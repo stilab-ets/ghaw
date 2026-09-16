@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+    "source_full_name": "dotnet/aspnetcore",
+    "source_owner": "dotnet",
+    "source_repo": "aspnetcore",
+    "md_path": ".github/workflows/browsertesting-deps-update.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/aspnetcore/blob/HEAD/.github/workflows/browsertesting-deps-update.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/aspnetcore",
+      "generated_owner": "dotnet",
+      "generated_repo": "aspnetcore",
+      "generated_workflow_path": ".github/workflows/browsertesting-deps-update.lock.yml",
+      "generated_workflow_file": "browsertesting-deps-update.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/browsertesting-deps-update.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:25:13+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/browsertesting-deps-update.md",
+      "commit_sha": "f0c032af5fa3c2d0144da1b2219cc638e3e2336c",
+      "authored_at": "2026-04-07T20:29:33Z",
+      "committed_at": "2026-04-07T20:29:33Z",
+      "author_name": "Korolev Dmitry",
+      "author_email": "dmkorolev@microsoft.com",
+      "author_login": "DeagleGross",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "infra: modify browser-testing dependencies update to agentic-workflows (#65469)",
+      "parent_shas": [
+        "adb0895624d81f7f4ac8a5145956ad503883aa81"
+      ],
+      "tree_sha": "ec4a070caedbaffcd5f3f9cf019e1d5e3b752143",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/f0c032af5fa3c2d0144da1b2219cc638e3e2336c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/browsertesting-deps-update.md",
+          "commit_sha": "f0c032af5fa3c2d0144da1b2219cc638e3e2336c",
+          "committed_at": "2026-04-07T20:29:33Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 99,
+          "file_deletions": 0,
+          "file_changes": 99,
+          "file_patch": "@@ -0,0 +1,99 @@\n+---\n+on:\n+  schedule: every 1mo\n+  workflow_dispatch:\n+\n+description: >\n+  Monthly workflow that checks for newer Selenium and Playwright versions\n+  and opens a PR to update them in the repository.\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+\n+network:\n+  allowed:\n+    - defaults\n+    - dotnet\n+    - containers\n+\n+tools:\n+  github:\n+  edit:\n+  bash: [\"grep\", \"sed\", \"jq\", \"git\"]\n+\n+mcp-servers:\n+  nuget:\n+    container: \"mcr.microsoft.com/dotnet/sdk:10.0\"\n+    entrypoint: \"dnx\"\n+    entrypointArgs: [\"NuGet.Mcp.Server\", \"--source\", \"https://api.nuget.org/v3/index.json\", \"--yes\"]\n+    allowed: [\"get-latest-package-version\"]\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[build-ops] \"\n+    labels: [build-ops]\n+    draft: false\n+    base-branch: main\n+  add-comment:\n+    target: \"*\"\n+    max: 1\n+---\n+\n+# Update Browser-Testing Dependencies (Selenium & Playwright)\n+\n+Selenium is used in the aspnetcore repo for automated E2E integration testing.\n+Playwright is used for some benchmarking apps. Both need to be kept up to date.\n+\n+## Task\n+\n+Check for the latest stable versions of the following NuGet packages and update them in the repository if newer versions are available.\n+\n+### 1. Selenium packages\n+\n+Look up the latest stable versions of these NuGet packages:\n+\n+- **Selenium.WebDriver** — https://www.nuget.org/packages/Selenium.WebDriver/\n+- **Selenium.Support** — https://www.nuget.org/packages/Selenium.Support/\n+\n+Then update the corresponding version variables in `eng/Versions.props`:\n+\n+- `SeleniumWebDriverVersion`\n+- `SeleniumSupportVersion`\n+\n+### 2. Playwright packages\n+\n+Look up the latest stable version of the Playwright package:\n+\n+- **Microsoft.Playwright** — https://www.nuget.org/packages/Microsoft.Playwright/\n+\n+Then update:\n+\n+- The `MicrosoftPlaywrightVersion` variable in `eng/Versions.props`\n+- The Playwright Docker image tag in `src/Components/benchmarkapps/Wasm.Performance/dockerfile` — the image reference starts with `mcr.microsoft.com` and should use the matching version.\n+\n+### How to look up latest NuGet versions\n+\n+Use the NuGet MCP server's `get-latest-package-version` tool to look up each package:\n+- `Selenium.WebDriver`\n+- `Selenium.Support`\n+- `Microsoft.Playwright`\n+\n+Do NOT use `curl`, `web-fetch`, or any direct HTTP requests to the NuGet API — they are blocked by the network firewall.\n+\n+## Guidelines\n+\n+- If all packages are already at their latest stable versions, report that no changes are needed.\n+- Only update to **stable** releases — skip prerelease versions.\n+- Keep Selenium.WebDriver and Selenium.Support on the same major version if possible.\n+- Make sure the Playwright Docker image tag in the dockerfile is consistent with the `PlaywrightVersion` in `eng/Versions.props`.\n+- Use the `edit` tool to modify files directly. Do NOT use `git commit`, `git push`, or `git config` commands — the `create-pull-request` safe output handles committing and pushing automatically.\n+\n+## Output\n+\n+When all edits are done, use the `create-pull-request` safe output to open the PR. Include a summary of what was updated in the PR body.\n+\n+After the PR is created, use the `add-comment` safe output to post the following note on the created PR:\n+\n+> **Note:** After merging, push all packages to dotnet-public repo by queuing a build from [dotnet-migrate-package](https://dev.azure.com/dnceng/internal/_build?definitionId=931&_a=summary).",
+          "snapshot_ref": "f0c032af5fa3c2d0144da1b2219cc638e3e2336c",
+          "snapshot_blob_sha": "1cc65af1b07f8e52013fedd3f9fd84a63a60417e",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__f0c032af5fa3c2d0144da1b2219cc638e3e2336c__browsertesting-deps-update.md",
+          "snapshot_bytes": 3365,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/browsertesting-deps-update.lock.yml\",\"generated_workflow_file\":\"browsertesting-deps-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/browsertesting-deps-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/browsertesting-deps-update.md",
+      "commit_sha": "91c4ab906afec412d85325a6101314e1e79f1530",
+      "authored_at": "2026-06-29T16:07:42Z",
+      "committed_at": "2026-06-29T16:07:42Z",
+      "author_name": "Korolev Dmitry",
+      "author_email": "dmkorolev@microsoft.com",
+      "author_login": "DeagleGross",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "report-failure-as-issue: false for workflows (#67466)",
+      "parent_shas": [
+        "573e93f228c71e400cb0e30b5061f6e2dffd60f1"
+      ],
+      "tree_sha": "4bea91dba86e3f25e3465f1513c6d4dcf0b8ea59",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/91c4ab906afec412d85325a6101314e1e79f1530",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/browsertesting-deps-update.md",
+          "commit_sha": "91c4ab906afec412d85325a6101314e1e79f1530",
+          "committed_at": "2026-06-29T16:07:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -31,6 +31,7 @@ mcp-servers:\n     allowed: [\"get-latest-package-version\"]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-pull-request:\n     title-prefix: \"[build-ops] \"\n     labels: [build-ops]",
+          "snapshot_ref": "91c4ab906afec412d85325a6101314e1e79f1530",
+          "snapshot_blob_sha": "c12c9d60548ad88ff239f82d6b480462bfc21580",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__91c4ab906afec412d85325a6101314e1e79f1530__browsertesting-deps-update.md",
+          "snapshot_bytes": 3398,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/browsertesting-deps-update.lock.yml\",\"generated_workflow_file\":\"browsertesting-deps-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/browsertesting-deps-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/browsertesting-deps-update.md",
+      "commit_sha": "6ce13b9c49929192589382dcc4dae610259696f2",
+      "authored_at": "2026-07-07T19:34:56Z",
+      "committed_at": "2026-07-07T19:34:56Z",
+      "author_name": "Jeff Handley",
+      "author_email": "jeffhandley@users.noreply.github.com",
+      "author_login": "jeffhandley",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Adopt the PAT pool for agentic workflows (#67411)\n\n* Move the labeler README out of the workflows folder\n\nRename .github/workflows/labeler.md to .github/labeler.README.md so that 'gh aw compile' does not treat the labeler documentation as an agentic workflow.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add the shared pat_pool agentic workflow component\n\nAdd .github/workflows/shared/pat_pool.md, a reusable import that selects a Copilot PAT number from the COPILOT_PAT_0 through COPILOT_PAT_9 pool and exposes it as the pat_pool job output, along with .github/workflows/shared/pat_pool.README.md documenting the pool.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Skip agentic workflows on forks unless manually dispatched\n\nAdd a top-level 'if' fork guard to browsertesting-deps-update, cswin32-update, issue-triage-agent, and test-quarantine (which still run on workflow_dispatch) and to community-pr-issue-check (guarded on !fork). Add 'permissions: {}' under 'on' for browsertesting-deps-update, community-pr-issue-check, and cswin32-update. Recompile the affected .lock.yml files.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Adopt the PAT pool in the agentic workflows\n\nImport shared/pat_pool.md into browsertesting-deps-update, community-pr-issue-check, cswin32-update, issue-triage-agent, test-quarantine, and triage-comment-reviewer, run their agent jobs in the copilot-pat-pool environment, and override COPILOT_GITHUB_TOKEN with the selected pool secret (COPILOT_PAT_0 through COPILOT_PAT_9). Add skip-if-no-match to issue-triage-agent so a pre_activation job exists for pat_pool to depend on. Recompile the affected .lock.yml files with the COPILOT_PAT secrets approved.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add the validate-pat-pool workflow\n\nAdd .github/workflows/validate-pat-pool.yml, a scheduled and manually dispatchable workflow that exercises each COPILOT_PAT_0 through COPILOT_PAT_9 secret with a Copilot CLI request and reports pool health (valid, empty, invalid, or unknown) in the run summary.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Stop Dependabot from updating gh-aw-managed actions\n\nAdd actions/cache/restore, actions/cache/save, actions/checkout, actions/download-artifact, actions/github-script, actions/setup-node, and actions/upload-artifact to the github-actions Dependabot ignore list. These actions are pinned in the generated agentic .lock.yml files by gh aw compile, so Dependabot bumps to those files are reverted on the next compile.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b126e4ffb9b8d5895e95cc1264163dee3a6a3517"
+      ],
+      "tree_sha": "1c3de6c9f6fcc70dcbb59517208de18e6f255623",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/6ce13b9c49929192589382dcc4dae610259696f2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/browsertesting-deps-update.md",
+          "commit_sha": "6ce13b9c49929192589382dcc4dae610259696f2",
+          "committed_at": "2026-07-07T19:34:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 35,
+          "file_deletions": 0,
+          "file_changes": 35,
+          "file_patch": "@@ -1,5 +1,8 @@\n ---\n+if: ${{ github.event_name == 'workflow_dispatch' || !github.event.repository.fork }}\n+\n on:\n+  permissions: {}\n   schedule: every 1mo\n   workflow_dispatch:\n \n@@ -40,6 +43,38 @@ safe-outputs:\n   add-comment:\n     target: \"*\"\n     max: 1\n+\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in an isolated `copilot-pat-pool` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n+\n+environment: copilot-pat-pool\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n ---\n \n # Update Browser-Testing Dependencies (Selenium & Playwright)",
+          "snapshot_ref": "6ce13b9c49929192589382dcc4dae610259696f2",
+          "snapshot_blob_sha": "f7c0537724c2d6f891deaf667a72efcdeb491119",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__6ce13b9c49929192589382dcc4dae610259696f2__browsertesting-deps-update.md",
+          "snapshot_bytes": 4848,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/browsertesting-deps-update.lock.yml\",\"generated_workflow_file\":\"browsertesting-deps-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/browsertesting-deps-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/browsertesting-deps-update.md",
+      "commit_sha": "5a09c126653d5bd295262f2ca96c9388b854cb24",
+      "authored_at": "2026-07-20T12:02:22Z",
+      "committed_at": "2026-07-20T12:02:22Z",
+      "author_name": "Korolev Dmitry",
+      "author_email": "dmkorolev@microsoft.com",
+      "author_login": "DeagleGross",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update agentic workflows for gh aw v0.82.13 (#67901)\n\nBump gh-aw generated files to gh aw v0.82.13:\n- Update .github/aw/actions-lock.json: pin github/gh-aw-actions/setup and\n  new setup-cli to v0.82.13, add container digest pin for\n  mcr.microsoft.com/dotnet/sdk:10.0, and normalize actions/github-script@v9.0.0\n  to its commit SHA (3a2844b).\n- Migrate dispatcher agent to .github/skills/agentic-workflows/SKILL.md and\n  regenerate .github/workflows/agentics-maintenance.yml.\n- Collapse the PAT-pool COPILOT_GITHUB_TOKEN case() expression onto a single\n  line in the six agentic workflows so the v0.82.13 compiler emits valid YAML\n  (the multiline block-scalar form now compiles to invalid YAML).\n- Recompile all workflows with 'gh aw compile --schedule-seed dotnet/aspnetcore'.\n\n\nCopilot-Session: d7b601c9-af9b-4c8c-9561-8de5696176b9\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "58c56325e2e407f7c4d63c377ba63dcacdfa52de"
+      ],
+      "tree_sha": "558797c0ed85914f3299cc2e26183bf0b911d13f",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/5a09c126653d5bd295262f2ca96c9388b854cb24",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/browsertesting-deps-update.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/browsertesting-deps-update.md",
+          "commit_sha": "5a09c126653d5bd295262f2ca96c9388b854cb24",
+          "committed_at": "2026-07-20T12:02:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 14,
+          "file_changes": 15,
+          "file_patch": "@@ -61,20 +61,7 @@ environment: copilot-pat-pool\n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: |\n-      ${{ case(\n-        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n-        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n-        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n-        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n-        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n-        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n-        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n-        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n-        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n-        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        'NO COPILOT PAT AVAILABLE')\n-      }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, 'NO COPILOT PAT AVAILABLE') }}\n ---\n \n # Update Browser-Testing Dependencies (Selenium & Playwright)",
+          "snapshot_ref": "5a09c126653d5bd295262f2ca96c9388b854cb24",
+          "snapshot_blob_sha": "fc18e62f207a43c81ea48c18f0b47cde4da61b97",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__5a09c126653d5bd295262f2ca96c9388b854cb24__browsertesting-deps-update.md",
+          "snapshot_bytes": 4745,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/browsertesting-deps-update.lock.yml\",\"generated_workflow_file\":\"browsertesting-deps-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/browsertesting-deps-update.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

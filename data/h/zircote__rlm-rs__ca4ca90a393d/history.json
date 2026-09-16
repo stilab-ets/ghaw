@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "zircote/rlm-rs:.github/workflows/docs-freshness.md",
+    "source_full_name": "zircote/rlm-rs",
+    "source_owner": "zircote",
+    "source_repo": "rlm-rs",
+    "md_path": ".github/workflows/docs-freshness.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/zircote/rlm-rs/blob/HEAD/.github/workflows/docs-freshness.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "zircote/rlm-rs",
+      "generated_owner": "zircote",
+      "generated_repo": "rlm-rs",
+      "generated_workflow_path": ".github/workflows/docs-freshness.lock.yml",
+      "generated_workflow_file": "docs-freshness.lock.yml",
+      "generated_html_url": "https://github.com/zircote/rlm-rs/blob/3e83255df8c5abd9ca97fe93125254f0647cc5dc/.github/workflows/docs-freshness.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:46+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "zircote/rlm-rs:.github/workflows/docs-freshness.md",
+      "source_full_name": "zircote/rlm-rs",
+      "md_path": ".github/workflows/docs-freshness.md",
+      "commit_sha": "fc9091ee6c57ff1294cda7b13b9e02df3cd39361",
+      "authored_at": "2026-02-26T21:36:38Z",
+      "committed_at": "2026-02-26T21:36:38Z",
+      "author_name": "Robert Allen",
+      "author_email": "zircote@gmail.com",
+      "author_login": "zircote",
+      "author_account_type": "User",
+      "committer_name": "Robert Allen",
+      "committer_email": "zircote@gmail.com",
+      "committer_login": "zircote",
+      "committer_account_type": "User",
+      "message": "ci: add GitHub Pages deployment and docs freshness workflows\n\n- docs-deploy.yml: build Astro Starlight site + rustdoc, deploy to Pages\n- docs-freshness.md: weekly gh-aw check for stale generated content\n- docs-freshness.lock.yml: compiled agentic workflow",
+      "parent_shas": [
+        "60f661816b8168718423c6014bc2196ef4d3f396"
+      ],
+      "tree_sha": "87670d9a7461fe79291d6d6331accaca0a1a84c7",
+      "html_url": "https://github.com/zircote/rlm-rs/commit/fc9091ee6c57ff1294cda7b13b9e02df3cd39361",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "zircote/rlm-rs:.github/workflows/docs-freshness.md",
+          "source_full_name": "zircote/rlm-rs",
+          "md_path": ".github/workflows/docs-freshness.md",
+          "commit_sha": "fc9091ee6c57ff1294cda7b13b9e02df3cd39361",
+          "committed_at": "2026-02-26T21:36:38Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 78,
+          "file_deletions": 0,
+          "file_changes": 78,
+          "file_patch": "@@ -0,0 +1,78 @@\n+---\n+name: Documentation Site Freshness Check\n+description: |\n+  Weekly check that generated Starlight documentation site content is in sync with source files.\n+  Creates or updates a GitHub issue when content is stale.\n+on:\n+  schedule:\n+    - cron: 'weekly on sunday'\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+engine:\n+  id: copilot\n+\n+timeout-minutes: 15\n+\n+tools:\n+  bash:\n+    - echo\n+    - cat\n+    - grep\n+    - node\n+    - npm\n+    - npx\n+  github:\n+    toolsets: [context, issues]\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[docs-freshness] \"\n+    close-older-issues: true\n+  add-comment:\n+    target: \"*\"\n+    discussions: false\n+    max: 1\n+---\n+\n+# Documentation Site Freshness Check\n+\n+## Context\n+\n+This repository has an Astro Starlight documentation site in `site/` that generates MDX content pages from three sources:\n+\n+1. **Docs pages** — markdown files in `docs/` are converted to Starlight MDX pages via `site/scripts/generate-docs-pages.mjs`\n+2. **Workflow reference pages** — `.github/workflows/*.yml` files are parsed into reference pages via `site/scripts/generate-workflow-pages.mjs`\n+3. **Reference pages** — sections from `CLAUDE.md` are extracted into individual reference pages via `site/scripts/generate-reference-pages.mjs`\n+\n+The generated content lives in `site/src/content/docs/` and must stay in sync with these sources.\n+\n+## Instructions\n+\n+1. **Install dependencies**: Run `cd site && npm ci` to install the site's Node.js dependencies.\n+\n+2. **Run the freshness check**: Execute `npm run check:freshness` in the `site/` directory.\n+   - This script generates content to a temp directory and diffs it against the committed content.\n+   - Exit code 0 means all content is up-to-date.\n+   - Exit code 1 means content is stale, and the script lists which files need regeneration.\n+\n+3. **If content is up-to-date** (exit code 0):\n+   - Output a brief summary: \"All generated documentation pages are up-to-date.\"\n+   - Do not create any issues.\n+\n+4. **If content is stale** (exit code 1):\n+   - Capture the list of stale files from the script output.\n+   - Search for an existing open issue with the title prefix `[docs-freshness]`.\n+   - **If an open issue exists**: Add a comment to it with the updated list of stale files and the current date.\n+   - **If no open issue exists**: Create a new issue titled `[docs-freshness] Documentation site content is stale` with:\n+     - The list of stale/missing files\n+     - Instructions to fix: `cd site && npm run generate && git add . && git commit -m \"docs: regenerate site content\"`\n+     - A note that this was detected by the automated freshness check\n+\n+## Edge Cases\n+\n+- If `npm ci` fails, report the error and create an issue about broken site dependencies.\n+- If the freshness script itself errors (not exit code 0 or 1), report the unexpected error.",
+          "snapshot_ref": "fc9091ee6c57ff1294cda7b13b9e02df3cd39361",
+          "snapshot_blob_sha": "cacecf91e2040cf1d50f84a62c1d7c7107571bc8",
+          "snapshot_file": "snapshots/rlm-rs__zircote__fc9091ee6c57ff1294cda7b13b9e02df3cd39361__docs-freshness.md",
+          "snapshot_bytes": 2814,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"zircote/rlm-rs\",\"generated_owner\":\"zircote\",\"generated_repo\":\"rlm-rs\",\"generated_workflow_path\":\".github/workflows/docs-freshness.lock.yml\",\"generated_workflow_file\":\"docs-freshness.lock.yml\",\"generated_html_url\":\"https://github.com/zircote/rlm-rs/blob/3e83255df8c5abd9ca97fe93125254f0647cc5dc/.github/workflows/docs-freshness.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

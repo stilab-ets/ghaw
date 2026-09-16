@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "htekdev/vidpipe:.github/workflows/pr-triage.md",
+    "source_full_name": "htekdev/vidpipe",
+    "source_owner": "htekdev",
+    "source_repo": "vidpipe",
+    "md_path": ".github/workflows/pr-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/htekdev/vidpipe/blob/HEAD/.github/workflows/pr-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "htekdev/vidpipe",
+      "generated_owner": "htekdev",
+      "generated_repo": "vidpipe",
+      "generated_workflow_path": ".github/workflows/pr-triage.lock.yml",
+      "generated_workflow_file": "pr-triage.lock.yml",
+      "generated_html_url": "https://github.com/htekdev/vidpipe/blob/99a5378f1c93c40a5908e314c15186453154136f/.github/workflows/pr-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:57:06+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "htekdev/vidpipe:.github/workflows/pr-triage.md",
+      "source_full_name": "htekdev/vidpipe",
+      "md_path": ".github/workflows/pr-triage.md",
+      "commit_sha": "83af5f1eb060e257ee40980585313fde0c65c081",
+      "authored_at": "2026-03-11T20:55:26Z",
+      "committed_at": "2026-03-11T20:56:11Z",
+      "author_name": "Hector Flores",
+      "author_email": "hector.flores@htek.dev",
+      "author_login": "htekdev",
+      "author_account_type": "User",
+      "committer_name": "Hector Flores",
+      "committer_email": "hector.flores@htek.dev",
+      "committer_login": "htekdev",
+      "committer_account_type": "User",
+      "message": "feat: add daily PR triage agentic workflow",
+      "parent_shas": [
+        "b6cb2cc29d655502ce55f3de2723158ef6c81a02"
+      ],
+      "tree_sha": "14048832dc4fd64a025cb14b21889eef83ad3a03",
+      "html_url": "https://github.com/htekdev/vidpipe/commit/83af5f1eb060e257ee40980585313fde0c65c081",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "htekdev/vidpipe:.github/workflows/pr-triage.md",
+          "source_full_name": "htekdev/vidpipe",
+          "md_path": ".github/workflows/pr-triage.md",
+          "commit_sha": "83af5f1eb060e257ee40980585313fde0c65c081",
+          "committed_at": "2026-03-11T20:56:11Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 134,
+          "file_deletions": 0,
+          "file_changes": 134,
+          "file_patch": "@@ -0,0 +1,134 @@\n+---\n+description: Daily PR triage — updates PRs with main, verifies CI, fixes failures via code review, and approves ready PRs\n+on:\n+  schedule: daily on weekdays\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  actions: read\n+  checks: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [default]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+checkout:\n+  fetch-depth: 0\n+  github-token: ${{ secrets.GH_MY_PAT }}\n+secrets:\n+  GH_TOKEN:\n+    value: ${{ secrets.GH_MY_PAT }}\n+    description: \"PAT for PR operations (update branch, push fixes, approve)\"\n+safe-outputs:\n+  add-comment:\n+    max: 30\n+  noop:\n+---\n+\n+# PR Triage Agent\n+\n+You are an AI agent that performs daily triage on all open pull requests in this repository. Your goal is to ensure every PR is up-to-date with `main`, has passing CI, and is approved when ready.\n+\n+## Workflow\n+\n+For each open pull request, perform these steps in order:\n+\n+### Step 1: Gather open PRs\n+\n+Use the GitHub tools to list all open pull requests. For each PR, collect:\n+\n+- PR number and title\n+- Head branch name\n+- Current CI/check status\n+- Whether the branch is behind `main`\n+\n+### Step 2: Update branch with main\n+\n+For each PR whose branch is behind `main`:\n+\n+1. Run `gh pr update-branch <PR_NUMBER> --rebase` to bring the PR up-to-date with the default branch.\n+2. If the update fails due to merge conflicts, post a comment on the PR explaining the conflict and skip to the next PR.\n+3. After updating, wait briefly for CI to re-trigger before checking status.\n+\n+### Step 3: Check CI status\n+\n+For each PR, check if all required status checks and check runs are passing:\n+\n+1. Use `gh pr checks <PR_NUMBER>` to see the current check status.\n+2. If checks are still pending or in progress, wait up to 3 minutes with periodic polling (`gh pr checks <PR_NUMBER> --watch --fail-fast` with a timeout).\n+3. Classify the PR into one of:\n+   - **All passing** — proceed to Step 5 (approve)\n+   - **Failing** — proceed to Step 4 (fix)\n+   - **Pending timeout** — post a comment noting CI is still running and skip to the next PR\n+\n+### Step 4: Fix CI failures\n+\n+When CI checks are failing:\n+\n+1. **Identify failures**: Run `gh run list --branch <BRANCH> --status failure --limit 1` to find the failing run, then `gh run view <RUN_ID> --log-failed` to read the failure logs.\n+2. **Analyze the root cause**: Read the logs carefully. Common failures include:\n+   - TypeScript type errors\n+   - Test failures\n+   - Lint errors\n+   - Build errors\n+   - Coverage threshold violations\n+3. **Checkout the PR branch**: Run `git checkout <BRANCH>` and `git pull origin <BRANCH>`.\n+4. **Apply fixes**: Use the `edit` tool and bash commands to fix the issues. For this repository:\n+   - TypeScript errors → fix type annotations, missing imports, or type mismatches\n+   - Test failures → update tests to match changed behavior, fix broken assertions\n+   - Lint errors → apply the linter's suggested fixes\n+   - Build errors → fix compilation issues\n+   - Coverage drops → add missing test coverage for changed lines\n+5. **Validate locally**: Run the relevant validation commands:\n+   - `npm run typecheck` for type errors\n+   - `npm run test` for test failures\n+   - `npm run build` for build errors\n+6. **Commit and push**: If fixes are successful:\n+   ```bash\n+   git add -A\n+   git commit -m \"fix: resolve CI failures\n+\n+   Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\"\n+   git push origin <BRANCH>\n+   ```\n+7. **Post a comment** on the PR summarizing what was fixed.\n+8. If the failures are too complex to fix automatically (e.g., fundamental design issues, external service failures, flaky tests with no clear fix), post a comment describing the issue and requesting human attention. Do NOT force broken fixes.\n+\n+### Step 5: Approve ready PRs\n+\n+When a PR has:\n+- ✅ Branch up-to-date with `main`\n+- ✅ All CI checks passing\n+\n+Approve it:\n+\n+```bash\n+gh pr review <PR_NUMBER> --approve --body \"✅ Automated triage: branch is up-to-date with main and all CI checks are passing.\"\n+```\n+\n+Then post a comment summarizing the triage result.\n+\n+## Guidelines\n+\n+- **Be conservative with code fixes** — only fix clear, mechanical issues. If a fix requires design decisions, flag it for human review instead.\n+- **Never force-push** — always use regular pushes to preserve PR history.\n+- **One PR at a time** — fully process each PR before moving to the next.\n+- **Rate limit awareness** — if there are many PRs, process the most recently updated ones first (up to 10 PRs per run).\n+- **Skip draft PRs** — do not triage PRs marked as draft.\n+- **Skip PRs with \"do not merge\" or \"wip\" labels** — these are not ready for triage.\n+- **Attribution** — all commits must include the `Co-authored-by: Copilot` trailer.\n+- **Transparency** — always comment on the PR with what actions were taken, even if no action was needed.\n+\n+## When Nothing Needs to Be Done\n+\n+If there are no open PRs, or all open PRs are drafts/WIP, call the `noop` safe output with a message like: \"No actionable PRs found — all PRs are either drafts, WIP, or not yet open.\"\n+\n+## Error Handling\n+\n+- If `gh pr update-branch` fails → comment about the conflict and move on\n+- If CI log retrieval fails → comment that logs could not be read and skip\n+- If code fixes don't resolve CI → revert your changes, comment explaining the situation\n+- If git push fails → comment about the push failure and move on",
+          "snapshot_ref": "83af5f1eb060e257ee40980585313fde0c65c081",
+          "snapshot_blob_sha": "ef053a4d02196772fcd862dd161f2fd63d1e2267",
+          "snapshot_file": "snapshots/vidpipe__htekdev__83af5f1eb060e257ee40980585313fde0c65c081__pr-triage.md",
+          "snapshot_bytes": 5364,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"htekdev/vidpipe\",\"generated_owner\":\"htekdev\",\"generated_repo\":\"vidpipe\",\"generated_workflow_path\":\".github/workflows/pr-triage.lock.yml\",\"generated_workflow_file\":\"pr-triage.lock.yml\",\"generated_html_url\":\"https://github.com/htekdev/vidpipe/blob/99a5378f1c93c40a5908e314c15186453154136f/.github/workflows/pr-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

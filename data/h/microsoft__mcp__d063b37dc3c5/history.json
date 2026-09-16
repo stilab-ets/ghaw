@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/mcp:.github/workflows/doc-gap-detector.md",
+    "source_full_name": "microsoft/mcp",
+    "source_owner": "microsoft",
+    "source_repo": "mcp",
+    "md_path": ".github/workflows/doc-gap-detector.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/mcp/blob/HEAD/.github/workflows/doc-gap-detector.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/mcp",
+      "generated_owner": "microsoft",
+      "generated_repo": "mcp",
+      "generated_workflow_path": ".github/workflows/doc-gap-detector.lock.yml",
+      "generated_workflow_file": "doc-gap-detector.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/mcp/blob/1711eca2a6d07b5a180f3800dedc429bc917cf10/.github/workflows/doc-gap-detector.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:58:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/mcp:.github/workflows/doc-gap-detector.md",
+      "source_full_name": "microsoft/mcp",
+      "md_path": ".github/workflows/doc-gap-detector.md",
+      "commit_sha": "61ae407bcd714a954281e99372d0558a093f6002",
+      "authored_at": "2026-05-06T21:16:07Z",
+      "committed_at": "2026-05-06T21:16:07Z",
+      "author_name": "Anannya Patra",
+      "author_email": "40665106+anannya03@users.noreply.github.com",
+      "author_login": "anannya03",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Agent workflow to update Documentation (#2550)\n\n* Add issue triage agentic workflow\n\nCreates a GitHub Agentic Workflow that automatically triages new issues by:\n- Analyzing issue content to determine the relevant service area\n- Applying the correct service labels based on CODEOWNERS mapping\n- Assigning the appropriate codeowners to the issue\n- Posting a brief triage comment explaining the decision\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add documentation gap detector agentic workflow\n\nCreates a GitHub Agentic Workflow triggered on push to main that:\n- Analyzes diffs for MCP tool name, metadata, or functionality changes\n- Cross-references changes against azmcp-commands.md, e2eTestPrompts.md, and README.md\n- Files GitHub issues for documentation gaps found\n- Assigns issues to Copilot coding agent for implementation\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Changes to yaml and md\n\n* documentation update agent\n\n* trailing newline\n\n* Addresses feedback\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "68d3b7c41551efd8aceeb7aead575ee7bed6c0f7"
+      ],
+      "tree_sha": "0eba1201a1315a312375ac31a3ea0986193ad470",
+      "html_url": "https://github.com/microsoft/mcp/commit/61ae407bcd714a954281e99372d0558a093f6002",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/mcp:.github/workflows/doc-gap-detector.md",
+          "source_full_name": "microsoft/mcp",
+          "md_path": ".github/workflows/doc-gap-detector.md",
+          "commit_sha": "61ae407bcd714a954281e99372d0558a093f6002",
+          "committed_at": "2026-05-06T21:16:07Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 208,
+          "file_deletions": 0,
+          "file_changes": 208,
+          "file_patch": "@@ -0,0 +1,208 @@\n+---\n+name: Documentation Updater\n+description: |\n+  Documentation gap detector for the Azure MCP repository\n+  Triggered on every push to main, analyzes diff to identify documentation gaps\n+  and files GitHub issues for copilot coding agent to implement.\n+\n+on:\n+  push:\n+    branches: [main]\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+tools:\n+  web-fetch:\n+  github:\n+    toolsets: [default]\n+\n+timeout-minutes: 15\n+\n+safe-outputs:\n+  report-failure-as-issue: false\n+  create-issue:\n+    title-prefix: \"[Doc Gap]\"\n+    labels: ['documentation', 'copilot']\n+    max: 1\n+  noop:\n+    report-as-issue: false\n+\n+---\n+\n+# Documentation Gap Detector\n+\n+<!-- After editing run 'gh aw compile' -->\n+\n+## Job Description\n+\n+You are a documentation quality agent for the Azure MCP repository. Your role is to analyze code changes pushed to the `main` branch, identify documentation gaps, and file a focused GitHub issue describing what documentation updates are required. \n+\n+Specifically, review and validate the following files:\n+\n+- `servers/Azure.Mcp.Server/README.md`\n+- `servers/Azure.Mcp.Server/docs/azmcp-commands.md`\n+- `servers/Azure.Mcp.Server/docs/e2eTestPrompts.md`\n+\n+### Workflow\n+\n+#### Step 1: Analyze the push\n+\n+- Examine the diff for the push commit(s) that triggered this workflow.\n+- **Identify tool changes** by looking for modifications to:\n+  - MCP tool names (renames, additions, removals)\n+  - Tool metadata (descriptions, parameters, options)\n+  - Tool functionality (new capabilities, changes behavior)\n+  - Tool file paths under `/tools/` or `/servers/`\n+- Identify the commit author(s) and the PR number (if any) that triggered this push\n+\n+#### Step 2: Assess Documentation\n+\n+**Cross-reference with documentation** to check if:\n+   - `azmcp-commands.md` reflects any tool name changes, new commands, removed commands, or updated parameters/options\n+   - `e2eTestPrompts.md` has corresponding test prompts for new or renamed tools, and removed prompts for deleted tools\n+   - `servers/Azure.Mcp.Server/README.md` accurately reflects any major changes (new tools, new features, architecture changes)\n+\n+##### In `azmcp-commands.md`:\n+\n+- A new tool was added but no corresponding CLI command documentation exists\n+- A tool was renamed but the old name still appears in the docs\n+- Tool parameters/options were added or changed but the docs still show the old signature\n+- A tool was removed but its documentation still exists\n+\n+##### In `e2eTestPrompts.md`:\n+\n+- A new tool was added but no test prompts exist for it\n+- A tool was renamed but test prompts still reference the old tool name\n+- Tool functionality changed significantly but test prompts don't cover the new behavior\n+- A tool was removed but its test prompts still exist\n+\n+##### In `servers/Azure.Mcp.Server/README.md`:\n+\n+- A major new service area or tool category was added but not mentioned in the \"What can you do with the Azure MCP Server?\" section or the \"Complete List of Supported Azure Services\" section\n+- Architecture changes that affect how users interact with the server\n+- New setup requirements or dependencies not documented in the Installation section\n+\n+#### Step 3: Decide\n+\n+```\n+IF no implementation code exists (empty repository):\n+    - Use noop tool\n+    - Exit\n+\n+IF no code changes require documentation updates:\n+    - Use noop tool\n+    - Exit\n+\n+IF all documentation is already up-to-date and comprehensive:\n+    - Use noop tool\n+    - Exit\n+\n+ELSE:\n+    - Proceed to Step 4\n+```\n+#### Step 4: File a GitHub Issue\n+\n+Use the **create-issue** tool to file a single GitHub issue describing the documentation gap\n+\n+- **Title**: `[Doc Gap] <brief description of the gap>`\n+- **Body:** Follow the structure below exactly\n+\n+The issue body must follow this structure:\n+\n+```markdown\n+## Documentation Gap\n+\n+**Server:** `<full server name>`\n+**Tool directory:** `<tools>/<toolset>`\n+**Triggered by:** <commit SHA or PR #number> by @<author>\n+**Changed files**: <list of relevant changed files>\n+\n+## What Changed\n+\n+<Brief description of what was added/changed in the triggering push>\n+\n+## Gaps Found\n+\n+<Specific documentation gaps identified:>\n+- <gap 1>\n+- <gap 2>\n+- <gap 3>\n+\n+### Files to Update\n+- [ ] `<file path>`\n+\n+### Context\n+<relevant diff snippet or context showing the change that created the gap>\n+\n+<details>\n+<summary><strong>📐 Implementation Guide</strong></summary>\n+\n+This section contains step-by-step instructions for a coding agent to implement the changes described above\n+\n+### Step 1: Modify files\n+\n+For each file that needs changes, provide:\n+- The absolute path from the repository root\n+- Whether to create or edit the file\n+- The exact content to add, replace, or remove\n+\n+### Step 2: Verify documentation structure\n+\n+Depending on the gap, verify the relevant doc file follows the expected format:\n+\n+**`servers/Azure.Mcp.Server/docs/azmcp-commands.md`** — must include:\n+- A global options table at the top (subscription, resource-group, tenant, retry-max-retries, retry-delay)\n+- One `## azmcp <service> <resource> <operation>` section per command, containing a description, parameters table, and example usage block\n+\n+**`servers/Azure.Mcp.Server/docs/e2eTestPrompts.md`** — must include:\n+- A header explaining the file's purpose\n+- Service area sections (e.g., `## Azure Advisor`, `## Azure AI Search`) in alphabetical order\n+- Within each section, a table with columns `Tool Name | Test Prompt` listing tool names alphabetically\n+- New commands added in alphabetical order within their service section\n+\n+**`servers/Azure.Mcp.Server/README.md`** — must include:\n+- An `# Overview` section describing the server\n+- An `# Installation` section with subsections for IDE (VS Code, Visual Studio 2026, Visual Studio 2022, IntelliJ, Eclipse, Manual Setup) and Package Manager (NuGet, NPM, PyPI, Docker, MCPB)\n+- A `## What can you do with the Azure MCP Server?` section with per-service subsections (e.g., `### 🧮 Microsoft Foundry`, `### 💾 Azure Storage`, `### 🖥️ Azure Compute`) showing example prompts\n+- A `## Complete List of Supported Azure Services` section listing all supported services with emoji icons and brief descriptions\n+- A `# Support and Reference` section with Documentation, Feedback and Support, Security, and other subsections\n+Use `tools/Azure.Mcp.Tools.Storage/` as the canonical reference for toolset documentation patterns (README, option definitions, command structure)\n+\n+### Step 3: Validate\n+\n+Run these commands in order. Each must succeed before proceeding to the next:\n+\n+1. `dotnet build servers/Azure.Mcp.Server/` — confirms the server project compiles cleanly\n+2. `dotnet build tools/Azure.Mcp.Tools.<Service>/src/` — confirms the affected toolset compiles\n+3. `dotnet test tools/Azure.Mcp.Tools.<Service>/tests/Azure.Mcp.Tools.<Service>.UnitTests/` — runs unit tests for the affected toolset\n+4. `.\\eng\\common\\spelling\\Invoke-Cspell.ps1` — checks spelling in new or modified documentation\n+\n+</details>\n+\n+## Next Steps\n+\n+> [!TIP]\n+> **Ready for automated implementation?** Assign this issue to **@copilot** to have Copilot coding agent implement the changes described in the Implementation Guide above\n+\n+```\n+- **Labels**: `documentation`, `copilot`\n+\n+## Rules\n+\n+1. **Only flag genuine gaps** — if a change is purely internal (refactoring, tests, CI) with no user-facing impact, skip it.\n+2. **Do NOT modify repository files** — your only output is a GitHub issue. Do not write code, create patches, or modify any files in the repository.\n+3. **Be specific** — each issue should describe exactly what needs to change and where.\n+4. **Group related gaps** — if multiple related docs need updating for the same tool change, create one issue covering all of them.\n+5. **Max 1 issue per run** — prioritize the most impactful gaps. If unrelated gaps exist, briefly list them at the bottom as \"Other gaps to address in future runs\".\n+6. Always include the PR/commit author who triggered the push using @mention.\n+7. **No false positives** — if you're unsure whether something is a gap, err on the side of not filing an issue.\n+8. **Check existing issues** — before creating a new issue, search for existing open issues with \"[Doc Gap]\" in the title to avoid duplicates.",
+          "snapshot_ref": "61ae407bcd714a954281e99372d0558a093f6002",
+          "snapshot_blob_sha": "7174292fced577d0dbf2c28822e472b72223a915",
+          "snapshot_file": "snapshots/mcp__microsoft__61ae407bcd714a954281e99372d0558a093f6002__doc-gap-detector.md",
+          "snapshot_bytes": 8198,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/mcp\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"mcp\",\"generated_workflow_path\":\".github/workflows/doc-gap-detector.lock.yml\",\"generated_workflow_file\":\"doc-gap-detector.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/mcp/blob/1711eca2a6d07b5a180f3800dedc429bc917cf10/.github/workflows/doc-gap-detector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/mcp:.github/workflows/doc-gap-detector.md",
+      "source_full_name": "microsoft/mcp",
+      "md_path": ".github/workflows/doc-gap-detector.md",
+      "commit_sha": "579e73ffc0945484b9655c472881ae4232d7237f",
+      "authored_at": "2026-05-19T20:57:49Z",
+      "committed_at": "2026-05-19T20:57:49Z",
+      "author_name": "Alan Zimmer",
+      "author_email": "48699787+alzimmermsft@users.noreply.github.com",
+      "author_login": "alzimmermsft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Cleanup follow-ups for testing pattern migration (#2668)\n\n* Cleanup follow-ups for testing pattern migration\n\n* Fix --filter\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "960c6cd3360c62eeb32c9ca4be4eb75561d523d1"
+      ],
+      "tree_sha": "ddb8e47d6f1edd1d42b2e461b30b342c405d6fbc",
+      "html_url": "https://github.com/microsoft/mcp/commit/579e73ffc0945484b9655c472881ae4232d7237f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/mcp:.github/workflows/doc-gap-detector.md",
+          "source_full_name": "microsoft/mcp",
+          "md_path": ".github/workflows/doc-gap-detector.md",
+          "commit_sha": "579e73ffc0945484b9655c472881ae4232d7237f",
+          "committed_at": "2026-05-19T20:57:49Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -183,7 +183,7 @@ Run these commands in order. Each must succeed before proceeding to the next:\n \n 1. `dotnet build servers/Azure.Mcp.Server/` — confirms the server project compiles cleanly\n 2. `dotnet build tools/Azure.Mcp.Tools.<Service>/src/` — confirms the affected toolset compiles\n-3. `dotnet test tools/Azure.Mcp.Tools.<Service>/tests/Azure.Mcp.Tools.<Service>.UnitTests/` — runs unit tests for the affected toolset\n+3. `dotnet test tools/Azure.Mcp.Tools.<Service>/tests/Azure.Mcp.Tools.<Service>.Tests/ --filter \"TestType!=Live\"` — runs unit tests for the affected toolset\n 4. `.\\eng\\common\\spelling\\Invoke-Cspell.ps1` — checks spelling in new or modified documentation\n \n </details>",
+          "snapshot_ref": "579e73ffc0945484b9655c472881ae4232d7237f",
+          "snapshot_blob_sha": "ff66f249a8f0b97971e17b121b2aa9ee92148360",
+          "snapshot_file": "snapshots/mcp__microsoft__579e73ffc0945484b9655c472881ae4232d7237f__doc-gap-detector.md",
+          "snapshot_bytes": 8220,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/mcp\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"mcp\",\"generated_workflow_path\":\".github/workflows/doc-gap-detector.lock.yml\",\"generated_workflow_file\":\"doc-gap-detector.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/mcp/blob/1711eca2a6d07b5a180f3800dedc429bc917cf10/.github/workflows/doc-gap-detector.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

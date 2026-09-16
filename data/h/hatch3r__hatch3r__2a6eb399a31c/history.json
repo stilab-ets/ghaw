@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "hatch3r/hatch3r:.github/workflows/generate-docusaurus-docs.md",
+    "source_full_name": "hatch3r/hatch3r",
+    "source_owner": "hatch3r",
+    "source_repo": "hatch3r",
+    "md_path": ".github/workflows/generate-docusaurus-docs.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/hatch3r/hatch3r/blob/HEAD/.github/workflows/generate-docusaurus-docs.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "hatch3r/hatch3r",
+      "generated_owner": "hatch3r",
+      "generated_repo": "hatch3r",
+      "generated_workflow_path": ".github/workflows/generate-docusaurus-docs.lock.yml",
+      "generated_workflow_file": "generate-docusaurus-docs.lock.yml",
+      "generated_html_url": "https://github.com/hatch3r/hatch3r/blob/a4e1e05a02039a1da8141dc7c31c786d8dccda3b/.github/workflows/generate-docusaurus-docs.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:56:59+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "hatch3r/hatch3r:.github/workflows/generate-docusaurus-docs.md",
+      "source_full_name": "hatch3r/hatch3r",
+      "md_path": ".github/workflows/generate-docusaurus-docs.md",
+      "commit_sha": "cd72ff650f126c9d2b405684fed1882f1473f3a0",
+      "authored_at": "2026-03-02T06:54:18Z",
+      "committed_at": "2026-03-02T06:54:18Z",
+      "author_name": "Victor",
+      "author_email": "60963842+vicdotdevelop@users.noreply.github.com",
+      "author_login": "vicdotdevelop",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(docs): add Docusaurus documentation site with deploy workflow and github aw for docs (#18)\n\n* feat(docs): add Docusaurus documentation website\n\n- Add website with docs structure (getting-started, guides, reference)\n- Add .gitattributes for linguist-generated workflow lock files\n- Add gh-aw daily-repo-status workflow\n\nMade-with: Cursor\n\n* feat(docs): add Docusaurus documentation site with deploy workflow\n\n- Add Docusaurus config, homepage, and styling\n- Replace daily-repo-status workflow with generate-docusaurus-docs\n- Add deploy-docs workflow for documentation deployment\n- Add egg logo, social card, and dino images\n\nMade-with: Cursor\n\n* test: add coverage tests and fix init test flakiness\n\n- Add targeted tests for sync and validate commands (Option C) to meet\n  branch coverage thresholds\n- Refactor init tests: hoist module import to beforeAll, mock process.cwd\n  instead of process.chdir to avoid global state and cascading failures\n- Add vitest testTimeout, hookTimeout, and coverage.exclude for\n  website, cli index, and type-only files\n\nMade-with: Cursor\n\n* fix(test): scope coverage to src/ to prevent dist artifacts from failing CI\n\nThe CI build step creates dist/ before running tests, causing built\nfiles (0% coverage) to tank statement/line averages below thresholds.\nReplace broad exclude with include: [\"src/**\"] so only source files\nare measured.\n\nMade-with: Cursor\n\n---------\n\nCo-authored-by: root <root@vicgaming.localdomain>",
+      "parent_shas": [
+        "942b0502d9a3ee94e941b3cb228b5c5c68c919b0"
+      ],
+      "tree_sha": "9980e76437aff0ceeb9a8cce90b4bc2e178b87a5",
+      "html_url": "https://github.com/hatch3r/hatch3r/commit/cd72ff650f126c9d2b405684fed1882f1473f3a0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "hatch3r/hatch3r:.github/workflows/generate-docusaurus-docs.md",
+          "source_full_name": "hatch3r/hatch3r",
+          "md_path": ".github/workflows/generate-docusaurus-docs.md",
+          "commit_sha": "cd72ff650f126c9d2b405684fed1882f1473f3a0",
+          "committed_at": "2026-03-02T06:54:18Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 189,
+          "file_deletions": 0,
+          "file_changes": 189,
+          "file_patch": "@@ -0,0 +1,189 @@\n+---\n+description: |\n+  Reads source code and existing documentation to autonomously generate or update\n+  Docusaurus documentation site content under website/docs/. Triggered manually only.\n+  Creates a PR with changes for human review.\n+\n+on:\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+  noop:\n+\n+engine: codex\n+---\n+\n+# Generate Docusaurus Documentation\n+\n+You are an AI agent that reads the source code and existing documentation of this repository and autonomously generates or updates the Docusaurus documentation site content. The Docusaurus site lives in `website/` and is deployable as GitHub Pages. Styling is handled separately — you must only touch Markdown content files under `website/docs/`.\n+\n+## Decision Tree\n+\n+Follow this decision tree to determine what action to take:\n+\n+```mermaid\n+flowchart TD\n+    A[Start: workflow_dispatch] --> B{Does website/docs/ exist\\nand contain .md files?}\n+    B -- No --> C[Generate docs from scratch]\n+    B -- Yes --> D[Diff source code vs existing docs]\n+    D --> E{Are docs stale\\nor incomplete?}\n+    E -- No --> F[Noop: docs are up to date]\n+    E -- Yes --> G[Update outdated sections only]\n+    C --> H[Write all doc pages to website/docs/]\n+    G --> H\n+    H --> I[Open Pull Request with changes]\n+    I --> J[End]\n+```\n+\n+---\n+\n+## Phase 1 – Detect existing documentation\n+\n+1. Check whether `website/docs/` exists and contains at least one `.md` file.\n+2. If yes: read all existing `.md` files under `website/docs/` and store their content for comparison.\n+3. If no: proceed directly to **Phase 3 – Generate from scratch**.\n+\n+---\n+\n+## Phase 2 – Compare source vs existing docs (update path only)\n+\n+Read the following source locations and compare them against the existing documentation:\n+\n+| Source Location | What it covers |\n+|---|---|\n+| `README.md` | Top-level project overview, quick start, commands table |\n+| `agents/` | All agent definitions (id, description, capabilities) |\n+| `skills/` | All skill definitions |\n+| `rules/` | All rule definitions |\n+| `commands/` | All command definitions |\n+| `src/` | TypeScript source files (CLI internals and architecture) |\n+| `docs/` | Internal specs or ADRs |\n+| `package.json` | Version, dependencies, bin targets |\n+| `CHANGELOG.md` | Recent changes for a \"What's New\" section |\n+\n+For each documentation page, determine whether:\n+\n+- A source file it covers has changed (new fields, new items, removed items, version bumps)\n+- A source file exists but has no corresponding doc page yet\n+\n+Only update pages where there is a real divergence. Do not touch pages that are already accurate.\n+\n+If **all** documentation pages are current and no source files lack a corresponding doc page, call the `noop` safe output with a message explaining that documentation is already up to date.\n+\n+---\n+\n+## Phase 3 – Generate documentation content\n+\n+Whether generating from scratch or updating, produce the following Docusaurus content structure inside `website/docs/`:\n+\n+```text\n+website/docs/\n+├── intro.md\n+├── getting-started.md\n+├── how-it-works.md\n+├── agents/\n+│   ├── index.md\n+│   └── <agent-id>.md\n+├── skills/\n+│   ├── index.md\n+│   └── <skill-id>.md\n+├── rules/\n+│   ├── index.md\n+│   └── <rule-id>.md\n+├── commands/\n+│   ├── index.md\n+│   ├── cli.md\n+│   └── <command-id>.md\n+├── board-management.md\n+├── mcp-setup.md\n+├── supported-tools.md\n+├── customization.md\n+├── model-selection.md\n+├── sub-agentic-architecture.md\n+├── docs-structure.md\n+├── troubleshooting.md\n+└── changelog.md\n+```\n+\n+### Page descriptions\n+\n+| Page | Content |\n+|---|---|\n+| `intro.md` | What is hatch3r? Tagline, elevator pitch, quick start |\n+| `getting-started.md` | Installation (`npx hatch3r init`), prerequisites, first run |\n+| `how-it-works.md` | Architecture overview with Mermaid diagram |\n+| `agents/index.md` | Overview of all agents with summary table |\n+| `agents/<agent-id>.md` | One page per agent (auto-generated from `agents/` folder) |\n+| `skills/index.md` | Overview of all skills with summary table |\n+| `skills/<skill-id>.md` | One page per skill |\n+| `rules/index.md` | Overview of all rules with summary table |\n+| `rules/<rule-id>.md` | One page per rule |\n+| `commands/index.md` | Overview: CLI commands vs agent commands |\n+| `commands/cli.md` | `npx hatch3r init/sync/update/status/validate` |\n+| `commands/<command-id>.md` | One page per agent command |\n+| `board-management.md` | board-init, board-fill, board-pickup, board-refresh |\n+| `mcp-setup.md` | MCP servers, `.env.mcp`, per-tool config |\n+| `supported-tools.md` | Cursor, Copilot, Claude Code, Windsurf, Amp, Codex, Gemini, Cline |\n+| `customization.md` | Managed vs custom files, `.customize.yaml`, `hatch3r-*` naming |\n+| `model-selection.md` | `hatch.json`, per-agent models, resolution order |\n+| `sub-agentic-architecture.md` | Implementer agent, delegation patterns |\n+| `docs-structure.md` | `docs/specs/`, `docs/adr/`, `docs/process/` conventions |\n+| `troubleshooting.md` | Common issues (source: `docs/troubleshooting.md`) |\n+| `changelog.md` | Auto-generated from `CHANGELOG.md` |\n+\n+### Content requirements for every page\n+\n+- Written in clear, concise technical English aimed at developers.\n+- Use Docusaurus-compatible MDX frontmatter: `id`, `title`, `sidebar_label`, `sidebar_position`.\n+- Include Mermaid diagrams where a visual aids understanding:\n+  - `how-it-works.md`: architecture diagram showing `/.agents/` → tool adapters (Cursor, Copilot, Claude Code, etc.)\n+  - `board-management.md`: flowchart of the board lifecycle (init → fill → pickup → review → release)\n+  - `sub-agentic-architecture.md`: sequence diagram of orchestrator → implementer delegation\n+  - `getting-started.md`: flow diagram of the `npx hatch3r init` interactive setup steps\n+  - Individual agent/skill pages: include a simple flow diagram where the agent has a clear multi-step process\n+- All tables must use Markdown table syntax.\n+- Code blocks must use triple backtick fences with language specifiers (`bash`, `json`, `yaml`, `typescript`).\n+- Every Mermaid diagram must be valid and renderable by Docusaurus's built-in Mermaid support (wrapped in triple-backtick `mermaid` fences).\n+- Do NOT add any CSS, theme files, or Docusaurus configuration. Content only.\n+\n+---\n+\n+## Phase 4 – Open a Pull Request\n+\n+After writing all files to `website/docs/`:\n+\n+1. Create a new branch named `docs/auto-update-<date>` using today's ISO date (e.g. `docs/auto-update-2026-03-01`).\n+2. Commit all created/modified files with the message: `docs: auto-generate Docusaurus documentation content`.\n+3. Use the `create-pull-request` safe output to open a PR to `main` with:\n+   - **Title**: `docs: auto-generated documentation update`\n+   - **Body**: A summary of what was generated or changed, listing each page created/updated and why. If this was an update, include a brief diff summary per page.\n+4. Do NOT merge the PR. Leave it for human review.\n+\n+---\n+\n+## Key constraints\n+\n+- **Do not touch** `website/docusaurus.config.js`, `website/docusaurus.config.ts`, `website/sidebars.js`, `website/sidebars.ts`, `website/src/`, `website/static/`, or any theme/styling file.\n+- **Do not delete** existing documentation pages unless their source counterpart has been completely removed from the codebase.\n+- **Do not commit** to `main` directly. Always go through a PR.\n+- If `website/docs/` does not exist yet, create it. Do not create a Docusaurus project scaffold — only the `docs/` content folder.\n+\n+## Safe Outputs\n+\n+When you complete your work:\n+\n+- If you created/modified documentation and opened a PR: Use the `create-pull-request` safe output.\n+- **If documentation was already up to date**: Call the `noop` safe output with a clear message explaining that all docs are current and no changes were needed. This signals that you worked successfully and consciously determined no output was needed.",
+          "snapshot_ref": "cd72ff650f126c9d2b405684fed1882f1473f3a0",
+          "snapshot_blob_sha": "7fbb14cdb46225d97123f9258197a9ae543c1a2a",
+          "snapshot_file": "snapshots/hatch3r__hatch3r__cd72ff650f126c9d2b405684fed1882f1473f3a0__generate-docusaurus-docs.md",
+          "snapshot_bytes": 8060,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"hatch3r/hatch3r\",\"generated_owner\":\"hatch3r\",\"generated_repo\":\"hatch3r\",\"generated_workflow_path\":\".github/workflows/generate-docusaurus-docs.lock.yml\",\"generated_workflow_file\":\"generate-docusaurus-docs.lock.yml\",\"generated_html_url\":\"https://github.com/hatch3r/hatch3r/blob/a4e1e05a02039a1da8141dc7c31c786d8dccda3b/.github/workflows/generate-docusaurus-docs.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+    "source_full_name": "dotnet/skills",
+    "source_owner": "dotnet",
+    "source_repo": "skills",
+    "md_path": ".github/workflows/markdown-linter.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/skills/blob/HEAD/.github/workflows/markdown-linter.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/skills",
+      "generated_owner": "dotnet",
+      "generated_repo": "skills",
+      "generated_workflow_path": ".github/workflows/markdown-linter.lock.yml",
+      "generated_workflow_file": "markdown-linter.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/skills/blob/6fce087f5e72ce493ee1d44ceb0ecce6acc1e4dc/.github/workflows/markdown-linter.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:30+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+      "source_full_name": "dotnet/skills",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "c6cf65c7c3eebc05b64bf164857166d989047dc2",
+      "authored_at": "2026-04-23T13:57:45Z",
+      "committed_at": "2026-04-23T13:57:45Z",
+      "author_name": "Amaury Levé",
+      "author_email": "amauryleve@microsoft.com",
+      "author_login": "Evangelink",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Markdown Linter agentic workflow (#582)\n\nAdds a new agentic workflow (.github/workflows/markdown-linter.md) that\nruns Super Linter on weekdays at 2 PM UTC and on manual dispatch. The\nagent analyzes linter output and creates GitHub issues with categorized\nfindings, severity breakdown, and fix recommendations.\n\nAdapted from https://github.com/githubnext/agentics/blob/main/workflows/markdown-linter.md\nwith repo-specific conventions: PAT pool rotation, fork protection,\npinned action SHAs, scoped bash tools, and safe-outputs.",
+      "parent_shas": [
+        "4ace5459f8268c46dacc353c525c2ca4620e2c10"
+      ],
+      "tree_sha": "f5fb7fae7dabe5a57a830265c152b8dadc1f31b6",
+      "html_url": "https://github.com/dotnet/skills/commit/c6cf65c7c3eebc05b64bf164857166d989047dc2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+          "source_full_name": "dotnet/skills",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "c6cf65c7c3eebc05b64bf164857166d989047dc2",
+          "committed_at": "2026-04-23T13:57:45Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 236,
+          "file_deletions": 0,
+          "file_changes": 236,
+          "file_patch": "@@ -0,0 +1,236 @@\n+---\n+name: \"Markdown Linter\"\n+description: >\n+  Runs Markdown quality checks using Super Linter and creates issues\n+  for violations found across the repository.\n+\n+on:\n+  workflow_dispatch:\n+  schedule:\n+    - cron: \"0 14 * * 1-5\" # 2 PM UTC, weekdays only\n+\n+  # ###############################################################\n+  # Override the COPILOT_GITHUB_TOKEN secret usage for the workflow\n+  # with a randomly-selected token from a pool of secrets.\n+  #\n+  # As soon as organization-level billing is offered for Agentic\n+  # Workflows, this stop-gap approach will be removed.\n+  #\n+  # See: /.github/actions/select-copilot-pat/README.md\n+  # ###############################################################\n+  steps:\n+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+      name: Checkout the select-copilot-pat action folder\n+      with:\n+        persist-credentials: false\n+        sparse-checkout: .github/actions/select-copilot-pat\n+        sparse-checkout-cone-mode: true\n+        fetch-depth: 1\n+\n+    - id: select-copilot-pat\n+      name: Select Copilot token from pool\n+      uses: ./.github/actions/select-copilot-pat\n+      env:\n+        SECRET_0: ${{ secrets.COPILOT_GITHUB_TOKEN }}\n+        SECRET_1: ${{ secrets.COPILOT_GITHUB_TOKEN_2 }}\n+        SECRET_2: ${{ secrets.COPILOT_GITHUB_TOKEN_3 }}\n+        SECRET_3: ${{ secrets.COPILOT_GITHUB_TOKEN_4 }}\n+        SECRET_4: ${{ secrets.COPILOT_GITHUB_TOKEN_5 }}\n+        SECRET_5: ${{ secrets.COPILOT_GITHUB_TOKEN_6 }}\n+        SECRET_6: ${{ secrets.COPILOT_GITHUB_TOKEN_7 }}\n+        SECRET_7: ${{ secrets.COPILOT_GITHUB_TOKEN_8 }}\n+\n+# Don't run scheduled triggers on forked repositories — forks lack the\n+# secrets and context required, and scheduled runs would consume the\n+# fork owner's minutes.\n+if: ${{ !(github.event_name == 'schedule' && github.event.repository.fork) }}\n+\n+# Add the pre-activation output of the randomly selected PAT\n+jobs:\n+  pre-activation:\n+    outputs:\n+      copilot_pat_number: ${{ steps.select-copilot-pat.outputs.copilot_pat_number }}\n+\n+  super_linter:\n+    runs-on: ubuntu-latest\n+    permissions:\n+      contents: read\n+      packages: read\n+      statuses: write\n+    steps:\n+      - name: Checkout repository\n+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+        with:\n+          fetch-depth: 0\n+          persist-credentials: false\n+\n+      - name: Super-linter\n+        uses: super-linter/super-linter@61abc07d755095a68f4987d1c2c3d1d64408f1f9 # v8.5.0\n+        id: super-linter\n+        env:\n+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+          CREATE_LOG_FILE: \"true\"\n+          LOG_FILE: super-linter.log\n+          DEFAULT_BRANCH: main\n+          ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: \"true\"\n+          VALIDATE_MARKDOWN: \"true\"\n+          VALIDATE_ALL_CODEBASE: \"true\"\n+\n+      - name: Check for linting issues\n+        id: check-results\n+        run: |\n+          if [ -f \"super-linter.log\" ] && [ -s \"super-linter.log\" ]; then\n+            if grep -qE \"ERROR|WARN|FAIL\" super-linter.log; then\n+              echo \"needs-linting=true\" >> \"$GITHUB_OUTPUT\"\n+            else\n+              echo \"needs-linting=false\" >> \"$GITHUB_OUTPUT\"\n+            fi\n+          else\n+            echo \"needs-linting=false\" >> \"$GITHUB_OUTPUT\"\n+          fi\n+\n+      - name: Upload super-linter log\n+        if: always()\n+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1\n+        with:\n+          name: super-linter-log\n+          path: super-linter.log\n+          retention-days: 7\n+\n+# Override the COPILOT_GITHUB_TOKEN expression used in the activation job\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pre_activation.outputs.copilot_pat_number == '0', secrets.COPILOT_GITHUB_TOKEN, needs.pre_activation.outputs.copilot_pat_number == '1', secrets.COPILOT_GITHUB_TOKEN_2, needs.pre_activation.outputs.copilot_pat_number == '2', secrets.COPILOT_GITHUB_TOKEN_3, needs.pre_activation.outputs.copilot_pat_number == '3', secrets.COPILOT_GITHUB_TOKEN_4, needs.pre_activation.outputs.copilot_pat_number == '4', secrets.COPILOT_GITHUB_TOKEN_5, needs.pre_activation.outputs.copilot_pat_number == '5', secrets.COPILOT_GITHUB_TOKEN_6, needs.pre_activation.outputs.copilot_pat_number == '6', secrets.COPILOT_GITHUB_TOKEN_7, needs.pre_activation.outputs.copilot_pat_number == '7', secrets.COPILOT_GITHUB_TOKEN_8, secrets.COPILOT_GITHUB_TOKEN) }}\n+\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+\n+tools:\n+  cache-memory: true\n+  edit:\n+  bash:\n+    - \"cat\"\n+    - \"grep\"\n+    - \"head\"\n+    - \"tail\"\n+    - \"find\"\n+    - \"ls\"\n+    - \"wc\"\n+    - \"sort\"\n+    - \"uniq\"\n+    - \"date\"\n+\n+safe-outputs:\n+  create-issue:\n+    expires: 2d\n+    title-prefix: \"[linter] \"\n+    labels: [automation, code-quality]\n+    max: 1\n+  noop:\n+    report-as-issue: false\n+\n+network:\n+  allowed:\n+    - defaults\n+\n+timeout-minutes: 15\n+\n+steps:\n+  - name: Download super-linter log\n+    uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1\n+    with:\n+      name: super-linter-log\n+      path: /tmp/gh-aw/\n+---\n+\n+# Markdown Quality Report\n+\n+You are an expert documentation quality analyst. Your task is to analyze the\n+Super Linter Markdown output and create a comprehensive issue report for the\n+repository maintainers.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Triggered by**: @${{ github.actor }}\n+- **Run ID**: ${{ github.run_id }}\n+\n+## Your Task\n+\n+1. **Read the linter output** from `/tmp/gh-aw/super-linter.log` using the bash tool\n+2. **Analyze the findings**:\n+   - Categorize errors by severity (critical, high, medium, low)\n+   - Identify patterns in the errors\n+   - Determine which errors are most important to fix first\n+   - Note: This workflow only validates Markdown files\n+3. **Create a detailed issue** with the following structure:\n+\n+### Issue Title\n+\n+Use format: \"Markdown Quality Report - [Date] - [X] issues found\"\n+\n+### Issue Body Structure\n+\n+```markdown\n+## 🔍 Markdown Linter Summary\n+\n+**Date**: [Current date]\n+**Total Issues Found**: [Number]\n+**Run ID**: ${{ github.run_id }}\n+\n+## 📊 Breakdown by Severity\n+\n+- **Critical**: [Count and brief description]\n+- **High**: [Count and brief description]\n+- **Medium**: [Count and brief description]\n+- **Low**: [Count and brief description]\n+\n+## 📁 Issues by Category\n+\n+### [Category/Rule Name]\n+- **File**: `path/to/file`\n+  - Line [X]: [Error description]\n+  - Suggested fix: [How to resolve]\n+\n+[Repeat for other categories]\n+\n+## 🎯 Priority Recommendations\n+\n+1. [Most critical issue to address first]\n+2. [Second priority]\n+3. [Third priority]\n+\n+## 📋 Full Linter Output\n+\n+<details>\n+<summary>Click to expand complete linter log</summary>\n+\n+```\n+[Include the full linter output here]\n+```\n+\n+</details>\n+\n+## 🔗 References\n+\n+- [Link to workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n+- [Super Linter Documentation](https://github.com/super-linter/super-linter)\n+```\n+\n+## Important Guidelines\n+\n+- **Be concise but thorough**: Focus on actionable insights\n+- **Prioritize issues**: Not all linting errors are equal\n+- **Provide context**: Explain why each type of error matters for documentation quality\n+- **Suggest fixes**: Give practical recommendations\n+- **Use proper formatting**: Make the issue easy to read and navigate\n+- **If no errors found**: Call `noop` celebrating clean markdown\n+\n+**Important**: Always call exactly one safe-output tool before finishing (`create-issue` or `noop`).\n+\n+```json\n+{\"noop\": {\"message\": \"No action needed: [brief explanation of what was analyzed and why]\"}}\n+```",
+          "snapshot_ref": "c6cf65c7c3eebc05b64bf164857166d989047dc2",
+          "snapshot_blob_sha": "bdc15c2272ec5a473b6476e5f48678ea7b829e3d",
+          "snapshot_file": "snapshots/skills__dotnet__c6cf65c7c3eebc05b64bf164857166d989047dc2__markdown-linter.md",
+          "snapshot_bytes": 7512,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/skills\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/skills/blob/6fce087f5e72ce493ee1d44ceb0ecce6acc1e4dc/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+      "source_full_name": "dotnet/skills",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "cc0621e2ac4125365ae56ae6d5a3cddca25531df",
+      "authored_at": "2026-06-09T17:58:25Z",
+      "committed_at": "2026-06-09T17:58:25Z",
+      "author_name": "Jan Krivanek",
+      "author_email": "jankrivanek@microsoft.com",
+      "author_login": "JanKrivanek",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Copilot PAT rotation for gh-aw v0.77.5 runtime (#736)\n\n* Fix Copilot PAT rotation for gh-aw v0.77.5 runtime\n\nThe PAT-rotation stop-gap wired the rotated token into engine.env via needs.pre_activation.outputs.copilot_pat_number. Because the compiled agent job depends only on 'activation' (not the built-in 'pre_activation'), that needs reference evaluated to an empty string in the agent job, so the case() fell through to the default COPILOT_GITHUB_TOKEN and rotation never reached the agent. gh-aw v0.77.5 surfaces this as a compiler warning.\n\nReplace the pre_activation step-injection with a 'select_copilot_pat' custom job wired via on.needs. As a user-defined job referenced in engine.env, the compiler makes it a direct dependency of the agent job, so needs.select_copilot_pat.outputs.copilot_pat_number resolves correctly in both the activation and agent jobs. Same action, same secret pool, same case() expression. Recompiled all workflows with gh-aw v0.77.5.\n\n* Add temporary test-pat-rotation workflow to validate rotation\n\nNon-destructive pull_request-triggered workflow that selects a pool token and asserts, in the agent job, that needs.select_copilot_pat.outputs.copilot_pat_number is non-empty (the exact value that was silently empty with the old pre_activation wiring). To be removed after validation.\n\n* Work around gh-aw v0.77.5 invalid-YAML rendering of top-level if\n\ngh-aw v0.77.5 emits the top-level frontmatter `if:` on the built-in\npre_activation job WITHOUT a ${{ }} wrapper. When the condition starts with\n`!` (the fork guards), the emitted `if: !(...)` is invalid YAML (a leading `!`\nstarts a YAML tag), which GitHub rejects as a workflow-file startup failure.\nv0.68.3 wrapped it (valid); v0.77.5 does not. Confirmed independent of the\nPAT-rotation change via a minimal probe.\n\nWrap the fork-guard conditions in parentheses so the emitted scalar starts\nwith `(` instead of `!` (semantically identical). Affects close-stale-prs,\ndevops-health-check, devops-health-groom, markdown-linter, pr-malicious-scan.\n\n* Update select-copilot-pat README for the custom-job + on.needs pattern\n\n* Remove temporary test-pat-rotation workflow (rotation validated)",
+      "parent_shas": [
+        "7bd6628e91401f76da56cb2a154da0ca40b04df7"
+      ],
+      "tree_sha": "2c2ce0b2ec2586530763f58dbb271017cd217e65",
+      "html_url": "https://github.com/dotnet/skills/commit/cc0621e2ac4125365ae56ae6d5a3cddca25531df",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+          "source_full_name": "dotnet/skills",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "cc0621e2ac4125365ae56ae6d5a3cddca25531df",
+          "committed_at": "2026-06-09T17:58:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 49,
+          "file_deletions": 27,
+          "file_changes": 76,
+          "file_patch": "@@ -18,38 +18,57 @@ on:\n   #\n   # See: /.github/actions/select-copilot-pat/README.md\n   # ###############################################################\n-  steps:\n-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n-      name: Checkout the select-copilot-pat action folder\n-      with:\n-        persist-credentials: false\n-        sparse-checkout: .github/actions/select-copilot-pat\n-        sparse-checkout-cone-mode: true\n-        fetch-depth: 1\n-\n-    - id: select-copilot-pat\n-      name: Select Copilot token from pool\n-      uses: ./.github/actions/select-copilot-pat\n-      env:\n-        SECRET_0: ${{ secrets.COPILOT_GITHUB_TOKEN }}\n-        SECRET_1: ${{ secrets.COPILOT_GITHUB_TOKEN_2 }}\n-        SECRET_2: ${{ secrets.COPILOT_GITHUB_TOKEN_3 }}\n-        SECRET_3: ${{ secrets.COPILOT_GITHUB_TOKEN_4 }}\n-        SECRET_4: ${{ secrets.COPILOT_GITHUB_TOKEN_5 }}\n-        SECRET_5: ${{ secrets.COPILOT_GITHUB_TOKEN_6 }}\n-        SECRET_6: ${{ secrets.COPILOT_GITHUB_TOKEN_7 }}\n-        SECRET_7: ${{ secrets.COPILOT_GITHUB_TOKEN_8 }}\n+  #\n+  # Run the `select_copilot_pat` custom job (defined under `jobs:` below)\n+  # before the activation gate so its `copilot_pat_number` output is available\n+  # to the activation and agent jobs that consume it in `engine: env`.\n+  needs: [select_copilot_pat]\n \n # Don't run scheduled triggers on forked repositories — forks lack the\n # secrets and context required, and scheduled runs would consume the\n # fork owner's minutes.\n-if: ${{ !(github.event_name == 'schedule' && github.event.repository.fork) }}\n-\n-# Add the pre-activation output of the randomly selected PAT\n+if: ${{ (!(github.event_name == 'schedule' && github.event.repository.fork)) }}\n+\n+# Custom job that randomly selects one PAT number from the pool of secrets.\n+# It is declared as an `on.needs` dependency above so it runs before the\n+# activation gate. Because it is a user-defined (non-built-in) job, the compiler\n+# wires it as a direct dependency of the agent job, so the\n+# `needs.select_copilot_pat.outputs.*` reference in `engine: env` resolves\n+# correctly at runtime in BOTH the activation and agent jobs. (A built-in job\n+# such as `pre_activation` is not a direct dependency of the agent job, so a\n+# `needs.pre_activation.*` reference there would silently evaluate to an empty\n+# string — which is the failure mode this approach avoids.)\n jobs:\n-  pre-activation:\n+  select_copilot_pat:\n+    runs-on: ubuntu-slim\n+    permissions:\n+      contents: read\n+    if: ${{ !(github.event_name == 'schedule' && github.event.repository.fork) }}\n     outputs:\n       copilot_pat_number: ${{ steps.select-copilot-pat.outputs.copilot_pat_number }}\n+    steps:\n+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+        name: Checkout the select-copilot-pat action folder\n+        with:\n+          persist-credentials: false\n+          sparse-checkout: .github/actions/select-copilot-pat\n+          sparse-checkout-cone-mode: true\n+          fetch-depth: 1\n+\n+      - id: select-copilot-pat\n+        name: Select Copilot token from pool\n+        uses: ./.github/actions/select-copilot-pat\n+        env:\n+          # If the secret names are changed here, they must also be changed\n+          # in the `engine: env` case expression below\n+          SECRET_0: ${{ secrets.COPILOT_GITHUB_TOKEN }}\n+          SECRET_1: ${{ secrets.COPILOT_GITHUB_TOKEN_2 }}\n+          SECRET_2: ${{ secrets.COPILOT_GITHUB_TOKEN_3 }}\n+          SECRET_3: ${{ secrets.COPILOT_GITHUB_TOKEN_4 }}\n+          SECRET_4: ${{ secrets.COPILOT_GITHUB_TOKEN_5 }}\n+          SECRET_5: ${{ secrets.COPILOT_GITHUB_TOKEN_6 }}\n+          SECRET_6: ${{ secrets.COPILOT_GITHUB_TOKEN_7 }}\n+          SECRET_7: ${{ secrets.COPILOT_GITHUB_TOKEN_8 }}\n \n   super_linter:\n     runs-on: ubuntu-latest\n@@ -97,11 +116,14 @@ jobs:\n           path: super-linter.log\n           retention-days: 7\n \n-# Override the COPILOT_GITHUB_TOKEN expression used in the activation job\n+# Override the COPILOT_GITHUB_TOKEN expression used by the Copilot engine.\n+# Consume the PAT number from the select_copilot_pat job and select the corresponding secret.\n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: ${{ case(needs.pre_activation.outputs.copilot_pat_number == '0', secrets.COPILOT_GITHUB_TOKEN, needs.pre_activation.outputs.copilot_pat_number == '1', secrets.COPILOT_GITHUB_TOKEN_2, needs.pre_activation.outputs.copilot_pat_number == '2', secrets.COPILOT_GITHUB_TOKEN_3, needs.pre_activation.outputs.copilot_pat_number == '3', secrets.COPILOT_GITHUB_TOKEN_4, needs.pre_activation.outputs.copilot_pat_number == '4', secrets.COPILOT_GITHUB_TOKEN_5, needs.pre_activation.outputs.copilot_pat_number == '5', secrets.COPILOT_GITHUB_TOKEN_6, needs.pre_activation.outputs.copilot_pat_number == '6', secrets.COPILOT_GITHUB_TOKEN_7, needs.pre_activation.outputs.copilot_pat_number == '7', secrets.COPILOT_GITHUB_TOKEN_8, secrets.COPILOT_GITHUB_TOKEN) }}\n+    # We cannot use line breaks in this expression as it leads to a syntax error in the compiled workflow\n+    # If none of the `COPILOT_GITHUB_TOKEN_#` secrets were selected, then the default COPILOT_GITHUB_TOKEN is used\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.select_copilot_pat.outputs.copilot_pat_number == '0', secrets.COPILOT_GITHUB_TOKEN, needs.select_copilot_pat.outputs.copilot_pat_number == '1', secrets.COPILOT_GITHUB_TOKEN_2, needs.select_copilot_pat.outputs.copilot_pat_number == '2', secrets.COPILOT_GITHUB_TOKEN_3, needs.select_copilot_pat.outputs.copilot_pat_number == '3', secrets.COPILOT_GITHUB_TOKEN_4, needs.select_copilot_pat.outputs.copilot_pat_number == '4', secrets.COPILOT_GITHUB_TOKEN_5, needs.select_copilot_pat.outputs.copilot_pat_number == '5', secrets.COPILOT_GITHUB_TOKEN_6, needs.select_copilot_pat.outputs.copilot_pat_number == '6', secrets.COPILOT_GITHUB_TOKEN_7, needs.select_copilot_pat.outputs.copilot_pat_number == '7', secrets.COPILOT_GITHUB_TOKEN_8, secrets.COPILOT_GITHUB_TOKEN) }}\n \n permissions:\n   contents: read",
+          "snapshot_ref": "cc0621e2ac4125365ae56ae6d5a3cddca25531df",
+          "snapshot_blob_sha": "df9db2ffef5e18e01832770ff179d6437988806f",
+          "snapshot_file": "snapshots/skills__dotnet__cc0621e2ac4125365ae56ae6d5a3cddca25531df__markdown-linter.md",
+          "snapshot_bytes": 9039,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/skills\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/skills/blob/6fce087f5e72ce493ee1d44ceb0ecce6acc1e4dc/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+      "source_full_name": "dotnet/skills",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "78f3f755e7fe956ebb72f8420cba41f11768681e",
+      "authored_at": "2026-06-10T08:20:09Z",
+      "committed_at": "2026-06-10T08:20:09Z",
+      "author_name": "Jan Krivanek",
+      "author_email": "jankrivanek@microsoft.com",
+      "author_login": "JanKrivanek",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Migrate Copilot PAT rotation to shared pat_pool import (#743)\n\nAdopt the shared workflow import pattern from dotnet/runtime PR #127946,\nreplacing the per-workflow select-copilot-pat action + custom job (shipped in\n#736) with a reusable shared/pat_pool.md import.\n\nWhat changed:\n- Add .github/workflows/shared/pat_pool.md: an import that defines a `pat_pool`\n  job (inline bash, no separate action) exposing a `pat_number` output, plus an\n  import-schema mapping COPILOT_PAT_0..7 to this repo's pool secrets\n  (COPILOT_GITHUB_TOKEN, COPILOT_GITHUB_TOKEN_2..8).\n- Add .github/workflows/shared/pat_pool.README.md documenting the pattern.\n- Convert all 8 agentic workflows to `imports: - shared/pat_pool.md` +\n  `engine.env` `case(needs.pat_pool.outputs.pat_number ...)`.\n- Delete the now-unused .github/actions/select-copilot-pat action.\n- Add .github/workflows/validate-pat-pool.yml: a daily standalone workflow that\n  validates each pool PAT with a Copilot CLI request and summarizes pool health.\n\nWiring note (adaptation from runtime): consuming workflows declare\n`on.needs: [pat_pool]` instead of runtime's `needs: [pre_activation]` +\n`on.permissions: {}`. This wires pat_pool ahead of the pre_activation and\nactivation jobs so the selected PAT is validated by the activation job and used\nby the agent, and it works for `roles: all` workflows (issue-triage), which do\nnot produce a pre_activation job for the runtime workaround to attach to.\n\nCompiled with gh-aw v0.77.5. Verified end-to-end with a temporary\ntest-pat-rotation workflow (since removed): a run selected token #2 of the\n3-token pool and the agent job observed pat_number='2', confirming the rotated\nPAT reaches the agent.",
+      "parent_shas": [
+        "c85a2d8d9f1bbb8258038e5be22f8b723dc778cc"
+      ],
+      "tree_sha": "319d06da94937621fdfb7b3a869a65b6a8597e5c",
+      "html_url": "https://github.com/dotnet/skills/commit/78f3f755e7fe956ebb72f8420cba41f11768681e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+          "source_full_name": "dotnet/skills",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "78f3f755e7fe956ebb72f8420cba41f11768681e",
+          "committed_at": "2026-06-10T08:20:09Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 14,
+          "file_deletions": 59,
+          "file_changes": 73,
+          "file_patch": "@@ -9,67 +9,17 @@ on:\n   schedule:\n     - cron: \"0 14 * * 1-5\" # 2 PM UTC, weekdays only\n \n-  # ###############################################################\n-  # Override the COPILOT_GITHUB_TOKEN secret usage for the workflow\n-  # with a randomly-selected token from a pool of secrets.\n-  #\n-  # As soon as organization-level billing is offered for Agentic\n-  # Workflows, this stop-gap approach will be removed.\n-  #\n-  # See: /.github/actions/select-copilot-pat/README.md\n-  # ###############################################################\n-  #\n-  # Run the `select_copilot_pat` custom job (defined under `jobs:` below)\n-  # before the activation gate so its `copilot_pat_number` output is available\n-  # to the activation and agent jobs that consume it in `engine: env`.\n-  needs: [select_copilot_pat]\n+  # Run the imported pat_pool job before the activation gate so its pat_number\n+  # output is available to the activation and agent jobs (which consume it in\n+  # engine.env). See: shared/pat_pool.README.md.\n+  needs: [pat_pool]\n \n # Don't run scheduled triggers on forked repositories — forks lack the\n # secrets and context required, and scheduled runs would consume the\n # fork owner's minutes.\n if: ${{ (!(github.event_name == 'schedule' && github.event.repository.fork)) }}\n \n-# Custom job that randomly selects one PAT number from the pool of secrets.\n-# It is declared as an `on.needs` dependency above so it runs before the\n-# activation gate. Because it is a user-defined (non-built-in) job, the compiler\n-# wires it as a direct dependency of the agent job, so the\n-# `needs.select_copilot_pat.outputs.*` reference in `engine: env` resolves\n-# correctly at runtime in BOTH the activation and agent jobs. (A built-in job\n-# such as `pre_activation` is not a direct dependency of the agent job, so a\n-# `needs.pre_activation.*` reference there would silently evaluate to an empty\n-# string — which is the failure mode this approach avoids.)\n jobs:\n-  select_copilot_pat:\n-    runs-on: ubuntu-slim\n-    permissions:\n-      contents: read\n-    if: ${{ !(github.event_name == 'schedule' && github.event.repository.fork) }}\n-    outputs:\n-      copilot_pat_number: ${{ steps.select-copilot-pat.outputs.copilot_pat_number }}\n-    steps:\n-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n-        name: Checkout the select-copilot-pat action folder\n-        with:\n-          persist-credentials: false\n-          sparse-checkout: .github/actions/select-copilot-pat\n-          sparse-checkout-cone-mode: true\n-          fetch-depth: 1\n-\n-      - id: select-copilot-pat\n-        name: Select Copilot token from pool\n-        uses: ./.github/actions/select-copilot-pat\n-        env:\n-          # If the secret names are changed here, they must also be changed\n-          # in the `engine: env` case expression below\n-          SECRET_0: ${{ secrets.COPILOT_GITHUB_TOKEN }}\n-          SECRET_1: ${{ secrets.COPILOT_GITHUB_TOKEN_2 }}\n-          SECRET_2: ${{ secrets.COPILOT_GITHUB_TOKEN_3 }}\n-          SECRET_3: ${{ secrets.COPILOT_GITHUB_TOKEN_4 }}\n-          SECRET_4: ${{ secrets.COPILOT_GITHUB_TOKEN_5 }}\n-          SECRET_5: ${{ secrets.COPILOT_GITHUB_TOKEN_6 }}\n-          SECRET_6: ${{ secrets.COPILOT_GITHUB_TOKEN_7 }}\n-          SECRET_7: ${{ secrets.COPILOT_GITHUB_TOKEN_8 }}\n-\n   super_linter:\n     runs-on: ubuntu-latest\n     permissions:\n@@ -116,14 +66,19 @@ jobs:\n           path: super-linter.log\n           retention-days: 7\n \n-# Override the COPILOT_GITHUB_TOKEN expression used by the Copilot engine.\n-# Consume the PAT number from the select_copilot_pat job and select the corresponding secret.\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - shared/pat_pool.md\n+\n engine:\n   id: copilot\n   env:\n-    # We cannot use line breaks in this expression as it leads to a syntax error in the compiled workflow\n-    # If none of the `COPILOT_GITHUB_TOKEN_#` secrets were selected, then the default COPILOT_GITHUB_TOKEN is used\n-    COPILOT_GITHUB_TOKEN: ${{ case(needs.select_copilot_pat.outputs.copilot_pat_number == '0', secrets.COPILOT_GITHUB_TOKEN, needs.select_copilot_pat.outputs.copilot_pat_number == '1', secrets.COPILOT_GITHUB_TOKEN_2, needs.select_copilot_pat.outputs.copilot_pat_number == '2', secrets.COPILOT_GITHUB_TOKEN_3, needs.select_copilot_pat.outputs.copilot_pat_number == '3', secrets.COPILOT_GITHUB_TOKEN_4, needs.select_copilot_pat.outputs.copilot_pat_number == '4', secrets.COPILOT_GITHUB_TOKEN_5, needs.select_copilot_pat.outputs.copilot_pat_number == '5', secrets.COPILOT_GITHUB_TOKEN_6, needs.select_copilot_pat.outputs.copilot_pat_number == '6', secrets.COPILOT_GITHUB_TOKEN_7, needs.select_copilot_pat.outputs.copilot_pat_number == '7', secrets.COPILOT_GITHUB_TOKEN_8, secrets.COPILOT_GITHUB_TOKEN) }}\n+    # If none of the COPILOT_GITHUB_TOKEN[_#] pool secrets were selected, the default COPILOT_GITHUB_TOKEN is used.\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_GITHUB_TOKEN, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_GITHUB_TOKEN_2, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_GITHUB_TOKEN_3, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_GITHUB_TOKEN_4, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_GITHUB_TOKEN_5, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_GITHUB_TOKEN_6, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_GITHUB_TOKEN_7, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_GITHUB_TOKEN_8, secrets.COPILOT_GITHUB_TOKEN) }}\n \n permissions:\n   contents: read",
+          "snapshot_ref": "78f3f755e7fe956ebb72f8420cba41f11768681e",
+          "snapshot_blob_sha": "f2e5bde38bf1b12f1b084d661ec545577a530357",
+          "snapshot_file": "snapshots/skills__dotnet__78f3f755e7fe956ebb72f8420cba41f11768681e__markdown-linter.md",
+          "snapshot_bytes": 6497,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/skills\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/skills/blob/6fce087f5e72ce493ee1d44ceb0ecce6acc1e4dc/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+      "source_full_name": "dotnet/skills",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "11c5dfc7380ac6a1ac45dd94939fd84d486c3ea7",
+      "authored_at": "2026-06-25T22:35:22Z",
+      "committed_at": "2026-06-25T22:35:22Z",
+      "author_name": "Jeff Handley",
+      "author_email": "jeffhandley@users.noreply.github.com",
+      "author_login": "jeffhandley",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Require environment input to pat_pool shared workflow. (#832)\n\n* Require environment input to pat_pool shared workflow.\n\n- Updates the PAT pool shared workflow to latest version\n- Updates the validate-pat-pool workflow to match other repos\n- Updates all agentic workflows to use the updated PAT pool import\n  with the standard secret names used across other repos\n- The new version of the import does not require the 'needs' workaround\n  but the issue-triage workflow's 'roles: all' configuration requires\n  a different workaround to ensure the pre_activation job exists for\n  the pat_pool job to be able to depend on it (necessary for ordering).\n\n* Update markdown bullet style\n\n* Apply Copilot PR feedback\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* Bump versions to match gh-aw\n\n---------\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "592a53008e550aadd46e955f155a31a491b5a6a2"
+      ],
+      "tree_sha": "780f66b0d551cce9308f0c854c9f01aa0fc4f9d9",
+      "html_url": "https://github.com/dotnet/skills/commit/11c5dfc7380ac6a1ac45dd94939fd84d486c3ea7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+          "source_full_name": "dotnet/skills",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "11c5dfc7380ac6a1ac45dd94939fd84d486c3ea7",
+          "committed_at": "2026-06-25T22:35:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 33,
+          "file_deletions": 19,
+          "file_changes": 52,
+          "file_patch": "@@ -5,15 +5,11 @@ description: >\n   for violations found across the repository.\n \n on:\n+  permissions: {}\n   workflow_dispatch:\n   schedule:\n     - cron: \"0 14 * * 1-5\" # 2 PM UTC, weekdays only\n \n-  # Run the imported pat_pool job before the activation gate so its pat_number\n-  # output is available to the activation and agent jobs (which consume it in\n-  # engine.env). See: shared/pat_pool.README.md.\n-  needs: [pat_pool]\n-\n # Don't run scheduled triggers on forked repositories — forks lack the\n # secrets and context required, and scheduled runs would consume the\n # fork owner's minutes.\n@@ -66,20 +62,6 @@ jobs:\n           path: super-linter.log\n           retention-days: 7\n \n-# ###############################################################\n-# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n-# When org-level billing is available, this will be removed.\n-# See `shared/pat_pool.README.md` for more information.\n-# ###############################################################\n-imports:\n-  - shared/pat_pool.md\n-\n-engine:\n-  id: copilot\n-  env:\n-    # If none of the COPILOT_GITHUB_TOKEN[_#] pool secrets were selected, the default COPILOT_GITHUB_TOKEN is used.\n-    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_GITHUB_TOKEN, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_GITHUB_TOKEN_2, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_GITHUB_TOKEN_3, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_GITHUB_TOKEN_4, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_GITHUB_TOKEN_5, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_GITHUB_TOKEN_6, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_GITHUB_TOKEN_7, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_GITHUB_TOKEN_8, secrets.COPILOT_GITHUB_TOKEN) }}\n-\n permissions:\n   contents: read\n   actions: read\n@@ -121,6 +103,38 @@ steps:\n     with:\n       name: super-linter-log\n       path: /tmp/gh-aw/\n+\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in an isolated `copilot-pat-pool` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n+\n+environment: copilot-pat-pool\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n ---\n \n # Markdown Quality Report",
+          "snapshot_ref": "11c5dfc7380ac6a1ac45dd94939fd84d486c3ea7",
+          "snapshot_blob_sha": "b40df1cc65d99cfb5286a9938fd5adedadfff31c",
+          "snapshot_file": "snapshots/skills__dotnet__11c5dfc7380ac6a1ac45dd94939fd84d486c3ea7__markdown-linter.md",
+          "snapshot_bytes": 6484,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/skills\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/skills/blob/6fce087f5e72ce493ee1d44ceb0ecce6acc1e4dc/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+      "source_full_name": "dotnet/skills",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "4df4da469a588f19505d538af4768ab70350ab39",
+      "authored_at": "2026-07-20T13:20:14Z",
+      "committed_at": "2026-07-20T13:20:14Z",
+      "author_name": "Amaury Levé",
+      "author_email": "amauryleve@microsoft.com",
+      "author_login": "Evangelink",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade agentic workflows and fix stale PR cleanup (#916)\n\n* chore: upgrade gh-aw runtime\n\n* fix: paginate stale pull request cleanup\n\nUpgrade the generated agentic workflow assets and ensure stale PR discovery includes every result page and draft pull requests.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 968a22c2-327f-4d26-8f86-1c59bcd323ea\n\n* Improve dotnet-test eval coverage and efficiency\n\nAddress remaining high-confidence items from #899 by bounding the code-testing pipeline and adding eval coverage for grade-tests and find-untested-sources.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: e430fee9-d3df-4ef5-85a4-745ae4b17046\n\n* fix: address agentic workflow review\n\nPin the Copilot setup checkout action and include the cutoff date in stale PR search results.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 968a22c2-327f-4d26-8f86-1c59bcd323ea\n\n* Improve test migration skill guidance\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 5e19d263-02a6-45b1-9cfb-424fa4d10863\n\n* fix: add fixture namespace imports\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: a464e6e4-3e45-41fe-b17d-887c8cb8a448\n\n* test: assert GetOrderById grade\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: a464e6e4-3e45-41fe-b17d-887c8cb8a448\n\n---------\n\nCo-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>",
+      "parent_shas": [
+        "ab72985132b79adcc4818d1fc5c41d9543f12498"
+      ],
+      "tree_sha": "985a95c35a20c3dd368a318eb77282c914856b98",
+      "html_url": "https://github.com/dotnet/skills/commit/4df4da469a588f19505d538af4768ab70350ab39",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/skills:.github/workflows/markdown-linter.md",
+          "source_full_name": "dotnet/skills",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "4df4da469a588f19505d538af4768ab70350ab39",
+          "committed_at": "2026-07-20T13:20:14Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 16,
+          "file_changes": 19,
+          "file_patch": "@@ -24,13 +24,13 @@ jobs:\n       statuses: write\n     steps:\n       - name: Checkout repository\n-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0\n         with:\n           fetch-depth: 0\n           persist-credentials: false\n \n       - name: Super-linter\n-        uses: super-linter/super-linter@61abc07d755095a68f4987d1c2c3d1d64408f1f9 # v8.5.0\n+        uses: super-linter/super-linter@4ce20838b8ab83717e78138c5b3a1407148e0918  # v8.7.0\n         id: super-linter\n         env:\n           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n@@ -121,20 +121,7 @@ environment: copilot-pat-pool\n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: |\n-      ${{ case(\n-        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n-        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n-        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n-        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n-        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n-        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n-        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n-        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n-        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n-        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        'NO COPILOT PAT AVAILABLE')\n-      }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, 'NO COPILOT PAT AVAILABLE') }}\n ---\n \n # Markdown Quality Report",
+          "snapshot_ref": "4df4da469a588f19505d538af4768ab70350ab39",
+          "snapshot_blob_sha": "079f1ecc494c63e5f9d92a2a6e46f0ffeaae0a30",
+          "snapshot_file": "snapshots/skills__dotnet__4df4da469a588f19505d538af4768ab70350ab39__markdown-linter.md",
+          "snapshot_bytes": 6383,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/skills\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/skills/blob/6fce087f5e72ce493ee1d44ceb0ecce6acc1e4dc/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

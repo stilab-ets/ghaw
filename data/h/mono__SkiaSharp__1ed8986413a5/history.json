@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+    "source_full_name": "mono/SkiaSharp",
+    "source_owner": "mono",
+    "source_repo": "SkiaSharp",
+    "md_path": ".github/workflows/memory-leak-fixer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/mono/SkiaSharp/blob/HEAD/.github/workflows/memory-leak-fixer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "mono/SkiaSharp",
+      "generated_owner": "mono",
+      "generated_repo": "SkiaSharp",
+      "generated_workflow_path": ".github/workflows/memory-leak-fixer.lock.yml",
+      "generated_workflow_file": "memory-leak-fixer.lock.yml",
+      "generated_html_url": "https://github.com/mono/SkiaSharp/blob/1f96367d6881084e0745c2a045d7822c8bc4fbb0/.github/workflows/memory-leak-fixer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:42:57+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+      "source_full_name": "mono/SkiaSharp",
+      "md_path": ".github/workflows/memory-leak-fixer.md",
+      "commit_sha": "63596a1572f0a91c7a76f607fd6b2b87afcdf5be",
+      "authored_at": "2026-07-06T23:02:53Z",
+      "committed_at": "2026-07-06T23:02:53Z",
+      "author_name": "Matthew Leibowitz",
+      "author_email": "mattleibow@live.com",
+      "author_login": "mattleibow",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add memory-leak-fixer skill + self-testing agentic workflow (#4330)\n\nAdd memory-leak-fixer skill + self-testing agentic workflow (#4330)\n\nContext: https://github.com/dotnet/maui/pull/36276\n\nAdapts MAUI's AI leak-scanner idea to SkiaSharp's actual leak surface — native\nownership/disposal correctness (undisposed SKObject handles, wrong `owns:` flags,\nC-API ref-count mismatches, same-instance double-dispose, unremoved view/handler\nsubscriptions, `fixed`-pointer lifetime) rather than MAUI's managed view-retention\nleaks. Everything is scoped to managed C# (binding/**, source/SkiaSharp.Views*/**);\nupstream Skia under externals/skia/** is out of scope.\n\nTwo deliverables plus registration:\n\n- .agents/skills/memory-leak-fixer/SKILL.md (+ references/types-of-leaks.md):\n  a reusable scan -> prove -> fix methodology grounded in\n  documentation/dev/memory-management.md, with an 11-family leak catalogue as the\n  single source of truth (each family carries a description, why it leaks, a generic\n  example, the idiomatic fix, anti-patterns, and where to look). Golden rule: every\n  fix is proven red->green — the regression test must fail without the fix and pass\n  with it — before anything ships. Tests are never weakened or muted; generated\n  files and upstream Skia are never touched.\n\n- .github/workflows/memory-leak-fixer.md (+ compiled .lock.yml): a gh-aw workflow\n  (Copilot / claude-opus-4.8) that runs the skill on a 12h schedule. Every run does\n  the same thing — hunt one leak (round-robin family focus by day-of-year + hour),\n  prove it, fix it, then emit a linked pair of safe outputs: a `[memory-leak]`\n  finding issue and a draft fix PR whose body ends with `Fixes #<temporary_id>`.\n  gh-aw resolves the temporary id to the real issue number within the same run, so\n  merging the PR auto-closes the finding. The only knob is `dry_run` (do everything\n  but open nothing).\n\n- AGENTS.md: registers the skill as /memory-leak-fixer in the command and issue\n  classification tables.\n\nThe workflow self-tests: any PR that edits the workflow or skill re-runs the whole\npipeline in forced DRY-RUN, emitting only a `noop` (never a real issue/PR), so the\nprompt/skill can be iterated on and watched live without side effects. Verified\nacross several dry-runs — all green, all noop-only. The scanner already surfaced a\ngenuine finding on otherwise-hardened code: SKRegion.SpanIterator does not root its\nparent SKRegion the way its RectIterator/ClipIterator siblings do, a real\nuse-after-free risk. It is deliberately left unfixed here so the workflow has a real\ntarget to find and fix on its first scheduled run.\n\nCo-authored-by: Matthew Leibowitz <mattleibow@live.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "d167198d93b7de25e0405b9e12f58188322389fe"
+      ],
+      "tree_sha": "61f04fb7e86ee17ce2ea484b6853db18fbe5276d",
+      "html_url": "https://github.com/mono/SkiaSharp/commit/63596a1572f0a91c7a76f607fd6b2b87afcdf5be",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+          "source_full_name": "mono/SkiaSharp",
+          "md_path": ".github/workflows/memory-leak-fixer.md",
+          "commit_sha": "63596a1572f0a91c7a76f607fd6b2b87afcdf5be",
+          "committed_at": "2026-07-06T23:02:53Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 208,
+          "file_deletions": 0,
+          "file_changes": 208,
+          "file_patch": "@@ -0,0 +1,208 @@\n+---\n+# =============================================================================\n+# Fixer - Memory Leak\n+#\n+# Periodic AI-driven workflow that SCANS the repo's managed C# for a native\n+# ownership / disposal memory leak, PROVES it with a red→green regression test,\n+# FIXES it, and opens a DRAFT PR. Adapted from dotnet/maui's leak scanner+fixer\n+# idea to our real leak family (undisposed SKObject handles, wrong\n+# `owns:` flags, same-instance double-dispose, unremoved view/handler\n+# subscriptions, `fixed`-pointer lifetime). Scope: managed C# only — the native\n+# Skia under externals/skia/** is upstream and out of scope.\n+#\n+# All the domain knowledge lives in the reusable skill\n+# `.agents/skills/memory-leak-fixer/SKILL.md`; this file is the schedule + the\n+# guardrails (one finding per run, de-dup, validate-before-PR).\n+# =============================================================================\n+description: \"Scan the repo's managed C# for a native ownership/disposal memory leak, prove it with a red→green test, fix it, and open a draft PR.\"\n+\n+environment: gh-aw-agents\n+\n+# -- Engine ------------------------------------------------------------\n+# Leak reasoning (ownership tracing + a correct minimal fix) is hard and\n+# benefits from the stronger model, matching auto-skia-sync's choice.\n+engine:\n+  id: copilot\n+  model: claude-opus-4.8\n+\n+# -- Triggers ----------------------------------------------------------\n+# Every 12h + manual + PR-driven self-test. Every run does the same full\n+# scan→prove→fix→file pipeline; the only knob is `dry_run` (do everything but\n+# open nothing). A `pull_request` that edits THIS workflow or its skill re-runs\n+# the whole pipeline in FORCED DRY-RUN (see Step 2.6) so we can iterate on the\n+# prompt/skill and watch the run without ever opening a real PR/issue.\n+on:\n+  schedule: every 12h\n+  workflow_dispatch:\n+    inputs:\n+      dry_run:\n+        description: \"Do the full scan→prove→fix locally but do NOT open a PR/issue.\"\n+        required: false\n+        default: false\n+        type: boolean\n+  pull_request:\n+    paths:\n+      - \".github/workflows/memory-leak-fixer.md\"\n+      - \".github/workflows/memory-leak-fixer.lock.yml\"\n+      - \".agents/skills/memory-leak-fixer/**\"\n+\n+# Only ever run on the canonical repo — never on forks.\n+if: |\n+  github.repository == 'mono/SkiaSharp'\n+\n+# Give the skill's Phase 5 report a writable step-summary sink (mirrors the\n+# convention used by auto-triage).\n+steps:\n+  - name: Redirect step summary into agent-writable directory\n+    run: |\n+      mkdir -p /tmp/gh-aw/agent\n+      touch /tmp/gh-aw/agent/step-summary.md\n+      rm -f /tmp/gh-aw/agent-step-summary.md\n+      ln -s /tmp/gh-aw/agent/step-summary.md /tmp/gh-aw/agent-step-summary.md\n+\n+concurrency:\n+  group: \"memory-leak-fixer\"\n+  cancel-in-progress: false\n+\n+timeout-minutes: 120\n+\n+# create-pull-request is commit-based and needs full history for its branch ops\n+# (and for the skill's git-commit-count focus rotation). This skill is managed-C#\n+# only and builds against pre-built natives (externals-download), so the skia\n+# source submodule is NOT needed — a plain checkout keeps runs fast.\n+checkout:\n+  - fetch-depth: 0\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+# -- Agent tools -----------------------------------------------------\n+# The agent reads source, writes a throwaway probe + a regression test, edits\n+# managed C# to fix, builds, tests, then commits. `dotnet`/`pwsh`/`git` are the\n+# work tools; `gh` powers de-dup queries. No `sed`/`awk` in-place edits — use the\n+# edit tool so changes are reviewable.\n+tools:\n+  github:\n+    toolsets: [issues, pull_requests, search]\n+    allowed-repos: [\"mono/skiasharp\"]\n+    min-integrity: none\n+  edit:\n+  bash: [\"dotnet\", \"pwsh\", \"git\", \"gh\", \"find\", \"ls\", \"cat\", \"grep\", \"head\", \"tail\", \"wc\", \"jq\", \"tee\", \"sed\", \"awk\", \"tr\", \"cut\", \"sort\", \"uniq\", \"xargs\", \"echo\", \"date\", \"mkdir\", \"test\", \"env\", \"basename\", \"dirname\", \"bash\", \"sh\", \"chmod\", \"cp\", \"mv\", \"rm\"]\n+\n+# -- Network allowlist -----------------------------------------------\n+# nuget.org for the shipped-package leak probe; the SkiaSharp-CI Azure DevOps\n+# feed + blob storage for `externals-download` pre-built natives; the `dotnet`\n+# ecosystem covers pkgs.dev.azure.com and the SDK/restore hosts.\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - dotnet\n+    - \"*.blob.core.windows.net\"\n+\n+# -- Safe outputs ------------------------------------------------------\n+# A confirmed, managed-C#-fixable leak emits a PAIR: a [memory-leak] issue (the\n+# finding) + a draft fix PR that closes it on merge (Fixes #<temp-id>, resolved\n+# by gh-aw to the real number). When the only correct fix is native / upstream\n+# Skia (out of scope here), the issue is filed alone. Quiet/dry runs emit a noop.\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[memory-leak] \"\n+    labels: [agentic-workflows]\n+    draft: true\n+    allowed-base-branches: [main]\n+  create-issue:\n+    title-prefix: \"[memory-leak] \"\n+    labels: [agentic-workflows]\n+    allowed-labels: [agentic-workflows]\n+    max: 1\n+  noop:\n+    report-as-issue: false\n+---\n+\n+# Fixer - Memory Leak\n+\n+You **scan** the repo's **managed C#** for one native ownership / disposal memory leak,\n+**prove** it with a red→green regression test, **fix** it, then **file the finding as a\n+`[memory-leak]` issue and open a draft PR that closes it** (`Fixes #…`) — or, when the only\n+correct fix is in native / upstream Skia (out of scope here), file the `[memory-leak]` issue\n+alone. **One finding per run.**\n+\n+**Read this first — set your expectations correctly:**\n+\n+- This codebase is **mature and heavily-hardened**. There is **no planted/seeded/injected\n+  bug** to find. Most runs will (and should) find **nothing convincing** — that is the normal,\n+  expected, successful outcome, **not** a failure and **not** a puzzle with a guaranteed answer.\n+  Do **not** invent a leak, do **not** rationalize well-documented, deliberately-hardened code\n+  as \"decoys,\" and do **not** lower your evidence bar just to produce a result.\n+- A quiet run is a **first-class success**: when you find nothing that clears the bar, emit\n+  exactly **one `noop`** safe output summarizing what you scanned and why nothing qualified.\n+  A `noop` is the correct \"nothing to do\" signal — silence makes the run look incomplete.\n+- **Scope is managed C# only.** Fix only code the repo owns — `binding/**` and `source/**`.\n+  Everything under `externals/skia/**` (including our C shim) is upstream Skia: not checked\n+  out, not buildable here (native tests use pre-built packages via `externals-download`), and\n+  out of scope. A leak whose only correct fix is native is **issue-only** (see 2.4).\n+- **Timebox the scan.** Do one focused pass over the leak families, pick the single strongest\n+  candidate early, and stop. If nothing clears the bar in that pass, emit the `noop` and finish\n+  — do not launch open-ended sub-agent explorations that may not return within the budget.\n+\n+All the methodology lives in the skill. Follow it exactly.\n+\n+## Step 1 — Run the memory-leak-fixer skill\n+\n+Read and follow `.agents/skills/memory-leak-fixer/SKILL.md` end-to-end.\n+\n+**Every run does the same thing — \"Scan and fix\"** (skill Phase 1 → 2 → 3 → 4 → 5): hunt a new\n+leak, prove it, fix it, then file the finding issue + linked fix PR. There is no per-issue target\n+mode. The only variation is dry-run — forced on `pull_request`, opt-in via the `dry_run` input\n+(see Guardrail 6).\n+\n+Persist all intermediate state (the `/tmp/leakprobe` project, notes) under `/tmp/gh-aw/agent/`.\n+Each bash call is a fresh subshell — re-`cd` as needed.\n+\n+## Step 2 — Guardrails (in addition to the skill's golden rules)\n+\n+1. **What to emit — one finding per run.** For a confirmed, managed-C#-fixable leak, emit the\n+   **linked pair**: one `create-issue` (the finding, with a `temporary_id`) **and** one\n+   `create-pull-request` (the fix, whose body ends with `Fixes #<that temporary_id>` so merging\n+   auto-closes the issue) — see skill Phase 4. If the only correct fix is native / upstream (out\n+   of scope) → emit the **`create-issue` alone**. If nothing clears the bar → exactly one\n+   **`noop`**. Never finish a run with no safe output at all (that makes the run look incomplete).\n+2. **De-dup first.** Run skill Phase 1.3 — skip any candidate already covered by an OPEN\n+   `[memory-leak]` issue or PR on `mono/SkiaSharp`. A candidate whose only prior item is\n+   CLOSED may be re-filed.\n+3. **Validate before you open a PR.** Only open a PR when you have demonstrated the\n+   regression test **fails without the fix and passes with it** (skill Phase 3, both\n+   directions). No red→green ⇒ no PR.\n+4. **Managed-C# fixes only.** The fix must live in `binding/**` / `source/**`, bootstrapped\n+   with `dotnet cake --target=externals-download` (pre-built natives) and validated with\n+   `dotnet test`. If the strongest candidate's only correct fix is in native / upstream Skia\n+   (`externals/skia/**`, including the C shim), do **not** open an unvalidated PR — file a\n+   `[memory-leak]` issue with the Phase 1–2 evidence and the proposed fix instead.\n+5. **Never weaken, skip, mute, or delete a test, and never edit `*.generated.cs` or anything\n+   under `externals/skia/**`** (upstream Skia + the C shim are out of scope for this skill).\n+6. **Dry run (forced on PRs).** Decide from the trigger `${{ github.event_name }}`:\n+   `pull_request` → **always DRY-RUN** (a PR editing this workflow/skill is a self-test);\n+   `workflow_dispatch` with the **dry_run** input `true` (shown as\n+   `${{ github.event.inputs.dry_run }}`) → **DRY-RUN**; `schedule` → real run. In DRY-RUN you do the\n+   full scan→prove→fix locally but you **MUST NOT** emit any `create-pull-request` or\n+   `create-issue` safe output under any circumstances. Instead, report your findings in the\n+   step summary **and** emit exactly one **`noop`** whose body is that same summary (what you\n+   scanned, the strongest candidate if any, and — had this been a real run — the finding you\n+   would have filed and the fix PR you would have opened). Never finish a dry run with no safe output.\n+7. **AI attribution.** Every PR/issue body must clearly state it was produced by this\n+   agentic workflow + the `memory-leak-fixer` skill, and include an honest scope note\n+   (framework bug vs footgun; empirically-proven vs statically-reasoned; ABI impact).\n+\n+## Step 3 — Report\n+\n+Append a short summary to `/tmp/gh-aw/agent/step-summary.md` (this file is symlinked to the\n+run's step summary — do **not** use `$GITHUB_STEP_SUMMARY`): the leak family, the candidate\n+(with `file:line`), the proof result (alive/collected counts or red→green status), and the\n+resulting issue + PR links — or \"no convincing candidate this run\" for a quiet run.\n+\n+Then make sure you have emitted the safe output(s) from Step 2.1: the **issue + PR pair** (or a\n+`create-issue` alone when the fix is out of scope), or — for a dry run or a quiet run — a single\n+`noop` carrying this same summary. Never finish the run with no safe output.",
+          "snapshot_ref": "63596a1572f0a91c7a76f607fd6b2b87afcdf5be",
+          "snapshot_blob_sha": "68e83ef3ce9c8a60551b988eeea1a43ec3bb1818",
+          "snapshot_file": "snapshots/SkiaSharp__mono__63596a1572f0a91c7a76f607fd6b2b87afcdf5be__memory-leak-fixer.md",
+          "snapshot_bytes": 11035,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"mono/SkiaSharp\",\"generated_owner\":\"mono\",\"generated_repo\":\"SkiaSharp\",\"generated_workflow_path\":\".github/workflows/memory-leak-fixer.lock.yml\",\"generated_workflow_file\":\"memory-leak-fixer.lock.yml\",\"generated_html_url\":\"https://github.com/mono/SkiaSharp/blob/1f96367d6881084e0745c2a045d7822c8bc4fbb0/.github/workflows/memory-leak-fixer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+      "source_full_name": "mono/SkiaSharp",
+      "md_path": ".github/workflows/memory-leak-fixer.md",
+      "commit_sha": "a877c18ae5f31922ed75ca0edf97753593fc141c",
+      "authored_at": "2026-07-07T17:14:04Z",
+      "committed_at": "2026-07-07T17:14:04Z",
+      "author_name": "Matthew Leibowitz",
+      "author_email": "mattleibow@live.com",
+      "author_login": "mattleibow",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add focus_family override input to memory-leak-fixer workflow (#4356)\n\nAdd focus_family override to memory-leak-fixer workflow (#4356)\n\nChanges: https://github.com/mono/SkiaSharp/compare/main...dev/memory-leak-fixer-focus-override\n\nThe \"Fixer - Memory Leak\" agentic workflow picks which leak family to deep-scan\nvia a time-based round-robin (day-of-year + hour, mod 11). That keeps unattended\nruns varied, but it also means any *one* family only gets a deep scan when the\nclock happens to rotate onto it — roughly once every 11 hours. There was no way\nto point the scanner at a specific family on demand, which made it hard to\nexercise the finding-issue -> fix-PR pairing end to end while iterating.\n\nThe first real run (28829268499) made this concrete: its focus landed on\nfamily 1 (Wrong `owns:`), a hardened area, so it correctly emitted a `noop`.\nCorrect behavior, but not testable — we couldn't force it onto, say, the\nfinalizer/collection-ordering family that covers the SKRegion iterators.\n\nAdd an optional `focus_family` workflow_dispatch input (0-10, blank = rotate):\n\n  * When set to a bare number, Step 1 passes it to the skill's Phase 1.1, which\n    now honors an explicit override and skips the round-robin.\n  * When blank (schedule / pull_request / dispatch without it), the rotation is\n    unchanged.\n  * Independent of `dry_run`, so `focus_family=5 dry_run=false` can force a real\n    run on a chosen family.\n\nRendered through the same gh-aw path as the existing `dry_run`/`event_name`\nexpressions: gh-aw auto-wires `GH_AW_GITHUB_EVENT_INPUTS_FOCUS_FAMILY` onto the\nprompt-building step and substitutes it into the runtime-imported prompt. Lock\nrecompiled clean (0 errors, 0 warnings).\n\nValidated live: the PR self-test dry-run (28844087566, blank input -> rotation)\npassed; a dispatched `focus_family=5` run (28844126750) opened its report with\n\"Focus family: 5\", ran a full red->green probe, and de-duped to a noop. A\nsecond `focus_family=5` run (28882528714) found the same SKRegion.SpanIterator\ncandidate but stood down against the already-open issue #4354 + fix PR #4355,\nproving the de-dup guardrail on demand.\n\nWorkflow + skill only; no product code changes (ABI-neutral).\n\nCo-authored-by: Matthew Leibowitz <mattleibow@live.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "63596a1572f0a91c7a76f607fd6b2b87afcdf5be"
+      ],
+      "tree_sha": "82358cf2c953b9d7bb21afe1ef76dc98328fc39a",
+      "html_url": "https://github.com/mono/SkiaSharp/commit/a877c18ae5f31922ed75ca0edf97753593fc141c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+          "source_full_name": "mono/SkiaSharp",
+          "md_path": ".github/workflows/memory-leak-fixer.md",
+          "commit_sha": "a877c18ae5f31922ed75ca0edf97753593fc141c",
+          "committed_at": "2026-07-07T17:14:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 14,
+          "file_deletions": 2,
+          "file_changes": 16,
+          "file_patch": "@@ -27,8 +27,9 @@ engine:\n \n # -- Triggers ----------------------------------------------------------\n # Every 12h + manual + PR-driven self-test. Every run does the same full\n-# scan→prove→fix→file pipeline; the only knob is `dry_run` (do everything but\n-# open nothing). A `pull_request` that edits THIS workflow or its skill re-runs\n+# scan→prove→fix→file pipeline; the knobs are `dry_run` (do everything but open\n+# nothing) and `focus_family` (force one leak family instead of the time-based\n+# rotation — for testing a specific family on demand). A `pull_request` that edits THIS workflow or its skill re-runs\n # the whole pipeline in FORCED DRY-RUN (see Step 2.6) so we can iterate on the\n # prompt/skill and watch the run without ever opening a real PR/issue.\n on:\n@@ -40,6 +41,11 @@ on:\n         required: false\n         default: false\n         type: boolean\n+      focus_family:\n+        description: \"Force a specific leak family 0-10 (see references/types-of-leaks.md) instead of the time-based round-robin. Leave blank to rotate.\"\n+        required: false\n+        default: \"\"\n+        type: string\n   pull_request:\n     paths:\n       - \".github/workflows/memory-leak-fixer.md\"\n@@ -159,6 +165,12 @@ leak, prove it, fix it, then file the finding issue + linked fix PR. There is no\n mode. The only variation is dry-run — forced on `pull_request`, opt-in via the `dry_run` input\n (see Guardrail 6).\n \n+**Focus family override:** `${{ github.event.inputs.focus_family }}` — if that shows a bare\n+number **0–10**, pass it to the skill's Phase 1.1 as the focus family and **skip the round-robin**\n+computation. If it is blank (schedule / PR / dispatch without the input), use the normal\n+time-based round-robin. This is only a testing knob to target a specific family on demand; it\n+changes nothing else about the run.\n+\n Persist all intermediate state (the `/tmp/leakprobe` project, notes) under `/tmp/gh-aw/agent/`.\n Each bash call is a fresh subshell — re-`cd` as needed.\n ",
+          "snapshot_ref": "a877c18ae5f31922ed75ca0edf97753593fc141c",
+          "snapshot_blob_sha": "fb1d509a78acbb0f47879cd9c7265a9aad15fe40",
+          "snapshot_file": "snapshots/SkiaSharp__mono__a877c18ae5f31922ed75ca0edf97753593fc141c__memory-leak-fixer.md",
+          "snapshot_bytes": 11810,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"mono/SkiaSharp\",\"generated_owner\":\"mono\",\"generated_repo\":\"SkiaSharp\",\"generated_workflow_path\":\".github/workflows/memory-leak-fixer.lock.yml\",\"generated_workflow_file\":\"memory-leak-fixer.lock.yml\",\"generated_html_url\":\"https://github.com/mono/SkiaSharp/blob/1f96367d6881084e0745c2a045d7822c8bc4fbb0/.github/workflows/memory-leak-fixer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+      "source_full_name": "mono/SkiaSharp",
+      "md_path": ".github/workflows/memory-leak-fixer.md",
+      "commit_sha": "23d43e4770df281d04969029bda1482d7350d67e",
+      "authored_at": "2026-07-07T20:39:41Z",
+      "committed_at": "2026-07-07T20:39:41Z",
+      "author_name": "Matthew Leibowitz",
+      "author_email": "mattleibow@live.com",
+      "author_login": "mattleibow",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[skills] Add perf/* label taxonomy and rework memory-leak-fixer focus areas (#4362)\n\n[skills] Add perf/* label taxonomy and rework memory-leak-fixer focus areas (#4362)\n\nTwo related improvements to the agentic-workflow skills. Memory-leak\nfindings previously landed with only the `agentic-workflows` label — a\nlabel read by nothing and present on zero issues/PRs — so leaks and\nperformance reports had no meaningful classification, and the triage\nskill had no rule mapping either to a quality tenet.\n\n~~ perf/* label taxonomy ~~\n\nThere is no dedicated \"memory-leak\" label, and grouping every speed,\nmemory, or size concern under the single `tenet/performance` umbrella\nloses the sub-type. Add a `perf/*` axis beneath that umbrella, grounded\nin the repo's real corpus (61 tenet/performance + ~25 memory-leak\nissues): perf/memory-leak, perf/allocations, perf/interop,\nperf/rendering, perf/throughput, perf/startup, perf/size. Any perf/*\nimplies tenet/performance.\n\n  * memory-leak-fixer workflow: drop agentic-workflows; label the\n    finding issue and fix PR with tenet/performance + perf/memory-leak.\n  * issue-triage skill: add the perf axis to labels.md, the schema\n    (classifiedPerf enum + validated perf[] field), the cheatsheet,\n    SKILL.md, and the report template.\n  * auto-triage workflow: apply classification.perf[] labels; raise the\n    add-labels cap 10 -> 12 to fit the new axis.\n\nType classification (type/bug vs type/enhancement) is left to triage on\npurpose — a leak is usually a bug, but a \"make it faster\" report may be\nan enhancement.\n\n~~ \"family\" -> \"focus area\" rework ~~\n\nAlign the memory-leak-fixer's vocabulary with the new performance-fixer\nskill (#4361), which routes over \"focus areas\" and a focus_area knob.\nThe 11 rotating leak categories are now focus areas rather than\nfamilies, and the workflow's focus_family dispatch input is renamed to\nfocus_area. The single overarching \"leak family\" becomes \"class of\nleaks\" so the term is dropped entirely. Terminology only — no\nbehavioural change.\n\nBoth .lock.yml files were regenerated with `gh aw compile` (0 errors);\nthe perf/* labels were created in mono/SkiaSharp.\n\nCo-authored-by: Matthew Leibowitz <mattleibow@live.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "e0dd3d15e771c0aaedff73ebe32709988bd8790e"
+      ],
+      "tree_sha": "9d2b2220225369b6111b1a77ea249073376a9aca",
+      "html_url": "https://github.com/mono/SkiaSharp/commit/23d43e4770df281d04969029bda1482d7350d67e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+          "source_full_name": "mono/SkiaSharp",
+          "md_path": ".github/workflows/memory-leak-fixer.md",
+          "commit_sha": "23d43e4770df281d04969029bda1482d7350d67e",
+          "committed_at": "2026-07-07T20:39:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 18,
+          "file_deletions": 13,
+          "file_changes": 31,
+          "file_patch": "@@ -5,7 +5,7 @@\n # Periodic AI-driven workflow that SCANS the repo's managed C# for a native\n # ownership / disposal memory leak, PROVES it with a red→green regression test,\n # FIXES it, and opens a DRAFT PR. Adapted from dotnet/maui's leak scanner+fixer\n-# idea to our real leak family (undisposed SKObject handles, wrong\n+# idea to our real leak focus areas (undisposed SKObject handles, wrong\n # `owns:` flags, same-instance double-dispose, unremoved view/handler\n # subscriptions, `fixed`-pointer lifetime). Scope: managed C# only — the native\n # Skia under externals/skia/** is upstream and out of scope.\n@@ -28,8 +28,8 @@ engine:\n # -- Triggers ----------------------------------------------------------\n # Every 12h + manual + PR-driven self-test. Every run does the same full\n # scan→prove→fix→file pipeline; the knobs are `dry_run` (do everything but open\n-# nothing) and `focus_family` (force one leak family instead of the time-based\n-# rotation — for testing a specific family on demand). A `pull_request` that edits THIS workflow or its skill re-runs\n+# nothing) and `focus_area` (force one leak focus area instead of the time-based\n+# rotation — for testing a specific focus area on demand). A `pull_request` that edits THIS workflow or its skill re-runs\n # the whole pipeline in FORCED DRY-RUN (see Step 2.6) so we can iterate on the\n # prompt/skill and watch the run without ever opening a real PR/issue.\n on:\n@@ -41,8 +41,8 @@ on:\n         required: false\n         default: false\n         type: boolean\n-      focus_family:\n-        description: \"Force a specific leak family 0-10 (see references/types-of-leaks.md) instead of the time-based round-robin. Leave blank to rotate.\"\n+      focus_area:\n+        description: \"Force a specific leak focus area 0-10 (see references/types-of-leaks.md) instead of the time-based round-robin. Leave blank to rotate.\"\n         required: false\n         default: \"\"\n         type: string\n@@ -113,16 +113,21 @@ network:\n # finding) + a draft fix PR that closes it on merge (Fixes #<temp-id>, resolved\n # by gh-aw to the real number). When the only correct fix is native / upstream\n # Skia (out of scope here), the issue is filed alone. Quiet/dry runs emit a noop.\n+#\n+# Labels: a memory leak is a performance concern, so both the issue and the PR\n+# carry `tenet/performance` (the quality-tenet umbrella) + `perf/memory-leak`\n+# (the performance sub-type). See the perf/* taxonomy in the issue-triage skill\n+# (.agents/skills/issue-triage/references/labels.md).\n safe-outputs:\n   create-pull-request:\n     title-prefix: \"[memory-leak] \"\n-    labels: [agentic-workflows]\n+    labels: [tenet/performance, perf/memory-leak]\n     draft: true\n     allowed-base-branches: [main]\n   create-issue:\n     title-prefix: \"[memory-leak] \"\n-    labels: [agentic-workflows]\n-    allowed-labels: [agentic-workflows]\n+    labels: [tenet/performance, perf/memory-leak]\n+    allowed-labels: [tenet/performance, perf/memory-leak]\n     max: 1\n   noop:\n     report-as-issue: false\n@@ -150,7 +155,7 @@ alone. **One finding per run.**\n   Everything under `externals/skia/**` (including our C shim) is upstream Skia: not checked\n   out, not buildable here (native tests use pre-built packages via `externals-download`), and\n   out of scope. A leak whose only correct fix is native is **issue-only** (see 2.4).\n-- **Timebox the scan.** Do one focused pass over the leak families, pick the single strongest\n+- **Timebox the scan.** Do one focused pass over the leak focus areas, pick the single strongest\n   candidate early, and stop. If nothing clears the bar in that pass, emit the `noop` and finish\n   — do not launch open-ended sub-agent explorations that may not return within the budget.\n \n@@ -165,10 +170,10 @@ leak, prove it, fix it, then file the finding issue + linked fix PR. There is no\n mode. The only variation is dry-run — forced on `pull_request`, opt-in via the `dry_run` input\n (see Guardrail 6).\n \n-**Focus family override:** `${{ github.event.inputs.focus_family }}` — if that shows a bare\n-number **0–10**, pass it to the skill's Phase 1.1 as the focus family and **skip the round-robin**\n+**Focus area override:** `${{ github.event.inputs.focus_area }}` — if that shows a bare\n+number **0–10**, pass it to the skill's Phase 1.1 as the focus area and **skip the round-robin**\n computation. If it is blank (schedule / PR / dispatch without the input), use the normal\n-time-based round-robin. This is only a testing knob to target a specific family on demand; it\n+time-based round-robin. This is only a testing knob to target a specific focus area on demand; it\n changes nothing else about the run.\n \n Persist all intermediate state (the `/tmp/leakprobe` project, notes) under `/tmp/gh-aw/agent/`.\n@@ -211,7 +216,7 @@ Each bash call is a fresh subshell — re-`cd` as needed.\n ## Step 3 — Report\n \n Append a short summary to `/tmp/gh-aw/agent/step-summary.md` (this file is symlinked to the\n-run's step summary — do **not** use `$GITHUB_STEP_SUMMARY`): the leak family, the candidate\n+run's step summary — do **not** use `$GITHUB_STEP_SUMMARY`): the leak focus area, the candidate\n (with `file:line`), the proof result (alive/collected counts or red→green status), and the\n resulting issue + PR links — or \"no convincing candidate this run\" for a quiet run.\n ",
+          "snapshot_ref": "23d43e4770df281d04969029bda1482d7350d67e",
+          "snapshot_blob_sha": "1fa73353992c9bf7c7381b44ba1b8d5c70d7b27f",
+          "snapshot_file": "snapshots/SkiaSharp__mono__23d43e4770df281d04969029bda1482d7350d67e__memory-leak-fixer.md",
+          "snapshot_bytes": 12175,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"mono/SkiaSharp\",\"generated_owner\":\"mono\",\"generated_repo\":\"SkiaSharp\",\"generated_workflow_path\":\".github/workflows/memory-leak-fixer.lock.yml\",\"generated_workflow_file\":\"memory-leak-fixer.lock.yml\",\"generated_html_url\":\"https://github.com/mono/SkiaSharp/blob/1f96367d6881084e0745c2a045d7822c8bc4fbb0/.github/workflows/memory-leak-fixer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+      "source_full_name": "mono/SkiaSharp",
+      "md_path": ".github/workflows/memory-leak-fixer.md",
+      "commit_sha": "295f63966b9a4a4efae265ffe5f623f080c79aab",
+      "authored_at": "2026-07-12T18:47:44Z",
+      "committed_at": "2026-07-12T18:47:44Z",
+      "author_name": "Matthew Leibowitz",
+      "author_email": "mattleibow@live.com",
+      "author_login": "mattleibow",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add partner/agentic-workflows label to agentic workflow outputs (#4409)\n\nAdd partner/agentic-workflows label to agentic workflow outputs (#4409)\n\nAgent-authored PRs and issues were indistinguishable from human ones,\nmaking it impossible to filter or audit what the SkiaSharp agentic\nworkflows produce. Introduce a `partner/agentic-workflows` label and wire\nit into every workflow that creates content so future agent output is\ntagged automatically.\n\nForward config:\n\n  * performance-fixer / memory-leak-fixer: add the label to the\n    create-pull-request and create-issue `labels`, and to `allowed-labels`\n    where a restrictive allowlist gates what may be applied.\n  * update-release-notes: add the label to create-pull-request `labels`.\n  * auto-skia-sync (skia-sync-push-prs.sh): add\n    `--label partner/agentic-workflows` to the create + edit paths for both\n    the mono/skia and mono/SkiaSharp PRs.\n  * Recompiled the three affected `.lock.yml` files with `gh aw compile`\n    v0.71.5. The only diffs are the added label plus the derived\n    frontmatter/heredoc hashes; the compiler version is unchanged.\n\nauto-triage is deliberately left untouched: it labels existing (human)\nissues rather than creating content, so extending its add-labels output\nwould mislabel human issues. Its sole agent-created artifacts are gh-aw\nframework failure reports, which carry the `gh-aw-workflow-id` marker and\nare handled by the backfill.\n\nLabel + backfill were applied out-of-band via the GitHub API (not in this\ndiff): the pre-existing grey `agentic-workflows` label was renamed to\n`partner/agentic-workflows` (partner color #A2C0F9) in mono/SkiaSharp and\ncreated fresh in mono/skia, then applied to 238 existing agent-created\nitems — 201 marker-bearing PRs/issues + 19 skia-sync PRs in mono/SkiaSharp,\nand 18 skia-sync PRs in mono/skia. All 201 marker items were verified as\ngithub-actions[bot]-authored, so there were no false positives.\n\nCo-authored-by: Matthew Leibowitz <mattleibow@live.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "921bd4a90a29610c948e1745dd04a4d834b8b11d"
+      ],
+      "tree_sha": "a8e155231e0cb7c8ce4ff0ddf946451e5921b838",
+      "html_url": "https://github.com/mono/SkiaSharp/commit/295f63966b9a4a4efae265ffe5f623f080c79aab",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "mono/SkiaSharp:.github/workflows/memory-leak-fixer.md",
+          "source_full_name": "mono/SkiaSharp",
+          "md_path": ".github/workflows/memory-leak-fixer.md",
+          "commit_sha": "295f63966b9a4a4efae265ffe5f623f080c79aab",
+          "committed_at": "2026-07-12T18:47:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -121,13 +121,13 @@ network:\n safe-outputs:\n   create-pull-request:\n     title-prefix: \"[memory-leak] \"\n-    labels: [tenet/performance, perf/memory-leak]\n+    labels: [tenet/performance, perf/memory-leak, partner/agentic-workflows]\n     draft: true\n     allowed-base-branches: [main]\n   create-issue:\n     title-prefix: \"[memory-leak] \"\n-    labels: [tenet/performance, perf/memory-leak]\n-    allowed-labels: [tenet/performance, perf/memory-leak]\n+    labels: [tenet/performance, perf/memory-leak, partner/agentic-workflows]\n+    allowed-labels: [tenet/performance, perf/memory-leak, partner/agentic-workflows]\n     max: 1\n   noop:\n     report-as-issue: false",
+          "snapshot_ref": "295f63966b9a4a4efae265ffe5f623f080c79aab",
+          "snapshot_blob_sha": "04fe032b25032c880656c2eb5e64a065ff45bca1",
+          "snapshot_file": "snapshots/SkiaSharp__mono__295f63966b9a4a4efae265ffe5f623f080c79aab__memory-leak-fixer.md",
+          "snapshot_bytes": 12256,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"mono/SkiaSharp\",\"generated_owner\":\"mono\",\"generated_repo\":\"SkiaSharp\",\"generated_workflow_path\":\".github/workflows/memory-leak-fixer.lock.yml\",\"generated_workflow_file\":\"memory-leak-fixer.lock.yml\",\"generated_html_url\":\"https://github.com/mono/SkiaSharp/blob/1f96367d6881084e0745c2a045d7822c8bc4fbb0/.github/workflows/memory-leak-fixer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

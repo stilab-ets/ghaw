@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+    "source_full_name": "drhelius/Gearsystem",
+    "source_owner": "drhelius",
+    "source_repo": "Gearsystem",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/drhelius/Gearsystem/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "drhelius/Gearsystem",
+      "generated_owner": "drhelius",
+      "generated_repo": "Gearsystem",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/drhelius/Gearsystem/blob/10bf2746ff5e3db6e65aa5612ba76c5eb7e7c673/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+      "source_full_name": "drhelius/Gearsystem",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "77c99c58c2482dd2da657dafdf7c25db72670462",
+      "authored_at": "2026-06-20T21:35:15Z",
+      "committed_at": "2026-06-20T21:35:15Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "571f8c8cdabb27759307a9720a238eecda6d7d89"
+      ],
+      "tree_sha": "5ed508af946bd940b7ce38f172b6e44b72adb559",
+      "html_url": "https://github.com/drhelius/Gearsystem/commit/77c99c58c2482dd2da657dafdf7c25db72670462",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+          "source_full_name": "drhelius/Gearsystem",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "77c99c58c2482dd2da657dafdf7c25db72670462",
+          "committed_at": "2026-06-20T21:35:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 111,
+          "file_deletions": 0,
+          "file_changes": 111,
+          "file_patch": "@@ -0,0 +1,111 @@\n+---\n+name: Issue Triage\n+description: Triage newly opened Gearsystem issues by applying the correct repository labels.\n+on:\n+  issues:\n+    types: [opened]\n+    lock-for-agent: true\n+  roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  copilot-requests: write\n+strict: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [repos, issues]\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  add-labels:\n+    target: triggering\n+    max: 3\n+    allowed:\n+      - agentic workflows\n+      - bug\n+      - duplicate\n+      - feature request\n+      - needs info\n+      - not a bug\n+      - question\n+      - wontfix\n+    blocked:\n+      - \"~*\"\n+      - \"*[bot]\"\n+  add-comment:\n+    target: triggering\n+    max: 1\n+    hide-older-comments: true\n+  close-issue:\n+    target: triggering\n+    max: 1\n+    state-reason: duplicate\n+---\n+\n+# Issue Triage\n+\n+## Task\n+\n+Triage the newly opened issue in `${{ github.repository }}` and apply the correct label or labels from the configured allowlist.\n+\n+Use GitHub read tools to inspect the triggering issue. Search existing open and closed issues for likely duplicates before deciding. Be conservative: it is better to under-label than to apply a speculative label.\n+\n+## Triage Protocol\n+\n+### Phase 1: Gather Context\n+\n+1. Read the triggering issue title, body, author association, and current labels.\n+2. Search existing open and closed issues for similar titles, affected games, mapper names, hardware names, error messages, or workflow names.\n+3. Consider the available label allowlist only: `agentic workflows`, `bug`, `duplicate`, `feature request`, `needs info`, `not a bug`, `question`, `wontfix`.\n+4. Do not create, rename, remove, or edit labels.\n+\n+### Phase 2: Quality And Completeness Check\n+\n+1. If the issue already has the correct label set and no duplicate close or clarification is needed, call `noop`.\n+2. If there is not enough information to choose a primary label, add `needs info`. Do not add `question` unless the issue is actually a user question.\n+3. Most incomplete issues should receive only the `needs info` label with no comment.\n+4. Post a clarification comment only when the issue is likely a `bug`, the next engineering action depends on Gearsystem version or platform/frontend, and the issue body does not already provide that information.\n+5. When asking, ask only for Gearsystem version and platform/frontend. Do not ask for ROM hashes, logs, screenshots, save files, long reproduction forms, or extra context during initial triage.\n+\n+### Phase 3: Primary Classification\n+\n+Apply labels only through the configured `add-labels` safe output. Choose exactly one primary label when there is enough information:\n+\n+- `bug`: broken behavior in an already-supported Gearsystem feature, mapper, platform, build, package, or workflow. Use this for regressions, crashes, incorrect emulation, save-state problems, audio/video/input defects, frontend bugs, and release or CI breakages caused by this repository.\n+- `feature request`: a request for new behavior, new platform support, new debugging/MCP capability, new frontend option, or support for currently unsupported cartridge hardware. If a user reports that a game does not run and the likely reason is a missing mapper, unsupported mapper variant, unsupported cartridge accessory, or unsupported special hardware, label it `feature request`, not `bug`.\n+- `question`: a user question, support request, usage question, or troubleshooting question where the user is asking how something works or how to use Gearsystem.\n+- `not a bug`: expected behavior, invalid or corrupted ROM/save data, a known hardware limitation, an external service problem, spam/test content, or behavior caused by user environment rather than Gearsystem.\n+- `wontfix`: a valid request or limitation that is intentionally outside project scope. Use this sparingly and only when the issue text or maintainer context makes that intent clear.\n+- `agentic workflows`: an issue about gh-aw, Build Doctor, Issue Triage, workflow agents, safe outputs, generated lock files, or other agentic workflow behavior in this repository. Do not add this label to ordinary emulator bugs, game compatibility reports, or feature requests.\n+\n+### Phase 4: Gearsystem-Specific Checks\n+\n+For game compatibility reports, separate bugs from unsupported cartridge hardware:\n+\n+1. Treat likely unsupported or missing mappers as `feature request`. Clues include mapper support requests, bootleg or multicart hardware, Codemasters/Korean/SG-1000 banking variants, special cartridge hardware, or a game that fails only because Gearsystem has no implementation for that cartridge type.\n+2. Treat an already-supported mapper or known supported game that regressed, crashes, corrupts graphics/audio/input, fails save/RTC behavior, or diverges from hardware/reference emulator behavior as `bug`.\n+3. Treat bad dumps, patched/trainer ROM issues without clean-ROM evidence, invalid save files, or expected Sega Master System / Game Gear / SG-1000 hardware behavior as `not a bug` when the evidence is clear.\n+4. Use `needs info` when the report says only that a game does not run but omits the exact ROM title/region/revision, ROM hash, Gearsystem version, platform, steps, or whether a clean dump was tested.\n+\n+### Phase 5: Duplicate Detection\n+\n+1. Compare the issue to similar open and closed issues.\n+2. If there is a high-confidence duplicate, add `duplicate` and close the triggering issue using the configured `close-issue` safe output with duplicate state reason.\n+3. Include the duplicate explanation in the close comment. Do not call `add-comment` separately for duplicates.\n+4. Use a clearly automated but readable close-comment format, for example: `Automated triage result: this issue appears to duplicate #123 because it describes the same affected game and mapper symptom. This issue is being closed as a duplicate; comment if this report describes a different case.`\n+5. Do not close issues for any non-duplicate classification.\n+\n+### Phase 6: Apply Results\n+\n+1. Apply the chosen labels with `add-labels`.\n+2. Default to labels only. Do not post a comment unless Phase 5 closes a duplicate or Phase 2 requires a narrowly scoped version/platform clarification.\n+3. For clarification comments, use a clearly automated but readable format, for example: `Automated triage request: please provide the Gearsystem version and platform/frontend so this bug report can be classified correctly.`\n+\n+## Style\n+\n+Keep comments brief, neutral, and explicitly automated, but write in complete readable sentences rather than terse status fragments. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs. Do not expose secrets, private resource identifiers, tokens, generated hostnames, or user-sensitive paths. Redact sensitive values as `<redacted>`.\n\\ No newline at end of file",
+          "snapshot_ref": "77c99c58c2482dd2da657dafdf7c25db72670462",
+          "snapshot_blob_sha": "4f8f038d2965fdb982ec600c74ef907fc5dd78fc",
+          "snapshot_file": "snapshots/Gearsystem__drhelius__77c99c58c2482dd2da657dafdf7c25db72670462__issue-triage.md",
+          "snapshot_bytes": 6827,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearsystem\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearsystem\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearsystem/blob/10bf2746ff5e3db6e65aa5612ba76c5eb7e7c673/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+      "source_full_name": "drhelius/Gearsystem",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "e96f260749ca9c7358d4f95fd268239a80002ab9",
+      "authored_at": "2026-06-20T22:52:53Z",
+      "committed_at": "2026-06-20T22:52:53Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "77c99c58c2482dd2da657dafdf7c25db72670462"
+      ],
+      "tree_sha": "d623a2200d4e19d3566990e8a9dfbb958eebfe7c",
+      "html_url": "https://github.com/drhelius/Gearsystem/commit/e96f260749ca9c7358d4f95fd268239a80002ab9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+          "source_full_name": "drhelius/Gearsystem",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "e96f260749ca9c7358d4f95fd268239a80002ab9",
+          "committed_at": "2026-06-20T22:52:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -103,8 +103,9 @@ For game compatibility reports, separate bugs from unsupported cartridge hardwar\n ### Phase 6: Apply Results\n \n 1. Apply the chosen labels with `add-labels`.\n-2. Default to labels only. Do not post a comment unless Phase 5 closes a duplicate or Phase 2 requires a narrowly scoped version/platform clarification.\n-3. For clarification comments, use a clearly automated but readable format, for example: `Automated triage request: please provide the Gearsystem version and platform/frontend so this bug report can be classified correctly.`\n+2. When calling `add-labels`, provide each label as a separate exact label string from the allowlist. Do not emit bracketed, comma-joined, or combined label strings such as `[bug, needs info]`.\n+3. Default to labels only. Do not post a comment unless Phase 5 closes a duplicate or Phase 2 requires a narrowly scoped version/platform clarification.\n+4. For clarification comments, use a clearly automated but readable format, for example: `Automated triage request: please provide the Gearsystem version and platform/frontend so this bug report can be classified correctly.`\n \n ## Style\n ",
+          "snapshot_ref": "e96f260749ca9c7358d4f95fd268239a80002ab9",
+          "snapshot_blob_sha": "060360945680260d5d2a594620ca40c921e8ca7e",
+          "snapshot_file": "snapshots/Gearsystem__drhelius__e96f260749ca9c7358d4f95fd268239a80002ab9__issue-triage.md",
+          "snapshot_bytes": 7021,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearsystem\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearsystem\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearsystem/blob/10bf2746ff5e3db6e65aa5612ba76c5eb7e7c673/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+      "source_full_name": "drhelius/Gearsystem",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "ee4117468fe88e780269060bacfa65596be44394",
+      "authored_at": "2026-06-22T14:13:41Z",
+      "committed_at": "2026-06-22T14:13:41Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "355be94459dbea99d73369bf24b33aad3a69bb0a"
+      ],
+      "tree_sha": "ac0b8e82a5468a17de054d17910a82ecde977327",
+      "html_url": "https://github.com/drhelius/Gearsystem/commit/ee4117468fe88e780269060bacfa65596be44394",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+          "source_full_name": "drhelius/Gearsystem",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "ee4117468fe88e780269060bacfa65596be44394",
+          "committed_at": "2026-06-22T14:13:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 18,
+          "file_deletions": 3,
+          "file_changes": 21,
+          "file_patch": "@@ -97,16 +97,31 @@ For game compatibility reports, separate bugs from unsupported cartridge hardwar\n 1. Compare the issue to similar open and closed issues.\n 2. If there is a high-confidence duplicate, add `duplicate` and close the triggering issue using the configured `close-issue` safe output with duplicate state reason.\n 3. Include the duplicate explanation in the close comment. Do not call `add-comment` separately for duplicates.\n-4. Use a clearly automated but readable close-comment format, for example: `Automated triage result: this issue appears to duplicate #123 because it describes the same affected game and mapper symptom. This issue is being closed as a duplicate; comment if this report describes a different case.`\n+4. Use a clearly automated, readable Markdown close comment with line breaks. Use this shape:\n+\n+```markdown\n+Automated triage result: duplicate issue.\n+\n+- Matches: #123.\n+- Reason: same affected game and mapper symptom.\n+- Action: closing this issue as a duplicate.\n+```\n 5. Do not close issues for any non-duplicate classification.\n \n ### Phase 6: Apply Results\n \n 1. Apply the chosen labels with `add-labels`.\n 2. When calling `add-labels`, provide each label as a separate exact label string from the allowlist. Do not emit bracketed, comma-joined, or combined label strings such as `[bug, needs info]`.\n 3. Default to labels only. Do not post a comment unless Phase 5 closes a duplicate or Phase 2 requires a narrowly scoped version/platform clarification.\n-4. For clarification comments, use a clearly automated but readable format, for example: `Automated triage request: please provide the Gearsystem version and platform/frontend so this bug report can be classified correctly.`\n+4. For clarification comments, use a clearly automated, readable Markdown request with line breaks. Use this shape:\n+\n+```markdown\n+Automated triage request: missing required environment details.\n+\n+- Gearsystem version:\n+- Platform/frontend:\n+```\n \n ## Style\n \n-Keep comments brief, neutral, and explicitly automated, but write in complete readable sentences rather than terse status fragments. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs. Do not expose secrets, private resource identifiers, tokens, generated hostnames, or user-sensitive paths. Redact sensitive values as `<redacted>`.\n\\ No newline at end of file\n+Keep comments brief, neutral, and explicitly automated, but write in complete readable sentences rather than terse status fragments. Every comment body must use Markdown line breaks: one short summary line, one blank line, then one to three short bullet lines. Do not write comments as a single paragraph or a single long sentence. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs. Do not expose secrets, private resource identifiers, tokens, generated hostnames, or user-sensitive paths. Redact sensitive values as `<redacted>`.\n\\ No newline at end of file",
+          "snapshot_ref": "ee4117468fe88e780269060bacfa65596be44394",
+          "snapshot_blob_sha": "b2dc356797b99bb173c64a2acdb9d3503750d42b",
+          "snapshot_file": "snapshots/Gearsystem__drhelius__ee4117468fe88e780269060bacfa65596be44394__issue-triage.md",
+          "snapshot_bytes": 7204,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearsystem\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearsystem\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearsystem/blob/10bf2746ff5e3db6e65aa5612ba76c5eb7e7c673/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+      "source_full_name": "drhelius/Gearsystem",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "0f95dc9f5d92d7c5945a171ef8a06babaf93e84c",
+      "authored_at": "2026-06-22T14:23:13Z",
+      "committed_at": "2026-06-22T14:23:13Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "ee4117468fe88e780269060bacfa65596be44394"
+      ],
+      "tree_sha": "2f7ee163e0b7aaff1b6a26e931795076d8afd4d3",
+      "html_url": "https://github.com/drhelius/Gearsystem/commit/0f95dc9f5d92d7c5945a171ef8a06babaf93e84c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+          "source_full_name": "drhelius/Gearsystem",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "0f95dc9f5d92d7c5945a171ef8a06babaf93e84c",
+          "committed_at": "2026-06-22T14:23:13Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 10,
+          "file_changes": 17,
+          "file_patch": "@@ -97,14 +97,12 @@ For game compatibility reports, separate bugs from unsupported cartridge hardwar\n 1. Compare the issue to similar open and closed issues.\n 2. If there is a high-confidence duplicate, add `duplicate` and close the triggering issue using the configured `close-issue` safe output with duplicate state reason.\n 3. Include the duplicate explanation in the close comment. Do not call `add-comment` separately for duplicates.\n-4. Use a clearly automated, readable Markdown close comment with line breaks. Use this shape:\n+4. Use a clearly automated, polite Markdown close comment with line breaks. Use this shape:\n \n ```markdown\n-Automated triage result: duplicate issue.\n+Automated triage result: this appears to duplicate #123 because it describes the same affected game and mapper symptom.\n \n-- Matches: #123.\n-- Reason: same affected game and mapper symptom.\n-- Action: closing this issue as a duplicate.\n+Closing this as a duplicate. If this report describes a different case, please add the details and it can be reopened.\n ```\n 5. Do not close issues for any non-duplicate classification.\n \n@@ -113,15 +111,14 @@ Automated triage result: duplicate issue.\n 1. Apply the chosen labels with `add-labels`.\n 2. When calling `add-labels`, provide each label as a separate exact label string from the allowlist. Do not emit bracketed, comma-joined, or combined label strings such as `[bug, needs info]`.\n 3. Default to labels only. Do not post a comment unless Phase 5 closes a duplicate or Phase 2 requires a narrowly scoped version/platform clarification.\n-4. For clarification comments, use a clearly automated, readable Markdown request with line breaks. Use this shape:\n+4. For clarification comments, use a clearly automated, polite Markdown request with line breaks. Use this shape:\n \n ```markdown\n-Automated triage request: missing required environment details.\n+Automated triage request: please provide the Gearsystem version and platform/frontend so this bug report can be investigated.\n \n-- Gearsystem version:\n-- Platform/frontend:\n+No other details are needed for initial triage.\n ```\n \n ## Style\n \n-Keep comments brief, neutral, and explicitly automated, but write in complete readable sentences rather than terse status fragments. Every comment body must use Markdown line breaks: one short summary line, one blank line, then one to three short bullet lines. Do not write comments as a single paragraph or a single long sentence. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs. Do not expose secrets, private resource identifiers, tokens, generated hostnames, or user-sensitive paths. Redact sensitive values as `<redacted>`.\n\\ No newline at end of file\n+Keep comments brief, neutral, polite, and explicitly automated, but write in complete readable sentences rather than terse status fragments. Every comment body must use Markdown line breaks: one short automated summary sentence, one blank line, then one short follow-up sentence. Do not write comments as a single paragraph, a single long sentence, a form, or a checklist. Do not use first person, apologies, thanks, human-like warmth, or sign-offs. Do not expose secrets, private resource identifiers, tokens, generated hostnames, or user-sensitive paths. Redact sensitive values as `<redacted>`.\n\\ No newline at end of file",
+          "snapshot_ref": "0f95dc9f5d92d7c5945a171ef8a06babaf93e84c",
+          "snapshot_blob_sha": "ea630856d6ca8344611fbe0e7c722c4f7fbbcfb3",
+          "snapshot_file": "snapshots/Gearsystem__drhelius__0f95dc9f5d92d7c5945a171ef8a06babaf93e84c__issue-triage.md",
+          "snapshot_bytes": 7379,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearsystem\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearsystem\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearsystem/blob/10bf2746ff5e3db6e65aa5612ba76c5eb7e7c673/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+      "source_full_name": "drhelius/Gearsystem",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "203f24748e3eb0dbda1dab0b67b59c9570889ca2",
+      "authored_at": "2026-06-22T21:50:43Z",
+      "committed_at": "2026-06-22T21:50:43Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "d20e301e2ac73633639777e34692950e259477aa"
+      ],
+      "tree_sha": "703437849995e93f3404de5ab544afaefadefc59",
+      "html_url": "https://github.com/drhelius/Gearsystem/commit/203f24748e3eb0dbda1dab0b67b59c9570889ca2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearsystem:.github/workflows/issue-triage.md",
+          "source_full_name": "drhelius/Gearsystem",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "203f24748e3eb0dbda1dab0b67b59c9570889ca2",
+          "committed_at": "2026-06-22T21:50:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -20,6 +20,8 @@ tools:\n     mode: gh-proxy\n     toolsets: [repos, issues]\n safe-outputs:\n+  messages:\n+    footer: \"Generated by [{workflow_name}]({run_url})\"\n   mentions: false\n   allowed-github-references: []\n   add-labels:",
+          "snapshot_ref": "203f24748e3eb0dbda1dab0b67b59c9570889ca2",
+          "snapshot_blob_sha": "027897fe2a47a98d0c9bf454656a528faab50aa9",
+          "snapshot_file": "snapshots/Gearsystem__drhelius__203f24748e3eb0dbda1dab0b67b59c9570889ca2__issue-triage.md",
+          "snapshot_bytes": 7447,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearsystem\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearsystem\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearsystem/blob/10bf2746ff5e3db6e65aa5612ba76c5eb7e7c673/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

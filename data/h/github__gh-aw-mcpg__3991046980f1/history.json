@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+    "source_full_name": "github/gh-aw-mcpg",
+    "source_owner": "github",
+    "source_repo": "gh-aw-mcpg",
+    "md_path": ".github/workflows/readonly-stress-default.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-mcpg/blob/HEAD/.github/workflows/readonly-stress-default.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-mcpg",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-mcpg",
+      "generated_workflow_path": ".github/workflows/readonly-stress-default.lock.yml",
+      "generated_workflow_file": "readonly-stress-default.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/readonly-stress-default.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:35+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/readonly-stress-default.md",
+      "commit_sha": "f9a0f2ac53ad482ef58a5eb75559d10cceed2079",
+      "authored_at": "2026-07-20T20:23:14Z",
+      "committed_at": "2026-07-20T20:23:14Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "Add PR-triggered read-only stress workflows for mcpg across default/gVisor/docker-sbx runtimes\n\nAdds three agentic workflows that stress-test the MCP Gateway's read-only\nGitHub guarantee on both enforcement surfaces (MCP tool calls + proxied CLI\ncommands), each running the agent under a different isolation runtime:\n\n- readonly-stress-default (default AWF / normal container isolation)\n- readonly-stress-gvisor  (gVisor runsc, kernel-level isolation)\n- readonly-stress-sbx     (docker-sbx KVM microVM)\n\nEach attempts reads (expect ALLOWED) and writes (expect BLOCKED) via the\nread-only GitHub MCP tools and the gateway-backed CLI proxy, failing if any\nwrite leaks through. Triggered on pull_request so they can be required checks;\nshared test plan in shared/readonly-stress.md, inlined for ruleset compatibility.",
+      "parent_shas": [
+        "1486415f7a957a59132ee3290fc5aff0aa047756"
+      ],
+      "tree_sha": "bdcc80652bfe9da40f12f1c339eafd7106b29792",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/f9a0f2ac53ad482ef58a5eb75559d10cceed2079",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/readonly-stress-default.md",
+          "commit_sha": "f9a0f2ac53ad482ef58a5eb75559d10cceed2079",
+          "committed_at": "2026-07-20T20:23:14Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 78,
+          "file_deletions": 0,
+          "file_changes": 78,
+          "file_patch": "@@ -0,0 +1,78 @@\n+---\n+emoji: 🔒\n+description: PR stress test proving mcpg enforces read-only GitHub access (MCP tool calls + proxied CLI) under the default AWF runtime\n+on:\n+  pull_request:\n+    types: [opened, synchronize, reopened]\n+  workflow_dispatch:\n+  reaction: \"eyes\"\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+  copilot-requests: write\n+name: \"Read-Only Stress: default runtime\"\n+engine:\n+  id: copilot\n+strict: false\n+inlined-imports: true\n+imports:\n+  - shared/reporting.md\n+  - shared/readonly-stress.md\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - github.com\n+tools:\n+  github:\n+    mode: local\n+    toolsets: [repos, issues, pull_requests, search]\n+    min-integrity: approved\n+  cli-proxy: true\n+  edit:\n+  bash:\n+    - \"github\"\n+    - \"gh\"\n+    - \"cat\"\n+    - \"echo\"\n+    - \"date\"\n+    - \"jq\"\n+    - \"mkdir\"\n+    - \"grep\"\n+    - \"wc\"\n+    - \"head\"\n+    - \"tail\"\n+sandbox:\n+  agent:\n+    id: awf\n+  mcp:\n+    container: \"ghcr.io/github/gh-aw-mcpg\"\n+    version: \"latest\"\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+  add-comment:\n+    hide-older-comments: true\n+    max: 2\n+  create-issue:\n+    max: 1\n+  add-labels:\n+    allowed: [readonly-stress-pass]\n+  messages:\n+    footer: \"> 🔒 *mcpg read-only stress (default AWF runtime) by [{workflow_name}]({run_url})*\"\n+    run-started: \"🔒 [{workflow_name}]({run_url}) is stress-testing mcpg read-only enforcement under the default AWF runtime...\"\n+    run-success: \"🔒 [{workflow_name}]({run_url}) completed. Read-only enforcement validated. ✅\"\n+    run-failure: \"🔒 [{workflow_name}]({run_url}) reports {status}. Read-only enforcement may be broken. ⚠️\"\n+timeout-minutes: 15\n+---\n+\n+# mcpg Read-Only Stress Test — Default AWF Runtime\n+\n+`RUNTIME_LABEL` = **default AWF (normal container isolation)**.\n+\n+This run exercises the gateway's read-only guarantee while the agent runs under\n+the **default AWF sandbox** (no extra-isolation runtime). Follow the shared test\n+plan below, attempting reads (expect ALLOWED) and writes (expect BLOCKED) on both\n+the MCP tool-call surface and the proxied CLI surface.",
+          "snapshot_ref": "f9a0f2ac53ad482ef58a5eb75559d10cceed2079",
+          "snapshot_blob_sha": "00fae46aead83a5aa27136fae402c026fcd55645",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__f9a0f2ac53ad482ef58a5eb75559d10cceed2079__readonly-stress-default.md",
+          "snapshot_bytes": 2066,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/readonly-stress-default.lock.yml\",\"generated_workflow_file\":\"readonly-stress-default.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/readonly-stress-default.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/readonly-stress-default.md",
+      "commit_sha": "9ea3db175fe16a3122182f95691b7a020924bfb8",
+      "authored_at": "2026-07-20T20:53:12Z",
+      "committed_at": "2026-07-20T20:53:12Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Address review feedback on readonly-stress .md files",
+      "parent_shas": [
+        "f9a0f2ac53ad482ef58a5eb75559d10cceed2079"
+      ],
+      "tree_sha": "14899f85849243e8486134407328029a015be4e6",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/9ea3db175fe16a3122182f95691b7a020924bfb8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/readonly-stress-default.md",
+          "commit_sha": "9ea3db175fe16a3122182f95691b7a020924bfb8",
+          "committed_at": "2026-07-20T20:53:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -2,6 +2,7 @@\n emoji: 🔒\n description: PR stress test proving mcpg enforces read-only GitHub access (MCP tool calls + proxied CLI) under the default AWF runtime\n on:\n+  roles: all\n   pull_request:\n     types: [opened, synchronize, reopened]\n   workflow_dispatch:\n@@ -59,7 +60,7 @@ safe-outputs:\n   create-issue:\n     max: 1\n   add-labels:\n-    allowed: [readonly-stress-pass]\n+    allowed: [readonly-stress-pass-default]\n   messages:\n     footer: \"> 🔒 *mcpg read-only stress (default AWF runtime) by [{workflow_name}]({run_url})*\"\n     run-started: \"🔒 [{workflow_name}]({run_url}) is stress-testing mcpg read-only enforcement under the default AWF runtime...\"",
+          "snapshot_ref": "9ea3db175fe16a3122182f95691b7a020924bfb8",
+          "snapshot_blob_sha": "921c6239af8c3c313ea5486aa37ad4b27ee5af1c",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__9ea3db175fe16a3122182f95691b7a020924bfb8__readonly-stress-default.md",
+          "snapshot_bytes": 2087,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/readonly-stress-default.lock.yml\",\"generated_workflow_file\":\"readonly-stress-default.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/readonly-stress-default.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/readonly-stress-default.md",
+      "commit_sha": "ba97f8afef3e955caa4585ab80bb5d8e9a2efbd0",
+      "authored_at": "2026-07-31T22:24:11Z",
+      "committed_at": "2026-07-31T22:24:11Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "Pin models for isolated runtime stress workflows\n\nAvoid relying on AWF reflect model pricing when gVisor or docker-sbx isolates the agent from the API proxy endpoint.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "df019b5dec482e621d35f4403ce7504635d4e547"
+      ],
+      "tree_sha": "a46d5b3cd0f571d8dd1ca9357e14b9b9085cfcb7",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/ba97f8afef3e955caa4585ab80bb5d8e9a2efbd0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/readonly-stress-default.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/readonly-stress-default.md",
+          "commit_sha": "ba97f8afef3e955caa4585ab80bb5d8e9a2efbd0",
+          "committed_at": "2026-07-31T22:24:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -14,6 +14,7 @@ permissions:\n   actions: read\n   copilot-requests: write\n name: \"Read-Only Stress: default runtime\"\n+model: claude-sonnet-4.6\n engine:\n   id: copilot\n strict: false",
+          "snapshot_ref": "ba97f8afef3e955caa4585ab80bb5d8e9a2efbd0",
+          "snapshot_blob_sha": "2e8129d9318f1173f93642df99a0165e7f9f168f",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__ba97f8afef3e955caa4585ab80bb5d8e9a2efbd0__readonly-stress-default.md",
+          "snapshot_bytes": 2112,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/readonly-stress-default.lock.yml\",\"generated_workflow_file\":\"readonly-stress-default.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/readonly-stress-default.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

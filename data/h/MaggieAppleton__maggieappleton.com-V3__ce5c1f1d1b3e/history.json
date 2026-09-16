@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/draft-research.md",
+    "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+    "source_owner": "MaggieAppleton",
+    "source_repo": "maggieappleton.com-V3",
+    "md_path": ".github/workflows/draft-research.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/HEAD/.github/workflows/draft-research.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "generated_owner": "MaggieAppleton",
+      "generated_repo": "maggieappleton.com-V3",
+      "generated_workflow_path": ".github/workflows/draft-research.lock.yml",
+      "generated_workflow_file": "draft-research.lock.yml",
+      "generated_html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/draft-research.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:58:06+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/draft-research.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/draft-research.md",
+      "commit_sha": "b587711128c5fdaced6f5d15b8aacce1f1bb7a08",
+      "authored_at": "2026-05-01T08:41:41Z",
+      "committed_at": "2026-05-01T08:41:41Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add draft-research gh-aw workflow (#212)\n\nManually-triggered workflow that scans MDX drafts (draft: true) for\nincompleteness signals, researches gaps via web search, and emits one\nGitHub issue per draft with findings — no prose written, no files edited.\n\nCo-authored-by: Claude Opus 4.7 <noreply@anthropic.com>",
+      "parent_shas": [
+        "410a3d9e5f9ccd94caf5cfe2895eed07fed20303"
+      ],
+      "tree_sha": "60cd50877a388dd92a27855b4d5a7586543c3344",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/b587711128c5fdaced6f5d15b8aacce1f1bb7a08",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/draft-research.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/draft-research.md",
+          "commit_sha": "b587711128c5fdaced6f5d15b8aacce1f1bb7a08",
+          "committed_at": "2026-05-01T08:41:41Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 173,
+          "file_deletions": 0,
+          "file_changes": 173,
+          "file_patch": "@@ -0,0 +1,173 @@\n+---\n+name: Draft Research Agent\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      target:\n+        description: \"Optional path to a single MDX file (e.g. src/content/essays/block-party.mdx). Leave blank to scan all drafts.\"\n+        required: false\n+        default: \"\"\n+  stop-after: \"+30d\"\n+permissions:\n+  contents: read\n+  issues: read\n+engine:\n+  id: claude\n+  model: claude-sonnet-4-6\n+  max-turns: 30\n+timeout-minutes: 30\n+tools:\n+  bash: [\"grep *\", \"rg *\", \"find *\", \"cat *\", \"ls *\", \"head *\", \"tail *\", \"wc *\"]\n+  web-fetch:\n+  web-search:\n+  github:\n+    toolsets: [repos, issues, context]\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[research] \"\n+    labels: [draft-research, automation]\n+    max: 20\n+  add-comment:\n+    max: 20\n+  noop:\n+network:\n+  allowed: [defaults]\n+---\n+\n+# Draft Research Agent\n+\n+You are a research assistant for Maggie's digital garden. Maggie writes long-form essays in MDX under `src/content/`. Drafts (`draft: true` in frontmatter) often contain placeholders, factual gaps, and unfinished thoughts that block publication. Your job: find those gaps, do the research legwork, and report findings as **GitHub issues** — one per draft.\n+\n+**You must never write prose into the drafts. You must never propose replacement paragraphs. You deliver research findings only — facts, dates, names, sources — that Maggie will incorporate in her own voice.**\n+\n+## Reference: Maggie's writing voice\n+\n+The following is a guide to *what kinds of evidence and framings* Maggie tends to find useful. Use it to judge what's worth surfacing — not to imitate her voice in your output.\n+\n+{{#runtime-import .github/shared/writing-style.md}}\n+\n+## Input\n+\n+Optional `target` input: `${{ github.event.inputs.target }}`\n+\n+If `target` is set, scan only that single file. Otherwise, scan all draft MDX files in the repo.\n+\n+## Process\n+\n+### 1. Find draft files\n+\n+Use bash to locate MDX files where frontmatter contains `draft: true`:\n+\n+```\n+grep -rl \"^draft: true\" src/content --include=\"*.mdx\"\n+```\n+\n+If `target` is provided, restrict to that single path (and verify it has `draft: true` — if it doesn't, emit `noop` and stop).\n+\n+### 2. For each draft, scan for gaps\n+\n+Read the file. Identify two categories of gap:\n+\n+**A. Explicit markers** — high confidence:\n+- `XXX`, `TODO`, `FIXME`\n+- Bracketed placeholders like `[date here]`, `[example]`, `[need source]`\n+- `???` or `?` standing in for an unknown\n+- Inline notes: \"I need to research X\", \"I should look into\", \"double-check this\", \"find a source for\"\n+- Sentences trailing into ellipses (`...`) where the trailing text is clearly incomplete (not a stylistic ellipsis at the end of a quote)\n+\n+**B. Soft signals** — lower confidence, use judgment:\n+- Vague factual claims with no citation: \"around the 1960s\", \"some studies show\", \"many researchers\", a named person/work introduced with no context or date\n+- Specific dates, statistics, or quotes that are clearly meant to be authoritative but lack a source link\n+- Named works, books, papers, or projects mentioned without enough context for a reader to look them up\n+- Structural gaps: a paragraph ending mid-thought, a section header with thin or missing content beneath it, a list with one obviously-placeholder item\n+\n+For soft signals, only flag items where research could plausibly produce a concrete fact, date, name, or source link. Do not flag stylistic choices, rhetorical questions, or deliberate vagueness. If you're not sure whether something is a deliberate choice or a gap, err on the side of *not* flagging it.\n+\n+### 3. Research each gap\n+\n+For each gap, use `web-search` and `web-fetch` to find:\n+- The missing fact (a date, a name, a number, a definition)\n+- A primary or otherwise authoritative source URL\n+- Brief context if useful (one sentence max)\n+\n+Prefer primary sources, original texts, and academic/specialist material over summaries and listicles. Maggie's writing leans anthropological and historical — surface those angles when relevant.\n+\n+If research is inconclusive, say so plainly. **Do not fabricate.** A \"could not confirm\" finding is more useful than a guess.\n+\n+### 4. Dedupe against existing issues\n+\n+Before opening a new issue for a draft, search for existing open issues with title starting `[research] <slug>` for that draft (use the GitHub `issues` toolset). If one exists:\n+\n+1. Post a comment on the existing issue noting it's being superseded by a fresh scan.\n+2. Add a label or comment so it can be closed manually (you have read-only permissions on issues, so you cannot close it directly — leave a clear comment instead).\n+3. Open the new issue as normal.\n+\n+The slug for matching is the **filename stem** (e.g. `block-party.mdx` → `block-party`).\n+\n+### 5. Emit one issue per draft with gaps\n+\n+For each draft that has at least one gap, call `create-issue` once. Title:\n+\n+```\n+[research] <slug>\n+```\n+\n+where `<slug>` is the filename stem of the draft.\n+\n+Body format:\n+\n+```markdown\n+## Draft\n+\n+`<file path>`\n+\n+## Summary\n+\n+Found <N> gap(s): <X> explicit marker(s), <Y> soft signal(s).\n+\n+## Gaps\n+\n+### 1. <short label> — line <N> (<explicit marker | soft signal>)\n+\n+**Original text:**\n+> <exact quoted text from the file, with enough context to locate it>\n+\n+**Finding:**\n+<one or two sentences, facts only — a date, a name, a definition, a clarification>\n+\n+**Sources:**\n+- <url 1>\n+- <url 2>\n+\n+---\n+\n+### 2. <short label> — line <N> ...\n+\n+(repeat per gap)\n+\n+---\n+\n+## Note\n+\n+These are research findings only. Maggie writes the prose herself — do not interpret these as drafted replacements.\n+```\n+\n+If a draft has zero gaps, do NOT open an issue for it.\n+\n+If no draft in the entire scan has any gaps, emit `noop`.\n+\n+## Hard rules\n+\n+- **Never edit any file.** (Read-only permissions enforce this; state it explicitly anyway.)\n+- **Never write replacement prose, paraphrase Maggie's writing, or suggest sentence-level rewrites.** Findings are facts, not draft text.\n+- **Be terse.** A finding is a date, a name, a link, a one-line clarification. Not a paragraph.\n+- **No fabrication.** If you can't confirm, say \"could not confirm\" and explain what you searched.\n+- **Cite sources.** Every finding must have at least one source URL, unless the finding is \"could not confirm\" — in which case list the searches you tried.\n+- **Quote accurately.** When you quote \"Original text\" from the file, it must match the file exactly, and the line number must be correct.\n+- **One issue per draft.** Don't split a single draft's gaps across multiple issues.\n+\n+## Getting stuck\n+\n+If you cannot determine whether something is a gap or a stylistic choice, leave it alone. False positives are worse than false negatives — a noisy issue trains Maggie to ignore the agent.\n+\n+If `web-search` and `web-fetch` are unavailable or rate-limited, complete what you can with the research already gathered, note the limitation in the issue body, and proceed.",
+          "snapshot_ref": "b587711128c5fdaced6f5d15b8aacce1f1bb7a08",
+          "snapshot_blob_sha": "db7da1d71dd8ba1176c80861257037ee6e51b463",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__b587711128c5fdaced6f5d15b8aacce1f1bb7a08__draft-research.md",
+          "snapshot_bytes": 6800,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/draft-research.lock.yml\",\"generated_workflow_file\":\"draft-research.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/draft-research.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/draft-research.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/draft-research.md",
+      "commit_sha": "b987ad6c652f75f806a60c02ce2b1614b20ad5fd",
+      "authored_at": "2026-05-01T08:45:22Z",
+      "committed_at": "2026-05-01T08:45:22Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(draft-research): allow target input to scan non-draft files (#213)\n\nWhen the user explicitly passes a target path, skip the draft: true\nrequirement so the agent can research older published posts. Default\nno-target scan still restricted to drafts.\n\nCo-authored-by: Claude Opus 4.7 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b587711128c5fdaced6f5d15b8aacce1f1bb7a08"
+      ],
+      "tree_sha": "534b91e7e3fbd590148fd9ea51e3b3fca85d59b4",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/b987ad6c652f75f806a60c02ce2b1614b20ad5fd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/draft-research.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/draft-research.md",
+          "commit_sha": "b987ad6c652f75f806a60c02ce2b1614b20ad5fd",
+          "committed_at": "2026-05-01T08:45:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 5,
+          "file_changes": 10,
+          "file_patch": "@@ -50,20 +50,20 @@ The following is a guide to *what kinds of evidence and framings* Maggie tends t\n \n Optional `target` input: `${{ github.event.inputs.target }}`\n \n-If `target` is set, scan only that single file. Otherwise, scan all draft MDX files in the repo.\n+If `target` is set, scan only that single file (regardless of draft status — the user has explicitly opted in). Otherwise, scan all `draft: true` MDX files in the repo.\n \n ## Process\n \n-### 1. Find draft files\n+### 1. Find files to scan\n \n-Use bash to locate MDX files where frontmatter contains `draft: true`:\n+**If `target` is provided:** scan that single path. Verify the file exists and is an `.mdx` file under `src/content/`. Do **not** require `draft: true` — the user can target published posts to surface gaps in older work.\n+\n+**If `target` is empty:** locate all MDX files where frontmatter contains `draft: true`:\n \n ```\n grep -rl \"^draft: true\" src/content --include=\"*.mdx\"\n ```\n \n-If `target` is provided, restrict to that single path (and verify it has `draft: true` — if it doesn't, emit `noop` and stop).\n-\n ### 2. For each draft, scan for gaps\n \n Read the file. Identify two categories of gap:",
+          "snapshot_ref": "b987ad6c652f75f806a60c02ce2b1614b20ad5fd",
+          "snapshot_blob_sha": "3bd9f00cfa8da2688d8a861133fe1a6242bb80e0",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__b987ad6c652f75f806a60c02ce2b1614b20ad5fd__draft-research.md",
+          "snapshot_bytes": 6988,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/draft-research.lock.yml\",\"generated_workflow_file\":\"draft-research.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/draft-research.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

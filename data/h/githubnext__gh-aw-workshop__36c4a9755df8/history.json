@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+    "source_full_name": "githubnext/gh-aw-workshop",
+    "source_owner": "githubnext",
+    "source_repo": "gh-aw-workshop",
+    "md_path": ".github/workflows/security-side-quest.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/gh-aw-workshop/blob/HEAD/.github/workflows/security-side-quest.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/gh-aw-workshop",
+      "generated_owner": "githubnext",
+      "generated_repo": "gh-aw-workshop",
+      "generated_workflow_path": ".github/workflows/security-side-quest.lock.yml",
+      "generated_workflow_file": "security-side-quest.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/security-side-quest.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:49:17+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/security-side-quest.md",
+      "commit_sha": "0e7d896fd8345fa81c87f9047bedf5f97e2cac3a",
+      "authored_at": "2026-07-13T06:08:07Z",
+      "committed_at": "2026-07-13T06:08:07Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add daily security-side-quest agentic workflow (#536)",
+      "parent_shas": [
+        "3fff6cb185314dd0789c096816cb5f2073b2e8e1"
+      ],
+      "tree_sha": "b5200eb7787ac18c6bb7559e4972969327f26bed",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/0e7d896fd8345fa81c87f9047bedf5f97e2cac3a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/security-side-quest.md",
+          "commit_sha": "0e7d896fd8345fa81c87f9047bedf5f97e2cac3a",
+          "committed_at": "2026-07-13T06:08:07Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 345,
+          "file_deletions": 0,
+          "file_changes": 345,
+          "file_patch": "@@ -0,0 +1,345 @@\n+---\n+emoji: 🔐\n+name: Security Side Quest\n+description: >\n+  Daily workshop editor that creates one new security-focused side quest explaining\n+  a real attack vector or security risk, and connects it to the design decisions\n+  in the AW security architecture.\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+    inputs:\n+      focus:\n+        description: \"Optional attack or security topic hint (e.g. prompt injection, token exfiltration, supply chain)\"\n+        required: false\n+        type: string\n+  skip-if-match: \"is:pr is:open label:security-side-quest\"\n+permissions:\n+  contents: read\n+  copilot-requests: write\n+  pull-requests: read\n+  issues: read\n+  actions: read\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+  agentic-workflows:\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[security-side-quest] \"\n+    labels: [workshop, security-side-quest, documentation]\n+    draft: true\n+    protected-files:\n+      policy: request_review\n+    allowed-files:\n+      - \"workshop/*.md\"\n+      - \"workshop/**/*.md\"\n+    if-no-changes: warn\n+network:\n+  allowed:\n+    - defaults\n+steps:\n+  - name: Gather security side quest state\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/data\n+\n+      python3 <<'PY'\n+      import json\n+      import pathlib\n+      import re\n+\n+      workshop_dir = pathlib.Path(\"workshop\")\n+\n+      # Collect existing security side quest files\n+      security_sq_files = sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*security*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*attack*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*inject*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*token*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*exfiltrat*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*permission*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*sandbox*.md\")\n+      )\n+      security_sq_files += sorted(\n+          str(p) for p in workshop_dir.glob(\"side-quest-*supply-chain*.md\")\n+      )\n+      # Deduplicate\n+      security_sq_files = sorted(set(security_sq_files))\n+\n+      # All existing side quest files\n+      all_sq_files = sorted(str(p) for p in workshop_dir.glob(\"side-quest-*.md\"))\n+\n+      # Read titles from existing security side quests\n+      sq_titles = {}\n+      for sq_path in security_sq_files:\n+          text = pathlib.Path(sq_path).read_text()\n+          m = re.search(r\"^# (.+)$\", text, re.MULTILINE)\n+          if m:\n+              sq_titles[sq_path] = m.group(1).strip()\n+\n+      # Read the security architecture document\n+      sec_arch_path = workshop_dir / \"side-quest-17-02-security-architecture.md\"\n+      sec_arch_content = sec_arch_path.read_text() if sec_arch_path.exists() else \"\"\n+\n+      # Read the secrets/permissions side quest\n+      secrets_path = workshop_dir / \"side-quest-16-02-secrets-and-permissions.md\"\n+      secrets_content = secrets_path.read_text() if secrets_path.exists() else \"\"\n+\n+      # Build a brief of covered topics from existing side quest headings to help\n+      # the agent avoid duplication. Store partial content (first 500 chars) only.\n+      existing_sq_excerpts = {\n+          path: pathlib.Path(path).read_text()[:500]\n+          for path in all_sq_files\n+          if pathlib.Path(path).exists()\n+      }\n+\n+      # Candidate attack/security topics the workflow should cover (one per run)\n+      attack_topics = [\n+          {\n+              \"slug\": \"prompt-injection\",\n+              \"title\": \"Prompt Injection Attacks\",\n+              \"description\": \"How malicious content in repo data (issues, PR titles, commit messages) can hijack agent instructions, and how AW's sandboxed brief execution limits the blast radius.\",\n+              \"parent_step\": \"17\",\n+              \"sq_seq\": \"03\",\n+          },\n+          {\n+              \"slug\": \"token-exfiltration\",\n+              \"title\": \"Token and Secret Exfiltration\",\n+              \"description\": \"How an agent could be tricked into leaking GITHUB_TOKEN or other secrets through log output or API calls, and how AW's safe-outputs and log masking prevent this.\",\n+              \"parent_step\": \"16\",\n+              \"sq_seq\": \"03\",\n+          },\n+          {\n+              \"slug\": \"permission-escalation\",\n+              \"title\": \"Permission Escalation\",\n+              \"description\": \"How an agent that is granted write permissions can be misused to push malicious commits or delete branches, and why AW requires you to declare only the minimum permissions you need.\",\n+              \"parent_step\": \"17\",\n+              \"sq_seq\": \"04\",\n+          },\n+          {\n+              \"slug\": \"supply-chain-mcp\",\n+              \"title\": \"Supply Chain Attacks via MCP Tool Servers\",\n+              \"description\": \"How a compromised or malicious MCP server can feed poisoned tool results back to the agent, and how AW's network allow-list and tool pinning reduce that risk.\",\n+              \"parent_step\": \"17\",\n+              \"sq_seq\": \"05\",\n+          },\n+          {\n+              \"slug\": \"output-injection\",\n+              \"title\": \"Output Injection via safe-outputs\",\n+              \"description\": \"How a carefully crafted agent output could embed markdown or HTML to mislead human reviewers reading a PR body or issue comment, and how AW's safe-outputs block keeps output constrained to allowed surfaces.\",\n+              \"parent_step\": \"17\",\n+              \"sq_seq\": \"06\",\n+          },\n+          {\n+              \"slug\": \"jailbreak-brief\",\n+              \"title\": \"Jailbreaking the Agent Brief\",\n+              \"description\": \"How adversarial instructions hidden in repo content can override the intended task brief, and why treating the brief as the authoritative system prompt (not just a suggestion) matters.\",\n+              \"parent_step\": \"10\",\n+              \"sq_seq\": \"02\",\n+          },\n+          {\n+              \"slug\": \"long-lived-credentials\",\n+              \"title\": \"Long-Lived Credential Risks\",\n+              \"description\": \"Why using personal access tokens (PATs) instead of the ephemeral GITHUB_TOKEN increases your attack surface, and how AW's ephemeral runner model reduces the window for credential misuse.\",\n+              \"parent_step\": \"16\",\n+              \"sq_seq\": \"04\",\n+          },\n+          {\n+              \"slug\": \"repo-poisoning\",\n+              \"title\": \"Repository Poisoning via Agentic Write Access\",\n+              \"description\": \"How an agent with contents:write could be directed to commit backdoors or delete files, and how declaring contents:read (plus protected-files in safe-outputs) defends the codebase.\",\n+              \"parent_step\": \"17\",\n+              \"sq_seq\": \"07\",\n+          },\n+      ]\n+\n+      # Determine which topics are already covered\n+      covered_slugs = set()\n+      for sq_path in all_sq_files:\n+          for topic in attack_topics:\n+              if topic[\"slug\"] in sq_path:\n+                  covered_slugs.add(topic[\"slug\"])\n+\n+      remaining_topics = [t for t in attack_topics if t[\"slug\"] not in covered_slugs]\n+\n+      pathlib.Path(\"/tmp/gh-aw/data/security-sq-state.json\").write_text(\n+          json.dumps(\n+              {\n+                  \"existing_security_side_quests\": security_sq_files,\n+                  \"existing_security_sq_titles\": sq_titles,\n+                  \"all_side_quest_files\": all_sq_files,\n+                  \"security_architecture_doc\": \"workshop/side-quest-17-02-security-architecture.md\",\n+                  \"security_architecture_content\": sec_arch_content,\n+                  \"secrets_permissions_doc\": \"workshop/side-quest-16-02-secrets-and-permissions.md\",\n+                  \"secrets_permissions_content\": secrets_content,\n+                  \"existing_sq_excerpts\": existing_sq_excerpts,\n+                  \"attack_topics\": attack_topics,\n+                  \"covered_slugs\": list(covered_slugs),\n+                  \"remaining_topics\": remaining_topics,\n+                  \"remaining_count\": len(remaining_topics),\n+              },\n+              indent=2,\n+          )\n+      )\n+      PY\n+---\n+\n+## Security Side Quest\n+\n+You are a security-minded workshop editor for **Learning GitHub Agentic Workflows**.\n+\n+Your job is to teach learners about real security threats that affect AI agentic\n+workflows, and to explain how `gh-aw`'s design choices defend against those threats.\n+Each run creates **at most one** new side quest covering **one** specific attack or\n+security risk.\n+\n+Create **at most one** pull request per run.\n+\n+## Read first\n+\n+1. `/tmp/gh-aw/data/security-sq-state.json`\n+2. `workshop/side-quest-17-02-security-architecture.md` — the AW security architecture\n+   reference document that all new side quests must be rooted in\n+3. `workshop/side-quest-16-02-secrets-and-permissions.md` — the existing credentials\n+   side quest (do not duplicate its content)\n+4. `workshop/README.md`\n+5. `.github/workflows/guidelines.md`\n+\n+If `focus` is provided, prioritize the attack topic that best matches the hint.\n+Otherwise, pick the first uncovered topic from `remaining_topics` in the state file.\n+\n+## What counts as a security side quest\n+\n+Each side quest covers **one** attack vector or security risk. The side quest must:\n+\n+- Name the real-world attack (e.g. prompt injection, token exfiltration)\n+- Show a concrete, realistic scenario in the context of a GitHub agentic workflow\n+- Explain which AW design feature prevents or limits the attack\n+- Connect back to the security architecture document\n+- Be self-contained and standalone — a learner who missed the main step should\n+  still finish it with a useful mental model\n+\n+Good side quest angles:\n+\n+- **Prompt injection**: malicious repo data overriding agent instructions\n+- **Token/secret exfiltration**: agent output leaking credentials\n+- **Permission escalation**: over-scoped permissions enabling destructive writes\n+- **Supply chain via MCP**: a compromised tool server poisoning agent results\n+- **Output injection**: agent output embedding content that misleads reviewers\n+- **Jailbreaking the brief**: adversarial instructions in repo issues or PR bodies\n+- **Long-lived credentials**: PAT misuse vs. ephemeral GITHUB_TOKEN\n+- **Repository poisoning**: agent write access used to commit malicious code\n+\n+## Required change set\n+\n+1. Create exactly one new file named\n+   `workshop/side-quest-<parent_step>-<sq_seq>-<slug>.md`\n+   using the `parent_step`, `sq_seq`, and `slug` from the matching entry in\n+   `attack_topics` in the state file.\n+2. Do **not** modify `side-quest-17-02-security-architecture.md` or\n+   `side-quest-16-02-secrets-and-permissions.md` — link to them instead.\n+3. Add an optional callout linking to the new side quest in the most relevant\n+   main workshop step (usually the step whose number matches `parent_step`).\n+4. Update `workshop/README.md` to list the new side quest in the Optional Side\n+   Quests section.\n+\n+## Structure for each security side quest\n+\n+Write every security side quest with this exact structure:\n+\n+```markdown\n+# Side Quest: <Attack Name>\n+\n+> _One sentence: what attack this covers and why AW is designed to resist it._\n+\n+## The Attack\n+\n+2–3 sentences describing the attack in plain English, without jargon. Include\n+a realistic scenario set in the context of an agentic GitHub workflow.\n+\n+## Why This Matters for Agentic Workflows\n+\n+1–2 paragraphs explaining why agentic workflows are particularly exposed to this\n+attack, compared with classic CI/CD pipelines.\n+\n+## How AW Defends Against It\n+\n+A short explanation (bullet list or short paragraphs) of the specific gh-aw\n+design features that prevent or limit the attack. Reference real frontmatter\n+fields, safe-outputs options, or runtime properties.\n+\n+Link back to the broader model with:\n+> See [Agentic Workflow Security Architecture (Explain Like You're 5)](side-quest-17-02-security-architecture.md)\n+> for the full security model.\n+\n+## What You Can Do as a Workflow Author\n+\n+A short checklist of concrete actions the learner can take right now to harden\n+their workflow against this attack.\n+\n+## ✅ Checkpoint\n+\n+- [ ] I can describe the <attack name> attack in one sentence\n+- [ ] I can name the gh-aw feature that limits this attack\n+- [ ] I have applied at least one defensive measure to my own workflow\n+\n+Return to [<parent step title>](<parent-step-file>.md).\n+```\n+\n+## Writing rules\n+\n+- Second person, present tense, active voice.\n+- Keep the side quest to one concept. Do not bundle two attacks into one file.\n+- Do not duplicate content already covered in\n+  `side-quest-16-02-secrets-and-permissions.md`.\n+- Include a short concrete YAML snippet where it makes the defense tangible\n+  (e.g. showing minimal permissions, a `protected-files` block, or a\n+  `safe-outputs` constraint).\n+- Follow `.github/workflows/guidelines.md` — no numbered headers, no Node.js\n+  prerequisites, UI-first where possible.\n+\n+## Routing rules\n+\n+- In the most relevant main workshop step, add an optional callout (using\n+  `> [!TIP]` or an **Optional Side Quest** note) that links to the new side\n+  quest with clear optional language.\n+- In the new side quest file, include a return link at the bottom.\n+- In `workshop/README.md`, add the side quest to the Optional Side Quests\n+  section and state which main step it branches from.\n+\n+## Validate workflow snippets\n+\n+Use the shared procedure in `.github/workflows/workshop-author.md` under\n+`### 5. Validate agentic workflow snippets`.\n+\n+## No-op rule\n+\n+Call `noop` with a short explanation when:\n+\n+- `remaining_count` in the state file is `0` (all planned topics are covered)\n+- The `focus` topic is not in `remaining_topics` and has already been covered\n+- No coherent security side quest can be written without duplicating existing\n+  content\n+\n+## Safe outputs\n+\n+- Use `create-pull-request` for all visible changes.\n+- PR body must include:\n+  - the attack topic covered\n+  - which AW design feature is highlighted\n+  - which main workshop step received the optional callout link\n+  - which files were created or modified",
+          "snapshot_ref": "0e7d896fd8345fa81c87f9047bedf5f97e2cac3a",
+          "snapshot_blob_sha": "c4d01db1fb81f26fe7f3834ac7ca5e54a83779c7",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__0e7d896fd8345fa81c87f9047bedf5f97e2cac3a__security-side-quest.md",
+          "snapshot_bytes": 14057,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/security-side-quest.lock.yml\",\"generated_workflow_file\":\"security-side-quest.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/security-side-quest.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/security-side-quest.md",
+      "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+      "authored_at": "2026-07-14T22:45:21Z",
+      "committed_at": "2026-07-14T22:45:21Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `expires: 1d` to all agentic workflow safe-outputs (#1125)",
+      "parent_shas": [
+        "b4fd7e2d2ad27cd43d5764482c3fe5e06dd8112d"
+      ],
+      "tree_sha": "a141fde523b6534bacfbf9f0f444b5474b1ad009",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/964af15393f94c1cd7239080ac7e2207139848fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/security-side-quest.md",
+          "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "committed_at": "2026-07-14T22:45:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -36,6 +36,7 @@ safe-outputs:\n       - \"workshop/*.md\"\n       - \"workshop/**/*.md\"\n     if-no-changes: warn\n+    expires: 1d\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "snapshot_blob_sha": "0846a1ffce86d5f15f1f9a956b1b16f99d22061c",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__964af15393f94c1cd7239080ac7e2207139848fb__security-side-quest.md",
+          "snapshot_bytes": 14073,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/security-side-quest.lock.yml\",\"generated_workflow_file\":\"security-side-quest.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/security-side-quest.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/security-side-quest.md",
+      "commit_sha": "10b73f9c1ecbec56a214aa4965db0a080c91a3e5",
+      "authored_at": "2026-07-24T17:12:22Z",
+      "committed_at": "2026-07-24T17:12:22Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Make Codespaces the sole core workshop route (#1970)",
+      "parent_shas": [
+        "2a649785c73abe6d0595597abf2c2067b95b66c1"
+      ],
+      "tree_sha": "f1f1ad5b9097a3b1094089fbf8fe042ae073df3d",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/10b73f9c1ecbec56a214aa4965db0a080c91a3e5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/security-side-quest.md",
+          "commit_sha": "10b73f9c1ecbec56a214aa4965db0a080c91a3e5",
+          "committed_at": "2026-07-24T17:12:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -311,7 +311,7 @@ Return to [<parent step title>](<parent-step-file>.md).\n   (e.g. showing minimal permissions, a `protected-files` block, or a\n   `safe-outputs` constraint).\n - Follow `.github/workflows/guidelines.md` — no numbered headers, no Node.js\n-  prerequisites, UI-first where possible.\n+  prerequisites, and no environment alternatives in the Codespaces core route.\n \n ## Routing rules\n ",
+          "snapshot_ref": "10b73f9c1ecbec56a214aa4965db0a080c91a3e5",
+          "snapshot_blob_sha": "d3688b4e18289137e2893ca98ae8d24bb80b51c2",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__10b73f9c1ecbec56a214aa4965db0a080c91a3e5__security-side-quest.md",
+          "snapshot_bytes": 14110,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/security-side-quest.lock.yml\",\"generated_workflow_file\":\"security-side-quest.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/security-side-quest.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/security-side-quest.md",
+      "commit_sha": "475fb0453b4473c751d08b5a1d5920698705ec93",
+      "authored_at": "2026-07-29T09:13:14Z",
+      "committed_at": "2026-07-29T09:13:14Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Replace raw emoji in workflow templates with GitHub colon-syntax emoticons (#2322)\n\n* fix: replace raw emoji in titles with GitHub colon-syntax emoticons\n\nReplace raw Unicode emoji characters (🎯 📋 ✅ 🔀) with GitHub colon-syntax\nemoticons (:dart: :clipboard: :white_check_mark: :twisted_rightwards_arrows:)\nin workflow template headings, section-name strings, and enforcement rules.\n\nThis aligns the workflow agent templates and tooling with how the actual\nworkshop/ content files already spell their section headings, and ensures\nthe workshop-order-review section-extraction code matches live files.\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* fix: apply :clipboard: colon-syntax to Before You Start headings in workshop docs and regenerate lock files\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\nCo-authored-by: Peli de Halleux <pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "bcc8196f143d2f0181c762e3babe84458fee5085"
+      ],
+      "tree_sha": "87f10c134b702c9a95255299548accceecbcce16",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/475fb0453b4473c751d08b5a1d5920698705ec93",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/security-side-quest.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/security-side-quest.md",
+          "commit_sha": "475fb0453b4473c751d08b5a1d5920698705ec93",
+          "committed_at": "2026-07-29T09:13:14Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -292,7 +292,7 @@ Link back to the broader model with:\n A short checklist of concrete actions the learner can take right now to harden\n their workflow against this attack.\n \n-## ✅ Checkpoint\n+## :white_check_mark: Checkpoint\n \n - [ ] I can describe the <attack name> attack in one sentence\n - [ ] I can name the gh-aw feature that limits this attack",
+          "snapshot_ref": "475fb0453b4473c751d08b5a1d5920698705ec93",
+          "snapshot_blob_sha": "b1663d1b7f7d0b2ac832cf7742778753e4ab7722",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__475fb0453b4473c751d08b5a1d5920698705ec93__security-side-quest.md",
+          "snapshot_bytes": 14125,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/security-side-quest.lock.yml\",\"generated_workflow_file\":\"security-side-quest.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/security-side-quest.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

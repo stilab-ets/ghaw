@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+    "source_full_name": "elastic/kibana",
+    "source_owner": "elastic",
+    "source_repo": "kibana",
+    "md_path": ".github/workflows/reviewer-scout.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/elastic/kibana/blob/HEAD/.github/workflows/reviewer-scout.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "elastic/kibana",
+      "generated_owner": "elastic",
+      "generated_repo": "kibana",
+      "generated_workflow_path": ".github/workflows/reviewer-scout.lock.yml",
+      "generated_workflow_file": "reviewer-scout.lock.yml",
+      "generated_html_url": "https://github.com/elastic/kibana/blob/7be104e152285dbd9dbf5ffc43ede2c218305f24/.github/workflows/reviewer-scout.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:26:48+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+      "source_full_name": "elastic/kibana",
+      "md_path": ".github/workflows/reviewer-scout.md",
+      "commit_sha": "5bdf4e1fd4404d3523240e9c84b9152a546b6594",
+      "authored_at": "2026-06-19T13:38:01Z",
+      "committed_at": "2026-06-19T13:38:01Z",
+      "author_name": "Cesare de Cal",
+      "author_email": "cesare.decal@elastic.co",
+      "author_login": "csr",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[Scout] Add Scout test reviewer agentic workflow (#268871)\n\nThis PR adds a new GitHub Agentic Workflow that performs Scout test\nreviews for PRs that have the `reviewer:scout` label. The goal is to\nprovide very similar functionality to the the existing Macroscope [Scout\nTest Review check run\nagent](https://github.com/elastic/kibana/blob/main/.macroscope/scout-review.md).\n\nInspired by the existing\n[Claude](https://github.com/elastic/kibana/blob/main/.github/workflows/reviewer-claude.md)\nand\n[Codex](https://github.com/elastic/kibana/blob/main/.github/workflows/reviewer-codex.md)\nworkflows.",
+      "parent_shas": [
+        "e5dcbacc5b7850b5ded8d9c0ea27b91ddc0f0e40"
+      ],
+      "tree_sha": "2fc636af3fdb11f352bfd716d67c2d61103dec6e",
+      "html_url": "https://github.com/elastic/kibana/commit/5bdf4e1fd4404d3523240e9c84b9152a546b6594",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+          "source_full_name": "elastic/kibana",
+          "md_path": ".github/workflows/reviewer-scout.md",
+          "commit_sha": "5bdf4e1fd4404d3523240e9c84b9152a546b6594",
+          "committed_at": "2026-06-19T13:38:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 142,
+          "file_deletions": 0,
+          "file_changes": 142,
+          "file_patch": "@@ -0,0 +1,142 @@\n+---\n+name: Scout Test Reviewer\n+on:\n+  pull_request_target:\n+    types: [synchronize, reopened, labeled]\n+  workflow_dispatch:\n+    inputs:\n+      pr_number:\n+        description: Pull request number to review\n+        required: true\n+        type: string\n+      comment_id:\n+        description: Triggering comment id for dispatched follow-up runs\n+        required: false\n+        type: string\n+resources:\n+  - prefetch-pr-context.yml\n+imports:\n+  - .github/agents/scout-reviewer.md\n+engine:\n+  id: claude\n+  version: '2.1.111'\n+  model: opus\n+  max-turns: 120\n+  env:\n+    ANTHROPIC_API_KEY: ${{ secrets.LITELLM_API_KEY }}\n+    ANTHROPIC_BASE_URL: https://elastic.litellm-prod.ai\n+    ENABLE_PROMPT_CACHING_1H: '1'\n+    # Route Claude Code's 1M Opus alias through LiteLLM.\n+    ANTHROPIC_DEFAULT_OPUS_MODEL: llm-gateway/claude-opus-4-7[1m]\n+    ANTHROPIC_DEFAULT_HAIKU_MODEL: llm-gateway/claude-haiku-4-5\n+    ANTHROPIC_DEFAULT_SONNET_MODEL: llm-gateway/claude-sonnet-4-6\n+    CLAUDE_CODE_SUBAGENT_MODEL: opus[1m]\n+# Activation rules:\n+# - Manual runs always activate.\n+# - Reviewer label events activate, including labels added while creating a PR.\n+# - Synchronize/reopened PR events activate when the reviewer label is already present.\n+# - Comment follow-up runs are dispatched by Reviewer Comment Dispatcher after fork-safe validation.\n+if: >-\n+  !github.event.repository.fork &&\n+  (\n+    github.event_name == 'workflow_dispatch' ||\n+    (\n+      github.event.sender.type != 'Bot' &&\n+      !contains(github.event.pull_request.labels.*.name, 'reviewer:skip-ai') &&\n+      github.event_name == 'pull_request_target' &&\n+      (\n+        (\n+          github.event.action == 'labeled' &&\n+          github.event.label.name == 'reviewer:scout'\n+        ) ||\n+        (\n+          github.event.action != 'labeled' &&\n+          contains(github.event.pull_request.labels.*.name, 'reviewer:scout')\n+        )\n+      )\n+    )\n+  )\n+concurrency:\n+  # Keep one review lane per PR/comment. Unrelated label events get their own group suffix so they can skip without canceling an in-flight review.\n+  group: >-\n+    gh-aw-${{ github.workflow }}-${{ github.event.pull_request.number || github.event.inputs.pr_number || github.run_id }}-${{\n+      github.event.inputs.comment_id ||\n+      (\n+        github.event.action == 'labeled' &&\n+        github.event.label.name != 'reviewer:scout' &&\n+        github.event.label.name != 'reviewer:skip-ai' &&\n+        github.event.label.name\n+      ) ||\n+      'pr-review'\n+    }}\n+  cancel-in-progress: true\n+  job-discriminator: ${{ github.event.pull_request.number || github.event.inputs.pr_number || github.run_id }}\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+env:\n+  PR_NUMBER: &pr_number ${{ github.event.pull_request.number || github.event.inputs.pr_number }}\n+  PR_CONTEXT_ARTIFACT_NAME: &pr_context_artifact_name prefetched-pr-context-${{ github.event.pull_request.number || github.event.inputs.pr_number }}\n+  REVIEWER_COMMENT_ID: ${{ github.event.inputs.comment_id }}\n+tools:\n+  github:\n+    toolsets: [default]\n+    min-integrity: none\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - elastic.litellm-prod.ai\n+jobs:\n+  prefetch_pr_context:\n+    permissions:\n+      contents: read\n+      issues: read\n+      pull-requests: read\n+    uses: ./.github/workflows/prefetch-pr-context.yml\n+    with:\n+      pr_number: *pr_number\n+      repo: ${{ github.repository }}\n+      artifact_name: *pr_context_artifact_name\n+steps:\n+  - name: Download prefetched PR context\n+    uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1\n+    with:\n+      name: ${{ env.PR_CONTEXT_ARTIFACT_NAME }}\n+      path: /tmp/gh-aw/agent\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  create-pull-request-review-comment:\n+    max: 10\n+    target: ${{ env.PR_NUMBER }}\n+  submit-pull-request-review:\n+    max: 5\n+    target: ${{ env.PR_NUMBER }}\n+    allowed-events: [COMMENT]\n+    footer: none\n+  add-comment:\n+    max: 5\n+    target: ${{ env.PR_NUMBER }}\n+    discussions: false\n+    footer: false\n+  reply-to-pull-request-review-comment:\n+    max: 10\n+    target: ${{ env.PR_NUMBER }}\n+    footer: false\n+  resolve-pull-request-review-thread:\n+    max: 10\n+---\n+\n+# Scout Test Reviewer\n+\n+Using the imported reviewer instructions:\n+\n+- Run in review mode for `pull_request_target` and manual `workflow_dispatch` events without a comment id.\n+- Run in follow-up response mode when `workflow_dispatch` includes a comment id from the Reviewer Comment Dispatcher.\n+- This reviewer's own gh-aw workflow id is `reviewer-scout`. Use it as \"this reviewer's own workflow id\" when matching review threads to resolve.\n+\n+For dispatched follow-up runs, use this context:\n+- PR number: `${{ github.event.inputs.pr_number }}`\n+- Comment id: `${{ github.event.inputs.comment_id }}`",
+          "snapshot_ref": "5bdf4e1fd4404d3523240e9c84b9152a546b6594",
+          "snapshot_blob_sha": "3f4f230a6fb86fe1a5cd33c0af152260d804ad50",
+          "snapshot_file": "snapshots/kibana__elastic__5bdf4e1fd4404d3523240e9c84b9152a546b6594__reviewer-scout.md",
+          "snapshot_bytes": 4719,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/kibana\",\"generated_owner\":\"elastic\",\"generated_repo\":\"kibana\",\"generated_workflow_path\":\".github/workflows/reviewer-scout.lock.yml\",\"generated_workflow_file\":\"reviewer-scout.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/kibana/blob/7be104e152285dbd9dbf5ffc43ede2c218305f24/.github/workflows/reviewer-scout.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+      "source_full_name": "elastic/kibana",
+      "md_path": ".github/workflows/reviewer-scout.md",
+      "commit_sha": "67c9bdd91b44a0fde78d6b041a4335387653e334",
+      "authored_at": "2026-06-19T15:11:48Z",
+      "committed_at": "2026-06-19T15:11:48Z",
+      "author_name": "Cesare de Cal",
+      "author_email": "cesare.decal@elastic.co",
+      "author_login": "csr",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[Scout Reviewer] Fix redacted links in Scout reviewer comments (#274194)\n\nThe Scout reviewer was posting its best-practices doc links as\n`(www.elastic.co/redacted)` because gh-aw sanitizes any URL whose domain\nisn't in `network.allowed`. The links it's told to emit all point at\n`www.elastic.co`, which wasn't on the list.",
+      "parent_shas": [
+        "accf6664fccac38afe50e0e1aa448405d6d8c602"
+      ],
+      "tree_sha": "68565107a8506f8b60d89f426ed5e5a07b9fa1d0",
+      "html_url": "https://github.com/elastic/kibana/commit/67c9bdd91b44a0fde78d6b041a4335387653e334",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+          "source_full_name": "elastic/kibana",
+          "md_path": ".github/workflows/reviewer-scout.md",
+          "commit_sha": "67c9bdd91b44a0fde78d6b041a4335387653e334",
+          "committed_at": "2026-06-19T15:11:48Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -88,6 +88,7 @@ network:\n     - defaults\n     - github\n     - elastic.litellm-prod.ai\n+    - elastic.co\n jobs:\n   prefetch_pr_context:\n     permissions:",
+          "snapshot_ref": "67c9bdd91b44a0fde78d6b041a4335387653e334",
+          "snapshot_blob_sha": "b8e19f995bb8c92b135a718e3591dce265ea86b4",
+          "snapshot_file": "snapshots/kibana__elastic__67c9bdd91b44a0fde78d6b041a4335387653e334__reviewer-scout.md",
+          "snapshot_bytes": 4736,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/kibana\",\"generated_owner\":\"elastic\",\"generated_repo\":\"kibana\",\"generated_workflow_path\":\".github/workflows/reviewer-scout.lock.yml\",\"generated_workflow_file\":\"reviewer-scout.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/kibana/blob/7be104e152285dbd9dbf5ffc43ede2c218305f24/.github/workflows/reviewer-scout.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+      "source_full_name": "elastic/kibana",
+      "md_path": ".github/workflows/reviewer-scout.md",
+      "commit_sha": "62e824c4ec53644ac94e9404f5ecf257f2914880",
+      "authored_at": "2026-07-17T17:49:19Z",
+      "committed_at": "2026-07-17T17:49:19Z",
+      "author_name": "Brad White",
+      "author_email": "Ikuni17@users.noreply.github.com",
+      "author_login": "Ikuni17",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[aw] Improve review reliability, reduce costs, and bug fixes (#278628)\n\n## Summary\n\nPart of #276859\n\nThis brings forward some fixes from #277102, without the expensive\nsubagent split.\n\n- Removes Claude's 1 hour caching. The writes are quite expensive and\nwould be invalidated by a new commit SHA anyways. This should reduce\nagent costs by about 20%.\n- Adjust the prompt so the agent reviews every file. They have a strong\ntendency to find the first issue and mark the review as complete.\n- The `safe_outputs` for comment thread resolution requires permissions\nabove what the ephemeral `github_token` is allowed. This was silently\nfailing. The specific `safe_output` now uses the `kibanamachine` token\nand correctly resolves threads. This affected all reviewers.\n- Fixes an issue with follow up comment dispatching losing context. This\ncaused the agents to have to search extensively for the comment. This\naffected all reviewers.\n- Aligns `actions/github-script` version between workflows\n- Upgrade Claude CLI\n\n### Testing\nhttps://github.com/elastic/kibana/actions/runs/29456690609 against this\nPR.\n\n---------\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+      "parent_shas": [
+        "83e5aafcf96469a6a30e1a7dba8cf766870ca87e"
+      ],
+      "tree_sha": "d2d1962ce9271d98c0e1755ab9517591f1b0aff2",
+      "html_url": "https://github.com/elastic/kibana/commit/62e824c4ec53644ac94e9404f5ecf257f2914880",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Cursor",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Cursor:cursor_agent_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+          "source_full_name": "elastic/kibana",
+          "md_path": ".github/workflows/reviewer-scout.md",
+          "commit_sha": "62e824c4ec53644ac94e9404f5ecf257f2914880",
+          "committed_at": "2026-07-17T17:49:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 1,
+          "file_changes": 9,
+          "file_patch": "@@ -13,6 +13,10 @@ on:\n         description: Triggering comment id for dispatched follow-up runs\n         required: false\n         type: string\n+      comment_type:\n+        description: Triggering comment event type for dispatched follow-up runs\n+        required: false\n+        type: string\n resources:\n   - prefetch-pr-context.yml\n imports:\n@@ -79,6 +83,7 @@ env:\n   PR_NUMBER: &pr_number ${{ github.event.pull_request.number || github.event.inputs.pr_number }}\n   PR_CONTEXT_ARTIFACT_NAME: &pr_context_artifact_name prefetched-pr-context-${{ github.event.pull_request.number || github.event.inputs.pr_number }}\n   REVIEWER_COMMENT_ID: ${{ github.event.inputs.comment_id }}\n+  REVIEWER_COMMENT_TYPE: ${{ github.event.inputs.comment_type }}\n tools:\n   github:\n     toolsets: [default]\n@@ -128,16 +133,18 @@ safe-outputs:\n     footer: false\n   resolve-pull-request-review-thread:\n     max: 10\n+    github-token: ${{ secrets.KIBANAMACHINE_TOKEN }}\n ---\n \n # Scout Test Reviewer\n \n Using the imported reviewer instructions:\n \n - Run in review mode for `pull_request_target` and manual `workflow_dispatch` events without a comment id.\n-- Run in follow-up response mode when `workflow_dispatch` includes a comment id from the Reviewer Comment Dispatcher.\n+- Run in follow-up response mode when `workflow_dispatch` includes a comment id and event type from the Reviewer Comment Dispatcher.\n - This reviewer's own gh-aw workflow id is `reviewer-scout`. Use it as \"this reviewer's own workflow id\" when matching review threads to resolve.\n \n For dispatched follow-up runs, use this context:\n - PR number: `${{ github.event.inputs.pr_number }}`\n - Comment id: `${{ github.event.inputs.comment_id }}`\n+- Comment event type: `${{ github.event.inputs.comment_type }}`",
+          "snapshot_ref": "62e824c4ec53644ac94e9404f5ecf257f2914880",
+          "snapshot_blob_sha": "fbc9461bb0bfe8970c2701b5edce25a03687eaf3",
+          "snapshot_file": "snapshots/kibana__elastic__62e824c4ec53644ac94e9404f5ecf257f2914880__reviewer-scout.md",
+          "snapshot_bytes": 5079,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/kibana\",\"generated_owner\":\"elastic\",\"generated_repo\":\"kibana\",\"generated_workflow_path\":\".github/workflows/reviewer-scout.lock.yml\",\"generated_workflow_file\":\"reviewer-scout.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/kibana/blob/7be104e152285dbd9dbf5ffc43ede2c218305f24/.github/workflows/reviewer-scout.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+      "source_full_name": "elastic/kibana",
+      "md_path": ".github/workflows/reviewer-scout.md",
+      "commit_sha": "cab9741c2c977b46db6e6d623489750e227f3d1c",
+      "authored_at": "2026-07-24T15:51:56Z",
+      "committed_at": "2026-07-24T15:51:56Z",
+      "author_name": "Cesare de Cal",
+      "author_email": "cesare.decal@elastic.co",
+      "author_login": "csr",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[Scout Reviewer] Refine and enforce high-priority \"critical\" checks (#280360)\n\nThis PR improves the Scout agentic reviewer workflow so that we perform\nthe following non-negotiable checks:\n\n- Scout custom server config set\n- Tests in the right location check\n- Pick the right test type\n- Keep test suites small\n\nComments that are related to these checks will show an \"important\"\ndisclaimer at the end of the comment:\n\n> [!IMPORTANT]\n> The Applications DX team marked this comment as high-priority.\n\n---------\n\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+      "parent_shas": [
+        "45eee38b41b25e68b839a5fcf11b2096d632a5a1"
+      ],
+      "tree_sha": "4e93330c049060f82353890eaeda1c04b60c39ff",
+      "html_url": "https://github.com/elastic/kibana/commit/cab9741c2c977b46db6e6d623489750e227f3d1c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Cursor",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Cursor:cursor_agent_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+          "source_full_name": "elastic/kibana",
+          "md_path": ".github/workflows/reviewer-scout.md",
+          "commit_sha": "cab9741c2c977b46db6e6d623489750e227f3d1c",
+          "committed_at": "2026-07-24T15:51:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 1,
+          "file_changes": 11,
+          "file_patch": "@@ -115,7 +115,7 @@ safe-outputs:\n   noop:\n     report-as-issue: false\n   create-pull-request-review-comment:\n-    max: 10\n+    max: 15\n     target: ${{ env.PR_NUMBER }}\n   submit-pull-request-review:\n     max: 5\n@@ -144,6 +144,15 @@ Using the imported reviewer instructions:\n - Run in follow-up response mode when `workflow_dispatch` includes a comment id and event type from the Reviewer Comment Dispatcher.\n - This reviewer's own gh-aw workflow id is `reviewer-scout`. Use it as \"this reviewer's own workflow id\" when matching review threads to resolve.\n \n+## Critical checks\n+\n+Work through the multi-step **Critical checks** defined in the skill's `SKILL.md` one by one, in order. Report any Critical-check hits **before** ordinary findings, and prefix each Critical-check finding with a GitHub `> [!IMPORTANT]` alert containing exactly this line (the finding details follow after the alert):\n+\n+```\n+> [!IMPORTANT]\n+> The Applications DX team marked this comment as high-priority.\n+```\n+\n For dispatched follow-up runs, use this context:\n - PR number: `${{ github.event.inputs.pr_number }}`\n - Comment id: `${{ github.event.inputs.comment_id }}`",
+          "snapshot_ref": "cab9741c2c977b46db6e6d623489750e227f3d1c",
+          "snapshot_blob_sha": "160792c05a7a2e656ca5ba92320ca3a69fc38606",
+          "snapshot_file": "snapshots/kibana__elastic__cab9741c2c977b46db6e6d623489750e227f3d1c__reviewer-scout.md",
+          "snapshot_bytes": 5505,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/kibana\",\"generated_owner\":\"elastic\",\"generated_repo\":\"kibana\",\"generated_workflow_path\":\".github/workflows/reviewer-scout.lock.yml\",\"generated_workflow_file\":\"reviewer-scout.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/kibana/blob/7be104e152285dbd9dbf5ffc43ede2c218305f24/.github/workflows/reviewer-scout.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+      "source_full_name": "elastic/kibana",
+      "md_path": ".github/workflows/reviewer-scout.md",
+      "commit_sha": "076349f2ba1f024c0e97e71fb6cd3d1c9d4e1e8f",
+      "authored_at": "2026-07-27T20:11:41Z",
+      "committed_at": "2026-07-27T20:11:41Z",
+      "author_name": "Brad White",
+      "author_email": "Ikuni17@users.noreply.github.com",
+      "author_login": "Ikuni17",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[aw] Route all workflows through OpenRouter (#281124)\n\n## Summary\n\n- migrate the remaining six LiteLLM-backed agentic workflows to\nOpenRouter\n- use the shared `OPENROUTER_API_KEY` secret and Anthropic-compatible\nOpenRouter endpoint\n- preserve each workflow's existing Opus version, 1M context alias,\nprompt caching, effort, and subagent settings\n- regenerate the six affected workflow lockfiles\n\n## Validation\n\n- this config has been tested working with the Claude reviewer",
+      "parent_shas": [
+        "1fc9087b99cec657848de51bf6b714f6736a5558"
+      ],
+      "tree_sha": "9e8c37575bfb094c32e1268e13e69e406563f233",
+      "html_url": "https://github.com/elastic/kibana/commit/076349f2ba1f024c0e97e71fb6cd3d1c9d4e1e8f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/kibana:.github/workflows/reviewer-scout.md",
+          "source_full_name": "elastic/kibana",
+          "md_path": ".github/workflows/reviewer-scout.md",
+          "commit_sha": "076349f2ba1f024c0e97e71fb6cd3d1c9d4e1e8f",
+          "committed_at": "2026-07-27T20:11:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 7,
+          "file_changes": 13,
+          "file_patch": "@@ -27,13 +27,12 @@ engine:\n   model: opus\n   max-turns: 120\n   env:\n-    ANTHROPIC_API_KEY: ${{ secrets.LITELLM_API_KEY }}\n-    ANTHROPIC_BASE_URL: https://elastic.litellm-prod.ai\n+    ANTHROPIC_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}\n+    ANTHROPIC_BASE_URL: https://openrouter.ai/api\n     ENABLE_PROMPT_CACHING_1H: '1'\n-    # Route Claude Code's 1M Opus alias through LiteLLM.\n-    ANTHROPIC_DEFAULT_OPUS_MODEL: llm-gateway/claude-opus-4-7[1m]\n-    ANTHROPIC_DEFAULT_HAIKU_MODEL: llm-gateway/claude-haiku-4-5\n-    ANTHROPIC_DEFAULT_SONNET_MODEL: llm-gateway/claude-sonnet-4-6\n+    ANTHROPIC_DEFAULT_OPUS_MODEL: anthropic/claude-opus-4.7[1m]\n+    ANTHROPIC_DEFAULT_HAIKU_MODEL: anthropic/claude-haiku-4.5\n+    ANTHROPIC_DEFAULT_SONNET_MODEL: anthropic/claude-sonnet-4.6\n     CLAUDE_CODE_SUBAGENT_MODEL: opus[1m]\n # Activation rules:\n # - Manual runs always activate.\n@@ -92,7 +91,7 @@ network:\n   allowed:\n     - defaults\n     - github\n-    - elastic.litellm-prod.ai\n+    - openrouter.ai\n     - elastic.co\n jobs:\n   prefetch_pr_context:",
+          "snapshot_ref": "076349f2ba1f024c0e97e71fb6cd3d1c9d4e1e8f",
+          "snapshot_blob_sha": "1c7518319f121db3fe35980294141ba4c2cbe3f9",
+          "snapshot_file": "snapshots/kibana__elastic__076349f2ba1f024c0e97e71fb6cd3d1c9d4e1e8f__reviewer-scout.md",
+          "snapshot_bytes": 5429,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/kibana\",\"generated_owner\":\"elastic\",\"generated_repo\":\"kibana\",\"generated_workflow_path\":\".github/workflows/reviewer-scout.lock.yml\",\"generated_workflow_file\":\"reviewer-scout.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/kibana/blob/7be104e152285dbd9dbf5ffc43ede2c218305f24/.github/workflows/reviewer-scout.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

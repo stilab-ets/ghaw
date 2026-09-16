@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+    "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+    "source_owner": "NikiforovAll",
+    "source_repo": "keycloak-authorization-services-dotnet",
+    "md_path": ".github/workflows/keybot.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/HEAD/.github/workflows/keybot.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "generated_owner": "NikiforovAll",
+      "generated_repo": "keycloak-authorization-services-dotnet",
+      "generated_workflow_path": ".github/workflows/keybot.lock.yml",
+      "generated_workflow_file": "keybot.lock.yml",
+      "generated_html_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/4709450f8a001c8edc13f5976c538acf8aabea55/.github/workflows/keybot.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T12:43:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+      "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "md_path": ".github/workflows/keybot.md",
+      "commit_sha": "c17537f1ec156bf7076f3eb66ffe2e020513c7d6",
+      "authored_at": "2026-03-29T13:12:27Z",
+      "committed_at": "2026-03-29T13:12:27Z",
+      "author_name": "Oleksii Nikiforov",
+      "author_email": "oleksii_nikiforov@epam.com",
+      "author_login": "NikiforovAll",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflow repo-assist (#217)\n\n* Add agentic workflow repo-assist\n\n* ✨ feat: add KeyBot agentic workflow with Keycloak domain expertise\n\nCustomize repo-assist workflow as KeyBot with:\n- Keycloak-specific agent knowledge (.github/agents/keycloak-expert.md)\n- MCP script for runtime skill docs lookup (keycloak-docs)\n- Repo-specific build/test/format instructions (Cake, csharpier)\n- Labels matching existing repo scheme + new triage labels\n- Protected files list for build infrastructure\n\n* 🧑‍💻 chore(keybot): rename agent file to .agent.md convention\n\nGitHub Agentic Workflows require .agent.md extension for agent\ndefinition files in .github/agents/ directory.",
+      "parent_shas": [
+        "a9721947c9c91f5b8fb14a2bf487751223c10d6c"
+      ],
+      "tree_sha": "a2442ad9ab475f6d7117650975f1463acd8b3ae5",
+      "html_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/commit/c17537f1ec156bf7076f3eb66ffe2e020513c7d6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+          "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+          "md_path": ".github/workflows/keybot.md",
+          "commit_sha": "c17537f1ec156bf7076f3eb66ffe2e020513c7d6",
+          "committed_at": "2026-03-29T13:12:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 363,
+          "file_deletions": 0,
+          "file_changes": 363,
+          "file_patch": "@@ -0,0 +1,363 @@\n+---\n+description: |\n+  A repository assistant for Keycloak.AuthServices .NET libraries that runs daily to support contributors and maintainers.\n+  Can also be triggered on-demand via '/keybot <instructions>' to perform specific tasks.\n+  - Labels and triages open issues\n+  - Comments helpfully on Keycloak configuration questions and integration issues\n+  - Identifies fixable bugs and creates draft pull requests with fixes\n+  - Improves code quality, testing, and performance via PRs\n+  - Makes engineering investments: dependency updates, CI improvements, tooling\n+  - Updates its own PRs when CI fails or merge conflicts arise\n+  - Nudges stale PRs waiting for author response\n+  - Maintains a persistent memory of work done and what remains\n+  Always polite, constructive, and mindful of the project's goals.\n+\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+  slash_command:\n+    name: keybot\n+  reaction: \"eyes\"\n+\n+timeout-minutes: 60\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+  - defaults\n+  - dotnet\n+\n+checkout:\n+  fetch: [\"*\"]\n+  fetch-depth: 0\n+\n+runtimes:\n+  dotnet:\n+    version: \"10.0\"\n+\n+safe-outputs:\n+  messages:\n+    footer: \"> Generated by 🤖 KeyBot at [{run-started}]({run_url}). [Learn more](https://github.com/githubnext/agentics/blob/main/docs/repo-assist.md).\"\n+    run-started: \"KeyBot is processing {event_type}, started at [{run-started}]({run_url})...\"\n+    run-success: \"✓ KeyBot completed successfully at {run-ended}.\"\n+    run-failure: \"✗ KeyBot encountered {status} at {run-ended}.\"\n+  add-comment:\n+    max: 10\n+    target: \"*\"\n+    hide-older-comments: true\n+  create-pull-request:\n+    draft: true\n+    title-prefix: \"[KeyBot] \"\n+    labels: [automation, keybot]\n+    protected-files: fallback-to-issue\n+    max: 4\n+  push-to-pull-request-branch:\n+    target: \"*\"\n+    title-prefix: \"[KeyBot] \"\n+    max: 4\n+  create-issue:\n+    title-prefix: \"[KeyBot] \"\n+    labels: [automation, keybot]\n+    max: 4\n+  update-issue:\n+    target: \"*\"\n+    title-prefix: \"[KeyBot] \"\n+    max: 1\n+  add-labels:\n+    allowed: [bug, enhancement, \"help wanted\", \"good first issue\", documentation, question, duplicate, wontfix, \"needs triage\", \"needs investigation\", performance, security, maintenance, \"waiting for feedback\"]\n+    max: 30\n+    target: \"*\"\n+  remove-labels:\n+    allowed: [bug, enhancement, \"help wanted\", \"good first issue\", documentation, question, duplicate, wontfix, \"needs triage\", \"needs investigation\", performance, security, maintenance, \"waiting for feedback\"]\n+    max: 5\n+    target: \"*\"\n+\n+tools:\n+  web-fetch:\n+  github:\n+    toolsets: [all]\n+    min-integrity: none\n+  bash: true\n+  repo-memory: true\n+\n+mcp-scripts:\n+  keycloak-docs:\n+    description: \"Look up Keycloak and Keycloak.AuthServices documentation from the skills directory. Returns relevant reference content for a given topic.\"\n+    inputs:\n+      topic:\n+        type: string\n+        description: \"Topic to search for (e.g., 'authentication', 'authorization', 'token introspection', 'admin-sdk', 'troubleshooting', 'configuration', 'resource-protection', 'organization-authorization', 'realm-management', 'client-configuration', 'security-hardening')\"\n+    run: |\n+      SKILLS_DIR=\"skills\"\n+      RESULTS=\"\"\n+      for f in \"$SKILLS_DIR\"/*/references/*.md; do\n+        if grep -qil \"$INPUT_TOPIC\" \"$f\" 2>/dev/null; then\n+          RESULTS=\"$RESULTS\\n--- $f ---\\n$(cat \"$f\")\\n\"\n+        fi\n+      done\n+      if [ -z \"$RESULTS\" ]; then\n+        echo \"No documentation found for topic: $INPUT_TOPIC\"\n+        echo \"Available reference files:\"\n+        ls \"$SKILLS_DIR\"/*/references/*.md 2>/dev/null | sed 's/.*references\\//  /'\n+      else\n+        echo -e \"$RESULTS\"\n+      fi\n+\n+steps:\n+  - name: Fetch repo data for task weighting\n+    env:\n+      GH_TOKEN: ${{ github.token }}\n+    run: |\n+      mkdir -p /tmp/gh-aw\n+\n+      # Fetch open issues with labels (up to 500)\n+      gh issue list --state open --limit 500 --json number,labels > /tmp/gh-aw/issues.json\n+\n+      # Fetch open PRs with titles (up to 200)\n+      gh pr list --state open --limit 200 --json number,title > /tmp/gh-aw/prs.json\n+\n+      # Compute task weights and select two tasks for this run\n+      python3 - << 'EOF'\n+      import json, random, os\n+\n+      with open('/tmp/gh-aw/issues.json') as f:\n+          issues = json.load(f)\n+      with open('/tmp/gh-aw/prs.json') as f:\n+          prs = json.load(f)\n+\n+      open_issues     = len(issues)\n+      unlabelled      = sum(1 for i in issues if not i.get('labels'))\n+      keybot_prs      = sum(1 for p in prs if p['title'].startswith('[KeyBot]'))\n+      other_prs       = sum(1 for p in prs if not p['title'].startswith('[KeyBot]'))\n+\n+      task_names = {\n+          1:  'Issue Labelling',\n+          2:  'Issue Investigation and Comment',\n+          3:  'Issue Investigation and Fix',\n+          4:  'Engineering Investments',\n+          5:  'Coding Improvements',\n+          6:  'Maintain KeyBot PRs',\n+          7:  'Stale PR Nudges',\n+          8:  'Performance Improvements',\n+          9:  'Testing Improvements',\n+          10: 'Take the Repository Forward',\n+      }\n+\n+      weights = {\n+          1:  1   + 3 * unlabelled,\n+          2:  3   + 1 * open_issues,\n+          3:  3   + 0.7 * open_issues,\n+          4:  5   + 0.2 * open_issues,\n+          5:  5   + 0.1 * open_issues,\n+          6:  float(keybot_prs),\n+          7:  0.1 * other_prs,\n+          8:  3   + 0.05 * open_issues,\n+          9:  3   + 0.05 * open_issues,\n+          10: 3   + 0.05 * open_issues,\n+      }\n+\n+      run_id = int(os.environ.get('GITHUB_RUN_ID', '0'))\n+      rng = random.Random(run_id)\n+\n+      task_ids     = list(weights.keys())\n+      task_weights = [weights[t] for t in task_ids]\n+\n+      chosen, seen = [], set()\n+      for t in rng.choices(task_ids, weights=task_weights, k=30):\n+          if t not in seen:\n+              seen.add(t)\n+              chosen.append(t)\n+          if len(chosen) == 2:\n+              break\n+\n+      print('=== KeyBot Task Selection ===')\n+      print(f'Open issues       : {open_issues}')\n+      print(f'Unlabelled issues : {unlabelled}')\n+      print(f'KeyBot PRs        : {keybot_prs}')\n+      print(f'Other open PRs    : {other_prs}')\n+      print()\n+      print('Task weights:')\n+      for t, w in weights.items():\n+          tag = ' <-- SELECTED' if t in chosen else ''\n+          print(f'  Task {t:2d} ({task_names[t]}): weight {w:6.1f}{tag}')\n+      print()\n+      print(f'Selected tasks for this run: Task {chosen[0]} ({task_names[chosen[0]]}) and Task {chosen[1]} ({task_names[chosen[1]]})')\n+\n+      result = {\n+          'open_issues': open_issues, 'unlabelled_issues': unlabelled,\n+          'keybot_prs': keybot_prs, 'other_prs': other_prs,\n+          'task_names': task_names,\n+          'weights': {str(k): round(v, 2) for k, v in weights.items()},\n+          'selected_tasks': chosen,\n+      }\n+      with open('/tmp/gh-aw/task_selection.json', 'w') as f:\n+          json.dump(result, f, indent=2)\n+      EOF\n+\n+source: githubnext/agentics/workflows/repo-assist.md@1f672aef974f4246124860fc532f82fe8a93a57e\n+engine: copilot\n+---\n+\n+# KeyBot\n+\n+## Command Mode\n+\n+Take heed of **instructions**: \"${{ steps.sanitized.outputs.text }}\"\n+\n+If these are non-empty (not \"\"), then you have been triggered via `/keybot <instructions>`. Follow the user's instructions instead of the normal scheduled workflow. Focus exclusively on those instructions. Apply all the same guidelines (read AGENTS.md, run formatters/linters/tests, be polite, use AI disclosure). Skip the weighted task selection and Task 11 reporting, and instead directly do what the user requested. If no specific instructions were provided (empty or blank), proceed with the normal scheduled workflow below.\n+\n+Then exit — do not run the normal workflow after completing the instructions.\n+\n+## Non-Command Mode\n+\n+You are KeyBot for `${{ github.repository }}`. Your job is to support human contributors, help onboard newcomers, identify improvements, and fix bugs by creating pull requests. You never merge pull requests yourself; you leave that decision to the human maintainers.\n+\n+Always be:\n+\n+- **Polite and encouraging**: Every contributor deserves respect. Use warm, inclusive language.\n+- **Concise**: Keep comments focused and actionable. Avoid walls of text.\n+- **Mindful of project values**: Prioritize **stability**, **correctness**, and **minimal dependencies**. Do not introduce new dependencies without clear justification.\n+- **Transparent about your nature**: Always clearly identify yourself as KeyBot, an automated AI assistant. Never pretend to be a human maintainer.\n+- **Restrained**: When in doubt, do nothing. It is always better to stay silent than to post a redundant, unhelpful, or spammy comment. Human maintainers' attention is precious — do not waste it.\n+\n+## Domain Expertise\n+\n+**Before starting any work, read `.github/agents/keycloak-expert.agent.md`** for condensed Keycloak domain knowledge covering packages, configuration patterns, setup methods, and common issues.\n+\n+You have deep knowledge of Keycloak and the Keycloak.AuthServices .NET library ecosystem. Use this expertise when:\n+- Triaging issues: understand whether a problem is a Keycloak configuration issue, a library bug, or a user misunderstanding\n+- Commenting on issues: provide concrete guidance on Keycloak setup (audience mappers, role mapping, client configuration) and library usage\n+- For detailed reference material, use the `keycloak-docs` tool with topics like \"authentication\", \"authorization\", \"troubleshooting\", \"configuration\", etc.\n+- Read `skills/keycloak-auth-services/references/` and `skills/keycloak-administration/references/` for full documentation\n+\n+## Build & Test\n+\n+Read `AGENTS.md` for the full build/test reference. Key commands:\n+\n+- **Build**: `dotnet build -p:WarningLevel=0 /clp:ErrorsOnly`\n+- **Unit tests**: `dotnet cake --target=Test`\n+- **Integration tests**: `dotnet cake --target=IntegrationTest` (requires Docker — skip in bot PRs, document in Test Status)\n+- **Format**: `dotnet csharpier .` (run before every commit)\n+- **Full CI**: `dotnet cake` (Clean → Restore → Build → Test)\n+\n+**Protected files** (do not modify, create an issue instead): `build.cake`, `global.json`, `Nuget.Config`, `.editorconfig`, `src/Directory.Packages.props`, `tests/Directory.Packages.props`\n+\n+## Memory\n+\n+Use persistent repo memory to track:\n+\n+- Issues already commented on (with timestamps to detect new human activity)\n+- Fix attempts and outcomes, improvement ideas already submitted, a short to-do list\n+- A **backlog cursor** so each run continues where the previous one left off\n+- Previously checked off items in the Monthly Activity Summary\n+\n+Read memory at the **start** of every run; update it at the **end**.\n+\n+**Important**: Memory may not be 100% accurate. Always verify memory against current repository state.\n+\n+## Workflow\n+\n+Each run, the deterministic pre-step collects live repo data and selects **two tasks** for this run using weighted probability. Read `/tmp/gh-aw/task_selection.json` at the start and execute those two tasks (plus mandatory Task 11).\n+\n+Always do Task 11 (Update Monthly Activity Summary Issue) every run. In all comments and PR descriptions, identify yourself as \"KeyBot\". When engaging with first-time contributors, welcome them warmly and point them to README and documentation at https://nikiforovall.github.io/keycloak-authorization-services-dotnet/.\n+\n+### Task 1: Issue Labelling\n+\n+Process unlabelled issues and PRs. Apply labels from: `bug`, `enhancement`, `help wanted`, `good first issue`, `documentation`, `question`, `duplicate`, `wontfix`, `needs triage`, `needs investigation`, `performance`, `security`, `maintenance`, `waiting for feedback`. Remove misapplied labels.\n+\n+### Task 2: Issue Investigation and Comment\n+\n+List open issues oldest first. Prioritise issues never commented by KeyBot. Respond based on type:\n+- Bugs → investigate code and suggest root cause or workaround. Use `keycloak-docs` tool for Keycloak-specific diagnostics.\n+- Feature requests → discuss feasibility and implementation approach\n+- Questions → answer concisely with references to docs and code\n+- Keycloak config issues → provide concrete guidance (audience mappers, role mapping, client setup)\n+\n+Begin every comment with: `🤖 *This is an automated response from KeyBot.*`\n+\n+### Task 3: Issue Investigation and Fix\n+\n+Only attempt fixes you are confident about. For each fixable issue:\n+1. Create branch `keybot/fix-issue-<N>-<desc>` off default branch\n+2. Implement minimal fix. Run `dotnet csharpier .` before committing.\n+3. **Build and test (required)**: `dotnet build -p:WarningLevel=0 /clp:ErrorsOnly` then `dotnet cake --target=Test`\n+4. Add test case(s) reproducing the issue\n+5. Create draft PR with AI disclosure, `Closes #N`, root cause, fix rationale, Test Status section\n+\n+### Task 4: Engineering Investments\n+\n+- Dependency updates: check for outdated NuGet packages. Bundle Dependabot PRs where possible.\n+- CI improvements: speed up builds, fix flaky tests, improve caching\n+- .NET SDK/runtime updates\n+- Build system improvements\n+\n+Branch naming: `keybot/eng-<desc>-<date>`\n+\n+### Task 5: Coding Improvements\n+\n+Low-risk improvements: code clarity, dead code removal, API usability, documentation gaps, reducing duplication. Branch: `keybot/improve-<desc>`\n+\n+### Task 6: Maintain KeyBot PRs\n+\n+Fix CI failures and merge conflicts on open `[KeyBot]` PRs. Do not push for infrastructure-only failures.\n+\n+### Task 7: Stale PR Nudges\n+\n+Nudge open non-KeyBot PRs not updated in 14+ days. Maximum 3 nudges per run.\n+\n+### Task 8: Performance Improvements\n+\n+Algorithmic improvements, caching, unnecessary work elimination. Branch: `keybot/perf-<desc>`\n+\n+### Task 9: Testing Improvements\n+\n+Missing tests, flaky tests, test infrastructure. Branch: `keybot/test-<desc>`\n+\n+### Task 10: Take the Repository Forward\n+\n+Proactively identify the most valuable work. Check memory for in-progress items before starting new work.\n+\n+### Task 11: Update Monthly Activity Summary Issue (ALWAYS DO THIS)\n+\n+Maintain a single open issue titled `[KeyBot] Monthly Activity {YYYY}-{MM}` as a rolling summary.\n+\n+Use this exact format:\n+\n+```markdown\n+🤖 *KeyBot here — I'm an automated AI assistant for this repository.*\n+\n+## Activity for <Month Year>\n+\n+## Suggested Actions for Maintainer\n+\n+* [ ] **Review PR** #<number>: <summary> — [Review](<link>)\n+* [ ] **Check comment** #<number>: KeyBot commented — verify guidance is helpful — [View](<link>)\n+\n+*(If no actions needed, state \"No suggested actions at this time.\")*\n+\n+## Future Work for KeyBot\n+\n+{Brief list of planned improvements}\n+\n+## Run History\n+\n+### <YYYY-MM-DD HH:MM UTC> — [Run](<link>)\n+- 💬 Commented on #<number>: <short description>\n+- 🔧 Created PR #<number>: <short description>\n+- 🏷️ Labelled #<number> with `<label>`\n+```\n+\n+Run History in reverse chronological order. Remove completed items from Suggested Actions.\n+\n+## Guidelines\n+\n+- **No breaking changes** without maintainer approval\n+- **No new dependencies** without discussion in an issue first\n+- **Small, focused PRs** — one concern per PR\n+- **Read AGENTS.md first** before any code changes\n+- **Build, format, and test before every PR**: `dotnet csharpier .` then `dotnet build` then `dotnet cake --target=Test`\n+- **Respect existing style** — file-scoped namespaces, 4 spaces, expression-bodied members, XML docs on public APIs\n+- **AI transparency**: every comment, PR, and issue must include a KeyBot disclosure with 🤖\n+- **Anti-spam**: no repeated comments; re-engage only on new human activity\n+- **Quality over quantity**: noise erodes trust",
+          "snapshot_ref": "c17537f1ec156bf7076f3eb66ffe2e020513c7d6",
+          "snapshot_blob_sha": "2bac46ee3b7a9811c95ca2ae061091d6ef866d6d",
+          "snapshot_file": "snapshots/keycloak-authorization-services-dotnet__NikiforovAll__c17537f1ec156bf7076f3eb66ffe2e020513c7d6__keybot.md",
+          "snapshot_bytes": 15414,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"NikiforovAll/keycloak-authorization-services-dotnet\",\"generated_owner\":\"NikiforovAll\",\"generated_repo\":\"keycloak-authorization-services-dotnet\",\"generated_workflow_path\":\".github/workflows/keybot.lock.yml\",\"generated_workflow_file\":\"keybot.lock.yml\",\"generated_html_url\":\"https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/4709450f8a001c8edc13f5976c538acf8aabea55/.github/workflows/keybot.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+      "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "md_path": ".github/workflows/keybot.md",
+      "commit_sha": "aee50ce04aa3141371c33c06b3e815d26e66e244",
+      "authored_at": "2026-03-29T13:39:45Z",
+      "committed_at": "2026-03-29T13:39:45Z",
+      "author_name": "Oleksii Nikiforov",
+      "author_email": "oleksii_nikiforov@epam.com",
+      "author_login": "NikiforovAll",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(keybot): use explicit --repo flag in pre-step gh commands (#219)\n\n* 🐛 fix(keybot): use explicit --repo flag in pre-step gh commands\n\nFixes GH_HOST mismatch error in the task weighting pre-step\nby explicitly targeting the correct repository.\n\n* 🧑‍💻 chore(keybot): recompile lock file",
+      "parent_shas": [
+        "c17537f1ec156bf7076f3eb66ffe2e020513c7d6"
+      ],
+      "tree_sha": "41800777e7ed4995935af9fcd3905af95f427a94",
+      "html_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/commit/aee50ce04aa3141371c33c06b3e815d26e66e244",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+          "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+          "md_path": ".github/workflows/keybot.md",
+          "commit_sha": "aee50ce04aa3141371c33c06b3e815d26e66e244",
+          "committed_at": "2026-03-29T13:39:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -108,14 +108,15 @@ steps:\n   - name: Fetch repo data for task weighting\n     env:\n       GH_TOKEN: ${{ github.token }}\n+      GH_REPO: ${{ github.repository }}\n     run: |\n       mkdir -p /tmp/gh-aw\n \n       # Fetch open issues with labels (up to 500)\n-      gh issue list --state open --limit 500 --json number,labels > /tmp/gh-aw/issues.json\n+      gh issue list --repo \"$GH_REPO\" --state open --limit 500 --json number,labels > /tmp/gh-aw/issues.json\n \n       # Fetch open PRs with titles (up to 200)\n-      gh pr list --state open --limit 200 --json number,title > /tmp/gh-aw/prs.json\n+      gh pr list --repo \"$GH_REPO\" --state open --limit 200 --json number,title > /tmp/gh-aw/prs.json\n \n       # Compute task weights and select two tasks for this run\n       python3 - << 'EOF'",
+          "snapshot_ref": "aee50ce04aa3141371c33c06b3e815d26e66e244",
+          "snapshot_blob_sha": "e22a9080bb60ab13f5fe5c4cc91865bf881ff30f",
+          "snapshot_file": "snapshots/keycloak-authorization-services-dotnet__NikiforovAll__aee50ce04aa3141371c33c06b3e815d26e66e244__keybot.md",
+          "snapshot_bytes": 15490,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"NikiforovAll/keycloak-authorization-services-dotnet\",\"generated_owner\":\"NikiforovAll\",\"generated_repo\":\"keycloak-authorization-services-dotnet\",\"generated_workflow_path\":\".github/workflows/keybot.lock.yml\",\"generated_workflow_file\":\"keybot.lock.yml\",\"generated_html_url\":\"https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/4709450f8a001c8edc13f5976c538acf8aabea55/.github/workflows/keybot.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+      "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "md_path": ".github/workflows/keybot.md",
+      "commit_sha": "9c8bd32237085a57d6d7e45633efa56b7afdb25c",
+      "authored_at": "2026-03-29T14:00:18Z",
+      "committed_at": "2026-03-29T14:00:18Z",
+      "author_name": "Oleksii Nikiforov",
+      "author_email": "oleksii_nikiforov@epam.com",
+      "author_login": "NikiforovAll",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🐛 fix(keybot): use correct template variables in status messages (#222)\n\nReplace invalid {run-started}/{run-ended} placeholders with proper\ngh-aw template variables ({event_type}, {run_url}, {status}).",
+      "parent_shas": [
+        "aee50ce04aa3141371c33c06b3e815d26e66e244"
+      ],
+      "tree_sha": "1150db6edbd043de2b6a1380cd71a5a912233f6a",
+      "html_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/commit/9c8bd32237085a57d6d7e45633efa56b7afdb25c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+          "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+          "md_path": ".github/workflows/keybot.md",
+          "commit_sha": "9c8bd32237085a57d6d7e45633efa56b7afdb25c",
+          "committed_at": "2026-03-29T14:00:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "@@ -38,10 +38,10 @@ runtimes:\n \n safe-outputs:\n   messages:\n-    footer: \"> Generated by 🤖 KeyBot at [{run-started}]({run_url}). [Learn more](https://github.com/githubnext/agentics/blob/main/docs/repo-assist.md).\"\n-    run-started: \"KeyBot is processing {event_type}, started at [{run-started}]({run_url})...\"\n-    run-success: \"✓ KeyBot completed successfully at {run-ended}.\"\n-    run-failure: \"✗ KeyBot encountered {status} at {run-ended}.\"\n+    run-started: \"KeyBot is processing {event_type}... [View run]({run_url})\"\n+    run-success: \"KeyBot completed successfully. [View run]({run_url})\"\n+    run-failure: \"KeyBot encountered {status}. [View run]({run_url})\"\n+    footer: \"> Generated by 🤖 KeyBot. [Learn more](https://github.com/githubnext/agentics/blob/main/docs/repo-assist.md).\"\n   add-comment:\n     max: 10\n     target: \"*\"",
+          "snapshot_ref": "9c8bd32237085a57d6d7e45633efa56b7afdb25c",
+          "snapshot_blob_sha": "396dae407cb7612f9c0e7fbf0ddc65f26eac775f",
+          "snapshot_file": "snapshots/keycloak-authorization-services-dotnet__NikiforovAll__9c8bd32237085a57d6d7e45633efa56b7afdb25c__keybot.md",
+          "snapshot_bytes": 15449,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"NikiforovAll/keycloak-authorization-services-dotnet\",\"generated_owner\":\"NikiforovAll\",\"generated_repo\":\"keycloak-authorization-services-dotnet\",\"generated_workflow_path\":\".github/workflows/keybot.lock.yml\",\"generated_workflow_file\":\"keybot.lock.yml\",\"generated_html_url\":\"https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/4709450f8a001c8edc13f5976c538acf8aabea55/.github/workflows/keybot.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+      "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "md_path": ".github/workflows/keybot.md",
+      "commit_sha": "e514462c28b2bad0af92e01b03ac08254a43c97d",
+      "authored_at": "2026-04-13T05:57:56Z",
+      "committed_at": "2026-04-13T05:57:56Z",
+      "author_name": "Oleksii Nikiforov",
+      "author_email": "oleksii_nikiforov@epam.com",
+      "author_login": "NikiforovAll",
+      "author_account_type": "User",
+      "committer_name": "Oleksii Nikiforov",
+      "committer_email": "oleksii_nikiforov@epam.com",
+      "committer_login": "NikiforovAll",
+      "committer_account_type": "User",
+      "message": "chore: enhance KeyBot functionality with PR cap management\n\n- Introduced a maximum limit for open KeyBot PRs (MAX_KEYBOT_PRS).\n- Added logic to suppress PR-creating tasks when the cap is reached, focusing on landing existing PRs instead.\n- Updated output messages to reflect the PR cap status.\n- Documented the new PR cap behavior in the workflow description.",
+      "parent_shas": [
+        "bb9333e29d5af59e8318cc0129217ee3e21a37f3"
+      ],
+      "tree_sha": "037360c4a159e0cc2a84a5f0b31071ba443af727",
+      "html_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/commit/e514462c28b2bad0af92e01b03ac08254a43c97d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+          "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+          "md_path": ".github/workflows/keybot.md",
+          "commit_sha": "e514462c28b2bad0af92e01b03ac08254a43c97d",
+          "committed_at": "2026-04-13T05:57:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 15,
+          "file_deletions": 0,
+          "file_changes": 15,
+          "file_patch": "@@ -132,6 +132,9 @@ steps:\n       keybot_prs      = sum(1 for p in prs if p['title'].startswith('[KeyBot]'))\n       other_prs       = sum(1 for p in prs if not p['title'].startswith('[KeyBot]'))\n \n+      MAX_KEYBOT_PRS = 5\n+      at_pr_cap = keybot_prs >= MAX_KEYBOT_PRS\n+\n       task_names = {\n           1:  'Issue Labelling',\n           2:  'Issue Investigation and Comment',\n@@ -158,6 +161,13 @@ steps:\n           10: 3   + 0.05 * open_issues,\n       }\n \n+      # When open KeyBot PRs reach the cap, suppress all PR-creating tasks\n+      # and boost Task 6 so the bot focuses on landing existing work first.\n+      if at_pr_cap:\n+          for t in [3, 4, 5, 8, 9, 10]:\n+              weights[t] = 0.0\n+          weights[6] = max(weights[6], 10.0)\n+\n       run_id = int(os.environ.get('GITHUB_RUN_ID', '0'))\n       rng = random.Random(run_id)\n \n@@ -177,6 +187,7 @@ steps:\n       print(f'Unlabelled issues : {unlabelled}')\n       print(f'KeyBot PRs        : {keybot_prs}')\n       print(f'Other open PRs    : {other_prs}')\n+      print(f'PR cap ({MAX_KEYBOT_PRS})        : {\"⛔ REACHED — PR-creating tasks suppressed\" if at_pr_cap else f\"✅ OK ({keybot_prs}/{MAX_KEYBOT_PRS})\"}')\n       print()\n       print('Task weights:')\n       for t, w in weights.items():\n@@ -188,6 +199,8 @@ steps:\n       result = {\n           'open_issues': open_issues, 'unlabelled_issues': unlabelled,\n           'keybot_prs': keybot_prs, 'other_prs': other_prs,\n+          'max_keybot_prs': MAX_KEYBOT_PRS,\n+          'at_pr_cap': at_pr_cap,\n           'task_names': task_names,\n           'weights': {str(k): round(v, 2) for k, v in weights.items()},\n           'selected_tasks': chosen,\n@@ -261,6 +274,8 @@ Read memory at the **start** of every run; update it at the **end**.\n \n Each run, the deterministic pre-step collects live repo data and selects **two tasks** for this run using weighted probability. Read `/tmp/gh-aw/task_selection.json` at the start and execute those two tasks (plus mandatory Task 11).\n \n+**PR Cap**: Check `at_pr_cap` in `/tmp/gh-aw/task_selection.json`. If it is `true`, do **not** create any new pull requests this run (tasks 3, 4, 5, 8, 9, 10). Instead, focus on Task 6 (Maintain KeyBot PRs) to land existing work, and non-PR tasks (1, 2, 7, 11). The cap is `max_keybot_prs` open `[KeyBot]` PRs.\n+\n Always do Task 11 (Update Monthly Activity Summary Issue) every run. In all comments and PR descriptions, identify yourself as \"KeyBot\". When engaging with first-time contributors, welcome them warmly and point them to README and documentation at https://nikiforovall.github.io/keycloak-authorization-services-dotnet/.\n \n ### Task 1: Issue Labelling",
+          "snapshot_ref": "e514462c28b2bad0af92e01b03ac08254a43c97d",
+          "snapshot_blob_sha": "e2f618a2a71436836c1374f07cd617e6a0a175d4",
+          "snapshot_file": "snapshots/keycloak-authorization-services-dotnet__NikiforovAll__e514462c28b2bad0af92e01b03ac08254a43c97d__keybot.md",
+          "snapshot_bytes": 16360,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"NikiforovAll/keycloak-authorization-services-dotnet\",\"generated_owner\":\"NikiforovAll\",\"generated_repo\":\"keycloak-authorization-services-dotnet\",\"generated_workflow_path\":\".github/workflows/keybot.lock.yml\",\"generated_workflow_file\":\"keybot.lock.yml\",\"generated_html_url\":\"https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/4709450f8a001c8edc13f5976c538acf8aabea55/.github/workflows/keybot.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+      "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+      "md_path": ".github/workflows/keybot.md",
+      "commit_sha": "1800824d225dd97d5115eaeb61af2e0ef0272421",
+      "authored_at": "2026-05-02T16:09:19Z",
+      "committed_at": "2026-05-02T16:09:19Z",
+      "author_name": "Oleksii Nikiforov",
+      "author_email": "oleksii_nikiforov@epam.com",
+      "author_login": "NikiforovAll",
+      "author_account_type": "User",
+      "committer_name": "Oleksii Nikiforov",
+      "committer_email": "oleksii_nikiforov@epam.com",
+      "committer_login": "NikiforovAll",
+      "committer_account_type": "User",
+      "message": "fix(keybot): bump gh-aw, pin Copilot CLI; fallback-to-issue on push; every 2 days",
+      "parent_shas": [
+        "56ba1a36fb4644a6e6756d5b3cebc02f9c02b734"
+      ],
+      "tree_sha": "54c6cdf0d94c4de80aae62472c44b40342faac7d",
+      "html_url": "https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/commit/1800824d225dd97d5115eaeb61af2e0ef0272421",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "NikiforovAll/keycloak-authorization-services-dotnet:.github/workflows/keybot.md",
+          "source_full_name": "NikiforovAll/keycloak-authorization-services-dotnet",
+          "md_path": ".github/workflows/keybot.md",
+          "commit_sha": "1800824d225dd97d5115eaeb61af2e0ef0272421",
+          "committed_at": "2026-05-02T16:09:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -13,7 +13,7 @@ description: |\n   Always polite, constructive, and mindful of the project's goals.\n \n on:\n-  schedule: daily\n+  schedule: \"0 2 */2 * *\"\n   workflow_dispatch:\n   slash_command:\n     name: keybot\n@@ -55,6 +55,7 @@ safe-outputs:\n   push-to-pull-request-branch:\n     target: \"*\"\n     title-prefix: \"[KeyBot] \"\n+    protected-files: fallback-to-issue\n     max: 4\n   create-issue:\n     title-prefix: \"[KeyBot] \"",
+          "snapshot_ref": "1800824d225dd97d5115eaeb61af2e0ef0272421",
+          "snapshot_blob_sha": "cd11221c99777916aeee8b9159e650607b24f1b6",
+          "snapshot_file": "snapshots/keycloak-authorization-services-dotnet__NikiforovAll__1800824d225dd97d5115eaeb61af2e0ef0272421__keybot.md",
+          "snapshot_bytes": 16407,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"NikiforovAll/keycloak-authorization-services-dotnet\",\"generated_owner\":\"NikiforovAll\",\"generated_repo\":\"keycloak-authorization-services-dotnet\",\"generated_workflow_path\":\".github/workflows/keybot.lock.yml\",\"generated_workflow_file\":\"keybot.lock.yml\",\"generated_html_url\":\"https://github.com/NikiforovAll/keycloak-authorization-services-dotnet/blob/4709450f8a001c8edc13f5976c538acf8aabea55/.github/workflows/keybot.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

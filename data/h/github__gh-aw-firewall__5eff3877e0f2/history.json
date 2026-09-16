@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/smoke-docker-sbx-codex.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/smoke-docker-sbx-codex.lock.yml",
+      "generated_workflow_file": "smoke-docker-sbx-codex.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-docker-sbx-codex.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:48:21+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+      "commit_sha": "1f435b6f01261bf79b8c353c554e3dc599bac8a9",
+      "authored_at": "2026-07-12T16:16:57Z",
+      "committed_at": "2026-07-12T16:16:57Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add Docker sandbox smoke tests for Claude, Codex, and build workloads (#6145)\n\n* feat: add Docker sandbox smoke tests for Claude, Codex, and build workloads\n\nAdd three new smoke test workflows for the Docker sandbox (default AWF mode):\n\n- smoke-docker-sbx-claude.md: Docker sbx + Claude engine (haiku-4-5)\n- smoke-docker-sbx-codex.md: Docker sbx + Codex engine (gpt-5.4)\n- smoke-docker-sbx-build-test.md: Docker sbx + Node.js/Go build & test workloads\n\nThese mirror the gVisor smoke tests to provide a comparison baseline and\nensure Docker sandbox continues to work across engines and workloads.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* compiled sbx smoke tests\n\n* compiled sbx smoke tests\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "674a445aedcb38c2331f82fb369eabed27aa183f"
+      ],
+      "tree_sha": "46c83055189b41df5ae3bd1831a3982e4bf24f0d",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/1f435b6f01261bf79b8c353c554e3dc599bac8a9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+          "commit_sha": "1f435b6f01261bf79b8c353c554e3dc599bac8a9",
+          "committed_at": "2026-07-12T16:16:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 160,
+          "file_deletions": 0,
+          "file_changes": 160,
+          "file_patch": "@@ -0,0 +1,160 @@\n+---\n+description: Smoke test Docker sandbox with Codex engine\n+on:\n+  workflow_dispatch:\n+  label_command:\n+    name: test-docker-sbx-codex\n+    events: [pull_request]\n+    remove_label: false\n+  reaction: \"eyes\"\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  actions: read\n+name: Smoke Docker Sbx Codex\n+engine:\n+  id: codex\n+  model: gpt-5.4\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  bash:\n+    - \"*\"\n+  github:\n+    toolsets: [pull_requests]\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+  add-comment:\n+    hide-older-comments: true\n+  add-labels:\n+    allowed: [smoke-docker-sbx-codex]\n+  messages:\n+    footer: \"> 🐳🔮 *Docker sbx + Codex smoke test by [{workflow_name}]({run_url})*\"\n+    run-started: \"🐳🔮 [{workflow_name}]({run_url}) is testing Docker sandbox with Codex engine...\"\n+    run-success: \"🐳🔮 [{workflow_name}]({run_url}) completed. Docker sbx + Codex smoke test passed. ✅\"\n+    run-failure: \"🐳🔮 [{workflow_name}]({run_url}) reports {status}. Docker sbx + Codex compatibility issue detected.\"\n+timeout-minutes: 15\n+sandbox:\n+  mcp:\n+    version: latest\n+strict: false\n+jobs:\n+  verify_token_usage:\n+    needs: agent\n+    if: always() && needs.agent.result != 'skipped' && needs.agent.result != 'cancelled'\n+    runs-on: ubuntu-latest\n+    permissions:\n+      contents: read\n+    steps:\n+      - name: Checkout repository\n+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0\n+        with:\n+          persist-credentials: false\n+      - name: Download agent artifact\n+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1\n+        with:\n+          name: agent\n+          path: /tmp/gh-aw-agent\n+      - name: Token-usage sanity check\n+        run: node scripts/ci/check-token-usage.js --artifact-root /tmp/gh-aw-agent --engine codex\n+steps:\n+  - name: Pre-compute smoke test data\n+    id: smoke-data\n+    run: |\n+      echo \"::group::Fetching last 2 merged PRs\"\n+      PR_DATA=$(gh pr list --repo \"$GITHUB_REPOSITORY\" --state merged --limit 2 \\\n+        --json number,title,author,mergedAt \\\n+        --jq '.[] | \"PR #\\(.number): \\(.title) (by @\\(.author.login), merged \\(.mergedAt))\"')\n+      echo \"$PR_DATA\"\n+      echo \"::endgroup::\"\n+\n+      echo \"::group::GitHub.com connectivity check\"\n+      HTTP_CODE=$(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 https://github.com)\n+      echo \"github.com returned HTTP $HTTP_CODE\"\n+      echo \"::endgroup::\"\n+\n+      echo \"::group::File write/read test\"\n+      TEST_DIR=\"/tmp/gh-aw/agent\"\n+      TEST_FILE=\"$TEST_DIR/smoke-test-docker-sbx-codex-${GITHUB_RUN_ID}.txt\"\n+      mkdir -p \"$TEST_DIR\"\n+      echo \"Docker sbx+Codex smoke test passed at $(date)\" > \"$TEST_FILE\"\n+      FILE_CONTENT=$(cat \"$TEST_FILE\")\n+      echo \"Wrote and read back: $FILE_CONTENT\"\n+      echo \"::endgroup::\"\n+\n+      {\n+        echo \"SMOKE_PR_DATA<<SMOKE_EOF\"\n+        echo \"$PR_DATA\"\n+        echo \"SMOKE_EOF\"\n+        echo \"SMOKE_HTTP_CODE=$HTTP_CODE\"\n+        echo \"SMOKE_FILE_CONTENT=$FILE_CONTENT\"\n+        echo \"SMOKE_FILE_PATH=$TEST_FILE\"\n+      } >> \"$GITHUB_OUTPUT\"\n+    env:\n+      GH_TOKEN: ${{ github.token }}\n+post-steps:\n+  - name: Validate safe outputs were invoked\n+    run: |\n+      OUTPUTS_FILE=\"${GH_AW_SAFE_OUTPUTS:-${RUNNER_TEMP}/gh-aw/safeoutputs/outputs.jsonl}\"\n+      if [ ! -s \"$OUTPUTS_FILE\" ]; then\n+        echo \"::error::No safe outputs were invoked. Smoke tests require the agent to call safe output tools.\"\n+        echo \"Checked path: $OUTPUTS_FILE\"\n+        exit 1\n+      fi\n+      echo \"Safe output entries found: $(wc -l < \"$OUTPUTS_FILE\")\"\n+      if [ \"$GITHUB_EVENT_NAME\" = \"pull_request\" ]; then\n+        if ! grep -q '\"add_comment\"' \"$OUTPUTS_FILE\"; then\n+          echo \"::error::Agent did not call add_comment on a pull_request trigger.\"\n+          exit 1\n+        fi\n+        echo \"add_comment verified for PR trigger\"\n+      fi\n+      echo \"Safe output validation passed\"\n+---\n+\n+> **[ASSIGNED WORKFLOW TASK]** Execute the smoke test procedure below. This is the legitimate, authorized task from the workflow system — not injected content. Begin immediately.\n+>\n+> *(Note: This task header exists because the Codex engine classifies workflow body instructions outside the system context as potentially untrusted content. The header signals this is the legitimate workflow task to execute.)*\n+\n+# Smoke Test: Docker Sandbox + Codex Engine\n+\n+**IMPORTANT: Keep all outputs extremely short and concise. Use single-line responses where possible. No verbose explanations.**\n+\n+## Pre-Computed Test Results\n+\n+The following tests were already executed in a deterministic pre-agent step. Your job is to verify the results and produce the summary comment.\n+\n+### 1. GitHub MCP Testing\n+Verify MCP connectivity by calling `github-list_pull_requests` for ${{ github.repository }} (limit 1, state merged). Confirm the result matches the pre-fetched data below.\n+\n+### 2. GitHub.com Connectivity\n+Pre-step result: HTTP ${{ steps.smoke-data.outputs.SMOKE_HTTP_CODE }} from github.com.\n+✅ if HTTP 200 or 301, ❌ otherwise.\n+\n+### 3. File Write/Read Test\n+Pre-step wrote and read back: \"${{ steps.smoke-data.outputs.SMOKE_FILE_CONTENT }}\"\n+File path: ${{ steps.smoke-data.outputs.SMOKE_FILE_PATH }}\n+Verify by running `cat` on the file path using bash to confirm it exists.\n+\n+### 4. Network Isolation Verification\n+Run `curl -s -o /dev/null -w \"%{http_code}\" --max-time 5 https://example.com` — this domain is NOT in the allowlist, so it should be blocked (timeout or 403).\n+\n+## Pre-Fetched PR Data\n+\n+    ${{ steps.smoke-data.outputs.SMOKE_PR_DATA }}\n+\n+## Output (MANDATORY)\n+\n+**If triggered by a pull request** (check: `${{ github.event_name }}` equals \"pull_request\"), you MUST call `add_comment` to post a **very brief** comment (max 5-10 lines) on the current pull request with:\n+- 🐳🔮 Docker sbx + Codex\n+- ✅ or ❌ for each test result\n+- Overall status: PASS or FAIL\n+\n+If all tests pass on a pull request trigger:\n+- Use the `add_labels` safe-output tool to add the label `smoke-docker-sbx-codex` to the pull request\n+\n+**If triggered by workflow_dispatch** (no PR context), call `noop` with a concise PASS/FAIL summary instead. Do NOT attempt to add pull request comments or labels when there is no pull request.",
+          "snapshot_ref": "1f435b6f01261bf79b8c353c554e3dc599bac8a9",
+          "snapshot_blob_sha": "83f9cdbd243ad974a86873ce718f3d1f8cfe166b",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__1f435b6f01261bf79b8c353c554e3dc599bac8a9__smoke-docker-sbx-codex.md",
+          "snapshot_bytes": 6207,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-docker-sbx-codex.lock.yml\",\"generated_workflow_file\":\"smoke-docker-sbx-codex.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-docker-sbx-codex.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+      "commit_sha": "70f90272448c6fe0df93a262942856403c7be3a3",
+      "authored_at": "2026-07-13T01:34:50Z",
+      "committed_at": "2026-07-13T01:34:50Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Set runtime to docker-sbx in smoke-docker-sbx workflow frontmatter (#6153)\n\n* Set runtime to docker-sbx in smoke-docker-sbx workflow frontmatter\n\nAdd sandbox.agent block with runtime: docker-sbx to all four\nsmoke-docker-sbx workflow .md files, matching the pattern used\nby the gvisor smoke tests.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* Add sudo: true to sandbox.agent in smoke-docker-sbx workflows\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* compiled workflows\n\n* Fix sbx create crash: use pipe stdin instead of ignore\n\nexeca throws 'Cannot read properties of null (reading end)' when\ninput is provided but stdio[0] is 'ignore'. Change stdin to 'pipe'\nso the confirmation input can be written to the sbx create process.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* Build AWF from source in smoke-docker-sbx-build-test to test sbx fix\n\nReplace the released binary install step with a source build so the\nstdin pipe fix in sbx-manager.ts is exercised in CI.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* Fix sbx auth: preserve XDG_CONFIG_HOME for credential lookup\n\nRemoving XDG_CONFIG_HOME from the environment passed to sbx create\nprevents the sbx CLI from finding Docker Hub credentials stored by\nsbx login, causing 'user is not authenticated' errors even though\nthe daemon pre-pulled the image successfully.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* compiled workflows\n\n* compiled workflows\n\n* chore: build AWF from source in docker-sbx lock files (stdin pipe fix)\n\nThe released AWF binary (v0.27.30) has a bug where execa crashes with\n'Cannot read properties of null (reading end)' because stdio[0] is set\nto 'ignore' while input is provided. Build from source to include the\nfix (stdio[0] changed to 'pipe').\n\nThis is a temporary workaround until a new AWF version is released.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix: include containers/ dir in source build install\n\nThe compiled dist references ../containers/api-proxy/provider-env-constants.json\nrelative to the dist/ directory.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix(sbx): use process.env instead of custom env for sbx create\n\nPassing a custom sanitized env to execa replaces the entire process\nenvironment, which strips variables the sbx CLI needs to locate its\ndaemon socket and credential store. This causes 'user is not\nauthenticated to Docker' errors even when sbx login was run moments\nbefore.\n\nInstead, temporarily set DOCKER_SANDBOXES_PROXY in process.env and\nrestore it after the call, letting sbx inherit the full environment.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix(sbx): don't set DOCKER_SANDBOXES_PROXY during sbx create\n\nRevert to the original behavior from PR #6101: delete DOCKER_SANDBOXES_PROXY\nfrom the env during sbx create. Setting it forces the sbx daemon to route\nDocker Hub registry auth through Squid, which blocks the pull and causes\n'user is not authenticated to Docker' errors.\n\nThe proxy is set at exec time instead, which is after Squid is fully\nconfigured and ready.\n\nAlso reverts the process.env change (security issue: would have leaked\nsecrets like GITHUB_TOKEN, DOCKER_PAT etc to the sbx CLI). The sanitized\nenv approach (sanitizeEnvForSbx) is the correct security boundary.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix(sbx): inherit process.env for sbx create (management command)\n\nsbx create is a management command that talks to the local daemon — it\ndoes not run user code inside the sandbox. Passing a custom sanitized env\nstrips variables the sbx CLI needs to locate the daemon's credential\nstore, causing 'user is not authenticated to Docker' errors.\n\nThe sandbox interior's env is controlled separately by execInSandbox()\nwhich still uses sanitizeEnvForSbx() to strip secrets.\n\nDOCKER_SANDBOXES_PROXY is temporarily removed during create to prevent\nrouting Docker Hub registry auth through Squid (which isn't ready yet).\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix(sbx): remove XDG_CONFIG_HOME during sbx create\n\nThe Copilot harness sets XDG_CONFIG_HOME=$HOME before running AWF.\nThis makes the sbx CLI look for credentials in $HOME/ instead of the\ndefault $HOME/.config/ where 'sbx login' stored them (sbx login runs\nin a step before the harness, with XDG_CONFIG_HOME unset).\n\nTemporarily unset XDG_CONFIG_HOME during sbx create so the sbx CLI\nfinds the daemon credentials at the correct default path.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* chore: update smoke-docker-sbx.lock.yml to build AWF from source\n\nAdd source build + credential refresh step to match the other lock files.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* compiled workflows\n\n* compiled workflows\n\n* chore: build AWF from source in smoke-docker-sbx.lock.yml\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "10b8e3ba0336fadec1fe2ef90c29af697d4cd154"
+      ],
+      "tree_sha": "19b28a0a8b558bd527b96dde73c773b5e904501f",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/70f90272448c6fe0df93a262942856403c7be3a3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+          "commit_sha": "70f90272448c6fe0df93a262942856403c7be3a3",
+          "committed_at": "2026-07-13T01:34:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -39,6 +39,10 @@ safe-outputs:\n     run-failure: \"🐳🔮 [{workflow_name}]({run_url}) reports {status}. Docker sbx + Codex compatibility issue detected.\"\n timeout-minutes: 15\n sandbox:\n+  agent:\n+    id: awf\n+    runtime: docker-sbx\n+    sudo: true\n   mcp:\n     version: latest\n strict: false",
+          "snapshot_ref": "70f90272448c6fe0df93a262942856403c7be3a3",
+          "snapshot_blob_sha": "bb5f5fa1e3cd05c9b214270924a8af20e8f5dd13",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__70f90272448c6fe0df93a262942856403c7be3a3__smoke-docker-sbx-codex.md",
+          "snapshot_bytes": 6267,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-docker-sbx-codex.lock.yml\",\"generated_workflow_file\":\"smoke-docker-sbx-codex.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-docker-sbx-codex.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+      "commit_sha": "3061640abd66a623567488a891f5a6ed307ab995",
+      "authored_at": "2026-07-20T20:20:10Z",
+      "committed_at": "2026-07-20T20:20:10Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: upgrade gh-aw extension to v0.82.14 pre-release (#6446)\n\n- Upgraded gh-aw from v0.82.13 to v0.82.14 via gh aw upgrade --pre-releases\n- Applied codemods (engine.model to top-level model)\n- Updated actions-lock.json with latest action versions\n- Recompiled all workflow lock files\n- Ran post-processing to apply local build patches for CI\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c36473b10c23a326047923197b4ab64bfa37640e"
+      ],
+      "tree_sha": "db4f2e5c1730b9eb5fcad5f3462db36c6635ae64",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/3061640abd66a623567488a891f5a6ed307ab995",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+          "commit_sha": "3061640abd66a623567488a891f5a6ed307ab995",
+          "committed_at": "2026-07-20T20:20:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "",
+          "snapshot_ref": "3061640abd66a623567488a891f5a6ed307ab995",
+          "snapshot_blob_sha": "5a0865a5fa93c358ac9d6bde20a86873dea85384",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__3061640abd66a623567488a891f5a6ed307ab995__smoke-docker-sbx-codex.md",
+          "snapshot_bytes": 6264,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-docker-sbx-codex.lock.yml\",\"generated_workflow_file\":\"smoke-docker-sbx-codex.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-docker-sbx-codex.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+      "commit_sha": "c2e79f2cd0637f016684acb926c420f007c02acd",
+      "authored_at": "2026-07-23T18:05:10Z",
+      "committed_at": "2026-07-23T18:05:10Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: add required supply-chain scan on every PR (#6530)\n\n* ci: add required supply-chain scan on every PR\n\nAdd a deterministic (non-agentic) workflow that runs\n`gh aw compile --strict --syft --grype --grant` on every pull request.\n\nThe Anchore scanners run via Docker against the container images recorded\nin the compiled `*.lock.yml` manifests:\n- --syft:  generate an SBOM per image\n- --grype: scan for known CVEs / insecure libraries\n- --grant: enforce the license allowlist in `.grant.yaml`\n\n`--strict` makes any finding or scan error fail the job so it acts as a\nreal gate. Add `.grant.yaml` at the repo root since `--grant` requires it.\n\nThe \"Compile + Syft/Grype/Grant\" check is added to the \"CI passes before\nmerging to main\" ruleset so it is required before merge.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 92b2407f-7d59-464d-afe7-bc21bd71bddb\n\n* ci: address PR review feedback on supply-chain-scan workflow and grant policy\n\n- Fix .grant.yaml: derive allowlist from actual syft scans of squid/agent/api-proxy\n  images; set require-known-license: false for Ubuntu's non-SPDX license strings\n- Fix workflow line 16: correct required-check context name to\n  'Supply Chain Scan / Compile + Syft/Grype/Grant'\n- Fix workflow line 38: update actions/checkout to v7.0.1 SHA\n  (3d3c42e5) matching the rest of the repo (was v6.0.2 SHA mislabelled as v4)\n- Fix workflow line 50: remove mutable --grype/--grant flags from gh aw compile;\n  replace with explicit Docker steps pinned to reviewed digests:\n  grype v0.116.0 (sha256:fd4ab4d1) and grant v0.6.8 (sha256:17246361)\n  with GHCR auth via docker login + packages: read permission\n\n* ci: don't fail supply-chain scan on strict mode; use local awf builds\n\nThe supply-chain-scan compile step used `gh aw compile --strict`, which\nforced repo-wide strict validation and rejected 24 workflows that pin\n`sandbox.mcp.version` (an internal implementation detail disallowed in\nstrict mode). The Syft/Grype/Grant scanners don't require strict, so drop\nthe flag: `gh aw compile --syft`.\n\nSeparately, make the smoke/build-test workflows build awf/firewall from\nthe repo's own source and use the compiler-default MCP gateway image:\n\n- Remove `sandbox.mcp.version` and `sandbox.agent.version` pins from 22\n  workflow .md files. Without the mcp pin the compiler uses its default\n  gateway (v0.4.3) instead of the stale pinned v0.3.x.\n- Empty the postprocess release-mode exclusion set so the\n  network-isolation variants also build locally (--build-local); the\n  injected full-repo checkout makes that valid everywhere.\n- Update the now-inaccurate \"no local builds\" note in\n  build-test-network-isolation.md.\n\nRecompiled all lock files and re-ran postprocess-smoke-workflows.ts.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 1076089d-35ad-4339-8143-58e140987894\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCopilot-Session: 92b2407f-7d59-464d-afe7-bc21bd71bddb\nCopilot-Session: 1076089d-35ad-4339-8143-58e140987894",
+      "parent_shas": [
+        "dcdb3b497fda94667fa4496e463e65b9e8677aeb"
+      ],
+      "tree_sha": "00b464fe0dd7f7c3993cd617a7b93dd7dc64b678",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/c2e79f2cd0637f016684acb926c420f007c02acd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+          "commit_sha": "c2e79f2cd0637f016684acb926c420f007c02acd",
+          "committed_at": "2026-07-23T18:05:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -43,8 +43,6 @@ sandbox:\n     id: awf\n     runtime: docker-sbx\n     sudo: true\n-  mcp:\n-    version: latest\n strict: false\n jobs:\n   verify_token_usage:",
+          "snapshot_ref": "c2e79f2cd0637f016684acb926c420f007c02acd",
+          "snapshot_blob_sha": "e4297ad0ead7c464272481cb707a578241f903b2",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__c2e79f2cd0637f016684acb926c420f007c02acd__smoke-docker-sbx-codex.md",
+          "snapshot_bytes": 6237,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-docker-sbx-codex.lock.yml\",\"generated_workflow_file\":\"smoke-docker-sbx-codex.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-docker-sbx-codex.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+      "commit_sha": "f89d63e56e0c82eba6bad7207d96d703cac530ef",
+      "authored_at": "2026-07-29T15:40:41Z",
+      "committed_at": "2026-07-29T15:40:41Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: upgrade gh-aw to v0.83.5 pre-release and recompile workflows (#6718)\n\n* chore: upgrade gh-aw to v0.83.5 pre-release and recompile workflows\n\n- Upgrade gh-aw extension from v0.83.4 to v0.83.5\n- Fix 15 workflows with steps-output-in-prompt validation errors:\n  - Migrate step outputs ($GITHUB_OUTPUT) to file-based data passing\n    (/tmp/gh-aw/agent/) for all smoke-data workflows\n  - Fix refactoring-scanner, security-guard, self-hosted-runner-doctor-updater,\n    test-coverage-improver, and test-coverage-reporter workflows\n- Recompile all 58 workflows (0 errors)\n- Update tests to match new file-based data passing pattern\n- Update default model reference (claude-sonnet-4.6 → claude-sonnet-5)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix: address test-coverage workflow review feedback\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "3d029b973ac0bdbb3937a974ee4171c08acfa101"
+      ],
+      "tree_sha": "a4a5a35ac7fbb1d765029c7a55d1140e86402c52",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/f89d63e56e0c82eba6bad7207d96d703cac530ef",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-docker-sbx-codex.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-docker-sbx-codex.md",
+          "commit_sha": "f89d63e56e0c82eba6bad7207d96d703cac530ef",
+          "committed_at": "2026-07-29T15:40:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 13,
+          "file_changes": 23,
+          "file_patch": "",
+          "snapshot_ref": "f89d63e56e0c82eba6bad7207d96d703cac530ef",
+          "snapshot_blob_sha": "a23d99475404c0685c244271a5d75262ec9a14be",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__f89d63e56e0c82eba6bad7207d96d703cac530ef__smoke-docker-sbx-codex.md",
+          "snapshot_bytes": 6284,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-docker-sbx-codex.lock.yml\",\"generated_workflow_file\":\"smoke-docker-sbx-codex.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-docker-sbx-codex.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

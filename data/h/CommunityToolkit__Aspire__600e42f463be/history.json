@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+    "source_full_name": "CommunityToolkit/Aspire",
+    "source_owner": "CommunityToolkit",
+    "source_repo": "Aspire",
+    "md_path": ".github/workflows/aspire-upgrade.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/CommunityToolkit/Aspire/blob/HEAD/.github/workflows/aspire-upgrade.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "CommunityToolkit/Aspire",
+      "generated_owner": "CommunityToolkit",
+      "generated_repo": "Aspire",
+      "generated_workflow_path": ".github/workflows/aspire-upgrade.lock.yml",
+      "generated_workflow_file": "aspire-upgrade.lock.yml",
+      "generated_html_url": "https://github.com/CommunityToolkit/Aspire/blob/3aa2aa0aaf77be2e427cd8047b24de31112e1766/.github/workflows/aspire-upgrade.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:09+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+      "source_full_name": "CommunityToolkit/Aspire",
+      "md_path": ".github/workflows/aspire-upgrade.md",
+      "commit_sha": "cafe91da67e6970eeabdada69119258948a63225",
+      "authored_at": "2026-03-12T23:42:48Z",
+      "committed_at": "2026-03-12T23:45:41Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "Aaron Powell",
+      "committer_email": "me@aaron-powell.com",
+      "committer_login": "aaronpowell",
+      "committer_account_type": "User",
+      "message": "Improve aspire-upgrade agentic workflow\n\n- Add description field for discoverability\n- Add concurrency control to prevent conflicting PRs\n- Remove unnecessary permissions (issues: read, pull-requests: read)\n- Narrow network allowlist to only defaults (removed python/node/go/java)\n- Narrow GitHub toolsets to [repos, context] instead of [default]\n- Add explicit instructions to find and update all ~50 AppHost .csproj files\n- Add dotnet restore validation step before PR creation\n- Restructure prompt into clear numbered steps\n- Remove redundant engine: copilot (it's the default)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "4b3cc6a439a7ff8cb147b4c8410ed67eb860b861"
+      ],
+      "tree_sha": "fcb6fe524d732c1f2fb7fbae420fcc80f8cebb95",
+      "html_url": "https://github.com/CommunityToolkit/Aspire/commit/cafe91da67e6970eeabdada69119258948a63225",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+          "source_full_name": "CommunityToolkit/Aspire",
+          "md_path": ".github/workflows/aspire-upgrade.md",
+          "commit_sha": "cafe91da67e6970eeabdada69119258948a63225",
+          "committed_at": "2026-03-12T23:45:41Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 65,
+          "file_deletions": 0,
+          "file_changes": 65,
+          "file_patch": "@@ -0,0 +1,65 @@\n+---\n+description: Updates Aspire SDK to the latest nightly build\n+on:\n+    workflow_dispatch:\n+concurrency: aspire-upgrade\n+permissions:\n+    contents: read\n+network:\n+    allowed:\n+        - defaults\n+tools:\n+    github:\n+        toolsets: [repos, context]\n+    edit:\n+    bash: true\n+    web-fetch:\n+safe-outputs:\n+    create-pull-request:\n+---\n+\n+The target version prefix is **13.2**.\n+\n+# aspire-upgrade\n+\n+You are responsible for updating the Aspire version in our repo to the latest nightly build.\n+\n+You are to use the NuGet feed https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json\n+\n+Look for the latest nightly version that starts with the target version prefix above.\n+\n+## Step 1: Update `Directory.Build.props`\n+\n+Update the following values in the root `Directory.Build.props` file:\n+\n+```xml\n+<AspireMajorVersion>MAJOR_VERSION</AspireMajorVersion>\n+<AspireVersion>$(AspireMajorVersion).MINOR_VERSION.PATCH_VERSION-PREVIEW_VERSION</AspireVersion>\n+<AspirePreviewSuffix></AspirePreviewSuffix>\n+```\n+\n+Where MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, and PREVIEW_VERSION are the respective parts of the version you found.\n+\n+When using a nightly build, we want to blank out the `AspirePreviewSuffix` to avoid confusion with the actual preview versions.\n+\n+## Step 2: Update all AppHost project files\n+\n+Search the entire repository for **all** `.csproj` files whose `<Project Sdk=\"...\">` attribute references `Aspire.AppHost.Sdk`. There are many of these across `tests/`, `tests-app-hosts/`, and `examples/`.\n+\n+Each one must be updated to the full version string:\n+\n+```xml\n+<Project Sdk=\"Aspire.AppHost.Sdk/MAJOR_VERSION.MINOR_VERSION.PATCH_VERSION-PREVIEW_VERSION\">\n+```\n+\n+**We cannot use a MSBuild variable in the Project SDK attribute, so you must hardcode the version in every file.**\n+\n+Use a command like `grep -rl \"Aspire.AppHost.Sdk\" --include=\"*.csproj\"` to find all files that need updating.\n+\n+## Step 3: Validate the changes\n+\n+Run `dotnet restore` at the repository root to verify the new version resolves correctly. Fix any errors before proceeding.\n+\n+## Step 4: Create a pull request\n+\n+After all changes are made and validated, create a pull request with the title \"Update Aspire version to X.Y.Z\" where X.Y.Z is the full version you updated to.",
+          "snapshot_ref": "cafe91da67e6970eeabdada69119258948a63225",
+          "snapshot_blob_sha": "2bfd979fcca37cbccd019c74cf8394753cbbc415",
+          "snapshot_file": "snapshots/Aspire__CommunityToolkit__cafe91da67e6970eeabdada69119258948a63225__aspire-upgrade.md",
+          "snapshot_bytes": 2244,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"CommunityToolkit/Aspire\",\"generated_owner\":\"CommunityToolkit\",\"generated_repo\":\"Aspire\",\"generated_workflow_path\":\".github/workflows/aspire-upgrade.lock.yml\",\"generated_workflow_file\":\"aspire-upgrade.lock.yml\",\"generated_html_url\":\"https://github.com/CommunityToolkit/Aspire/blob/3aa2aa0aaf77be2e427cd8047b24de31112e1766/.github/workflows/aspire-upgrade.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+      "source_full_name": "CommunityToolkit/Aspire",
+      "md_path": ".github/workflows/aspire-upgrade.md",
+      "commit_sha": "f6f31f694a00f1864cec8075bdb09acbfa0fd8ce",
+      "authored_at": "2026-03-18T05:53:36Z",
+      "committed_at": "2026-03-18T05:53:36Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "Aaron Powell",
+      "committer_email": "me@aaron-powell.com",
+      "committer_login": "aaronpowell",
+      "committer_account_type": "User",
+      "message": "Trying to get the aw to use the .NET CLI not randomly querying the NuGet feed URLs",
+      "parent_shas": [
+        "c68ff59035feaa3ac7f26830e578ae13c2f1489a"
+      ],
+      "tree_sha": "c462262e96ce625b51c71daab659392f082c43dd",
+      "html_url": "https://github.com/CommunityToolkit/Aspire/commit/f6f31f694a00f1864cec8075bdb09acbfa0fd8ce",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+          "source_full_name": "CommunityToolkit/Aspire",
+          "md_path": ".github/workflows/aspire-upgrade.md",
+          "commit_sha": "f6f31f694a00f1864cec8075bdb09acbfa0fd8ce",
+          "committed_at": "2026-03-18T05:53:36Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 44,
+          "file_deletions": 5,
+          "file_changes": 49,
+          "file_patch": "@@ -1,23 +1,26 @@\n ---\n-description: Updates Aspire SDK to the latest nightly build\n on:\n     workflow_dispatch:\n-concurrency: aspire-upgrade\n permissions:\n     contents: read\n+    issues: read\n+    pull-requests: read\n+engine: copilot\n network:\n     allowed:\n         - defaults\n+        - dotnet\n tools:\n     github:\n-        toolsets: [repos, context]\n+        toolsets: [default]\n     edit:\n     bash: true\n-    web-fetch:\n safe-outputs:\n     create-pull-request:\n ---\n \n+# aspire-upgrade\n+\n The target version prefix is **13.2**.\n \n # aspire-upgrade\n@@ -26,7 +29,15 @@ You are responsible for updating the Aspire version in our repo to the latest ni\n \n You are to use the NuGet feed https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json\n \n-Look for the latest nightly version that starts with the target version prefix above.\n+Look for the latest nightly version that starts with the target version prefix above. To do this, you will need to use the .NET CLI package search feature with the `--prerelease` and `--exact-match` flags (and probably best to specify the feed with `--source` to avoid confusion with any stable versions from nuget.org). Query for the `Aspire.AppHost.Sdk` package as it is a dependency of all our AppHost projects and will be the most reliable way to find the correct version string.\n+\n+Here is an example command to find the latest version:\n+\n+```bash\n+dotnet package search Aspire.AppHost.Sdk --prerelease --exact-match --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json --format json\n+```\n+\n+Parse the result for the latest version that matches the target version prefix. This will be the version you update to in the next steps.\n \n ## Step 1: Update `Directory.Build.props`\n \n@@ -63,3 +74,31 @@ Run `dotnet restore` at the repository root to verify the new version resolves c\n ## Step 4: Create a pull request\n \n After all changes are made and validated, create a pull request with the title \"Update Aspire version to X.Y.Z\" where X.Y.Z is the full version you updated to.\n+\n+<!--\n+## TODO: Customize this workflow\n+\n+The workflow has been generated based on your selections. Consider adding:\n+\n+- [ ] More specific instructions for the AI\n+- [ ] Error handling requirements\n+- [ ] Output format specifications\n+- [ ] Integration with other workflows\n+- [ ] Testing and validation steps\n+\n+## Configuration Summary\n+\n+- **Trigger**: Manual trigger\n+- **AI Engine**: copilot\n+- **Tools**: github, edit, bash\n+- **Safe Outputs**: create-pull-request\n+- **Network Access**: ecosystem\n+\n+## Next Steps\n+\n+1. Review and customize the workflow content above\n+2. Remove TODO sections when ready\n+3. Run `gh aw compile` to generate the GitHub Actions workflow\n+4. Test the workflow with a manual trigger or appropriate event\n+-->\n+",
+          "snapshot_ref": "f6f31f694a00f1864cec8075bdb09acbfa0fd8ce",
+          "snapshot_blob_sha": "2e47d172bf92505a120553f11ea4829755b6bf30",
+          "snapshot_file": "snapshots/Aspire__CommunityToolkit__f6f31f694a00f1864cec8075bdb09acbfa0fd8ce__aspire-upgrade.md",
+          "snapshot_bytes": 3726,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"CommunityToolkit/Aspire\",\"generated_owner\":\"CommunityToolkit\",\"generated_repo\":\"Aspire\",\"generated_workflow_path\":\".github/workflows/aspire-upgrade.lock.yml\",\"generated_workflow_file\":\"aspire-upgrade.lock.yml\",\"generated_html_url\":\"https://github.com/CommunityToolkit/Aspire/blob/3aa2aa0aaf77be2e427cd8047b24de31112e1766/.github/workflows/aspire-upgrade.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+      "source_full_name": "CommunityToolkit/Aspire",
+      "md_path": ".github/workflows/aspire-upgrade.md",
+      "commit_sha": "14caeb2b80bfa70cd0b48d8aa7c6b051c5a043e3",
+      "authored_at": "2026-03-18T05:57:28Z",
+      "committed_at": "2026-03-18T05:57:28Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "Aaron Powell",
+      "committer_email": "me@aaron-powell.com",
+      "committer_login": "aaronpowell",
+      "committer_account_type": "User",
+      "message": "deleting mistaken stuff",
+      "parent_shas": [
+        "69ba2889452da395c0ea41ef44fcbb8fac2c20d7"
+      ],
+      "tree_sha": "1b9271a965321af0602ae7ca119fcbd6b3a02e25",
+      "html_url": "https://github.com/CommunityToolkit/Aspire/commit/14caeb2b80bfa70cd0b48d8aa7c6b051c5a043e3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+          "source_full_name": "CommunityToolkit/Aspire",
+          "md_path": ".github/workflows/aspire-upgrade.md",
+          "commit_sha": "14caeb2b80bfa70cd0b48d8aa7c6b051c5a043e3",
+          "committed_at": "2026-03-18T05:57:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 27,
+          "file_changes": 27,
+          "file_patch": "@@ -75,30 +75,3 @@ Run `dotnet restore` at the repository root to verify the new version resolves c\n \n After all changes are made and validated, create a pull request with the title \"Update Aspire version to X.Y.Z\" where X.Y.Z is the full version you updated to.\n \n-<!--\n-## TODO: Customize this workflow\n-\n-The workflow has been generated based on your selections. Consider adding:\n-\n-- [ ] More specific instructions for the AI\n-- [ ] Error handling requirements\n-- [ ] Output format specifications\n-- [ ] Integration with other workflows\n-- [ ] Testing and validation steps\n-\n-## Configuration Summary\n-\n-- **Trigger**: Manual trigger\n-- **AI Engine**: copilot\n-- **Tools**: github, edit, bash\n-- **Safe Outputs**: create-pull-request\n-- **Network Access**: ecosystem\n-\n-## Next Steps\n-\n-1. Review and customize the workflow content above\n-2. Remove TODO sections when ready\n-3. Run `gh aw compile` to generate the GitHub Actions workflow\n-4. Test the workflow with a manual trigger or appropriate event\n--->\n-",
+          "snapshot_ref": "14caeb2b80bfa70cd0b48d8aa7c6b051c5a043e3",
+          "snapshot_blob_sha": "08ef1cae051229088f8bfaf07f23c7ea463a0ac7",
+          "snapshot_file": "snapshots/Aspire__CommunityToolkit__14caeb2b80bfa70cd0b48d8aa7c6b051c5a043e3__aspire-upgrade.md",
+          "snapshot_bytes": 3004,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"CommunityToolkit/Aspire\",\"generated_owner\":\"CommunityToolkit\",\"generated_repo\":\"Aspire\",\"generated_workflow_path\":\".github/workflows/aspire-upgrade.lock.yml\",\"generated_workflow_file\":\"aspire-upgrade.lock.yml\",\"generated_html_url\":\"https://github.com/CommunityToolkit/Aspire/blob/3aa2aa0aaf77be2e427cd8047b24de31112e1766/.github/workflows/aspire-upgrade.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+      "source_full_name": "CommunityToolkit/Aspire",
+      "md_path": ".github/workflows/aspire-upgrade.md",
+      "commit_sha": "3a5972ff7c411f3b313a311f1da77f56e4b9bc65",
+      "authored_at": "2026-05-14T05:14:06Z",
+      "committed_at": "2026-05-14T05:14:06Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: use .csproj project references in TypeScript apphost aspire.config.json (#1261)\n\n* fix: use .csproj project references in TypeScript apphost aspire.config.json\n\nReplace empty/version string package references with relative .csproj paths\nso the Aspire CLI builds integrations from local source instead of trying\nto pull from NuGet. This follows the local development with project\nreferences pattern documented at aspire.dev.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fixing mcp inspector not having a default server\n\n* updating ignores\n\n* feat: add secrets support to TypeScript apphost validation\n\nAdd a -Secrets parameter to validate-typescript-apphost.ps1 that accepts\nkey=value pairs. The script calls 'aspire secret set' for each pair\nbefore starting the apphost, and cleans them up via 'aspire secret delete'\nin the finally block.\n\nUpdate TypeScriptAppHostTest.Run() with an optional secrets dictionary\nparameter that forwards to the PowerShell script.\n\nUpdate the McpInspector TypeScript test to pass the required proxy-token\nsecret parameter.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* feat: auto-detect and pack local project dependencies in TS apphost validation\n\nThe validate-typescript-apphost.ps1 script now uses dotnet msbuild\n-getItem:ProjectReference to discover CommunityToolkit.* project\nreferences from the integration being tested. Each discovered dependency\nis packed into the temp NuGet source and added to aspire.config.json\nalongside the main package.\n\nThis fixes TypeScript apphost validation for integrations like\nMongoDB.Extensions, MySql.Extensions, PostgreSQL.Extensions,\nRedis.Extensions, and SqlServer.Extensions which depend on local\npackages like DbGate, Adminer, and Flyway.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Disabling ngrok TS apphost test on CIThis requires an authenticated ngrok account to be setup, which can be done locally but not for CI\n\n* Simplfying the TS apphostThe routing stuff isn't meant to work the way it was defined and would cause the apphost to fail\n\n* Fixing path to the rust API\n\n* ignoring solr data folder\n\n* Fixing solr ts apphost by forcing permissions\n\n* ignore the possible failure due to solr data folder ownership\n\n* Fixing typescript validation script\n\nOn Windows, it would try to run the npm.ps1 script, which then freaks out about arguments, so have to do some hacky stuff\n\n* Bumping package due to CVE\n\n* Ignoring the lscache files\n\n* run bun, bump bun\n\n* still dealing with CVE packages. Why isn't OTEL verioning consistent\n\n* Aspire commands get debug flags\n\n* Copilot/update aspire 13 3 from pr1261 (#1314)\n\n* Update Aspire version references to 13.3\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n* Align dependency versions for Aspire 13.3\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n* Overriding more packages with CVE's\n\n* Debugging the TypeScript app host bootstrapper\n\n* Making the nuget.config more explicit in where to find stuff\n* Adding a VS Code launch command\n* Verbose debugging\n\nTests still won't pass though\n\n* Fixing a mistake in launching the debugger\n\n* No idea why the API usage was the way that was, but making it correct now\n\n* The API for getting endpoints was wrong for how 13.3 works - updated to the correct API\n\n* Fixing a bit more surface area in activemq\n\n* Fixing API usage in flagd apphost.ts\n\n* Fixing API usage in goff apphost.ts\n\n* Fixing API usage in java apphost.ts\n\n* Fixing API usage in KurrentDB apphost.ts\n\n* Fixing API usage in LavinMQ apphost.ts\n\n* Fixing API usage in MailPit apphost.ts\n\n* Fixing API usage in MeilieSearch apphost.ts\n\n* Fixing API usage in MinIO apphost.ts\n\n* Fixing API usage in mysql apphost.ts\n\n* Fixing API usage in otelcollector apphost.ts\n\n* Fixing API usage in papercut apphost.ts\n\n* Fixing API usage in pgext apphost.ts\n\n* Fixing API usage in sftp apphost.ts\n\n* Fixing API usage in solr apphost.ts\n\n* Fixing API usage in dbprojects apphost.ts\n\n* Fixing API usage in sqlite apphost.ts\n\n* Fixing API usage in surrealdb apphost.ts\n\n* Fixing API usage in umami apphost.ts\n\n* adding sqlserver to the dab ts apphost demo\n\n* Forgot that the tests didn't wait on resources\n\n* Updating all the aspire.config.json to include sdk version\n\n* Moving mcp config for cli\n\n* aspire agent skills\n\n* Adding some fixes to the apphost.ts usage\n\n* Removing some stuff that isn't needed, we have them in examples\n\n* Fixing the api usage for adding params with values\n\n* Fixing minio api usage\n\n* Fixing api usage on otel collection\n\n* Fixing typescript apphost for papercutsmtp\n\n* Fixing sftp typescript apphost\n\n* Fixing sqlite ts apphost, which was super weirdly written\n\n* Fix TypeScript AppHost cleanup ordering\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Fix remaining TypeScript AppHost CI failures\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Disabling DAB on TS apphost test due to known issue\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: David Fowler <davidfowl@gmail.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: restore playground files to resolve PR merge conflicts\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: David Fowler <davidfowl@gmail.com>",
+      "parent_shas": [
+        "537ca66b933bd81a42bf3bdd94aa3c3f0dbcc0d0"
+      ],
+      "tree_sha": "64629d3bd81fe7e698e3e504c6e18c483ee1577b",
+      "html_url": "https://github.com/CommunityToolkit/Aspire/commit/3a5972ff7c411f3b313a311f1da77f56e4b9bc65",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+          "source_full_name": "CommunityToolkit/Aspire",
+          "md_path": ".github/workflows/aspire-upgrade.md",
+          "commit_sha": "3a5972ff7c411f3b313a311f1da77f56e4b9bc65",
+          "committed_at": "2026-05-14T05:14:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -21,7 +21,7 @@ safe-outputs:\n \n # aspire-upgrade\n \n-The target version prefix is **13.2**.\n+The target version prefix is **13.3**.\n \n # aspire-upgrade\n ",
+          "snapshot_ref": "3a5972ff7c411f3b313a311f1da77f56e4b9bc65",
+          "snapshot_blob_sha": "6281127fb68b832608b15d7a4007c4b399056d0c",
+          "snapshot_file": "snapshots/Aspire__CommunityToolkit__3a5972ff7c411f3b313a311f1da77f56e4b9bc65__aspire-upgrade.md",
+          "snapshot_bytes": 3004,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"CommunityToolkit/Aspire\",\"generated_owner\":\"CommunityToolkit\",\"generated_repo\":\"Aspire\",\"generated_workflow_path\":\".github/workflows/aspire-upgrade.lock.yml\",\"generated_workflow_file\":\"aspire-upgrade.lock.yml\",\"generated_html_url\":\"https://github.com/CommunityToolkit/Aspire/blob/3aa2aa0aaf77be2e427cd8047b24de31112e1766/.github/workflows/aspire-upgrade.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+      "source_full_name": "CommunityToolkit/Aspire",
+      "md_path": ".github/workflows/aspire-upgrade.md",
+      "commit_sha": "7dac9abe1ff87e52439a0c4506e63706e9d5bb44",
+      "authored_at": "2026-05-26T00:56:19Z",
+      "committed_at": "2026-05-26T00:56:19Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "skill to upgrade aspire (#1358)\n\n* Adding a skill version of the agentic workflow and supporting aspire.config.json updates\n\n* ensuring latest aw used",
+      "parent_shas": [
+        "d7b684cbecd640c8ccd86ff98902509a30c75ee3"
+      ],
+      "tree_sha": "f7a1f61fac3df7f0b5a5518fa05d231f62a0b200",
+      "html_url": "https://github.com/CommunityToolkit/Aspire/commit/7dac9abe1ff87e52439a0c4506e63706e9d5bb44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "CommunityToolkit/Aspire:.github/workflows/aspire-upgrade.md",
+          "source_full_name": "CommunityToolkit/Aspire",
+          "md_path": ".github/workflows/aspire-upgrade.md",
+          "commit_sha": "7dac9abe1ff87e52439a0c4506e63706e9d5bb44",
+          "committed_at": "2026-05-26T00:56:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 11,
+          "file_deletions": 3,
+          "file_changes": 14,
+          "file_patch": "@@ -21,7 +21,7 @@ safe-outputs:\n \n # aspire-upgrade\n \n-The target version prefix is **13.3**.\n+The target version prefix is **13.4**.\n \n # aspire-upgrade\n \n@@ -67,11 +67,19 @@ Each one must be updated to the full version string:\n \n Use a command like `grep -rl \"Aspire.AppHost.Sdk\" --include=\"*.csproj\"` to find all files that need updating.\n \n-## Step 3: Validate the changes\n+## Step 3: Update TypeScript AppHost `aspire.config.json` files\n+\n+Search the entire repository for all `aspire.config.json` files (typically under `examples/` in directories ending with `.AppHost.TypeScript`). Each file has an `sdk.version` field that must be updated to the new version.\n+\n+The `sdk.version` value should be the full version string (e.g., `13.4.0-preview.1.25280.1`).\n+\n+Use a command like `find . -name \"aspire.config.json\"` to locate all files, then update the `\"version\"` value inside the `\"sdk\"` object in each one.\n+\n+## Step 4: Validate the changes\n \n Run `dotnet restore` at the repository root to verify the new version resolves correctly. Fix any errors before proceeding.\n \n-## Step 4: Create a pull request\n+## Step 5: Create a pull request\n \n After all changes are made and validated, create a pull request with the title \"Update Aspire version to X.Y.Z\" where X.Y.Z is the full version you updated to.\n ",
+          "snapshot_ref": "7dac9abe1ff87e52439a0c4506e63706e9d5bb44",
+          "snapshot_blob_sha": "b4fb082afe9ebf8d23a1ac1dbe29ed2eab1fc6fd",
+          "snapshot_file": "snapshots/Aspire__CommunityToolkit__7dac9abe1ff87e52439a0c4506e63706e9d5bb44__aspire-upgrade.md",
+          "snapshot_bytes": 3537,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"CommunityToolkit/Aspire\",\"generated_owner\":\"CommunityToolkit\",\"generated_repo\":\"Aspire\",\"generated_workflow_path\":\".github/workflows/aspire-upgrade.lock.yml\",\"generated_workflow_file\":\"aspire-upgrade.lock.yml\",\"generated_html_url\":\"https://github.com/CommunityToolkit/Aspire/blob/3aa2aa0aaf77be2e427cd8047b24de31112e1766/.github/workflows/aspire-upgrade.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+    "source_full_name": "SSWConsulting/SSW.Rules.Content",
+    "source_owner": "SSWConsulting",
+    "source_repo": "SSW.Rules.Content",
+    "md_path": ".github/workflows/content-judge-pr.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/HEAD/.github/workflows/content-judge-pr.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SSWConsulting/SSW.Rules.Content",
+      "generated_owner": "SSWConsulting",
+      "generated_repo": "SSW.Rules.Content",
+      "generated_workflow_path": ".github/workflows/content-judge-pr.lock.yml",
+      "generated_workflow_file": "content-judge-pr.lock.yml",
+      "generated_html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge-pr.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:33+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-judge-pr.md",
+      "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "authored_at": "2026-04-01T05:40:31Z",
+      "committed_at": "2026-04-01T05:40:31Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Add agentic workflows for auditing SSW Rules (#12307)\n\n<!-- **Tip: Use [SSW Rule Writer\nGPT](https://chat.openai.com/g/g-cOvrRzEnU-ssw-rules-writer) for help\nwith writing rules 🤖** -->\n>\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nEmail Subject - Do you avoid redundant linking (aka have a single link\nto a single location)? | SSW.Rules\n\n> 2. What was changed?\n\nThis PR adds a number of agentic workflows to SSW Rules that work\ntogether to update content on SSW Rules and catalog the work that has\nbeen done. I've included a mermaid diagram with a description of the\nflows as well as how to use them in the README referenced in this PR.\n\nBefore merging I also need to add the following new secrets to the repo\n\n- [x] TAVILY_API_KEY\n- [x] COPILOT_GITHUB_TOKEN\n- [x] CONTENTHAWK_GITHUB_PAT\n- [x] Give workflows permissions to creat/approve pull requests\n\n<img width=\"1619\" height=\"646\" alt=\"CleanShot 2026-03-27 at 15 00 18\"\nsrc=\"https://github.com/user-attachments/assets/a8cce0a9-0573-4c25-ac24-ba9bc56045a0\"\n/>\n\n**Figure: Proposed new flows**\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\n@18-th",
+      "parent_shas": [
+        "8f64357ba47cf0dbc014d929abac603d03708dfa"
+      ],
+      "tree_sha": "7bbf19cca2a23bcaabc508b0a79fbe890d86c405",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-judge-pr.md",
+          "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "committed_at": "2026-04-01T05:40:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 247,
+          "file_deletions": 0,
+          "file_changes": 247,
+          "file_patch": "@@ -0,0 +1,247 @@\n+---\n+description: >\n+  Agent 2b (PR Creator) of the ContentHawk pipeline.\n+  Triggered by Agent 2a after it finishes creating issues. Reads the snapshot\n+  file from main, searches for all issues created by Agent 2a in the given\n+  judge run, matches them to rows in the Files to Review table, and updates\n+  each matched row with the issue number and checked date.\n+  Commits the updated snapshot to a new branch and opens a pull request back\n+  to main.\n+  Stops immediately if a judge PR already exists for this label to avoid\n+  duplicates.\n+name: Content Judge PR (Agent 2b)\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      snapshot_path:\n+        description: \"Repo-relative path to the snapshot file on main (e.g. '.github/ContentHawk/TODO/2026-03-05_Snapshot_archive-legacy-rules.md').\"\n+        required: true\n+      label_name:\n+        description: \"GitHub label slug that ties this pipeline together (e.g. 'archive-legacy-rules'). Must match the Label field in the snapshot.\"\n+        required: true\n+      judge_run_id:\n+        description: \"The workflow run ID of the Agent 2a (Judge) run that created the issues. Used to filter issues to this specific run.\"\n+        required: true\n+\n+steps: \n+  - name: Guard — no open Content Judge PR for this label\n+    uses: ./.github/actions/guard-open-pr\n+    with:\n+      label_name: ${{ inputs.label_name }}\n+      workflow_id: content-judge-pr\n+  - name: Download skipped file list\n+    run: gh run download $JUDGE_RUN_ID -n $JUDGE_RUN_ID -D /tmp/gh-aw\n+    env:\n+      JUDGE_RUN_ID: ${{ inputs.judge_run_id }}\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+\n+engine:\n+  id: copilot\n+  model: gpt-5-mini\n+\n+permissions: read-all\n+\n+concurrency:\n+  group: \"contenthawk-judge-pr-${{ inputs.label_name }}\"\n+  cancel-in-progress: true\n+\n+safe-outputs:\n+  report-failure-as-issue: false\n+  create-pull-request:\n+    title-prefix: \"[Content Judge] \"\n+    labels: [\"${{ inputs.label_name }}\"]\n+    protected-files: allowed\n+    allowed-files:\n+      - .github/ContentHawk/TODO/*.md\n+      - .github/ContentHawk/DONE/*.md\n+    max: 1\n+\n+tools:\n+  github:\n+    lockdown: false\n+    toolsets: [issues, repos, pull_requests, search, labels]\n+    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+\n+post-steps:\n+  - name: Workflow Summary\n+    if: always()\n+    env:\n+      INPUT_SNAPSHOT_PATH: ${{ inputs.snapshot_path }}\n+      INPUT_LABEL_NAME: ${{ inputs.label_name }}\n+      INPUT_JUDGE_RUN_ID: ${{ inputs.judge_run_id }}\n+    run: |\n+      echo \"## ContentHawk — Agent 2b (PR Creator)\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      echo \"### Inputs\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Field            | Value |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"|------------------|-------|\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Snapshot Path    | $INPUT_SNAPSHOT_PATH |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Label            | \\`$INPUT_LABEL_NAME\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Judge Run ID     | $INPUT_JUDGE_RUN_ID |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      echo \"### Agent Output\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      if [ -d /tmp/gh-aw ]; then\n+        echo \"\\`\\`\\`\" >> \"$GITHUB_STEP_SUMMARY\"\n+        find /tmp/gh-aw -type f | head -30 >> \"$GITHUB_STEP_SUMMARY\"\n+        echo \"\\`\\`\\`\" >> \"$GITHUB_STEP_SUMMARY\"\n+      else\n+        echo \"_No agent output directory found._\" >> \"$GITHUB_STEP_SUMMARY\"\n+      fi\n+---\n+\n+\n+## Important context\n+\n+This workflow is **Agent 2b (PR Creator)** in a multi-agent pipeline called **ContentHawk**:\n+\n+- **Agent 1 (Detective)**: Catalogs content files, creates a snapshot tracking file on a branch, and opens a PR. That PR is reviewed and merged into `main` before Agent 2a runs.\n+- **Agent 2a (Judge)**: Reads the merged snapshot, judges each pending file against the intent, and opens issues for files that need fixing. Triggers this workflow via a post-step when it completes.\n+- **Agent 2b (this workflow)**: Reads the issues created by Agent 2a, matches them to the snapshot's Files to Review table, updates the snapshot with issue numbers and checked dates, and opens a PR.\n+- **Agent 3 (Fixer)**: Reads issues with the intent label and raises PRs to resolve them.\n+\n+The snapshot file is **self-contained** — it stores every configuration value Agent 1 received.\n+\n+---\n+\n+### Step 1 — Read and parse the snapshot\n+\n+Read the full content of the file at `${{ inputs.snapshot_path }}` from the `main` branch.\n+\n+#### 1a. Parse the Agent Configuration table\n+\n+Extract the following fields from the `## Agent Configuration` table:\n+\n+- **Intent** — what the judge was looking for in each file\n+- **Label** — the label slug stored in the snapshot\n+\n+**Validation**: Assert that the `Label` value extracted from the snapshot matches `${{ inputs.label_name }}` exactly (ignoring surrounding backticks). If they do not match, **stop immediately** with an error:\n+\n+> Snapshot label '<snapshot_label>' does not match the input label '${{ inputs.label_name }}'. Aborting.\n+\n+#### 1b. Parse the Files to Review table\n+\n+Collect every row from the `## Files to Review` table. Preserve the exact row order from the table. Separate them into:\n+- `pending_rows` — rows where `CheckResult` is exactly `pending`\n+- `other_rows` — rows that already have a non-pending `CheckResult`\n+\n+If `pending_rows` is empty (all rows already have a non-pending CheckResult), **stop immediately** with a message:\n+\n+> No pending rows found in snapshot. Nothing to do.\n+\n+### Step 2 — Resolve issues from the judge run\n+\n+Search GitHub for all issues created by Agent 2a during the judge run. Use the hidden `gh-aw-workflow-id` marker that the gh-aw runtime automatically embeds in the body of every issue created by Agent 2a:\n+\n+```\n+repo:${{ github.repository }} is:issue is:open \"contenthawk-run-id: ${{ inputs.judge_run_id }}\" in:body\n+```\n+\n+For each issue returned:\n+1. Parse the `### File` section of the issue body to extract the file path.\n+2. Find the matching row in `pending_rows` where `Path` equals that extracted path.\n+3. Record the match: `{ path: <Path>, number: <issue number> }`.\n+\n+Build a `matched_issues` list from all successful matches. If an issue cannot be matched to any `pending_rows` entry, log a warning but continue.\n+\n+If no issues are found at all, log a message:\n+\n+> No issues found for judge run ${{ inputs.judge_run_id }}. The judge may have skipped all files.\n+\n+Continue to Step 3 — the snapshot still needs to be committed even if no issues were created (rows remain `pending`).\n+\n+### Step 3 — Update the snapshot\n+\n+\n+run the following command to get a list of files that were skipped by Agent 2a and stored in the artifact and store the result in a variable called `skipped_files`:\n+\n+```\n+\n+cat /tmp/gh-aw/skipped_files.txt || echo \"No skipped files artifact found.\"\n+\n+```\n+\n+For each file in `skipped_files`, add the following to the matching row:\n+\n+- For each matched row, update:\n+  - `CheckResult` → `skipped`\n+  - `CheckedDate` → `<today's date in YYYY-MM-DD>`\n+\n+For each issue in `matched_issues`, add the following to the matching row:\n+\n+- For each matched row, update:\n+  - `CheckResult` → `Issue #<number>`\n+  - `CheckedDate` → `<today's date in YYYY-MM-DD>`\n+\n+All other columns (`Path`, `CategoryList`, `Created`, `LastUpdated`) must be preserved **verbatim**, character-for-character.\n+\n+Rows in `pending_rows` that do **not** have a matching issue remain unchanged — keep `CheckResult = pending` and `CheckedDate = -` exactly as they were.\n+\n+The `## Agent Configuration` table must be preserved entirely unchanged.\n+\n+### Step 4 — Open a pull request with the updated snapshot\n+\n+Create a new branch from `main` named:\n+\n+```\n+ContentHawk/judge/${{ inputs.label_name }}\n+```\n+\n+Commit the updated snapshot file from Step 3 to this branch. The commit message must be:\n+\n+```\n+content-hawk[judge]: update snapshot for ${{ inputs.label_name }}\n+```\n+\n+Then open a pull request using the `create-pull-request` safe-output tool:\n+\n+**Title**: `[Content Judge] ${{ inputs.label_name }} — <N> issues matched, <P> still pending`\n+\n+> Note: the `title-prefix` safe-output setting will prepend `[Content Judge] ` automatically — so only pass `${{ inputs.label_name }} — <N> issues matched, <P> still pending` as the title value.\n+\n+**Base branch**: `main`\n+\n+**Body**:\n+\n+```markdown\n+## ContentHawk — Agent 2b (PR Creator) Results\n+\n+### Summary\n+\n+| Metric                | Count |\n+|-----------------------|-------|\n+| Issues matched        | <N>   |\n+| Rows still pending    | <P>   |\n+| Skipped files         | <S>   |\n+\n+### Label\n+\n+`${{ inputs.label_name }}`\n+\n+### Judge Run\n+\n+[Agent 2a Run #${{ inputs.judge_run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ inputs.judge_run_id }})\n+\n+### Snapshot file\n+\n+`${{ inputs.snapshot_path }}`\n+\n+### Issues matched\n+\n+<Iterate over the `matched_issues` list. For each entry, write one bullet:\n+`- #<number> (<path>)`\n+If `matched_issues` is empty, write: _No issues were matched this run._>\n+\n+### Next steps\n+\n+- Merge this PR to update the snapshot on `main`.\n+- If rows are still pending, re-run Agent 2a after closing enough issues to drop below the limit.\n+- Once all rows are processed, Agent 3 can start resolving the open issues.\n+\n+---\n+```\n+\n+After the PR is created, apply the label `${{ inputs.label_name }}` to the PR using the `add-labels` tool.",
+          "snapshot_ref": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "snapshot_blob_sha": "6e68886a2f0f7c4ddee626927a3b0d8ab90fc1b9",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__e231121470b4ba5338e933dc2171d3b1fd3ded2b__content-judge-pr.md",
+          "snapshot_bytes": 9330,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-judge-pr.lock.yml\",\"generated_workflow_file\":\"content-judge-pr.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge-pr.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-judge-pr.md",
+      "commit_sha": "de7b26d00208797f2183a40e28393d2b57984800",
+      "authored_at": "2026-04-02T05:42:33Z",
+      "committed_at": "2026-04-02T05:42:33Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🧑‍⚖️ Content Judge - Fix flow PRs not being created due to empty change sets (#12383)\n\n<!-- **Tip: Use [SSW Rule Writer\nGPT](https://chat.openai.com/g/g-cOvrRzEnU-ssw-rules-writer) for help\nwith writing rules 🤖** -->\n>\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nA\n[previous](https://github.com/Calinator444/SSW.Rules.Content.ContentHawk/actions/runs/23594389682)\nworkflow run for `content-judge-pr` failed because it attempted to\ncreate a branch but inadvertently used a branch name that already\nexisted remotely (i.e. `ContentHawk/judge/archive-all-rules-cars`).\nBecause the remote branch already had the same changeset (i.e. issues\nlinked in the table) copilot CLI created an empty commit for the file,\ncausing the GitHub to fail.\n\n> 2. What was changed?\n\nThis PR appends the run ID to the branch name to prevent collisions from\noccurring if the flow is run more than once.\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\n N/a",
+      "parent_shas": [
+        "9b8d33a94382ac389bc7ff26eeed1a9377409c2f"
+      ],
+      "tree_sha": "254607cf2785a5ecea99227250aff8eb777825d3",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/de7b26d00208797f2183a40e28393d2b57984800",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-judge-pr.md",
+          "commit_sha": "de7b26d00208797f2183a40e28393d2b57984800",
+          "committed_at": "2026-04-02T05:42:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -187,7 +187,7 @@ The `## Agent Configuration` table must be preserved entirely unchanged.\n Create a new branch from `main` named:\n \n ```\n-ContentHawk/judge/${{ inputs.label_name }}\n+ContentHawk/judge/${{ inputs.label_name }}${{ github.run_id }}\n ```\n \n Commit the updated snapshot file from Step 3 to this branch. The commit message must be:",
+          "snapshot_ref": "de7b26d00208797f2183a40e28393d2b57984800",
+          "snapshot_blob_sha": "fb1d7fac1cef340b336568e91545198a21792ab1",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__de7b26d00208797f2183a40e28393d2b57984800__content-judge-pr.md",
+          "snapshot_bytes": 9350,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-judge-pr.lock.yml\",\"generated_workflow_file\":\"content-judge-pr.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge-pr.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-judge-pr.md",
+      "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "authored_at": "2026-05-15T01:11:10Z",
+      "committed_at": "2026-05-15T01:11:10Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 Installing ContentHawk (#12715)\n\nUpgraded ContentHawk using the brand new schmick Claude skill for\ninstalling it 😉.\n\n\n**What changed?**\nI reworked the workflows to avoid the need for a user to supply a custom\nGitHub token (`CONTENTHAWK_GITHUB_PAT`). The main thing that changed is\nthat `Content Judge` no longer triggers using `workflow_dispatch` as\nthis would require a personalised GitHub token to be used. Triggering\nGitHub within Agentic workflows requires a custom GitHub token unless\nthey are triggered via `safe_outputs` (The workflow level permissions\nfor agentic workflows enforce this).\n\n**Changes**\n- Removed all references to `CONTENTHAWK_GITHUB_PAT`\n- 👨‍⚖️Updated `Content Judge PR` to trigger when `Content Judge`\nfinishes running\n- 👨‍⚖️Updated `Content Judge PR` to get inputs from workflow artefacts\nto circumvent permissions issues\n- 🗾Update `Content Campaign` to run existing label in [pre-activation\nsteps](https://github.github.com/gh-aw/reference/triggers/#pre-activation-steps-onsteps)\nto allow for job level GITHUB_TOKEN permissions.",
+      "parent_shas": [
+        "9205018548c1659e85a538d9795e6d08efe03112"
+      ],
+      "tree_sha": "785242e56c1a6e859cb7d930c0fc14327b379444",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge-pr.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-judge-pr.md",
+          "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "committed_at": "2026-05-15T01:11:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 83,
+          "file_deletions": 31,
+          "file_changes": 114,
+          "file_patch": "@@ -22,18 +22,57 @@ on:\n       judge_run_id:\n         description: \"The workflow run ID of the Agent 2a (Judge) run that created the issues. Used to filter issues to this specific run.\"\n         required: true\n+  workflow_run:\n+    workflows: [\"Content Judge (Agent 2a)\"]\n+    types: [completed]\n+    branches:\n+      - main\n+\n+steps:\n+  - name: Resolve run context\n+    id: resolve-context\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+      JUDGE_RUN_ID: ${{ github.event.workflow_run.id || inputs.judge_run_id }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw\n+\n+      gh run download \"$JUDGE_RUN_ID\" -n \"$JUDGE_RUN_ID\" -D /tmp/gh-aw || {\n+        echo \"No artifact for run $JUDGE_RUN_ID — Agent 2a was a noop, skipping.\"\n+        exit 1\n+      }\n+\n+      LABEL_NAME=$(cat /tmp/gh-aw/label_name.txt 2>/dev/null | tr -d '[:space:]')\n+      if [ -z \"$LABEL_NAME\" ]; then\n+        echo \"::error::label_name.txt is empty in artifact — cannot proceed.\"\n+        exit 1\n+      fi\n+\n+      SNAPSHOT_PATH=$(ls .github/ContentHawk/TODO/*_Snapshot_${LABEL_NAME}.md 2>/dev/null | sort -r | head -1)\n+\n+      if [ -z \"$SNAPSHOT_PATH\" ]; then\n+        echo \"::error::No snapshot found for label $LABEL_NAME\"\n+        exit 1\n+      fi\n+\n+      echo \"label_name=$LABEL_NAME\" >> \"$GITHUB_OUTPUT\"\n+      echo \"judge_run_id=$JUDGE_RUN_ID\" >> \"$GITHUB_OUTPUT\"\n+      echo \"snapshot_path=$SNAPSHOT_PATH\" >> \"$GITHUB_OUTPUT\"\n+\n+      cat > /tmp/gh-aw/run_context.env << EOF\n+      export JUDGE_RUN_ID=\"$JUDGE_RUN_ID\"\n+      export LABEL_NAME=\"$LABEL_NAME\"\n+      export SNAPSHOT_PATH=\"$SNAPSHOT_PATH\"\n+      EOF\n+\n+      echo \"Resolved: JUDGE_RUN_ID=$JUDGE_RUN_ID LABEL_NAME=$LABEL_NAME SNAPSHOT_PATH=$SNAPSHOT_PATH\"\n \n-steps: \n   - name: Guard — no open Content Judge PR for this label\n     uses: ./.github/actions/guard-open-pr\n     with:\n-      label_name: ${{ inputs.label_name }}\n+      label_name: ${{ steps.resolve-context.outputs.label_name }}\n       workflow_id: content-judge-pr\n-  - name: Download skipped file list\n-    run: gh run download $JUDGE_RUN_ID -n $JUDGE_RUN_ID -D /tmp/gh-aw\n-    env:\n-      JUDGE_RUN_ID: ${{ inputs.judge_run_id }}\n-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n \n engine:\n   id: copilot\n@@ -42,14 +81,13 @@ engine:\n permissions: read-all\n \n concurrency:\n-  group: \"contenthawk-judge-pr-${{ inputs.label_name }}\"\n+  group: \"contenthawk-judge-pr-${{ inputs.label_name || github.event.workflow_run.id }}\"\n   cancel-in-progress: true\n \n safe-outputs:\n   report-failure-as-issue: false\n   create-pull-request:\n     title-prefix: \"[Content Judge] \"\n-    labels: [\"${{ inputs.label_name }}\"]\n     protected-files: allowed\n     allowed-files:\n       - .github/ContentHawk/TODO/*.md\n@@ -60,26 +98,27 @@ tools:\n   github:\n     lockdown: false\n     toolsets: [issues, repos, pull_requests, search, labels]\n-    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+    github-token: \"${{ secrets.GITHUB_TOKEN }}\"\n \n post-steps:\n   - name: Workflow Summary\n     if: always()\n     env:\n-      INPUT_SNAPSHOT_PATH: ${{ inputs.snapshot_path }}\n-      INPUT_LABEL_NAME: ${{ inputs.label_name }}\n-      INPUT_JUDGE_RUN_ID: ${{ inputs.judge_run_id }}\n+      RESOLVED_SNAPSHOT_PATH: ${{ steps.resolve-context.outputs.snapshot_path }}\n+      RESOLVED_LABEL_NAME: ${{ steps.resolve-context.outputs.label_name }}\n+      RESOLVED_JUDGE_RUN_ID: ${{ steps.resolve-context.outputs.judge_run_id }}\n     run: |\n       echo \"## ContentHawk — Agent 2b (PR Creator)\" >> \"$GITHUB_STEP_SUMMARY\"\n       echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n \n-      echo \"### Inputs\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"### Run Context\" >> \"$GITHUB_STEP_SUMMARY\"\n       echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n       echo \"| Field            | Value |\" >> \"$GITHUB_STEP_SUMMARY\"\n       echo \"|------------------|-------|\" >> \"$GITHUB_STEP_SUMMARY\"\n-      echo \"| Snapshot Path    | $INPUT_SNAPSHOT_PATH |\" >> \"$GITHUB_STEP_SUMMARY\"\n-      echo \"| Label            | \\`$INPUT_LABEL_NAME\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n-      echo \"| Judge Run ID     | $INPUT_JUDGE_RUN_ID |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Trigger          | \\`${{ github.event_name }}\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Snapshot Path    | ${RESOLVED_SNAPSHOT_PATH:-<not resolved>} |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Label            | \\`${RESOLVED_LABEL_NAME:-<not resolved>}\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Judge Run ID     | ${RESOLVED_JUDGE_RUN_ID:-<not resolved>} |\" >> \"$GITHUB_STEP_SUMMARY\"\n       echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n \n       echo \"### Agent Output\" >> \"$GITHUB_STEP_SUMMARY\"\n@@ -99,17 +138,30 @@ post-steps:\n This workflow is **Agent 2b (PR Creator)** in a multi-agent pipeline called **ContentHawk**:\n \n - **Agent 1 (Detective)**: Catalogs content files, creates a snapshot tracking file on a branch, and opens a PR. That PR is reviewed and merged into `main` before Agent 2a runs.\n-- **Agent 2a (Judge)**: Reads the merged snapshot, judges each pending file against the intent, and opens issues for files that need fixing. Triggers this workflow via a post-step when it completes.\n+- **Agent 2a (Judge)**: Reads the merged snapshot, judges each pending file against the intent, and opens issues for files that need fixing. Completes successfully, which automatically triggers this workflow via `workflow_run`.\n - **Agent 2b (this workflow)**: Reads the issues created by Agent 2a, matches them to the snapshot's Files to Review table, updates the snapshot with issue numbers and checked dates, and opens a PR.\n - **Agent 3 (Fixer)**: Reads issues with the intent label and raises PRs to resolve them.\n \n The snapshot file is **self-contained** — it stores every configuration value Agent 1 received.\n \n ---\n \n+### Step 0 — Load run context\n+\n+Source the run context file written by the pre-step:\n+\n+```bash\n+source /tmp/gh-aw/run_context.env\n+```\n+\n+This provides three variables used throughout all steps below:\n+- `$SNAPSHOT_PATH` — repo-relative path to the snapshot file on `main`\n+- `$LABEL_NAME` — the label slug tying this pipeline run together\n+- `$JUDGE_RUN_ID` — the Agent 2a run ID whose issues this workflow will process\n+\n ### Step 1 — Read and parse the snapshot\n \n-Read the full content of the file at `${{ inputs.snapshot_path }}` from the `main` branch.\n+Read the full content of the file at `$SNAPSHOT_PATH` from the `main` branch.\n \n #### 1a. Parse the Agent Configuration table\n \n@@ -118,9 +170,9 @@ Extract the following fields from the `## Agent Configuration` table:\n - **Intent** — what the judge was looking for in each file\n - **Label** — the label slug stored in the snapshot\n \n-**Validation**: Assert that the `Label` value extracted from the snapshot matches `${{ inputs.label_name }}` exactly (ignoring surrounding backticks). If they do not match, **stop immediately** with an error:\n+**Validation**: Assert that the `Label` value extracted from the snapshot matches `$LABEL_NAME` exactly (ignoring surrounding backticks). If they do not match, **stop immediately** with an error:\n \n-> Snapshot label '<snapshot_label>' does not match the input label '${{ inputs.label_name }}'. Aborting.\n+> Snapshot label '<snapshot_label>' does not match the resolved label '$LABEL_NAME'. Aborting.\n \n #### 1b. Parse the Files to Review table\n \n@@ -137,7 +189,7 @@ If `pending_rows` is empty (all rows already have a non-pending CheckResult), **\n Search GitHub for all issues created by Agent 2a during the judge run. Use the hidden `gh-aw-workflow-id` marker that the gh-aw runtime automatically embeds in the body of every issue created by Agent 2a:\n \n ```\n-repo:${{ github.repository }} is:issue is:open \"contenthawk-run-id: ${{ inputs.judge_run_id }}\" in:body\n+repo:${{ github.repository }} is:issue is:open \"contenthawk-run-id: $JUDGE_RUN_ID\" in:body\n ```\n \n For each issue returned:\n@@ -149,7 +201,7 @@ Build a `matched_issues` list from all successful matches. If an issue cannot be\n \n If no issues are found at all, log a message:\n \n-> No issues found for judge run ${{ inputs.judge_run_id }}. The judge may have skipped all files.\n+> No issues found for judge run $JUDGE_RUN_ID. The judge may have skipped all files.\n \n Continue to Step 3 — the snapshot still needs to be committed even if no issues were created (rows remain `pending`).\n \n@@ -187,20 +239,20 @@ The `## Agent Configuration` table must be preserved entirely unchanged.\n Create a new branch from `main` named:\n \n ```\n-ContentHawk/judge/${{ inputs.label_name }}${{ github.run_id }}\n+ContentHawk/judge/$LABEL_NAME-${{ github.run_id }}\n ```\n \n Commit the updated snapshot file from Step 3 to this branch. The commit message must be:\n \n ```\n-content-hawk[judge]: update snapshot for ${{ inputs.label_name }}\n+content-hawk[judge]: update snapshot for $LABEL_NAME\n ```\n \n Then open a pull request using the `create-pull-request` safe-output tool:\n \n-**Title**: `[Content Judge] ${{ inputs.label_name }} — <N> issues matched, <P> still pending`\n+**Title**: `$LABEL_NAME — <N> issues matched, <P> still pending`\n \n-> Note: the `title-prefix` safe-output setting will prepend `[Content Judge] ` automatically — so only pass `${{ inputs.label_name }} — <N> issues matched, <P> still pending` as the title value.\n+> Note: the `title-prefix` safe-output setting will prepend `[Content Judge] ` automatically — so only pass `$LABEL_NAME — <N> issues matched, <P> still pending` as the title value.\n \n **Base branch**: `main`\n \n@@ -219,15 +271,15 @@ Then open a pull request using the `create-pull-request` safe-output tool:\n \n ### Label\n \n-`${{ inputs.label_name }}`\n+`$LABEL_NAME`\n \n ### Judge Run\n \n-[Agent 2a Run #${{ inputs.judge_run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ inputs.judge_run_id }})\n+[Agent 2a Run #$JUDGE_RUN_ID](${{ github.server_url }}/${{ github.repository }}/actions/runs/$JUDGE_RUN_ID)\n \n ### Snapshot file\n \n-`${{ inputs.snapshot_path }}`\n+`$SNAPSHOT_PATH`\n \n ### Issues matched\n \n@@ -244,4 +296,4 @@ If `matched_issues` is empty, write: _No issues were matched this run._>\n ---\n ```\n \n-After the PR is created, apply the label `${{ inputs.label_name }}` to the PR using the `add-labels` tool.\n+After the PR is created, apply the label `$LABEL_NAME` to the PR using the `add-labels` tool.",
+          "snapshot_ref": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "snapshot_blob_sha": "f784485995eef3a2c3c2be8ddae4310b132d011d",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__0a9e7b77dc698a3fb4ea446221daf3c33523439b__content-judge-pr.md",
+          "snapshot_bytes": 11107,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-judge-pr.lock.yml\",\"generated_workflow_file\":\"content-judge-pr.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge-pr.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

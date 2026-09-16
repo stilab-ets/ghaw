@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "primer/eslint-plugin-primer-react:.github/workflows/issue-triage.md",
+    "source_full_name": "primer/eslint-plugin-primer-react",
+    "source_owner": "primer",
+    "source_repo": "eslint-plugin-primer-react",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/primer/eslint-plugin-primer-react/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "primer/eslint-plugin-primer-react",
+      "generated_owner": "primer",
+      "generated_repo": "eslint-plugin-primer-react",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/primer/eslint-plugin-primer-react/blob/2b21a211629decc1fca55f51e312ce345420dc9d/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:13+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "primer/eslint-plugin-primer-react:.github/workflows/issue-triage.md",
+      "source_full_name": "primer/eslint-plugin-primer-react",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "f9f25b4a96b60f99127ba260916add70b2d7f3f7",
+      "authored_at": "2026-07-27T08:10:21Z",
+      "committed_at": "2026-07-27T08:10:21Z",
+      "author_name": "Alon Dahari",
+      "author_email": "alondahari@github.com",
+      "author_login": "alondahari",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic issue-intents triage workflow (#610)\n\nNew installation of a gh-aw issue triage workflow for opened/reopened\nissues. Uses built-in issue-intent safe outputs (set-issue-type,\nadd-labels) with rationale/confidence and suggestion routing, plus a\nminimal add-comment for missing info. No custom API jobs; no issue-field\nmutations (repo has no evidence of issue-field usage). Does not close\nissues and preserves existing labels.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: c0a9055b-20f2-4c86-abd0-51f813c0418b",
+      "parent_shas": [
+        "589e822a8d21c2d4f4d411d23c761dfe0e25dee7"
+      ],
+      "tree_sha": "dc3fc1a3ef99038962f80ffe2c3379c0fea89a2b",
+      "html_url": "https://github.com/primer/eslint-plugin-primer-react/commit/f9f25b4a96b60f99127ba260916add70b2d7f3f7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "primer/eslint-plugin-primer-react:.github/workflows/issue-triage.md",
+          "source_full_name": "primer/eslint-plugin-primer-react",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "f9f25b4a96b60f99127ba260916add70b2d7f3f7",
+          "committed_at": "2026-07-27T08:10:21Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 69,
+          "file_deletions": 0,
+          "file_changes": 69,
+          "file_patch": "@@ -0,0 +1,69 @@\n+---\n+description: |\n+  Triage assistant for new and reopened issues in eslint-plugin-primer-react.\n+  Reads the issue and its comments to classify the issue type when unset, apply\n+  relevant existing labels, flag likely duplicates, ask for missing information\n+  only when needed, and — when an issue is well-scoped and actionable — suggest\n+  assigning it to Copilot. Stays low-noise and never closes issues.\n+\n+on:\n+  issues:\n+    types: [opened, reopened]\n+  reaction: eyes\n+\n+permissions: read-all\n+\n+network: defaults\n+\n+safe-outputs:\n+  set-issue-type:\n+    max: 1\n+    target: triggering\n+    issue-intent: true\n+  add-labels:\n+    max: 3\n+    target: triggering\n+    issue-intent: true\n+  assign-to-agent:\n+    name: copilot\n+    allowed: [copilot]\n+    max: 1\n+    target: triggering\n+    issue-intent: true\n+  add-comment:\n+    max: 1\n+\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+    min-integrity: none\n+\n+timeout-minutes: 15\n+---\n+\n+# Issue triage\n+\n+You triage issue #${{ github.event.issue.number }} in this repository, an ESLint plugin\n+for Primer React components. Work only from what the issue and its comments actually say —\n+do not invent missing context or make assumptions the content does not support.\n+\n+Keep visible output to a minimum: do not post a routine triage report, and only comment when\n+you genuinely need something from the author. Never close an issue.\n+\n+Discover what is available at runtime — read the repository's existing issue types and labels\n+rather than assuming any fixed set — and work toward these outcomes:\n+\n+- **Issue type:** If the issue has no type, give it the single best-fitting type from those the\n+  repository offers. If it already has a type, leave it unchanged.\n+- **Labels:** Apply the repository's existing labels that clearly apply to the issue. Prefer a\n+  few accurate labels over speculative ones; if nothing clearly applies, add none.\n+- **Duplicates and related work:** Look for existing issues that are likely duplicates or\n+  closely related and surface them. Do not close anything.\n+- **Missing information:** If the issue lacks the detail needed to act on it, post a single\n+  comment asking the author for exactly what is missing and why. Do not ask for details the\n+  issue already provides.\n+- **Ready for Copilot:** When an issue is well-scoped and actionable enough for an automated\n+  coding agent to pick up, suggest assigning it to Copilot.\n+\n+If the issue is already complete and correctly triaged, or there is otherwise no visible change\n+to make, take no action.",
+          "snapshot_ref": "f9f25b4a96b60f99127ba260916add70b2d7f3f7",
+          "snapshot_blob_sha": "1e459dddb9e4591d21e2f3c7e9e186e4cced812a",
+          "snapshot_file": "snapshots/eslint-plugin-primer-react__primer__f9f25b4a96b60f99127ba260916add70b2d7f3f7__issue-triage.md",
+          "snapshot_bytes": 2499,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"primer/eslint-plugin-primer-react\",\"generated_owner\":\"primer\",\"generated_repo\":\"eslint-plugin-primer-react\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/primer/eslint-plugin-primer-react/blob/2b21a211629decc1fca55f51e312ce345420dc9d/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

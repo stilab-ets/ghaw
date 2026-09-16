@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/git-ape:.github/workflows/git-ape-workshop-content-updater.md",
+    "source_full_name": "Azure/git-ape",
+    "source_owner": "Azure",
+    "source_repo": "git-ape",
+    "md_path": ".github/workflows/git-ape-workshop-content-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/git-ape/blob/HEAD/.github/workflows/git-ape-workshop-content-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/git-ape",
+      "generated_owner": "Azure",
+      "generated_repo": "git-ape",
+      "generated_workflow_path": ".github/workflows/git-ape-workshop-content-updater.lock.yml",
+      "generated_workflow_file": "git-ape-workshop-content-updater.lock.yml",
+      "generated_html_url": "https://github.com/Azure/git-ape/blob/dde02eeabeed0a3aa9024c5ee0ed48d29d063777/.github/workflows/git-ape-workshop-content-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/git-ape:.github/workflows/git-ape-workshop-content-updater.md",
+      "source_full_name": "Azure/git-ape",
+      "md_path": ".github/workflows/git-ape-workshop-content-updater.md",
+      "commit_sha": "db5f7e765f86f8f860e46914c7f2625c6b78b107",
+      "authored_at": "2026-06-15T05:32:27Z",
+      "committed_at": "2026-06-15T05:32:27Z",
+      "author_name": "Shailesh Mishra",
+      "author_email": "shaileshmishra@example.com",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Shailesh Mishra",
+      "committer_email": "shaileshmishra@example.com",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "feat(workshops): agentic weekly workshop-content-updater (Phase 2)\n\nAdds the gh-aw workflow (compiled to .lock.yml) that runs weekly to assess\nthe gap between current features and workshop content, then proposes\nuser-centric, section-level updates as a draft PR plus a rolling coverage\nissue. Augments the deterministic sync/deck-build workflows. Lock recompiled\nagainst this repo's action pins.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "856280dc8e8a11d03663b144cc7fe00f0fe53e89"
+      ],
+      "tree_sha": "974b6033f46767a8947b3368f2c019e87910c4c2",
+      "html_url": "https://github.com/Azure/git-ape/commit/db5f7e765f86f8f860e46914c7f2625c6b78b107",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/git-ape:.github/workflows/git-ape-workshop-content-updater.md",
+          "source_full_name": "Azure/git-ape",
+          "md_path": ".github/workflows/git-ape-workshop-content-updater.md",
+          "commit_sha": "db5f7e765f86f8f860e46914c7f2625c6b78b107",
+          "committed_at": "2026-06-15T05:32:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 396,
+          "file_deletions": 0,
+          "file_changes": 396,
+          "file_patch": "@@ -0,0 +1,396 @@\n+---\n+description: |\n+  Weekly agentic workshop-content maintenance for Git-Ape. Assesses the gap\n+  between the repository's current features (agents, skills, core workflows) and\n+  the existing workshop content, then proposes user-centric content updates as a\n+  draft pull request and a rolling coverage-status issue. This is the Phase 2\n+  (LLM content regeneration) counterpart to the deterministic\n+  git-ape-workshop-sync.yml issue-filer and the git-ape-deck-build.yml renderer.\n+\n+strict: false\n+\n+on:\n+  # Weekly (fuzzy: gh-aw distributes the exact minute to avoid load spikes).\n+  # Assess what workshop work is needed vs. the current state of the features.\n+  schedule: weekly on monday\n+  workflow_dispatch:\n+    inputs:\n+      focus:\n+        description: \"Optional: scope the assessment to a feature or track (e.g. 'azure-cost-estimator' or 'Track 3'). Leave blank to assess everything.\"\n+        required: false\n+        default: \"\"\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+# Deterministic pre-step runs OUTSIDE the agent sandbox. It builds an\n+# authoritative inventory of features vs. workshop coverage so the agent\n+# reasons from ground truth and cannot hallucinate what is or isn't covered.\n+steps:\n+  - name: Build workshop coverage inventory\n+    shell: bash\n+    run: |\n+      set -uo pipefail\n+      mkdir -p .workshop-snapshots\n+\n+      # Best-effort history deepen so per-file \"last change\" dates are meaningful.\n+      # Safe to fail on shallow clones / no network — staleness then degrades to\n+      # \"unknown\" and the agent leans on the workshop-sync issues + content reads.\n+      git fetch --deepen=400 --quiet 2>/dev/null || true\n+\n+      AGENTS_DIR=\".github/agents\"\n+      SKILLS_DIR=\".github/skills\"\n+      WS=\"workshops\"\n+      CORE_WORKFLOWS=\"git-ape-plan git-ape-deploy git-ape-destroy git-ape-verify\"\n+\n+      INV=\".workshop-snapshots/WORKSHOP-INVENTORY.md\"\n+\n+      last_date() { git log -1 --format=%cs -- \"$1\" 2>/dev/null || true; }\n+      # Count workshop markdown files that mention a feature slug (read-only grep).\n+      refs_for() {\n+        grep -rIl --include='*.md' -e \"$1\" \"$WS\" 2>/dev/null | wc -l | tr -d ' '\n+      }\n+\n+      {\n+        echo \"# Workshop Coverage Inventory\"\n+        echo \"\"\n+        echo \"**Generated:** $(date -u +%Y-%m-%dT%H:%M:%SZ)\"\n+        echo \"**Workspace:** $GITHUB_WORKSPACE\"\n+        echo \"\"\n+        echo \"> This file is AUTHORITATIVE. The agent MUST read it before assessing\"\n+        echo \"> coverage. If it exists, the pre-step ran successfully — do not claim\"\n+        echo \"> the inventory is missing. Reference counts are a coarse grep proxy\"\n+        echo \"> (\\`grep -l <slug> workshops/**\\`); 0 refs is a strong signal a feature\"\n+        echo \"> is uncovered, but always confirm by reading the actual content.\"\n+        echo \"\"\n+\n+        echo \"## Workshop tracks present\"\n+        echo \"\"\n+        for d in \"$WS\"/track-*/; do\n+          [ -d \"$d\" ] || continue\n+          labs=$(ls \"$d\"lab-*.md 2>/dev/null | wc -l | tr -d ' ')\n+          deck=$(ls \"$d\"*_deck.md 2>/dev/null | head -1)\n+          echo \"- \\`$d\\` — ${labs} lab file(s); deck: \\`${deck:-none}\\`\"\n+        done\n+        echo \"\"\n+        echo \"Glossary: \\`$WS/shared/glossary.md\\` ($( [ -f \"$WS/shared/glossary.md\" ] && echo present || echo MISSING ))\"\n+        echo \"\"\n+\n+        echo \"## Agents -> workshop coverage\"\n+        echo \"\"\n+        echo \"| Agent | Last change | Refs in workshops/ | Signal |\"\n+        echo \"|---|---|---|---|\"\n+        for f in \"$AGENTS_DIR\"/*.md; do\n+          [ -f \"$f\" ] || continue\n+          base=$(basename \"$f\"); slug=${base%.agent.md}; slug=${slug%.md}\n+          d=$(last_date \"$f\"); refs=$(refs_for \"$slug\")\n+          if [ \"$refs\" = \"0\" ]; then sig=\"UNCOVERED — candidate for NEW content\"; else sig=\"covered ($refs file(s))\"; fi\n+          echo \"| \\`$slug\\` | ${d:-unknown} | $refs | $sig |\"\n+        done\n+        echo \"\"\n+\n+        echo \"## Skills -> workshop coverage\"\n+        echo \"\"\n+        echo \"| Skill | Last change | Refs in workshops/ | Signal |\"\n+        echo \"|---|---|---|---|\"\n+        for sd in \"$SKILLS_DIR\"/*/; do\n+          [ -d \"$sd\" ] || continue\n+          slug=$(basename \"$sd\")\n+          d=$(last_date \"${sd}SKILL.md\"); refs=$(refs_for \"$slug\")\n+          if [ \"$refs\" = \"0\" ]; then sig=\"UNCOVERED — candidate for NEW content\"; else sig=\"covered ($refs file(s))\"; fi\n+          echo \"| \\`$slug\\` | ${d:-unknown} | $refs | $sig |\"\n+        done\n+        echo \"\"\n+\n+        echo \"## Core workflows -> workshop coverage (Track 3 CI/CD)\"\n+        echo \"\"\n+        echo \"| Workflow | Last change | Refs in workshops/ |\"\n+        echo \"|---|---|---|\"\n+        for w in $CORE_WORKFLOWS; do\n+          wf=\".github/workflows/${w}.yml\"\n+          [ -f \"$wf\" ] || continue\n+          d=$(last_date \"$wf\"); refs=$(refs_for \"$w\")\n+          echo \"| \\`$w\\` | ${d:-unknown} | $refs |\"\n+        done\n+        echo \"\"\n+\n+        echo \"## Recently changed feature files (last 30 days, if history available)\"\n+        echo \"\"\n+        git log --since=\"30 days ago\" --name-only --pretty=format: -- \\\n+          \"$AGENTS_DIR\" \"$SKILLS_DIR\" \\\n+          .github/workflows/git-ape-plan.yml \\\n+          .github/workflows/git-ape-deploy.yml \\\n+          .github/workflows/git-ape-destroy.yml \\\n+          .github/workflows/git-ape-verify.yml 2>/dev/null \\\n+          | grep -E '\\.(md|yml)$' | sort -u | sed 's/^/- /' || echo \"- (no history available — rely on open workshop-sync issues)\"\n+        echo \"\"\n+      } > \"$INV\"\n+\n+      echo \"---- WORKSHOP-INVENTORY.md ----\"\n+      cat \"$INV\"\n+\n+tools:\n+  edit:\n+  bash:\n+    - \"ls *\"\n+    - \"cat *\"\n+    - \"find *\"\n+    - \"grep *\"\n+    - \"head *\"\n+    - \"tail *\"\n+    - \"wc *\"\n+    - \"sort *\"\n+    - \"diff *\"\n+    - \"jq *\"\n+    - \"date *\"\n+    - \"git log *\"\n+    - \"git diff *\"\n+    - \"git show *\"\n+    - \"git status *\"\n+    - \"git ls-files *\"\n+  github:\n+    # Private repo, so lockdown has no effect. Read issues/PRs to find open\n+    # workshop-sync issues and avoid opening duplicate content PRs.\n+    lockdown: false\n+    toolsets: [issues, pull_requests]\n+  cache-memory:\n+    description: \"Workshop coverage state — remembers prior assessments and the last-seen feature set to keep weekly runs idempotent and avoid re-proposing already-open work.\"\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  # Rolling coverage-status issue: the \"what needs doing\" assessment, produced\n+  # on EVERY run. Distinct title-prefix + label so close-older-issues never\n+  # touches the deterministic git-ape-workshop-sync.yml issues.\n+  create-issue:\n+    title-prefix: \"[workshop-coverage] \"\n+    labels: [workshop-coverage, report]\n+    close-older-issues: true\n+    max: 1\n+  # Draft PR with the actual content changes, opened only when gaps warrant it.\n+  # Rendered binaries are excluded so git-ape-deck-build.yml re-renders them\n+  # from the merged source — this workflow only edits source (.md) content.\n+  create-pull-request:\n+    title-prefix: \"[workshop-update] \"\n+    labels: [workshop-sync, workshop]\n+    draft: true\n+    max: 1\n+    if-no-changes: \"ignore\"\n+    auto-close-issue: false\n+    excluded-files:\n+      - \"**/*.pdf\"\n+      - \"**/*.pptx\"\n+      - \"**/*.html\"\n+      - \"**/*.pptx-html\"\n+    max-patch-files: 200\n+    max-patch-size: 2048\n+---\n+\n+# Workshop Content Auto-Updater\n+\n+Keep the Git-Ape workshop program continuously aligned with the product. Each\n+week, assess the gap between the repository's **current features** and the\n+**existing workshop content**, then propose **user-centric** updates for human\n+review. You never deploy, merge, or modify CI — you only propose content.\n+\n+## Context\n+\n+Git-Ape ships a four-track workshop program under `workshops/`. Today two\n+deterministic workflows keep it fresh:\n+\n+- `git-ape-workshop-sync.yml` files a rolling **`workshop-sync` issue** listing\n+  feature files that changed on `main`.\n+- `git-ape-deck-build.yml` re-renders deck binaries (HTML/PDF/PPTX) when source\n+  changes.\n+\n+You are the **Phase 2** layer those workflows anticipated: you reason about what\n+the content *should say* and propose the edits. You **augment** them — you do not\n+replace them.\n+\n+## STEP 0 — MANDATORY: read the inventory first\n+\n+The pre-step wrote an authoritative inventory to the workspace. Begin by running:\n+\n+```bash\n+ls -la .workshop-snapshots/\n+cat .workshop-snapshots/WORKSHOP-INVENTORY.md\n+```\n+\n+If `WORKSHOP-INVENTORY.md` exists, the pre-step ran successfully — never claim it\n+is missing. The inventory's reference counts are a coarse `grep` proxy: a `0` is a\n+strong signal a feature is uncovered, but always confirm by reading the real\n+content before concluding anything.\n+\n+## STEP 1 — Gather change signals\n+\n+1. Read the inventory's coverage tables and \"recently changed feature files\".\n+2. Use the GitHub tools to read **open `workshop-sync` issues** — they enumerate\n+   feature files that changed recently. Treat those as priority work items.\n+3. Read the most recent **`[workshop-coverage]` status issue** (if any) and your\n+   **cache memory** to recall what you already proposed, so you don't repeat\n+   open work.\n+4. If a `focus` input was provided (`${{ github.event.inputs.focus }}`), scope\n+   your assessment to that feature or track only.\n+\n+## STEP 2 — Read the current workshop content\n+\n+For every feature you intend to touch, read the actual content so your edits are\n+grounded and minimal-surprise:\n+\n+- `workshops/README.md` — program overview and track selector.\n+- `workshops/track-1-zero-to-deploy/` — beginners / non-technical (30 min).\n+- `workshops/track-2-deploy-like-a-pro/` — engineers & developers (60 min).\n+- `workshops/track-3-platform-engineering/` — DevOps / SRE / platform (130 min).\n+- `workshops/track-4-executive-briefing/` — leads & executives (20 min, deck-led).\n+- `workshops/shared/glossary.md` — terms, agents, and skills reference.\n+- The relevant `lab-*.md`, `*_deck.md`, and `deck-outline.md` files.\n+\n+Also read the **source** of each changed/uncovered feature\n+(`.github/agents/<name>.agent.md`, `.github/skills/<name>/SKILL.md`, or the core\n+workflow YAML) to understand what it actually does.\n+\n+## STEP 3 — Classify the work\n+\n+**Scope filter (apply first).** Not every uncovered feature deserves workshop\n+content. The program is **Azure-focused** and persona-driven. Before proposing\n+anything, drop features that are out of the workshop's current scope — for\n+example, the `aws-*` skills show as \"uncovered\" only because the program targets\n+Azure; do **not** generate content for them unless the program's scope has\n+deliberately expanded (a human signals this, e.g. via a `workshop-sync` issue or\n+the `focus` input). Prioritize features that are new/changed **and** fit an\n+existing persona.\n+\n+Sort every remaining gap into one of three buckets:\n+\n+- **New feature, uncovered** (0 refs in `workshops/`): a new agent/skill/workflow\n+  with no workshop coverage. Create new content for it (a new lab section, or a\n+  new lab, or — rarely — a new track).\n+- **Existing feature, changed** (referenced, but the feature changed after the\n+  content): the behaviour/output/name drifted. Revise the affected\n+  labs/decks/glossary so they match current behaviour.\n+- **In sync**: covered and unchanged. Leave it alone.\n+\n+## STEP 4 — Choose the user-centric persona (infer, document, ask if unsure)\n+\n+For each feature you will cover, infer **the user who benefits most** and map them\n+to the best-fit track, then write *for that persona*:\n+\n+| Persona | Track | Lens |\n+|---|---|---|\n+| Beginner / non-technical | Track 1 | \"Deploy with a single sentence\" — no jargon, no Azure required |\n+| Engineer / developer | Track 2 | Security gates, cost, architecture, drift — hands-on with a sandbox |\n+| DevOps / SRE / platform | Track 3 | CI/CD, headless, multi-env, policy, drift ops, evals |\n+| Engineering lead / executive | Track 4 | Governance, cost visibility, compliance, ROI — deck-led |\n+\n+Inference rules of thumb (confirm against the feature's actual purpose):\n+\n+- Cost / pricing / ROI features → Track 2 (hands-on) and Track 4 (narrative).\n+- Security / policy / compliance features → Track 2 (deep dive) and Track 3 (gates).\n+- CI/CD, headless, multi-environment, drift, evaluation features → Track 3.\n+- Onboarding / first-deploy / natural-language features → Track 1.\n+- A foundational capability may justify coverage in **multiple** tracks at the\n+  appropriate depth for each persona.\n+\n+If the right persona/track is genuinely ambiguous, **do not guess silently** —\n+state the options and your recommendation in the coverage-status issue and the PR\n+body, and pick the most defensible option so a human can redirect you.\n+\n+## STEP 5 — Generate or revise content (section-level)\n+\n+Work at the **section level**: rewrite the affected sections/labs and add new ones;\n+keep unaffected content intact. Reimagine thoughtfully by studying how the existing,\n+complete labs are structured (objectives → prerequisites → numbered steps →\n+expected output → recap → no-Azure fallback) and match that voice, depth, and\n+timing.\n+\n+You MAY create or modify:\n+\n+- Lab files (`workshops/track-*/lab-*.md`), including **new** labs.\n+- Deck source (`workshops/track-*/*_deck.md`) and `deck-outline.md`.\n+- `workshops/shared/glossary.md`, track `README.md`s, and `workshops/README.md`.\n+- Shared resources under `workshops/shared/` (prerequisites, troubleshooting, etc.).\n+- A **new track** directory (`workshops/track-N-<slug>/`) only when a feature set\n+  is large enough that it does not fit any existing persona/track — justify it\n+  explicitly in the PR body.\n+- The Docusaurus mirrors under `website/docs/workshops/` when their track changed.\n+\n+You MUST NOT:\n+\n+- Edit, delete, or hand-write rendered binaries (`*.pdf`, `*.pptx`, `*.html`) —\n+  `git-ape-deck-build.yml` regenerates those from the merged source.\n+- Modify any file outside `workshops/` and `website/docs/workshops/` — never touch\n+  `.github/`, source code, or this workflow.\n+- Modify deck CSS front-matter or remove existing slides/labs.\n+- Break a lab's stated timing (30/60/130/20 min) or its no-Azure fallback path.\n+- Invent feature behaviour. Every described command, output, agent, or skill must\n+  be verifiable against the feature source you read. When unsure, say so rather\n+  than fabricate.\n+\n+### Deck lint rules (when editing `*_deck.md`)\n+\n+The renderer enforces these — keep them satisfied so the build won't fail:\n+\n+- **L1** — No inline `<svg>`. Reference external files at\n+  `workshops/shared/img/<name>.svg` via `<img src=\"../shared/img/...\">`.\n+- **L11** — Marp class directives (`<!-- _class: ... -->`) live in their own\n+  comment block, separate from speaker notes.\n+- **L15** — No trailing `---` at end of file (it creates an empty slide).\n+\n+## STEP 6 — Outputs\n+\n+### Always: rolling coverage-status issue (`create_issue`)\n+\n+Produce **exactly one** coverage-status issue every run (it rolls — older\n+`[workshop-coverage]` issues auto-close). Use `###`/`####` headers only. Format:\n+\n+```markdown\n+### Workshop Coverage Status — <YYYY-MM-DD>\n+\n+**Run:** <workflow-run-url>\n+**Features assessed:** <n agents, n skills, n workflows>\n+**Coverage:** <covered> / <total> · **Gaps found:** <count>\n+**Proposed this run:** <draft PR #__ | none — in sync>\n+\n+### Gaps & proposed work\n+| Feature | Type | Persona / Track | Action | Status |\n+|---|---|---|---|---|\n+| `azure-cost-estimator` | skill | Engineer / T2 | New lab section | In PR #__ |\n+| ... | ... | ... | ... | deferred / in sync |\n+\n+<details><summary><b>Coverage detail</b></summary>\n+...per-feature notes, including any persona ambiguity and your recommendation...\n+</details>\n+\n+### Recommended next steps\n+- ...\n+```\n+\n+### When work is warranted: a draft PR (`create_pull_request`)\n+\n+If — and only if — you made content changes, open a **draft** PR. If everything is\n+in sync, make no changes (the PR step is skipped automatically). The PR body must:\n+\n+- Summarize what changed and **why**, per feature.\n+- Name the **persona/track** each change targets and your reasoning.\n+- Confirm the guardrails (timing preserved, no-Azure fallback intact, binaries\n+  untouched, lint rules satisfied).\n+- Link the coverage-status issue, and add `Closes #<n>` for any **open\n+  `workshop-sync` issue** this PR resolves (so merging clears the deterministic\n+  backlog item). Do **not** add `Closes` for the rolling coverage-status issue.\n+\n+## STEP 7 — Update memory\n+\n+Record in cache memory: this run's timestamp, the feature set you assessed, the\n+gaps found, and what you proposed (issue/PR). On the next run, use it to avoid\n+re-proposing work that is already in an open PR.\n+\n+## Required completion behavior\n+\n+- Always call `create_issue` exactly once (the rolling coverage report), even when\n+  everything is in sync (\"no gaps — content matches current features\").\n+- Call `create_pull_request` only when you actually changed content.\n+- The safe-output tools exist **only in this top-level agent context** — never\n+  delegate them to a subagent or skill. Do the work yourself and call them in your\n+  final turn.",
+          "snapshot_ref": "db5f7e765f86f8f860e46914c7f2625c6b78b107",
+          "snapshot_blob_sha": "6f83a4c2f6900694aea38648aafb4ea5d70782c9",
+          "snapshot_file": "snapshots/git-ape__Azure__db5f7e765f86f8f860e46914c7f2625c6b78b107__git-ape-workshop-content-updater.md",
+          "snapshot_bytes": 16917,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/git-ape\",\"generated_owner\":\"Azure\",\"generated_repo\":\"git-ape\",\"generated_workflow_path\":\".github/workflows/git-ape-workshop-content-updater.lock.yml\",\"generated_workflow_file\":\"git-ape-workshop-content-updater.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/git-ape/blob/dde02eeabeed0a3aa9024c5ee0ed48d29d063777/.github/workflows/git-ape-workshop-content-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/git-ape:.github/workflows/git-ape-workshop-content-updater.md",
+      "source_full_name": "Azure/git-ape",
+      "md_path": ".github/workflows/git-ape-workshop-content-updater.md",
+      "commit_sha": "582c24d9ea976cb765a4d894336bc1203231dfa1",
+      "authored_at": "2026-06-18T05:26:45Z",
+      "committed_at": "2026-06-18T05:26:45Z",
+      "author_name": "Shailesh Mishra",
+      "author_email": "shaileshmishra@example.com",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Shailesh Mishra",
+      "committer_email": "shaileshmishra@example.com",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "fix(workshops): enable lockdown on agentic updater + address review nits\n\nAddresses @arnaudlh's review on #180:\n\n- Enable `lockdown: true` on git-ape-workshop-content-updater. Azure/git-ape\n  is public, so the prior \"private repo, no effect\" rationale was wrong;\n  lockdown sanitizes the untrusted issue/PR content the agent reads\n  (issues/pull_requests toolsets), closing the cross-prompt-injection (XPIA)\n  surface. Lock file recompiled (gh-aw v0.76.1, no version churn).\n- workshop-sync: diff over the push-event range (before..after) with a\n  zero-SHA fallback to HEAD~1, so multi-commit / non-squash pushes are fully\n  covered instead of only the final commit. Mirrors git-ape-deck-build.yml.\n- workshop-quality-check: continue-on-error on the advisory comment step so\n  fork PRs (read-only GITHUB_TOKEN -> 403) never surface a red check to\n  community contributors.\n- render-workshop-decks: pin Marp to exact 4.4.0 (was ^4.4.0) for\n  reproducible deck renders.\n- check-track-{1,2}-prereqs: document the static-literal invariant on `eval`.\n- verify-workshop-decks: remove unused WORKSHOPS_DIR constant.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "60c3d2149f284ac32eacff1418829a7e89168b08"
+      ],
+      "tree_sha": "672142ffbfa79a08ef5a6c8500d1c9d8c53b6e96",
+      "html_url": "https://github.com/Azure/git-ape/commit/582c24d9ea976cb765a4d894336bc1203231dfa1",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/git-ape:.github/workflows/git-ape-workshop-content-updater.md",
+          "source_full_name": "Azure/git-ape",
+          "md_path": ".github/workflows/git-ape-workshop-content-updater.md",
+          "commit_sha": "582c24d9ea976cb765a4d894336bc1203231dfa1",
+          "committed_at": "2026-06-18T05:26:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 3,
+          "file_changes": 9,
+          "file_patch": "@@ -151,9 +151,12 @@ tools:\n     - \"git status *\"\n     - \"git ls-files *\"\n   github:\n-    # Private repo, so lockdown has no effect. Read issues/PRs to find open\n-    # workshop-sync issues and avoid opening duplicate content PRs.\n-    lockdown: false\n+    # Public repo: keep lockdown ON (the safe default). It sanitizes the\n+    # untrusted issue/PR content this agent reads (issues/pull_requests\n+    # toolsets), closing the cross-prompt-injection (XPIA) surface. Reading\n+    # issues/PRs lets the agent find open workshop-sync issues and avoid\n+    # opening duplicate content PRs.\n+    lockdown: true\n     toolsets: [issues, pull_requests]\n   cache-memory:\n     description: \"Workshop coverage state — remembers prior assessments and the last-seen feature set to keep weekly runs idempotent and avoid re-proposing already-open work.\"",
+          "snapshot_ref": "582c24d9ea976cb765a4d894336bc1203231dfa1",
+          "snapshot_blob_sha": "e6cf31b7cf2cafdb61ed943ed2ae99769ea156bb",
+          "snapshot_file": "snapshots/git-ape__Azure__582c24d9ea976cb765a4d894336bc1203231dfa1__git-ape-workshop-content-updater.md",
+          "snapshot_bytes": 17103,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/git-ape\",\"generated_owner\":\"Azure\",\"generated_repo\":\"git-ape\",\"generated_workflow_path\":\".github/workflows/git-ape-workshop-content-updater.lock.yml\",\"generated_workflow_file\":\"git-ape-workshop-content-updater.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/git-ape/blob/dde02eeabeed0a3aa9024c5ee0ed48d29d063777/.github/workflows/git-ape-workshop-content-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

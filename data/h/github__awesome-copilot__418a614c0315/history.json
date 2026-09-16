@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+    "source_full_name": "github/awesome-copilot",
+    "source_owner": "github",
+    "source_repo": "awesome-copilot",
+    "md_path": ".github/workflows/pr-duplicate-check.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/awesome-copilot/blob/HEAD/.github/workflows/pr-duplicate-check.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/awesome-copilot",
+      "generated_owner": "github",
+      "generated_repo": "awesome-copilot",
+      "generated_workflow_path": ".github/workflows/pr-duplicate-check.lock.yml",
+      "generated_workflow_file": "pr-duplicate-check.lock.yml",
+      "generated_html_url": "https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/pr-duplicate-check.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:27:09+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/pr-duplicate-check.md",
+      "commit_sha": "7f343aad2272135a69e29b2b6bac33459f6891d5",
+      "authored_at": "2026-03-12T22:42:56Z",
+      "committed_at": "2026-03-12T22:42:56Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add PR Duplicate Check agentic workflow (#954)\n\n* Initial plan\n\n* feat: add PR duplicate check agentic workflow\n\nAdds a new GitHub Agentic Workflow that triggers on pull_request\nevents (opened, synchronize, reopened) to detect potential duplicate\nagents, instructions, skills, and workflows being contributed via PR.\n\nWhen relevant files are changed, the agent compares them against\nexisting resources and posts a comment on the PR listing any potential\nduplicates with context and a suggestion. If no relevant files are\nchanged or no duplicates are found, it calls noop.\n\n- .github/workflows/pr-duplicate-check.md: source workflow (gh-aw format)\n- .github/workflows/pr-duplicate-check.lock.yml: compiled workflow\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: Aaron Powell <me@aaron-powell.com>",
+      "parent_shas": [
+        "af09f9c38e1d99f516663633b81ac6950ab2b09c"
+      ],
+      "tree_sha": "6461d50a9013649116d471e842b6d5468ffae6ed",
+      "html_url": "https://github.com/github/awesome-copilot/commit/7f343aad2272135a69e29b2b6bac33459f6891d5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/pr-duplicate-check.md",
+          "commit_sha": "7f343aad2272135a69e29b2b6bac33459f6891d5",
+          "committed_at": "2026-03-12T22:42:56Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 119,
+          "file_deletions": 0,
+          "file_changes": 119,
+          "file_patch": "@@ -0,0 +1,119 @@\n+---\n+description: 'Checks PRs for potential duplicate agents, instructions, skills, and workflows already in the repository'\n+on:\n+  pull_request:\n+    types: [opened, synchronize, reopened]\n+permissions:\n+  contents: read\n+  pull-requests: write\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+    update-comment: true\n+  noop:\n+---\n+\n+# PR Duplicate Check\n+\n+You are an AI agent that reviews pull requests and checks whether any new resources being added may be duplicates of — or very similar to — existing resources in this repository.\n+\n+## Your Task\n+\n+When a pull request is opened or updated, inspect the changed files and determine whether any of them duplicate existing resources. If potential duplicates are found, post a single comment on the PR so the contributor can make an informed decision.\n+\n+## Step 1: Identify Relevant Files\n+\n+Get the list of files changed in pull request #${{ github.event.pull_request.number }}.\n+\n+Filter for files in these resource directories:\n+\n+- `agents/` (`.agent.md` files)\n+- `instructions/` (`.instructions.md` files)\n+- `skills/` (folders — the SKILL.md inside each folder is the resource)\n+- `workflows/` (`.md` files)\n+\n+If **no files** from these directories were modified, call `noop` with the message:\n+\"No agent, instruction, skill, or workflow files were changed in this PR — no duplicate check needed.\"\n+\n+## Step 2: Read Metadata for the PR's New Resources\n+\n+For each relevant file changed in the PR, extract:\n+\n+1. **File path**\n+2. **Front matter `description`** field\n+3. **Front matter `name`** field (if present)\n+4. **First ~20 lines of body content** (the markdown after the front matter)\n+\n+For skills (files like `skills/<name>/SKILL.md`), treat the entire skill folder as one resource.\n+\n+## Step 3: Scan Existing Resources\n+\n+Read all existing resources in the repository (excluding files that are part of this PR's changes):\n+\n+- `agents/` (`.agent.md` files)\n+- `instructions/` (`.instructions.md` files)\n+- `skills/` (folders — read `SKILL.md` inside each)\n+- `workflows/` (`.md` files)\n+\n+For each, extract the same metadata: file path, description, name field, and first ~20 lines.\n+\n+## Step 4: Compare for Potential Duplicates\n+\n+Compare the PR's new resources against the existing repository resources. Flag potential duplicates when **two or more** of the following signals are present:\n+\n+- **Similar names** — file names or `name` fields that share key terms (e.g., `react-testing.agent.md` and `react-unit-testing.agent.md`)\n+- **Similar descriptions** — descriptions that describe the same task, technology, or domain with only minor wording differences\n+- **Overlapping scope** — resources that target the same language/framework/tool and the same activity (e.g., two \"Python best practices\" instruction files)\n+- **Cross-type overlap** — an agent and an instruction (or skill) that cover the same topic so thoroughly that one may make the other redundant\n+\n+Be pragmatic. Resources that cover related but distinct topics are **not** duplicates:\n+- `react.instructions.md` (general React coding standards) and `react-testing.agent.md` (React testing agent) → **not** duplicates\n+- `python-fastapi.instructions.md` and `python-flask.instructions.md` → **not** duplicates (different frameworks)\n+- `code-review.agent.md` and `code-review.instructions.md` that both enforce the same style rules → **potential** duplicate\n+\n+## Step 5: Post Results\n+\n+### If potential duplicates are found\n+\n+Use `add-comment` to post a comment on PR #${{ github.event.pull_request.number }} with the following format:\n+\n+```markdown\n+## 🔍 Potential Duplicate Resources Detected\n+\n+This PR adds resources that may be similar to existing ones in the repository. Please review these potential overlaps before merging to avoid redundancy.\n+\n+### Possible Duplicates\n+\n+#### Group 1: <Short description of what they share>\n+\n+| Resource | Type | Description |\n+|----------|------|-------------|\n+| `<new file from this PR>` | <Agent/Instruction/Skill/Workflow> | <description> |\n+| `<existing file in repo>` | <Agent/Instruction/Skill/Workflow> | <description> |\n+\n+**Why flagged:** <Brief explanation of the similarity>\n+\n+**Suggestion:** Consider whether this contribution adds distinct value, or whether the existing resource could be updated instead.\n+\n+---\n+\n+<repeat for each group, up to 5>\n+\n+> 💡 This is an advisory check only. If these are intentionally different, no action is needed — feel free to proceed with your PR.\n+```\n+\n+### If no potential duplicates are found\n+\n+Call `noop` with the message: \"No potential duplicate resources detected in this PR. All new resources appear to serve distinct purposes.\"\n+\n+## Guidelines\n+\n+- Be conservative — only flag resources where there is genuine risk of redundancy.\n+- Group related duplicate signals together (don't list the same pair twice in separate groups).\n+- Sort groups by confidence: strongest duplicate signal first.\n+- Limit the report to the top **5** most likely duplicate groups to keep feedback actionable.\n+- For skills, report by folder name (e.g., `skills/my-skill/`) using the description from `SKILL.md`.\n+- If a file is being **updated** (not newly added), apply the same check but note in the output that it is a modification.",
+          "snapshot_ref": "7f343aad2272135a69e29b2b6bac33459f6891d5",
+          "snapshot_blob_sha": "3b7da97e50f7437a5bc4562f4187b162889235c1",
+          "snapshot_file": "snapshots/awesome-copilot__github__7f343aad2272135a69e29b2b6bac33459f6891d5__pr-duplicate-check.md",
+          "snapshot_bytes": 5241,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/pr-duplicate-check.lock.yml\",\"generated_workflow_file\":\"pr-duplicate-check.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/pr-duplicate-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/pr-duplicate-check.md",
+      "commit_sha": "3025370a15c3f6d4b0f431b5e61f834455dc4d6a",
+      "authored_at": "2026-03-13T01:25:46Z",
+      "committed_at": "2026-03-13T01:25:46Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Updating our agentic workflows (#996)",
+      "parent_shas": [
+        "1970e7b584d8a8d92d10afb5d2b45503faf39932"
+      ],
+      "tree_sha": "b9278c9c1d43e405d87fa6b686ca665f7dd9f51f",
+      "html_url": "https://github.com/github/awesome-copilot/commit/3025370a15c3f6d4b0f431b5e61f834455dc4d6a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/pr-duplicate-check.md",
+          "commit_sha": "3025370a15c3f6d4b0f431b5e61f834455dc4d6a",
+          "committed_at": "2026-03-13T01:25:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -5,14 +5,14 @@ on:\n     types: [opened, synchronize, reopened]\n permissions:\n   contents: read\n-  pull-requests: write\n+  pull-requests: read\n tools:\n   github:\n     toolsets: [repos, pull_requests]\n safe-outputs:\n   add-comment:\n     max: 1\n-    update-comment: true\n+    hide-older-comments: true\n   noop:\n ---\n ",
+          "snapshot_ref": "3025370a15c3f6d4b0f431b5e61f834455dc4d6a",
+          "snapshot_blob_sha": "04853e0e55fac3ab7a3f78bf9a2ed989df9eabd2",
+          "snapshot_file": "snapshots/awesome-copilot__github__3025370a15c3f6d4b0f431b5e61f834455dc4d6a__pr-duplicate-check.md",
+          "snapshot_bytes": 5245,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/pr-duplicate-check.lock.yml\",\"generated_workflow_file\":\"pr-duplicate-check.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/pr-duplicate-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/pr-duplicate-check.md",
+      "commit_sha": "6962f991ed4cd74d3c56c39fed8479734fca1939",
+      "authored_at": "2026-03-23T04:29:43Z",
+      "committed_at": "2026-03-23T04:29:43Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Updating workflow to ignore noop (#1135)",
+      "parent_shas": [
+        "b8a7847db022e9e26b70a5dec86084d7df00c6d9"
+      ],
+      "tree_sha": "1aa418be2aee0c85b4eb51733281d4513397c9fc",
+      "html_url": "https://github.com/github/awesome-copilot/commit/6962f991ed4cd74d3c56c39fed8479734fca1939",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/pr-duplicate-check.md",
+          "commit_sha": "6962f991ed4cd74d3c56c39fed8479734fca1939",
+          "committed_at": "2026-03-23T04:29:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -14,6 +14,7 @@ safe-outputs:\n     max: 1\n     hide-older-comments: true\n   noop:\n+    report-as-issue: false\n ---\n \n # PR Duplicate Check",
+          "snapshot_ref": "6962f991ed4cd74d3c56c39fed8479734fca1939",
+          "snapshot_blob_sha": "07561fa54e6771ab997ae338508a17ed0db7b141",
+          "snapshot_file": "snapshots/awesome-copilot__github__6962f991ed4cd74d3c56c39fed8479734fca1939__pr-duplicate-check.md",
+          "snapshot_bytes": 5272,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/pr-duplicate-check.lock.yml\",\"generated_workflow_file\":\"pr-duplicate-check.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/pr-duplicate-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/pr-duplicate-check.md",
+      "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "authored_at": "2026-07-03T00:08:42Z",
+      "committed_at": "2026-07-03T00:08:42Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix PR duplicate check not running on external contributor submissions (#2188)\n\n* Initial plan\n\n* Fix PR duplicate check not running on external contributor submissions\n\nAdd forks: [\\\"*\\\"] and roles: all to pr-duplicate-check.md so the\nagentic workflow runs for all PR authors, including external contributors\nsubmitting from forks. Previously, the generated lock.yml contained:\n- A fork repository check blocking all fork PRs from running\n- A team membership check (admin/maintainer/write) blocking external contributors\n\nRecompiled with gh aw compile to regenerate pr-duplicate-check.lock.yml.\nThe pre_activation job (which held the membership gate) is now removed,\nand the activation job runs unconditionally for all pull_request events.\n\nCloses #2121\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* fixing a bunch of warnings on all the agentic workflows\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: Aaron Powell <me@aaron-powell.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8c68eba69048c2f87389ab9fa99d28f694a11846"
+      ],
+      "tree_sha": "ca59b4fcc7e2b196a97fdc5e923e9571a0db4091",
+      "html_url": "https://github.com/github/awesome-copilot/commit/3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/pr-duplicate-check.md",
+          "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "committed_at": "2026-07-03T00:08:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 1,
+          "file_changes": 5,
+          "file_patch": "@@ -1,11 +1,14 @@\n ---\n description: 'Checks PRs for potential duplicate agents, instructions, skills, and workflows already in the repository'\n on:\n-  pull_request:\n+  pull_request_target:\n     types: [opened, synchronize, reopened]\n+  roles: all\n+checkout: false\n permissions:\n   contents: read\n   pull-requests: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [repos, pull_requests]",
+          "snapshot_ref": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "snapshot_blob_sha": "9f3f47ea86b418c3e21bd8e48856b474a26c9885",
+          "snapshot_file": "snapshots/awesome-copilot__github__3bd22bc0f4bc4e54f3a288de7d485a48e78718c3__pr-duplicate-check.md",
+          "snapshot_bytes": 5334,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/pr-duplicate-check.lock.yml\",\"generated_workflow_file\":\"pr-duplicate-check.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/pr-duplicate-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/pr-duplicate-check.md",
+      "commit_sha": "34f0e35050e427225b27b4e5aae20912b55fb00b",
+      "authored_at": "2026-07-08T01:23:01Z",
+      "committed_at": "2026-07-08T01:23:01Z",
+      "author_name": "James Montemagno",
+      "author_email": "james.montemagno@gmail.com",
+      "author_login": "jamesmontemagno",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix duplicate PR check role gating (#2241)\n\nRemove the read-only role override from the PR duplicate check so gh-aw pre-activation gates unsupported actors before the PR checkout step runs.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "cb2a6022d709288f51b499c60bc57b0adaf459a4"
+      ],
+      "tree_sha": "cc8bf268f85506c2a27637ca8f9ef0831f0b4ef2",
+      "html_url": "https://github.com/github/awesome-copilot/commit/34f0e35050e427225b27b4e5aae20912b55fb00b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/pr-duplicate-check.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/pr-duplicate-check.md",
+          "commit_sha": "34f0e35050e427225b27b4e5aae20912b55fb00b",
+          "committed_at": "2026-07-08T01:23:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -3,7 +3,6 @@ description: 'Checks PRs for potential duplicate agents, instructions, skills, a\n on:\n   pull_request_target:\n     types: [opened, synchronize, reopened]\n-  roles: all\n checkout: false\n permissions:\n   contents: read",
+          "snapshot_ref": "34f0e35050e427225b27b4e5aae20912b55fb00b",
+          "snapshot_blob_sha": "d84ca4799d20992fbba24c4504a2ec7dbea66a51",
+          "snapshot_file": "snapshots/awesome-copilot__github__34f0e35050e427225b27b4e5aae20912b55fb00b__pr-duplicate-check.md",
+          "snapshot_bytes": 5321,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/pr-duplicate-check.lock.yml\",\"generated_workflow_file\":\"pr-duplicate-check.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/pr-duplicate-check.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

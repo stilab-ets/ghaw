@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/dependabot-bundler.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/dependabot-bundler.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/dependabot-bundler.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/dependabot-bundler.lock.yml",
+      "generated_workflow_file": "dependabot-bundler.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/dependabot-bundler.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/dependabot-bundler.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/dependabot-bundler.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/dependabot-bundler.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/dependabot-bundler.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 139,
+          "file_deletions": 0,
+          "file_changes": 139,
+          "file_patch": "@@ -0,0 +1,139 @@\n+---\n+name: 'Dependabot PR Bundler'\n+description: 'Groups open Dependabot PRs into logical bundles with merge strategy recommendations'\n+on:\n+  schedule:\n+    - cron: '0 10 * * 1'\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+  pull-requests: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[dependabot-bundle]'\n+    max: 4\n+    expires: '7d'\n+    close-older-issues: true\n+tools:\n+  github:\n+    toolsets: [pull_requests, issues]\n+---\n+\n+# Dependabot PR Bundler\n+\n+You analyze open Dependabot PRs and group them into logical bundles with merge strategy recommendations.\n+\n+## Context\n+\n+This is the **mcp-adr-analysis-server** — a Model Context Protocol server with these critical dependencies:\n+\n+- **@modelcontextprotocol/sdk** — The core MCP protocol SDK. Updates to this are **critical** and require manual review with Node 20/22 matrix testing.\n+- **openai** — Used for OpenRouter.ai integration (AI executor)\n+- **tree-sitter** and language grammars — Native bindings, updates can break builds\n+- **zod** — Schema validation for all tool inputs\n+- **vitest** / **@vitest/coverage-v8** — Test framework\n+- **typescript** — Compiler, updates can introduce new strict errors\n+\n+## Process\n+\n+### Step 1: Gather open Dependabot PRs\n+\n+Use the GitHub tool to list all open PRs from the `dependabot[bot]` author. For each PR, collect:\n+\n+- PR number, title, and branch name\n+- The dependency being updated and the version change (from → to)\n+- Whether it's a major, minor, or patch update\n+- Any failing CI checks\n+- Labels already applied\n+\n+### Step 2: Categorize into bundles\n+\n+Group the PRs into these bundles:\n+\n+#### Bundle 1: MCP SDK Updates (Manual Review Required)\n+\n+- Any PR updating `@modelcontextprotocol/sdk`\n+- Flag as requiring enhanced testing: Node 20 AND Node 22 matrix\n+- Note any breaking changes in the SDK changelog\n+\n+#### Bundle 2: Production Dependencies\n+\n+- Updates to packages listed in `dependencies` (not `devDependencies`)\n+- Sub-group by risk level:\n+  - **High risk**: Major version bumps, native modules (tree-sitter)\n+  - **Medium risk**: Minor version bumps of core deps (openai, zod)\n+  - **Low risk**: Patch version bumps\n+\n+#### Bundle 3: Dev Dependencies\n+\n+- Updates to packages listed in `devDependencies`\n+- Sub-group:\n+  - **Test framework**: vitest, @vitest/\\*, jest-related\n+  - **TypeScript tooling**: typescript, @types/\\*\n+  - **Linting/formatting**: eslint, prettier, related plugins\n+  - **Build tools**: tsx, other build deps\n+\n+#### Bundle 4: GitHub Actions Updates\n+\n+- Updates to GitHub Actions versions (actions/checkout, actions/setup-node, etc.)\n+- These are typically safe to batch-merge\n+\n+### Step 3: Determine merge strategy\n+\n+For each bundle, recommend a merge strategy:\n+\n+| Bundle             | Strategy                | Rationale                                           |\n+| ------------------ | ----------------------- | --------------------------------------------------- |\n+| MCP SDK            | Individual review       | Core protocol dependency, breaking changes possible |\n+| Prod (high risk)   | Individual review       | Could break runtime behavior                        |\n+| Prod (medium risk) | Batch with testing      | Run full test suite after batch merge               |\n+| Prod (low risk)    | Auto-merge if CI passes | Patch updates, low risk                             |\n+| Dev deps (test)    | Batch merge             | Test framework updates, verify tests pass           |\n+| Dev deps (types)   | Auto-merge if CI passes | Type definitions only                               |\n+| Dev deps (other)   | Batch merge             | Low risk dev tooling                                |\n+| GitHub Actions     | Batch merge             | Infrastructure only                                 |\n+\n+### Step 4: Create bundle issues\n+\n+For each non-empty bundle, create an issue:\n+\n+**Title**: `[dependabot-bundle] {Bundle Name} — {count} updates ({date})`\n+\n+**Body**:\n+\n+```markdown\n+## Dependabot Bundle: {Bundle Name}\n+\n+**PRs in bundle**: {count}\n+**Risk level**: {High/Medium/Low}\n+**Recommended strategy**: {strategy}\n+\n+### Updates\n+\n+| PR        | Dependency | From   | To   | Type                | CI Status           |\n+| --------- | ---------- | ------ | ---- | ------------------- | ------------------- |\n+| #{number} | {dep}      | {from} | {to} | {major/minor/patch} | {pass/fail/pending} |\n+\n+### Merge Order\n+\n+{If order matters, list the recommended merge sequence. Otherwise, note they can be merged in any order.}\n+\n+### Testing Notes\n+\n+{Specific testing recommendations for this bundle}\n+\n+### Action Items\n+\n+- [ ] Review changes in each PR\n+- [ ] Merge in recommended order\n+- [ ] Verify CI passes after each merge (or after batch)\n+- [ ] Close this issue when all PRs are merged\n+\n+---\n+\n+_Generated by Dependabot PR Bundler agentic workflow_\n+```\n+\n+### Step 5: Handle empty state\n+\n+If there are no open Dependabot PRs, output `noop` — do not create an issue.",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "c261570e643a37611a65b27be0fc181fcf42c94a",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__dependabot-bundler.md",
+          "snapshot_bytes": 4867,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/dependabot-bundler.lock.yml\",\"generated_workflow_file\":\"dependabot-bundler.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/dependabot-bundler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/dependabot-bundler.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/dependabot-bundler.md",
+      "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "authored_at": "2026-02-20T00:13:55Z",
+      "committed_at": "2026-02-20T00:13:55Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs: fix documentation review findings from issue #508 (#509)\n\n* docs: fix documentation review findings from issue #508\n\n- Fix 25+ broken relative links that escape Docusaurus docs root\n  (../README.md, ../../CONTRIBUTING.md → absolute GitHub URLs)\n- Fix broken anchor links in CONVERSION_CHECKLIST, self-learning-architecture,\n  and firecrawl-setup docs\n- Fix sample-project links in docs/adrs/README.md to use absolute GitHub URLs\n- Add \"Server installed but nothing happens\" troubleshooting section\n  explaining MCP client requirement with download links\n- Add \"Firecrawl Integration Issues\" troubleshooting section\n- Expand MCP acronym in README title, add MCP client to prerequisites,\n  show config path prominently, add docs build instructions\n- Fix EXECUTION_MODE=prompt → EXECUTION_MODE=prompt-only (matches source)\n- Clarify sample-project only available from source, not npm\n- Add MCP client and OpenRouter API key to tutorial prerequisites\n- Create docs/reference/glossary.md defining key terms (MCP, ADR, AST,\n  Firecrawl, Knowledge Graph, OpenRouter, Ripgrep, tree-sitter)\n\nCloses #508\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: change gh-aw Copilot agents from weekly to monthly schedules\n\nReduce Copilot API costs by running agentic workflows monthly instead\nof weekly. Schedules staggered across the month to avoid overlap:\n\n- docs-noob-tester: 1st of month (was every Monday)\n- docs-site-validator: 8th of month (was every Wednesday)\n- mcp-tool-checker: 15th of month (was every Wednesday)\n- dependabot-bundler: 22nd of month (was every Monday)\n\nAll agents retain workflow_dispatch for manual triggering.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: fix npm audit failures by scoping to production deps\n\nNew CVEs published for minimatch, ajv, and hono affected dev\ndependencies (jest, eslint, typedoc, @modelcontextprotocol/inspector).\nThese are not exploitable in production since they never ship to users.\n\n- Run `npm audit fix --omit=dev` to fix production-only vulns (ajv, hono)\n- Update Makefile check-deps and security-check to use --omit=dev\n- Update security-scanning.yml to use --omit=dev\n- Production deps: 0 vulnerabilities\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: scope dependencies.yml audit to production deps\n\nSame --omit=dev fix as the other workflows — dev dependency\nCVEs (jest, eslint, typedoc) should not block the security-audit job.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "3b8b49ba616902846f15de6597dc7c4d370a6db6"
+      ],
+      "tree_sha": "5a010ea1bba3609ac18ce729dc37d466f601bc06",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/dependabot-bundler.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/dependabot-bundler.md",
+          "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "committed_at": "2026-02-20T00:13:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -3,7 +3,7 @@ name: 'Dependabot PR Bundler'\n description: 'Groups open Dependabot PRs into logical bundles with merge strategy recommendations'\n on:\n   schedule:\n-    - cron: '0 10 * * 1'\n+    - cron: '0 10 22 * *' # Monthly on 22nd\n   workflow_dispatch:\n permissions:\n   issues: read",
+          "snapshot_ref": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "snapshot_blob_sha": "6b17734fa1ab825872376b44eeb033b7bb1d1e04",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__60ddaf6b47ae4e72b1f972430749d1f79eef5d44__dependabot-bundler.md",
+          "snapshot_bytes": 4886,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/dependabot-bundler.lock.yml\",\"generated_workflow_file\":\"dependabot-bundler.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/dependabot-bundler.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

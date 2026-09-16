@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+    "source_full_name": "svenjacobs/lokksmith",
+    "source_owner": "svenjacobs",
+    "source_repo": "lokksmith",
+    "md_path": ".github/workflows/update-dependency-matrix.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/svenjacobs/lokksmith/blob/HEAD/.github/workflows/update-dependency-matrix.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "svenjacobs/lokksmith",
+      "generated_owner": "svenjacobs",
+      "generated_repo": "lokksmith",
+      "generated_workflow_path": ".github/workflows/update-dependency-matrix.lock.yml",
+      "generated_workflow_file": "update-dependency-matrix.lock.yml",
+      "generated_html_url": "https://github.com/svenjacobs/lokksmith/blob/638840ad78e147cc7cb5eb030301c11916c55ae9/.github/workflows/update-dependency-matrix.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+      "source_full_name": "svenjacobs/lokksmith",
+      "md_path": ".github/workflows/update-dependency-matrix.md",
+      "commit_sha": "7e8b515c559620a964c5bd60d3e78f6e1cdcf833",
+      "authored_at": "2026-03-20T08:22:36Z",
+      "committed_at": "2026-03-20T08:22:36Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: add agentic workflow to update dependency matrix on release (#328)\n\n* Initial plan\n\n* chore: add agentic workflow to update dependency matrix on release\n\nCo-authored-by: svenjacobs <255313+svenjacobs@users.noreply.github.com>\n\n* chore: update dependency matrix workflow instructions per review feedback\n\nCo-authored-by: svenjacobs <255313+svenjacobs@users.noreply.github.com>\n\n* chore: clarify conventional commits requirement for all agent commits\n\nCo-authored-by: svenjacobs <255313+svenjacobs@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: svenjacobs <255313+svenjacobs@users.noreply.github.com>",
+      "parent_shas": [
+        "a5d4d4cccdcd436a3a54705a9c2fb77cdd45009e"
+      ],
+      "tree_sha": "b2701cec74a7548e68d2c68895f3d4f462d6a71f",
+      "html_url": "https://github.com/svenjacobs/lokksmith/commit/7e8b515c559620a964c5bd60d3e78f6e1cdcf833",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+          "source_full_name": "svenjacobs/lokksmith",
+          "md_path": ".github/workflows/update-dependency-matrix.md",
+          "commit_sha": "7e8b515c559620a964c5bd60d3e78f6e1cdcf833",
+          "committed_at": "2026-03-20T08:22:36Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 94,
+          "file_deletions": 0,
+          "file_changes": 94,
+          "file_patch": "@@ -0,0 +1,94 @@\n+---\n+on:\n+  release:\n+    types: [published]\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+tools:\n+  github:\n+    toolsets: [context, repos]\n+  edit:\n+\n+network: defaults\n+\n+safe-outputs:\n+  create-pull-request:\n+    labels: [documentation]\n+    base-branch: main\n+\n+---\n+\n+# Update Dependency Matrix\n+\n+This workflow runs after a release is published and updates\n+`site/docs/dependency-matrix.md` with the dependency versions\n+used in that release.\n+\n+## Context\n+\n+- The release tag is available as `${{ github.event.release.tag_name }}` (e.g. `v0.13.0`).\n+- The version number without the leading `v` is the Lokksmith version (e.g. `0.13.0`).\n+- The authoritative source of dependency versions for each release is\n+  `lib/gradle/libs.versions.toml` in the repository.\n+\n+## Commit conventions\n+\n+Every commit created during this workflow — including the automatic initial\n+\"Initial plan\" commit and the final PR commit — **must** follow the\n+[Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).\n+\n+The format is: `<type>[optional scope]: <description>`\n+\n+- Use `chore(docs)` as the type+scope for all commits in this workflow.\n+- Example: `chore(docs): update dependency matrix for v0.13.0`\n+- The initial \"Initial plan\" commit message must also use this format,\n+  e.g. `chore(docs): initial plan for updating dependency matrix`.\n+\n+## Instructions\n+\n+1. Read `lib/gradle/libs.versions.toml` from the repository.\n+\n+2. Extract the following version values from the `[versions]` section:\n+   - `kotlin` → **Kotlin** column\n+   - `kotlinx-coroutines` → **Coroutines** column\n+   - `kotlinx-serialization` → **Serialization** column\n+   - `ktor` → **Ktor** column\n+   - `compose-multiplatform` → **Compose Multiplatform** column\n+\n+3. Strip the leading `v` from `${{ github.event.release.tag_name }}` to get the\n+   Lokksmith version (e.g. `v0.13.0` → `0.13.0`).\n+\n+4. Read `site/docs/dependency-matrix.md`.\n+\n+5. Update the **lokksmith-core** table:\n+   - Check the last row. If every dependency column value matches the new\n+     release, extend the version range in the existing row\n+     (e.g. `0.13.0` becomes `0.13.0 - 0.13.1`, or\n+     `0.13.0 - 0.13.1` becomes `0.13.0 - 0.13.2`).\n+   - If any dependency differs from the last row, append a new row for\n+     the new version.\n+   - When a column value is the same as the one directly above it in the\n+     table, use `\"` (a double-quote character) to indicate \"same as above\",\n+     following the existing table style.\n+   - **Bold convention**: For each column, only the single latest (most recently\n+     introduced) version value in the entire column should be wrapped in `**…**`.\n+     All older values must NOT be bold. When you append a new row and a column\n+     value changes, remove the bold markers from that column's previously-bolded\n+     value and bold the new value instead. Columns whose value did not change\n+     keep their existing bold placement unchanged.\n+   - Keep the column widths consistent with the existing table formatting.\n+\n+6. Apply the same logic to the **lokksmith-compose** table using only the\n+   `compose-multiplatform` version.\n+\n+7. Write the updated content back to `site/docs/dependency-matrix.md` using\n+   the edit tool.\n+\n+8. Create a pull request (following the commit conventions defined above):\n+   - commit message: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`\n+   - title: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`\n+   - body: `Update dependency matrix in \\`site/docs/dependency-matrix.md\\` for release ${{ github.event.release.tag_name }}.`\n+   - branch: `chore/update-dependency-matrix-${{ github.event.release.tag_name }}`",
+          "snapshot_ref": "7e8b515c559620a964c5bd60d3e78f6e1cdcf833",
+          "snapshot_blob_sha": "d1def0e1a047455588bd05c71c240a1178d4d709",
+          "snapshot_file": "snapshots/lokksmith__svenjacobs__7e8b515c559620a964c5bd60d3e78f6e1cdcf833__update-dependency-matrix.md",
+          "snapshot_bytes": 3683,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"svenjacobs/lokksmith\",\"generated_owner\":\"svenjacobs\",\"generated_repo\":\"lokksmith\",\"generated_workflow_path\":\".github/workflows/update-dependency-matrix.lock.yml\",\"generated_workflow_file\":\"update-dependency-matrix.lock.yml\",\"generated_html_url\":\"https://github.com/svenjacobs/lokksmith/blob/638840ad78e147cc7cb5eb030301c11916c55ae9/.github/workflows/update-dependency-matrix.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+      "source_full_name": "svenjacobs/lokksmith",
+      "md_path": ".github/workflows/update-dependency-matrix.md",
+      "commit_sha": "deeb0a4b43c2854018c3b8d6c3b63c6d109399a8",
+      "authored_at": "2026-03-20T10:13:37Z",
+      "committed_at": "2026-03-20T10:13:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs(workflow): skip PR creation when dependency matrix is unchanged (#329)\n\n* Initial plan\n\n* docs: update workflow instructions to skip PR if dependency-matrix.md unchanged\n\nCo-authored-by: svenjacobs <255313+svenjacobs@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: svenjacobs <255313+svenjacobs@users.noreply.github.com>",
+      "parent_shas": [
+        "7e8b515c559620a964c5bd60d3e78f6e1cdcf833"
+      ],
+      "tree_sha": "9c1def767f0afb2eac6014971432c88c35c16f22",
+      "html_url": "https://github.com/svenjacobs/lokksmith/commit/deeb0a4b43c2854018c3b8d6c3b63c6d109399a8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+          "source_full_name": "svenjacobs/lokksmith",
+          "md_path": ".github/workflows/update-dependency-matrix.md",
+          "commit_sha": "deeb0a4b43c2854018c3b8d6c3b63c6d109399a8",
+          "committed_at": "2026-03-20T10:13:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 1,
+          "file_changes": 7,
+          "file_patch": "@@ -87,7 +87,12 @@ The format is: `<type>[optional scope]: <description>`\n 7. Write the updated content back to `site/docs/dependency-matrix.md` using\n    the edit tool.\n \n-8. Create a pull request (following the commit conventions defined above):\n+8. Check whether `site/docs/dependency-matrix.md` was actually modified in\n+   step 7. If the file content is identical to what was read in step 4\n+   (i.e. no changes were needed), **do not create a pull request** and stop\n+   here.\n+\n+9. Create a pull request (following the commit conventions defined above):\n    - commit message: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`\n    - title: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`\n    - body: `Update dependency matrix in \\`site/docs/dependency-matrix.md\\` for release ${{ github.event.release.tag_name }}.`",
+          "snapshot_ref": "deeb0a4b43c2854018c3b8d6c3b63c6d109399a8",
+          "snapshot_blob_sha": "f73a374f67efff79d96a86e70a5f468e22c57327",
+          "snapshot_file": "snapshots/lokksmith__svenjacobs__deeb0a4b43c2854018c3b8d6c3b63c6d109399a8__update-dependency-matrix.md",
+          "snapshot_bytes": 3915,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"svenjacobs/lokksmith\",\"generated_owner\":\"svenjacobs\",\"generated_repo\":\"lokksmith\",\"generated_workflow_path\":\".github/workflows/update-dependency-matrix.lock.yml\",\"generated_workflow_file\":\"update-dependency-matrix.lock.yml\",\"generated_html_url\":\"https://github.com/svenjacobs/lokksmith/blob/638840ad78e147cc7cb5eb030301c11916c55ae9/.github/workflows/update-dependency-matrix.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+      "source_full_name": "svenjacobs/lokksmith",
+      "md_path": ".github/workflows/update-dependency-matrix.md",
+      "commit_sha": "d7231583a84ecf8a42b1c666d77782d7170b4154",
+      "authored_at": "2026-06-09T13:36:33Z",
+      "committed_at": "2026-06-09T13:36:33Z",
+      "author_name": "Sven Jacobs",
+      "author_email": "github@svenjacobs.com",
+      "author_login": "svenjacobs",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: allow release-please bot to trigger Update Dependency Matrix workflow (#427)\n\nCo-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "8af8848aa3794c83e6791f3878c918d4f7b7f3a9"
+      ],
+      "tree_sha": "c2ae685e0dda1ae84c4edbed9b1509298ec78a2e",
+      "html_url": "https://github.com/svenjacobs/lokksmith/commit/d7231583a84ecf8a42b1c666d77782d7170b4154",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "svenjacobs/lokksmith:.github/workflows/update-dependency-matrix.md",
+          "source_full_name": "svenjacobs/lokksmith",
+          "md_path": ".github/workflows/update-dependency-matrix.md",
+          "commit_sha": "d7231583a84ecf8a42b1c666d77782d7170b4154",
+          "committed_at": "2026-06-09T13:36:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -2,6 +2,8 @@\n on:\n   release:\n     types: [published]\n+  bots:\n+    - lokksmith-release-please[bot]\n \n permissions:\n   contents: read",
+          "snapshot_ref": "d7231583a84ecf8a42b1c666d77782d7170b4154",
+          "snapshot_blob_sha": "e798b1e643455e71736c20338099014242ff7d28",
+          "snapshot_file": "snapshots/lokksmith__svenjacobs__d7231583a84ecf8a42b1c666d77782d7170b4154__update-dependency-matrix.md",
+          "snapshot_bytes": 3959,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"svenjacobs/lokksmith\",\"generated_owner\":\"svenjacobs\",\"generated_repo\":\"lokksmith\",\"generated_workflow_path\":\".github/workflows/update-dependency-matrix.lock.yml\",\"generated_workflow_file\":\"update-dependency-matrix.lock.yml\",\"generated_html_url\":\"https://github.com/svenjacobs/lokksmith/blob/638840ad78e147cc7cb5eb030301c11916c55ae9/.github/workflows/update-dependency-matrix.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

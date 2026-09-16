@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/AppConfiguration-KubernetesProvider:.github/workflows/issue-triage.md",
+    "source_full_name": "Azure/AppConfiguration-KubernetesProvider",
+    "source_owner": "Azure",
+    "source_repo": "AppConfiguration-KubernetesProvider",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/AppConfiguration-KubernetesProvider/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/AppConfiguration-KubernetesProvider",
+      "generated_owner": "Azure",
+      "generated_repo": "AppConfiguration-KubernetesProvider",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/Azure/AppConfiguration-KubernetesProvider/blob/582ab6320bb5645aa76e24bfee8dcb53f3b5ae88/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/AppConfiguration-KubernetesProvider:.github/workflows/issue-triage.md",
+      "source_full_name": "Azure/AppConfiguration-KubernetesProvider",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "766ee6d5607a68e95b6a3e74ca8b0e891f216b95",
+      "authored_at": "2026-03-05T06:35:15Z",
+      "committed_at": "2026-03-05T06:35:15Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add GitHub Agentic Workflow for automated issue triage (#162)\n\n* Initial plan\n\n* Add GitHub Agentic Workflow for issue triage\n\nCo-authored-by: RichardChen820 <99175581+RichardChen820@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: RichardChen820 <99175581+RichardChen820@users.noreply.github.com>",
+      "parent_shas": [
+        "1031b105a6e91d812f9e898bdb535318b60c3b41"
+      ],
+      "tree_sha": "7b7b79305c2c9ee07e2dee1f1949376d531f00c1",
+      "html_url": "https://github.com/Azure/AppConfiguration-KubernetesProvider/commit/766ee6d5607a68e95b6a3e74ca8b0e891f216b95",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Azure/AppConfiguration-KubernetesProvider:.github/workflows/issue-triage.md",
+          "source_full_name": "Azure/AppConfiguration-KubernetesProvider",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "766ee6d5607a68e95b6a3e74ca8b0e891f216b95",
+          "committed_at": "2026-03-05T06:35:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 120,
+          "file_deletions": 0,
+          "file_changes": 120,
+          "file_patch": "@@ -0,0 +1,120 @@\n+---\n+description: Triage new issues by labeling them by type and priority, identifying duplicates, asking clarifying questions when descriptions are unclear, and assigning them to the right team members.\n+on:\n+  issues:\n+    types: [opened, reopened]\n+  workflow_dispatch:\n+    inputs:\n+      issue-number:\n+        description: Issue number to triage\n+        required: true\n+        type: number\n+  roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+    lockdown: false\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+  update-issue:\n+    max: 1\n+  add-labels:\n+    allowed:\n+      - bug\n+      - enhancement\n+      - question\n+      - documentation\n+      - duplicate\n+      - invalid\n+      - wontfix\n+      - help wanted\n+      - good first issue\n+      - priority/critical\n+      - priority/high\n+      - priority/medium\n+      - priority/low\n+    max: 3\n+  noop:\n+---\n+\n+# Issue Triage Workflow\n+\n+You are an issue triage assistant for the Azure App Configuration Kubernetes Provider project. Your job is to triage newly opened issues.\n+\n+## Your Tasks\n+\n+When a new issue is opened, perform the following steps:\n+\n+### 1. Classify the Issue Type\n+\n+Analyze the issue title and body and apply one of these labels:\n+\n+- **bug** — Something is not working as expected\n+- **enhancement** — A request for new functionality or improvement\n+- **question** — A support or usage question\n+- **documentation** — Documentation is missing or incorrect\n+- **invalid** — The issue is not actionable (e.g., spam, gibberish, unrelated)\n+\n+### 2. Assess Priority\n+\n+Assign a priority label based on impact and urgency:\n+\n+- **priority/critical** — Data loss, security vulnerability, complete outage, or production blocker\n+- **priority/high** — Significant functionality broken, affects many users, no workaround\n+- **priority/medium** — Partial functionality impacted, workaround exists, affects some users\n+- **priority/low** — Minor issue, cosmetic, or rarely encountered edge case\n+\n+### 3. Check for Duplicates\n+\n+Search existing open and recently closed issues for similar topics. If you find a likely duplicate:\n+- Apply the **duplicate** label\n+- Add a comment referencing the original issue (e.g., \"This appears to be a duplicate of #123. Please follow that issue for updates.\")\n+- Do NOT assign or set priority for duplicates\n+\n+### 4. Request Clarification When Needed\n+\n+If the issue lacks sufficient information to triage or reproduce, add a comment asking for clarification. Examples of missing information:\n+- No steps to reproduce for a bug\n+- No expected vs. actual behavior\n+- No version information (provider version, Kubernetes version, Azure App Configuration SKU)\n+- Vague description with no actionable details\n+\n+Ask focused, specific questions. Example comment:\n+> Thank you for filing this issue! To help us investigate, could you please provide:\n+> - The version of the Azure App Configuration Kubernetes Provider you are using\n+> - The Kubernetes version and distribution (e.g., AKS, EKS, GKE)\n+> - Steps to reproduce the issue\n+> - Expected behavior and what you observed instead\n+\n+### 5. Assign to Team Members\n+\n+Assign the issue to appropriate team members based on these guidelines:\n+\n+- For **bugs** related to configuration syncing or AzureAppConfigurationProvider reconciliation: assign to maintainers familiar with the controller logic\n+- For **documentation** issues: assign to a team member who handles docs\n+- For **questions**: you may leave unassigned so community or any team member can answer\n+- For **enhancements**: leave unassigned unless it maps to a known area\n+\n+To determine who to assign, look at:\n+- Recent contributors and their areas of activity\n+- The `CODEOWNERS` file if present\n+- Existing assignees on similar past issues\n+\n+## Guidelines\n+\n+- Be concise and professional in any comments you post\n+- Apply labels and assignments in a single `update-issue` call when possible\n+- If nothing needs to be done (e.g., the issue is clearly not actionable and already labeled), call `noop`\n+- Do not assign the issue if it is a duplicate or invalid\n+- Always be welcoming and constructive in your tone toward contributors\n+\n+## Context\n+\n+This is the **Azure App Configuration Kubernetes Provider** repository. It provides a Kubernetes custom resource (`AzureAppConfigurationProvider`) that syncs configuration and feature flags from Azure App Configuration into Kubernetes ConfigMaps and Secrets.\n+\n+Current issue being triaged: **#${{ github.event.issue.number }}** — \"${{ github.event.issue.title }}\"",
+          "snapshot_ref": "766ee6d5607a68e95b6a3e74ca8b0e891f216b95",
+          "snapshot_blob_sha": "32d136ce791814860f1848e740463bd594036a93",
+          "snapshot_file": "snapshots/AppConfiguration-KubernetesProvider__Azure__766ee6d5607a68e95b6a3e74ca8b0e891f216b95__issue-triage.md",
+          "snapshot_bytes": 4522,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/AppConfiguration-KubernetesProvider\",\"generated_owner\":\"Azure\",\"generated_repo\":\"AppConfiguration-KubernetesProvider\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/AppConfiguration-KubernetesProvider/blob/582ab6320bb5645aa76e24bfee8dcb53f3b5ae88/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

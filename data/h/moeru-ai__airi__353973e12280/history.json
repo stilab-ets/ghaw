@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+    "source_full_name": "moeru-ai/airi",
+    "source_owner": "moeru-ai",
+    "source_repo": "airi",
+    "md_path": ".github/workflows/pr-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/moeru-ai/airi/blob/HEAD/.github/workflows/pr-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "moeru-ai/airi",
+      "generated_owner": "moeru-ai",
+      "generated_repo": "airi",
+      "generated_workflow_path": ".github/workflows/pr-triage.lock.yml",
+      "generated_workflow_file": "pr-triage.lock.yml",
+      "generated_html_url": "https://github.com/moeru-ai/airi/blob/93af669d14f876632afb83c4e924bd07737db9f7/.github/workflows/pr-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:42:57+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+      "source_full_name": "moeru-ai/airi",
+      "md_path": ".github/workflows/pr-triage.md",
+      "commit_sha": "2876817f6f0a5749565af841a8c5066675e6198c",
+      "authored_at": "2026-04-04T19:11:13Z",
+      "committed_at": "2026-04-04T19:11:13Z",
+      "author_name": "Rin",
+      "author_email": "shinohara-rin@users.noreply.github.com",
+      "author_login": "shinohara-rin",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(ci): add label sync and PR triage workflows (#1575)",
+      "parent_shas": [
+        "744503a10eea0c334197dc44c2c242b74bc9fe84"
+      ],
+      "tree_sha": "157cef7d3ce69f63bbb7406f7499be10f39e4e81",
+      "html_url": "https://github.com/moeru-ai/airi/commit/2876817f6f0a5749565af841a8c5066675e6198c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+          "source_full_name": "moeru-ai/airi",
+          "md_path": ".github/workflows/pr-triage.md",
+          "commit_sha": "2876817f6f0a5749565af841a8c5066675e6198c",
+          "committed_at": "2026-04-04T19:11:13Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 199,
+          "file_deletions": 0,
+          "file_changes": 199,
+          "file_patch": "@@ -0,0 +1,199 @@\n+---\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      pull_request_number:\n+        description: \"Pull request number to triage manually\"\n+        required: true\n+        type: string\n+  pull_request:\n+    types: [opened, reopened, ready_for_review]\n+    forks: [\"*\"]\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+engine: copilot\n+\n+tools:\n+  github:\n+    toolsets: [repos, issues, pull_requests, labels]\n+\n+network: defaults\n+\n+safe-outputs:\n+  add-labels:\n+    max: 12\n+    target: ${{ github.event.pull_request.number || github.event.inputs.pull_request_number }}\n+    allowed:\n+      - bug\n+      - feature\n+      - pending triage\n+      - apps/stage-pocket\n+      - apps/stage-tamagotchi\n+      - apps/stage-web\n+      - env/os-all\n+      - env/os-linux\n+      - env/os-macos\n+      - env/os-windows\n+      - priority/general\n+      - priority/nice-to-have\n+      - priority/urgent\n+      - scope/agent\n+      - scope/audio-input\n+      - scope/audio-output\n+      - scope/avatar\n+      - scope/avatar/live2d\n+      - scope/avatar/vrm\n+      - scope/documentation\n+      - scope/engineering\n+      - scope/extension\n+      - scope/game-playing-ai\n+      - scope/i18n\n+      - scope/providers\n+      - scope/server-api\n+      - scope/ui\n+  remove-labels:\n+    max: 24\n+    target: ${{ github.event.pull_request.number || github.event.inputs.pull_request_number }}\n+    allowed:\n+      - bug\n+      - feature\n+      - pending triage\n+      - apps/stage-pocket\n+      - apps/stage-tamagotchi\n+      - apps/stage-web\n+      - env/os-all\n+      - env/os-linux\n+      - env/os-macos\n+      - env/os-windows\n+      - priority/general\n+      - priority/nice-to-have\n+      - priority/urgent\n+      - scope/agent\n+      - scope/audio-input\n+      - scope/audio-output\n+      - scope/avatar\n+      - scope/avatar/live2d\n+      - scope/avatar/vrm\n+      - scope/documentation\n+      - scope/engineering\n+      - scope/extension\n+      - scope/game-playing-ai\n+      - scope/i18n\n+      - scope/providers\n+      - scope/server-api\n+      - scope/ui\n+---\n+\n+# PR Triage\n+\n+Classify the target pull request with content labels.\n+\n+## Goal\n+\n+Read the target pull request and keep only the relevant automatically-managed triage labels in sync.\n+\n+The target pull request is:\n+\n+- the triggering PR for `pull_request` events\n+- PR `#${{ github.event.inputs.pull_request_number }}` for `workflow_dispatch`\n+\n+Managed labels:\n+\n+- Type: `bug`, `feature`\n+- App surface: `apps/stage-pocket`, `apps/stage-tamagotchi`, `apps/stage-web`\n+- Environment: `env/os-all`, `env/os-linux`, `env/os-macos`, `env/os-windows`\n+- Scope: `scope/agent`, `scope/audio-input`, `scope/audio-output`, `scope/avatar`, `scope/avatar/live2d`, `scope/avatar/vrm`, `scope/documentation`, `scope/engineering`, `scope/extension`, `scope/game-playing-ai`, `scope/i18n`, `scope/providers`, `scope/server-api`, `scope/ui`\n+- Priority: `priority/general`, `priority/nice-to-have`, `priority/urgent`\n+- Fallback: `pending triage`\n+\n+Never add or remove any label outside that managed set.\n+\n+## Required inputs\n+\n+Inspect, in order:\n+\n+1. PR title\n+2. PR body\n+3. Linked issues explicitly referenced in the PR title or body\n+4. Changed files\n+5. Existing labels on the PR\n+\n+Do not use web search. Do not use bash or edit tools. Do not post comments. Do not update the PR body or title. Do not request reviewers.\n+\n+## Classification rules\n+\n+### Confidence and fallback\n+\n+- Only apply a managed label when the evidence is explicit from the PR text, linked issues, or changed file paths.\n+- If the PR is too vague, too short, intentionally a test, or the classification is meaningfully ambiguous, remove all currently-present managed labels and leave only `pending triage`.\n+- If you can classify it confidently, remove `pending triage`.\n+\n+### Type labels\n+\n+- Do not apply both `bug` and `feature`.\n+- For documentation-first PRs, do not apply `feature`.\n+\n+### Documentation\n+\n+- Apply `scope/documentation` when the PR is primarily documentation, manuals, tutorials, guides, README work, or mostly touches `docs/` and similar documentation files.\n+- Documentation PRs may still receive environment labels if the docs are explicitly platform-specific, but they should not receive `feature`.\n+\n+### App labels\n+\n+- Apply `apps/stage-web` when files under `apps/stage-web/` change, or the PR text explicitly says the change is for the web app or PWA/browser surface.\n+- Apply `apps/stage-tamagotchi` when files under `apps/stage-tamagotchi/` change, or the PR text explicitly says desktop/Electron/Windows/macOS/Linux app.\n+- Apply `apps/stage-pocket` when files under `apps/stage-pocket/` change, or the PR text explicitly says mobile/iOS/Android app.\n+- Multiple app labels are allowed when the evidence is explicit.\n+\n+### Environment labels\n+\n+- Apply `env/os-windows`, `env/os-macos`, or `env/os-linux` only when the PR text or linked issues explicitly call out that platform.\n+- Apply `env/os-all` only when the PR explicitly describes all major desktop platforms or a clearly cross-platform OS fix.\n+- Do not infer OS labels from maintainers' guesses alone.\n+- `env/os-all` should replace per-OS labels when the evidence is clearly all-platform.\n+\n+### Scope labels\n+\n+- Apply `scope/ui` for UI, UX, settings, layouts, views, components, visual behavior, or interaction flows.\n+- Apply `scope/providers` for provider integrations, provider configuration, model/provider selection, or supported provider behavior.\n+- Apply `scope/audio-input` for ASR, STT, microphone capture, VAD, hearing, transcription input pipelines.\n+- Apply `scope/audio-output` for TTS, voice output, speech synthesis, voice playback, or voice cloning.\n+- Apply `scope/avatar` for general avatar rendering/control/interaction.\n+- Apply `scope/avatar/live2d` when the work is specifically about Live2D.\n+- Apply `scope/avatar/vrm` when the work is specifically about VRM.\n+- Apply `scope/engineering` for CI, build, release, packaging, toolchain, workflow, infrastructure, repository automation.\n+- Apply `scope/extension` for extensions, plugins, mod APIs, tentacle APIs, or channel integrations.\n+- Apply `scope/agent` for agent workflow, orchestration, LLM runtime, prompt routing, agent behavior.\n+- Apply `scope/server-api` for the maintained server API or public server service behavior.\n+- Apply `scope/i18n` for translation keys, locale additions, localization-only or localization-heavy work.\n+- Apply `scope/game-playing-ai` when the change is specifically about game-playing agent behavior.\n+- Multiple scope labels are allowed when the evidence is explicit and non-conflicting.\n+- If a PR is clearly documentation-first, use `scope/documentation` instead of trying to classify it as another primary scope unless the non-documentation scope is also explicit and substantial.\n+\n+### Priority labels\n+\n+- Apply at most one priority label.\n+- Apply `priority/urgent` only when the PR or linked issue clearly says urgent, critical, blocker, severe regression, production breakage, or similarly high urgency.\n+- Apply `priority/general` when the PR or linked issue clearly says it should be in the current release or treated as normal release work.\n+- Apply `priority/nice-to-have` when the PR or linked issue clearly frames it as polish, optional, low urgency, or explicitly nice-to-have.\n+- If urgency is not explicit, do not apply any priority label.\n+\n+## Label synchronization behavior\n+\n+When you finish classification:\n+\n+1. Compute the desired managed labels for this PR.\n+2. Compare them against the PR's existing managed labels only.\n+3. Remove managed labels that are no longer desired.\n+4. Add desired managed labels that are missing.\n+\n+Important constraints:\n+\n+- Never remove unmanaged labels.\n+- Never add more labels than the evidence supports.\n+- If confident classification is possible, do not leave `pending triage`.\n+- If confident classification is not possible, the only managed label that should remain is `pending triage`.",
+          "snapshot_ref": "2876817f6f0a5749565af841a8c5066675e6198c",
+          "snapshot_blob_sha": "dc27b7ee6fad80daaf12ebedea4b7e149783502e",
+          "snapshot_file": "snapshots/airi__moeru-ai__2876817f6f0a5749565af841a8c5066675e6198c__pr-triage.md",
+          "snapshot_bytes": 7818,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"moeru-ai/airi\",\"generated_owner\":\"moeru-ai\",\"generated_repo\":\"airi\",\"generated_workflow_path\":\".github/workflows/pr-triage.lock.yml\",\"generated_workflow_file\":\"pr-triage.lock.yml\",\"generated_html_url\":\"https://github.com/moeru-ai/airi/blob/93af669d14f876632afb83c4e924bd07737db9f7/.github/workflows/pr-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+      "source_full_name": "moeru-ai/airi",
+      "md_path": ".github/workflows/pr-triage.md",
+      "commit_sha": "4e1946da436f82ac7939f60fbaa9278547bbf06a",
+      "authored_at": "2026-04-10T17:03:03Z",
+      "committed_at": "2026-04-10T17:03:03Z",
+      "author_name": "Rin",
+      "author_email": "shinohara-rin@users.noreply.github.com",
+      "author_login": "shinohara-rin",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(ci): pr triage permission (#1619)",
+      "parent_shas": [
+        "adcfcd9399dd395acdc1ad5b0cb1e853ec565b83"
+      ],
+      "tree_sha": "f9d110df51de28ce45b6e7d5c2516661931e04f9",
+      "html_url": "https://github.com/moeru-ai/airi/commit/4e1946da436f82ac7939f60fbaa9278547bbf06a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+          "source_full_name": "moeru-ai/airi",
+          "md_path": ".github/workflows/pr-triage.md",
+          "commit_sha": "4e1946da436f82ac7939f60fbaa9278547bbf06a",
+          "committed_at": "2026-04-10T17:03:03Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "@@ -6,15 +6,15 @@ on:\n         description: \"Pull request number to triage manually\"\n         required: true\n         type: string\n-  pull_request:\n-    types: [opened, reopened, ready_for_review]\n-    forks: [\"*\"]\n+  roles: all\n \n permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n \n+checkout: false\n+\n engine: copilot\n \n tools:\n@@ -24,6 +24,7 @@ tools:\n network: defaults\n \n safe-outputs:\n+  report-failure-as-issue: false\n   add-labels:\n     max: 12\n     target: ${{ github.event.pull_request.number || github.event.inputs.pull_request_number }}\n@@ -98,7 +99,6 @@ Read the target pull request and keep only the relevant automatically-managed tr\n \n The target pull request is:\n \n-- the triggering PR for `pull_request` events\n - PR `#${{ github.event.inputs.pull_request_number }}` for `workflow_dispatch`\n \n Managed labels:",
+          "snapshot_ref": "4e1946da436f82ac7939f60fbaa9278547bbf06a",
+          "snapshot_blob_sha": "3de8ae255a19bd2ecac11813bf6c708f67213d1b",
+          "snapshot_file": "snapshots/airi__moeru-ai__4e1946da436f82ac7939f60fbaa9278547bbf06a__pr-triage.md",
+          "snapshot_bytes": 7754,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"moeru-ai/airi\",\"generated_owner\":\"moeru-ai\",\"generated_repo\":\"airi\",\"generated_workflow_path\":\".github/workflows/pr-triage.lock.yml\",\"generated_workflow_file\":\"pr-triage.lock.yml\",\"generated_html_url\":\"https://github.com/moeru-ai/airi/blob/93af669d14f876632afb83c4e924bd07737db9f7/.github/workflows/pr-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+      "source_full_name": "moeru-ai/airi",
+      "md_path": ".github/workflows/pr-triage.md",
+      "commit_sha": "b7e9ce1a3d229b3dae401d525938472a05bc91c8",
+      "authored_at": "2026-04-12T10:02:58Z",
+      "committed_at": "2026-04-12T10:02:58Z",
+      "author_name": "Rin",
+      "author_email": "shinohara-rin@users.noreply.github.com",
+      "author_login": "shinohara-rin",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(ci): min-integrity: none for safeoutput mcp call (#1645)",
+      "parent_shas": [
+        "977a8e4f57c73bd1ef970455dd793941b45249c7"
+      ],
+      "tree_sha": "6dad9c2194f34242508e814aaa7fa3fd52c03ce2",
+      "html_url": "https://github.com/moeru-ai/airi/commit/b7e9ce1a3d229b3dae401d525938472a05bc91c8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+          "source_full_name": "moeru-ai/airi",
+          "md_path": ".github/workflows/pr-triage.md",
+          "commit_sha": "b7e9ce1a3d229b3dae401d525938472a05bc91c8",
+          "committed_at": "2026-04-12T10:02:58Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -20,6 +20,7 @@ engine: copilot\n tools:\n   github:\n     toolsets: [repos, issues, pull_requests, labels]\n+    min-integrity: none\n \n network: defaults\n ",
+          "snapshot_ref": "b7e9ce1a3d229b3dae401d525938472a05bc91c8",
+          "snapshot_blob_sha": "e755e04c85294cb78ce344f8c32f6a5a646d544b",
+          "snapshot_file": "snapshots/airi__moeru-ai__b7e9ce1a3d229b3dae401d525938472a05bc91c8__pr-triage.md",
+          "snapshot_bytes": 7778,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"moeru-ai/airi\",\"generated_owner\":\"moeru-ai\",\"generated_repo\":\"airi\",\"generated_workflow_path\":\".github/workflows/pr-triage.lock.yml\",\"generated_workflow_file\":\"pr-triage.lock.yml\",\"generated_html_url\":\"https://github.com/moeru-ai/airi/blob/93af669d14f876632afb83c4e924bd07737db9f7/.github/workflows/pr-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+      "source_full_name": "moeru-ai/airi",
+      "md_path": ".github/workflows/pr-triage.md",
+      "commit_sha": "61371060e7068af702d8eff3cefd686c9698d27b",
+      "authored_at": "2026-04-13T08:24:15Z",
+      "committed_at": "2026-04-13T08:24:15Z",
+      "author_name": "Liet Blue",
+      "author_email": "127093491+lietblue@users.noreply.github.com",
+      "author_login": "lietblue",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(ci): harden pr-triage prompt against WASM guard UTF-8 crash (#1653)\n\nThe WASM guard (lib.rs:939) panics on `&output_json[..500]` when the\nserialized output contains CJK characters at the byte boundary. This\npoisons the guard for the entire session.\n\n- Flip call order: get_files first (ASCII-dominant response), get second\n- Add fallback: curl GitHub API when MCP server dies\n- Narrow bash restriction: allow read-only shell for data retrieval\n- Recompile lock file",
+      "parent_shas": [
+        "9bc2d718b62a28e7b3752a9e7a461aac8ae363a2"
+      ],
+      "tree_sha": "cd8011e22b59f0a54f085c1eb10027b564f51e33",
+      "html_url": "https://github.com/moeru-ai/airi/commit/61371060e7068af702d8eff3cefd686c9698d27b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "moeru-ai/airi:.github/workflows/pr-triage.md",
+          "source_full_name": "moeru-ai/airi",
+          "md_path": ".github/workflows/pr-triage.md",
+          "commit_sha": "61371060e7068af702d8eff3cefd686c9698d27b",
+          "committed_at": "2026-04-13T08:24:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 21,
+          "file_deletions": 7,
+          "file_changes": 28,
+          "file_patch": "@@ -115,15 +115,29 @@ Never add or remove any label outside that managed set.\n \n ## Required inputs\n \n-Inspect, in order:\n+Inspect the PR step by step. **Do NOT issue multiple tool calls in parallel — wait for each call to return before making the next one.**\n \n-1. PR title\n-2. PR body\n-3. Linked issues explicitly referenced in the PR title or body\n-4. Changed files\n-5. Existing labels on the PR\n+**Step 1** — Call `pull_request_read` with `method: \"get_files\"` to retrieve:\n+1. Changed files\n \n-Do not use web search. Do not use bash or edit tools. Do not post comments. Do not update the PR body or title. Do not request reviewers.\n+**Step 2** — Call `pull_request_read` with `method: \"get\"` to retrieve:\n+2. PR title\n+3. PR body\n+4. Existing labels on the PR\n+\n+**Step 3** — If the PR title or body references linked issues, read those issues for additional context.\n+\n+### If MCP calls fail\n+\n+If any `pull_request_read` call returns an MCP error (e.g. WASM trap, guard failure), do NOT retry the same call. Instead:\n+\n+1. For file data: if Step 1 succeeded, read the saved tool output file using shell (`cat` + `jq`).\n+2. For PR metadata: fall back to shell with `curl -s \"https://api.github.com/repos/moeru-ai/airi/pulls/${{ github.event.inputs.pull_request_number }}\"` and parse the JSON with `jq`.\n+3. Continue classification with whatever data you can gather.\n+4. Use `safeoutputs` tools (add_labels / remove_labels) for the final label application — these are unaffected by MCP server failures.\n+5. Only report `missing_tool` if you cannot retrieve ANY data after trying all fallback paths.\n+\n+Do not use web search. Do not use bash to modify files, create branches, post comments, update the PR body or title, or request reviewers. Read-only shell commands for data retrieval are allowed.\n \n ## Classification rules\n ",
+          "snapshot_ref": "61371060e7068af702d8eff3cefd686c9698d27b",
+          "snapshot_blob_sha": "30b46eb81eaefa26b539f2a8176fd1568f5a0a96",
+          "snapshot_file": "snapshots/airi__moeru-ai__61371060e7068af702d8eff3cefd686c9698d27b__pr-triage.md",
+          "snapshot_bytes": 8879,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"moeru-ai/airi\",\"generated_owner\":\"moeru-ai\",\"generated_repo\":\"airi\",\"generated_workflow_path\":\".github/workflows/pr-triage.lock.yml\",\"generated_workflow_file\":\"pr-triage.lock.yml\",\"generated_html_url\":\"https://github.com/moeru-ai/airi/blob/93af669d14f876632afb83c4e924bd07737db9f7/.github/workflows/pr-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

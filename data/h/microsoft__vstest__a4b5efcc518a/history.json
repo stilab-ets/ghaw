@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/vstest:.github/workflows/markdown-linter.md",
+    "source_full_name": "microsoft/vstest",
+    "source_owner": "microsoft",
+    "source_repo": "vstest",
+    "md_path": ".github/workflows/markdown-linter.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/vstest/blob/HEAD/.github/workflows/markdown-linter.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/vstest",
+      "generated_owner": "microsoft",
+      "generated_repo": "vstest",
+      "generated_workflow_path": ".github/workflows/markdown-linter.lock.yml",
+      "generated_workflow_file": "markdown-linter.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/markdown-linter.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:42:52+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/vstest:.github/workflows/markdown-linter.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "authored_at": "2026-06-19T12:08:15Z",
+      "committed_at": "2026-06-19T12:08:15Z",
+      "author_name": "Amaury Levé",
+      "author_email": "amauryleve@microsoft.com",
+      "author_login": "Evangelink",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows ported from testfx (#16136)\n\nPorts 8 agentic-workflow families from microsoft/testfx, applying vstest\nadaptation tweaks (vstest labels, trimmed network, no AI-credits footer,\nv4 action pins):\n\n- build-failure-analysis (+ /analyze-build-failure command)\n- code-simplifier\n- daily-file-diet\n- efficiency-improver\n- markdown-linter\n- malicious-code-scan\n- msbuild-quality-review\n- repository-quality-improver\n\nIncludes shared imports (formatting, reporting, build-failure-analysis-shared,\nmsbuild-review-shared) and the build-failure-analyst / msbuild-reviewer agents.\nAll workflows compiled with `gh aw compile` (0 errors, 0 warnings).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "78861b32ccdc0acd64261e016da2debd0e673d16"
+      ],
+      "tree_sha": "16b3f1a1ca2c92395ada5ca2c1476100dff1e875",
+      "html_url": "https://github.com/microsoft/vstest/commit/cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/markdown-linter.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "committed_at": "2026-06-19T12:08:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 164,
+          "file_deletions": 0,
+          "file_changes": 164,
+          "file_patch": "@@ -0,0 +1,164 @@\n+---\n+on:\n+  schedule:\n+  - cron: 0 14 * * 1-5\n+  workflow_dispatch: null\n+permissions:\n+  actions: read\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+imports:\n+- shared/reporting.md\n+safe-outputs:\n+  create-issue:\n+    expires: 2d\n+    labels:\n+    - agentic-workflows\n+    - \"Area: Documentation\"\n+    title-prefix: \"[linter] \"\n+  noop:\n+    report-as-issue: false\n+steps:\n+- name: Download super-linter log\n+  uses: actions/download-artifact@v4\n+  with:\n+    name: super-linter-log\n+    path: /tmp/gh-aw/\n+description: Runs Markdown quality checks using Super Linter and creates issues for violations\n+jobs:\n+  super_linter:\n+    permissions:\n+      contents: read\n+      packages: read\n+      statuses: write\n+    runs-on: ubuntu-latest\n+    steps:\n+    - name: Checkout repository\n+      uses: actions/checkout@v4\n+      with:\n+        fetch-depth: 0\n+        persist-credentials: false\n+    - env:\n+        CREATE_LOG_FILE: \"true\"\n+        DEFAULT_BRANCH: main\n+        ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: \"true\"\n+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+        LOG_FILE: super-linter.log\n+        VALIDATE_ALL_CODEBASE: \"false\"\n+        VALIDATE_MARKDOWN: \"true\"\n+      id: super-linter\n+      name: Super-linter\n+      uses: super-linter/super-linter@v8.6.0\n+    - id: check-results\n+      name: Check for linting issues\n+      run: |\n+        if [ -f \"super-linter.log\" ] && [ -s \"super-linter.log\" ]; then\n+          if grep -qE \"ERROR|WARN|FAIL\" super-linter.log; then\n+            echo \"needs-linting=true\" >> \"$GITHUB_OUTPUT\"\n+          else\n+            echo \"needs-linting=false\" >> \"$GITHUB_OUTPUT\"\n+          fi\n+        else\n+          echo \"needs-linting=false\" >> \"$GITHUB_OUTPUT\"\n+        fi\n+    - if: always()\n+      name: Upload super-linter log\n+      uses: actions/upload-artifact@v4\n+      with:\n+        name: super-linter-log\n+        path: super-linter.log\n+        retention-days: 7\n+name: Markdown Linter\n+timeout-minutes: 15\n+tools:\n+  bash:\n+  - \"*\"\n+  cache-memory: true\n+  edit: null\n+---\n+# Markdown Quality Report\n+\n+You are an expert documentation quality analyst. Your task is to analyze the Super Linter Markdown output and create a comprehensive issue report for the repository maintainers.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Triggered by**: @${{ github.actor }}\n+- **Run ID**: ${{ github.run_id }}\n+\n+## Your Task\n+\n+1. **Read the linter output** from `/tmp/gh-aw/super-linter.log` using the bash tool\n+2. **Analyze the findings**:\n+   - Categorize errors by severity (critical, high, medium, low)\n+   - Identify patterns in the errors\n+   - Determine which errors are most important to fix first\n+   - Note: This workflow only validates Markdown files\n+3. **Create a detailed issue** with the following structure:\n+\n+### Issue Title\n+Use format: \"Markdown Quality Report - [Date] - [X] issues found\"\n+\n+### Issue Body Structure\n+\n+```markdown\n+## 🔍 Markdown Linter Summary\n+\n+**Date**: [Current date]\n+**Total Issues Found**: [Number]\n+**Run ID**: ${{ github.run_id }}\n+\n+## 📊 Breakdown by Severity\n+\n+- **Critical**: [Count and brief description]\n+- **High**: [Count and brief description]\n+- **Medium**: [Count and brief description]\n+- **Low**: [Count and brief description]\n+\n+## 📁 Issues by Category\n+\n+### [Category/Rule Name]\n+- **File**: `path/to/file`\n+  - Line [X]: [Error description]\n+  - Suggested fix: [How to resolve]\n+\n+[Repeat for other categories]\n+\n+## 🎯 Priority Recommendations\n+\n+1. [Most critical issue to address first]\n+2. [Second priority]\n+3. [Third priority]\n+\n+## 📋 Full Linter Output\n+\n+<details>\n+<summary>Click to expand complete linter log</summary>\n+\n+```\n+[Include the full linter output here]\n+```\n+\n+</details>\n+\n+## 🔗 References\n+\n+- [Link to workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n+- [Super Linter Documentation](https://github.com/super-linter/super-linter)\n+```\n+\n+## Important Guidelines\n+\n+- **Be concise but thorough**: Focus on actionable insights\n+- **Prioritize issues**: Not all linting errors are equal\n+- **Provide context**: Explain why each type of error matters for documentation quality\n+- **Suggest fixes**: Give practical recommendations\n+- **Use proper formatting**: Make the issue easy to read and navigate\n+- **If no errors found**: Call `noop` celebrating clean markdown\n+\n+**Important**: Always call exactly one safe-output tool before finishing (`create_issue` or `noop`).\n+\n+```json\n+{\"noop\": {\"message\": \"No action needed: [brief explanation of what was analyzed and why]\"}}\n+```",
+          "snapshot_ref": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "snapshot_blob_sha": "e8858e1fb372c649268e795f04aecae31322262b",
+          "snapshot_file": "snapshots/vstest__microsoft__cfe59578dfcfc2ceb6b95639620943ff4a623c79__markdown-linter.md",
+          "snapshot_bytes": 4455,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vstest:.github/workflows/markdown-linter.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/markdown-linter.md",
+      "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+      "authored_at": "2026-07-07T12:25:41Z",
+      "committed_at": "2026-07-07T12:25:41Z",
+      "author_name": "Jakub Jareš",
+      "author_email": "me@jakubjares.com",
+      "author_login": "nohwnd",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Prefer org tokens over personal PATs in agentic workflows (#16226)\n\nThe Microsoft OSS enterprise now 403s fine-grained PATs older than 8 days, so\nthe personal-PAT setup breaks on a short cycle and takes every agentic workflow\ndown with it at once. Move auth onto org-owned credentials, mirroring testfx:\n\n- Copilot inference now uses the copilot-requests: write permission (billed to\n  the org Copilot subscription) instead of COPILOT_GITHUB_TOKEN. No compiled lock\n  references that secret anymore. read-all workflows expand to an explicit read\n  map so the one write scope can be added.\n- Drop lockdown: true from the issue/PR workflows (deprecated upstream; they\n  keep min-integrity: none), so MCP reads fall back to the default GITHUB_TOKEN.\n- The two write-back workflows (issue-repro-triage, pr-iteration) reference an\n  org-owned GitHub App under safe-outputs with ignore-if-missing, so they fall\n  back to GITHUB_TOKEN until an admin provisions APP_ID/APP_PRIVATE_KEY.\n- Bump gh-aw 0.72.1 -> 0.81.6 and recompile every lock file.\n\nAdds .github/workflows/README.md documenting the token model and updates the\nAGENTS.md secrets note.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b7a1884481f21ceaf6356026c8e70c23fc99e3ea"
+      ],
+      "tree_sha": "50fdd84f67fd467635b139a6e820abab24f78a3b",
+      "html_url": "https://github.com/microsoft/vstest/commit/77c3673ef28372023e5602802748ab727408a33f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/markdown-linter.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/markdown-linter.md",
+          "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+          "committed_at": "2026-07-07T12:25:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -8,6 +8,7 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n+  copilot-requests: write\n imports:\n - shared/reporting.md\n safe-outputs:",
+          "snapshot_ref": "77c3673ef28372023e5602802748ab727408a33f",
+          "snapshot_blob_sha": "f999fe356f19ab4dbb7c3ab09ce5353023ac1e08",
+          "snapshot_file": "snapshots/vstest__microsoft__77c3673ef28372023e5602802748ab727408a33f__markdown-linter.md",
+          "snapshot_bytes": 4481,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/markdown-linter.lock.yml\",\"generated_workflow_file\":\"markdown-linter.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/markdown-linter.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

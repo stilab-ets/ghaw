@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "drhelius/Gearcoleco:.github/workflows/release.md",
+    "source_full_name": "drhelius/Gearcoleco",
+    "source_owner": "drhelius",
+    "source_repo": "Gearcoleco",
+    "md_path": ".github/workflows/release.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/drhelius/Gearcoleco/blob/HEAD/.github/workflows/release.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "drhelius/Gearcoleco",
+      "generated_owner": "drhelius",
+      "generated_repo": "Gearcoleco",
+      "generated_workflow_path": ".github/workflows/release.lock.yml",
+      "generated_workflow_file": "release.lock.yml",
+      "generated_html_url": "https://github.com/drhelius/Gearcoleco/blob/dd64cea4fd0a52f78635b71af526b0632f3570cf/.github/workflows/release.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:25:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "drhelius/Gearcoleco:.github/workflows/release.md",
+      "source_full_name": "drhelius/Gearcoleco",
+      "md_path": ".github/workflows/release.md",
+      "commit_sha": "e5b234f1790ac9ed4e681c568055825e1003b891",
+      "authored_at": "2026-06-29T09:05:19Z",
+      "committed_at": "2026-06-29T09:05:19Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "d225be248c81a7fbc3098fb4cc36508aaf9fc900"
+      ],
+      "tree_sha": "3dcd89a8722738538f301c7f0c9122792c8a41cb",
+      "html_url": "https://github.com/drhelius/Gearcoleco/commit/e5b234f1790ac9ed4e681c568055825e1003b891",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearcoleco:.github/workflows/release.md",
+          "source_full_name": "drhelius/Gearcoleco",
+          "md_path": ".github/workflows/release.md",
+          "commit_sha": "e5b234f1790ac9ed4e681c568055825e1003b891",
+          "committed_at": "2026-06-29T09:05:19Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 101,
+          "file_deletions": 0,
+          "file_changes": 101,
+          "file_patch": "@@ -0,0 +1,101 @@\n+---\n+name: Release\n+description: Bump the patch version and create a release tag for Gearcoleco.\n+on:\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - github-actions\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [repos]\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  jobs:\n+    create-release:\n+      description: \"Bump the patch version in README.md and MCP_README.md, commit, push, tag, and push the tag.\"\n+      runs-on: ubuntu-latest\n+      permissions:\n+        contents: write\n+      output: \"Release created.\"\n+      env:\n+        GH_TOKEN: ${{ github.token }}\n+      inputs:\n+        current_version:\n+          description: \"The current x.y.z version found in README.md.\"\n+          required: true\n+          type: string\n+        new_version:\n+          description: \"The new x.y.z version after bumping the patch component.\"\n+          required: true\n+          type: string\n+      steps:\n+        - name: Checkout\n+          uses: actions/checkout@v4\n+          with:\n+            fetch-depth: 0\n+        - name: Bump version and tag\n+          run: |\n+            if [ ! -f \"$GH_AW_AGENT_OUTPUT\" ]; then\n+              echo \"No agent output found\"\n+              exit 1\n+            fi\n+            CURRENT=$(jq -r '.items[] | select(.type == \"create_release\") | .current_version' \"$GH_AW_AGENT_OUTPUT\")\n+            NEW=$(jq -r '.items[] | select(.type == \"create_release\") | .new_version' \"$GH_AW_AGENT_OUTPUT\")\n+            if [ -z \"$CURRENT\" ] || [ -z \"$NEW\" ]; then\n+              echo \"Missing current or new version\"\n+              exit 1\n+            fi\n+            if ! echo \"$CURRENT\" | grep -qE '^[0-9]+\\.[0-9]+\\.[0-9]+$'; then\n+              echo \"Invalid current version: $CURRENT\"\n+              exit 1\n+            fi\n+            if ! echo \"$NEW\" | grep -qE '^[0-9]+\\.[0-9]+\\.[0-9]+$'; then\n+              echo \"Invalid new version: $NEW\"\n+              exit 1\n+            fi\n+            grep -q \"$CURRENT\" README.md || { echo \"Current version not found in README.md\"; exit 1; }\n+            grep -q \"$CURRENT\" MCP_README.md || { echo \"Current version not found in MCP_README.md\"; exit 1; }\n+            sed -i \"s/$CURRENT/$NEW/g\" README.md MCP_README.md\n+            git config user.name \"github-actions[bot]\"\n+            git config user.email \"41898282+github-actions[bot]@users.noreply.github.com\"\n+            git add README.md MCP_README.md\n+            git commit -m \"Bump version to $NEW\"\n+            git push\n+            git tag \"$NEW\" -m \"$NEW\"\n+            git push origin \"$NEW\"\n+---\n+\n+# Release\n+\n+## Task\n+\n+Create a new release for Gearcoleco by bumping the patch version, committing, and tagging, following the established release process. Do this autonomously: nobody provides any input when dispatching this workflow. If anything is inconsistent or unexpected, stop and fail without making changes.\n+\n+## Procedure\n+\n+### Phase 1: Determine The Version\n+\n+1. Read README.md and find the current version `x.y.z`. The same number appears many times, used only in download links.\n+2. Read MCP_README.md and confirm it uses the same `x.y.z` version.\n+3. If README.md and MCP_README.md disagree on the version, or the version is not a clean `x.y.z`, call `noop` with a short explanation and stop.\n+4. Compute the new version by bumping only the patch component `z` by one, keeping the major and minor unchanged.\n+\n+### Phase 2: Create The Release\n+\n+Call the `create_release` safe-output tool with `current_version` set to the current `x.y.z` and `new_version` set to the bumped version. A privileged job updates every occurrence in README.md and MCP_README.md, commits `Bump version to <new_version>`, pushes, creates the tag `<new_version>`, and pushes the tag.\n+\n+## Style\n+\n+Do not edit any other files. Do not change the major or minor version. If anything is inconsistent or unexpected, stop and report instead of guessing.",
+          "snapshot_ref": "e5b234f1790ac9ed4e681c568055825e1003b891",
+          "snapshot_blob_sha": "137de5097b3971b35fa1d9fcb785e24bb850e33c",
+          "snapshot_file": "snapshots/Gearcoleco__drhelius__e5b234f1790ac9ed4e681c568055825e1003b891__release.md",
+          "snapshot_bytes": 3970,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearcoleco\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearcoleco\",\"generated_workflow_path\":\".github/workflows/release.lock.yml\",\"generated_workflow_file\":\"release.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearcoleco/blob/dd64cea4fd0a52f78635b71af526b0632f3570cf/.github/workflows/release.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearcoleco:.github/workflows/release.md",
+      "source_full_name": "drhelius/Gearcoleco",
+      "md_path": ".github/workflows/release.md",
+      "commit_sha": "22bdcd12b5a7dfbb51bade1018893933b2bcd421",
+      "authored_at": "2026-06-29T18:13:55Z",
+      "committed_at": "2026-06-29T18:13:55Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "570891cbdcc6af19e39dee638bfdd71ac6c9c8d0"
+      ],
+      "tree_sha": "a8deeb6ac01201b9221d14fa25cbc22f5ff9dea8",
+      "html_url": "https://github.com/drhelius/Gearcoleco/commit/22bdcd12b5a7dfbb51bade1018893933b2bcd421",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearcoleco:.github/workflows/release.md",
+          "source_full_name": "drhelius/Gearcoleco",
+          "md_path": ".github/workflows/release.md",
+          "commit_sha": "22bdcd12b5a7dfbb51bade1018893933b2bcd421",
+          "committed_at": "2026-06-29T18:13:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 2,
+          "file_changes": 6,
+          "file_patch": "@@ -24,10 +24,11 @@ safe-outputs:\n   allowed-github-references: []\n   jobs:\n     create-release:\n-      description: \"Bump the patch version in README.md and MCP_README.md, commit, push, tag, and push the tag.\"\n+      description: \"Bump the patch version in README.md and MCP_README.md, commit, push, tag, push the tag, and trigger the build.\"\n       runs-on: ubuntu-latest\n       permissions:\n         contents: write\n+        actions: write\n       output: \"Release created.\"\n       env:\n         GH_TOKEN: ${{ github.token }}\n@@ -75,6 +76,7 @@ safe-outputs:\n             git push\n             git tag \"$NEW\" -m \"$NEW\"\n             git push origin \"$NEW\"\n+            gh workflow run \"Build and Release\" --ref \"$NEW\"\n ---\n \n # Release\n@@ -94,7 +96,7 @@ Create a new release for Gearcoleco by bumping the patch version, committing, an\n \n ### Phase 2: Create The Release\n \n-Call the `create_release` safe-output tool with `current_version` set to the current `x.y.z` and `new_version` set to the bumped version. A privileged job updates every occurrence in README.md and MCP_README.md, commits `Bump version to <new_version>`, pushes, creates the tag `<new_version>`, and pushes the tag.\n+Call the `create_release` safe-output tool with `current_version` set to the detected `x.y.z` and `new_version` set to the bumped version. A privileged job updates every occurrence in README.md and MCP_README.md, commits `Bump version to <new_version>`, pushes, creates the tag `<new_version>`, pushes the tag, and triggers the Build and Release workflow at that tag so the draft release is created.\n \n ## Style\n ",
+          "snapshot_ref": "22bdcd12b5a7dfbb51bade1018893933b2bcd421",
+          "snapshot_blob_sha": "5ead30ed1e4d81c099086e3510ee15bbf54ad2fb",
+          "snapshot_file": "snapshots/Gearcoleco__drhelius__22bdcd12b5a7dfbb51bade1018893933b2bcd421__release.md",
+          "snapshot_bytes": 4159,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearcoleco\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearcoleco\",\"generated_workflow_path\":\".github/workflows/release.lock.yml\",\"generated_workflow_file\":\"release.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearcoleco/blob/dd64cea4fd0a52f78635b71af526b0632f3570cf/.github/workflows/release.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

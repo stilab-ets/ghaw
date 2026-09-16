@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/daily-elixir-credo-snippet-audit.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/daily-elixir-credo-snippet-audit.lock.yml",
+      "generated_workflow_file": "daily-elixir-credo-snippet-audit.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-elixir-credo-snippet-audit.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T11:42:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+      "commit_sha": "3fa71b5a2b43abf8a59b4a6ed58a2e2b245d9934",
+      "authored_at": "2026-07-09T02:16:03Z",
+      "committed_at": "2026-07-09T02:16:03Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: expose erl in AWF sandbox when using runtimes.elixir (#44283)",
+      "parent_shas": [
+        "afedbd93cfaf6453bb0f4c79754ae9d19720776f"
+      ],
+      "tree_sha": "10d6c5f8836132f4a3a2489fee8124c96a068389",
+      "html_url": "https://github.com/github/gh-aw/commit/3fa71b5a2b43abf8a59b4a6ed58a2e2b245d9934",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+          "commit_sha": "3fa71b5a2b43abf8a59b4a6ed58a2e2b245d9934",
+          "committed_at": "2026-07-09T02:16:03Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 137,
+          "file_deletions": 0,
+          "file_changes": 137,
+          "file_patch": "@@ -0,0 +1,137 @@\n+---\n+private: true\n+emoji: \"🧪\"\n+name: Daily Elixir Credo Snippet Audit\n+description: Uses Credo daily to lint Elixir snippets in repository markdown and proposes fixes\n+on:\n+  schedule:\n+    - cron: \"daily around 8:00 on weekdays\"\n+  workflow_dispatch:\n+max-daily-ai-credits: 10000\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tracker-id: daily-elixir-credo-snippet-audit\n+engine:\n+  id: claude\n+timeout-minutes: 45\n+strict: true\n+runtimes:\n+  elixir:\n+    version: \"1.17\"\n+network:\n+  allowed:\n+    - defaults\n+    - hex.pm\n+    - repo.hex.pm\n+    - builds.hex.pm\n+tools:\n+  cli-proxy: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+  bash:\n+    - \"*\"\n+  edit:\n+imports:\n+  - uses: shared/daily-pr-base.md\n+    with:\n+      title-prefix: \"[elixir-credo] \"\n+      expires: 3d\n+      labels: [automation, elixir, docs]\n+      reviewers: [copilot]\n+sandbox:\n+  agent:\n+    sudo: false\n+steps:\n+  - name: Install Credo tooling project\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent/elixir-credo\n+      cd /tmp/gh-aw/agent/elixir-credo\n+      mix new credo_audit --sup --force\n+      cd credo_audit\n+      cat > mix.exs <<'EOF'\n+      defmodule CredoAudit.MixProject do\n+        use Mix.Project\n+\n+        def project do\n+          [\n+            app: :credo_audit,\n+            version: \"0.1.0\",\n+            elixir: \"~> 1.17\",\n+            start_permanent: Mix.env() == :prod,\n+            deps: deps()\n+          ]\n+        end\n+\n+        def application do\n+          [\n+            extra_applications: [:logger]\n+          ]\n+        end\n+\n+        defp deps do\n+          [\n+            {:credo, \"~> 1.7\", only: [:dev, :test], runtime: false}\n+          ]\n+        end\n+      end\n+      EOF\n+      MIX_ENV=dev mix deps.get\n+      MIX_ENV=dev mix deps.compile\n+      MIX_ENV=dev mix credo --version\n+features:\n+  gh-aw-detection: true\n+---\n+\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# Daily Elixir Credo Snippet Audit\n+\n+Use Credo to improve Elixir quality signals in this repository by linting Elixir\n+snippets embedded in markdown content.\n+\n+## Context\n+\n+- Repository: `${{ github.repository }}`\n+- Workspace: `${{ github.workspace }}`\n+- Credo project path: `/tmp/gh-aw/agent/elixir-credo/credo_audit`\n+\n+The workflow pre-step has already installed Credo and dependencies. Use:\n+\n+```bash\n+cd /tmp/gh-aw/agent/elixir-credo/credo_audit\n+MIX_ENV=dev mix credo --strict --format oneline\n+```\n+\n+## Task\n+\n+1. Find fenced Elixir snippets in markdown files under:\n+   - `docs/`\n+   - `.github/workflows/`\n+2. Materialize snippets into temporary `.exs` files under:\n+   `/tmp/gh-aw/agent/elixir-credo/snippets/`.\n+3. Run Credo in strict mode against those files.\n+4. If Credo reports actionable issues:\n+   - Prefer fixing the source markdown snippets directly.\n+   - Keep fixes minimal and preserve snippet intent.\n+5. If no actionable fixes are needed, use `noop` and include summary counts.\n+\n+## Constraints\n+\n+- Do not edit generated `.lock.yml` files.\n+- Keep changes scoped to markdown files containing Elixir snippets.\n+- If edits are made, create one PR with title prefix `[elixir-credo] ` using\n+  the configured safe output.\n+\n+### Output Format\n+\n+Use `###` or lower headings.\n+\n+Structure reports as: overview → key metrics/issues → collapsible detail →\n+next actions.\n+\n+Wrap long details in\n+`<details><summary><b>View Details</b></summary>...</details>`.",
+          "snapshot_ref": "3fa71b5a2b43abf8a59b4a6ed58a2e2b245d9934",
+          "snapshot_blob_sha": "f6884ca67fee5e129fe07815bfb615be10dbf4aa",
+          "snapshot_file": "snapshots/gh-aw__github__3fa71b5a2b43abf8a59b4a6ed58a2e2b245d9934__daily-elixir-credo-snippet-audit.md",
+          "snapshot_bytes": 3324,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-elixir-credo-snippet-audit.lock.yml\",\"generated_workflow_file\":\"daily-elixir-credo-snippet-audit.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-elixir-credo-snippet-audit.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+      "commit_sha": "00c0b134a79b615f828d56698a13a19b4e7527be",
+      "authored_at": "2026-07-10T15:37:06Z",
+      "committed_at": "2026-07-10T15:37:06Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Daily Elixir Credo Snippet Audit bootstrap step for Mix compatibility (#44762)",
+      "parent_shas": [
+        "8b5184560bc2dada30bb6d273b72ac59ac590498"
+      ],
+      "tree_sha": "62310b51b5ed1b98dae0c035687161a494d4faef",
+      "html_url": "https://github.com/github/gh-aw/commit/00c0b134a79b615f828d56698a13a19b4e7527be",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+          "commit_sha": "00c0b134a79b615f828d56698a13a19b4e7527be",
+          "committed_at": "2026-07-10T15:37:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -50,7 +50,7 @@ steps:\n       set -euo pipefail\n       mkdir -p /tmp/gh-aw/agent/elixir-credo\n       cd /tmp/gh-aw/agent/elixir-credo\n-      mix new credo_audit --sup --force\n+      mix new credo_audit --sup\n       cd credo_audit\n       cat > mix.exs <<'EOF'\n       defmodule CredoAudit.MixProject do",
+          "snapshot_ref": "00c0b134a79b615f828d56698a13a19b4e7527be",
+          "snapshot_blob_sha": "328960a5e620a21d2b5003503b936778faa862ba",
+          "snapshot_file": "snapshots/gh-aw__github__00c0b134a79b615f828d56698a13a19b4e7527be__daily-elixir-credo-snippet-audit.md",
+          "snapshot_bytes": 3316,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-elixir-credo-snippet-audit.lock.yml\",\"generated_workflow_file\":\"daily-elixir-credo-snippet-audit.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-elixir-credo-snippet-audit.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+      "commit_sha": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+      "authored_at": "2026-07-20T08:57:28Z",
+      "committed_at": "2026-07-20T08:57:28Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: enable evals in 64 agentic workflows (#46774)",
+      "parent_shas": [
+        "e1781d5df4cfe3027452bb4b5d206db82b035a71"
+      ],
+      "tree_sha": "d0e212d2340ccfd9923388017178ac3c18fcb1f9",
+      "html_url": "https://github.com/github/gh-aw/commit/b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-elixir-credo-snippet-audit.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-elixir-credo-snippet-audit.md",
+          "commit_sha": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+          "committed_at": "2026-07-20T08:57:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -84,6 +84,11 @@ steps:\n       MIX_ENV=dev mix credo --version\n features:\n   gh-aw-detection: true\n+evals:\n+  - id: elixir_snippets_linted\n+    question: Did the agent use Credo to lint Elixir snippets found in repository markdown files?\n+  - id: fixes_proposed_or_noop\n+    question: Were fixes proposed in a PR or issue, or was noop used when no linting violations were found?\n ---\n \n {{#runtime-import? .github/shared-instructions.md}}",
+          "snapshot_ref": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+          "snapshot_blob_sha": "3ab03d12d677c04ca02e804bbf580c2922112cdb",
+          "snapshot_file": "snapshots/gh-aw__github__b124884b3e2d09c0b3a0c948f7b27c8d863e2a39__daily-elixir-credo-snippet-audit.md",
+          "snapshot_bytes": 3591,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-elixir-credo-snippet-audit.lock.yml\",\"generated_workflow_file\":\"daily-elixir-credo-snippet-audit.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-elixir-credo-snippet-audit.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

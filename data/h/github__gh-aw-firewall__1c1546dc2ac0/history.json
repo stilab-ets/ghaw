@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/smoke-sink-visibility-blocked.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/smoke-sink-visibility-blocked.lock.yml",
+      "generated_workflow_file": "smoke-sink-visibility-blocked.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-sink-visibility-blocked.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:48:25+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+      "commit_sha": "28fc3af4c11c905ed19e7cb6ffa65c36d58ee2e9",
+      "authored_at": "2026-07-12T19:30:19Z",
+      "committed_at": "2026-07-12T19:30:19Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add smoke tests for sink visibility (private-to-public-flows) (#6148)\n\n* feat: add smoke tests for sink visibility (private-to-public-flows)\n\nAdd two workflow .md files to smoke-test the MCP Gateway\nprivate-to-public-flows frontmatter from gh-aw#45113:\n\n- smoke-sink-visibility-blocked.md: Verifies that the default\n  sink-visibility enforcement blocks reads from private repo\n  github/agentic-workflows when private-to-public-flows is not set.\n\n- smoke-sink-visibility-allowed.md: Verifies that\n  private-to-public-flows: allow correctly disables enforcement,\n  permitting reads from the private repo.\n\nBoth workflows test gh CLI (mcpg proxy mode) and GitHub MCP tools\n(mcpg gateway mode) with GH_AW_CROSS_REPO_PAT for authentication.\nAll access is read-only.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix: remove pinned mcp gateway version, rely on compiler default\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "a36fe293277a85c2a779d89089b926ab89158556"
+      ],
+      "tree_sha": "4fcbc39cb416b9165888c860c1a038ca4432097a",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/28fc3af4c11c905ed19e7cb6ffa65c36d58ee2e9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+          "commit_sha": "28fc3af4c11c905ed19e7cb6ffa65c36d58ee2e9",
+          "committed_at": "2026-07-12T19:30:19Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 80,
+          "file_deletions": 0,
+          "file_changes": 80,
+          "file_patch": "@@ -0,0 +1,80 @@\n+---\n+name: Smoke Sink Visibility Blocked\n+description: >-\n+  Smoke test verifying that MCP Gateway sink-visibility enforcement blocks\n+  cross-repo reads from a private repository (github/agentic-workflows) when\n+  private-to-public-flows is NOT opted out. Tests both gh CLI (mcpg proxy mode)\n+  and GitHub MCP tools (mcpg gateway mode).\n+on:\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+engine:\n+  id: copilot\n+  version: 1.0.34\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  bash:\n+    - \"*\"\n+  github:\n+    github-token: ${{ secrets.GH_AW_CROSS_REPO_PAT }}\n+    toolsets: [repos]\n+    # NOTE: private-to-public-flows is intentionally NOT set here.\n+    # The MCP Gateway should enforce forcePublicRepos=true, blocking\n+    # access to the private repo github/agentic-workflows.\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+strict: false\n+max-turns: 10\n+timeout-minutes: 10\n+---\n+\n+# Smoke Test: Sink Visibility — Blocked (Default Enforcement)\n+\n+This test verifies that the MCP Gateway **blocks** reads from a private\n+repository when `private-to-public-flows` is not opted out.\n+\n+Target private repo: `github/agentic-workflows`\n+\n+**IMPORTANT: All access to github/agentic-workflows must be READ-ONLY.\n+Never create, update, or delete anything in that repository.**\n+\n+## Test 1 — gh CLI (mcpg proxy mode)\n+\n+Run the following bash command and capture the exit code and output:\n+\n+```bash\n+gh repo view github/agentic-workflows --json name 2>&1; echo \"EXIT_CODE=$?\"\n+```\n+\n+**Expected**: The command should FAIL (non-zero exit code or error message\n+indicating the repo is inaccessible / not found).\n+\n+## Test 2 — GitHub MCP tools (mcpg gateway mode)\n+\n+Call the MCP tool `get_file_contents` to read the root path (`/`) of\n+`github/agentic-workflows`:\n+- owner: `github`\n+- repo: `agentic-workflows`\n+- path: `/`\n+\n+**Expected**: The MCP call should FAIL with an error (repository not found,\n+access denied, or similar).\n+\n+## Report\n+\n+Summarize the results:\n+\n+| Test | Method | Expected | Actual | Status |\n+|------|--------|----------|--------|--------|\n+| 1 | gh CLI (proxy mode) | BLOCKED | ... | ✅/❌ |\n+| 2 | MCP tools (gateway mode) | BLOCKED | ... | ✅/❌ |\n+\n+- ✅ = access was correctly blocked (test passed)\n+- ❌ = access was unexpectedly allowed (test failed — sink visibility not enforced)\n+\n+Call `noop` with the summary table and overall PASS/FAIL status.",
+          "snapshot_ref": "28fc3af4c11c905ed19e7cb6ffa65c36d58ee2e9",
+          "snapshot_blob_sha": "9004206158c47173996657a5f9c5c4e7003856c3",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__28fc3af4c11c905ed19e7cb6ffa65c36d58ee2e9__smoke-sink-visibility-blocked.md",
+          "snapshot_bytes": 2354,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-sink-visibility-blocked.lock.yml\",\"generated_workflow_file\":\"smoke-sink-visibility-blocked.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-sink-visibility-blocked.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+      "commit_sha": "c96e8ef3e43ae245107cc2caaed72660cdf78892",
+      "authored_at": "2026-07-13T03:58:31Z",
+      "committed_at": "2026-07-13T03:58:31Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: add mode: gh-proxy to smoke-sink-visibility workflows (#6164)\n\n* fix: add mode: gh-proxy to smoke-sink-visibility workflows\n\nThe gh CLI was unauthenticated inside the AWF container because the\ndefault local mode doesn't set up the CLI proxy (DIFC proxy sidecar).\nAdding mode: gh-proxy tells the compiler to configure the cli-proxy\ncontainer so gh CLI calls are authenticated through the MCPG proxy.\n\nLock files need recompilation with the newer compiler that supports\nprivate-to-public-flows.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* compiled workflows\n\n* test: add forcePublicRepos: true to blocked lock file gateway config\n\nThis should make the MCP Gateway (and CLI proxy) deny reads from private\nrepos, which is needed for the sink-visibility-blocked smoke test to\nactually block access to github/agentic-workflows.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* test: set CLI_PROXY_POLICY repos to 'public' in blocked lock file\n\nThe CLI proxy guard policy had repos='all' which allows reading any repo\nincluding private ones. Change to repos='public' so the MCPG CLI proxy\nfilters out private repos like github/agentic-workflows.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* compiled workflows\n\n* compiled workflows\n\n* compiled workflows\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "35df7a1f66667766b3f38c79dc98308e92c9ea7e"
+      ],
+      "tree_sha": "350a272a6c9db234fdd84ca7b4cd1d864c1ebc0c",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/c96e8ef3e43ae245107cc2caaed72660cdf78892",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+          "commit_sha": "c96e8ef3e43ae245107cc2caaed72660cdf78892",
+          "committed_at": "2026-07-13T03:58:31Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -20,6 +20,7 @@ tools:\n   bash:\n     - \"*\"\n   github:\n+    mode: gh-proxy\n     github-token: ${{ secrets.GH_AW_CROSS_REPO_PAT }}\n     toolsets: [repos]\n     # NOTE: private-to-public-flows is intentionally NOT set here.",
+          "snapshot_ref": "c96e8ef3e43ae245107cc2caaed72660cdf78892",
+          "snapshot_blob_sha": "d9fec509c0f6605cd849d4f5b47db1a7977b5769",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__c96e8ef3e43ae245107cc2caaed72660cdf78892__smoke-sink-visibility-blocked.md",
+          "snapshot_bytes": 2373,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-sink-visibility-blocked.lock.yml\",\"generated_workflow_file\":\"smoke-sink-visibility-blocked.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-sink-visibility-blocked.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+      "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "authored_at": "2026-07-23T23:02:50Z",
+      "committed_at": "2026-07-23T23:02:50Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: use github.token for copilot-engine workflows (drop removed COPILOT_GITHUB_TOKEN secret) (#6556)\n\n* ci: add copilot-requests perm, use github.token for copilot engine\n\nThe COPILOT_GITHUB_TOKEN secret was removed from the repo, causing every\ncopilot-engine workflow that referenced secrets.COPILOT_GITHUB_TOKEN to\nsend an empty token to the api-proxy and get HTTP 401 from\napi.githubcopilot.com. Adding the copilot-requests: write permission lets\ngh-aw compile the built-in github.token as COPILOT_GITHUB_TOKEN instead,\nremoving the dependency on the deleted secret.\n\n* ci: fix BYOK copilot token source\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "9bfc72605e300278fe2ee93171b65db8ccaa9e6b"
+      ],
+      "tree_sha": "b4c8e557b01c145c68a8b3a54e0522567891ad4e",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-sink-visibility-blocked.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-sink-visibility-blocked.md",
+          "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "committed_at": "2026-07-23T23:02:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -8,6 +8,7 @@ description: >-\n on:\n   workflow_dispatch:\n permissions:\n+  copilot-requests: write\n   contents: read\n engine:\n   id: copilot",
+          "snapshot_ref": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "snapshot_blob_sha": "d512463b0eeb64b0920d6dee1b3f8b7dab8e3b4f",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__02cb22631932cfbeae4d633edf8f0202dbbf6b5d__smoke-sink-visibility-blocked.md",
+          "snapshot_bytes": 2399,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-sink-visibility-blocked.lock.yml\",\"generated_workflow_file\":\"smoke-sink-visibility-blocked.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-sink-visibility-blocked.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/auth-doctor-updater.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/auth-doctor-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/auth-doctor-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/auth-doctor-updater.lock.yml",
+      "generated_workflow_file": "auth-doctor-updater.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/auth-doctor-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:47:54+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/auth-doctor-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/auth-doctor-updater.md",
+      "commit_sha": "af8ed0c37a8bc3525f1b7a93cad3e0472c36700b",
+      "authored_at": "2026-08-03T22:27:44Z",
+      "committed_at": "2026-08-03T22:27:44Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add Auth Doctor Updater workflow (#6898)\n\n* feat: add Auth Doctor workflow\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 79dfde80-9308-4d73-bd34-3ec5bc114cd7\n\n* fix: replace Auth Doctor with updater\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 79dfde80-9308-4d73-bd34-3ec5bc114cd7\n\n* fix: make Auth Doctor Updater open docs PRs\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 79dfde80-9308-4d73-bd34-3ec5bc114cd7\n\n* fix: address dependency audit failures\n\nUse the available AJV release that avoids vulnerable fast-uri, and pin the docs build to a patched PostCSS release.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 79dfde80-9308-4d73-bd34-3ec5bc114cd7\n\n---------\n\nCopilot-Session: 79dfde80-9308-4d73-bd34-3ec5bc114cd7",
+      "parent_shas": [
+        "6dbec0d9cc25642beabae02809c4bcbe3ee77370"
+      ],
+      "tree_sha": "2541acf49ef45609d1e6e54d8516678a7eb31462",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/af8ed0c37a8bc3525f1b7a93cad3e0472c36700b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/auth-doctor-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/auth-doctor-updater.md",
+          "commit_sha": "af8ed0c37a8bc3525f1b7a93cad3e0472c36700b",
+          "committed_at": "2026-08-03T22:27:44Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 213,
+          "file_deletions": 0,
+          "file_changes": 213,
+          "file_patch": "@@ -0,0 +1,213 @@\n+---\n+name: Auth Doctor Updater\n+description: Daily workflow that reviews provider authentication guidance and repository changes, updates approved AWF authentication and API-proxy docs, and opens a pull request.\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+  skip-if-match:\n+    query: 'is:pr is:open in:title \"[docs] auth:\"'\n+    max: 1\n+permissions:\n+  copilot-requests: write\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  web-fetch:\n+  bash: true\n+  cache-memory: true\n+  edit:\n+sandbox:\n+  agent:\n+    id: awf\n+network:\n+  allowed:\n+    - github\n+    - platform.openai.com\n+    - learn.microsoft.com\n+    - docs.aws.amazon.com\n+    - cloud.google.com\n+    - docs.anthropic.com\n+    - platform.claude.com\n+    - ai.google.dev\n+    - docs.github.com\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+  create-pull-request:\n+    title-prefix: \"[docs] auth: \"\n+    labels: [documentation, ai-generated]\n+    reviewers: copilot\n+    draft: false\n+    allowed-files:\n+      - README.md\n+      - docs/api-proxy-sidecar.md\n+      - docs/auth-matrix.md\n+      - docs/authentication-architecture.md\n+      - docs/awf-config-spec.md\n+      - docs/environment.md\n+      - docs/github_actions.md\n+      - docs/security.md\n+      - docs/usage.md\n+timeout-minutes: 20\n+steps:\n+  - name: Compute scan window\n+    run: |\n+      # Look back two days so a missed daily run does not create a coverage gap.\n+      # Overlap is de-duplicated against existing documentation and proposals.\n+      SINCE=$(date -u -d '2 days ago' +%Y-%m-%d)\n+      mkdir -p /tmp/gh-aw/agent\n+      echo \"$SINCE\" > /tmp/gh-aw/agent/scan-since.txt\n+      echo \"Scanning for authentication guidance updated since $SINCE\"\n+---\n+\n+# Auth Doctor Updater\n+\n+You maintain this repository's documentation for AWF authentication, API-proxy routing, and related gh-aw HTTP MCP GitHub OIDC behavior. Each day, reconcile current repository implementation and recent changes with official provider guidance, apply precise corrections to approved documentation files, and open one pull request.\n+\n+Your only visible output is one documentation pull request through the configured safe output, or a `noop`.\n+\n+## Scan Window\n+\n+- **Repository:** ${{ github.repository }}\n+- **Since (UTC date):** read from `/tmp/gh-aw/agent/scan-since.txt`\n+\n+Consider relevant issues, pull requests, releases, and documentation updates on or after the scan window. The window overlaps the previous daily run; de-duplicate anything already documented or covered by an open updater pull request.\n+\n+## Step 1 — Read the Current Documentation and Implementation\n+\n+Read these documentation files in full:\n+\n+```bash\n+cat README.md\n+cat docs/auth-matrix.md\n+cat docs/authentication-architecture.md\n+cat docs/api-proxy-sidecar.md\n+cat docs/environment.md\n+cat docs/awf-config-spec.md\n+cat docs/github_actions.md\n+```\n+\n+Verify concrete claims against current code, especially:\n+\n+```bash\n+cat src/services/api-proxy-env-config.ts\n+cat src/services/api-proxy-credential-env.ts\n+cat src/services/agent-environment/excluded-vars.ts\n+cat src/services/agent-environment/env-passthrough.ts\n+cat containers/api-proxy/management.js\n+cat containers/api-proxy/startup.js\n+cat containers/agent/api-proxy-health-check.sh\n+```\n+\n+Use `rg` to locate provider adapters, OIDC token providers, schema fields, tests, and any additional documentation that makes the same claim. Treat implementation and tests on the default branch as the source of truth for shipped AWF behavior.\n+\n+## Step 2 — Research Recent Repository Lessons\n+\n+Read the scan date, then search this repository for issues and pull requests updated since that date. Search several combinations of:\n+\n+`authentication`, `api-proxy`, `OIDC`, `WIF`, `OpenAI`, `Anthropic`, `Copilot`, `BYOK`, `Gemini`, `Vertex`, `Azure`, `Entra`, `AWS`, `Bedrock`, `GCP`, `workload identity`, `ACTIONS_ID_TOKEN`, `mcpg`, `github-oidc`, `authorization header`, `credential isolation`, `health`, `reflect`.\n+\n+Include open and closed issues plus merged pull requests. Read bodies and key comments to establish whether behavior is shipped on `main`, pending on another branch, or still unresolved. In particular, verify the current status of github/gh-aw-firewall#6894 and github/gh-aw#50053 before describing their behavior or compatibility work.\n+\n+## Step 3 — Check Official Provider Guidance\n+\n+Use `web-fetch` only for the allowlisted official documentation sites:\n+\n+- OpenAI API authentication and endpoints: `https://platform.openai.com/docs/`\n+- Azure OpenAI and Entra workload identity: `https://learn.microsoft.com/azure/ai-services/openai/` and `https://learn.microsoft.com/entra/workload-id/`\n+- AWS IAM OIDC federation and Bedrock runtime authentication: `https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc.html` and `https://docs.aws.amazon.com/bedrock/`\n+- GCP workload identity federation and Vertex AI authentication: `https://cloud.google.com/iam/docs/workload-identity-federation` and `https://cloud.google.com/vertex-ai/docs/authentication`\n+- Anthropic API authentication and WIF: `https://docs.anthropic.com/` and `https://platform.claude.com/docs/`\n+- Gemini API-key authentication: `https://ai.google.dev/gemini-api/docs/api-key`\n+- GitHub Actions OIDC: `https://docs.github.com/actions/concepts/security/openid-connect`\n+\n+Look for factual changes only: required permissions, supported auth modes, provider field names, audiences/scopes, endpoint or header behavior, route requirements, credential precedence, and deprecations. Ignore marketing or prose-only differences.\n+\n+Never submit credentials, repository data, workflow logs, or configuration values to provider documentation sites. These checks are public documentation reads only.\n+\n+## Step 4 — Audit the Supported Auth Matrix\n+\n+Confirm the documentation consistently covers:\n+\n+- static OpenAI and Anthropic keys;\n+- GitHub Copilot/GitHub auth and Copilot BYOK;\n+- static Gemini and Vertex API-key routes;\n+- Azure, AWS Bedrock, GCP Vertex, and Anthropic WIF through API-proxy OIDC;\n+- API-proxy enablement, provider route/listener availability, `/health`, and `/reflect`;\n+- required `id-token: write` and provider-specific non-secret configuration;\n+- unsupported or conflicting combinations, including Gemini API-key mode versus GCP WIF/Vertex;\n+- GitHub.com, GHEC, and GHES Copilot routing where supported.\n+\n+Keep the API proxy and MCP gateway as separate trust paths:\n+\n+- AWF owns the API-proxy sidecar and provider credential injection.\n+- gh-aw launches/configures mcpg in a runner-owned workflow step for HTTP MCP `auth.type: github-oidc`.\n+- AWF does not launch or configure mcpg.\n+- Actions OIDC request tokens, minted JWTs, exchanged cloud credentials, API keys, and authorization headers must never be exposed to the agent or reproduced in documentation examples.\n+\n+## Step 5 — Classify Each Finding\n+\n+For every candidate, choose one:\n+\n+- **Already accurate** — implementation and official guidance match the docs; skip.\n+- **Shipped behavior missing from docs** — make the narrowest addition and cite the merged source.\n+- **Stale or incorrect claim** — replace it with evidence-backed wording.\n+- **Pending behavior presented as shipped** — add a current-main caveat and link the pending work.\n+- **Cross-document inconsistency** — identify every file that must change together.\n+- **Unverified provider change** — do not propose an update; state what evidence is missing.\n+\n+Do not infer support from an unmerged pull request, a feature request, or provider documentation alone. AWF support requires current default-branch implementation and tests.\n+\n+## Step 6 — Avoid Duplicate Pull Requests\n+\n+Search open pull requests with `[docs] auth:` in the title. If an existing updater pull request covers the same findings, call `noop` instead of opening another pull request.\n+\n+## Step 7 — Apply and Validate Documentation Changes\n+\n+Edit only the files allowed by `safe-outputs.create-pull-request.allowed-files`. Do not modify source code, tests, schemas, workflow files, generated files, or dependencies.\n+\n+Before creating the pull request:\n+\n+1. Review the diff and remove unrelated or cosmetic changes.\n+2. Confirm every factual change has current-main implementation evidence and an official or repository source.\n+3. Keep terminology and links consistent across every affected auth document.\n+4. Check Markdown structure, relative links, code fences, tables, and examples.\n+5. Search the diff for token/key/JWT values and credential-bearing URLs. Remove any such content.\n+\n+## Output\n+\n+If concrete corrections were applied, call `create-pull-request` once. The title prefix, labels, reviewer, draft state, and file allowlist are already configured.\n+\n+Use this pull request body:\n+\n+### Summary\n+\n+- scan window and sources reviewed\n+- corrected authentication paths\n+- current-main versus pending behavior clarified\n+\n+### Documentation Changes\n+\n+List each changed file and the factual correction made.\n+\n+### Validation\n+\n+List the implementation/tests checked, Markdown/link review performed, and credential-leakage diff review.\n+\n+### Sources\n+\n+Link every repository issue/pull request and official provider page used. Use full URLs and do not include credential-bearing URLs or copied headers.\n+\n+If no concrete corrections were applied, call `noop` with the scan window and a one-line explanation. Never open an empty, speculative, or prose-only pull request.\n+\n+## Guardrails\n+\n+- Modify approved documentation files only. Use the safe output for branch, commit, and pull-request creation; never run `git commit`, `git push`, or `gh pr create`.\n+- Never print, inspect, request, decode, hash, or reproduce secret values, Actions OIDC request tokens, minted JWTs, exchanged cloud credentials, API keys, cookies, or authorization headers.\n+- Never run credential probes, token exchanges, inference requests, broad environment dumps, `docker inspect`, or `docker compose config`.\n+- Treat identifiers such as tenant IDs, client IDs, role ARNs, service-account emails, and federation resource names as configuration metadata, but redact user-specific values in proposals.\n+- Prefer the smallest evidence-backed correction and preserve valid existing guidance.\n+- Fail closed: if a claim cannot be verified safely, classify it as unverified rather than guessing.",
+          "snapshot_ref": "af8ed0c37a8bc3525f1b7a93cad3e0472c36700b",
+          "snapshot_blob_sha": "4672722b59e97f7703350873d0008172b06857ac",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__af8ed0c37a8bc3525f1b7a93cad3e0472c36700b__auth-doctor-updater.md",
+          "snapshot_bytes": 10237,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/auth-doctor-updater.lock.yml\",\"generated_workflow_file\":\"auth-doctor-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/auth-doctor-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

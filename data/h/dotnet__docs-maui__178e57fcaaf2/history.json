@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/docs-maui:.github/workflows/docs-from-code.md",
+    "source_full_name": "dotnet/docs-maui",
+    "source_owner": "dotnet",
+    "source_repo": "docs-maui",
+    "md_path": ".github/workflows/docs-from-code.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/docs-maui/blob/HEAD/.github/workflows/docs-from-code.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/docs-maui",
+      "generated_owner": "dotnet",
+      "generated_repo": "docs-maui",
+      "generated_workflow_path": ".github/workflows/docs-from-code.lock.yml",
+      "generated_workflow_file": "docs-from-code.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/docs-maui/blob/ca20831b3eb9229d60fa837d1b8b0a06bd75a959/.github/workflows/docs-from-code.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:25:15+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/docs-maui:.github/workflows/docs-from-code.md",
+      "source_full_name": "dotnet/docs-maui",
+      "md_path": ".github/workflows/docs-from-code.md",
+      "commit_sha": "01abb08dd487074f51fc0b5bb9d84d4d37295757",
+      "authored_at": "2026-05-07T18:48:48Z",
+      "committed_at": "2026-05-07T18:48:48Z",
+      "author_name": "Gerald Versluis",
+      "author_email": "gerald.versluis@microsoft.com",
+      "author_login": "jfversluis",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: Agentic workflow to create draft PRs from docs-from-code issues (#3309)\n\nWhen an issue labeled 'docs-from-code' is opened (by the maui-labs\npr-docs-check workflow), this workflow:\n1. Reads the issue body for source PR details and suggested changes\n2. Browses existing docs to understand current state\n3. Writes the documentation changes following MS Learn conventions\n4. Creates a draft PR with the changes\n5. Comments on the issue with a link to the PR\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "264820413207d96657604306a3bcbc1b35123dbd"
+      ],
+      "tree_sha": "6e55bec1d3342fc50f6f346dc7b3eb7ce28f0f94",
+      "html_url": "https://github.com/dotnet/docs-maui/commit/01abb08dd487074f51fc0b5bb9d84d4d37295757",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/docs-maui:.github/workflows/docs-from-code.md",
+          "source_full_name": "dotnet/docs-maui",
+          "md_path": ".github/workflows/docs-from-code.md",
+          "commit_sha": "01abb08dd487074f51fc0b5bb9d84d4d37295757",
+          "committed_at": "2026-05-07T18:48:48Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 133,
+          "file_deletions": 0,
+          "file_changes": 133,
+          "file_patch": "@@ -0,0 +1,133 @@\n+---\n+description: |\n+  Picks up documentation issues created by the maui-labs pr-docs-check workflow.\n+  When an issue with '[maui-labs docs]' in the title is opened, this workflow reads\n+  the issue body (which contains the source PR details and suggested changes),\n+  writes the documentation updates, and creates a draft PR.\n+\n+on:\n+  issues:\n+    types: [opened, labeled]\n+\n+if: >-\n+  startsWith(github.event.issue.title, '[maui-labs docs]')\n+  && github.repository_owner == 'dotnet'\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+tools:\n+  github:\n+    toolsets: [repos, issues, pull_requests]\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[maui-labs docs] \"\n+    labels: [docs-from-code]\n+    draft: true\n+    fallback-as-issue: false\n+  add-comment:\n+    hide-older-comments: true\n+    discussions: false\n+\n+timeout-minutes: 20\n+---\n+\n+# Docs from Code — Create Draft PR\n+\n+Read a `[maui-labs docs]` issue and create a draft PR with the documentation changes.\n+\n+## Context\n+\n+- **Issue Number**: `${{ github.event.issue.number }}`\n+- **Issue Title**: `${{ github.event.issue.title }}`\n+- **Repository**: `dotnet/docs-maui`\n+\n+## Step 1: Read the Issue\n+\n+Read the full issue body for issue #`${{ github.event.issue.number }}`. The issue\n+was created by an automated workflow on `dotnet/maui-labs` and contains:\n+\n+- **Source PR** — link to the maui-labs PR that triggered this\n+- **Summary of Changes** — what user-facing changes were made\n+- **Documentation Pages Affected** — which files need updating\n+- **Suggested Changes** — specific text, code blocks, and sections to add or modify\n+\n+Extract all of this information. If the issue body is empty or doesn't contain\n+a source PR link, comment on the issue explaining it's missing required information\n+and **stop**.\n+\n+## Step 2: Browse Existing Documentation\n+\n+Browse the documentation in this repository to understand the current state.\n+The developer-tools documentation lives under `docs/developer-tools/`:\n+\n+**CLI documentation** (`docs/developer-tools/cli/`):\n+- `index.md` — .NET MAUI CLI overview\n+- `environment-diagnostics.md` — Environment diagnostics with `maui doctor`\n+- `android-management.md` — Android SDK and emulator management\n+- `device-management.md` — Device management\n+\n+**DevFlow documentation** (`docs/developer-tools/devflow/`):\n+- `index.md` — DevFlow overview\n+- `visual-tree-screenshots.md` — Visual tree inspection and screenshots\n+- `element-interaction.md` — Element interaction and automation\n+- `blazor-cdp.md` — Blazor WebView debugging with CDP\n+- `mcp-server.md` — MCP server for AI agents\n+- `network-profiling.md` — Network monitoring and profiling\n+- `broker.md` — DevFlow broker architecture\n+- `setup-windows.md` — DevFlow Windows setup\n+- `setup-android.md` — DevFlow Android setup\n+- `setup-apple.md` — DevFlow Apple platforms setup\n+\n+Also check:\n+- `docs/developer-tools/index.md` — Landing page\n+- `docs/TOC.yml` — Table of contents\n+\n+Read the specific pages mentioned in the issue's \"Documentation Pages Affected\"\n+section to understand what's already documented.\n+\n+## Step 3: Write Documentation Changes\n+\n+Based on the issue's \"Suggested Changes\" section, make the actual file changes:\n+\n+- **For updates to existing pages**: Edit the relevant `.md` files in place\n+- **For new pages**: Create new `.md` files in the appropriate directory\n+\n+Follow these MS Learn documentation conventions:\n+- **Frontmatter**: Every page needs `title`, `description`, and `ms.date` (format: `MM/DD/YYYY`)\n+- **Headings**: Use `#` for the page title (must match frontmatter `title`), `##` for sections\n+- **Code blocks**: Use triple backticks with language identifier (e.g., `csharp`, `bash`, `xml`)\n+- **Notes/warnings**: Use `> [!NOTE]`, `> [!IMPORTANT]`, `> [!WARNING]`\n+- **Cross-references**: Use relative paths for internal links (e.g., `[DevFlow overview](../devflow/index.md)`)\n+- **TOC.yml**: If adding new pages, add an entry under the appropriate section with `name` and `href`\n+- **ms.date**: Set to today's date on any page you modify\n+\n+## Step 4: Create Draft PR\n+\n+Create a draft pull request with:\n+\n+**Branch name**: Use `docs-from-code/<issue-number>` (e.g., `docs-from-code/3302`)\n+\n+**Title**: A clear, concise title describing the documentation work\n+(the `[maui-labs docs]` prefix will be added automatically)\n+\n+**Description** that includes:\n+- `Closes #<issue-number>` to auto-close the issue when merged\n+- A link to the source maui-labs PR (from the issue body)\n+- A summary of what documentation was added or changed\n+- A list of files modified or created\n+\n+## Step 5: Comment on the Issue\n+\n+Comment on the issue with:\n+- A message that a draft PR has been created\n+- A link to the draft PR\n+- A note that it needs human review before merging",
+          "snapshot_ref": "01abb08dd487074f51fc0b5bb9d84d4d37295757",
+          "snapshot_blob_sha": "ec089f47357060b23a9995041fe58624d31721a9",
+          "snapshot_file": "snapshots/docs-maui__dotnet__01abb08dd487074f51fc0b5bb9d84d4d37295757__docs-from-code.md",
+          "snapshot_bytes": 4784,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/docs-maui\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"docs-maui\",\"generated_workflow_path\":\".github/workflows/docs-from-code.lock.yml\",\"generated_workflow_file\":\"docs-from-code.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/docs-maui/blob/ca20831b3eb9229d60fa837d1b8b0a06bd75a959/.github/workflows/docs-from-code.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/docs-maui:.github/workflows/docs-from-code.md",
+      "source_full_name": "dotnet/docs-maui",
+      "md_path": ".github/workflows/docs-from-code.md",
+      "commit_sha": "bcb23dd9b3b5821ecf979063aaecfeba82f44448",
+      "authored_at": "2026-05-08T15:03:25Z",
+      "committed_at": "2026-05-08T15:03:25Z",
+      "author_name": "Gerald Versluis",
+      "author_email": "gerald.versluis@microsoft.com",
+      "author_login": "jfversluis",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: Remove labeled trigger, add workflow_dispatch for manual runs (#3312)\n\n- Remove 'labeled' event type (caused false triggers from triage bot)\n- Keep only 'opened' (when maui-labs creates the issue)\n- Add workflow_dispatch with issue_number input for manual testing\n- Update prompt to handle both trigger types\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "629cba3e1755b441477d5bba30d5f1aebcd63a77"
+      ],
+      "tree_sha": "f36fcf18ef25388f12247fd6cee5753598e58d5a",
+      "html_url": "https://github.com/dotnet/docs-maui/commit/bcb23dd9b3b5821ecf979063aaecfeba82f44448",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/docs-maui:.github/workflows/docs-from-code.md",
+          "source_full_name": "dotnet/docs-maui",
+          "md_path": ".github/workflows/docs-from-code.md",
+          "commit_sha": "bcb23dd9b3b5821ecf979063aaecfeba82f44448",
+          "committed_at": "2026-05-08T15:03:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 12,
+          "file_deletions": 5,
+          "file_changes": 17,
+          "file_patch": "@@ -7,7 +7,13 @@ description: |\n \n on:\n   issues:\n-    types: [opened, labeled]\n+    types: [opened]\n+  workflow_dispatch:\n+    inputs:\n+      issue_number:\n+        description: \"Issue number to process\"\n+        required: true\n+        type: string\n \n if: >-\n   startsWith(github.event.issue.title, '[maui-labs docs]')\n@@ -46,14 +52,15 @@ Read a `[maui-labs docs]` issue and create a draft PR with the documentation cha\n \n ## Context\n \n-- **Issue Number**: `${{ github.event.issue.number }}`\n-- **Issue Title**: `${{ github.event.issue.title }}`\n+- **Issue Number**: `${{ github.event.issue.number || github.event.inputs.issue_number }}`\n - **Repository**: `dotnet/docs-maui`\n \n ## Step 1: Read the Issue\n \n-Read the full issue body for issue #`${{ github.event.issue.number }}`. The issue\n-was created by an automated workflow on `dotnet/maui-labs` and contains:\n+Read the full issue body for issue #`${{ github.event.issue.number || github.event.inputs.issue_number }}`.\n+If triggered via `workflow_dispatch`, use the `issue_number` input.\n+\n+The issue was created by an automated workflow on `dotnet/maui-labs` and contains:\n \n - **Source PR** — link to the maui-labs PR that triggered this\n - **Summary of Changes** — what user-facing changes were made",
+          "snapshot_ref": "bcb23dd9b3b5821ecf979063aaecfeba82f44448",
+          "snapshot_blob_sha": "3ea5b97be6297e1cf263c7d7d40aac09b751b2f0",
+          "snapshot_file": "snapshots/docs-maui__dotnet__bcb23dd9b3b5821ecf979063aaecfeba82f44448__docs-from-code.md",
+          "snapshot_bytes": 5007,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/docs-maui\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"docs-maui\",\"generated_workflow_path\":\".github/workflows/docs-from-code.lock.yml\",\"generated_workflow_file\":\"docs-from-code.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/docs-maui/blob/ca20831b3eb9229d60fa837d1b8b0a06bd75a959/.github/workflows/docs-from-code.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

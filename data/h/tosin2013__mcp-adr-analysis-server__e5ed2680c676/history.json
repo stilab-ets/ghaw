@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/deployment-pattern-validation.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/deployment-pattern-validation.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/deployment-pattern-validation.lock.yml",
+      "generated_workflow_file": "deployment-pattern-validation.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/deployment-pattern-validation.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/deployment-pattern-validation.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/deployment-pattern-validation.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 224,
+          "file_deletions": 0,
+          "file_changes": 224,
+          "file_patch": "@@ -0,0 +1,224 @@\n+---\n+name: 'Deployment Pattern Validation'\n+description: 'Validates pattern schemas, detection logic, bootstrap tool, deployment readiness, and documentation for all infrastructure patterns'\n+on:\n+  pull_request:\n+    paths:\n+      - 'patterns/**'\n+      - 'src/tools/bootstrap-validation-loop-tool.ts'\n+      - 'src/tools/deployment-readiness-tool.ts'\n+      - 'src/utils/pattern-loader.ts'\n+  push:\n+    branches:\n+      - main\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+  pull-requests: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[pattern-validation]'\n+  add-comment:\n+tools:\n+  bash: true\n+  github:\n+    toolsets: [issues, pull_requests]\n+---\n+\n+# Deployment Pattern Validation\n+\n+You validate the deployment pattern framework: pattern schemas, automatic detection logic, the bootstrap validation tool, deployment readiness checks, and pattern documentation completeness.\n+\n+## Context\n+\n+The mcp-adr-analysis-server includes a **Validated Patterns Framework** in `patterns/infrastructure/`. These YAML patterns are authoritative deployment templates that LLMs query for platform-specific guidance.\n+\n+**Available patterns**:\n+\n+- `kubernetes.yaml` — Container orchestration with kubectl\n+- `firebase.yaml` — Production Firebase serverless deployment\n+- `firebase-emulators.yaml` — Local Firebase testing (emulator-first workflow)\n+\n+**Each pattern must have**:\n+\n+- `authoritativeSources` — URLs with priority (1-10) for LLMs to query\n+- `deploymentPhases` — Ordered deployment steps with commands\n+- `validationChecks` — Critical checks with remediation steps\n+- `detectionHints` — Files/patterns for automatic detection with confidence scores\n+\n+**Key tools**:\n+\n+- `bootstrap-validation-loop-tool.ts` — Auto-detects patterns based on project files\n+- `deployment-readiness-tool.ts` — Zero-tolerance validation with hard blocking on failures\n+\n+## Validation Steps\n+\n+### Step 1: Run Pattern Schema Validation\n+\n+```bash\n+npm run validate:patterns\n+```\n+\n+If this command is not available, proceed to manual validation in Step 3.\n+\n+### Step 2: Test Pattern Detection\n+\n+```bash\n+npm test -- tests/utils/pattern-loader.test.ts --verbose\n+```\n+\n+### Step 3: Validate All Infrastructure Patterns\n+\n+Load and validate each pattern file programmatically:\n+\n+```bash\n+node -e \"\n+  import { loadDeploymentPattern } from './dist/src/utils/pattern-loader.js';\n+  import fs from 'fs';\n+  import path from 'path';\n+\n+  const patternsDir = './patterns/infrastructure';\n+  const patterns = fs.readdirSync(patternsDir)\n+    .filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));\n+\n+  console.log('Found patterns:', patterns);\n+\n+  let allValid = true;\n+  for (const pattern of patterns) {\n+    try {\n+      const patternName = path.basename(pattern, path.extname(pattern));\n+      const loaded = loadDeploymentPattern(patternName);\n+\n+      if (!loaded.authoritativeSources || loaded.authoritativeSources.length === 0) {\n+        console.error(patternName + ': Missing authoritativeSources');\n+        allValid = false;\n+        continue;\n+      }\n+\n+      if (!loaded.deploymentPhases || loaded.deploymentPhases.length === 0) {\n+        console.error(patternName + ': Missing deploymentPhases');\n+        allValid = false;\n+        continue;\n+      }\n+\n+      if (!loaded.validationChecks) {\n+        console.error(patternName + ': Missing validationChecks');\n+        allValid = false;\n+        continue;\n+      }\n+\n+      console.log(patternName + ': Valid');\n+    } catch (error) {\n+      console.error(patternName + ':', error.message);\n+      allValid = false;\n+    }\n+  }\n+\n+  if (!allValid) {\n+    process.exit(1);\n+  }\n+\n+  console.log('All patterns validated successfully');\n+\"\n+```\n+\n+### Step 4: Test Bootstrap Validation Tool\n+\n+```bash\n+npm test -- tests/tools/bootstrap-validation-loop-tool.test.ts --verbose\n+```\n+\n+### Step 5: Test Deployment Readiness Tool\n+\n+```bash\n+npm test -- tests/tools/deployment-readiness-tool.test.ts --verbose\n+```\n+\n+### Step 6: Validate Pattern Documentation Completeness\n+\n+For each pattern file in `patterns/infrastructure/*.yaml`, verify it contains the required sections:\n+\n+```bash\n+for pattern in patterns/infrastructure/*.yaml; do\n+  echo \"Checking $pattern...\"\n+\n+  if ! grep -q \"authoritativeSources\" \"$pattern\"; then\n+    echo \"Missing authoritativeSources in $pattern\"\n+    exit 1\n+  fi\n+\n+  if ! grep -q \"deploymentPhases\" \"$pattern\"; then\n+    echo \"Missing deploymentPhases in $pattern\"\n+    exit 1\n+  fi\n+\n+  if ! grep -q \"detectionHints\" \"$pattern\"; then\n+    echo \"Missing detectionHints in $pattern\"\n+    exit 1\n+  fi\n+\n+  echo \"$pattern validated\"\n+done\n+\n+echo \"All pattern documentation validated\"\n+```\n+\n+## On Failure\n+\n+If any step fails:\n+\n+1. **For PR events**: Add a comment to the PR with:\n+   - Which pattern(s) failed validation\n+   - Which required section is missing or malformed\n+   - Link to the pattern YAML structure documentation\n+\n+2. **For push/dispatch events**: Create an issue:\n+\n+**Title**: `[pattern-validation] {pattern name}: {failure description}`\n+\n+**Body**:\n+\n+```markdown\n+## Deployment Pattern Validation Failure\n+\n+### Patterns Validated\n+\n+| Pattern                 | Status      | Issue          |\n+| ----------------------- | ----------- | -------------- |\n+| kubernetes.yaml         | {pass/fail} | {issue if any} |\n+| firebase.yaml           | {pass/fail} | {issue if any} |\n+| firebase-emulators.yaml | {pass/fail} | {issue if any} |\n+\n+### Validation Steps\n+\n+| Step                           | Status      |\n+| ------------------------------ | ----------- |\n+| Schema validation              | {pass/fail} |\n+| Pattern detection tests        | {pass/fail} |\n+| Infrastructure pattern loading | {pass/fail} |\n+| Bootstrap validation tool      | {pass/fail} |\n+| Deployment readiness tool      | {pass/fail} |\n+| Documentation completeness     | {pass/fail} |\n+\n+### Failure Details\n+\n+{full error output}\n+\n+### Recommended Fix\n+\n+1. {step 1}\n+2. {step 2}\n+\n+---\n+\n+_Generated by Deployment Pattern Validation agentic workflow_\n+```\n+\n+## On Success\n+\n+- **For PR events**: Add a comment confirming all patterns validated successfully, listing each pattern\n+- **For push/dispatch events**: No issue needed\n+\n+---\n+\n+_Replaces: .github/agents/deployment-pattern-validation.yml_",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "447e5b7d2d442374973cda87b31743b687b8a06d",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__deployment-pattern-validation.md",
+          "snapshot_bytes": 6100,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/deployment-pattern-validation.lock.yml\",\"generated_workflow_file\":\"deployment-pattern-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/deployment-pattern-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/deployment-pattern-validation.md",
+      "commit_sha": "a5f9263e64f1d48f5d41f2505b66cee5da91b7fb",
+      "authored_at": "2026-02-16T18:29:58Z",
+      "committed_at": "2026-02-16T18:29:58Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: fix dependency installation for pattern validation workflows (#460)\n\nInstall build-essential and python3 for native module compilation\n(tree-sitter) in copilot-setup-steps and validate-patterns workflows,\nmatching the approach already used in test.yml. Add error-tolerant\nnpm install fallback and non-blocking tree-sitter rebuild. Update\nagent instructions with Step 0 for dependency setup and fallback\nguidance when npm is unavailable.\n\nCloses #441\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "0a38eccbfa521b5d1c391ae2926e5d2ea2d97a4f"
+      ],
+      "tree_sha": "ef13098a6a3b34090511dba947382e3f376fd002",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/a5f9263e64f1d48f5d41f2505b66cee5da91b7fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/deployment-pattern-validation.md",
+          "commit_sha": "a5f9263e64f1d48f5d41f2505b66cee5da91b7fb",
+          "committed_at": "2026-02-16T18:29:58Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 30,
+          "file_deletions": 1,
+          "file_changes": 31,
+          "file_patch": "@@ -53,20 +53,45 @@ The mcp-adr-analysis-server includes a **Validated Patterns Framework** in `patt\n \n ## Validation Steps\n \n+### Step 0: Install Dependencies\n+\n+Install build tools required for native module compilation (e.g., tree-sitter), then install npm dependencies with error-tolerant fallbacks.\n+\n+```bash\n+# Install build tools for native modules (requires sudo)\n+sudo apt-get update -qq && sudo apt-get install -y build-essential python3 || echo \"⚠️ Could not install build tools (may already be present)\"\n+\n+# Install npm dependencies with fallback\n+if ! npm ci; then\n+  echo \"⚠️ npm ci failed, falling back to npm install...\"\n+  npm install\n+fi\n+\n+# Rebuild tree-sitter native bindings (non-blocking)\n+echo \"🔨 Rebuilding tree-sitter native bindings...\"\n+if ! npm rebuild tree-sitter; then\n+  echo \"⚠️ Tree-sitter rebuild failed, but continuing (tests handle graceful fallback)\"\n+fi\n+```\n+\n+If `npm` is not available or both install commands fail, you can still run the structural validation steps (Steps 3 and 6) using `grep` and shell commands directly.\n+\n ### Step 1: Run Pattern Schema Validation\n \n ```bash\n npm run validate:patterns\n ```\n \n-If this command is not available, proceed to manual validation in Step 3.\n+If this command is not available (e.g., npm install failed), proceed to manual validation in Step 3.\n \n ### Step 2: Test Pattern Detection\n \n ```bash\n npm test -- tests/utils/pattern-loader.test.ts --verbose\n ```\n \n+If npm/Jest is unavailable, skip to Step 3 for manual pattern validation.\n+\n ### Step 3: Validate All Infrastructure Patterns\n \n Load and validate each pattern file programmatically:\n@@ -128,12 +153,16 @@ node -e \"\n npm test -- tests/tools/bootstrap-validation-loop-tool.test.ts --verbose\n ```\n \n+If npm/Jest is unavailable, skip to Step 6 for structural validation using shell commands.\n+\n ### Step 5: Test Deployment Readiness Tool\n \n ```bash\n npm test -- tests/tools/deployment-readiness-tool.test.ts --verbose\n ```\n \n+If npm/Jest is unavailable, skip to Step 6 for structural validation using shell commands.\n+\n ### Step 6: Validate Pattern Documentation Completeness\n \n For each pattern file in `patterns/infrastructure/*.yaml`, verify it contains the required sections:",
+          "snapshot_ref": "a5f9263e64f1d48f5d41f2505b66cee5da91b7fb",
+          "snapshot_blob_sha": "0ac65d65553e2651260d326b954e86e9b2f7afc6",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__a5f9263e64f1d48f5d41f2505b66cee5da91b7fb__deployment-pattern-validation.md",
+          "snapshot_bytes": 7322,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/deployment-pattern-validation.lock.yml\",\"generated_workflow_file\":\"deployment-pattern-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/deployment-pattern-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/deployment-pattern-validation.md",
+      "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "authored_at": "2026-03-16T17:48:59Z",
+      "committed_at": "2026-03-16T17:48:59Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: add node ecosystem to gh-aw network allowlist for agentic workflows\n\nAll agentic workflows that run `npm ci` were failing because the gh-aw\nsandbox firewall blocked `nodejs.org`, preventing node-gyp from\ndownloading Node.js headers needed to compile tree-sitter native modules.\n\nAdd `network: allowed: [defaults, node]` to 7 workflow frontmatters:\n- deployment-pattern-validation.md\n- mcp-server-validation.md\n- esm-module-validation.md\n- knowledge-graph-validation.md\n- docs-noob-tester.md\n- mcp-tool-checker.md\n- ai-executor-integration.md\n\nThe `node` ecosystem identifier adds nodejs.org, npmjs.org, yarnpkg.com,\ndeno.land, bun.sh, and related domains to the firewall allowlist.\nRecompiled all lock files via `gh aw compile`.\n\nFixes #632\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2877451dca32cd49ad472fd7ef99825c028fe121"
+      ],
+      "tree_sha": "c6f58323d5517991601c231a1f6edcda0c151d60",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/deployment-pattern-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/deployment-pattern-validation.md",
+          "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "committed_at": "2026-03-16T17:48:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -23,6 +23,10 @@ tools:\n   bash: true\n   github:\n     toolsets: [issues, pull_requests]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n ---\n \n # Deployment Pattern Validation",
+          "snapshot_ref": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "snapshot_blob_sha": "c9b5a2473036a5343fd807485ae9cb0ecd9c6199",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__72f88fa814801e4acb65e1eaf7f4f0437de3fdef__deployment-pattern-validation.md",
+          "snapshot_bytes": 7368,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/deployment-pattern-validation.lock.yml\",\"generated_workflow_file\":\"deployment-pattern-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/deployment-pattern-validation.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

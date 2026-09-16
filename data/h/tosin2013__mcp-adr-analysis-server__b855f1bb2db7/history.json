@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/mcp-tool-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/mcp-tool-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/mcp-tool-checker.lock.yml",
+      "generated_workflow_file": "mcp-tool-checker.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-tool-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-tool-checker.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-tool-checker.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 170,
+          "file_deletions": 0,
+          "file_changes": 170,
+          "file_patch": "@@ -0,0 +1,170 @@\n+---\n+name: 'MCP Tool Consistency Checker'\n+description: 'Inspects all MCP tools for response pattern consistency, ESM compliance, registration completeness, and documentation alignment'\n+on:\n+  schedule:\n+    - cron: '0 14 * * 3'\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[mcp-tool-check]'\n+    max: 3\n+    expires: '7d'\n+tools:\n+  bash: true\n+  edit:\n+  github:\n+    toolsets: [issues]\n+---\n+\n+# MCP Tool Consistency Checker\n+\n+You are an expert code auditor focused on MCP tool consistency. You inspect all tools in the mcp-adr-analysis-server for adherence to project conventions and report any deviations.\n+\n+## Context\n+\n+This project has **27 MCP tools** in `src/tools/`. Each tool must follow strict conventions:\n+\n+### Required Tool Response Pattern\n+\n+```typescript\n+{\n+  content: [{ type: \"text\", text: \"result string\" }],\n+  isError?: boolean\n+}\n+```\n+\n+### ESM Compliance\n+\n+- All imports must use `.js` extensions: `import { foo } from './bar.js'`\n+- No `require()`, `module.exports`, or `__dirname`\n+- Use `import.meta.url` or `getCurrentDirCompat()` for directory resolution\n+\n+### Registration in src/index.ts\n+\n+Every tool must be registered in **both**:\n+\n+1. The `ListToolsRequestSchema` handler (tool metadata with name, description, inputSchema)\n+2. The `CallToolRequestSchema` handler (tool execution logic)\n+\n+### Documentation\n+\n+Each tool should have corresponding documentation in `docs/`\n+\n+## Audit Process\n+\n+### Check 1: Tool Response Pattern Consistency\n+\n+For each file in `src/tools/*.ts`:\n+\n+1. Read the file\n+2. Find all `return` statements that produce tool responses\n+3. Verify each returns `{ content: [{ type: \"text\", text: ... }] }`\n+4. Flag any tool that returns a different structure\n+5. Check that error responses set `isError: true`\n+\n+**Severity**: High — incorrect response patterns break MCP protocol compliance.\n+\n+### Check 2: ESM Compliance\n+\n+For each file in `src/tools/*.ts`:\n+\n+1. Check all `import` statements use `.js` extensions for relative imports\n+2. Verify no `require()` calls exist\n+3. Verify no `module.exports` usage\n+4. Verify no `__dirname` usage (should use `getCurrentDirCompat()`)\n+\n+**Severity**: High — ESM violations cause runtime failures.\n+\n+### Check 3: Registration Completeness\n+\n+Read `src/index.ts` and:\n+\n+1. Extract all tool names from the `ListToolsRequestSchema` handler\n+2. Extract all tool names from the `CallToolRequestSchema` handler\n+3. List all tool files in `src/tools/`\n+4. Cross-reference:\n+   - Tools in files but missing from ListTools registration\n+   - Tools in files but missing from CallTool registration\n+   - Tools registered in ListTools but not in CallTool (or vice versa)\n+   - Mismatched tool names between registration and implementation\n+\n+**Severity**: High — unregistered tools are invisible to MCP clients.\n+\n+### Check 4: Zod Schema Validation\n+\n+For each tool registered in the `ListToolsRequestSchema` handler:\n+\n+1. Verify the `inputSchema` is defined\n+2. Check that required parameters are documented\n+3. Verify parameter types match the Zod schemas in `src/types/`\n+\n+**Severity**: Medium — missing schemas cause runtime validation errors.\n+\n+### Check 5: Documentation Alignment\n+\n+For each tool:\n+\n+1. Check if documentation exists in `docs/` that references the tool\n+2. Verify the documented tool name matches the registered name\n+3. Check if the documented parameters match the actual inputSchema\n+\n+**Severity**: Low — documentation drift confuses users but doesn't break functionality.\n+\n+## Output\n+\n+Create an issue with findings:\n+\n+**Title**: `[mcp-tool-check] Tool Consistency Report — {date}`\n+\n+**Body**:\n+\n+```markdown\n+## MCP Tool Consistency Report\n+\n+**Date**: {date}\n+**Tools scanned**: {count}\n+**Total findings**: {count}\n+\n+### Summary\n+\n+| Check            | Status      | Findings       |\n+| ---------------- | ----------- | -------------- |\n+| Response Pattern | {pass/fail} | {count} issues |\n+| ESM Compliance   | {pass/fail} | {count} issues |\n+| Registration     | {pass/fail} | {count} issues |\n+| Zod Schemas      | {pass/fail} | {count} issues |\n+| Documentation    | {pass/fail} | {count} issues |\n+\n+### High Severity\n+\n+{numbered list of high-severity findings with file paths and line numbers}\n+\n+### Medium Severity\n+\n+{numbered list of medium-severity findings}\n+\n+### Low Severity\n+\n+{numbered list of low-severity findings}\n+\n+### Tool Registry\n+\n+| Tool Name | File   | ListTools | CallTool | Docs     | Schema   |\n+| --------- | ------ | --------- | -------- | -------- | -------- |\n+| {name}    | {file} | {yes/no}  | {yes/no} | {yes/no} | {yes/no} |\n+\n+### Recommendations\n+\n+1. {recommendation 1}\n+2. {recommendation 2}\n+3. {recommendation 3}\n+\n+---\n+\n+_Generated by MCP Tool Consistency Checker agentic workflow_\n+```\n+\n+If all checks pass with zero findings, output `noop` — no issue needed.",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "39b470fa5f36dbeae3bebe8353a80fd1fec1c6d8",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__mcp-tool-checker.md",
+          "snapshot_bytes": 4763,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-tool-checker.lock.yml\",\"generated_workflow_file\":\"mcp-tool-checker.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-tool-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-tool-checker.md",
+      "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "authored_at": "2026-02-20T00:13:55Z",
+      "committed_at": "2026-02-20T00:13:55Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs: fix documentation review findings from issue #508 (#509)\n\n* docs: fix documentation review findings from issue #508\n\n- Fix 25+ broken relative links that escape Docusaurus docs root\n  (../README.md, ../../CONTRIBUTING.md → absolute GitHub URLs)\n- Fix broken anchor links in CONVERSION_CHECKLIST, self-learning-architecture,\n  and firecrawl-setup docs\n- Fix sample-project links in docs/adrs/README.md to use absolute GitHub URLs\n- Add \"Server installed but nothing happens\" troubleshooting section\n  explaining MCP client requirement with download links\n- Add \"Firecrawl Integration Issues\" troubleshooting section\n- Expand MCP acronym in README title, add MCP client to prerequisites,\n  show config path prominently, add docs build instructions\n- Fix EXECUTION_MODE=prompt → EXECUTION_MODE=prompt-only (matches source)\n- Clarify sample-project only available from source, not npm\n- Add MCP client and OpenRouter API key to tutorial prerequisites\n- Create docs/reference/glossary.md defining key terms (MCP, ADR, AST,\n  Firecrawl, Knowledge Graph, OpenRouter, Ripgrep, tree-sitter)\n\nCloses #508\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: change gh-aw Copilot agents from weekly to monthly schedules\n\nReduce Copilot API costs by running agentic workflows monthly instead\nof weekly. Schedules staggered across the month to avoid overlap:\n\n- docs-noob-tester: 1st of month (was every Monday)\n- docs-site-validator: 8th of month (was every Wednesday)\n- mcp-tool-checker: 15th of month (was every Wednesday)\n- dependabot-bundler: 22nd of month (was every Monday)\n\nAll agents retain workflow_dispatch for manual triggering.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: fix npm audit failures by scoping to production deps\n\nNew CVEs published for minimatch, ajv, and hono affected dev\ndependencies (jest, eslint, typedoc, @modelcontextprotocol/inspector).\nThese are not exploitable in production since they never ship to users.\n\n- Run `npm audit fix --omit=dev` to fix production-only vulns (ajv, hono)\n- Update Makefile check-deps and security-check to use --omit=dev\n- Update security-scanning.yml to use --omit=dev\n- Production deps: 0 vulnerabilities\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: scope dependencies.yml audit to production deps\n\nSame --omit=dev fix as the other workflows — dev dependency\nCVEs (jest, eslint, typedoc) should not block the security-audit job.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "3b8b49ba616902846f15de6597dc7c4d370a6db6"
+      ],
+      "tree_sha": "5a010ea1bba3609ac18ce729dc37d466f601bc06",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-tool-checker.md",
+          "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "committed_at": "2026-02-20T00:13:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -3,7 +3,7 @@ name: 'MCP Tool Consistency Checker'\n description: 'Inspects all MCP tools for response pattern consistency, ESM compliance, registration completeness, and documentation alignment'\n on:\n   schedule:\n-    - cron: '0 14 * * 3'\n+    - cron: '0 14 15 * *' # Monthly on 15th\n   workflow_dispatch:\n permissions:\n   issues: read",
+          "snapshot_ref": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "snapshot_blob_sha": "7d314fbe655e0a29242db293279ac4d1136f7cda",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__60ddaf6b47ae4e72b1f972430749d1f79eef5d44__mcp-tool-checker.md",
+          "snapshot_bytes": 4782,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-tool-checker.lock.yml\",\"generated_workflow_file\":\"mcp-tool-checker.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-tool-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-tool-checker.md",
+      "commit_sha": "66b4ff68b284b25df42c88a75464bfb252398b68",
+      "authored_at": "2026-02-20T14:57:45Z",
+      "committed_at": "2026-02-20T14:57:45Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: update MCP server tool count from 27/23 to 73 across documentation (#522)\n\n* Initial plan\n\n* fix: update tool count from 27/23 to 73 across documentation\n\nCo-authored-by: tosin2013 <1975599+tosin2013@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: tosin2013 <1975599+tosin2013@users.noreply.github.com>\nCo-authored-by: Tosin Akinosho <tosin.akinosho@gmail.com>",
+      "parent_shas": [
+        "5620fa1f2559276e63d32a7b8301ec4a6c064a47"
+      ],
+      "tree_sha": "a318351a3a22612651c9a6e6186efbc0ac203fcd",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/66b4ff68b284b25df42c88a75464bfb252398b68",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-tool-checker.md",
+          "commit_sha": "66b4ff68b284b25df42c88a75464bfb252398b68",
+          "committed_at": "2026-02-20T14:57:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -25,7 +25,7 @@ You are an expert code auditor focused on MCP tool consistency. You inspect all\n \n ## Context\n \n-This project has **27 MCP tools** in `src/tools/`. Each tool must follow strict conventions:\n+This project has **73 MCP tools** in `src/tools/`. Each tool must follow strict conventions:\n \n ### Required Tool Response Pattern\n ",
+          "snapshot_ref": "66b4ff68b284b25df42c88a75464bfb252398b68",
+          "snapshot_blob_sha": "d14c0994d6e13df59c2f2214922602f4b80add7b",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__66b4ff68b284b25df42c88a75464bfb252398b68__mcp-tool-checker.md",
+          "snapshot_bytes": 4782,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-tool-checker.lock.yml\",\"generated_workflow_file\":\"mcp-tool-checker.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-tool-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-tool-checker.md",
+      "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "authored_at": "2026-03-16T17:48:59Z",
+      "committed_at": "2026-03-16T17:48:59Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: add node ecosystem to gh-aw network allowlist for agentic workflows\n\nAll agentic workflows that run `npm ci` were failing because the gh-aw\nsandbox firewall blocked `nodejs.org`, preventing node-gyp from\ndownloading Node.js headers needed to compile tree-sitter native modules.\n\nAdd `network: allowed: [defaults, node]` to 7 workflow frontmatters:\n- deployment-pattern-validation.md\n- mcp-server-validation.md\n- esm-module-validation.md\n- knowledge-graph-validation.md\n- docs-noob-tester.md\n- mcp-tool-checker.md\n- ai-executor-integration.md\n\nThe `node` ecosystem identifier adds nodejs.org, npmjs.org, yarnpkg.com,\ndeno.land, bun.sh, and related domains to the firewall allowlist.\nRecompiled all lock files via `gh aw compile`.\n\nFixes #632\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2877451dca32cd49ad472fd7ef99825c028fe121"
+      ],
+      "tree_sha": "c6f58323d5517991601c231a1f6edcda0c151d60",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-tool-checker.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-tool-checker.md",
+          "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "committed_at": "2026-03-16T17:48:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -17,6 +17,10 @@ tools:\n   edit:\n   github:\n     toolsets: [issues]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n ---\n \n # MCP Tool Consistency Checker",
+          "snapshot_ref": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "snapshot_blob_sha": "8fbd6bf4fea363148e51fa103cd7ff3d60e66720",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__72f88fa814801e4acb65e1eaf7f4f0437de3fdef__mcp-tool-checker.md",
+          "snapshot_bytes": 4828,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-tool-checker.lock.yml\",\"generated_workflow_file\":\"mcp-tool-checker.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-tool-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

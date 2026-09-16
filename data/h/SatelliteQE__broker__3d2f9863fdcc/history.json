@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SatelliteQE/broker:.github/workflows/wiki-sync.md",
+    "source_full_name": "SatelliteQE/broker",
+    "source_owner": "SatelliteQE",
+    "source_repo": "broker",
+    "md_path": ".github/workflows/wiki-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SatelliteQE/broker/blob/HEAD/.github/workflows/wiki-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SatelliteQE/broker",
+      "generated_owner": "SatelliteQE",
+      "generated_repo": "broker",
+      "generated_workflow_path": ".github/workflows/wiki-sync.lock.yml",
+      "generated_workflow_file": "wiki-sync.lock.yml",
+      "generated_html_url": "https://github.com/SatelliteQE/broker/blob/38cc671ed9350829913168f782df5a9b3b80c907/.github/workflows/wiki-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:26+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SatelliteQE/broker:.github/workflows/wiki-sync.md",
+      "source_full_name": "SatelliteQE/broker",
+      "md_path": ".github/workflows/wiki-sync.md",
+      "commit_sha": "af4f9dd4217d48a9baa4aaa63f948c62e8d437f7",
+      "authored_at": "2026-04-17T20:58:13Z",
+      "committed_at": "2026-04-20T04:58:48Z",
+      "author_name": "Jacob Callahan",
+      "author_email": "jacob.callahan05@gmail.com",
+      "author_login": "JacobCallahan",
+      "author_account_type": "User",
+      "committer_name": "Jake Callahan",
+      "committer_email": "jacob.callahan05@gmail.com",
+      "committer_login": "JacobCallahan",
+      "committer_account_type": "User",
+      "message": "Add AI-powered weekly wiki synchronization workflow\n\nFeatures:\n- Introduced an automated agentic workflow to analyze weekly commits for documentation relevance.\n- Implemented two execution modes: an analysis mode that creates a summary issue for review and an apply mode that updates wiki pages directly.\n- Integrated logic to scan for changes affecting the CLI, public APIs, installation steps, and configuration settings.\n\nConfiguration:\n- Configured a weekly cron schedule and manual triggers for the synchronization process.\n- Updated .gitattributes to manage generated workflow lock files and linguist metadata.\n- Added a lock file for GitHub Actions to pin specific repository SHAs.\n\nDocumentation:\n- Defined operational boundaries for the AI agent to ensure surgical section-level edits and prevent speculative documentation.\n- Included setup instructions for managing the necessary GitHub Personal Access Tokens for wiki writes.",
+      "parent_shas": [
+        "cfa413433171d1059ad65950a88f97a2fb5c3eb7"
+      ],
+      "tree_sha": "c487eb884695ed431c71570847e23a0e6f015a3c",
+      "html_url": "https://github.com/SatelliteQE/broker/commit/af4f9dd4217d48a9baa4aaa63f948c62e8d437f7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SatelliteQE/broker:.github/workflows/wiki-sync.md",
+          "source_full_name": "SatelliteQE/broker",
+          "md_path": ".github/workflows/wiki-sync.md",
+          "commit_sha": "af4f9dd4217d48a9baa4aaa63f948c62e8d437f7",
+          "committed_at": "2026-04-20T04:58:48Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 252,
+          "file_deletions": 0,
+          "file_changes": 252,
+          "file_patch": "@@ -0,0 +1,252 @@\n+---\n+# ============================================================\n+# SETUP INSTRUCTIONS\n+# ============================================================\n+# 1. Create a GitHub PAT (classic or fine-grained) with Contents:write\n+#    on the SatelliteQE/broker.wiki repository.\n+# 2. Add it as a repository secret named WIKI_SYNC_PAT on\n+#    SatelliteQE/broker (Settings → Secrets → Actions).\n+# 3. After editing this file's frontmatter, recompile:\n+#      gh aw compile .github/workflows/wiki-sync.md\n+# ============================================================\n+\n+on:\n+  schedule:\n+    - cron: \"0 22 * * 5\"  # Every Friday at 22:00 UTC\n+  workflow_dispatch:\n+    inputs:\n+      apply:\n+        description: \"Apply proposed changes to the wiki (default: create issue only)\"\n+        type: boolean\n+        default: false\n+\n+description: >\n+  Analyzes recent commits to master for documentation-relevant changes\n+  and either reports proposed wiki updates as a GitHub issue (default)\n+  or applies them directly to the SatelliteQE/broker wiki (when apply=true).\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  metadata: read\n+\n+tools:\n+  edit:\n+  github:\n+    toolsets: [repos, issues]\n+    mode: local\n+  cache-memory:\n+  web-fetch:\n+\n+network:\n+  firewall: true\n+  allowed:\n+    - defaults\n+    - github\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[wiki-sync] \"\n+    labels: [documentation]\n+    close-older-issues: true\n+    expires: 21\n+  jobs:\n+    push-to-wiki:\n+      description: \"Writes proposed wiki changes to SatelliteQE/broker.wiki and pushes them.\"\n+      runs-on: ubuntu-latest\n+      steps:\n+        - name: Apply wiki changes\n+          env:\n+            WIKI_SYNC_PAT: ${{ secrets.WIKI_SYNC_PAT }}\n+          run: |\n+            set -euo pipefail\n+\n+            if [ -z \"${WIKI_SYNC_PAT:-}\" ]; then\n+              echo \"::error::WIKI_SYNC_PAT secret is not set. See .github/workflows/wiki-sync.md for setup instructions.\"\n+              exit 1\n+            fi\n+\n+            echo \"::add-mask::${WIKI_SYNC_PAT}\"\n+            git -c \"http.extraHeader=Authorization: Bearer ${WIKI_SYNC_PAT}\" \\\n+              clone https://github.com/SatelliteQE/broker.wiki.git wiki\n+            cd wiki\n+            git config http.extraHeader \"Authorization: Bearer ${WIKI_SYNC_PAT}\"\n+\n+            python3 - <<'PYEOF'\n+            import json, os, sys\n+\n+            output_file = os.environ.get(\"GH_AW_AGENT_OUTPUT\", \"\")\n+            if not output_file or not os.path.isfile(output_file):\n+                print(\"No agent output file found; nothing to apply.\")\n+                sys.exit(0)\n+\n+            with open(output_file) as f:\n+                data = json.load(f)\n+\n+            items = [i for i in data.get(\"items\", []) if i.get(\"type\") == \"push_to_wiki\"]\n+            if not items:\n+                print(\"No push_to_wiki items in agent output; nothing to apply.\")\n+                sys.exit(0)\n+\n+            wrote = []\n+            for item in items:\n+                for change in item.get(\"changes\", []):\n+                    filename = change.get(\"filename\", \"\")\n+                    # Guard: only plain .md filenames, no path traversal\n+                    if (\n+                        not filename.endswith(\".md\")\n+                        or \"/\" in filename\n+                        or filename.startswith(\".\")\n+                    ):\n+                        print(f\"Skipping unsafe filename: {filename!r}\", file=sys.stderr)\n+                        continue\n+                    print(f\"Writing {filename}\")\n+                    with open(filename, \"w\") as fout:\n+                        fout.write(change[\"content\"])\n+                    wrote.append(filename)\n+\n+            if not wrote:\n+                print(\"No valid files to write; exiting.\")\n+                sys.exit(0)\n+            PYEOF\n+\n+            git config user.email \"github-actions[bot]@users.noreply.github.com\"\n+            git config user.name \"github-actions[bot]\"\n+            git add -A\n+\n+            if git diff --staged --quiet; then\n+              echo \"No changes to commit — wiki is already up to date.\"\n+              exit 0\n+            fi\n+\n+            COMMIT_MSG=$(python3 - <<'PYEOF'\n+            import json, os, sys\n+            with open(os.environ[\"GH_AW_AGENT_OUTPUT\"]) as f:\n+                data = json.load(f)\n+            items = [i for i in data.get(\"items\", []) if i.get(\"type\") == \"push_to_wiki\"]\n+            msg = (items[0].get(\"commit_message\") if items else None) or \"docs: weekly wiki sync [automated]\"\n+            print(msg)\n+            PYEOF\n+            )\n+\n+            git commit -m \"${COMMIT_MSG}\"\n+\n+            if ! git push; then\n+              echo \"::warning::Push failed (possible conflict). A summary issue was still created by the agent.\"\n+              exit 1\n+            fi\n+\n+            echo \"Wiki updated: ${COMMIT_MSG}\"\n+---\n+\n+# Weekly Wiki Sync\n+\n+You are a documentation maintenance agent for the **Broker** project — a Python CLI tool that acts as an infrastructure middleman, providing a common interface for provisioning and managing VMs/containers across providers like AnsibleTower, Beaker, Docker, Podman, and OpenStack.\n+\n+The wiki lives at `SatelliteQE/broker` (GitHub wiki, repository name: `SatelliteQE/broker.wiki`). Your job is to keep it accurate and up-to-date with the current state of the codebase.\n+\n+---\n+\n+## Step 1: Determine the starting commit\n+\n+Call `cache-memory read` with key `wiki_sync_last_sha`.\n+\n+- If a SHA is found, use it as `base_sha`.\n+- If not found (first run), use the commit SHA from exactly 7 days ago as `base_sha`. Get this by listing recent commits to `SatelliteQE/broker` on `master` and selecting the oldest one from the past 7 days.\n+\n+List all commits to `master` in `SatelliteQE/broker` since `base_sha`. Record the SHA of the most-recent commit as `head_sha`.\n+\n+If there are **no commits** since `base_sha`, write `head_sha = base_sha` and proceed to Step 5 (update SHA cache) — do not create an issue or push anything.\n+\n+---\n+\n+## Step 2: Identify doc-relevant changes\n+\n+For each commit, fetch the list of files changed. Review the full set of changed files and commit messages across all commits this week.\n+\n+Use your judgment to determine whether any changes are **documentation-relevant**. A change is doc-relevant if it affects something a user of Broker would need to know about, or that a developer extending Broker would reference in the docs. Examples include:\n+\n+- **New user-facing features**: new CLI commands or subcommands, new flags or options, new configuration keys, new provider actions\n+- **Changed behavior**: renamed or removed CLI commands, changed defaults, changed config key names, changed return types or method signatures on public classes (`Broker`, `Host`, provider classes, SSH session classes)\n+- **New or changed APIs**: new public methods, changed method signatures, new classes or modules intended for use outside Broker internals\n+- **New SSH backends or providers**: a new `broker/binds/` module or a new `broker/providers/` module that users can configure and use\n+- **Installation or dependency changes**: new optional dependencies, changed minimum Python version, changed install extras (e.g., new `broker[hussh]`-style extras)\n+- **Deprecations or removals**: anything removed or deprecated that users may rely on\n+- **Security or behavioral notes**: anything that changes how credentials, secrets, or inventory are handled\n+\n+Changes that are **not** doc-relevant include: internal refactors with no user-visible behavior change, test changes, CI/CD changes, and style/lint fixes.\n+\n+If **no doc-relevant changes** are found, skip to Step 5 (update SHA cache) and stop — do not create an issue or push anything.\n+\n+---\n+\n+## Step 3: Understand what changed\n+\n+For each doc-relevant change identified in Step 2, fetch the current content of the relevant source files from `SatelliteQE/broker` (default branch). Read them carefully and note exactly what is new, changed, or removed and how it differs from what the current wiki describes.\n+\n+---\n+\n+## Step 4: Fetch current wiki content\n+\n+Fetch the current content of all wiki pages from `SatelliteQE/broker.wiki`. At minimum, retrieve:\n+\n+- `API-Usage.md`\n+- `CLI-Usage.md`\n+- `Configuration.md`\n+- `Installation.md`\n+- `Home.md`\n+\n+Also check whether any other wiki pages exist that might be relevant to the changes found.\n+\n+---\n+\n+## Step 5: Identify gaps and update SHA cache\n+\n+For each wiki page, identify **specific sections** that are outdated, missing, or incorrect based on the code changes found in Step 3. For each gap, note: which wiki page, which section, what the old content is, what the new content should be, and which commit + file justifies the change.\n+\n+Write `head_sha` to `cache-memory` under key `wiki_sync_last_sha` now (regardless of whether gaps were found).\n+\n+**Hard limits — always obey these:**\n+\n+1. **Evidence-only**: Only flag a gap if you have clear evidence from an actual code change. Do not speculate about undocumented behavior.\n+2. **Surgical edits only**: Propose targeted section-level updates. Do not rewrite entire pages from scratch.\n+3. **No removals**: Do not remove or rename existing sections. You may update content within them or add new sections.\n+4. **Blast radius**: Change at most **3 wiki pages** per run, and at most **100 lines net** across all pages.\n+5. **New pages only for major features**: Only propose creating a new wiki page if a major new user-facing feature has no existing coverage at all. New pages count toward the 3-page limit.\n+\n+---\n+\n+## Step 6A: Analysis mode (default)\n+\n+*Use this step when triggered by schedule or by `workflow_dispatch` with `apply: false`.*\n+\n+Create a `[wiki-sync]` issue titled `[wiki-sync] Documentation review — week of {YYYY-MM-DD}` that contains:\n+\n+1. **Commits analyzed**: `{base_sha}` → `{head_sha}` with a link to the compare view (`https://github.com/SatelliteQE/broker/compare/{base_sha}...{head_sha}`)\n+2. **Doc-relevant changes found**: bullet list of what changed and why it matters for docs\n+3. **Proposed wiki updates**: for each affected page and section:\n+   - What changed in the code (with commit reference and link)\n+   - The proposed new section content as a fenced markdown code block labelled with the filename and section name\n+   - Exactly where in the page the change should go (e.g., \"replace the existing `## Session.run()` subsection\" or \"add after the `## SSH Backends` section\")\n+4. If no doc-relevant changes were found despite commits existing: \"No documentation updates required for this week's changes.\"\n+\n+End the issue with:\n+\n+> To apply these changes, trigger the **Wiki Sync** workflow from the Actions tab with **Apply: true**.\n+\n+---\n+\n+## Step 6B: Apply mode\n+\n+*Use this step when triggered by `workflow_dispatch` with `apply: true`.*\n+\n+If there are no concrete proposed changes, use the `noop` output and stop.\n+\n+Call the `push-to-wiki` tool with:\n+\n+- `changes`: JSON array of `{\"filename\": \"PageName.md\", \"content\": \"<complete updated page content>\"}` — one entry per page being updated. Provide the **full updated file content**, not a diff.\n+- `commit_message`: A concise, imperative-mood git commit message (e.g., `\"docs: update API-Usage with new hussh session methods\"`). Prefix with `docs:`.\n+\n+After calling `push-to-wiki`, also create a brief `[wiki-sync]` issue titled `[wiki-sync] Applied documentation updates — week of {YYYY-MM-DD}` summarizing:\n+- Which wiki pages were updated\n+- What was changed and why (with links to the triggering commits)",
+          "snapshot_ref": "af4f9dd4217d48a9baa4aaa63f948c62e8d437f7",
+          "snapshot_blob_sha": "cc3b2da40792fb2a127d61d273f93f642e8a852a",
+          "snapshot_file": "snapshots/broker__SatelliteQE__af4f9dd4217d48a9baa4aaa63f948c62e8d437f7__wiki-sync.md",
+          "snapshot_bytes": 11392,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SatelliteQE/broker\",\"generated_owner\":\"SatelliteQE\",\"generated_repo\":\"broker\",\"generated_workflow_path\":\".github/workflows/wiki-sync.lock.yml\",\"generated_workflow_file\":\"wiki-sync.lock.yml\",\"generated_html_url\":\"https://github.com/SatelliteQE/broker/blob/38cc671ed9350829913168f782df5a9b3b80c907/.github/workflows/wiki-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

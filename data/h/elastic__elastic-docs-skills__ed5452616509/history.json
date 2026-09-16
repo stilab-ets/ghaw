@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+    "source_full_name": "elastic/elastic-docs-skills",
+    "source_owner": "elastic",
+    "source_repo": "elastic-docs-skills",
+    "md_path": ".github/workflows/skill-quality-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/elastic/elastic-docs-skills/blob/HEAD/.github/workflows/skill-quality-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "elastic/elastic-docs-skills",
+      "generated_owner": "elastic",
+      "generated_repo": "elastic-docs-skills",
+      "generated_workflow_path": ".github/workflows/skill-quality-review.lock.yml",
+      "generated_workflow_file": "skill-quality-review.lock.yml",
+      "generated_html_url": "https://github.com/elastic/elastic-docs-skills/blob/b901a4608e8073d10496c619c8758d2533323f08/.github/workflows/skill-quality-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:26:42+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+      "source_full_name": "elastic/elastic-docs-skills",
+      "md_path": ".github/workflows/skill-quality-review.md",
+      "commit_sha": "8b6c61849ce464fb82b6083032a84e86e0c44bbc",
+      "authored_at": "2026-03-05T09:51:18Z",
+      "committed_at": "2026-03-05T09:51:18Z",
+      "author_name": "Fabrizio Ferri Benedetti",
+      "author_email": "fabri.ferribenedetti@elastic.co",
+      "author_login": "theletterf",
+      "author_account_type": "User",
+      "committer_name": "Fabrizio Ferri Benedetti",
+      "committer_email": "fabri.ferribenedetti@elastic.co",
+      "committer_login": "theletterf",
+      "committer_account_type": "User",
+      "message": "Add skill quality review gh-aw workflow\n\nNew agentic workflow that reviews skills changed in a PR for quality\nissues based on Claude Skills documentation and skill-validator\ncriteria, then posts an advisory comment with findings.\n\nAlso recompiles existing lock files with gh-aw v0.53.3.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "2c82d44cff9a11b116807cd95f27e67fe9bfec79"
+      ],
+      "tree_sha": "5394aefc19108b0285e1d82d3985ad8c2bb76bf7",
+      "html_url": "https://github.com/elastic/elastic-docs-skills/commit/8b6c61849ce464fb82b6083032a84e86e0c44bbc",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+          "source_full_name": "elastic/elastic-docs-skills",
+          "md_path": ".github/workflows/skill-quality-review.md",
+          "commit_sha": "8b6c61849ce464fb82b6083032a84e86e0c44bbc",
+          "committed_at": "2026-03-05T09:51:18Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 119,
+          "file_deletions": 0,
+          "file_changes": 119,
+          "file_patch": "@@ -0,0 +1,119 @@\n+---\n+description: |\n+  Review skills changed in a PR for quality issues based on Claude Skills\n+  documentation and skill-validator criteria. Posts a PR comment with findings.\n+\n+on:\n+  pull_request:\n+    paths: ['skills/**']\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+\n+network:\n+  allowed:\n+    - defaults\n+    - \"docs.anthropic.com\"\n+    - \"www.elastic.co\"\n+\n+tools:\n+  github:\n+    lockdown: false\n+  web-fetch:\n+\n+safe-outputs:\n+  add-comment:\n+---\n+<!-- Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one\n+or more contributor license agreements. See the NOTICE file distributed with\n+this work for additional information regarding copyright\n+ownership. Elasticsearch B.V. licenses this file to you under\n+the Apache License, Version 2.0 (the \"License\"); you may\n+not use this file except in compliance with the License.\n+You may obtain a copy of the License at\n+\n+\thttp://www.apache.org/licenses/LICENSE-2.0\n+\n+Unless required by applicable law or agreed to in writing,\n+software distributed under the License is distributed on an\n+\"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n+KIND, either express or implied.  See the License for the\n+specific language governing permissions and limitations\n+under the License. -->\n+\n+# Skill Quality Review\n+\n+Review skills changed in this PR for quality issues and post a comment with findings.\n+\n+## Process\n+\n+1. List the files changed in this PR. Identify every `SKILL.md` under `skills/`.\n+2. For each changed skill, read the full `SKILL.md` file.\n+3. Evaluate the skill against the criteria below.\n+4. Post a single comment on the PR summarizing your findings across all changed skills. This is advisory only.\n+\n+## Evaluation criteria\n+\n+### Structure (from skill-validator)\n+\n+- File starts with valid YAML frontmatter between `---` delimiters.\n+- Required frontmatter fields: `name`, `description`, `version`.\n+- `name` is kebab-case and matches the directory name.\n+- `version` is valid SemVer.\n+- No unclosed code fences in the markdown body.\n+- No broken internal links (references to files that don't exist in the skill directory).\n+\n+### Content quality (from skill-validator)\n+\n+- **Token efficiency**: The skill body should be under 500 lines. Longer skills should justify their length with proportionally more actionable content.\n+- **Code block ratio**: Code examples should be present but not dominate. A ratio above 0.4 suggests the skill may be a code dump rather than instructional content.\n+- **Imperative language**: Skills should use imperative voice (\"Use X\", \"Add Y\", \"Check Z\"). A very low imperative ratio (< 0.05) suggests the skill is descriptive rather than actionable.\n+- **Instruction specificity**: Rules and instructions should be specific enough to act on without ambiguity. Vague guidance like \"follow best practices\" is not useful.\n+\n+### Clarity and actionability (from Claude Skills documentation)\n+\n+- **Clear trigger**: The `description` field should make it obvious when to use the skill. It should describe both what the skill does and the situations that trigger it.\n+- **Scoped purpose**: The skill should do one thing well. If it tries to cover too many topics, it becomes harder for the agent to apply correctly.\n+- **Actionable instructions**: Every section should tell the agent what to do, not just describe concepts. Prefer concrete rules over abstract guidance.\n+- **Examples**: Non-trivial syntax or patterns should include examples. Examples should be minimal and focused — just enough to illustrate the point.\n+- **No redundancy with training data**: Skills are most valuable when they encode information the model doesn't already know — project-specific conventions, proprietary syntax, or domain rules. Restating widely-known information (standard markdown, common git commands) wastes tokens and can degrade output quality.\n+\n+### Contamination awareness\n+\n+- Code examples should be in the language relevant to the skill's domain. Mixing unrelated languages (e.g., Python examples in a markup-focused skill) can confuse the agent.\n+- If multiple languages are necessary, they should be clearly scoped to specific sections.\n+\n+## Comment format\n+\n+Post a single comment with this structure:\n+\n+```\n+## Skill Quality Review\n+\n+### <skill-name>\n+\n+**Overall**: [Brief 1-sentence assessment]\n+\n+**Strengths**:\n+- [What the skill does well]\n+\n+**Issues** (if any):\n+- [Specific issue with actionable suggestion]\n+\n+**Suggestions** (if any):\n+- [Optional improvements, not blockers]\n+```\n+\n+If all skills look good, keep it short:\n+\n+```\n+## Skill Quality Review\n+\n+### <skill-name>\n+\n+Looks good — clear trigger, actionable instructions, appropriate scope.\n+```\n+\n+Do not nitpick formatting or stylistic preferences. Focus on issues that would affect the skill's effectiveness when used by an agent.",
+          "snapshot_ref": "8b6c61849ce464fb82b6083032a84e86e0c44bbc",
+          "snapshot_blob_sha": "75156271cafe7488bb775ae7ab18aa89599e4b41",
+          "snapshot_file": "snapshots/elastic-docs-skills__elastic__8b6c61849ce464fb82b6083032a84e86e0c44bbc__skill-quality-review.md",
+          "snapshot_bytes": 4753,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elastic-docs-skills\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elastic-docs-skills\",\"generated_workflow_path\":\".github/workflows/skill-quality-review.lock.yml\",\"generated_workflow_file\":\"skill-quality-review.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elastic-docs-skills/blob/b901a4608e8073d10496c619c8758d2533323f08/.github/workflows/skill-quality-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+      "source_full_name": "elastic/elastic-docs-skills",
+      "md_path": ".github/workflows/skill-quality-review.md",
+      "commit_sha": "d8078b76548f886b4b85835b35c644d2fc250079",
+      "authored_at": "2026-03-05T10:30:34Z",
+      "committed_at": "2026-03-05T10:30:34Z",
+      "author_name": "Fabrizio Ferri Benedetti",
+      "author_email": "fabri.ferribenedetti@elastic.co",
+      "author_login": "theletterf",
+      "author_account_type": "User",
+      "committer_name": "Fabrizio Ferri Benedetti",
+      "committer_email": "fabri.ferribenedetti@elastic.co",
+      "committer_login": "theletterf",
+      "committer_account_type": "User",
+      "message": "Make GH-AW workflows idempotent and use Elastic Docs MCP for freshness\n\n- skill-eval-test and skill-quality-review now update existing PR comments\n  instead of posting duplicates on re-runs\n- skill-freshness and docs-freshness-checker agent use the Elastic Docs MCP\n  server to check skills without explicit sources: frontmatter\n- Document the public MCP server (https://www.elastic.co/docs/_mcp/) in CLAUDE.md\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "bbb231d328505c15cf21128a4169017b4b8b2d2e"
+      ],
+      "tree_sha": "e5e2c0109752d378f50968d688589bc6b2893db8",
+      "html_url": "https://github.com/elastic/elastic-docs-skills/commit/d8078b76548f886b4b85835b35c644d2fc250079",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+          "source_full_name": "elastic/elastic-docs-skills",
+          "md_path": ".github/workflows/skill-quality-review.md",
+          "commit_sha": "d8078b76548f886b4b85835b35c644d2fc250079",
+          "committed_at": "2026-03-05T10:30:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 1,
+          "file_changes": 6,
+          "file_patch": "@@ -52,7 +52,7 @@ Review skills changed in this PR for quality issues and post a comment with find\n 1. List the files changed in this PR. Identify every `SKILL.md` under `skills/`.\n 2. For each changed skill, read the full `SKILL.md` file.\n 3. Evaluate the skill against the criteria below.\n-4. Post a single comment on the PR summarizing your findings across all changed skills. This is advisory only.\n+4. Post a comment on the PR summarizing your findings across all changed skills, updating any existing comment from a previous run (see \"Comment idempotency\" below). This is advisory only.\n \n ## Evaluation criteria\n \n@@ -117,3 +117,7 @@ Looks good — clear trigger, actionable instructions, appropriate scope.\n ```\n \n Do not nitpick formatting or stylistic preferences. Focus on issues that would affect the skill's effectiveness when used by an agent.\n+\n+## Comment idempotency\n+\n+Before posting, search existing PR comments for one that starts with `## Skill Quality Review`. If found, **update that comment** instead of creating a new one. This prevents duplicate comments on re-runs.",
+          "snapshot_ref": "d8078b76548f886b4b85835b35c644d2fc250079",
+          "snapshot_blob_sha": "497877f95493522d3b18fb174aed99ce32a6c381",
+          "snapshot_file": "snapshots/elastic-docs-skills__elastic__d8078b76548f886b4b85835b35c644d2fc250079__skill-quality-review.md",
+          "snapshot_bytes": 5062,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elastic-docs-skills\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elastic-docs-skills\",\"generated_workflow_path\":\".github/workflows/skill-quality-review.lock.yml\",\"generated_workflow_file\":\"skill-quality-review.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elastic-docs-skills/blob/b901a4608e8073d10496c619c8758d2533323f08/.github/workflows/skill-quality-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+      "source_full_name": "elastic/elastic-docs-skills",
+      "md_path": ".github/workflows/skill-quality-review.md",
+      "commit_sha": "48e4633c4eca87d97c75dd1f0b46721cb9648491",
+      "authored_at": "2026-05-07T12:01:55Z",
+      "committed_at": "2026-05-07T12:01:55Z",
+      "author_name": "Fabrizio Ferri Benedetti",
+      "author_email": "fabri.ferribenedetti@elastic.co",
+      "author_login": "theletterf",
+      "author_account_type": "User",
+      "committer_name": "Fabrizio Ferri Benedetti",
+      "committer_email": "fabri.ferribenedetti@elastic.co",
+      "committer_login": "theletterf",
+      "committer_account_type": "User",
+      "message": "Update skill catalog structure and metadata\n\nAlign the plugin, catalog generation, and contributor guidance with the revised skill categories and naming policy.\n\nCo-authored-by: GPT-5.5 <noreply@openai.com>\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+      "parent_shas": [
+        "19097f82a8ab95bfcbee8e70c3f4259f09cc46fa"
+      ],
+      "tree_sha": "8175e00209912d02016fec615dfb77bebf5bbc5e",
+      "html_url": "https://github.com/elastic/elastic-docs-skills/commit/48e4633c4eca87d97c75dd1f0b46721cb9648491",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Cursor",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Cursor:cursor_agent_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+          "source_full_name": "elastic/elastic-docs-skills",
+          "md_path": ".github/workflows/skill-quality-review.md",
+          "commit_sha": "48e4633c4eca87d97c75dd1f0b46721cb9648491",
+          "committed_at": "2026-05-07T12:01:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -60,7 +60,8 @@ Review skills changed in this PR for quality issues and post a comment with find\n \n - File starts with valid YAML frontmatter between `---` delimiters.\n - Required frontmatter fields: `name`, `description`, `version`.\n-- `name` is kebab-case and matches the directory name.\n+- `name` is kebab-case, starts with `docs-`, and is unique across the catalog.\n+- The skill directory name is kebab-case.\n - `version` is valid SemVer.\n - No unclosed code fences in the markdown body.\n - No broken internal links (references to files that don't exist in the skill directory).\n@@ -82,7 +83,7 @@ Review skills changed in this PR for quality issues and post a comment with find\n \n ### Contamination awareness\n \n-- Code examples should be in the language relevant to the skill's domain. Mixing unrelated languages (e.g., Python examples in a markup-focused skill) can confuse the agent.\n+- Code examples should be in the language relevant to the skill's domain. Mixing unrelated languages, such as Python examples in a markup-focused skill, can confuse the agent.\n - If multiple languages are necessary, they should be clearly scoped to specific sections.\n \n ## Comment format",
+          "snapshot_ref": "48e4633c4eca87d97c75dd1f0b46721cb9648491",
+          "snapshot_blob_sha": "63ee5f96d53b8c69f2869c0d61c2ffbd60b98c79",
+          "snapshot_file": "snapshots/elastic-docs-skills__elastic__48e4633c4eca87d97c75dd1f0b46721cb9648491__skill-quality-review.md",
+          "snapshot_bytes": 5130,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elastic-docs-skills\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elastic-docs-skills\",\"generated_workflow_path\":\".github/workflows/skill-quality-review.lock.yml\",\"generated_workflow_file\":\"skill-quality-review.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elastic-docs-skills/blob/b901a4608e8073d10496c619c8758d2533323f08/.github/workflows/skill-quality-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+      "source_full_name": "elastic/elastic-docs-skills",
+      "md_path": ".github/workflows/skill-quality-review.md",
+      "commit_sha": "5dbc2ed5c97f67ebc6c437dfb4bd936e049d3f8b",
+      "authored_at": "2026-06-22T06:45:07Z",
+      "committed_at": "2026-06-22T06:45:07Z",
+      "author_name": "Fabrizio Ferri Benedetti",
+      "author_email": "fabri.ferribenedetti@elastic.co",
+      "author_login": "theletterf",
+      "author_account_type": "User",
+      "committer_name": "Fabrizio Ferri Benedetti",
+      "committer_email": "fabri.ferribenedetti@elastic.co",
+      "committer_login": "theletterf",
+      "committer_account_type": "User",
+      "message": "Update gh-aw workflow locks to v0.80.8\n\nRecompile agentic workflows with gh-aw v0.80.8 and enable token-based Copilot requests so the generated workflows no longer require a COPILOT_GITHUB_TOKEN secret.\n\nCo-authored-by: GPT-5.5 <noreply@openai.com>\nCo-authored-by: Cursor <cursoragent@cursor.com>",
+      "parent_shas": [
+        "6b4acec9b23efacbb8ff416005c31863abd1fbcb"
+      ],
+      "tree_sha": "ec2e0a8051bf835a9b8ae52c18c39165c548b861",
+      "html_url": "https://github.com/elastic/elastic-docs-skills/commit/5dbc2ed5c97f67ebc6c437dfb4bd936e049d3f8b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Cursor",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Cursor:cursor_agent_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/elastic-docs-skills:.github/workflows/skill-quality-review.md",
+          "source_full_name": "elastic/elastic-docs-skills",
+          "md_path": ".github/workflows/skill-quality-review.md",
+          "commit_sha": "5dbc2ed5c97f67ebc6c437dfb4bd936e049d3f8b",
+          "committed_at": "2026-06-22T06:45:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -11,6 +11,7 @@ permissions:\n   contents: read\n   pull-requests: read\n   issues: read\n+  copilot-requests: write\n \n network:\n   allowed:",
+          "snapshot_ref": "5dbc2ed5c97f67ebc6c437dfb4bd936e049d3f8b",
+          "snapshot_blob_sha": "35e710246013b87c4cc7d0819edebb6ec498f049",
+          "snapshot_file": "snapshots/elastic-docs-skills__elastic__5dbc2ed5c97f67ebc6c437dfb4bd936e049d3f8b__skill-quality-review.md",
+          "snapshot_bytes": 5156,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elastic-docs-skills\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elastic-docs-skills\",\"generated_workflow_path\":\".github/workflows/skill-quality-review.lock.yml\",\"generated_workflow_file\":\"skill-quality-review.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elastic-docs-skills/blob/b901a4608e8073d10496c619c8758d2533323f08/.github/workflows/skill-quality-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

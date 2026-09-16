@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/mcp:.github/workflows/issue-triage-agent.md",
+    "source_full_name": "microsoft/mcp",
+    "source_owner": "microsoft",
+    "source_repo": "mcp",
+    "md_path": ".github/workflows/issue-triage-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/mcp/blob/HEAD/.github/workflows/issue-triage-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/mcp",
+      "generated_owner": "microsoft",
+      "generated_repo": "mcp",
+      "generated_workflow_path": ".github/workflows/issue-triage-agent.lock.yml",
+      "generated_workflow_file": "issue-triage-agent.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/mcp/blob/1711eca2a6d07b5a180f3800dedc429bc917cf10/.github/workflows/issue-triage-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:58:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/mcp:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "microsoft/mcp",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "c8b57245986ed9de53566769307bde384f73d52d",
+      "authored_at": "2026-07-10T16:51:05Z",
+      "committed_at": "2026-07-10T16:51:05Z",
+      "author_name": "Rick Winter",
+      "author_email": "rick.winter@microsoft.com",
+      "author_login": "RickWinter",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic issue triage workflow (#2484) (#3012)\n\n* Add agentic issue triage workflow (#2484)\n\nAdds a gh-aw Issue Triage Agent that classifies new/reopened issues, applies classification, area, and special labels, sets Issue Type and Priority fields, and posts a rationale comment with an owner recommendation.",
+      "parent_shas": [
+        "f43b47a21545e5f3f87b3bceee35986442217bb4"
+      ],
+      "tree_sha": "e1ddc2447d42db812dc0837e470ae7e700474e54",
+      "html_url": "https://github.com/microsoft/mcp/commit/c8b57245986ed9de53566769307bde384f73d52d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/mcp:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "microsoft/mcp",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "c8b57245986ed9de53566769307bde384f73d52d",
+          "committed_at": "2026-07-10T16:51:05Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 129,
+          "file_deletions": 0,
+          "file_changes": 129,
+          "file_patch": "@@ -0,0 +1,129 @@\n+---\n+name: Issue Triage Agent\n+description: |\n+  Agentic issue triage for microsoft/mcp.\n+  Applies classification and routing labels, sets issue fields, and leaves a concise rationale comment.\n+\n+on:\n+  issues:\n+    types: [opened, reopened]\n+  workflow_dispatch:\n+    inputs:\n+      issue_number:\n+        description: Issue number to triage manually.\n+        required: false\n+        type: string\n+\n+# Skip the shared report-incomplete tracking issue that this workflow creates.\n+if: github.event_name != 'issues' || !startsWith(github.event.issue.title, '[incomplete] Issue Triage Agent')\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+engine: copilot\n+\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+    min-integrity: none\n+    allowed-repos: \"${{ github.repository }}\"\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+timeout-minutes: 15\n+\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+  add-labels:\n+    max: 1\n+  set-issue-type:\n+    max: 1\n+  set-issue-field:\n+    max: 2\n+  noop:\n+    report-as-issue: false\n+  report-incomplete:\n+    max: 1\n+\n+---\n+\n+# Issue Triage Agent\n+\n+<!-- After editing run 'gh aw compile issue-triage-agent' -->\n+\n+You triage exactly one issue, the issue from the triggering event.\n+\n+## Guardrails\n+\n+- Process only issues, never pull requests.\n+- This workflow can only add labels, never remove them. Do not attempt to remove or replace existing labels.\n+- Do not close or lock issues.\n+- If the issue already has one of the classification labels (`bug`, `enhancement`, `question`, `engineering item`), do not add another one. If you believe the existing classification is wrong, explain this in your comment and recommend the correct classification instead of relabeling.\n+- If required labels or field option values are unavailable or ambiguous, use `report-incomplete` with the missing details instead of guessing.\n+\n+## Triage outputs\n+\n+Apply labels and fields according to repository conventions and issue content.\n+\n+### 1) Classification label (mutually exclusive)\n+\n+Choose exactly one of:\n+- `bug`\n+- `enhancement`\n+- `question`\n+- `engineering item`\n+\n+Rules:\n+- Prefer `bug` for broken existing behavior, regressions, crashes, errors, failing CI, deploy/provision/auth failures, or documented behavior that does not work.\n+- Prefer `enhancement` for new capabilities or behavior improvements.\n+- Prefer `question` when the issue primarily asks for clarification or guidance.\n+- Prefer `engineering item` for internal automation, release, workflow, maintenance, or documentation follow-up work.\n+\n+### 2) Additional labels\n+\n+When supported by issue content and label availability, add:\n+- Relevant area labels (`tools-*`, `server-*`, `packages-*`)\n+- Relevant extension labels\n+- Special labels: `blocker`, `regression`, `customer-reported`, `automation`, `agentic-workflows`\n+\n+Skip labels that do not exist in this repository.\n+\n+### 3) Issue Type field\n+\n+Set GitHub Issue Type using the dominant classification:\n+- `bug` -> `Bug`\n+- `enhancement` -> `Feature`\n+- `question` or `engineering item` -> `Task`\n+\n+### 4) Priority field\n+\n+Set the Priority issue field using the strongest applicable signal:\n+- Urgent: active repo-wide blocker, release blocker, security incident, or CI failure blocking broad PR flow.\n+- High: regression, deploy/provision/auth failure, data/schema corruption, severe customer-reported bug, or active milestone blocker.\n+- Medium: important bug or feature gap with clear impact, but not broadly blocking, including docs and quality improvements with contained impact.\n+- Low: backlog idea, exploratory item, or low-urgency cleanup.\n+\n+Important:\n+- Use the Priority field option values exactly as configured in this repository.\n+- If exact option names cannot be resolved confidently, do not set Priority and report what needs confirmation via `report-incomplete`.\n+\n+### 5) Owner recommendation\n+\n+Recommend one primary owner in your comment only:\n+- If confidence is high, mention one owner handle and why.\n+- If confidence is low, state that owner is left blank and explain why.\n+- Do not assign users in this workflow.\n+\n+## Final action\n+\n+After applying labels and fields, post one concise comment that includes:\n+- The selected classification and short reason.\n+- Any special labels added and why.\n+- Priority rationale.\n+- Issue Type selected.\n+- Owner recommendation or blank-owner reason.",
+          "snapshot_ref": "c8b57245986ed9de53566769307bde384f73d52d",
+          "snapshot_blob_sha": "3a4eb223a5ee62ea1084c4c0ccc39e7798a9ad6a",
+          "snapshot_file": "snapshots/mcp__microsoft__c8b57245986ed9de53566769307bde384f73d52d__issue-triage-agent.md",
+          "snapshot_bytes": 4272,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/mcp\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"mcp\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/mcp/blob/1711eca2a6d07b5a180f3800dedc429bc917cf10/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/mcp:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "microsoft/mcp",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "b031dd8512c1ef44a409942edef4d861b152870a",
+      "authored_at": "2026-07-20T15:41:42Z",
+      "committed_at": "2026-07-20T15:41:42Z",
+      "author_name": "Rick Winter",
+      "author_email": "rick.winter@microsoft.com",
+      "author_login": "RickWinter",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix issue triage repository guard (#3089)\n\nEncode the explicit repository allowlist as an array so the MCP gateway can initialize the GitHub guard policy.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6e1020e5-dc4b-4e1e-8004-01f33a6b3977\n\nCo-authored-by: Copilot <copilot@github.com>",
+      "parent_shas": [
+        "db8f4d78c25ff1a94e20db8eb86f674b213f95ab"
+      ],
+      "tree_sha": "4f66f2b5bcd09768a653a355c318cb563f25a531",
+      "html_url": "https://github.com/microsoft/mcp/commit/b031dd8512c1ef44a409942edef4d861b152870a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/mcp:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "microsoft/mcp",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "b031dd8512c1ef44a409942edef4d861b152870a",
+          "committed_at": "2026-07-20T15:41:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -27,7 +27,7 @@ tools:\n   github:\n     toolsets: [issues, labels]\n     min-integrity: none\n-    allowed-repos: \"${{ github.repository }}\"\n+    allowed-repos: [\"microsoft/mcp\"]\n \n network:\n   allowed:",
+          "snapshot_ref": "b031dd8512c1ef44a409942edef4d861b152870a",
+          "snapshot_blob_sha": "645d5f2b7bc128b4f256a4ac55e675c3b1954e0d",
+          "snapshot_file": "snapshots/mcp__microsoft__b031dd8512c1ef44a409942edef4d861b152870a__issue-triage-agent.md",
+          "snapshot_bytes": 4263,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/mcp\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"mcp\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/mcp/blob/1711eca2a6d07b5a180f3800dedc429bc917cf10/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

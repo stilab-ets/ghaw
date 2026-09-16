@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+    "source_full_name": "SSWConsulting/SSW.Rules.Content",
+    "source_owner": "SSWConsulting",
+    "source_repo": "SSW.Rules.Content",
+    "md_path": ".github/workflows/content-snapshot-done.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/HEAD/.github/workflows/content-snapshot-done.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SSWConsulting/SSW.Rules.Content",
+      "generated_owner": "SSWConsulting",
+      "generated_repo": "SSW.Rules.Content",
+      "generated_workflow_path": ".github/workflows/content-snapshot-done.lock.yml",
+      "generated_workflow_file": "content-snapshot-done.lock.yml",
+      "generated_html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-snapshot-done.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-snapshot-done.md",
+      "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "authored_at": "2026-04-01T05:40:31Z",
+      "committed_at": "2026-04-01T05:40:31Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Add agentic workflows for auditing SSW Rules (#12307)\n\n<!-- **Tip: Use [SSW Rule Writer\nGPT](https://chat.openai.com/g/g-cOvrRzEnU-ssw-rules-writer) for help\nwith writing rules 🤖** -->\n>\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nEmail Subject - Do you avoid redundant linking (aka have a single link\nto a single location)? | SSW.Rules\n\n> 2. What was changed?\n\nThis PR adds a number of agentic workflows to SSW Rules that work\ntogether to update content on SSW Rules and catalog the work that has\nbeen done. I've included a mermaid diagram with a description of the\nflows as well as how to use them in the README referenced in this PR.\n\nBefore merging I also need to add the following new secrets to the repo\n\n- [x] TAVILY_API_KEY\n- [x] COPILOT_GITHUB_TOKEN\n- [x] CONTENTHAWK_GITHUB_PAT\n- [x] Give workflows permissions to creat/approve pull requests\n\n<img width=\"1619\" height=\"646\" alt=\"CleanShot 2026-03-27 at 15 00 18\"\nsrc=\"https://github.com/user-attachments/assets/a8cce0a9-0573-4c25-ac24-ba9bc56045a0\"\n/>\n\n**Figure: Proposed new flows**\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\n@18-th",
+      "parent_shas": [
+        "8f64357ba47cf0dbc014d929abac603d03708dfa"
+      ],
+      "tree_sha": "7bbf19cca2a23bcaabc508b0a79fbe890d86c405",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-snapshot-done.md",
+          "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "committed_at": "2026-04-01T05:40:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 172,
+          "file_deletions": 0,
+          "file_changes": 172,
+          "file_patch": "@@ -0,0 +1,172 @@\n+---\n+description: >\n+  Agent 4 (Snapshot Done) of the ContentHawk pipeline.\n+  Triggered when a ContentHawk judge issue is closed or when a snapshot file\n+  is pushed to TODO/. Parses the Files to Review table and checks whether\n+  all rows are non-pending and all referenced issues are closed (or all rows\n+  are skipped). If the snapshot is fully complete, moves it from TODO/ to\n+  DONE/ via the commit-files safe-output.\n+\n+on:\n+  issues:\n+    types: [closed]\n+  push:\n+    branches: [main]\n+    paths:\n+      - .github/ContentHawk/TODO/*.md\n+name: Content Snapshot Cleanup (Agent 3b)\n+\n+engine:\n+  id: copilot\n+  model: gpt-5-mini\n+\n+permissions: read-all\n+\n+concurrency:\n+  group: \"contenthawk-snapshot-done\"\n+  cancel-in-progress: false\n+\n+safe-outputs:\n+  report-failure-as-issue: false\n+  create-pull-request:\n+    max: 1\n+    title-prefix: \"[Content Snapshot Done] \"\n+    protected-files: allowed\n+    allowed-files:\n+      - .github/ContentHawk/TODO/*.md\n+      - .github/ContentHawk/DONE/*.md\n+\n+steps:\n+  - name: Guard — only ContentHawk judge issues\n+    if: github.event_name == 'issues'\n+    env:\n+      BODY: ${{ github.event.issue.body }}\n+    run: |\n+      if echo \"$BODY\" | grep -qF \"gh-aw-workflow-id: content-judge\"; then\n+        echo \"ContentHawk judge issue detected. Proceeding.\"\n+      else\n+        echo \"Not a ContentHawk judge issue. Exiting.\"\n+        exit 1\n+      fi\n+\n+tools:\n+  github:\n+    lockdown: false\n+    toolsets: [issues, search, labels, pull_requests]\n+    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+\n+post-steps:\n+  - name: Workflow Summary\n+    env:\n+      ISSUE_NUMBER: ${{ github.event.issue.number || '' }}\n+      EVENT_NAME: ${{ github.event_name }}\n+    if: always()\n+    run: |\n+      echo \"## ContentHawk — Agent 4 (Snapshot Done)\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      echo \"### Trigger\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Field   | Value |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"|---------|-------|\" >> \"$GITHUB_STEP_SUMMARY\"\n+      if [ \"$EVENT_NAME\" = \"issues\" ]; then\n+        echo \"| Event   | Issue #${ISSUE_NUMBER} closed |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      else\n+        echo \"| Event   | Push to TODO/ |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      fi\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+---\n+\n+## Important context\n+\n+This workflow is **Agent 4 (Snapshot Done)** in the ContentHawk pipeline. It runs when a ContentHawk judge issue is closed **or** when a snapshot file is pushed to `TODO/`. It determines whether the associated snapshot is fully complete.\n+\n+A snapshot is complete when:\n+1. **No rows** in the Files to Review table have `CheckResult = pending`, **AND**\n+2. **Either** all rows are `skipped` (no issues exist), **or** every issue referenced in the table (rows with `CheckResult = Issue #<number>`) is closed\n+\n+If both conditions are met, the agent uses the `commit-files` safe-output to move the snapshot from `TODO/` to `DONE/`.\n+\n+---\n+\n+### Step 0 — Determine the snapshot\n+\n+{{#if github.event.issue.number}}\n+#### Trigger: Issue closed\n+\n+The closed issue is #${{ github.event.issue.number }}.\n+\n+Read the issue's labels. Extract the **label names** — these will be used to match against snapshot filenames.\n+\n+If the issue has no labels, **stop immediately** with a message:\n+\n+> Closed issue #${{ github.event.issue.number }} has no labels. Cannot match to a snapshot. Exiting.\n+\n+Proceed to **Step 1**.\n+{{/if}}\n+\n+{{#if github.event.head_commit.id}}\n+#### Trigger: Push to TODO/\n+\n+Look at the commits in this push. Identify files matching `.github/ContentHawk/TODO/*_Snapshot_*.md` that were added or modified.\n+\n+If no matching snapshot files were found, **stop immediately** with a message:\n+\n+> Push did not include any snapshot files in TODO/. Nothing to do. Exiting.\n+\n+Before proceeding, verify each snapshot file still exists in `TODO/`. If it has been deleted or moved, skip it — it was likely already processed.\n+\n+For each remaining snapshot file, extract the **label** from the filename convention `YYYY-MM-DD_Snapshot_<label>.md` — parse `<label>` (everything between `_Snapshot_` and `.md`).\n+\n+Set **`snapshot_path`** to the full path of the file. **Skip Step 1** and proceed directly to **Step 2**.\n+{{/if}}\n+\n+### Step 1 — Find the matching snapshot (issue trigger only)\n+\n+List the files in `.github/ContentHawk/TODO/`. Look for snapshot files matching the pattern `*_Snapshot_<label>.md` where `<label>` matches one of the labels from the closed issue.\n+\n+If **no matching snapshot** is found, **stop immediately** with a message:\n+\n+> No snapshot in TODO/ matches the labels on issue #${{ github.event.issue.number }}. Nothing to do.\n+\n+If multiple snapshots match (e.g. different dates for the same label), use the **most recent** one (highest date prefix).\n+\n+Read the full content of the matched snapshot file. Call its path **`snapshot_path`**.\n+\n+### Step 2 — Parse the Files to Review table\n+\n+Parse the `## Files to Review` table from the snapshot. For each row, extract the `CheckResult` column value.\n+\n+Categorise the rows:\n+\n+* **Pending rows** — `CheckResult` is exactly `pending`\n+* **Issue rows** — `CheckResult` matches `Issue #<number>` (extract the issue number)\n+* **Other rows** — any other value (e.g. `skipped`)\n+\n+If there are **any pending rows**, **stop immediately** with a message:\n+\n+> Snapshot `<snapshot_path>` still has <N> pending rows. Not ready to move to DONE.\n+\n+If there are **no issue rows and no pending rows** (all rows are `skipped`), the snapshot is already complete — **skip Step 3** and go directly to **Step 4**.\n+\n+If there are **issue rows**, proceed to **Step 3** to verify they are all closed.\n+\n+### Step 3 — Check all referenced issues are closed\n+\n+For each issue number extracted from the table, use the GitHub tools to check the issue state.\n+\n+If **any** referenced issue is still open, **stop immediately** with a message:\n+\n+> Snapshot `<snapshot_path>` is not complete — issue #<number> is still open (<M> of <total> issues closed so far).\n+\n+### Step 4 — Move snapshot to DONE\n+\n+The snapshot is complete. Use the `create-pull-request` safe-output to create a PR that moves the snapshot from `<snapshot_path>` to `.github/ContentHawk/DONE/<basename>` with the commit message:\n+\n+```\n+content-hawk: move completed snapshot to DONE\n+```\n+\n+Output a summary:\n+\n+> Snapshot `<snapshot_path>` is complete. All rows are resolved (skipped or issues closed). Moved to DONE/.",
+          "snapshot_ref": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "snapshot_blob_sha": "d27afe1cd66c9a9375bc39f569208ee3143cb26a",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__e231121470b4ba5338e933dc2171d3b1fd3ded2b__content-snapshot-done.md",
+          "snapshot_bytes": 6389,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-snapshot-done.lock.yml\",\"generated_workflow_file\":\"content-snapshot-done.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-snapshot-done.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-snapshot-done.md",
+      "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "authored_at": "2026-05-15T01:11:10Z",
+      "committed_at": "2026-05-15T01:11:10Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 Installing ContentHawk (#12715)\n\nUpgraded ContentHawk using the brand new schmick Claude skill for\ninstalling it 😉.\n\n\n**What changed?**\nI reworked the workflows to avoid the need for a user to supply a custom\nGitHub token (`CONTENTHAWK_GITHUB_PAT`). The main thing that changed is\nthat `Content Judge` no longer triggers using `workflow_dispatch` as\nthis would require a personalised GitHub token to be used. Triggering\nGitHub within Agentic workflows requires a custom GitHub token unless\nthey are triggered via `safe_outputs` (The workflow level permissions\nfor agentic workflows enforce this).\n\n**Changes**\n- Removed all references to `CONTENTHAWK_GITHUB_PAT`\n- 👨‍⚖️Updated `Content Judge PR` to trigger when `Content Judge`\nfinishes running\n- 👨‍⚖️Updated `Content Judge PR` to get inputs from workflow artefacts\nto circumvent permissions issues\n- 🗾Update `Content Campaign` to run existing label in [pre-activation\nsteps](https://github.github.com/gh-aw/reference/triggers/#pre-activation-steps-onsteps)\nto allow for job level GITHUB_TOKEN permissions.",
+      "parent_shas": [
+        "9205018548c1659e85a538d9795e6d08efe03112"
+      ],
+      "tree_sha": "785242e56c1a6e859cb7d930c0fc14327b379444",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-snapshot-done.md",
+          "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "committed_at": "2026-05-15T01:11:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -53,7 +53,7 @@ tools:\n   github:\n     lockdown: false\n     toolsets: [issues, search, labels, pull_requests]\n-    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+    github-token: \"${{ secrets.GITHUB_TOKEN }}\"\n \n post-steps:\n   - name: Workflow Summary",
+          "snapshot_ref": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "snapshot_blob_sha": "9a806ea0e36664281e16b5493f41efc0302809f2",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__0a9e7b77dc698a3fb4ea446221daf3c33523439b__content-snapshot-done.md",
+          "snapshot_bytes": 6379,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-snapshot-done.lock.yml\",\"generated_workflow_file\":\"content-snapshot-done.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-snapshot-done.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-snapshot-done.md",
+      "commit_sha": "6c44a5e1161d74bfcc84e874b58cffc3f4baee9e",
+      "authored_at": "2026-05-27T23:15:45Z",
+      "committed_at": "2026-05-27T23:15:45Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Use Pre-activation steps rather than exceptions for checking issue relevance (#12782)\n\n### Description\n\nThis PR updates `contenthawk-snapshot-done` to use pre-activation steps\nto check if the closed issue was relevant rather than throwing an error.\nThis doesn't functionally change how the workflow works, but it means\nwhen the workflow is skipped it will not show up as an error in GitHub\nactions.\n\n\nChanges based on this PR (I just used GitHub scripts instead since it's\neasier to read):\nhttps://github.com/SSWConsulting/SSW.Rules.Content/pull/12767\n\n### Note\nThis PR was Generated by the 🦅ContentHawk installer because I wanted to\nroll out the fix for ContentHawk in general.\n\n\n### Screenshot\n\n<img width=\"1563\" height=\"596\" alt=\"CleanShot 2026-05-28 at 08 47 14\"\nsrc=\"https://github.com/user-attachments/assets/cfd17bce-26d2-43fa-b03e-721911a74975\"\n/>\n\n**Figure: Workflows being skipped on test repo**\n\n### Fixed \n\nhttps://github.com/SSWConsulting/SSW.Rules.Content/issues/12766",
+      "parent_shas": [
+        "e4e5016ceff4aaf19053ee2103d9cd1a1088a5d3"
+      ],
+      "tree_sha": "6a4d91fc5d963790d7fb55fb68b81d99fd6410f1",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/6c44a5e1161d74bfcc84e874b58cffc3f4baee9e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-snapshot-done.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-snapshot-done.md",
+          "commit_sha": "6c44a5e1161d74bfcc84e874b58cffc3f4baee9e",
+          "committed_at": "2026-05-27T23:15:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 20,
+          "file_deletions": 13,
+          "file_changes": 33,
+          "file_patch": "@@ -8,14 +8,34 @@ description: >\n   DONE/ via the commit-files safe-output.\n \n on:\n+  permissions:\n+    contents: read\n   issues:\n     types: [closed]\n   push:\n     branches: [main]\n     paths:\n       - .github/ContentHawk/TODO/*.md\n+  steps:\n+    - name: Guard — only ContentHawk judge issues\n+      id: issue_guard\n+      if: github.event_name == 'issues'\n+      uses: actions/github-script@v7\n+      with:\n+        script: |\n+          const body = context.payload.issue?.body ?? '';\n+          const isJudgeIssue = body.includes('gh-aw-workflow-id: content-judge');\n+          console.log(isJudgeIssue ? 'ContentHawk judge issue detected. Proceeding.' : 'Not a ContentHawk judge issue. Skipping workflow.');\n+          core.setOutput('is_contenthawk_judge_issue', String(isJudgeIssue));\n name: Content Snapshot Cleanup (Agent 3b)\n \n+jobs:\n+  pre-activation:\n+    outputs:\n+      is_contenthawk_judge_issue: ${{ steps.issue_guard.outputs.is_contenthawk_judge_issue }}\n+\n+if: github.event_name == 'push' || needs.pre_activation.outputs.is_contenthawk_judge_issue == 'true'\n+\n engine:\n   id: copilot\n   model: gpt-5-mini\n@@ -36,19 +56,6 @@ safe-outputs:\n       - .github/ContentHawk/TODO/*.md\n       - .github/ContentHawk/DONE/*.md\n \n-steps:\n-  - name: Guard — only ContentHawk judge issues\n-    if: github.event_name == 'issues'\n-    env:\n-      BODY: ${{ github.event.issue.body }}\n-    run: |\n-      if echo \"$BODY\" | grep -qF \"gh-aw-workflow-id: content-judge\"; then\n-        echo \"ContentHawk judge issue detected. Proceeding.\"\n-      else\n-        echo \"Not a ContentHawk judge issue. Exiting.\"\n-        exit 1\n-      fi\n-\n tools:\n   github:\n     lockdown: false",
+          "snapshot_ref": "6c44a5e1161d74bfcc84e874b58cffc3f4baee9e",
+          "snapshot_blob_sha": "b3e8f67f177ed79b9ff6b3eb5b9ddbbf046a5dfe",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__6c44a5e1161d74bfcc84e874b58cffc3f4baee9e__content-snapshot-done.md",
+          "snapshot_bytes": 6812,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-snapshot-done.lock.yml\",\"generated_workflow_file\":\"content-snapshot-done.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-snapshot-done.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+    "source_full_name": "plengauer/Thoth",
+    "source_owner": "plengauer",
+    "source_repo": "Thoth",
+    "md_path": ".github/workflows/monitor_changelog.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/plengauer/Thoth/blob/HEAD/.github/workflows/monitor_changelog.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "plengauer/Thoth",
+      "generated_owner": "plengauer",
+      "generated_repo": "Thoth",
+      "generated_workflow_path": ".github/workflows/monitor_changelog.lock.yml",
+      "generated_workflow_file": "monitor_changelog.lock.yml",
+      "generated_html_url": "https://github.com/plengauer/Thoth/blob/71539aaebfbf201e7f9259558335b2317ebe302a/.github/workflows/monitor_changelog.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:13+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+      "source_full_name": "plengauer/Thoth",
+      "md_path": ".github/workflows/monitor_changelog.md",
+      "commit_sha": "63f42cc946903f41ed85dbede2937dbf46a7bd7c",
+      "authored_at": "2026-05-14T08:01:37Z",
+      "committed_at": "2026-05-14T08:01:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add monthly GitHub changelog monitor agentic workflow (#3390)\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: plengauer <100447901+plengauer@users.noreply.github.com>",
+      "parent_shas": [
+        "d93f847486ca941804d9062258b6a8beecf36e71"
+      ],
+      "tree_sha": "5b4ebdfba828322f94210f0877884797b6c18e87",
+      "html_url": "https://github.com/plengauer/Thoth/commit/63f42cc946903f41ed85dbede2937dbf46a7bd7c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+          "source_full_name": "plengauer/Thoth",
+          "md_path": ".github/workflows/monitor_changelog.md",
+          "commit_sha": "63f42cc946903f41ed85dbede2937dbf46a7bd7c",
+          "committed_at": "2026-05-14T08:01:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 71,
+          "file_deletions": 0,
+          "file_changes": 71,
+          "file_patch": "@@ -0,0 +1,71 @@\n+---\n+name: Monitor GitHub Changelog\n+description: Automatically reacts to important GitHub changes by reading the monthly changelog and creating issues for anything relevant to this project's GitHub Actions instrumentation\n+on:\n+  schedule:\n+    - cron: '0 6 1 * *'\n+permissions:\n+  contents: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [context, issues]\n+  web-fetch:\n+rate-limit:\n+  max: 1\n+  window: 180\n+safe-outputs:\n+  noop:\n+  create-issue:\n+    github-token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}\n+    max: 20\n+---\n+\n+# Monitor GitHub Changelog\n+\n+You are an automated agent that monitors the GitHub changelog for announcements relevant to this project and its GitHub Actions instrumentation, and creates tracking issues for anything that may require attention.\n+\n+## Your Task\n+\n+Once a month this workflow runs and performs the following steps:\n+\n+1. **Fetch the GitHub changelog**: Use the web-fetch tool to retrieve the GitHub changelog page at https://github.blog/changelog/. Also fetch the RSS/Atom feed at https://github.blog/changelog/feed/ to get structured data about recent posts.\n+\n+2. **Identify posts from the last month**: Determine the current date from context and filter for posts published in the previous calendar month (i.e., from 1st of the previous month 00:00 UTC up to but not including the 1st of the current month 00:00 UTC).\n+\n+3. **Evaluate each post for relevance**: For each post from the last month, fetch its full content using web-fetch and evaluate whether it is relevant to this project. This project provides OpenTelemetry instrumentation for shell scripts and GitHub Actions, so relevant topics include but are not limited to:\n+   - Changes to GitHub Actions runners (new OS versions, deprecations, new features)\n+   - Changes to GitHub Actions workflow syntax, expressions, or contexts\n+   - Changes to the GitHub Actions runner environment (pre-installed tools, environment variables, paths)\n+   - Changes to GitHub Actions permissions, OIDC tokens, or secrets handling\n+   - Changes to GitHub-hosted runner hardware or software\n+   - Changes to how GitHub Actions jobs and workflows are structured or executed\n+   - New or deprecated GitHub Actions built-in actions (e.g. `actions/checkout`, `actions/upload-artifact`)\n+   - Changes to the GitHub API that may affect workflow instrumentation or data collection\n+   - Changes to GitHub Actions events, triggers, or webhook payloads\n+   - Changes to GitHub Actions concurrency, caching, or artifact handling\n+   - Security changes or vulnerabilities affecting GitHub Actions\n+   - Changes to GitHub Copilot or AI coding agents that could affect agentic workflows\n+   - Changes to GitHub CLI (`gh`) commands used in action scripts\n+   - Any deprecations or breaking changes to features used in GitHub Action workflows\n+\n+4. **Search for existing issues**: For each relevant post, use the GitHub issues toolset to search existing open issues in this repository to check whether an issue for the same changelog entry already exists (search by the post title or URL).\n+\n+5. **Create issues for new relevant findings**: For each relevant post that does NOT already have a corresponding open issue, call the `create-issue` safe output with:\n+   - `title`: A clear title in the format: `[Changelog] <post title>`\n+   - `body`: A description that includes:\n+     - A link to the changelog post\n+     - A summary of what changed\n+     - A specific description of what may need to be adjusted, added, fixed, or investigated in this project as a result of the change\n+     - Any relevant context about which parts of this project are potentially affected (e.g., job-level instrumentation, workflow-level instrumentation, shell scripts, specific runner environments)\n+\n+6. **If no relevant posts are found**: Use the `noop` safe output to signal no action needed.\n+\n+## Guidelines\n+\n+- **Be thorough**: Fetch and read the full content of each changelog post before deciding whether it is relevant.\n+- **Be relevant**: Only create issues for posts that could genuinely affect this project. Avoid creating issues for purely cosmetic changes, GitHub.com UI updates, or GitHub Enterprise features unrelated to GitHub Actions.\n+- **Be specific**: The issue body should clearly describe what aspect of this project may need to change and why, not just summarize the changelog post.\n+- **Avoid duplicates**: Always search for existing open issues before creating a new one.\n+- **One issue per changelog post**: Each relevant changelog entry should result in at most one new issue.\n+- **Be conservative on rate limits**: If the changelog contains many posts, prioritize the most impactful and clearly relevant ones.",
+          "snapshot_ref": "63f42cc946903f41ed85dbede2937dbf46a7bd7c",
+          "snapshot_blob_sha": "432b8776657a5a49eb74a4730059772463e29836",
+          "snapshot_file": "snapshots/Thoth__plengauer__63f42cc946903f41ed85dbede2937dbf46a7bd7c__monitor_changelog.md",
+          "snapshot_bytes": 4632,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"plengauer/Thoth\",\"generated_owner\":\"plengauer\",\"generated_repo\":\"Thoth\",\"generated_workflow_path\":\".github/workflows/monitor_changelog.lock.yml\",\"generated_workflow_file\":\"monitor_changelog.lock.yml\",\"generated_html_url\":\"https://github.com/plengauer/Thoth/blob/71539aaebfbf201e7f9259558335b2317ebe302a/.github/workflows/monitor_changelog.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+      "source_full_name": "plengauer/Thoth",
+      "md_path": ".github/workflows/monitor_changelog.md",
+      "commit_sha": "57f66b1bd2e6cfe13049e4b8ca93d080945ea7f7",
+      "authored_at": "2026-06-01T10:58:56Z",
+      "committed_at": "2026-06-01T10:58:56Z",
+      "author_name": "Philipp Lengauer",
+      "author_email": "100447901+plengauer@users.noreply.github.com",
+      "author_login": "plengauer",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update monitor_changelog.md",
+      "parent_shas": [
+        "a832ba6dc339c92aaea9aab5d79c3e2dcbb63599"
+      ],
+      "tree_sha": "18ec2a75931364b34a09e823140fa4480307f44d",
+      "html_url": "https://github.com/plengauer/Thoth/commit/57f66b1bd2e6cfe13049e4b8ca93d080945ea7f7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+          "source_full_name": "plengauer/Thoth",
+          "md_path": ".github/workflows/monitor_changelog.md",
+          "commit_sha": "57f66b1bd2e6cfe13049e4b8ca93d080945ea7f7",
+          "committed_at": "2026-06-01T10:58:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -7,6 +7,10 @@ on:\n permissions:\n   contents: read\n   issues: read\n+network:\n+  allowed:\n+    defaults\n+    github\n tools:\n   github:\n     toolsets: [context, issues]",
+          "snapshot_ref": "57f66b1bd2e6cfe13049e4b8ca93d080945ea7f7",
+          "snapshot_blob_sha": "1c55bff1b65b2eef2226bf322d4d8f19fd1906df",
+          "snapshot_file": "snapshots/Thoth__plengauer__57f66b1bd2e6cfe13049e4b8ca93d080945ea7f7__monitor_changelog.md",
+          "snapshot_bytes": 4676,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"plengauer/Thoth\",\"generated_owner\":\"plengauer\",\"generated_repo\":\"Thoth\",\"generated_workflow_path\":\".github/workflows/monitor_changelog.lock.yml\",\"generated_workflow_file\":\"monitor_changelog.lock.yml\",\"generated_html_url\":\"https://github.com/plengauer/Thoth/blob/71539aaebfbf201e7f9259558335b2317ebe302a/.github/workflows/monitor_changelog.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+      "source_full_name": "plengauer/Thoth",
+      "md_path": ".github/workflows/monitor_changelog.md",
+      "commit_sha": "8bedb0258d8a900a0b20770ce7cfd0d13d28f02e",
+      "authored_at": "2026-06-01T11:04:42Z",
+      "committed_at": "2026-06-01T11:04:42Z",
+      "author_name": "Philipp Lengauer",
+      "author_email": "100447901+plengauer@users.noreply.github.com",
+      "author_login": "plengauer",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Format allowed networks in monitor_changelog.md",
+      "parent_shas": [
+        "57f66b1bd2e6cfe13049e4b8ca93d080945ea7f7"
+      ],
+      "tree_sha": "4c60be78591e1b006abffdff22e4e20d933bde0b",
+      "html_url": "https://github.com/plengauer/Thoth/commit/8bedb0258d8a900a0b20770ce7cfd0d13d28f02e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+          "source_full_name": "plengauer/Thoth",
+          "md_path": ".github/workflows/monitor_changelog.md",
+          "commit_sha": "8bedb0258d8a900a0b20770ce7cfd0d13d28f02e",
+          "committed_at": "2026-06-01T11:04:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -9,8 +9,8 @@ permissions:\n   issues: read\n network:\n   allowed:\n-    defaults\n-    github\n+    - defaults\n+    - github\n tools:\n   github:\n     toolsets: [context, issues]",
+          "snapshot_ref": "8bedb0258d8a900a0b20770ce7cfd0d13d28f02e",
+          "snapshot_blob_sha": "c2b6a9119d65650bc2e81a23ec4652b873a2f2d9",
+          "snapshot_file": "snapshots/Thoth__plengauer__8bedb0258d8a900a0b20770ce7cfd0d13d28f02e__monitor_changelog.md",
+          "snapshot_bytes": 4680,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"plengauer/Thoth\",\"generated_owner\":\"plengauer\",\"generated_repo\":\"Thoth\",\"generated_workflow_path\":\".github/workflows/monitor_changelog.lock.yml\",\"generated_workflow_file\":\"monitor_changelog.lock.yml\",\"generated_html_url\":\"https://github.com/plengauer/Thoth/blob/71539aaebfbf201e7f9259558335b2317ebe302a/.github/workflows/monitor_changelog.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+      "source_full_name": "plengauer/Thoth",
+      "md_path": ".github/workflows/monitor_changelog.md",
+      "commit_sha": "b96ea740fc107bccab76ced4675fd9903d436698",
+      "authored_at": "2026-07-05T07:58:49Z",
+      "committed_at": "2026-07-05T07:58:49Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Unbreak agentic workflow recompilation with current gh-aw schema (#3704)\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "1451eaf16379bd5d0915b71e7d425b3aea17277f"
+      ],
+      "tree_sha": "0ece4d91f29d845e8052112f73b6cbb09347ccb0",
+      "html_url": "https://github.com/plengauer/Thoth/commit/b96ea740fc107bccab76ced4675fd9903d436698",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "plengauer/Thoth:.github/workflows/monitor_changelog.md",
+          "source_full_name": "plengauer/Thoth",
+          "md_path": ".github/workflows/monitor_changelog.md",
+          "commit_sha": "b96ea740fc107bccab76ced4675fd9903d436698",
+          "committed_at": "2026-07-05T07:58:49Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 3,
+          "file_changes": 3,
+          "file_patch": "@@ -15,9 +15,6 @@ tools:\n   github:\n     toolsets: [context, issues]\n   web-fetch:\n-rate-limit:\n-  max: 1\n-  window: 180\n safe-outputs:\n   noop:\n   create-issue:",
+          "snapshot_ref": "b96ea740fc107bccab76ced4675fd9903d436698",
+          "snapshot_blob_sha": "d6fbf8167adcb6e676dc405b3ae317d8cebc2b57",
+          "snapshot_file": "snapshots/Thoth__plengauer__b96ea740fc107bccab76ced4675fd9903d436698__monitor_changelog.md",
+          "snapshot_bytes": 4645,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"plengauer/Thoth\",\"generated_owner\":\"plengauer\",\"generated_repo\":\"Thoth\",\"generated_workflow_path\":\".github/workflows/monitor_changelog.lock.yml\",\"generated_workflow_file\":\"monitor_changelog.lock.yml\",\"generated_html_url\":\"https://github.com/plengauer/Thoth/blob/71539aaebfbf201e7f9259558335b2317ebe302a/.github/workflows/monitor_changelog.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

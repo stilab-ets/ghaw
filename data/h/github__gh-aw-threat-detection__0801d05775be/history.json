@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-threat-detection:.github/workflows/gh-aw-parity-monitor.md",
+    "source_full_name": "github/gh-aw-threat-detection",
+    "source_owner": "github",
+    "source_repo": "gh-aw-threat-detection",
+    "md_path": ".github/workflows/gh-aw-parity-monitor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-threat-detection/blob/HEAD/.github/workflows/gh-aw-parity-monitor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-threat-detection",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-threat-detection",
+      "generated_workflow_path": ".github/workflows/gh-aw-parity-monitor.lock.yml",
+      "generated_workflow_file": "gh-aw-parity-monitor.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/gh-aw-parity-monitor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:45+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/gh-aw-parity-monitor.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/gh-aw-parity-monitor.md",
+      "commit_sha": "0fb2d80e4441c7f9b42011fc0aa795c3928f5f8e",
+      "authored_at": "2026-07-30T21:06:28Z",
+      "committed_at": "2026-07-30T21:06:28Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): add gh-aw parity monitor + release-binary skill (#703)\n\n* feat(workflows): add gh-aw parity monitor agentic workflow\n\nAdd a daily agentic workflow that checks github/gh-aw for releases and\nprereleases published since the last run (tracked via cache-memory state),\nextracts every threat-detection-related change from the new (pre)releases,\nand opens a single issue listing them with PR links so this repository can\nstay in parity with the main gh-aw workflow.\n\nCompiled with gh-aw v0.83.4 to match the repository's existing lock files.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* docs(skills): add get-gh-aw-release-binary skill\n\nDocument how to obtain the latest github/gh-aw release binary: resolving the\nlatest stable vs. latest-overall (including prereleases) tag, installing the gh\nCLI extension, downloading the correct raw platform asset, and verifying its\nchecksum. Cross-references the update-workflow-versions skill and notes the\nseparate threat-detect binary release.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n---------\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "5d6b55a4679a58d1169acf8cb01d853573a2dc36"
+      ],
+      "tree_sha": "97d1540e70c1456f3146faaae51a5035b684d3c2",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/0fb2d80e4441c7f9b42011fc0aa795c3928f5f8e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/gh-aw-parity-monitor.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/gh-aw-parity-monitor.md",
+          "commit_sha": "0fb2d80e4441c7f9b42011fc0aa795c3928f5f8e",
+          "committed_at": "2026-07-30T21:06:28Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 139,
+          "file_deletions": 0,
+          "file_changes": 139,
+          "file_patch": "@@ -0,0 +1,139 @@\n+---\n+description: Daily scan of github/gh-aw releases and prereleases published since the last run; opens an issue summarizing every threat-detection-related change (with PR links) so this repository stays in parity with the main gh-aw workflow\n+on:\n+  workflow_dispatch:\n+  schedule: daily\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+name: gh-aw Parity Monitor\n+engine: copilot\n+strict: false\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests]\n+  cache-memory:\n+    key: gh-aw-parity-monitor-${{ github.repository }}\n+    allowed-extensions: [\".json\"]\n+safe-outputs:\n+  allowed-domains: [default-safe-outputs]\n+  create-issue:\n+    title-prefix: \"[gh-aw-parity] \"\n+    labels: [automation, gh-aw-parity]\n+    max: 1\n+timeout-minutes: 15\n+---\n+\n+# gh-aw Parity Monitor\n+\n+You watch the upstream **`github/gh-aw`** repository for new releases and\n+prereleases and surface every change that touches **threat detection**, so the\n+maintainers of **this** repository (`github/gh-aw-threat-detection`, which ships\n+the `threat-detect` binary consumed by `gh-aw`) can stay in parity with the main\n+`gh-aw` workflow.\n+\n+Keep every output concise and factual. Your only job is to **find** the new\n+(pre)releases since your last run, **extract** the threat-detection-related\n+changes from them, and **report** them in a single issue with links.\n+\n+## State: what \"since the last time it ran\" means\n+\n+You have a persistent cache-memory directory at `/tmp/gh-aw/cache-memory/`.\n+State is kept in a single JSON file:\n+\n+```\n+/tmp/gh-aw/cache-memory/last-seen.json\n+```\n+\n+with this shape:\n+\n+```json\n+{ \"last_published_at\": \"2026-01-01T00:00:00Z\", \"last_tag\": \"v1.2.3\" }\n+```\n+\n+- `last_published_at` — ISO-8601 UTC `published_at` of the newest gh-aw\n+  (pre)release you have already processed.\n+- `last_tag` — the tag name of that release (for humans / debugging).\n+\n+Read this file at the start of the run:\n+\n+- **If the file does not exist or cannot be parsed (first run / cold cache):**\n+  do **not** open an issue. Treat this run as a baseline. Find the single newest\n+  `github/gh-aw` release or prerelease, write its `published_at` and `tag_name`\n+  into `last-seen.json`, and finish by calling the `noop` safe-output tool with a\n+  short message such as `Baseline established at <tag>; no issue on first run`.\n+- **If the file exists:** use `last_published_at` as the low-water mark for\n+  \"new\" releases below.\n+\n+Always overwrite `last-seen.json` at the end of a successful run with the newest\n+processed release (see Steps step 6), even when no threat-detection changes were\n+found, so you never re-process the same release.\n+\n+## Steps\n+\n+Use the GitHub tools (do not use `gh` — it is not authenticated). All reads\n+target `owner: github`, `repo: gh-aw`.\n+\n+1. Read `/tmp/gh-aw/cache-memory/last-seen.json`. Apply the baseline rule above\n+   if it is missing/unparseable.\n+2. List releases in `github/gh-aw`, newest first. Include **both** full releases\n+   and prereleases; **exclude drafts**. Consider a release **new** when its\n+   `published_at` is strictly greater than `last_published_at` from state. Bound\n+   your work to at most the 30 most recent releases — do not paginate further\n+   back than that. If none are new, skip to step 6 (no issue).\n+3. For each new (pre)release, gather:\n+   - `tag_name`, whether it is a `prerelease`, its `published_at`, and its\n+     `html_url`.\n+   - The release **body/notes**. `gh-aw` release notes contain an auto-generated\n+     changelog listing merged PRs with their links.\n+4. From each new release, extract the **threat-detection-related** changes.\n+   Treat an entry as related if its PR title, release-note line, or referenced\n+   commit message mentions any of (case-insensitive):\n+   - `threat detection`, `threat-detection`, `threat detect`, `threat-detect`\n+   - `detection job`, `detection result`, `detection_result`\n+   - `prompt injection`, `secret leak`, `malicious patch`\n+   - `safe-outputs` threat gating, or the `gh-aw-detection` feature\n+   For each matching entry capture: the PR number and PR URL\n+   (`https://github.com/github/gh-aw/pull/<n>`), a one-line description (the PR\n+   title or note text), and the release tag it shipped in. De-duplicate by PR\n+   number across releases (a PR appears once, attributed to the earliest release\n+   that contains it).\n+5. Decide the output:\n+   - **If one or more threat-detection-related changes were found**, create\n+     exactly one issue (see Output).\n+   - **If new releases exist but none contained threat-detection changes**, do\n+     not open an issue — call the `noop` safe-output tool with a short message\n+     such as `<N> new gh-aw (pre)releases, no threat-detection changes`.\n+6. Update state: write `/tmp/gh-aw/cache-memory/last-seen.json` with the\n+   `published_at` and `tag_name` of the **newest** release you saw this run\n+   (the first item from step 2's newest-first list), regardless of whether you\n+   opened an issue. This advances the low-water mark so the next run starts from\n+   here.\n+\n+## Output\n+\n+When you found one or more threat-detection-related changes, create exactly one\n+issue.\n+\n+- Title: `gh-aw threat-detection changes to review - <UTC date, YYYY-MM-DD>`\n+- Body must contain, in this order:\n+  1. A one-line summary: the count of new (pre)releases scanned, their tag range,\n+     and the count of threat-detection-related changes found.\n+  2. A `## Releases` section: one bullet per new (pre)release that contained a\n+     threat-detection change, formatted\n+     `- <tag> (<release|prerelease>, <published_at date>) — <release html_url>`.\n+  3. A `## Threat-detection changes` section: one Markdown bullet per\n+     de-duplicated change, formatted\n+     `- [#<pr_number>](<pr_url>) — <one-line description> — shipped in <tag>`.\n+  4. A short `## Why this matters` line reminding the reader that this repository\n+     ships the `threat-detect` binary consumed by `gh-aw` and these changes may\n+     require matching updates here to stay in parity.\n+  5. A trailing line: `Scanned: <this run's URL>` using\n+     `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`.\n+\n+Do not include anything else in the issue body.",
+          "snapshot_ref": "0fb2d80e4441c7f9b42011fc0aa795c3928f5f8e",
+          "snapshot_blob_sha": "cb130a73f100211180c09cc4e5c059603bef95a4",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__0fb2d80e4441c7f9b42011fc0aa795c3928f5f8e__gh-aw-parity-monitor.md",
+          "snapshot_bytes": 6170,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/gh-aw-parity-monitor.lock.yml\",\"generated_workflow_file\":\"gh-aw-parity-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/gh-aw-parity-monitor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

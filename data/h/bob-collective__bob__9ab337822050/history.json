@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "bob-collective/bob:.github/workflows/openapi-docs-sync.md",
+    "source_full_name": "bob-collective/bob",
+    "source_owner": "bob-collective",
+    "source_repo": "bob",
+    "md_path": ".github/workflows/openapi-docs-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/bob-collective/bob/blob/HEAD/.github/workflows/openapi-docs-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "bob-collective/bob",
+      "generated_owner": "bob-collective",
+      "generated_repo": "bob",
+      "generated_workflow_path": ".github/workflows/openapi-docs-sync.lock.yml",
+      "generated_workflow_file": "openapi-docs-sync.lock.yml",
+      "generated_html_url": "https://github.com/bob-collective/bob/blob/a8834f6facdc369975faabc982a13a90784db435/.github/workflows/openapi-docs-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:51+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "bob-collective/bob:.github/workflows/openapi-docs-sync.md",
+      "source_full_name": "bob-collective/bob",
+      "md_path": ".github/workflows/openapi-docs-sync.md",
+      "commit_sha": "32dab71587e8a1f4993c29c41b15b1d75d03b9b6",
+      "authored_at": "2026-03-20T17:29:39Z",
+      "committed_at": "2026-03-20T17:29:39Z",
+      "author_name": "Gregory Hill",
+      "author_email": "gregorydhill@outlook.com",
+      "author_login": "gregdhill",
+      "author_account_type": "User",
+      "committer_name": "Gregory Hill",
+      "committer_email": "gregorydhill@outlook.com",
+      "committer_login": "gregdhill",
+      "committer_account_type": "User",
+      "message": "docs: add agentic workflow for docs update\n\nSigned-off-by: Gregory Hill <gregorydhill@outlook.com>",
+      "parent_shas": [
+        "ba5111b7a21a8b34cf51be321868cbc187fe57c0"
+      ],
+      "tree_sha": "652b185e55b80e8eaae4644ac3267cc0f4864694",
+      "html_url": "https://github.com/bob-collective/bob/commit/32dab71587e8a1f4993c29c41b15b1d75d03b9b6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "bob-collective/bob:.github/workflows/openapi-docs-sync.md",
+          "source_full_name": "bob-collective/bob",
+          "md_path": ".github/workflows/openapi-docs-sync.md",
+          "commit_sha": "32dab71587e8a1f4993c29c41b15b1d75d03b9b6",
+          "committed_at": "2026-03-20T17:29:39Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 61,
+          "file_deletions": 0,
+          "file_changes": 61,
+          "file_patch": "@@ -0,0 +1,61 @@\n+---\n+description: Review merged OpenAPI spec changes and open a PR with relevant docs updates.\n+on:\n+  push:\n+    branches:\n+      - master\n+    paths:\n+      - docs/gateway/api-reference/openapi.json\n+engine: claude\n+permissions: read-all\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+  noop:\n+  missing-tool:\n+    create-issue: true\n+---\n+\n+# OpenAPI Docs Sync\n+\n+You are a repository-aware coding agent working in this repository.\n+\n+## Mission\n+\n+When this workflow is triggered by a push to master that includes changes to docs/gateway/api-reference/openapi.json, review the OpenAPI spec diff and create a focused documentation update pull request if documentation changes are needed.\n+\n+## Required Process\n+\n+1. Confirm the changed file list for this push and verify docs/gateway/api-reference/openapi.json is included.\n+2. Compute and inspect the spec diff for this push (prefer the push range: github.event.before..github.sha).\n+3. Determine what changed semantically in the API surface (endpoints, params, request/response shapes, error codes, behavior notes, examples).\n+4. Find and update relevant documentation files so docs remain accurate and consistent with the spec.\n+5. Keep updates minimal and targeted to the OpenAPI changes in this push.\n+6. Validate documentation quality (links, formatting, and internal consistency).\n+\n+## Scope Rules\n+\n+- Update only documentation and related generated docs artifacts when needed.\n+- Do not modify contracts, SDK, relayer, or other unrelated source code.\n+- Do not revert or alter unrelated local changes.\n+- Prefer concise wording and preserve existing documentation style.\n+\n+## Pull Request Requirements\n+\n+When documentation updates are necessary:\n+\n+1. Create a branch.\n+2. Commit only relevant documentation updates.\n+3. Open one pull request using safe output `create-pull-request`.\n+4. Use this PR title format: `[openapi-docs] Sync docs for OpenAPI updates (<short date>)`.\n+5. In the PR body, include:\n+   - Summary of OpenAPI changes detected in this push.\n+   - Files updated and why.\n+   - Any assumptions or follow-up items.\n+\n+## No-Change Path\n+\n+If the OpenAPI diff does not require documentation edits (for example, non-user-visible metadata-only changes), call safe output `noop` with a clear explanation of what you checked and why no PR was created.",
+          "snapshot_ref": "32dab71587e8a1f4993c29c41b15b1d75d03b9b6",
+          "snapshot_blob_sha": "4bfeb526a48862bb6ed0d04c1654538aedd2f7d5",
+          "snapshot_file": "snapshots/bob__bob-collective__32dab71587e8a1f4993c29c41b15b1d75d03b9b6__openapi-docs-sync.md",
+          "snapshot_bytes": 2320,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"bob-collective/bob\",\"generated_owner\":\"bob-collective\",\"generated_repo\":\"bob\",\"generated_workflow_path\":\".github/workflows/openapi-docs-sync.lock.yml\",\"generated_workflow_file\":\"openapi-docs-sync.lock.yml\",\"generated_html_url\":\"https://github.com/bob-collective/bob/blob/a8834f6facdc369975faabc982a13a90784db435/.github/workflows/openapi-docs-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

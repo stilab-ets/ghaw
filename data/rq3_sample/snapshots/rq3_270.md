@@ -1,0 +1,216 @@
+---
+description: Weekly documentation review with a 7-day change gate and 48-hour agent context
+on:
+  schedule: weekly
+  workflow_dispatch:
+  skip-if-match:
+    query: 'is:pr is:open in:title "[docs]"'
+    max: 1
+permissions:
+  contents: read
+  copilot-requests: write
+  issues: read
+  pull-requests: read
+sandbox:
+  agent:
+    id: awf
+if: needs.check_relevant_changes.outputs.has_changes == 'true' && needs.check_relevant_changes.outputs.skip_agent != 'true'
+jobs:
+  check_relevant_changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      has_changes: ${{ steps.check.outputs.has_changes }}
+      changed_count: ${{ steps.check.outputs.changed_count }}
+      skip_agent: ${{ steps.check.outputs.skip_agent }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Check for relevant changes
+        id: check
+        run: |
+          DIFF_PREVIEW=$(mktemp)
+          COUNT=$(git log --since="7 days ago" --oneline -- src/ containers/ scripts/ | wc -l | tr -d ' ')
+          git log --since="7 days ago" --format="=== Commit %H: %s ===" --stat -- src/ containers/ scripts/ docs/ '*.md' | head -30 > "$DIFF_PREVIEW"
+          DIFF_BYTES=$(wc -c < "$DIFF_PREVIEW" | tr -d ' ')
+          DIFF_LINES=$(wc -l < "$DIFF_PREVIEW" | tr -d ' ')
+          HAS_CHANGES=false
+          SKIP_AGENT=false
+          if [ "$COUNT" -gt 0 ]; then
+            HAS_CHANGES=true
+          fi
+          if [ "$HAS_CHANGES" = "true" ] && [ "$DIFF_LINES" -lt 3 ]; then
+            SKIP_AGENT=true
+            echo "::warning::Recent diffs are minimal ($DIFF_LINES lines, $DIFF_BYTES bytes). Skipping agent run."
+          fi
+          {
+            echo "changed_count=$COUNT"
+            echo "has_changes=$HAS_CHANGES"
+            echo "skip_agent=$SKIP_AGENT"
+          } >> "$GITHUB_OUTPUT"
+max-turns: 30
+model: claude-haiku-4.5
+engine:
+  id: copilot
+tools:
+  edit:
+  bash: false
+  github: false
+safe-outputs:
+  threat-detection:
+    enabled: false
+  create-pull-request:
+    title-prefix: "[docs] "
+    labels: [documentation, ai-generated]
+    reviewers: copilot
+    draft: false
+timeout-minutes: 15
+steps:
+  - name: Ensure recent git history is available
+    run: |
+      if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+        git fetch --prune --unshallow
+      fi
+  - name: Build documentation maintainer context
+    id: context
+    env:
+      EXPR_NEEDS_CHECK_RELEVANT_CHANGES_OUTPUTS_CHANGED_COUNT: ${{ needs.check_relevant_changes.outputs.changed_count }}
+    run: |
+      CONTEXT_DIR=/tmp/gh-aw/doc-maintainer-context
+      mkdir -p "$CONTEXT_DIR"
+      DOC_POOL=$(mktemp)
+      TOKENS=$(mktemp)
+      AFFECTED=$(mktemp)
+      COUNT="$EXPR_NEEDS_CHECK_RELEVANT_CHANGES_OUTPUTS_CHANGED_COUNT"
+
+      {
+        find docs/ -name "*.md" 2>/dev/null
+        find . -maxdepth 1 -name "*.md" ! -name "AGENTS.md" ! -name "CLAUDE.md" ! -name "skill.md"
+      } | sort > "$DOC_POOL"
+
+      git log --since="48 hours ago" --format="=== Commit %H: %s ===" --stat -- src/ containers/ scripts/ docs/ '*.md' | head -20 > "$CONTEXT_DIR/recent-diffs.txt"
+
+      git log --since="48 hours ago" --format="%H" -- src/ containers/ scripts/ | \
+        while read -r sha; do
+          git show --name-only --format="" "$sha" -- docs/ '*.md' 2>/dev/null
+        done | grep -E '(^docs/.*\.md$|^[^/]+\.md$)' | sort -u | head -3 > "$AFFECTED" || true
+
+      if [ ! -s "$AFFECTED" ]; then
+        git log --since="48 hours ago" --name-only --format="" -- src/ containers/ scripts/ | \
+          grep -v '^$' | sed -E 's|.*/||; s|\.[^.]+$||' | \
+          tr '[:upper:]' '[:lower:]' | tr '[:punct:]' '\n' | grep -E '^[a-z0-9]{3,}$' | sort -u > "$TOKENS" || true
+        if [ -s "$TOKENS" ]; then
+          grep -i -F -f "$TOKENS" "$DOC_POOL" | head -3 > "$AFFECTED" || true
+        fi
+      fi
+
+      if [ ! -s "$AFFECTED" ]; then
+        head -3 "$DOC_POOL" > "$AFFECTED"
+      fi
+
+      cp "$AFFECTED" "$CONTEXT_DIR/affected-docs.txt"
+      {
+        echo "## Changes"
+        echo "- changed_count: $COUNT"
+        echo "- has_changes: true"
+        echo ""
+        echo "## Affected Documentation"
+        cat "$CONTEXT_DIR/affected-docs.txt"
+        echo ""
+        echo "## Recent Git Diffs"
+        cat "$CONTEXT_DIR/recent-diffs.txt"
+      } > "$CONTEXT_DIR/context.md"
+
+      CONTEXT_SIZE=$(wc -c < "$CONTEXT_DIR/context.md" | tr -d ' ')
+      DIFF_LINES=$(wc -l < "$CONTEXT_DIR/recent-diffs.txt" | tr -d ' ')
+      echo "Context size: ${CONTEXT_SIZE} bytes"
+      echo "Diff lines: ${DIFF_LINES}"
+      cat "$CONTEXT_DIR/affected-docs.txt" || echo "(empty)"
+      if [ "$CONTEXT_SIZE" -lt 100 ]; then
+        echo "::warning::Context file is empty or minimal ($CONTEXT_SIZE bytes). Skipping agent run."
+        echo "skip_agent=true" >> "$GITHUB_OUTPUT"
+      else
+        echo "skip_agent=false" >> "$GITHUB_OUTPUT"
+      fi
+  - name: Pre-load affected documentation content
+    run: |
+      CONTEXT_DIR=/tmp/gh-aw/doc-maintainer-context
+      AFFECTED="$CONTEXT_DIR/affected-docs.txt"
+
+      if [ ! -s "$AFFECTED" ]; then
+        echo "No affected docs to pre-load"
+        exit 0
+      fi
+
+      {
+        echo ""
+        echo "## Affected Documentation Content (pre-loaded — do not re-read these files)"
+        echo ""
+        head -3 "$AFFECTED" | while read -r doc; do
+          if [ -f "$doc" ]; then
+            echo "### File: $doc"
+            echo '```'
+            head -40 "$doc"
+            echo '```'
+            echo ""
+          fi
+        done
+      } >> "$CONTEXT_DIR/context.md"
+
+      SIZE=$(wc -c < "$CONTEXT_DIR/context.md" | tr -d ' ')
+      echo "Final context.md size: ${SIZE} bytes"
+---
+
+# Documentation Maintainer
+
+You are an AI agent responsible for keeping documentation synchronized with code changes in the gh-aw-firewall repository.
+
+## Your Mission
+
+Review the precomputed git context from the past 48 hours, identify documentation that has drifted out of sync with code, and create a PR with the necessary updates. The workflow only runs after the 7-day gate detects relevant source changes.
+
+## Task Steps
+
+### 1. Analyze Pre-computed Changes
+
+Read `/tmp/gh-aw/doc-maintainer-context/context.md` first.
+
+Use the **Recent Git Diffs** section from that file as your **sole source** for recent source changes. **Do not use the `shell` tool** (and the `bash` tool is disabled). Do not attempt to run `git`, `npm test`, `ls`, or any other shell command — they are restricted in this workflow and will fail with "Permission denied", wasting your limited turns. All required git data is already pre-computed.
+
+The workflow gate already checked the past 7 days to decide whether this run is needed. The pre-computed recent diff context is intentionally limited to the past 48 hours to stay focused while still covering delayed daily runs.
+
+### 2. Identify Documentation Gaps
+
+The first 40 lines of up to 3 affected documentation files are pre-loaded in `context.md` under **Affected Documentation Content**. Read from `context.md` directly and only re-read a file with the `edit` tool when you need content beyond the pre-loaded preview.
+
+Review only the files listed under **Affected Documentation** in `/tmp/gh-aw/doc-maintainer-context/context.md` (max 3 files) and identify what needs to be updated. Do not proactively read additional files not in this list.
+
+### 3. Verify Code Examples
+
+Ensure code examples in documentation match current CLI flags, environment variables, Docker configuration, and file paths. Verify them **only by reading** the pre-computed context and the documentation/source files via the `edit` tool. **Do not use the `shell` tool** to run tests, builds, or command-line checks — shell attempts are restricted/denied in this workflow and will waste your limited turns.
+
+### 4. Make Documentation Updates
+
+Use the edit tool to update documentation files:
+
+- **Add missing documentation** for new features
+- **Update outdated content** that no longer matches code
+- **Fix broken examples** with correct syntax
+- **Update version numbers** if applicable
+- **Add deprecation notices** for removed features
+
+Keep updates:
+- Minimal and focused
+- Consistent with existing style
+- Clear and accurate
+
+### 5. Create Pull Request
+
+After making updates, the safe-outputs system will automatically create a PR. Include in your changes:
+
+**PR Description**: Summarize updated docs, reference the triggering code changes, and list what was verified.
+
+**Success**: Review the 48-hour commit context after the 7-day gate fires, update out-of-sync docs, verify examples, and create a clear PR summary.

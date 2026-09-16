@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+    "source_full_name": "Josverl/micropython-stubs",
+    "source_owner": "Josverl",
+    "source_repo": "micropython-stubs",
+    "md_path": ".github/workflows/quality-issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Josverl/micropython-stubs/blob/HEAD/.github/workflows/quality-issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Josverl/micropython-stubs",
+      "generated_owner": "Josverl",
+      "generated_repo": "micropython-stubs",
+      "generated_workflow_path": ".github/workflows/quality-issue-triage.lock.yml",
+      "generated_workflow_file": "quality-issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/Josverl/micropython-stubs/blob/f7d57982148ec51ce1ea21eeaca7a6d1d71d2ad4/.github/workflows/quality-issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:57:28+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+      "source_full_name": "Josverl/micropython-stubs",
+      "md_path": ".github/workflows/quality-issue-triage.md",
+      "commit_sha": "85bcc359cc792b30a785bdf231554aaa22a15703",
+      "authored_at": "2026-05-09T19:36:19Z",
+      "committed_at": "2026-05-09T19:36:19Z",
+      "author_name": "Jos Verlinde",
+      "author_email": "Jos_Verlinde@hotmail.com",
+      "author_login": "Josverl",
+      "author_account_type": "User",
+      "committer_name": "Jos Verlinde",
+      "committer_email": "Jos_Verlinde@hotmail.com",
+      "committer_login": "Josverl",
+      "committer_account_type": "User",
+      "message": "Add quality issue triage workflow for MicroPython type stubs\n\nThis workflow automates the triage process for quality issues related to type stubs in the repository. It includes checks for issue labels, scope determination, and sub-issue creation based on the reported problems. The workflow can be triggered by new issues or manually via workflow dispatch.\n\nSigned-off-by: Jos Verlinde <Jos_Verlinde@hotmail.com>",
+      "parent_shas": [
+        "c9443a9649d398780109e0b2234908f8f1de662a"
+      ],
+      "tree_sha": "3d329465a0546c48fd794848c5aeba6bb794e852",
+      "html_url": "https://github.com/Josverl/micropython-stubs/commit/85bcc359cc792b30a785bdf231554aaa22a15703",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+          "source_full_name": "Josverl/micropython-stubs",
+          "md_path": ".github/workflows/quality-issue-triage.md",
+          "commit_sha": "85bcc359cc792b30a785bdf231554aaa22a15703",
+          "committed_at": "2026-05-09T19:36:19Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 101,
+          "file_deletions": 0,
+          "file_changes": 101,
+          "file_patch": "@@ -0,0 +1,101 @@\n+---\n+on:\n+  issues:\n+    types: [opened, labeled]\n+  workflow_dispatch:\n+    inputs:\n+      issue_number:\n+        description: 'Issue number to triage (optional, only applicable if triggered manually)'\n+        required: true\n+        default: ''\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+\n+network: defaults\n+\n+safe-outputs:\n+  add-comment:\n+    max: 3\n+  add-labels:\n+    max: 5\n+  create-issue:\n+    max: 10\n+  link-sub-issue:\n+    max: 10\n+\n+---\n+\n+# quality-issue-triage\n+\n+Triage quality issues for MicroPython type stubs in this repository.\n+\n+## Instructions\n+\n+When triggered by `issues`:\n+\n+1. Only continue if the issue currently has a label named `Quality` (case-insensitive).\n+   - If it does not, stop with no action.\n+\n+2. Inspect the issue title and body and decide whether it is specifically about one or more problems in type stubs maintained in this repository.\n+   - In scope examples: wrong or missing types in `.pyi` stubs, incorrect signatures, bad module/class/function definitions, typing regressions in published stubs.\n+   - Out of scope examples: runtime firmware bugs, hardware troubleshooting, general feature requests unrelated to stubs, documentation-only requests not tied to stub defects.\n+\n+3. If out of scope:\n+   - Add label `More info required`.\n+   - Add a brief comment explaining that this tracker is for stub quality issues and asking the reporter to clarify the exact stub module(s), symbols, and expected typing behavior.\n+   - Stop processing.\n+\n+4. If in scope, check information completeness:\n+   - The report must include either:\n+     - a minimal reproduction snippet directly in the issue, or\n+     - a stubs playground link starting with `https://josverl.github.io/stubs_playground` and containing embedded repro code in URL parameters or fragment.\n+       - Accept as embedded repro when parameter/fragment keys such as `code`, `snippet`, or `source` contain code text.\n+   - If neither is present:\n+     - add label `More info required`,\n+     - add a comment requesting a minimal repro snippet or a stubs playground link with embedded repro code,\n+     - stop processing.\n+\n+5. Determine the affected target scope and add one scope label:\n+   - Infer the MicroPython port from issue content when possible.\n+   - Validate candidate ports in this priority order:\n+     1) official MicroPython port names by listing `micropython/micropython` directories under `ports/` via GitHub MCP tools,\n+     2) package/board naming in this repository from `data/stub-packages.json`.\n+   - If cross-repo validation is unavailable, use `data/stub-packages.json` as the authoritative fallback.\n+   - If the issue clearly targets stdlib stubs rather than a port package, use `scope:stdlib`.\n+   - For ports, use label format `scope:port:<port>`, e.g. `scope:port:rp2`.\n+   - If the chosen scope label does not exist yet, create it and then apply it.\n+     - Use color `#0E8A16` (green) for consistency with other triage labels.\n+     - Use description `Stub quality scope label for triage routing: <scope>.`\n+   - If scope cannot be determined confidently, add label `More info required`, request clarification, and stop.\n+\n+6. Determine whether the issue describes multiple distinct problems or mixes defects with feature requests:\n+   - Group findings into unique problem types.\n+   - If there is only one problem type, add a short acknowledgement comment and stop.\n+   - If there are multiple unique problem types, create one sub-issue per unique problem type.\n+\n+7. For each sub-issue:\n+   - Use a concise title prefixed with `Quality:` and describe exactly one distinct problem.\n+   - Include a clear description with:\n+     - affected stub package/version (if known),\n+     - affected module(s)/symbol(s),\n+     - current behavior,\n+     - expected behavior,\n+     - link back to the parent issue.\n+\n+8. Link each created sub-issue to the parent issue and add a summary comment on the parent issue listing the created sub-issues.\n+\n+When triggered manually (`workflow_dispatch`):\n+\n+- Do nothing unless an issue number is present in available context. If no issue context is available, add a short log-style response and exit safely.\n+\n+## Notes\n+\n+- Keep actions focused, deterministic, and minimal.\n+- Do not modify code, pull requests, or unrelated issues.",
+          "snapshot_ref": "85bcc359cc792b30a785bdf231554aaa22a15703",
+          "snapshot_blob_sha": "e1b20a5923a668a3d99b00ca58b0ba8e6a3e61f7",
+          "snapshot_file": "snapshots/micropython-stubs__Josverl__85bcc359cc792b30a785bdf231554aaa22a15703__quality-issue-triage.md",
+          "snapshot_bytes": 4281,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Josverl/micropython-stubs\",\"generated_owner\":\"Josverl\",\"generated_repo\":\"micropython-stubs\",\"generated_workflow_path\":\".github/workflows/quality-issue-triage.lock.yml\",\"generated_workflow_file\":\"quality-issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/Josverl/micropython-stubs/blob/f7d57982148ec51ce1ea21eeaca7a6d1d71d2ad4/.github/workflows/quality-issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+      "source_full_name": "Josverl/micropython-stubs",
+      "md_path": ".github/workflows/quality-issue-triage.md",
+      "commit_sha": "09e89698089c057c6834fa735b24f972b2ad1b69",
+      "authored_at": "2026-05-09T20:01:11Z",
+      "committed_at": "2026-05-09T20:01:11Z",
+      "author_name": "Jos Verlinde",
+      "author_email": "Jos_Verlinde@hotmail.com",
+      "author_login": "Josverl",
+      "author_account_type": "User",
+      "committer_name": "Jos Verlinde",
+      "committer_email": "Jos_Verlinde@hotmail.com",
+      "committer_login": "Josverl",
+      "committer_account_type": "User",
+      "message": "impove issue processing\n\nSigned-off-by: Jos Verlinde <Jos_Verlinde@hotmail.com>",
+      "parent_shas": [
+        "43bfa7f6b33218cdda8f40ef52fbb3de540ed39b"
+      ],
+      "tree_sha": "06f5b9d3b480c3fe49ab82a0a75d404c01d35f8d",
+      "html_url": "https://github.com/Josverl/micropython-stubs/commit/09e89698089c057c6834fa735b24f972b2ad1b69",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+          "source_full_name": "Josverl/micropython-stubs",
+          "md_path": ".github/workflows/quality-issue-triage.md",
+          "commit_sha": "09e89698089c057c6834fa735b24f972b2ad1b69",
+          "committed_at": "2026-05-09T20:01:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 12,
+          "file_deletions": 3,
+          "file_changes": 15,
+          "file_patch": "@@ -5,8 +5,8 @@ on:\n   workflow_dispatch:\n     inputs:\n       issue_number:\n-        description: 'Issue number to triage (optional, only applicable if triggered manually)'\n-        required: true\n+        description: 'Issue number to triage when run manually'\n+        required: false\n         default: ''\n \n permissions:\n@@ -38,6 +38,14 @@ Triage quality issues for MicroPython type stubs in this repository.\n \n ## Instructions\n \n+First resolve the target issue number:\n+\n+1. If `${{ github.event.issue.number }}` is present, use that value.\n+2. Otherwise, read `${{ github.event.inputs.issue_number }}` and treat it as the target issue number.\n+3. If neither value is present, empty, or not a positive integer, call `missing_data` with a short message explaining that `workflow_dispatch` requires `issue_number`, then stop.\n+\n+After resolving the target issue number, fetch that issue via GitHub tools and use it as the single source of truth for title, body, labels, and URL in all steps below.\n+\n When triggered by `issues`:\n \n 1. Only continue if the issue currently has a label named `Quality` (case-insensitive).\n@@ -93,7 +101,8 @@ When triggered by `issues`:\n \n When triggered manually (`workflow_dispatch`):\n \n-- Do nothing unless an issue number is present in available context. If no issue context is available, add a short log-style response and exit safely.\n+- Use `${{ github.event.inputs.issue_number }}` as described above.\n+- Apply the exact same triage behavior as the `issues` trigger path (including label checks, scope routing, and optional sub-issue creation) to the fetched issue.\n \n ## Notes\n ",
+          "snapshot_ref": "09e89698089c057c6834fa735b24f972b2ad1b69",
+          "snapshot_blob_sha": "6e7cf5e5068263f5a3b0140ba692d7bcfbe1fe1a",
+          "snapshot_file": "snapshots/micropython-stubs__Josverl__09e89698089c057c6834fa735b24f972b2ad1b69__quality-issue-triage.md",
+          "snapshot_bytes": 4891,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Josverl/micropython-stubs\",\"generated_owner\":\"Josverl\",\"generated_repo\":\"micropython-stubs\",\"generated_workflow_path\":\".github/workflows/quality-issue-triage.lock.yml\",\"generated_workflow_file\":\"quality-issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/Josverl/micropython-stubs/blob/f7d57982148ec51ce1ea21eeaca7a6d1d71d2ad4/.github/workflows/quality-issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+      "source_full_name": "Josverl/micropython-stubs",
+      "md_path": ".github/workflows/quality-issue-triage.md",
+      "commit_sha": "08552b799ef9aa46bd2a64fed14a817d9095df53",
+      "authored_at": "2026-05-10T17:36:01Z",
+      "committed_at": "2026-05-10T17:36:01Z",
+      "author_name": "Jos Verlinde",
+      "author_email": "jos_verlinde@hotmail.com",
+      "author_login": "Josverl",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add min-integrity setting to quality issue triage",
+      "parent_shas": [
+        "f27b50fa3ea9c78cbd5c19f50313f64c05dc083b"
+      ],
+      "tree_sha": "bef39379f0dc63f15b10bff6ca4eb9c103b9f277",
+      "html_url": "https://github.com/Josverl/micropython-stubs/commit/08552b799ef9aa46bd2a64fed14a817d9095df53",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Josverl/micropython-stubs:.github/workflows/quality-issue-triage.md",
+          "source_full_name": "Josverl/micropython-stubs",
+          "md_path": ".github/workflows/quality-issue-triage.md",
+          "commit_sha": "08552b799ef9aa46bd2a64fed14a817d9095df53",
+          "committed_at": "2026-05-10T17:36:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -17,6 +17,7 @@ permissions:\n tools:\n   github:\n     toolsets: [default]\n+    min-integrity: unapproved # | merged | approved | unapproved | none\n \n network: defaults\n ",
+          "snapshot_ref": "08552b799ef9aa46bd2a64fed14a817d9095df53",
+          "snapshot_blob_sha": "897a4e5fa0a0343e51706f03461ad1ecc16c28f4",
+          "snapshot_file": "snapshots/micropython-stubs__Josverl__08552b799ef9aa46bd2a64fed14a817d9095df53__quality-issue-triage.md",
+          "snapshot_bytes": 4963,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Josverl/micropython-stubs\",\"generated_owner\":\"Josverl\",\"generated_repo\":\"micropython-stubs\",\"generated_workflow_path\":\".github/workflows/quality-issue-triage.lock.yml\",\"generated_workflow_file\":\"quality-issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/Josverl/micropython-stubs/blob/f7d57982148ec51ce1ea21eeaca7a6d1d71d2ad4/.github/workflows/quality-issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

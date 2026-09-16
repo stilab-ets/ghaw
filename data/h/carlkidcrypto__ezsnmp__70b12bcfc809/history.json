@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+    "source_full_name": "carlkidcrypto/ezsnmp",
+    "source_owner": "carlkidcrypto",
+    "source_repo": "ezsnmp",
+    "md_path": ".github/workflows/python_version_watcher.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/carlkidcrypto/ezsnmp/blob/HEAD/.github/workflows/python_version_watcher.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "carlkidcrypto/ezsnmp",
+      "generated_owner": "carlkidcrypto",
+      "generated_repo": "ezsnmp",
+      "generated_workflow_path": ".github/workflows/python_version_watcher.lock.yml",
+      "generated_workflow_file": "python_version_watcher.lock.yml",
+      "generated_html_url": "https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/python_version_watcher.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:55+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/python_version_watcher.md",
+      "commit_sha": "fe3dce046958014d05e9712f8d206099fe1d812a",
+      "authored_at": "2026-05-03T22:02:58Z",
+      "committed_at": "2026-05-03T22:02:58Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add Python Version Watcher agentic workflow (#906)\n\n* feat: add Python Version Watcher agentic workflow\n\nCo-authored-by: carlkidcrypto <27721404+carlkidcrypto@users.noreply.github.com>\n\n* fix: correct workflow file count description (four files, five occurrences)\n\nCo-authored-by: carlkidcrypto <27721404+carlkidcrypto@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: carlkidcrypto <27721404+carlkidcrypto@users.noreply.github.com>",
+      "parent_shas": [
+        "3848db22fe7929922bc3968eaebc6da716d265f5"
+      ],
+      "tree_sha": "df658a52c7b1cc9d281a323a34605e7ef476c32b",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/fe3dce046958014d05e9712f8d206099fe1d812a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/python_version_watcher.md",
+          "commit_sha": "fe3dce046958014d05e9712f8d206099fe1d812a",
+          "committed_at": "2026-05-03T22:02:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 208,
+          "file_deletions": 0,
+          "file_changes": 208,
+          "file_patch": "@@ -0,0 +1,208 @@\n+---\n+name: Python Version Watcher\n+\n+on:\n+  schedule:\n+    - cron: \"0 9 1 * *\"\n+  workflow_dispatch:\n+  skip-if-match:\n+    query: \"is:pr is:open head:automation/python-version-watcher label:automated-pr\"\n+\n+permissions:\n+  actions: read\n+  contents: read\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[python-version]\"\n+    labels:\n+      - automated-pr\n+    draft: true\n+    preserve-branch-name: true\n+    if-no-changes: ignore\n+\n+timeout-minutes: 45\n+\n+network: defaults\n+\n+tools:\n+  edit:\n+  bash: true\n+\n+engine:\n+  id: copilot\n+  model: auto\n+---\n+\n+## Python Version Watcher and Auto-Sync\n+\n+Monitor https://devguide.python.org/versions/ for changes to the set of actively supported Python\n+versions and automatically update the repository to stay in sync.\n+\n+## Goals\n+\n+- Detect which Python versions are currently supported (status = \"bugfix\", \"security\", or\n+  \"prerelease\") vs. end-of-life (status = \"end-of-life\").\n+- Update `setup.cfg` (`python_requires` range, `[tool:black]` `target-version` list, and\n+  `Programming Language :: Python :: 3.x` classifier lines) to reflect the current supported set.\n+- Update all four workflow files that declare a `python-version: [...]` matrix list (five\n+  occurrences total, because `tests_homebrew.yml` has two):\n+  - `.github/workflows/tests_native.yml`\n+  - `.github/workflows/tests_homebrew.yml` (has **two** occurrences of the matrix line)\n+  - `.github/workflows/tests_macports.yml`\n+  - `.github/workflows/integration_tests.yml`\n+- Open a draft PR only when changes are actually needed.\n+## Steps\n+\n+### 1. Fetch the Python versions page\n+\n+Use `curl` to download the Python versions page:\n+\n+```bash\n+curl -fsSL https://devguide.python.org/versions/ -o /tmp/pyversions.html\n+```\n+\n+- If the command fails (non-zero exit code), stop immediately and report the error.\n+- Check that `/tmp/pyversions.html` is at least 500 bytes. If not, stop and report that the\n+  page content looks truncated or empty.\n+\n+### 2. Parse supported versions\n+\n+Use Python to extract the currently supported version numbers from the downloaded page:\n+\n+```python\n+import re\n+\n+with open('/tmp/pyversions.html') as f:\n+    content = f.read()\n+\n+# The devguide page includes a table where each row has a version number and a status.\n+# Supported statuses are: bugfix, security, prerelease.\n+# End-of-life versions are excluded.\n+#\n+# Match rows that contain a supported status and extract the 3.x version number.\n+# The page structure typically contains version numbers like \"3.10\", \"3.11\", etc.\n+# and status strings like \"bugfix\", \"security\", \"prerelease\", \"end-of-life\".\n+#\n+# Strategy: find all version+status pairs from the HTML table content.\n+# Look for patterns like: >3.12<  ...  >bugfix<  or similar table cell patterns.\n+\n+# Extract version-status pairs from the versions table.\n+# The table rows look like: <td>3.13</td> ... <td>bugfix</td>\n+# Use a broad pattern then filter by status.\n+rows = re.findall(\n+    r'<tr[^>]*>.*?</tr>',\n+    content,\n+    re.DOTALL | re.IGNORECASE\n+)\n+\n+supported = []\n+for row in rows:\n+    # Look for a 3.x version number in this row\n+    ver_match = re.search(r'\\b(3\\.\\d+)\\b', row)\n+    if not ver_match:\n+        continue\n+    version = ver_match.group(1)\n+    # Check if this row contains a supported status\n+    if re.search(r'\\b(bugfix|security|prerelease)\\b', row, re.IGNORECASE):\n+        supported.append(version)\n+\n+# Sort numerically by minor version\n+supported = sorted(set(supported), key=lambda v: int(v.split('.')[1]))\n+print(supported)\n+```\n+\n+- If fewer than 3 supported versions are found, stop and report a parsing error (the page\n+  structure may have changed).\n+- Log the list of discovered supported versions before proceeding.\n+\n+### 3. Read current repo state\n+\n+Read the following files to determine what versions are currently declared in the repository:\n+\n+- `setup.cfg`: read `python_requires`, `target-version`, and all\n+  `Programming Language :: Python :: 3.x` classifier lines.\n+- `.github/workflows/tests_native.yml`: read the `python-version: [...]` matrix line.\n+- `.github/workflows/tests_homebrew.yml`: read **both** occurrences of the\n+  `python-version: [...]` matrix line (there are two — one near line 47, one near line 291).\n+- `.github/workflows/tests_macports.yml`: read the `python-version: [...]` matrix line.\n+- `.github/workflows/integration_tests.yml`: read the `python-version: [...]` matrix line.\n+\n+Extract the currently declared version list from these files and compare it to the\n+`supported` list obtained in Step 2.\n+\n+### 4. Check whether updates are needed\n+\n+Compute the expected new values:\n+\n+- **`python-version` matrix list** (for all five workflow files):\n+  A JSON-style array of the supported versions, e.g. `[\"3.10\", \"3.11\", \"3.12\", \"3.13\"]`.\n+  The line format is: `        python-version: [\"3.10\", \"3.11\", ...]`\n+  (8 spaces of indentation, versions as double-quoted strings, separated by `, `).\n+\n+- **`python_requires`** (in `setup.cfg`):\n+  `>={min},<{max_minor_plus_one}` where `min` is the lowest supported version and\n+  `max_minor_plus_one` is `3.{N+1}` where `N` is the minor of the highest supported version.\n+  Example: if supported = [\"3.10\", \"3.11\", \"3.12\", \"3.13\"], then\n+  `python_requires = >=3.10,<3.14`.\n+\n+- **`target-version`** (in `setup.cfg`):\n+  A list of `pyXYZ` tokens, e.g. `['py310', 'py311', 'py312', 'py313']`.\n+\n+- **Classifier lines** (in `setup.cfg`):\n+  One line per supported version:\n+  `    Programming Language :: Python :: 3.x`\n+  (4 spaces of indentation).\n+\n+If all current values already match the expected new values exactly, call the `noop` safe\n+output tool with a message like:\n+\"No update needed. Supported versions are already [list]. All files are up to date.\"\n+Then stop.\n+\n+### 5. Update `setup.cfg`\n+\n+Apply the following edits to `setup.cfg`:\n+\n+1. **`python_requires`**: Replace the existing `python_requires = ...` line with the new range.\n+\n+2. **`target-version`**: Replace the existing `target-version = [...]` line with the new list.\n+\n+3. **Classifier lines**: Replace the entire block of consecutive\n+   `Programming Language :: Python :: 3.x` classifier lines with the new set of classifier\n+   lines (one per supported version, in ascending order, each indented with 4 spaces).\n+\n+### 6. Update the four workflow files (five occurrences total)\n+\n+For each of the four workflow files listed in the Goals section, replace every occurrence of the\n+`python-version: [...]` matrix definition line with the new version list.\n+\n+The exact pattern to match and replace is the line:\n+```\n+        python-version: [\"3.10\", \"3.11\", \"3.12\", \"3.13\", \"3.14\"]\n+```\n+(with whatever version values are currently present).\n+\n+Replace it with:\n+```\n+        python-version: [<new comma-separated quoted versions>]\n+```\n+\n+- For `.github/workflows/tests_homebrew.yml`, there are **two** occurrences of this line.\n+  Both must be updated.\n+- Apply these edits using the `edit` tool.\n+\n+### 7. Open a draft PR\n+\n+After all edits are applied, create a pull request using:\n+\n+- **Branch**: `automation/python-version-watcher`\n+- **Base**: `main`\n+- **Title**: `chore: sync supported Python versions`\n+- **Commit message**: `chore: sync supported Python versions to devguide.python.org`\n+\n+Include the following information in the PR body:\n+\n+- Source checked: https://devguide.python.org/versions/\n+- Newly detected supported versions (with their statuses if available)\n+- Summary of changes made per file\n+- Note that this was generated automatically by the Python Version Watcher workflow",
+          "snapshot_ref": "fe3dce046958014d05e9712f8d206099fe1d812a",
+          "snapshot_blob_sha": "413476ce2b7388459c4c1549d42d2761c11babcf",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__fe3dce046958014d05e9712f8d206099fe1d812a__python_version_watcher.md",
+          "snapshot_bytes": 7390,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/python_version_watcher.lock.yml\",\"generated_workflow_file\":\"python_version_watcher.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/python_version_watcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/python_version_watcher.md",
+      "commit_sha": "e287dfbca9030c2898a6caa745bda7e775f98212",
+      "authored_at": "2026-05-04T02:29:33Z",
+      "committed_at": "2026-05-04T02:29:33Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: use explicit gpt-4o model in all agentic workflows (Copilot Pro compatibility) (#912)\n\n* Initial plan\n\n* fix: change agentic workflow model from auto to gpt-4o for Copilot Pro compatibility\n\nAgent-Logs-Url: https://github.com/carlkidcrypto/ezsnmp/sessions/abce78e8-8550-4901-8251-dfcbd3b50589\n\nCo-authored-by: carlkidcrypto <27721404+carlkidcrypto@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: carlkidcrypto <27721404+carlkidcrypto@users.noreply.github.com>",
+      "parent_shas": [
+        "3c006c4f3ed587dbd4faaca274da4256560673de"
+      ],
+      "tree_sha": "1a630e6e92e4d8f0ee5d723541b20fc02ecf29b7",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/e287dfbca9030c2898a6caa745bda7e775f98212",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/python_version_watcher.md",
+          "commit_sha": "e287dfbca9030c2898a6caa745bda7e775f98212",
+          "committed_at": "2026-05-04T02:29:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -31,7 +31,7 @@ tools:\n \n engine:\n   id: copilot\n-  model: auto\n+  model: gpt-4o\n ---\n \n ## Python Version Watcher and Auto-Sync",
+          "snapshot_ref": "e287dfbca9030c2898a6caa745bda7e775f98212",
+          "snapshot_blob_sha": "2b87032e0891b192c3fcfb0464dfaa10a24e45c6",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__e287dfbca9030c2898a6caa745bda7e775f98212__python_version_watcher.md",
+          "snapshot_bytes": 7392,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/python_version_watcher.lock.yml\",\"generated_workflow_file\":\"python_version_watcher.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/python_version_watcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/python_version_watcher.md",
+      "commit_sha": "ee43dc770fdf78c1c922b9d9cf9f0ecebf92e37e",
+      "authored_at": "2026-05-04T03:23:17Z",
+      "committed_at": "2026-05-04T03:23:17Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: change agentic workflow model from gpt-4o to claude-sonnet-4.6 (#913)\n\nAgent-Logs-Url: https://github.com/carlkidcrypto/ezsnmp/sessions/068ee58e-38a4-4ded-b663-f5b3f8a4c583\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: carlkidcrypto <27721404+carlkidcrypto@users.noreply.github.com>",
+      "parent_shas": [
+        "e3bbc753e5bf78117d4e09e9114c482b1b7580c9"
+      ],
+      "tree_sha": "2b833f5a951bd60694625e4894c0ec13446070a9",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/ee43dc770fdf78c1c922b9d9cf9f0ecebf92e37e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/python_version_watcher.md",
+          "commit_sha": "ee43dc770fdf78c1c922b9d9cf9f0ecebf92e37e",
+          "committed_at": "2026-05-04T03:23:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -31,7 +31,7 @@ tools:\n \n engine:\n   id: copilot\n-  model: gpt-4o\n+  model: claude-sonnet-4.6\n ---\n \n ## Python Version Watcher and Auto-Sync",
+          "snapshot_ref": "ee43dc770fdf78c1c922b9d9cf9f0ecebf92e37e",
+          "snapshot_blob_sha": "6f13fafb4fa71ed130afd6d3139d88dd7b87f242",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__ee43dc770fdf78c1c922b9d9cf9f0ecebf92e37e__python_version_watcher.md",
+          "snapshot_bytes": 7403,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/python_version_watcher.lock.yml\",\"generated_workflow_file\":\"python_version_watcher.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/python_version_watcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/python_version_watcher.md",
+      "commit_sha": "9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+      "authored_at": "2026-07-08T01:41:34Z",
+      "committed_at": "2026-07-08T01:41:34Z",
+      "author_name": "Carlos",
+      "author_email": "27721404+carlkidcrypto@users.noreply.github.com",
+      "author_login": "carlkidcrypto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix: Add copilot-requests permission for Agentic Workflows (#1091)\n\n* Fix: Add copilot-requests permission for Agentic Workflows\n\n* Compile Agentic Workflows with updated permissions\n\n* Fix: add copilot-requests permission to all agentic workflows and re-compile\n\n---------\n\nCo-authored-by: Clawbot <clawbot@openclaw.ai>",
+      "parent_shas": [
+        "845edd43ce29074bf94539821e28224b71804b0e"
+      ],
+      "tree_sha": "bdf324b7e369738a1a9bcb7282b2c51cda20e4e9",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/python_version_watcher.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/python_version_watcher.md",
+          "commit_sha": "9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+          "committed_at": "2026-07-08T01:41:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -11,6 +11,7 @@ on:\n permissions:\n   actions: read\n   contents: read\n+  copilot-requests: write\n \n safe-outputs:\n   create-pull-request:",
+          "snapshot_ref": "9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+          "snapshot_blob_sha": "f27a1d1bfb28d190489f57ac34667761e06973c0",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__9cffe8c4ad819dc17a8e6f81943021f07a5a9db3__python_version_watcher.md",
+          "snapshot_bytes": 7429,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/python_version_watcher.lock.yml\",\"generated_workflow_file\":\"python_version_watcher.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/python_version_watcher.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

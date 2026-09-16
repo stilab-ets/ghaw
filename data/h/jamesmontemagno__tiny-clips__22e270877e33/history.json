@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "jamesmontemagno/tiny-clips:.github/workflows/weekly-feature-parity.md",
+    "source_full_name": "jamesmontemagno/tiny-clips",
+    "source_owner": "jamesmontemagno",
+    "source_repo": "tiny-clips",
+    "md_path": ".github/workflows/weekly-feature-parity.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/jamesmontemagno/tiny-clips/blob/HEAD/.github/workflows/weekly-feature-parity.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "jamesmontemagno/tiny-clips",
+      "generated_owner": "jamesmontemagno",
+      "generated_repo": "tiny-clips",
+      "generated_workflow_path": ".github/workflows/weekly-feature-parity.lock.yml",
+      "generated_workflow_file": "weekly-feature-parity.lock.yml",
+      "generated_html_url": "https://github.com/jamesmontemagno/tiny-clips/blob/9289734b5831e5c5838b8c6b2645661b599b45ce/.github/workflows/weekly-feature-parity.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:57:15+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "jamesmontemagno/tiny-clips:.github/workflows/weekly-feature-parity.md",
+      "source_full_name": "jamesmontemagno/tiny-clips",
+      "md_path": ".github/workflows/weekly-feature-parity.md",
+      "commit_sha": "713b5e28a33570f6f03d458e15ee447cae07791e",
+      "authored_at": "2026-07-09T20:22:43Z",
+      "committed_at": "2026-07-09T20:22:43Z",
+      "author_name": "James Montemagno",
+      "author_email": "james.montemagno@gmail.com",
+      "author_login": "jamesmontemagno",
+      "author_account_type": "User",
+      "committer_name": "James Montemagno",
+      "committer_email": "james.montemagno@gmail.com",
+      "committer_login": "jamesmontemagno",
+      "committer_account_type": "User",
+      "message": "Add weekly feature parity agentic workflow\n\nConfigure GitHub Agentic Workflows for a weekly TinyClips parity report that compares Windows and macOS implementations and safely creates scoped issues for actionable gaps.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c6c70281c8278f625c0c0c5e52e689f6007e45a8"
+      ],
+      "tree_sha": "2c61d2d23c68521202512daa2fbed33e1aba8df6",
+      "html_url": "https://github.com/jamesmontemagno/tiny-clips/commit/713b5e28a33570f6f03d458e15ee447cae07791e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jamesmontemagno/tiny-clips:.github/workflows/weekly-feature-parity.md",
+          "source_full_name": "jamesmontemagno/tiny-clips",
+          "md_path": ".github/workflows/weekly-feature-parity.md",
+          "commit_sha": "713b5e28a33570f6f03d458e15ee447cae07791e",
+          "committed_at": "2026-07-09T20:22:43Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 64,
+          "file_deletions": 0,
+          "file_changes": 64,
+          "file_patch": "@@ -0,0 +1,64 @@\n+---\n+name: Weekly feature parity report\n+description: Compares TinyClips Windows and macOS implementations and opens scoped issues for actionable parity gaps.\n+on:\n+  schedule: weekly on sunday around 09:00\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+engine: copilot\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+\n+network: defaults\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[parity] \"\n+    max: 5\n+\n+---\n+\n+# TinyClips weekly feature parity report\n+\n+Every Sunday, compare the TinyClips Windows and macOS implementations and produce a concise feature-parity report.\n+\n+## Instructions\n+\n+Review the current repository state, including:\n+\n+1. The macOS app in `mac/`.\n+2. The Windows app in `windows/`.\n+3. Platform documentation and changelogs, especially `CONTRIBUTING.md`, `CHANGELOG.md`, `windows/README.md`, `windows/CHANGELOG.md`, and docs linked from those files.\n+4. Existing open issues and pull requests that may already cover a parity gap.\n+\n+Create a report with these sections:\n+\n+1. Features present on macOS but missing or incomplete on Windows.\n+2. Features present on Windows but missing or incomplete on macOS.\n+3. Shared behaviors that appear inconsistent across platforms.\n+4. Deferred items that are intentionally platform-specific, blocked, already tracked, or not actionable yet.\n+\n+For each potential gap, decide whether it can reasonably be implemented now using the repository context. Do not assume every platform-specific behavior must be identical; respect TinyClips platform conventions:\n+\n+1. macOS uses Swift, SwiftUI, AppKit, `#if APPSTORE`, and `#if canImport(Sparkle)` patterns.\n+2. Windows uses WinUI 3, Windows App SDK, .NET, and the `TinyClipsStoreBuild` MSBuild property.\n+3. Keep UI-app concerns in the platform UI projects and reusable/domain logic in platform core/shared areas as the repo already does.\n+\n+If there are no actionable feature gaps, state that no new issue is needed and stop.\n+\n+If actionable feature gaps exist:\n+\n+1. Search existing open issues first and do not create duplicates.\n+2. Create one GitHub issue per distinct implementable parity gap, up to the configured safe-output limit.\n+3. Scope each issue to one affected platform or one clearly bounded cross-platform behavior.\n+4. Include the current behavior, desired parity behavior, relevant files/docs to inspect, an implementation outline, and acceptance criteria.\n+5. Mention when a gap is intentionally deferred instead of creating an issue for it.\n+\n+Keep generated issues precise and implementation-ready. Prefer minimal, platform-appropriate work that preserves each app's conventions.",
+          "snapshot_ref": "713b5e28a33570f6f03d458e15ee447cae07791e",
+          "snapshot_blob_sha": "39dcba5a5ad78449ebc1ad4eaf883f0ebaa66965",
+          "snapshot_file": "snapshots/tiny-clips__jamesmontemagno__713b5e28a33570f6f03d458e15ee447cae07791e__weekly-feature-parity.md",
+          "snapshot_bytes": 2615,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jamesmontemagno/tiny-clips\",\"generated_owner\":\"jamesmontemagno\",\"generated_repo\":\"tiny-clips\",\"generated_workflow_path\":\".github/workflows/weekly-feature-parity.lock.yml\",\"generated_workflow_file\":\"weekly-feature-parity.lock.yml\",\"generated_html_url\":\"https://github.com/jamesmontemagno/tiny-clips/blob/9289734b5831e5c5838b8c6b2645661b599b45ce/.github/workflows/weekly-feature-parity.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "jamesmontemagno/tiny-clips:.github/workflows/weekly-feature-parity.md",
+      "source_full_name": "jamesmontemagno/tiny-clips",
+      "md_path": ".github/workflows/weekly-feature-parity.md",
+      "commit_sha": "95d0409de7484501ca38a33b91ded2607230643c",
+      "authored_at": "2026-07-10T05:38:00Z",
+      "committed_at": "2026-07-10T05:38:00Z",
+      "author_name": "James Montemagno",
+      "author_email": "james.montemagno@gmail.com",
+      "author_login": "jamesmontemagno",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add copilot-requests permission to workflow",
+      "parent_shas": [
+        "302327e5e50612cd58d732dde223759396222b5a"
+      ],
+      "tree_sha": "38deff898a7ba7ce45499d3b65378c8ba6571cb7",
+      "html_url": "https://github.com/jamesmontemagno/tiny-clips/commit/95d0409de7484501ca38a33b91ded2607230643c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jamesmontemagno/tiny-clips:.github/workflows/weekly-feature-parity.md",
+          "source_full_name": "jamesmontemagno/tiny-clips",
+          "md_path": ".github/workflows/weekly-feature-parity.md",
+          "commit_sha": "95d0409de7484501ca38a33b91ded2607230643c",
+          "committed_at": "2026-07-10T05:38:00Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -9,6 +9,7 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n+  copilot-requests: write\n \n engine: copilot\n ",
+          "snapshot_ref": "95d0409de7484501ca38a33b91ded2607230643c",
+          "snapshot_blob_sha": "70c9fa8e707daeab3739a00cfd7779fc1355416b",
+          "snapshot_file": "snapshots/tiny-clips__jamesmontemagno__95d0409de7484501ca38a33b91ded2607230643c__weekly-feature-parity.md",
+          "snapshot_bytes": 2641,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jamesmontemagno/tiny-clips\",\"generated_owner\":\"jamesmontemagno\",\"generated_repo\":\"tiny-clips\",\"generated_workflow_path\":\".github/workflows/weekly-feature-parity.lock.yml\",\"generated_workflow_file\":\"weekly-feature-parity.lock.yml\",\"generated_html_url\":\"https://github.com/jamesmontemagno/tiny-clips/blob/9289734b5831e5c5838b8c6b2645661b599b45ce/.github/workflows/weekly-feature-parity.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

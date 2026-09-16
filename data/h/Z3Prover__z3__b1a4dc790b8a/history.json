@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/academic-citation-tracker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/academic-citation-tracker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/academic-citation-tracker.lock.yml",
+      "generated_workflow_file": "academic-citation-tracker.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/academic-citation-tracker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:43+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/academic-citation-tracker.md",
+      "commit_sha": "fe6efef8088bd437d6be10ede5a08da3970640c3",
+      "authored_at": "2026-03-15T22:39:37Z",
+      "committed_at": "2026-03-15T22:39:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add monthly Academic Citation & Research Trend Tracker workflow (#9007)\n\n* Initial plan\n\n* Add academic-citation-tracker workflow and compiled lock file\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "99099255b6a4d29ee682bf44d5a9c9755770e788"
+      ],
+      "tree_sha": "f9fc60b2f5810fcafa594f8943453bb507a34d49",
+      "html_url": "https://github.com/Z3Prover/z3/commit/fe6efef8088bd437d6be10ede5a08da3970640c3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/academic-citation-tracker.md",
+          "commit_sha": "fe6efef8088bd437d6be10ede5a08da3970640c3",
+          "committed_at": "2026-03-15T22:39:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 298,
+          "file_deletions": 0,
+          "file_changes": 298,
+          "file_patch": "@@ -0,0 +1,298 @@\n+---\n+description: >\n+  Monthly Academic Citation & Research Trend Tracker for Z3.\n+  Searches arXiv, Semantic Scholar, and GitHub for recent papers and projects\n+  using Z3, analyses which Z3 features they rely on, and identifies the\n+  functionality — features or performance — most important to address next.\n+\n+on:\n+  schedule:\n+    - cron: \"0 6 1 * *\"\n+  workflow_dispatch:\n+\n+timeout-minutes: 60\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - export.arxiv.org\n+    - api.semanticscholar.org\n+    - github\n+\n+tools:\n+  cache-memory: true\n+  web-fetch: {}\n+  github:\n+    toolsets: [default, repos]\n+  bash: [\":*\"]\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  max-bot-mentions: 1\n+  create-discussion:\n+    title-prefix: \"[Research Trends] \"\n+    category: \"Agentic Workflows\"\n+    close-older-discussions: true\n+    expires: 60\n+  missing-tool:\n+    create-issue: true\n+  noop:\n+    report-as-issue: false\n+\n+---\n+\n+# Academic Citation & Research Trend Tracker\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. You are an expert research analyst for the Z3\n+theorem prover repository `${{ github.repository }}`. Your mission is to find recent\n+academic papers and open-source projects that use Z3, understand *which Z3 features*\n+they rely on, and synthesise what this reveals about the features and performance\n+improvements that would have the greatest community impact.\n+\n+## Your Task\n+\n+### 1. Initialise or Resume Progress (Cache Memory)\n+\n+Check cache memory for:\n+- Papers and projects already covered in the previous run (DOIs, arXiv IDs, GitHub repo URLs)\n+- Feature-usage counts accumulated across runs\n+- Date of the last run\n+\n+Use the cached data so this run focuses on **new** material (last 30 days by default; if no prior cache exists, cover the last 90 days).\n+Initialise an empty tracking structure if the cache is absent.\n+\n+### 2. Collect Recent Papers\n+\n+#### 2.1 arXiv Search\n+\n+Fetch recent papers that mention Z3 as a core tool. Use the arXiv API.\n+First compute the date 30 days ago (or 90 days for the initial run) in YYYYMMDD format,\n+then pass it as the `submittedDate` range filter:\n+\n+```bash\n+# Compute the start date (30 days ago)\n+START_DATE=$(date -d \"30 days ago\" +%Y%m%d 2>/dev/null || date -v-30d +%Y%m%d)\n+TODAY=$(date +%Y%m%d)\n+\n+# Papers mentioning Z3 in cs.PL, cs.LO, cs.SE, cs.CR, cs.FM categories\n+curl -s \"https://export.arxiv.org/api/query?search_query=all:Z3+solver+AND+(cat:cs.PL+OR+cat:cs.LO+OR+cat:cs.SE+OR+cat:cs.CR+OR+cat:cs.FM)&submittedDate=[${START_DATE}2359+TO+${TODAY}2359]&sortBy=submittedDate&sortOrder=descending&max_results=40\" \\\n+  -o /tmp/arxiv-results.xml\n+```\n+\n+Parse the XML for: title, authors, abstract, arXiv ID, submission date, primary category.\n+\n+#### 2.2 Semantic Scholar Search\n+\n+Fetch recent papers via the Semantic Scholar API, filtering to the current year\n+(or year-1 for the initial run) to surface only recent work:\n+\n+```bash\n+CURRENT_YEAR=$(date +%Y)\n+\n+curl -s \"https://api.semanticscholar.org/graph/v1/paper/search?query=Z3+theorem+prover&fields=title,authors,year,abstract,externalIds,citationCount,venue&limit=40&sort=relevance&year=${CURRENT_YEAR}\" \\\n+  -H \"Content-Type: application/json\" \\\n+  -o /tmp/s2-results.json\n+```\n+\n+Merge with the arXiv results (de-duplicate by DOI / arXiv ID).\n+\n+#### 2.3 GitHub Projects\n+\n+Use the GitHub MCP server tools to find recently-active repositories that depend on\n+or study Z3. Use these example search strategies:\n+- Repos with the `z3` topic pushed in the last 30 days:\n+  `topic:z3 pushed:>YYYY-MM-DD` (substitute the actual date)\n+- Repos depending on z3 Python package with recent activity:\n+  `z3-solver in:file filename:requirements.txt pushed:>YYYY-MM-DD`\n+- Repos referencing Z3Prover in README:\n+  `Z3Prover/z3 in:readme pushed:>YYYY-MM-DD`\n+\n+Limit to the 20 most-relevant results; filter out the Z3 repo itself (`Z3Prover/z3`).\n+\n+#### 2.4 Filter for Genuine Z3 Usage\n+\n+Keep only results where Z3 is used as a *core* component (not just a passing mention).\n+Discard:\n+- Papers that mention Z3 only in a reference list\n+- Repos that list z3 as an optional or dev dependency only\n+- Papers behind hard paywalls where the abstract cannot be fetched\n+\n+### 3. Analyse Feature Usage\n+\n+For each retained paper or project extract, from the abstract, full text (when\n+accessible), README, or source code:\n+\n+**Z3 Feature / API Surface Used:**\n+- SMT-LIB2 formula input (`check-sat`, `get-model`, theory declarations)\n+- Python API (`z3py`) — which theories: Int/Real arithmetic, BitVectors, Arrays, Strings/Sequences, Uninterpreted Functions, Quantifiers\n+- C/C++ API\n+- Other language bindings (Java, C#, OCaml, JavaScript/WASM)\n+- Fixedpoint / Datalog (`z3.Fixedpoint`)\n+- Optimisation (`z3.Optimize`, MaxSMT)\n+- Proofs / DRAT\n+- Tactics and solvers (e.g., `qfbv`, `spacer`, `elim-quantifiers`, `nlsat`)\n+- Incremental solving (`push`/`pop`, assumptions)\n+- Model generation and evaluation\n+- Interpolation / Horn clause solving (Spacer/PDR)\n+- SMTCOMP/evaluation benchmarks\n+\n+**Application Domain:**\n+- Program verification / deductive verification\n+- Symbolic execution / concolic testing\n+- Security (vulnerability discovery, protocol verification, exploit generation)\n+- Type checking / language design\n+- Hardware verification\n+- Constraint solving / planning / scheduling\n+- Formal specification / theorem proving assistance\n+- Compiler correctness\n+- Machine learning / neural network verification\n+- Other\n+\n+**Pain Points Mentioned:**\n+Note any explicit mentions of Z3 limitations, performance issues, missing features,\n+workarounds, or comparisons where Z3 underperformed.\n+\n+### 4. Aggregate Trends\n+\n+Compute over all papers and projects collected (this run + cache history):\n+- **Feature popularity ranking**: which APIs/theories appear most frequently\n+- **Domain ranking**: which application areas use Z3 most\n+- **Performance pain-point frequency**: mentions of timeouts, scalability, memory, or\n+  regression across Z3 versions\n+- **Feature gap signals**: features requested but absent, or workarounds applied\n+- **New vs. returning features**: compare with previous month's top features to spot\n+  rising or falling trends\n+\n+### 5. Correlate with Open Issues and PRs\n+\n+Use the GitHub MCP server to search the Z3 issue tracker and recent PRs for signals\n+that align with the academic findings:\n+- Are the performance pain-points also reflected in open issues?\n+- Do any open feature requests map to high-demand research use-cases?\n+- Are there recent PRs that address any of the identified gaps?\n+\n+This produces a prioritised list of development recommendations grounded in both\n+community usage and academic demand.\n+\n+### 6. Generate the Discussion Report\n+\n+Create a GitHub Discussion. Use `###` or lower for all section headers.\n+Wrap verbose tables or lists in `<details>` tags to keep the report scannable.\n+\n+Title: `[Research Trends] Academic Citation & Research Trend Report — [Month YYYY]`\n+\n+Suggested structure:\n+\n+```markdown\n+**Period covered**: [start date] – [end date]\n+**Papers analysed**: N (arXiv: N, Semantic Scholar: N, new this run: N)\n+**GitHub projects analysed**: N (new this run: N)\n+\n+### Executive Summary\n+\n+2–3 sentences: headline finding about where Z3 is being used and what the\n+community most needs.\n+\n+### Top Z3 Features Used\n+\n+| Rank | Feature / API | Papers | Projects | Trend vs. Last Month |\n+|------|--------------|--------|----------|----------------------|\n+| 1 | z3py – BitVectors | N | N | ↑ / ↓ / → |\n+| … |\n+\n+### Application Domain Breakdown\n+\n+| Domain | Papers | % of Total |\n+|--------|--------|------------|\n+| Program verification | N | N% |\n+| … |\n+\n+### Performance & Feature Pain-Points\n+\n+List the most-cited pain-points with representative quotes or paraphrases from\n+abstracts/READMEs. Group by theme (scalability, string solver performance, API\n+ergonomics, missing theories, etc.).\n+\n+<details>\n+<summary><b>All Pain-Point Mentions</b></summary>\n+\n+One entry per paper/project that mentions a pain-point.\n+\n+</details>\n+\n+### Recommended Development Priorities\n+\n+Ranked list of Z3 features or performance improvements most likely to have broad\n+research impact, with rationale tied to specific evidence:\n+\n+1. **[Priority 1]** — evidence: N papers, N projects, N related issues\n+2. …\n+\n+### Correlation with Open Issues / PRs\n+\n+Issues and PRs in Z3Prover/z3 that align with the identified research priorities.\n+\n+| Issue / PR | Title | Alignment |\n+|-----------|-------|-----------|\n+| #NNN | … | [feature / pain-point it addresses] |\n+\n+### Notable New Papers\n+\n+Brief description of 3–5 particularly interesting papers, their use of Z3, and\n+any Z3-specific insights.\n+\n+<details>\n+<summary><b>All Papers This Run</b></summary>\n+\n+| Source | Title | Authors | Date | Features Used | Domain |\n+|--------|-------|---------|------|--------------|--------|\n+| arXiv:XXXX.XXXXX | … | … | … | … | … |\n+\n+</details>\n+\n+<details>\n+<summary><b>All GitHub Projects This Run</b></summary>\n+\n+| Repository | Stars | Updated | Features Used | Domain |\n+|-----------|-------|---------|--------------|--------|\n+| owner/repo | N | YYYY-MM-DD | … | … |\n+\n+</details>\n+\n+### Methodology Note\n+\n+Brief description of the search strategy, sources, and filters used this run.\n+```\n+\n+### 7. Update Cache Memory\n+\n+Store for next run:\n+- Set of all paper IDs (DOIs, arXiv IDs) and GitHub repo URLs already covered\n+- Feature-usage frequency counts (cumulative)\n+- Domain frequency counts (cumulative)\n+- Date of this run\n+- Top-3 pain-point themes for trend comparison\n+\n+## Guidelines\n+\n+- **Be accurate**: Only attribute feature usage to Z3 when the paper/code makes it explicit.\n+- **Be exhaustive within scope**: Cover all material found; don't cherry-pick.\n+- **Be concise in headlines**: Lead with the most actionable finding.\n+- **Respect academic citation norms**: Include arXiv IDs and DOIs; do not reproduce\n+  full paper text — only titles, authors, and abstracts.\n+- **Track trends**: The cache lets you show month-over-month changes.\n+- **Stay Z3-specific**: Focus on insights relevant to Z3 development, not general SMT\n+  or theorem-proving trends.\n+\n+## Important Notes\n+\n+- DO NOT create pull requests or modify source files.\n+- DO NOT reproduce copyrighted paper text beyond short fair-use quotes.\n+- DO close older Research Trends discussions automatically (configured).\n+- DO always cite sources (arXiv ID, DOI, GitHub URL) so maintainers can verify.\n+- DO use cache memory to track longitudinal trends across months.",
+          "snapshot_ref": "fe6efef8088bd437d6be10ede5a08da3970640c3",
+          "snapshot_blob_sha": "ef6fc7efa2d9680904d3abe9634ef80b59ad43e9",
+          "snapshot_file": "snapshots/z3__Z3Prover__fe6efef8088bd437d6be10ede5a08da3970640c3__academic-citation-tracker.md",
+          "snapshot_bytes": 10363,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/academic-citation-tracker.lock.yml\",\"generated_workflow_file\":\"academic-citation-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/academic-citation-tracker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/academic-citation-tracker.md",
+      "commit_sha": "4a1f448a06119befd416413fc5493e00b9611b6d",
+      "authored_at": "2026-04-11T17:19:45Z",
+      "committed_at": "2026-04-11T17:19:45Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow compilation errors (gh-aw v0.68 compat) (#9275)\n\n* Start: recompile agentic workflows, fix errors and security issues\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/88b80d94-e7d6-4e8f-a106-baa2e7e212d6\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n* Fix agentic workflow compilation errors: remove glob/view tools, resolve merge conflict, fix serena tool and missing imports\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/88b80d94-e7d6-4e8f-a106-baa2e7e212d6\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "3c7e5c8197d6ca62bf8ebae1fd31599c83f161b1"
+      ],
+      "tree_sha": "e135a08ad18a1800325a1c6b26193231afce3cb9",
+      "html_url": "https://github.com/Z3Prover/z3/commit/4a1f448a06119befd416413fc5493e00b9611b6d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/academic-citation-tracker.md",
+          "commit_sha": "4a1f448a06119befd416413fc5493e00b9611b6d",
+          "committed_at": "2026-04-11T17:19:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -36,7 +36,7 @@ safe-outputs:\n     title-prefix: \"[Research Trends] \"\n     category: \"Agentic Workflows\"\n     close-older-discussions: true\n-    expires: 60\n+    expires: 60d\n   missing-tool:\n     create-issue: true\n   noop:\n@@ -295,4 +295,4 @@ Store for next run:\n - DO NOT reproduce copyrighted paper text beyond short fair-use quotes.\n - DO close older Research Trends discussions automatically (configured).\n - DO always cite sources (arXiv ID, DOI, GitHub URL) so maintainers can verify.\n-- DO use cache memory to track longitudinal trends across months.\n+- DO use cache memory to track longitudinal trends across months.\n\\ No newline at end of file",
+          "snapshot_ref": "4a1f448a06119befd416413fc5493e00b9611b6d",
+          "snapshot_blob_sha": "f8a87499c6781f94ebfc3eb2521d9f27dd78ddf4",
+          "snapshot_file": "snapshots/z3__Z3Prover__4a1f448a06119befd416413fc5493e00b9611b6d__academic-citation-tracker.md",
+          "snapshot_bytes": 10363,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/academic-citation-tracker.lock.yml\",\"generated_workflow_file\":\"academic-citation-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/academic-citation-tracker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/academic-citation-tracker.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/academic-citation-tracker.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -29,6 +29,7 @@ tools:\n   bash: [\":*\"]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   mentions: false\n   allowed-github-references: []\n   max-bot-mentions: 1",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "60e15136e04e6edc06e1e8eaed69ca7d67529bac",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__academic-citation-tracker.md",
+          "snapshot_bytes": 10396,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/academic-citation-tracker.lock.yml\",\"generated_workflow_file\":\"academic-citation-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/academic-citation-tracker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/academic-citation-tracker.md",
+      "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "authored_at": "2026-07-28T09:22:11Z",
+      "committed_at": "2026-07-28T09:22:11Z",
+      "author_name": "Nikolaj Bjorner",
+      "author_email": "nbjorner@microsoft.com",
+      "author_login": "NikolajBjorner",
+      "author_account_type": "User",
+      "committer_name": "Nikolaj Bjorner",
+      "committer_email": "nbjorner@microsoft.com",
+      "committer_login": "NikolajBjorner",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow auth by using Actions token-based Copilot inference\n\nThe COPILOT_GITHUB_TOKEN PAT secret expired, causing HTTP 401 auth\nfailures in all agentic workflows that referenced it. Switch these\nworkflows to GitHub Actions token-based Copilot inference by adding\n'copilot-requests: write' to their permissions (matching the already-\nworking code-simplifier and release-notes-updater workflows), so the\nengine uses the ephemeral github.token instead of the expired PAT.\n\nRecompiled with gh-aw v0.81.6 (repo's pinned version) to keep the diff\nminimal. Affected: api-coherence-checker, issue-backlog-processor,\nmemory-safety-report, academic-citation-tracker, smtlib-benchmark-finder,\nworkflow-suggestion-agent, specbot-crash-analyzer, tptp-benchmark.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 57b9b87e-950a-49ea-bbb3-ed585646a5a9",
+      "parent_shas": [
+        "18d8d7a7bd437cc25a532e3903a560f7c9a4b787"
+      ],
+      "tree_sha": "281bc4545bd45a13a519164dfb8873e3dd7f3e15",
+      "html_url": "https://github.com/Z3Prover/z3/commit/b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/academic-citation-tracker.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/academic-citation-tracker.md",
+          "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "committed_at": "2026-07-28T09:22:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 1,
+          "file_changes": 6,
+          "file_patch": "@@ -12,7 +12,11 @@ on:\n \n timeout-minutes: 60\n \n-permissions: read-all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n \n network:\n   allowed:",
+          "snapshot_ref": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "snapshot_blob_sha": "5b4fa5e0861c087551129940f17c13fe961b22b3",
+          "snapshot_file": "snapshots/z3__Z3Prover__b1168b48680a7b35d639f0243cf5b8c8a3ff0277__academic-citation-tracker.md",
+          "snapshot_bytes": 10467,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/academic-citation-tracker.lock.yml\",\"generated_workflow_file\":\"academic-citation-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/academic-citation-tracker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

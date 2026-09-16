@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+    "source_full_name": "neurodesk/neurodesktop",
+    "source_owner": "neurodesk",
+    "source_repo": "neurodesktop",
+    "md_path": ".github/workflows/maintenance-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/neurodesk/neurodesktop/blob/HEAD/.github/workflows/maintenance-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "neurodesk/neurodesktop",
+      "generated_owner": "neurodesk",
+      "generated_repo": "neurodesktop",
+      "generated_workflow_path": ".github/workflows/maintenance-review.lock.yml",
+      "generated_workflow_file": "maintenance-review.lock.yml",
+      "generated_html_url": "https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:43:01+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-review.md",
+      "commit_sha": "151736fc7a08dac82788ade9006df518dacea818",
+      "authored_at": "2026-07-28T06:33:19Z",
+      "committed_at": "2026-07-28T06:33:19Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "Add daily agentic maintenance workflows",
+      "parent_shas": [
+        "4c31374607600ec32b98766e001f38b6c72daa5c"
+      ],
+      "tree_sha": "bf95a9d76d7825416207ace7992eb577b504d917",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/151736fc7a08dac82788ade9006df518dacea818",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-review.md",
+          "commit_sha": "151736fc7a08dac82788ade9006df518dacea818",
+          "committed_at": "2026-07-28T06:33:19Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 153,
+          "file_deletions": 0,
+          "file_changes": 153,
+          "file_patch": "@@ -0,0 +1,153 @@\n+---\n+name: Daily Maintenance Review Loop\n+description: Apply CodeRabbit feedback to draft pull requests created by daily maintenance workflows.\n+labels: [automation, maintenance]\n+on:\n+  issue_comment:\n+    types: [created, edited]\n+  bots: [\"coderabbitai[bot]\"]\n+\n+if: >-\n+  github.event.issue.pull_request != null &&\n+  github.event.issue.state == 'open' &&\n+  github.event.issue.user.login == 'github-actions[bot]' &&\n+  contains(github.event.issue.labels.*.name, 'agentic-workflow') &&\n+  startsWith(github.event.issue.title, '[maintenance] ') &&\n+  contains(github.event.comment.body, 'summarize by coderabbit.ai')\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+\n+engine:\n+  id: codex\n+  model: ${{ vars.GH_AW_MODEL_AGENT_CODEX || vars.GH_AW_DEFAULT_MODEL_CODEX || 'neurodesk' }}\n+  env:\n+    OPENAI_BASE_URL: \"https://llm.neurodesk.org/openai\"\n+    OPENAI_API_KEY: ${{ secrets.CODEX_API_KEY || secrets.OPENAI_API_KEY }}\n+\n+models:\n+  providers:\n+    openai:\n+      models:\n+        neurodesk:\n+          cost:\n+            input: \"3e-06\"\n+            output: \"1.5e-05\"\n+\n+strict: true\n+max-ai-credits: -1\n+max-daily-ai-credits: -1\n+max-turn-cache-misses: 2000\n+timeout-minutes: 35\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - python\n+    - node\n+    - containers\n+    - linux-distros\n+    - llm.neurodesk.org\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+\n+safe-outputs:\n+  threat-detection:\n+    engine: false\n+  push-to-pull-request-branch:\n+    target: triggering\n+    required-labels: [agentic-workflow]\n+    required-title-prefix: \"[maintenance] \"\n+    protected-files:\n+      policy: fallback-to-issue\n+      # These files are intentionally writable by one or more maintenance\n+      # categories. The originating PR still receives protected-file review.\n+      exclude:\n+        - \"package.json\"\n+        - \"package-lock.json\"\n+        - \"pyproject.toml\"\n+        - \"README.md\"\n+        - \"AGENTS.md\"\n+        - \"CLAUDE.md\"\n+        - \".github/actions/\"\n+        - \".github/containerscan/\"\n+    max: 1\n+    allowed-files:\n+      - \"Dockerfile\"\n+      - \".codespellrc\"\n+      - \".dockerignore\"\n+      - \".gitignore\"\n+      - \".trivyignore.yaml\"\n+      - \"AGENTS.md\"\n+      - \"CLAUDE.md\"\n+      - \"README.md\"\n+      - \"analyze_image_size.sh\"\n+      - \"build_and_run.bat\"\n+      - \"build_and_run.sh\"\n+      - \"neurodesk.yml\"\n+      - \"stop_and_clean.bat\"\n+      - \"stop_and_clean.sh\"\n+      - \".github/actions/**\"\n+      - \".github/containerscan/**\"\n+      - \"config/**\"\n+      - \"docs/**\"\n+      - \"extensions/**\"\n+      - \"scripts/**\"\n+      - \"tests/**\"\n+  reply-to-pull-request-review-comment:\n+    target: triggering\n+    required-labels: [agentic-workflow]\n+    required-title-prefix: \"[maintenance] \"\n+    max: 10\n+  add-comment:\n+    max: 1\n+    target: triggering\n+    issues: false\n+    pull-requests: true\n+  noop:\n+    report-as-issue: false\n+---\n+\n+# Daily Maintenance Review Loop\n+\n+Review the open maintenance pull request that triggered this run and keep\n+iterating until no active actionable CodeRabbit findings remain.\n+\n+Use `gh` through the GitHub tool to read the pull request metadata, diff, the\n+complete current CodeRabbit review, all CodeRabbit review comments, and their\n+thread state. The triggering summary comment is only a signal that the review\n+changed; it is not the complete review.\n+\n+Before editing, verify that the pull request is open, belongs to this\n+repository, has the `agentic-workflow` label and `[maintenance] ` title prefix,\n+and was authored by `github-actions[bot]` (also exposed as\n+`app/github-actions`). Determine the maintenance category from the title and\n+keep all fixes within that original category and diff. Call `noop` if a guard\n+does not hold.\n+\n+## Review Iteration\n+\n+1. Collect every unresolved CodeRabbit finding from the latest completed review\n+   cycle, including findings summarized outside the diff.\n+2. Verify every finding against the current PR head. Fix only findings that are\n+   still valid. Reply to invalid or already-fixed inline findings with concise\n+   evidence.\n+3. Add or update focused regression tests when an appropriate seam exists. Do\n+   not expand the PR into a second maintenance task.\n+4. Run the validation required by `AGENTS.md` and `docs/testing.md` for the\n+   changed files. If it fails, do not push; add one PR comment with the exact\n+   failure and required follow-up.\n+5. Batch all validated fixes from the review cycle into one coherent commit and\n+   use `push-to-pull-request-branch` once.\n+6. After requesting the push, use `add-comment` with the body exactly\n+   `@coderabbitai review` to request the next incremental review.\n+\n+If no active actionable findings remain, call `noop` with a concise reason. Do\n+not make speculative changes, request another review, mark the draft ready,\n+approve it, or merge it.",
+          "snapshot_ref": "151736fc7a08dac82788ade9006df518dacea818",
+          "snapshot_blob_sha": "dbf90ded6f98bc5b2270c24802a1bd3c204f8cb8",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__151736fc7a08dac82788ade9006df518dacea818__maintenance-review.md",
+          "snapshot_bytes": 4754,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-review.lock.yml\",\"generated_workflow_file\":\"maintenance-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-review.md",
+      "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+      "authored_at": "2026-07-29T00:14:29Z",
+      "committed_at": "2026-07-29T00:14:29Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "fix maintenance workflows",
+      "parent_shas": [
+        "b523d75f2b32ff713db35b3ad0725a9806ff77a1"
+      ],
+      "tree_sha": "a55f6c043a53b1616f58930658aa41bd35b03cbf",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/2a1df33ef74729614931d791f5750f2366f7dab0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-review.md",
+          "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "committed_at": "2026-07-29T00:14:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 2,
+          "file_changes": 6,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n-name: Daily Maintenance Review Loop\n-description: Apply CodeRabbit feedback to draft pull requests created by daily maintenance workflows.\n+name: Weekly Maintenance Review Loop\n+description: Apply CodeRabbit feedback to draft pull requests created by weekly maintenance workflows.\n labels: [automation, maintenance]\n on:\n   issue_comment:\n@@ -42,6 +42,8 @@ max-ai-credits: -1\n max-daily-ai-credits: -1\n max-turn-cache-misses: 2000\n timeout-minutes: 35\n+imports:\n+  - uses: .github/workflows/shared/agentic-models.md\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "snapshot_blob_sha": "67f255bdb348195ffab88ad0978d2aef7db3a10c",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__2a1df33ef74729614931d791f5750f2366f7dab0__maintenance-review.md",
+          "snapshot_bytes": 4818,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-review.lock.yml\",\"generated_workflow_file\":\"maintenance-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-review.md",
+      "commit_sha": "5d9426a098a0c2dfdd7521e90c8733de3390a4af",
+      "authored_at": "2026-07-29T04:39:39Z",
+      "committed_at": "2026-07-29T04:39:39Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "Address CodeRabbit review findings",
+      "parent_shas": [
+        "0d9f06c227c5f21b337ef4216d75d7ae44b95bd7"
+      ],
+      "tree_sha": "41c1d3d6cbd859a2cf1cbbf4d2df5d66b413792e",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/5d9426a098a0c2dfdd7521e90c8733de3390a4af",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-review.md",
+          "commit_sha": "5d9426a098a0c2dfdd7521e90c8733de3390a4af",
+          "committed_at": "2026-07-29T04:39:39Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -116,7 +116,7 @@ safe-outputs:\n     report-as-issue: false\n ---\n \n-# Daily Maintenance Review Loop\n+# Weekly Maintenance Review Loop\n \n Review the open maintenance pull request that triggered this run and keep\n iterating until no active actionable CodeRabbit findings remain.",
+          "snapshot_ref": "5d9426a098a0c2dfdd7521e90c8733de3390a4af",
+          "snapshot_blob_sha": "a32a8aaa5193e7258a58a4c0e0d18c409ffddcd5",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__5d9426a098a0c2dfdd7521e90c8733de3390a4af__maintenance-review.md",
+          "snapshot_bytes": 4819,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-review.lock.yml\",\"generated_workflow_file\":\"maintenance-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-review.md",
+      "commit_sha": "8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+      "authored_at": "2026-07-31T16:23:08Z",
+      "committed_at": "2026-07-31T16:23:08Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "cleanup",
+      "parent_shas": [
+        "ecbc756a716eaac113a2762f5328d57eb032c015"
+      ],
+      "tree_sha": "01a34d987da37abcc2afcd1a35630d4d627bf577",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-review.md",
+          "commit_sha": "8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+          "committed_at": "2026-07-31T16:23:08Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -89,7 +89,6 @@ safe-outputs:\n       - \"AGENTS.md\"\n       - \"CLAUDE.md\"\n       - \"README.md\"\n-      - \"analyze_image_size.sh\"\n       - \"build_and_run.bat\"\n       - \"build_and_run.sh\"\n       - \"neurodesk.yml\"",
+          "snapshot_ref": "8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+          "snapshot_blob_sha": "a7307e4cc4bdaa8b5c9cec63e1e944b43e52f9c2",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__8d63aa7f979e9ea0818308b1d868c5bd9e995894__maintenance-review.md",
+          "snapshot_bytes": 4787,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-review.lock.yml\",\"generated_workflow_file\":\"maintenance-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

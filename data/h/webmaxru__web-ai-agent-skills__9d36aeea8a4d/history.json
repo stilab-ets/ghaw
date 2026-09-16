@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+    "source_full_name": "webmaxru/web-ai-agent-skills",
+    "source_owner": "webmaxru",
+    "source_repo": "web-ai-agent-skills",
+    "md_path": ".github/workflows/skill-update-worker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/webmaxru/web-ai-agent-skills/blob/HEAD/.github/workflows/skill-update-worker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "webmaxru/web-ai-agent-skills",
+      "generated_owner": "webmaxru",
+      "generated_repo": "web-ai-agent-skills",
+      "generated_workflow_path": ".github/workflows/skill-update-worker.lock.yml",
+      "generated_workflow_file": "skill-update-worker.lock.yml",
+      "generated_html_url": "https://github.com/webmaxru/web-ai-agent-skills/blob/f4c5a233067e5532699cc91546dcc81e6f802d77/.github/workflows/skill-update-worker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:43:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+      "source_full_name": "webmaxru/web-ai-agent-skills",
+      "md_path": ".github/workflows/skill-update-worker.md",
+      "commit_sha": "cc7b76ee807160d8f99ddd4fe738122e3740f1e1",
+      "authored_at": "2026-03-15T18:31:31Z",
+      "committed_at": "2026-03-15T18:31:31Z",
+      "author_name": "Maxim Salnikov",
+      "author_email": "salnikov@gmail.com",
+      "author_login": "webmaxru",
+      "author_account_type": "User",
+      "committer_name": "Maxim Salnikov",
+      "committer_email": "salnikov@gmail.com",
+      "committer_login": "webmaxru",
+      "committer_account_type": "User",
+      "message": "feat: add weekly skill updates workflow and skill update worker\n\n- Introduced a new workflow `weekly-skill-updates.yml` that runs on a schedule and allows for manual triggering to discover and execute skill-update prompts.\n- Implemented `skill-update-worker.md` to handle the execution of saved skill-update prompts, creating pull requests for any resulting changes.\n- The worker fetches external sources defined in the prompts and manages the creation of a structured output for the updates.",
+      "parent_shas": [
+        "ea8a385575cc4be966ecf768c70aa296bab2d963"
+      ],
+      "tree_sha": "98681af2def7fb8c5b532a1a8d28a39c27dd9db5",
+      "html_url": "https://github.com/webmaxru/web-ai-agent-skills/commit/cc7b76ee807160d8f99ddd4fe738122e3740f1e1",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+          "source_full_name": "webmaxru/web-ai-agent-skills",
+          "md_path": ".github/workflows/skill-update-worker.md",
+          "commit_sha": "cc7b76ee807160d8f99ddd4fe738122e3740f1e1",
+          "committed_at": "2026-03-15T18:31:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 161,
+          "file_deletions": 0,
+          "file_changes": 161,
+          "file_patch": "@@ -0,0 +1,161 @@\n+---\n+name: Skill Update Worker\n+description: Run one saved skill-update prompt from .github/prompts with GitHub Copilot and create a pull request for its resulting repository changes.\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      prompt_path:\n+        description: Path to a saved prompt under .github/prompts ending in -skill-update.prompt.md\n+        required: true\n+        type: string\n+  workflow_call:\n+    inputs:\n+      prompt_path:\n+        description: Path to a saved prompt under .github/prompts ending in -skill-update.prompt.md\n+        required: true\n+        type: string\n+permissions:\n+  actions: read\n+  contents: read\n+  pull-requests: read\n+engine: copilot\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  edit:\n+  bash:\n+    - python\n+    - node\n+    - git\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[skill-update] \"\n+    draft: true\n+    if-no-changes: warn\n+    fallback-as-issue: false\n+  noop:\n+    report-as-issue: false\n+strict: true\n+timeout-minutes: 45\n+steps:\n+  - name: Prepare prompt context\n+    id: prepare_prompt\n+    shell: bash\n+    env:\n+      PROMPT_PATH: ${{ inputs.prompt_path }}\n+    run: |\n+      set -euo pipefail\n+      node <<'NODE'\n+      const fs = require('node:fs');\n+      const path = require('node:path');\n+\n+      const promptPath = (process.env.PROMPT_PATH || '').trim();\n+      if (!promptPath) {\n+        throw new Error('prompt_path input is required');\n+      }\n+      if (!promptPath.startsWith('.github/prompts/') || !promptPath.endsWith('-skill-update.prompt.md')) {\n+        throw new Error('prompt_path must match .github/prompts/*-skill-update.prompt.md');\n+      }\n+\n+      const absolutePromptPath = path.join(process.cwd(), promptPath);\n+      if (!fs.existsSync(absolutePromptPath)) {\n+        throw new Error(`Prompt file not found: ${promptPath}`);\n+      }\n+\n+      const promptSlug = path.basename(promptPath, '.prompt.md');\n+      const promptText = fs.readFileSync(absolutePromptPath, 'utf8');\n+      const urlPattern = /https?:\\/\\/[^\\s)>'\"`]+/g;\n+      const uniqueUrls = Array.from(new Set(promptText.match(urlPattern) || [])).sort();\n+\n+      const sourcesRoot = path.join(process.cwd(), '.github', 'aw', 'prompt-sources', promptSlug);\n+      fs.rmSync(sourcesRoot, { recursive: true, force: true });\n+      fs.mkdirSync(sourcesRoot, { recursive: true });\n+\n+      async function fetchSource(url) {\n+        const response = await fetch(url, {\n+          headers: {\n+            'user-agent': 'gh-aw-skill-update-worker',\n+            'accept': 'text/markdown,text/plain,text/html,application/json;q=0.9,*/*;q=0.8',\n+          },\n+        });\n+        if (!response.ok) {\n+          throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);\n+        }\n+        const body = await response.text();\n+        return {\n+          status: response.status,\n+          contentType: response.headers.get('content-type') || 'text/plain',\n+          body,\n+        };\n+      }\n+\n+      async function main() {\n+        const manifest = [];\n+        for (let index = 0; index < uniqueUrls.length; index += 1) {\n+          const url = uniqueUrls[index];\n+          const fetched = await fetchSource(url);\n+          const fileName = `${String(index + 1).padStart(2, '0')}.txt`;\n+          const relativeFilePath = path.posix.join('.github', 'aw', 'prompt-sources', promptSlug, fileName);\n+          fs.writeFileSync(path.join(sourcesRoot, fileName), fetched.body, 'utf8');\n+          manifest.push({\n+            url,\n+            file: relativeFilePath,\n+            contentType: fetched.contentType,\n+            status: fetched.status,\n+          });\n+        }\n+\n+        const manifestRelativePath = path.posix.join('.github', 'aw', 'prompt-sources', promptSlug, 'manifest.json');\n+        fs.writeFileSync(path.join(sourcesRoot, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\\n', 'utf8');\n+\n+        fs.appendFileSync(process.env.GITHUB_OUTPUT, `prompt_path=${promptPath}\\n`);\n+        fs.appendFileSync(process.env.GITHUB_OUTPUT, `prompt_slug=${promptSlug}\\n`);\n+        fs.appendFileSync(process.env.GITHUB_OUTPUT, `sources_dir=.github/aw/prompt-sources/${promptSlug}\\n`);\n+        fs.appendFileSync(process.env.GITHUB_OUTPUT, `sources_manifest=${manifestRelativePath}\\n`);\n+        fs.appendFileSync(process.env.GITHUB_OUTPUT, `source_count=${manifest.length}\\n`);\n+      }\n+\n+      main().catch((error) => {\n+        console.error(error instanceof Error ? error.message : String(error));\n+        process.exit(1);\n+      });\n+      NODE\n+---\n+\n+# Skill Update Worker\n+\n+Execute the saved prompt at `${{ steps.prepare_prompt.outputs.prompt_path }}` and produce one pull request if that prompt leads to material repository changes.\n+\n+## Inputs\n+\n+- Saved prompt path: `${{ steps.prepare_prompt.outputs.prompt_path }}`\n+- Prompt slug: `${{ steps.prepare_prompt.outputs.prompt_slug }}`\n+- Prefetched source directory: `${{ steps.prepare_prompt.outputs.sources_dir }}`\n+- Prefetched source manifest: `${{ steps.prepare_prompt.outputs.sources_manifest }}`\n+\n+## Process\n+\n+1. Read the saved prompt file at `${{ steps.prepare_prompt.outputs.prompt_path }}` in full before taking any action.\n+2. Treat the markdown body of that saved prompt as the authoritative task definition for this run. Use its frontmatter only as routing and context metadata unless the body explicitly relies on it.\n+3. Resolve any relative file links in the saved prompt relative to the prompt file location.\n+4. Use the prefetched external-source copies under `${{ steps.prepare_prompt.outputs.sources_dir }}` and the URL-to-file mapping in `${{ steps.prepare_prompt.outputs.sources_manifest }}` as the local substitutes for the saved prompt's built-in URLs.\n+5. Follow the saved prompt faithfully inside this repository: inspect the referenced files, use the prefetched source copies when the prompt refers to built-in URLs, and make only the edits justified by that prompt.\n+6. Reuse repository conventions from AGENTS.md and any checklist, template, validator, or support file that the saved prompt references.\n+7. Run the validation commands requested by the saved prompt when they apply to the files you changed and the command is available in this environment.\n+8. If the prompt leads to material repository changes, create exactly one pull request for this prompt run.\n+9. If the prompt determines that no material update is needed, or if it does not justify file edits, call `noop` with a short explanation instead of forcing a pull request.\n+\n+## Pull Request Requirements\n+\n+- Keep the branch and PR scoped to `${{ steps.prepare_prompt.outputs.prompt_slug }}` only.\n+- Use a concise PR title derived from `${{ steps.prepare_prompt.outputs.prompt_slug }}`.\n+- Summarize the material deltas, validations run, and unresolved risks in the PR body.\n+\n+## Constraints\n+\n+- Do not process any prompt file other than `${{ steps.prepare_prompt.outputs.prompt_path }}`.\n+- Do not batch multiple prompt tasks into one branch or one pull request.\n+- Do not modify `.github/workflows/` or other automation files unless the saved prompt explicitly requires it.\n+- If no action is needed, call `noop` with a concise explanation.\n\\ No newline at end of file",
+          "snapshot_ref": "cc7b76ee807160d8f99ddd4fe738122e3740f1e1",
+          "snapshot_blob_sha": "da947f865c2eb11848e0b46c97181b0e56ffb5e3",
+          "snapshot_file": "snapshots/web-ai-agent-skills__webmaxru__cc7b76ee807160d8f99ddd4fe738122e3740f1e1__skill-update-worker.md",
+          "snapshot_bytes": 7076,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"webmaxru/web-ai-agent-skills\",\"generated_owner\":\"webmaxru\",\"generated_repo\":\"web-ai-agent-skills\",\"generated_workflow_path\":\".github/workflows/skill-update-worker.lock.yml\",\"generated_workflow_file\":\"skill-update-worker.lock.yml\",\"generated_html_url\":\"https://github.com/webmaxru/web-ai-agent-skills/blob/f4c5a233067e5532699cc91546dcc81e6f802d77/.github/workflows/skill-update-worker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+      "source_full_name": "webmaxru/web-ai-agent-skills",
+      "md_path": ".github/workflows/skill-update-worker.md",
+      "commit_sha": "07e9af2403bf30f082796f157c6ec56a6a8d7cc8",
+      "authored_at": "2026-03-15T19:09:07Z",
+      "committed_at": "2026-03-15T19:09:07Z",
+      "author_name": "Maxim Salnikov",
+      "author_email": "salnikov@gmail.com",
+      "author_login": "webmaxru",
+      "author_account_type": "User",
+      "committer_name": "Maxim Salnikov",
+      "committer_email": "salnikov@gmail.com",
+      "committer_login": "webmaxru",
+      "committer_account_type": "User",
+      "message": "fix: repair skill update workflow execution",
+      "parent_shas": [
+        "cc7b76ee807160d8f99ddd4fe738122e3740f1e1"
+      ],
+      "tree_sha": "a9ec2640a226fdb0cb94827f4519997235d52158",
+      "html_url": "https://github.com/webmaxru/web-ai-agent-skills/commit/07e9af2403bf30f082796f157c6ec56a6a8d7cc8",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+          "source_full_name": "webmaxru/web-ai-agent-skills",
+          "md_path": ".github/workflows/skill-update-worker.md",
+          "commit_sha": "07e9af2403bf30f082796f157c6ec56a6a8d7cc8",
+          "committed_at": "2026-03-15T19:09:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 25,
+          "file_deletions": 10,
+          "file_changes": 35,
+          "file_patch": "@@ -69,7 +69,9 @@ steps:\n       const urlPattern = /https?:\\/\\/[^\\s)>'\"`]+/g;\n       const uniqueUrls = Array.from(new Set(promptText.match(urlPattern) || [])).sort();\n \n+      const runtimeRoot = path.join(process.cwd(), '.github', 'aw');\n       const sourcesRoot = path.join(process.cwd(), '.github', 'aw', 'prompt-sources', promptSlug);\n+      fs.mkdirSync(runtimeRoot, { recursive: true });\n       fs.rmSync(sourcesRoot, { recursive: true, force: true });\n       fs.mkdirSync(sourcesRoot, { recursive: true });\n \n@@ -110,10 +112,26 @@ steps:\n         const manifestRelativePath = path.posix.join('.github', 'aw', 'prompt-sources', promptSlug, 'manifest.json');\n         fs.writeFileSync(path.join(sourcesRoot, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\\n', 'utf8');\n \n+        const runtimeInstructionsPath = path.join(runtimeRoot, 'skill-update-runtime.md');\n+        const runtimeInstructions = [\n+          '# Skill Update Runtime Context',\n+          '',\n+          `- Saved prompt path: ${promptPath}`,\n+          `- Prompt slug: ${promptSlug}`,\n+          `- Prefetched source directory: .github/aw/prompt-sources/${promptSlug}`,\n+          `- Prefetched source manifest: ${manifestRelativePath}`,\n+          `- Prefetched source count: ${manifest.length}`,\n+          '',\n+          'Use the saved prompt path above as the single authoritative task definition for this run.',\n+          'Use the prefetched source files and manifest above as local replacements for any built-in URLs referenced by that prompt.',\n+        ].join('\\n');\n+        fs.writeFileSync(runtimeInstructionsPath, `${runtimeInstructions}\\n`, 'utf8');\n+\n         fs.appendFileSync(process.env.GITHUB_OUTPUT, `prompt_path=${promptPath}\\n`);\n         fs.appendFileSync(process.env.GITHUB_OUTPUT, `prompt_slug=${promptSlug}\\n`);\n         fs.appendFileSync(process.env.GITHUB_OUTPUT, `sources_dir=.github/aw/prompt-sources/${promptSlug}\\n`);\n         fs.appendFileSync(process.env.GITHUB_OUTPUT, `sources_manifest=${manifestRelativePath}\\n`);\n+        fs.appendFileSync(process.env.GITHUB_OUTPUT, 'runtime_instructions=.github/aw/skill-update-runtime.md\\n');\n         fs.appendFileSync(process.env.GITHUB_OUTPUT, `source_count=${manifest.length}\\n`);\n       }\n \n@@ -126,21 +144,18 @@ steps:\n \n # Skill Update Worker\n \n-Execute the saved prompt at `${{ steps.prepare_prompt.outputs.prompt_path }}` and produce one pull request if that prompt leads to material repository changes.\n+Read `.github/aw/skill-update-runtime.md` first, then execute the selected saved prompt described there and produce one pull request if that prompt leads to material repository changes.\n \n ## Inputs\n \n-- Saved prompt path: `${{ steps.prepare_prompt.outputs.prompt_path }}`\n-- Prompt slug: `${{ steps.prepare_prompt.outputs.prompt_slug }}`\n-- Prefetched source directory: `${{ steps.prepare_prompt.outputs.sources_dir }}`\n-- Prefetched source manifest: `${{ steps.prepare_prompt.outputs.sources_manifest }}`\n+- Runtime context file: `.github/aw/skill-update-runtime.md`\n \n ## Process\n \n-1. Read the saved prompt file at `${{ steps.prepare_prompt.outputs.prompt_path }}` in full before taking any action.\n+1. Read `.github/aw/skill-update-runtime.md` in full before taking any action.\n 2. Treat the markdown body of that saved prompt as the authoritative task definition for this run. Use its frontmatter only as routing and context metadata unless the body explicitly relies on it.\n 3. Resolve any relative file links in the saved prompt relative to the prompt file location.\n-4. Use the prefetched external-source copies under `${{ steps.prepare_prompt.outputs.sources_dir }}` and the URL-to-file mapping in `${{ steps.prepare_prompt.outputs.sources_manifest }}` as the local substitutes for the saved prompt's built-in URLs.\n+4. Use the prefetched external-source copies and URL-to-file mapping listed in `.github/aw/skill-update-runtime.md` as the local substitutes for the saved prompt's built-in URLs.\n 5. Follow the saved prompt faithfully inside this repository: inspect the referenced files, use the prefetched source copies when the prompt refers to built-in URLs, and make only the edits justified by that prompt.\n 6. Reuse repository conventions from AGENTS.md and any checklist, template, validator, or support file that the saved prompt references.\n 7. Run the validation commands requested by the saved prompt when they apply to the files you changed and the command is available in this environment.\n@@ -149,13 +164,13 @@ Execute the saved prompt at `${{ steps.prepare_prompt.outputs.prompt_path }}` an\n \n ## Pull Request Requirements\n \n-- Keep the branch and PR scoped to `${{ steps.prepare_prompt.outputs.prompt_slug }}` only.\n-- Use a concise PR title derived from `${{ steps.prepare_prompt.outputs.prompt_slug }}`.\n+- Keep the branch and PR scoped only to the selected prompt described in `.github/aw/skill-update-runtime.md`.\n+- Use a concise PR title derived from the selected prompt slug in `.github/aw/skill-update-runtime.md`.\n - Summarize the material deltas, validations run, and unresolved risks in the PR body.\n \n ## Constraints\n \n-- Do not process any prompt file other than `${{ steps.prepare_prompt.outputs.prompt_path }}`.\n+- Do not process any prompt file other than the one identified in `.github/aw/skill-update-runtime.md`.\n - Do not batch multiple prompt tasks into one branch or one pull request.\n - Do not modify `.github/workflows/` or other automation files unless the saved prompt explicitly requires it.\n - If no action is needed, call `noop` with a concise explanation.\n\\ No newline at end of file",
+          "snapshot_ref": "07e9af2403bf30f082796f157c6ec56a6a8d7cc8",
+          "snapshot_blob_sha": "3824d5e58e2ee428e821d7f1c67194d144eb99a3",
+          "snapshot_file": "snapshots/web-ai-agent-skills__webmaxru__07e9af2403bf30f082796f157c6ec56a6a8d7cc8__skill-update-worker.md",
+          "snapshot_bytes": 7883,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"webmaxru/web-ai-agent-skills\",\"generated_owner\":\"webmaxru\",\"generated_repo\":\"web-ai-agent-skills\",\"generated_workflow_path\":\".github/workflows/skill-update-worker.lock.yml\",\"generated_workflow_file\":\"skill-update-worker.lock.yml\",\"generated_html_url\":\"https://github.com/webmaxru/web-ai-agent-skills/blob/f4c5a233067e5532699cc91546dcc81e6f802d77/.github/workflows/skill-update-worker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+      "source_full_name": "webmaxru/web-ai-agent-skills",
+      "md_path": ".github/workflows/skill-update-worker.md",
+      "commit_sha": "f9d415ee5ba919f9cebdc1d3ffc5a3f3108be312",
+      "authored_at": "2026-03-16T10:51:13Z",
+      "committed_at": "2026-03-16T10:51:13Z",
+      "author_name": "Maxim Salnikov",
+      "author_email": "salnikov@gmail.com",
+      "author_login": "webmaxru",
+      "author_account_type": "User",
+      "committer_name": "Maxim Salnikov",
+      "committer_email": "salnikov@gmail.com",
+      "committer_login": "webmaxru",
+      "committer_account_type": "User",
+      "message": "fix: isolate gh-aw worker concurrency",
+      "parent_shas": [
+        "42789c8dce5e91f4b2df470728c2b67f1d00f06e"
+      ],
+      "tree_sha": "7ee6a47a9fafb98bc54434bf6753ee7eed98c84f",
+      "html_url": "https://github.com/webmaxru/web-ai-agent-skills/commit/f9d415ee5ba919f9cebdc1d3ffc5a3f3108be312",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+          "source_full_name": "webmaxru/web-ai-agent-skills",
+          "md_path": ".github/workflows/skill-update-worker.md",
+          "commit_sha": "f9d415ee5ba919f9cebdc1d3ffc5a3f3108be312",
+          "committed_at": "2026-03-16T10:51:13Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -18,6 +18,9 @@ permissions:\n   actions: read\n   contents: read\n   pull-requests: read\n+concurrency:\n+  group: skill-update-worker-${{ github.repository }}-${{ inputs.prompt_path }}\n+  cancel-in-progress: false\n engine: copilot\n network:\n   allowed:",
+          "snapshot_ref": "f9d415ee5ba919f9cebdc1d3ffc5a3f3108be312",
+          "snapshot_blob_sha": "06f1b83b95bf62d8eed5f0a6c83be88572725f5c",
+          "snapshot_file": "snapshots/web-ai-agent-skills__webmaxru__f9d415ee5ba919f9cebdc1d3ffc5a3f3108be312__skill-update-worker.md",
+          "snapshot_bytes": 8004,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"webmaxru/web-ai-agent-skills\",\"generated_owner\":\"webmaxru\",\"generated_repo\":\"web-ai-agent-skills\",\"generated_workflow_path\":\".github/workflows/skill-update-worker.lock.yml\",\"generated_workflow_file\":\"skill-update-worker.lock.yml\",\"generated_html_url\":\"https://github.com/webmaxru/web-ai-agent-skills/blob/f4c5a233067e5532699cc91546dcc81e6f802d77/.github/workflows/skill-update-worker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+      "source_full_name": "webmaxru/web-ai-agent-skills",
+      "md_path": ".github/workflows/skill-update-worker.md",
+      "commit_sha": "0d3db743102b99df57099dc879eac6e44781f24b",
+      "authored_at": "2026-05-15T09:50:54Z",
+      "committed_at": "2026-05-15T09:50:54Z",
+      "author_name": "Maxim Salnikov",
+      "author_email": "salnikov@gmail.com",
+      "author_login": "webmaxru",
+      "author_account_type": "User",
+      "committer_name": "Maxim Salnikov",
+      "committer_email": "salnikov@gmail.com",
+      "committer_login": "webmaxru",
+      "committer_account_type": "User",
+      "message": "fix(workflows): pin Copilot CLI to 1.0.43 in skill-update-worker\n\nCopilot CLI 1.0.44+ broke authentication when running under gh-aw's\nchroot+API-proxy sandbox, causing 'No authentication information found.'\nPinning to 1.0.43 (the gh-aw default) restores the working configuration.\nRecompiled lock file with gh-aw v0.68.3.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "360ac6d33822d89e16dd2ee4957323383c89e817"
+      ],
+      "tree_sha": "de1bb240f0cd16546ec145848c4b501f255ee4a2",
+      "html_url": "https://github.com/webmaxru/web-ai-agent-skills/commit/0d3db743102b99df57099dc879eac6e44781f24b",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "webmaxru/web-ai-agent-skills:.github/workflows/skill-update-worker.md",
+          "source_full_name": "webmaxru/web-ai-agent-skills",
+          "md_path": ".github/workflows/skill-update-worker.md",
+          "commit_sha": "0d3db743102b99df57099dc879eac6e44781f24b",
+          "committed_at": "2026-05-15T09:50:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 1,
+          "file_changes": 4,
+          "file_patch": "@@ -21,7 +21,9 @@ permissions:\n concurrency:\n   group: skill-update-worker-${{ github.repository }}-${{ inputs.prompt_path }}\n   cancel-in-progress: false\n-engine: copilot\n+engine:\n+  id: copilot\n+  version: \"1.0.43\"\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "0d3db743102b99df57099dc879eac6e44781f24b",
+          "snapshot_blob_sha": "d0e18eaaebbcb9dbaea6520cd2e61aba3fe8233c",
+          "snapshot_file": "snapshots/web-ai-agent-skills__webmaxru__0d3db743102b99df57099dc879eac6e44781f24b__skill-update-worker.md",
+          "snapshot_bytes": 8030,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"webmaxru/web-ai-agent-skills\",\"generated_owner\":\"webmaxru\",\"generated_repo\":\"web-ai-agent-skills\",\"generated_workflow_path\":\".github/workflows/skill-update-worker.lock.yml\",\"generated_workflow_file\":\"skill-update-worker.lock.yml\",\"generated_html_url\":\"https://github.com/webmaxru/web-ai-agent-skills/blob/f4c5a233067e5532699cc91546dcc81e6f802d77/.github/workflows/skill-update-worker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

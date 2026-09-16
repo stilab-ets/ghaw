@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/smoke-copilot-mai.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/smoke-copilot-mai.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/smoke-copilot-mai.lock.yml",
+      "generated_workflow_file": "smoke-copilot-mai.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-copilot-mai.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:46:44+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-copilot-mai.md",
+      "commit_sha": "2195820db744af43cb0dc1f1fbac577381df4552",
+      "authored_at": "2026-07-16T16:38:31Z",
+      "committed_at": "2026-07-16T16:38:31Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add smoke-copilot-mai workflow using mai-code-1-flash (#46048)",
+      "parent_shas": [
+        "a56a3e48b9eb97bdd136a0902ceffeb99f868bbf"
+      ],
+      "tree_sha": "35920266d735db675eba38a03786b6b089ec1e01",
+      "html_url": "https://github.com/github/gh-aw/commit/2195820db744af43cb0dc1f1fbac577381df4552",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-copilot-mai.md",
+          "commit_sha": "2195820db744af43cb0dc1f1fbac577381df4552",
+          "committed_at": "2026-07-16T16:38:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 80,
+          "file_deletions": 0,
+          "file_changes": 80,
+          "file_patch": "@@ -0,0 +1,80 @@\n+---\n+private: true\n+emoji: \"⚡\"\n+description: Smoke test for MAI-Code-1-Flash - summarizes commit messages from the last 24h\n+on:\n+  slash_command:\n+    name: smoke-copilot-mai\n+    strategy: centralized\n+    events: [issues, issue_comment, pull_request, pull_request_comment]\n+  workflow_dispatch:\n+  label_command:\n+    name: smoke\n+    events: [pull_request]\n+  reaction: \"eyes\"\n+  status-comment: true\n+  github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+name: Smoke Copilot MAI\n+engine:\n+  id: copilot\n+  model: mai-code-1-flash\n+  bare: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  bash:\n+    - \"*\"\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+safe-outputs:\n+  create-issue:\n+    expires: 2h\n+    group: true\n+    close-older-issues: true\n+    close-older-key: \"smoke-copilot-mai\"\n+    labels: [automation, testing]\n+  add-comment:\n+    hide-older-comments: true\n+    max: 1\n+timeout-minutes: 10\n+features:\n+  gh-aw-detection: false\n+---\n+\n+# Smoke Test: MAI-Code-1-Flash Commit Summary\n+\n+**IMPORTANT: Keep all outputs extremely short and concise.**\n+\n+## Task\n+\n+Retrieve and summarize commit messages from the last 24h in `${{ github.repository }}`.\n+\n+1. **Get commits**: Run the following bash command to fetch commits from the last 24 hours:\n+\n+   ```bash\n+   gh api \"/repos/${{ github.repository }}/commits?since=$(date -u -d '24 hours ago' '+%Y-%m-%dT%H:%M:%SZ')\" \\\n+     --jq '.[] | \"- \\(.commit.message | split(\"\\n\")[0]) (\\(.sha[:7]))\"'\n+   ```\n+\n+   Mark as ✅ if the command ran without error, ❌ if it failed.\n+\n+2. **Summarize**: Write a concise 2–4 sentence summary grouping the commits by theme or area. If there are no commits, write \"No commits in the last 24h.\"\n+\n+## Output\n+\n+**Create an issue** titled **\"Smoke Test: MAI-Code-1-Flash - ${{ github.run_id }}\"** with:\n+- The commit list (or \"No commits in the last 24h\" if empty)\n+- The summary\n+- ✅ or ❌ for the bash tool test\n+- Overall status: PASS or FAIL\n+- Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n+- Timestamp\n+\n+**Only if triggered by a pull_request event**: Use `add_comment` to post a brief comment (max 5 lines) to the triggering PR with the summary and overall status.",
+          "snapshot_ref": "2195820db744af43cb0dc1f1fbac577381df4552",
+          "snapshot_blob_sha": "81326998fc163a0c0424dc7fe21cea73a2c5981f",
+          "snapshot_file": "snapshots/gh-aw__github__2195820db744af43cb0dc1f1fbac577381df4552__smoke-copilot-mai.md",
+          "snapshot_bytes": 2268,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-mai.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-mai.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-copilot-mai.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-copilot-mai.md",
+      "commit_sha": "85a76e4a105e4c46df61762594fe034993a9e8ec",
+      "authored_at": "2026-07-17T02:49:15Z",
+      "committed_at": "2026-07-17T02:49:15Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: update MAI model to mai-code-1-flash-picker and fix sandbox test isolation (#46052)",
+      "parent_shas": [
+        "295c718106cce794e844b9c7d88bd829ba037e10"
+      ],
+      "tree_sha": "85ae9e8db8d96f41c0e17669630c7041c838c9bc",
+      "html_url": "https://github.com/github/gh-aw/commit/85a76e4a105e4c46df61762594fe034993a9e8ec",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-copilot-mai.md",
+          "commit_sha": "85a76e4a105e4c46df61762594fe034993a9e8ec",
+          "committed_at": "2026-07-17T02:49:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 2,
+          "file_changes": 9,
+          "file_patch": "@@ -1,7 +1,7 @@\n ---\n private: true\n emoji: \"⚡\"\n-description: Smoke test for MAI-Code-1-Flash - summarizes commit messages from the last 24h\n+description: \"Smoke test for MAI-Code-1-Flash (mai-code-1-flash-picker) — pricing: $0.75/M input, $0.075/M cached, $4.50/M output\"\n on:\n   slash_command:\n     name: smoke-copilot-mai\n@@ -21,8 +21,13 @@ permissions:\n name: Smoke Copilot MAI\n engine:\n   id: copilot\n-  model: mai-code-1-flash\n+  model: mai-code-1-flash-picker\n   bare: true\n+  env:\n+    # MAI-Code-1-Flash-picker uses the OpenAI Responses API; the Copilot CLI\n+    # defaults custom providers to the legacy \"completions\" endpoint, which\n+    # this model rejects with HTTP 400. Force the \"responses\" wire API instead.\n+    COPILOT_PROVIDER_WIRE_API: responses\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "85a76e4a105e4c46df61762594fe034993a9e8ec",
+          "snapshot_blob_sha": "22cf183f261a6b6b43a346f794135d8b4eb99213",
+          "snapshot_file": "snapshots/gh-aw__github__85a76e4a105e4c46df61762594fe034993a9e8ec__smoke-copilot-mai.md",
+          "snapshot_bytes": 2597,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-mai.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-mai.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-copilot-mai.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-copilot-mai.md",
+      "commit_sha": "8e8f2a2e7e4a870b932f5a226aae38c99b3acc9d",
+      "authored_at": "2026-07-18T05:44:03Z",
+      "committed_at": "2026-07-18T05:44:03Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "auto-configure COPILOT_PROVIDER_WIRE_API from model catalog (#46156)",
+      "parent_shas": [
+        "4440010653f572b389cdfe225208aff8c1aaa5af"
+      ],
+      "tree_sha": "a0f99fe76b210f95ae6036a78d8963c6ca45d52b",
+      "html_url": "https://github.com/github/gh-aw/commit/8e8f2a2e7e4a870b932f5a226aae38c99b3acc9d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-copilot-mai.md",
+          "commit_sha": "8e8f2a2e7e4a870b932f5a226aae38c99b3acc9d",
+          "committed_at": "2026-07-18T05:44:03Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 5,
+          "file_changes": 5,
+          "file_patch": "@@ -23,11 +23,6 @@ engine:\n   id: copilot\n   model: mai-code-1-flash-picker\n   bare: true\n-  env:\n-    # MAI-Code-1-Flash-picker uses the OpenAI Responses API; the Copilot CLI\n-    # defaults custom providers to the legacy \"completions\" endpoint, which\n-    # this model rejects with HTTP 400. Force the \"responses\" wire API instead.\n-    COPILOT_PROVIDER_WIRE_API: responses\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "8e8f2a2e7e4a870b932f5a226aae38c99b3acc9d",
+          "snapshot_blob_sha": "72eeac88d20145cee47aad958992c3c9860f20a7",
+          "snapshot_file": "snapshots/gh-aw__github__8e8f2a2e7e4a870b932f5a226aae38c99b3acc9d__smoke-copilot-mai.md",
+          "snapshot_bytes": 2316,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-mai.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-mai.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-copilot-mai.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-copilot-mai.md",
+      "commit_sha": "36884336ee4366866880539677bbd7864122497e",
+      "authored_at": "2026-07-19T09:39:37Z",
+      "committed_at": "2026-07-19T09:39:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add top-level `model` field, deprecate `engine.model` (#46570)",
+      "parent_shas": [
+        "74058183471b424ce264dcd057765ceafe8931c6"
+      ],
+      "tree_sha": "762b0c8619a348af864fefcde591badf2ac6b5ea",
+      "html_url": "https://github.com/github/gh-aw/commit/36884336ee4366866880539677bbd7864122497e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-copilot-mai.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-copilot-mai.md",
+          "commit_sha": "36884336ee4366866880539677bbd7864122497e",
+          "committed_at": "2026-07-19T09:39:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -19,9 +19,9 @@ permissions:\n   issues: read\n   pull-requests: read\n name: Smoke Copilot MAI\n+model: mai-code-1-flash-picker\n engine:\n   id: copilot\n-  model: mai-code-1-flash-picker\n   bare: true\n network:\n   allowed:\n@@ -77,4 +77,4 @@ Retrieve and summarize commit messages from the last 24h in `${{ github.reposito\n - Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n - Timestamp\n \n-**Only if triggered by a pull_request event**: Use `add_comment` to post a brief comment (max 5 lines) to the triggering PR with the summary and overall status.\n+**Only if triggered by a pull_request event**: Use `add_comment` to post a brief comment (max 5 lines) to the triggering PR with the summary and overall status.\n\\ No newline at end of file",
+          "snapshot_ref": "36884336ee4366866880539677bbd7864122497e",
+          "snapshot_blob_sha": "ee1685e491acf36cf0926078f8509d91ebadb0bf",
+          "snapshot_file": "snapshots/gh-aw__github__36884336ee4366866880539677bbd7864122497e__smoke-copilot-mai.md",
+          "snapshot_bytes": 2313,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-mai.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-mai.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-copilot-mai.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

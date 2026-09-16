@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "JKamsker/JKToolKit.CodexSDK:.github/workflows/codex-sdk-parity-coderabbit-fix.md",
+    "source_full_name": "JKamsker/JKToolKit.CodexSDK",
+    "source_owner": "JKamsker",
+    "source_repo": "JKToolKit.CodexSDK",
+    "md_path": ".github/workflows/codex-sdk-parity-coderabbit-fix.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/JKamsker/JKToolKit.CodexSDK/blob/HEAD/.github/workflows/codex-sdk-parity-coderabbit-fix.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "JKamsker/JKToolKit.CodexSDK",
+      "generated_owner": "JKamsker",
+      "generated_repo": "JKToolKit.CodexSDK",
+      "generated_workflow_path": ".github/workflows/codex-sdk-parity-coderabbit-fix.lock.yml",
+      "generated_workflow_file": "codex-sdk-parity-coderabbit-fix.lock.yml",
+      "generated_html_url": "https://github.com/JKamsker/JKToolKit.CodexSDK/blob/c55f7adf88c3f129f3fe65ff2820e25381e1f686/.github/workflows/codex-sdk-parity-coderabbit-fix.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:57:18+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "JKamsker/JKToolKit.CodexSDK:.github/workflows/codex-sdk-parity-coderabbit-fix.md",
+      "source_full_name": "JKamsker/JKToolKit.CodexSDK",
+      "md_path": ".github/workflows/codex-sdk-parity-coderabbit-fix.md",
+      "commit_sha": "442077896d8409127142b273a2bebf88ae6a8535",
+      "authored_at": "2026-06-28T16:39:59Z",
+      "committed_at": "2026-06-28T16:39:59Z",
+      "author_name": "Jonas Kamsker",
+      "author_email": "11245306+JKamsker@users.noreply.github.com",
+      "author_login": "JKamsker",
+      "author_account_type": "User",
+      "committer_name": "Jonas Kamsker",
+      "committer_email": "11245306+JKamsker@users.noreply.github.com",
+      "committer_login": "JKamsker",
+      "committer_account_type": "User",
+      "message": "ci(gh-aw): handle CodeRabbit parity reviews\n\nCreate parity PRs as ready for review instead of drafts so normal review automation can run without a manual draft transition.\n\nAdd a dedicated gh-aw workflow that is allowed to activate from CodeRabbit bot reviews on gh-aw-created parity PRs. The workflow verifies the PR title, author, branch, and labels before fixing actionable review comments, then validates restore, generated DTOs, build, and tests before pushing back to the triggering branch.",
+      "parent_shas": [
+        "6bb935f779b2106d799fbfbef570176295689ee6"
+      ],
+      "tree_sha": "6166bbd6ba077a4690d62ee82acc372e94d967ff",
+      "html_url": "https://github.com/JKamsker/JKToolKit.CodexSDK/commit/442077896d8409127142b273a2bebf88ae6a8535",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "JKamsker/JKToolKit.CodexSDK:.github/workflows/codex-sdk-parity-coderabbit-fix.md",
+          "source_full_name": "JKamsker/JKToolKit.CodexSDK",
+          "md_path": ".github/workflows/codex-sdk-parity-coderabbit-fix.md",
+          "commit_sha": "442077896d8409127142b273a2bebf88ae6a8535",
+          "committed_at": "2026-06-28T16:39:59Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 186,
+          "file_deletions": 0,
+          "file_changes": 186,
+          "file_patch": "@@ -0,0 +1,186 @@\n+---\n+description: |\n+  Fixes actionable CodeRabbit review comments on parity pull requests created by\n+  the gh-aw parity automation.\n+\n+on:\n+  pull_request_review:\n+    types: [submitted, edited]\n+  bots:\n+    - coderabbitai\n+    - \"coderabbitai[bot]\"\n+\n+if: >\n+  (github.event.review.user.login == 'coderabbitai' || github.event.review.user.login == 'coderabbitai[bot]') &&\n+  (github.event.review.state == 'commented' || github.event.review.state == 'COMMENTED') &&\n+  github.event.pull_request.state == 'open' &&\n+  startsWith(github.event.pull_request.title, '[parity] ') &&\n+  github.event.pull_request.user.login == 'github-actions[bot]' &&\n+  startsWith(github.event.pull_request.head.ref, 'parity/codex-') &&\n+  contains(toJSON(github.event.pull_request.labels.*.name), '\"automation\"') &&\n+  contains(toJSON(github.event.pull_request.labels.*.name), '\"parity\"')\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+\n+checkout:\n+  fetch-depth: 0\n+  submodules: recursive\n+\n+network:\n+  allowed:\n+    - defaults\n+    - dotnet\n+\n+tools:\n+  github:\n+    lockdown: false\n+    min-integrity: none\n+\n+safe-outputs:\n+  push-to-pull-request-branch:\n+    target: triggering\n+    required-title-prefix: \"[parity] \"\n+    max: 1\n+    if-no-changes: \"ignore\"\n+    protected-files: fallback-to-issue\n+\n+# Use .github/scripts/compile_gh_aw.py after editing this workflow. See\n+# docs/Runbooks/GhAwCustomEndpoint.md for the secret-backed endpoint contract.\n+# The same compile script also injects model_reasoning_effort = \"high\" into\n+# the generated Codex config so the model remains controlled by GH_AW_* vars.\n+engine: codex\n+\n+post-steps:\n+  - name: Check whether parity CodeRabbit validation is required\n+    id: coderabbit-validation-guard\n+    shell: bash\n+    run: |\n+      set -euo pipefail\n+      outputs=\"/tmp/gh-aw/safeoutputs.jsonl\"\n+      should_validate=false\n+      if [ -s \"$outputs\" ] && grep -Eq '\"type\":\"push_to_pull_request_branch\"' \"$outputs\"; then\n+        should_validate=true\n+      fi\n+      echo \"should_validate=${should_validate}\" >> \"$GITHUB_OUTPUT\"\n+\n+  - name: Setup .NET for CodeRabbit fix validation\n+    if: steps.coderabbit-validation-guard.outputs.should_validate == 'true'\n+    uses: actions/setup-dotnet@v4\n+    with:\n+      dotnet-version: 10.0.x\n+\n+  - name: Materialize safe-output patch for CodeRabbit validation\n+    if: steps.coderabbit-validation-guard.outputs.should_validate == 'true'\n+    shell: bash\n+    run: |\n+      set -euo pipefail\n+      base_sha=\"${GITHUB_SHA:-}\"\n+      current_sha=\"$(git rev-parse HEAD)\"\n+      has_workspace_changes=false\n+      git diff --quiet || has_workspace_changes=true\n+      git diff --cached --quiet || has_workspace_changes=true\n+\n+      if [ \"$has_workspace_changes\" = false ] && [ -n \"$base_sha\" ] && [ \"$current_sha\" = \"$base_sha\" ]; then\n+        shopt -s nullglob\n+        patches=(/tmp/gh-aw/aw-*.patch)\n+        if [ \"${#patches[@]}\" -eq 0 ]; then\n+          echo \"::error::Safe output requested code changes, but the agent left no workspace changes and produced no patch artifact.\"\n+          exit 1\n+        fi\n+        if [ \"${#patches[@]}\" -gt 1 ]; then\n+          printf '::error::Expected one safe-output patch, found %s: %s\\n' \"${#patches[@]}\" \"${patches[*]}\"\n+          exit 1\n+        fi\n+        git apply --check \"${patches[0]}\"\n+        git apply \"${patches[0]}\"\n+      fi\n+\n+      git status --short\n+\n+  - name: Restore CodeRabbit fix validation dependencies\n+    if: steps.coderabbit-validation-guard.outputs.should_validate == 'true'\n+    run: dotnet restore JKToolKit.CodexSDK.sln\n+\n+  - name: Verify generated DTOs before CodeRabbit safe output\n+    if: steps.coderabbit-validation-guard.outputs.should_validate == 'true'\n+    run: dotnet run --project src/JKToolKit.CodexSDK.UpstreamGen --configuration Release --no-restore -- check\n+\n+  - name: Build before CodeRabbit safe output\n+    if: steps.coderabbit-validation-guard.outputs.should_validate == 'true'\n+    run: dotnet build JKToolKit.CodexSDK.sln --configuration Release --no-restore\n+\n+  - name: Test before CodeRabbit safe output\n+    if: steps.coderabbit-validation-guard.outputs.should_validate == 'true'\n+    run: dotnet test JKToolKit.CodexSDK.sln --configuration Release --no-build\n+\n+  - name: Redact Codex endpoint artifacts\n+    if: always()\n+    env:\n+      CODEX_LB_BASE_URL: ${{ secrets.CODEX_LB_BASE_URL }}\n+    run: python3 .github/scripts/redact_codex_endpoint_artifacts.py\n+---\n+\n+# Codex SDK Parity CodeRabbit Fix\n+\n+Fix actionable CodeRabbit findings on an existing gh-aw parity pull request.\n+\n+This workflow should only do useful work when it was triggered by a CodeRabbit\n+pull request review on an open parity PR created by the gh-aw parity workflow.\n+The compiled workflow also guards this before activation, but verify it yourself\n+before changing code:\n+\n+- the triggering review author is `coderabbitai` or `coderabbitai[bot]`,\n+- the pull request title starts with `[parity] `,\n+- the pull request author is `github-actions[bot]`,\n+- the head branch starts with `parity/codex-`,\n+- the pull request has both `automation` and `parity` labels.\n+\n+If any guard does not hold, leave the workspace unchanged and emit a `noop`.\n+\n+## Task\n+\n+Use the available GitHub tools to inspect the triggering pull request and the\n+newest CodeRabbit review on that pull request. Read the review body and all\n+unresolved CodeRabbit inline review comments.\n+\n+For each finding:\n+\n+1. Verify it against the current code before editing.\n+2. Fix only still-valid issues.\n+3. Skip invalid or obsolete findings with a brief reason in your final output.\n+4. Keep the change minimal and scoped to the reviewed parity PR.\n+\n+Do not apply CodeRabbit suggestions mechanically when the current source proves\n+the suggestion is wrong or stale.\n+\n+## Validation Before Safe Output\n+\n+Do not request `push_to_pull_request_branch` until validation passes and hosted\n+CI is expected to pass.\n+\n+Run the focused tests that cover every touched surface. If the change is not\n+pure documentation, also run:\n+\n+```bash\n+dotnet run --project src/JKToolKit.CodexSDK.UpstreamGen --configuration Release -- check\n+dotnet test JKToolKit.CodexSDK.sln --configuration Release\n+```\n+\n+The workflow enforces this after the agent runs: if a safe-output write is\n+requested, post-steps materialize the proposed patch if needed and run restore,\n+generated DTO check, build, and full tests before safe outputs are processed.\n+If those checks fail, the workflow run must fail instead of pushing a red PR.\n+\n+## Output\n+\n+When changes are needed:\n+\n+1. Commit the changes locally with a concise message such as\n+   `fix: address CodeRabbit parity review`.\n+2. Use `push_to_pull_request_branch` to update the triggering pull request.\n+\n+Do not use raw `git push`. Do not create a new pull request. Do not print API\n+keys, virtual token values, endpoint hosts, or other secrets.",
+          "snapshot_ref": "442077896d8409127142b273a2bebf88ae6a8535",
+          "snapshot_blob_sha": "d971f8a72cf132640a13bb67c2f824ff66468b73",
+          "snapshot_file": "snapshots/JKToolKit.CodexSDK__JKamsker__442077896d8409127142b273a2bebf88ae6a8535__codex-sdk-parity-coderabbit-fix.md",
+          "snapshot_bytes": 6749,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"JKamsker/JKToolKit.CodexSDK\",\"generated_owner\":\"JKamsker\",\"generated_repo\":\"JKToolKit.CodexSDK\",\"generated_workflow_path\":\".github/workflows/codex-sdk-parity-coderabbit-fix.lock.yml\",\"generated_workflow_file\":\"codex-sdk-parity-coderabbit-fix.lock.yml\",\"generated_html_url\":\"https://github.com/JKamsker/JKToolKit.CodexSDK/blob/c55f7adf88c3f129f3fe65ff2820e25381e1f686/.github/workflows/codex-sdk-parity-coderabbit-fix.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "JKamsker/JKToolKit.CodexSDK:.github/workflows/codex-sdk-parity-coderabbit-fix.md",
+      "source_full_name": "JKamsker/JKToolKit.CodexSDK",
+      "md_path": ".github/workflows/codex-sdk-parity-coderabbit-fix.md",
+      "commit_sha": "8d68c76b3f8d3f8a05f4735695690701469d9b7e",
+      "authored_at": "2026-06-28T17:47:15Z",
+      "committed_at": "2026-06-28T17:47:15Z",
+      "author_name": "Jonas Kamsker",
+      "author_email": "11245306+JKamsker@users.noreply.github.com",
+      "author_login": "JKamsker",
+      "author_account_type": "User",
+      "committer_name": "Jonas Kamsker",
+      "committer_email": "11245306+JKamsker@users.noreply.github.com",
+      "committer_login": "JKamsker",
+      "committer_account_type": "User",
+      "message": "ci(gh-aw): allow replaying CodeRabbit parity fixes\n\nAdd a workflow_dispatch path to the CodeRabbit parity fix workflow so existing review comments can be processed after the workflow has been installed. The dispatch path accepts a PR number or gh-aw aw_context and an optional review id, while preserving the same guardrails and validation before pushing to the parity PR branch.",
+      "parent_shas": [
+        "442077896d8409127142b273a2bebf88ae6a8535"
+      ],
+      "tree_sha": "05fe9fa9d99aa7de1efbb82e1128d533db3799ec",
+      "html_url": "https://github.com/JKamsker/JKToolKit.CodexSDK/commit/8d68c76b3f8d3f8a05f4735695690701469d9b7e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "JKamsker/JKToolKit.CodexSDK:.github/workflows/codex-sdk-parity-coderabbit-fix.md",
+          "source_full_name": "JKamsker/JKToolKit.CodexSDK",
+          "md_path": ".github/workflows/codex-sdk-parity-coderabbit-fix.md",
+          "commit_sha": "8d68c76b3f8d3f8a05f4735695690701469d9b7e",
+          "committed_at": "2026-06-28T17:47:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 48,
+          "file_deletions": 11,
+          "file_changes": 59,
+          "file_patch": "@@ -4,21 +4,44 @@ description: |\n   the gh-aw parity automation.\n \n on:\n+  workflow_dispatch:\n+    inputs:\n+      pr_number:\n+        description: \"Parity pull request number to replay existing CodeRabbit comments for.\"\n+        required: false\n+        default: \"\"\n+      review_id:\n+        description: \"Optional CodeRabbit pull request review id to focus on.\"\n+        required: false\n+        default: \"\"\n   pull_request_review:\n     types: [submitted, edited]\n   bots:\n     - coderabbitai\n     - \"coderabbitai[bot]\"\n \n if: >\n-  (github.event.review.user.login == 'coderabbitai' || github.event.review.user.login == 'coderabbitai[bot]') &&\n-  (github.event.review.state == 'commented' || github.event.review.state == 'COMMENTED') &&\n-  github.event.pull_request.state == 'open' &&\n-  startsWith(github.event.pull_request.title, '[parity] ') &&\n-  github.event.pull_request.user.login == 'github-actions[bot]' &&\n-  startsWith(github.event.pull_request.head.ref, 'parity/codex-') &&\n-  contains(toJSON(github.event.pull_request.labels.*.name), '\"automation\"') &&\n-  contains(toJSON(github.event.pull_request.labels.*.name), '\"parity\"')\n+  (\n+    github.event_name == 'workflow_dispatch' &&\n+    (\n+      github.event.inputs.pr_number != '' ||\n+      (\n+        fromJSON(github.event.inputs.aw_context || '{}').item_type == 'pull_request' &&\n+        fromJSON(github.event.inputs.aw_context || '{}').item_number != ''\n+      )\n+    )\n+  ) ||\n+  (\n+    github.event_name == 'pull_request_review' &&\n+    (github.event.review.user.login == 'coderabbitai' || github.event.review.user.login == 'coderabbitai[bot]') &&\n+    (github.event.review.state == 'commented' || github.event.review.state == 'COMMENTED') &&\n+    github.event.pull_request.state == 'open' &&\n+    startsWith(github.event.pull_request.title, '[parity] ') &&\n+    github.event.pull_request.user.login == 'github-actions[bot]' &&\n+    startsWith(github.event.pull_request.head.ref, 'parity/codex-') &&\n+    contains(toJSON(github.event.pull_request.labels.*.name), '\"automation\"') &&\n+    contains(toJSON(github.event.pull_request.labels.*.name), '\"parity\"')\n+  )\n \n permissions:\n   contents: read\n@@ -128,9 +151,10 @@ post-steps:\n Fix actionable CodeRabbit findings on an existing gh-aw parity pull request.\n \n This workflow should only do useful work when it was triggered by a CodeRabbit\n-pull request review on an open parity PR created by the gh-aw parity workflow.\n-The compiled workflow also guards this before activation, but verify it yourself\n-before changing code:\n+pull request review on an open parity PR created by the gh-aw parity workflow,\n+or when it was manually dispatched to replay existing CodeRabbit comments for\n+such a PR. The compiled workflow also guards this before activation where it can,\n+but verify it yourself before changing code:\n \n - the triggering review author is `coderabbitai` or `coderabbitai[bot]`,\n - the pull request title starts with `[parity] `,\n@@ -140,6 +164,19 @@ before changing code:\n \n If any guard does not hold, leave the workspace unchanged and emit a `noop`.\n \n+## Manual Replay Runs\n+\n+On `workflow_dispatch`, determine the target PR from\n+`github.event.inputs.pr_number` or the pull request number in\n+`github.event.inputs.aw_context`. Use `github.event.inputs.review_id` when it is\n+set; otherwise use the newest CodeRabbit review on that PR.\n+\n+Manual replay runs exist to process CodeRabbit comments that were created before\n+this workflow existed. Treat them the same as a fresh CodeRabbit review event:\n+inspect the target PR, verify the PR guardrails above, read the selected or\n+newest CodeRabbit review, and read all unresolved CodeRabbit inline review\n+comments before editing.\n+\n ## Task\n \n Use the available GitHub tools to inspect the triggering pull request and the",
+          "snapshot_ref": "8d68c76b3f8d3f8a05f4735695690701469d9b7e",
+          "snapshot_blob_sha": "c507625754e80c824fbd98afcb671edb12a85875",
+          "snapshot_file": "snapshots/JKToolKit.CodexSDK__JKamsker__8d68c76b3f8d3f8a05f4735695690701469d9b7e__codex-sdk-parity-coderabbit-fix.md",
+          "snapshot_bytes": 8165,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"JKamsker/JKToolKit.CodexSDK\",\"generated_owner\":\"JKamsker\",\"generated_repo\":\"JKToolKit.CodexSDK\",\"generated_workflow_path\":\".github/workflows/codex-sdk-parity-coderabbit-fix.lock.yml\",\"generated_workflow_file\":\"codex-sdk-parity-coderabbit-fix.lock.yml\",\"generated_html_url\":\"https://github.com/JKamsker/JKToolKit.CodexSDK/blob/c55f7adf88c3f129f3fe65ff2820e25381e1f686/.github/workflows/codex-sdk-parity-coderabbit-fix.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

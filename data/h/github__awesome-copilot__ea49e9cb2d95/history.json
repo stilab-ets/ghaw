@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+    "source_full_name": "github/awesome-copilot",
+    "source_owner": "github",
+    "source_repo": "awesome-copilot",
+    "md_path": ".github/workflows/duplicate-resource-detector.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/awesome-copilot/blob/HEAD/.github/workflows/duplicate-resource-detector.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/awesome-copilot",
+      "generated_owner": "github",
+      "generated_repo": "awesome-copilot",
+      "generated_workflow_path": ".github/workflows/duplicate-resource-detector.lock.yml",
+      "generated_workflow_file": "duplicate-resource-detector.lock.yml",
+      "generated_html_url": "https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/duplicate-resource-detector.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:07+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/duplicate-resource-detector.md",
+      "commit_sha": "3436da96199c8344f3a63b72114ca57d7ca677f7",
+      "authored_at": "2026-02-19T04:43:54Z",
+      "committed_at": "2026-02-19T04:55:32Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "Aaron Powell",
+      "committer_email": "me@aaron-powell.com",
+      "committer_login": "aaronpowell",
+      "committer_account_type": "User",
+      "message": "Add duplicate resource detector agentic workflow\n\nWeekly scheduled workflow that scans agents, prompts, instructions, and\nskills for potential duplicates based on name, description, and content\nsimilarity. Reports findings as a GitHub issue with task list checkboxes\nfor review. Checks previous duplicate-review issues to exclude known\naccepted pairs.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8ac0e41cb0f296b5f084ed68bd162b1bea8f2876"
+      ],
+      "tree_sha": "d6e07f0606272cca9571eb7b30a4c36dd28ce85a",
+      "html_url": "https://github.com/github/awesome-copilot/commit/3436da96199c8344f3a63b72114ca57d7ca677f7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/duplicate-resource-detector.md",
+          "commit_sha": "3436da96199c8344f3a63b72114ca57d7ca677f7",
+          "committed_at": "2026-02-19T04:55:32Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 127,
+          "file_deletions": 0,
+          "file_changes": 127,
+          "file_patch": "@@ -0,0 +1,127 @@\n+---\n+description: Weekly scan of agents, prompts, instructions, and skills to identify potential duplicate resources and report them for review\n+on:\n+  schedule: weekly\n+permissions:\n+  contents: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [repos, issues]\n+safe-outputs:\n+  create-issue:\n+    max: 1\n+    close-older-issues: true\n+    labels:\n+      - duplicate-review\n+  noop:\n+---\n+\n+# Duplicate Resource Detector\n+\n+You are an AI agent that audits the resources in this repository to find potential duplicates — resources that appear to serve the same or very similar purpose.\n+\n+## Your Task\n+\n+Scan all resources in the following directories and identify groups of resources that may be duplicates or near-duplicates based on their **name**, **description**, and **content**:\n+\n+- `agents/` (`.agent.md` files)\n+- `prompts/` (`.prompt.md` files)\n+- `instructions/` (`.instructions.md` files)\n+- `skills/` (folders — check `SKILL.md` inside each)\n+\n+### Step 1: Gather Resource Metadata\n+\n+For each resource, extract:\n+\n+1. **File name** (the path)\n+2. **Front matter `description`** field\n+3. **Front matter `name`** field (if present)\n+4. **First ~20 lines of body content** (the markdown after the front matter)\n+\n+Use bash to read files efficiently. For skills, read `skills/<name>/SKILL.md`.\n+\n+### Step 2: Identify Potential Duplicates\n+\n+Compare resources and flag groups that look like potential duplicates. Consider resources as potential duplicates when they share **two or more** of the following signals:\n+\n+- **Similar names** — file names or `name` fields that share key terms (e.g., `react-testing.prompt.md` and `react-unit-testing.prompt.md`)\n+- **Similar descriptions** — descriptions that describe the same task, technology, or domain with only minor wording differences\n+- **Overlapping scope** — resources that target the same language/framework/tool and the same activity (e.g., two separate \"Python best practices\" instructions)\n+- **Cross-type overlap** — an agent and a prompt (or instruction and agent) that cover the same topic so thoroughly that one may make the other redundant\n+\n+Be pragmatic. Resources that cover related but distinct topics are NOT duplicates. For example:\n+- `react.instructions.md` (general React coding standards) and `react-testing.prompt.md` (React testing prompts) are **not** duplicates — they serve different purposes.\n+- `python-fastapi.instructions.md` and `python-flask.instructions.md` are **not** duplicates — they target different frameworks.\n+- `code-review.agent.md` and `code-review.prompt.md` that both do the same style of code review **are** potential duplicates worth flagging.\n+\n+### Step 3: Check for Known Accepted Duplicates\n+\n+Before finalizing the report, search for **previous issues** labeled `duplicate-review` in this repository:\n+\n+```\n+Search for issues with label \"duplicate-review\" that are closed\n+```\n+\n+Read the comments and body of those past issues to find any pairs or groups that reviewers have explicitly marked as **\"accepted\"** or **\"not duplicates\"**. Look for phrases like:\n+- \"accepted as-is\"\n+- \"not duplicates\"\n+- \"intentionally separate\"\n+- \"keep both\"\n+- checked task list items (i.e., `- [x]`)\n+\n+Exclude those known-accepted pairs from the current report. If you include a group that was previously reviewed, add a note: `(previously reviewed — see #<issue-number>)`.\n+\n+### Step 4: Produce the Report\n+\n+Create an issue titled: `🔍 Duplicate Resource Review`\n+\n+Format the body as follows:\n+\n+```markdown\n+### Summary\n+\n+- **Potential duplicate groups found:** N\n+- **Resources involved:** M\n+- **Known accepted (excluded):** K pairs from previous reviews\n+\n+### How to Use This Report\n+\n+Review each group below. If the resources are intentionally separate, check the box to mark them as accepted. These will be excluded from future reports.\n+\n+### Potential Duplicates\n+\n+#### Group 1: <Short description of what they share>\n+\n+- [ ] Reviewed — these are intentionally separate\n+\n+| Resource | Type | Description |\n+|----------|------|-------------|\n+| `agents/foo.agent.md` | Agent | Does X for Y |\n+| `prompts/foo.prompt.md` | Prompt | Also does X for Y |\n+\n+**Why flagged:** <Brief explanation of the similarity>\n+\n+---\n+\n+#### Group 2: ...\n+\n+<repeat for each group>\n+```\n+\n+Use `<details>` blocks to collapse groups if there are more than 10.\n+\n+### Safe Output Guidance\n+\n+- If you find potential duplicates: use `create-issue` to file the report.\n+- If **no** potential duplicates are found (after excluding known accepted ones): call `noop` with the message: \"No potential duplicate resources detected. All resources appear to serve distinct purposes.\"\n+\n+## Guidelines\n+\n+- Be conservative — only flag resources where there is a genuine risk of redundancy.\n+- Group related duplicates together (don't list the same pair twice in separate groups).\n+- Sort groups by confidence (strongest duplicate signals first).\n+- Include cross-type duplicates (e.g., an agent and a prompt doing the same thing).\n+- Limit the report to the top 20 most likely duplicate groups to keep it actionable.\n+- For skills, use the folder name and description from `SKILL.md`.\n+- Process resources in batches to stay within time limits — prioritize name and description comparison, then spot-check content for top candidates.",
+          "snapshot_ref": "3436da96199c8344f3a63b72114ca57d7ca677f7",
+          "snapshot_blob_sha": "262dab404de898b4eff62c53fbd4f8d62e72ca9c",
+          "snapshot_file": "snapshots/awesome-copilot__github__3436da96199c8344f3a63b72114ca57d7ca677f7__duplicate-resource-detector.md",
+          "snapshot_bytes": 5231,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/duplicate-resource-detector.lock.yml\",\"generated_workflow_file\":\"duplicate-resource-detector.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/duplicate-resource-detector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/duplicate-resource-detector.md",
+      "commit_sha": "4126e19730aa1f0f33b97689b5d4689182f51ee6",
+      "authored_at": "2026-02-26T23:20:13Z",
+      "committed_at": "2026-02-26T23:20:13Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "Aaron Powell",
+      "committer_email": "me@aaron-powell.com",
+      "committer_login": "aaronpowell",
+      "committer_account_type": "User",
+      "message": "Remove prompt references from duplicate-resource-detector workflow\n\nUpdate the duplicate resource detector agentic workflow to no longer\nreference prompts, which are no longer a supported resource type.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "cf4347e88c2e40a9aabe5801748ec6bf924c09be"
+      ],
+      "tree_sha": "19a23527c8ff1394e78af304577645954e5b3dff",
+      "html_url": "https://github.com/github/awesome-copilot/commit/4126e19730aa1f0f33b97689b5d4689182f51ee6",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/duplicate-resource-detector.md",
+          "commit_sha": "4126e19730aa1f0f33b97689b5d4689182f51ee6",
+          "committed_at": "2026-02-26T23:20:13Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 8,
+          "file_changes": 15,
+          "file_patch": "@@ -1,5 +1,5 @@\n ---\n-description: Weekly scan of agents, prompts, instructions, and skills to identify potential duplicate resources and report them for review\n+description: Weekly scan of agents, instructions, and skills to identify potential duplicate resources and report them for review\n on:\n   schedule: weekly\n permissions:\n@@ -26,7 +26,6 @@ You are an AI agent that audits the resources in this repository to find potenti\n Scan all resources in the following directories and identify groups of resources that may be duplicates or near-duplicates based on their **name**, **description**, and **content**:\n \n - `agents/` (`.agent.md` files)\n-- `prompts/` (`.prompt.md` files)\n - `instructions/` (`.instructions.md` files)\n - `skills/` (folders — check `SKILL.md` inside each)\n \n@@ -45,15 +44,15 @@ Use bash to read files efficiently. For skills, read `skills/<name>/SKILL.md`.\n \n Compare resources and flag groups that look like potential duplicates. Consider resources as potential duplicates when they share **two or more** of the following signals:\n \n-- **Similar names** — file names or `name` fields that share key terms (e.g., `react-testing.prompt.md` and `react-unit-testing.prompt.md`)\n+- **Similar names** — file names or `name` fields that share key terms (e.g., `react-testing.agent.md` and `react-unit-testing.agent.md`)\n - **Similar descriptions** — descriptions that describe the same task, technology, or domain with only minor wording differences\n - **Overlapping scope** — resources that target the same language/framework/tool and the same activity (e.g., two separate \"Python best practices\" instructions)\n-- **Cross-type overlap** — an agent and a prompt (or instruction and agent) that cover the same topic so thoroughly that one may make the other redundant\n+- **Cross-type overlap** — an agent and an instruction (or instruction and skill) that cover the same topic so thoroughly that one may make the other redundant\n \n Be pragmatic. Resources that cover related but distinct topics are NOT duplicates. For example:\n-- `react.instructions.md` (general React coding standards) and `react-testing.prompt.md` (React testing prompts) are **not** duplicates — they serve different purposes.\n+- `react.instructions.md` (general React coding standards) and `react-testing.agent.md` (React testing agent) are **not** duplicates — they serve different purposes.\n - `python-fastapi.instructions.md` and `python-flask.instructions.md` are **not** duplicates — they target different frameworks.\n-- `code-review.agent.md` and `code-review.prompt.md` that both do the same style of code review **are** potential duplicates worth flagging.\n+- `code-review.agent.md` and `code-review.instructions.md` that both do the same style of code review **are** potential duplicates worth flagging.\n \n ### Step 3: Check for Known Accepted Duplicates\n \n@@ -98,7 +97,7 @@ Review each group below. If the resources are intentionally separate, check the\n | Resource | Type | Description |\n |----------|------|-------------|\n | `agents/foo.agent.md` | Agent | Does X for Y |\n-| `prompts/foo.prompt.md` | Prompt | Also does X for Y |\n+| `instructions/foo.instructions.md` | Instruction | Also does X for Y |\n \n **Why flagged:** <Brief explanation of the similarity>\n \n@@ -121,7 +120,7 @@ Use `<details>` blocks to collapse groups if there are more than 10.\n - Be conservative — only flag resources where there is a genuine risk of redundancy.\n - Group related duplicates together (don't list the same pair twice in separate groups).\n - Sort groups by confidence (strongest duplicate signals first).\n-- Include cross-type duplicates (e.g., an agent and a prompt doing the same thing).\n+- Include cross-type duplicates (e.g., an agent and an instruction doing the same thing).\n - Limit the report to the top 20 most likely duplicate groups to keep it actionable.\n - For skills, use the folder name and description from `SKILL.md`.\n - Process resources in batches to stay within time limits — prioritize name and description comparison, then spot-check content for top candidates.",
+          "snapshot_ref": "4126e19730aa1f0f33b97689b5d4689182f51ee6",
+          "snapshot_blob_sha": "0bfba0eb0b658be4d882682f6502b764ed2b7fae",
+          "snapshot_file": "snapshots/awesome-copilot__github__4126e19730aa1f0f33b97689b5d4689182f51ee6__duplicate-resource-detector.md",
+          "snapshot_bytes": 5217,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/duplicate-resource-detector.lock.yml\",\"generated_workflow_file\":\"duplicate-resource-detector.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/duplicate-resource-detector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/duplicate-resource-detector.md",
+      "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "authored_at": "2026-07-03T00:08:42Z",
+      "committed_at": "2026-07-03T00:08:42Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix PR duplicate check not running on external contributor submissions (#2188)\n\n* Initial plan\n\n* Fix PR duplicate check not running on external contributor submissions\n\nAdd forks: [\\\"*\\\"] and roles: all to pr-duplicate-check.md so the\nagentic workflow runs for all PR authors, including external contributors\nsubmitting from forks. Previously, the generated lock.yml contained:\n- A fork repository check blocking all fork PRs from running\n- A team membership check (admin/maintainer/write) blocking external contributors\n\nRecompiled with gh aw compile to regenerate pr-duplicate-check.lock.yml.\nThe pre_activation job (which held the membership gate) is now removed,\nand the activation job runs unconditionally for all pull_request events.\n\nCloses #2121\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* fixing a bunch of warnings on all the agentic workflows\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: Aaron Powell <me@aaron-powell.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8c68eba69048c2f87389ab9fa99d28f694a11846"
+      ],
+      "tree_sha": "ca59b4fcc7e2b196a97fdc5e923e9571a0db4091",
+      "html_url": "https://github.com/github/awesome-copilot/commit/3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/duplicate-resource-detector.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/duplicate-resource-detector.md",
+          "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "committed_at": "2026-07-03T00:08:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -5,6 +5,7 @@ on:\n permissions:\n   contents: read\n   issues: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [repos, issues]",
+          "snapshot_ref": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "snapshot_blob_sha": "b3c1a9bf458666337739d73e9389a8b488e2cbf9",
+          "snapshot_file": "snapshots/awesome-copilot__github__3bd22bc0f4bc4e54f3a288de7d485a48e78718c3__duplicate-resource-detector.md",
+          "snapshot_bytes": 5243,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/duplicate-resource-detector.lock.yml\",\"generated_workflow_file\":\"duplicate-resource-detector.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/duplicate-resource-detector.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

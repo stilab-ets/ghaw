@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+    "source_full_name": "chrizbo/agentics-beyond-code",
+    "source_owner": "chrizbo",
+    "source_repo": "agentics-beyond-code",
+    "md_path": ".github/workflows/commitment-reconciler.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/chrizbo/agentics-beyond-code/blob/HEAD/.github/workflows/commitment-reconciler.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "chrizbo/agentics-beyond-code",
+      "generated_owner": "chrizbo",
+      "generated_repo": "agentics-beyond-code",
+      "generated_workflow_path": ".github/workflows/commitment-reconciler.lock.yml",
+      "generated_workflow_file": "commitment-reconciler.lock.yml",
+      "generated_html_url": "https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/commitment-reconciler.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:58+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/commitment-reconciler.md",
+      "commit_sha": "41359de144aef9b9bc23da07c8d5d1a6be74ce7e",
+      "authored_at": "2026-06-01T00:11:01Z",
+      "committed_at": "2026-06-01T00:11:01Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "Chris Butler",
+      "committer_email": "chrizbo@gmail.com",
+      "committer_login": "chrizbo",
+      "committer_account_type": "User",
+      "message": "Add commitment reconciler workflow",
+      "parent_shas": [
+        "f990e05aaa2dd93c1252e3581319803846dc5963"
+      ],
+      "tree_sha": "08a8ffc2a619e8bdd6a06350247e9036f50646c0",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/41359de144aef9b9bc23da07c8d5d1a6be74ce7e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/commitment-reconciler.md",
+          "commit_sha": "41359de144aef9b9bc23da07c8d5d1a6be74ce7e",
+          "committed_at": "2026-06-01T00:11:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 349,
+          "file_deletions": 0,
+          "file_changes": 349,
+          "file_patch": "@@ -0,0 +1,349 @@\n+---\n+description: |\n+  Weekly commitment reconciler. Scans recent meeting transcripts and issue\n+  comments for commitments, action items, owner/date promises, and scope\n+  changes, then compares them against GitHub Issues and Projects so the team\n+  can catch promised-but-untracked work, stale commitments, and artifact drift.\n+\n+engine:\n+  id: codex\n+  model: gpt-5-codex\n+\n+on:\n+  schedule: weekly on monday\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  discussions: read\n+\n+strict: true\n+timeout-minutes: 20\n+\n+network:\n+  allowed: [defaults, github]\n+\n+steps:\n+  - name: Fetch launch data\n+    id: launch-data\n+    env:\n+      LAUNCH_DATA_TOKEN: ${{ secrets.AW_TOKEN }}\n+      LAUNCH_PROJECT_OWNER: ${{ vars.LAUNCH_PROJECT_OWNER || github.repository_owner }}\n+      LAUNCH_PROJECT_NUMBER: ${{ vars.LAUNCH_PROJECT_NUMBER || '1' }}\n+    run: |\n+      chmod +x .github/scripts/fetch-launch-data.sh\n+      ./.github/scripts/fetch-launch-data.sh \"$LAUNCH_PROJECT_OWNER\" \"$LAUNCH_PROJECT_NUMBER\" launch-data.json\n+      echo \"path=launch-data.json\" >> \"$GITHUB_OUTPUT\"\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, issues]\n+    lockdown: false\n+    min-integrity: none\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  max-bot-mentions: 1\n+  create-issue:\n+    title-prefix: \"[Commitment Reconciliation] \"\n+    labels: [ai:commitment-reconciliation]\n+    close-older-issues: true\n+    expires: 14\n+    max: 1\n+---\n+\n+# Commitment Reconciler\n+\n+You are a program-state reconciliation analyst for the repository\n+`${{ github.repository }}`. Your job is to compare what people committed to\n+in conversations against what the durable GitHub artifacts actually show.\n+\n+Produce one weekly reconciliation issue that helps the team answer:\n+\n+- What did we promise that is not tracked anywhere?\n+- What is tracked but no longer matches the latest conversation?\n+- What is still open even though recent discussion says it is done?\n+- What has an owner, deadline, blocker, or scope change in conversation that\n+  is missing from the issue or project state?\n+\n+This workflow is not a taskmaster. It is a linter for program state. Be\n+specific, cite evidence, and route ambiguous findings to human clarification.\n+\n+## Pre-Fetched Data\n+\n+A deterministic pre-step has already fetched all project data:\n+\n+- `launch-data-summary.json` — Read this first with `cat launch-data-summary.json`.\n+- `launch-data.json` — Full issue/project data with issue bodies. Use `jq` to\n+  extract only what you need.\n+\n+Token efficiency matters. Read `launch-data-summary.json` once. Read targeted\n+sections of `launch-data.json` only when a finding needs issue body detail.\n+\n+## What Counts as a Commitment\n+\n+A commitment is a concrete promise, expectation, or handoff that should be\n+reflected in a durable artifact. Look for:\n+\n+- **Owner promises:** \"Priya will update the design by Thursday\", \"Marcus owns\n+  the schema migration\"\n+- **Date promises:** \"ready by Friday\", \"we'll have this before Beta\", \"push\n+  to next sprint\"\n+- **Action items:** \"follow up with Legal\", \"open a tracking issue\", \"write the\n+  migration plan\"\n+- **Scope changes:** \"add bulk export\", \"drop priority queuing\", \"descoping the\n+  dashboard\"\n+- **Blocker handoffs:** \"waiting on Security\", \"blocked until API review signs\n+  off\"\n+- **Completion signals:** \"this is done\", \"we shipped it\", \"closed out the QA\n+  pass\"\n+\n+Do not treat vague intentions as commitments:\n+\n+- \"We should think about...\"\n+- \"Maybe we can...\"\n+- \"It would be nice if...\"\n+- Brainstorming without an owner, next step, deadline, or agreed direction\n+\n+## Process\n+\n+### Step 1: Load Current Program State\n+\n+```bash\n+cat launch-data-summary.json\n+```\n+\n+Build a compact map of open initiatives, launches, epics, and tasks:\n+\n+```bash\n+jq '[.launches[] | {number, title, url, state, updatedAt, labels: [.labels.nodes[]?.name], subIssues: [.subIssues[] | {number, title, url, state, updatedAt, labels: [.labels.nodes[]?.name], subIssues: [.subIssues[]? | {number, title, url, state, updatedAt, labels: [.labels.nodes[]?.name]}]}]}]' launch-data-summary.json\n+```\n+\n+Capture, when available:\n+\n+- issue number, title, URL, state, labels, assignees, updated date\n+- phase, target date, risk level, and project fields\n+- parent/child relationships\n+- open review sub-issues and labels such as `blocker`, `at-risk`,\n+  `ai:needs:{domain}`, and `approved:{domain}`\n+\n+### Step 2: Determine the Reconciliation Window\n+\n+Use a 7-day window ending at the current run time. Calculate the start of the\n+window in UTC:\n+\n+```bash\n+SINCE=$(date -u -v-7d '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || date -u -d '7 days ago' '+%Y-%m-%dT%H:%M:%SZ')\n+echo \"$SINCE\"\n+```\n+\n+### Step 3: Read Recent Transcripts\n+\n+Find transcripts added or modified in the reconciliation window:\n+\n+```bash\n+find transcripts/ -name '*.txt' -o -name '*.vtt' 2>/dev/null\n+git log --since=\"7 days ago\" --name-only --diff-filter=AM -- 'transcripts/*.vtt' 'transcripts/*.txt' 2>/dev/null | grep -E '\\.(vtt|txt)$' | sort -u\n+```\n+\n+For each transcript, read the content:\n+\n+```bash\n+cat <transcript-file>\n+```\n+\n+For `.vtt` files, ignore `WEBVTT`, timestamps, cue numbers, and blank lines.\n+Extract candidate commitments with speaker, date, source file, and nearby\n+context.\n+\n+### Step 4: Fetch Recent Issue Comments\n+\n+The pre-fetched data includes issue bodies but not comments. Fetch comments\n+for open launches and their sub-issues that were updated within the\n+reconciliation window:\n+\n+```bash\n+gh issue view <number> --repo ${{ github.repository }} --json comments --jq \".comments[] | select(.createdAt >= \\\"$SINCE\\\") | {author: .author.login, body: .body, createdAt: .createdAt, url: .url}\"\n+```\n+\n+Only fetch comments for issues with recent updates, or for issues that a\n+transcript explicitly references. Stop early if you have enough evidence for a\n+finding.\n+\n+### Step 5: Extract Candidate Commitments\n+\n+Create a working list of candidate commitments. For each one record:\n+\n+- **Commitment** — one sentence describing the promised work/state change\n+- **Source** — transcript filename or issue comment URL\n+- **Source date** — when the commitment was made\n+- **Actor/owner** — named person, role, team, or \"unclear\"\n+- **Due date/window** — exact date, relative date, phase, sprint, or \"unclear\"\n+- **Related artifact** — issue number/title if explicitly referenced or matched\n+- **Confidence** — high, medium, or low\n+\n+Confidence guidance:\n+\n+- **High:** explicit issue number/title, named owner, or direct \"we will\" action\n+- **Medium:** strong keyword match to one artifact and concrete action/date\n+- **Low:** ambiguous ownership, fuzzy topic match, or likely brainstorming\n+\n+Skip low-confidence items unless they reveal a recurring ambiguity worth\n+mentioning under \"Needs Human Clarification.\"\n+\n+### Step 6: Reconcile Commitments Against Artifacts\n+\n+For each high- or medium-confidence commitment, compare the conversation\n+against GitHub state.\n+\n+Classify findings into one of these categories:\n+\n+1. **Promised but untracked**\n+   - A concrete commitment appears in a transcript or comment, but no matching\n+     open issue, sub-issue, checklist item, or comment thread exists.\n+\n+2. **Tracked but stale**\n+   - An issue exists, but it has no recent progress evidence, no clear owner,\n+     or no updated target after a commitment changed.\n+\n+3. **Artifact drift**\n+   - The issue/project state conflicts with recent conversation. Examples:\n+     the issue still targets Beta but discussion moved it to GA; the issue\n+     says Security owns the next step but the meeting says Privacy is blocking;\n+     target date changed in discussion but not in the project field/body.\n+\n+4. **Done but still open**\n+   - Recent conversation says work shipped, completed, or was abandoned, but\n+     the artifact remains open without a comment explaining why.\n+\n+5. **Missing owner or date**\n+   - The work is tracked, but the latest commitment introduced an owner/date\n+     expectation that is not visible on the artifact.\n+\n+6. **Needs human clarification**\n+   - There is enough signal to ask a question, but not enough confidence to\n+     call it drift.\n+\n+Avoid false precision. If the evidence is mixed, put the item in \"Needs Human\n+Clarification\" and explain what would resolve it.\n+\n+### Step 7: Generate the Reconciliation Issue\n+\n+Create one issue with this title:\n+\n+```text\n+[Commitment Reconciliation] Week of YYYY-MM-DD\n+```\n+\n+Use the Monday of the current week as the date.\n+\n+Use this body structure:\n+\n+```markdown\n+### Summary\n+\n+<1-2 paragraphs describing the overall program-state health this week. Say\n+whether the main risk is untracked work, stale artifacts, artifact drift, or\n+ambiguous ownership.>\n+\n+| Category | Count |\n+|---|---:|\n+| Promised but untracked | N |\n+| Tracked but stale | N |\n+| Artifact drift | N |\n+| Done but still open | N |\n+| Missing owner or date | N |\n+| Needs human clarification | N |\n+\n+### Highest Priority Reconciliation Items\n+\n+List only the highest-signal items that need action this week. Keep this\n+section short.\n+\n+| Priority | Category | Commitment | Evidence | Suggested action |\n+|---|---|---|---|---|\n+| P1/P2/P3 | <category> | <plain-language commitment> | <source and artifact> | <specific next step> |\n+\n+### Promised But Untracked\n+\n+- **<Commitment>** — Evidence: `<transcript>` or comment URL. Suggested action:\n+  create/attach a tracking issue, or explicitly mark as intentionally untracked.\n+\n+### Artifact Drift\n+\n+- **<Artifact title>** — Conversation says `<state>`, but artifact says\n+  `<state>`. Suggested action: update owner/date/scope/status or clarify which\n+  source is authoritative.\n+\n+### Stale Or Incomplete Commitments\n+\n+- **<Artifact title>** — Expected `<owner/date/next step>`, but latest artifact\n+  state does not show it.\n+\n+### Done But Still Open\n+\n+- **<Artifact title>** — Evidence suggests completion/abandonment. Suggested\n+  action: close it or add a comment explaining why it remains open.\n+\n+### Needs Human Clarification\n+\n+- **<Question>** — Why it is ambiguous and what evidence would resolve it.\n+\n+<details>\n+<summary>Evidence Reviewed</summary>\n+\n+- Transcripts: N files\n+- Issues/comments: N issues checked\n+- Reporting window: YYYY-MM-DD to YYYY-MM-DD\n+\n+</details>\n+```\n+\n+If a section has no findings, write `No findings this week.` under that\n+section.\n+\n+### Step 8: Prioritize Findings\n+\n+Use these priorities:\n+\n+- **P1:** Could cause missed launch date, missed compliance sign-off,\n+  duplicated work, or invisible blocker this week\n+- **P2:** Important artifact drift or missing owner/date that could become a\n+  blocker before the next run\n+- **P3:** Cleanup, hygiene, or clarification that improves future tracking\n+\n+Limit \"Highest Priority Reconciliation Items\" to the top 10 findings. Put the\n+rest in the category sections or details.\n+\n+### Step 9: Keep the Report Quiet\n+\n+Do not mention users directly. Refer to people by plain name or role when\n+possible. Do not use bare `#123` references; use full issue links or escaped\n+references so the weekly report does not create backlinks on every issue.\n+\n+### Step 10: Summary Output\n+\n+Print a concise summary to stdout:\n+\n+```text\n+Commitment Reconciliation Complete\n+==================================\n+\n+Transcripts reviewed: N\n+Issues/comments reviewed: N\n+Findings: N\n+Report issue created: yes/no\n+\n+Top categories:\n+- Promised but untracked: N\n+- Artifact drift: N\n+- Missing owner/date: N\n+```\n+\n+If there are no transcripts, no recent comments, and no updated issues in the\n+window, create a short report saying there was not enough new evidence to\n+reconcile this week.",
+          "snapshot_ref": "41359de144aef9b9bc23da07c8d5d1a6be74ce7e",
+          "snapshot_blob_sha": "5b5e367091efb06914f95efa283f6fa38354445f",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__41359de144aef9b9bc23da07c8d5d1a6be74ce7e__commitment-reconciler.md",
+          "snapshot_bytes": 11436,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/commitment-reconciler.lock.yml\",\"generated_workflow_file\":\"commitment-reconciler.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/commitment-reconciler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/commitment-reconciler.md",
+      "commit_sha": "bba58920c034f37c6a12b3ec23892116cc1add47",
+      "authored_at": "2026-06-03T17:52:22Z",
+      "committed_at": "2026-06-03T17:52:22Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "Chris Butler",
+      "committer_email": "chrizbo@gmail.com",
+      "committer_login": "chrizbo",
+      "committer_account_type": "User",
+      "message": "Pause scheduled workflows, add freshness checks, update docs\n\n- Disable schedule triggers on all 15 reporting/simulator workflows\n  (keep event-triggered workflows active: assumption-surfacer, intake-triage,\n  compliance-review labels, slack-reaction-intake, slack-context-processor,\n  transcript-processor)\n- Add shared/freshness-check.md — noop guard for when data is >7 days old\n- Import freshness check into 11 reporting workflows that use launch-data\n- Add note to freshness check explaining when to remove it (live deployments)\n- Update README with paused-schedule notice and manual stage run order table\n- Add freshness check + strip-closed-items patterns to skills/token-optimization.md\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "fe179649e926e431b738475dab4bafc409c8baae"
+      ],
+      "tree_sha": "cc6b73446ddd6b71eba387fbd6562ca106a23b67",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/bba58920c034f37c6a12b3ec23892116cc1add47",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/commitment-reconciler.md",
+          "commit_sha": "bba58920c034f37c6a12b3ec23892116cc1add47",
+          "committed_at": "2026-06-03T17:52:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 1,
+          "file_changes": 5,
+          "file_patch": "@@ -10,7 +10,7 @@ engine:\n   model: gpt-5-codex\n \n on:\n-  schedule: weekly on monday\n+#  schedule: (disabled — re-enable to run on a schedule) weekly on monday\n   workflow_dispatch:\n \n permissions:\n@@ -37,6 +37,9 @@ steps:\n       ./.github/scripts/fetch-launch-data.sh \"$LAUNCH_PROJECT_OWNER\" \"$LAUNCH_PROJECT_NUMBER\" launch-data.json\n       echo \"path=launch-data.json\" >> \"$GITHUB_OUTPUT\"\n \n+imports:\n+  - shared/freshness-check.md\n+\n tools:\n   github:\n     mode: gh-proxy",
+          "snapshot_ref": "bba58920c034f37c6a12b3ec23892116cc1add47",
+          "snapshot_blob_sha": "ac927abedc95610f3ed8ee8e40a3bdffe6ac08f3",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__bba58920c034f37c6a12b3ec23892116cc1add47__commitment-reconciler.md",
+          "snapshot_bytes": 11523,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/commitment-reconciler.lock.yml\",\"generated_workflow_file\":\"commitment-reconciler.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/commitment-reconciler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/commitment-reconciler.md",
+      "commit_sha": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+      "authored_at": "2026-06-11T23:15:04Z",
+      "committed_at": "2026-06-11T23:15:04Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "Chris Butler",
+      "committer_email": "chrizbo@gmail.com",
+      "committer_login": "chrizbo",
+      "committer_account_type": "User",
+      "message": "Align agentic workflows with public preview",
+      "parent_shas": [
+        "a24608637f521950641e8d29c56af54210f3a36b"
+      ],
+      "tree_sha": "661559c203ddf131009f00dc7bba3bd3042f8418",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/commitment-reconciler.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/commitment-reconciler.md",
+          "commit_sha": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+          "committed_at": "2026-06-11T23:15:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -21,6 +21,7 @@ permissions:\n \n strict: true\n timeout-minutes: 20\n+max-ai-credits: 2000\n \n network:\n   allowed: [defaults, github]\n@@ -55,7 +56,7 @@ safe-outputs:\n     title-prefix: \"[Commitment Reconciliation] \"\n     labels: [ai:commitment-reconciliation]\n     close-older-issues: true\n-    expires: 14\n+    expires: 14d\n     max: 1\n ---\n ",
+          "snapshot_ref": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+          "snapshot_blob_sha": "d14363c800508660da9302cbced77cd42830f966",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__f2f40e1eb40456327ac1afd92f6a54229d6d278e__commitment-reconciler.md",
+          "snapshot_bytes": 11545,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/commitment-reconciler.lock.yml\",\"generated_workflow_file\":\"commitment-reconciler.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/commitment-reconciler.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

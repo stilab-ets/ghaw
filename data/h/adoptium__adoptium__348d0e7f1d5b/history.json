@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium:.github/workflows/issue-burn-down.md",
+    "source_full_name": "adoptium/adoptium",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium",
+    "md_path": ".github/workflows/issue-burn-down.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium/blob/HEAD/.github/workflows/issue-burn-down.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium",
+      "generated_workflow_path": ".github/workflows/issue-burn-down.lock.yml",
+      "generated_workflow_file": "issue-burn-down.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/issue-burn-down.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:32+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/issue-burn-down.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/issue-burn-down.md",
+      "commit_sha": "36d92f1c8ade846117808c39376a6174482ad502",
+      "authored_at": "2026-07-08T23:32:16Z",
+      "committed_at": "2026-07-08T23:32:16Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Add deterministic issue burn-down report workflow\n\nAdds a deterministic variant of the quarterly issue burn-down report.\nAll GitHub data is fetched and aggregated in a shell step before the\nagent runs, so the agent only ranks and writes the report. This avoids\nthe \"Unable to process large JSON file\" failures seen when the agent\nfetches and aggregates issue data itself.\n\nThe existing quarterly-issue-burn-down workflow is left in place.",
+      "parent_shas": [
+        "e4ac79da8fc3e966ca2b43863c3292f48bc627f9"
+      ],
+      "tree_sha": "7618d9dd9f60a7d580581bf24f571094bd62a5a6",
+      "html_url": "https://github.com/adoptium/adoptium/commit/36d92f1c8ade846117808c39376a6174482ad502",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/issue-burn-down.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/issue-burn-down.md",
+          "commit_sha": "36d92f1c8ade846117808c39376a6174482ad502",
+          "committed_at": "2026-07-08T23:32:16Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 135,
+          "file_deletions": 0,
+          "file_changes": 135,
+          "file_patch": "@@ -0,0 +1,135 @@\n+---\n+description: Quarterly Adoptium issue burn-down report. Data is fetched and aggregated deterministically; the agent only ranks and writes.\n+on:\n+  schedule:\n+    - cron: \"0 9 1 */3 *\"\n+  workflow_dispatch:\n+engine:\n+  id: copilot\n+  model: gpt-4o\n+timeout-minutes: 30\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+network:\n+  allowed:\n+    - defaults\n+steps:\n+  - name: Fetch and aggregate quarterly issue burn-down data\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent\n+\n+      # Reporting window: the last full calendar quarter relative to today.\n+      Y=$(date -u +%Y); M=$(date -u +%-m); CQ=$(( (M-1)/3 ))\n+      if [ \"$CQ\" -eq 0 ]; then\n+        START=\"$((Y-1))-10-01\"; END=\"$((Y-1))-12-31\"\n+      else\n+        SM=$(( (CQ-1)*3 + 1 )); EM=$(( SM+2 ))\n+        START=$(printf '%d-%02d-01' \"$Y\" \"$SM\")\n+        END=$(date -u -d \"$(printf '%d-%02d-01' \"$Y\" \"$EM\") +1 month -1 day\" +%Y-%m-%d)\n+      fi\n+      STALE=$(date -u -d '30 days ago' +%Y-%m-%d)\n+      echo \"Period: $START..$END   Stale-before: $STALE\"\n+\n+      # 1) Issues opened in the period (keep state + labels for the label tally).\n+      gh api -X GET search/issues \\\n+        -f q=\"org:adoptium is:issue created:$START..$END\" \\\n+        -f per_page=100 --paginate \\\n+        --jq '.items[] | {repo: (.repository_url | sub(\"https://api.github.com/repos/\";\"\")), state, labels: [.labels[].name]}' \\\n+        | jq -s '.' > /tmp/gh-aw/agent/opened.json\n+\n+      # 2) Issues closed in the period.\n+      gh api -X GET search/issues \\\n+        -f q=\"org:adoptium is:issue closed:$START..$END\" \\\n+        -f per_page=100 --paginate \\\n+        --jq '.items[] | {repo: (.repository_url | sub(\"https://api.github.com/repos/\";\"\"))}' \\\n+        | jq -s '.' > /tmp/gh-aw/agent/closed.json\n+\n+      # 3) Stale open issues (no activity in the last 30 days), oldest first.\n+      gh api -X GET search/issues \\\n+        -f q=\"org:adoptium is:issue is:open updated:<$STALE\" \\\n+        -f sort=updated -f order=asc \\\n+        -f per_page=100 --paginate \\\n+        --jq '.items[] | {repo: (.repository_url | sub(\"https://api.github.com/repos/\";\"\")), title, url: .html_url, updated: .updated_at}' \\\n+        | jq -s '.' > /tmp/gh-aw/agent/stale.json\n+\n+      # Aggregate everything deterministically into summary.json.\n+      jq -n \\\n+        --slurpfile opened /tmp/gh-aw/agent/opened.json \\\n+        --slurpfile closed /tmp/gh-aw/agent/closed.json \\\n+        --slurpfile stale  /tmp/gh-aw/agent/stale.json \\\n+        --arg start \"$START\" --arg end \"$END\" --arg stale_before \"$STALE\" \\\n+        '\n+        ($opened[0]) as $o | ($closed[0]) as $c | ($stale[0]) as $s |\n+        ([$o[].repo] | group_by(.) | map({repo: .[0], opened: length})) as $orepo |\n+        ([$c[].repo] | group_by(.) | map({repo: .[0], closed: length})) as $crepo |\n+        ([$s[].repo] | group_by(.) | map({repo: .[0], stale: length}))  as $srepo |\n+        ([ $orepo[].repo, $crepo[].repo, $srepo[].repo ] | unique) as $repos |\n+        {\n+          period_start: $start,\n+          period_end: $end,\n+          stale_before: $stale_before,\n+          total_opened: ($o | length),\n+          total_closed: ($c | length),\n+          total_stale_open: ($s | length),\n+          repositories: (\n+            $repos | map(. as $r |\n+              ((($orepo[] | select(.repo==$r) | .opened) // 0)) as $op |\n+              ((($crepo[] | select(.repo==$r) | .closed) // 0)) as $cl |\n+              ((($srepo[] | select(.repo==$r) | .stale)  // 0)) as $st |\n+              {\n+                repo: $r,\n+                opened: $op,\n+                closed: $cl,\n+                burn_down: ($cl - $op),\n+                stale: $st,\n+                stale_examples: ( [ $s[] | select(.repo==$r) ] | .[0:5] )\n+              }\n+            ) | sort_by(-.stale)\n+          ),\n+          underserved_labels: (\n+            [ $o[] | . as $i | $i.labels[] | {label: ., state: $i.state} ]\n+            | group_by(.label)\n+            | map({\n+                label: .[0].label,\n+                open:   ([.[] | select(.state==\"open\")]   | length),\n+                closed: ([.[] | select(.state==\"closed\")] | length)\n+              })\n+            | map(. + {deficit: (.open - .closed)})\n+            | sort_by(-.deficit)\n+            | .[0:10]\n+          )\n+        }\n+        ' > /tmp/gh-aw/agent/summary.json\n+      echo \"=== summary.json ===\"\n+      cat /tmp/gh-aw/agent/summary.json\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[burndown] \"\n+    labels: [report, burndown]\n+    close-older-issues: true\n+---\n+# Adoptium Issue Burn-down Report\n+All GitHub data has already been fetched and aggregated for you before this step. Do NOT call any GitHub tools or shell commands to fetch data — everything you need is on disk.\n+## Pre-fetched data\n+- `/tmp/gh-aw/agent/summary.json` — pre-computed aggregates: reporting window, org totals, per-repository opened/closed/burn-down/stale counts (already sorted by stale count, most first) with up to 5 stale-issue examples each, and the top 10 under-served labels ranked by `open - closed`. Read this first; it contains everything the report needs.\n+- `/tmp/gh-aw/agent/stale.json` — the full list of stale open issues (repo, title, url, last-updated) if you need more detail than the per-repo examples.\n+- `/tmp/gh-aw/agent/opened.json` and `/tmp/gh-aw/agent/closed.json` — the underlying opened/closed issue records, if needed.\n+## Your task\n+Using only the files above, write a concise quarterly issue burn-down report and create exactly one GitHub issue in this repository. Every figure and issue title in the report must be copied from these files — do not invent, estimate, or add repositories or issues that are not present in the data.\n+## The issue must contain\n+- A header summary: the reporting window (`period_start` to `period_end`), total issues opened, total closed, and total stale open across the org.\n+- A per-repository table sorted by stale count (as already ordered in `summary.json`): repository, opened, closed, burn-down score (`closed - opened`; negative means the backlog grew), and stale count. Skip repositories whose opened, closed, and stale counts are all zero.\n+- For each repository with stale issues, list its up-to-5 stale examples from `stale_examples`, showing title, link, and last-updated date, most-stale first.\n+- An \"Under-served labels\" section from `underserved_labels`: the top 10 labels where open issues outpace closed, with their open and closed counts.\n+- A short \"Items needing maintainer attention next quarter\" note, drawn only from what the data shows (e.g., repositories with the most negative burn-down or the highest stale counts).\n+## Constraints\n+- Create exactly one issue.\n+- Do not fetch any additional data; rank and summarize only what is on disk.\n+- If `summary.json` shows zero activity everywhere, still create the issue and state that the org had no qualifying issue activity in the window.\n+- Keep it concise and skimmable.",
+          "snapshot_ref": "36d92f1c8ade846117808c39376a6174482ad502",
+          "snapshot_blob_sha": "5fdab456e20e547e7a9c55e736313e7c9b4f1c1c",
+          "snapshot_file": "snapshots/adoptium__adoptium__36d92f1c8ade846117808c39376a6174482ad502__issue-burn-down.md",
+          "snapshot_bytes": 6962,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/issue-burn-down.lock.yml\",\"generated_workflow_file\":\"issue-burn-down.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/issue-burn-down.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

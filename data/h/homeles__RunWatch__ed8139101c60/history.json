@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "homeles/RunWatch:.github/workflows/metrics-collector.md",
+    "source_full_name": "homeles/RunWatch",
+    "source_owner": "homeles",
+    "source_repo": "RunWatch",
+    "md_path": ".github/workflows/metrics-collector.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/homeles/RunWatch/blob/HEAD/.github/workflows/metrics-collector.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "homeles/RunWatch",
+      "generated_owner": "homeles",
+      "generated_repo": "RunWatch",
+      "generated_workflow_path": ".github/workflows/metrics-collector.lock.yml",
+      "generated_workflow_file": "metrics-collector.lock.yml",
+      "generated_html_url": "https://github.com/homeles/RunWatch/blob/f535d18a6b7b193b9710cd4fa3c525aa354631cb/.github/workflows/metrics-collector.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:57:06+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "homeles/RunWatch:.github/workflows/metrics-collector.md",
+      "source_full_name": "homeles/RunWatch",
+      "md_path": ".github/workflows/metrics-collector.md",
+      "commit_sha": "dc5deeeded392cb71788ce2d0ecb3661a1688a61",
+      "authored_at": "2026-03-02T22:59:49Z",
+      "committed_at": "2026-03-02T22:59:49Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add metrics-collector agentic workflow for daily performance metrics collection\n\nCo-authored-by: homeles <6785228+homeles@users.noreply.github.com>",
+      "parent_shas": [
+        "e4e73678b5b4647209f3919f0eb942f79a1c7986"
+      ],
+      "tree_sha": "a8e2c281cdcacfb3ace8d1a4adb634c7b5d08e38",
+      "html_url": "https://github.com/homeles/RunWatch/commit/dc5deeeded392cb71788ce2d0ecb3661a1688a61",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "homeles/RunWatch:.github/workflows/metrics-collector.md",
+          "source_full_name": "homeles/RunWatch",
+          "md_path": ".github/workflows/metrics-collector.md",
+          "commit_sha": "dc5deeeded392cb71788ce2d0ecb3661a1688a61",
+          "committed_at": "2026-03-02T22:59:49Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 262,
+          "file_deletions": 0,
+          "file_changes": 262,
+          "file_patch": "@@ -0,0 +1,262 @@\n+---\n+description: Collects daily performance metrics for the agent ecosystem and stores them in repo-memory\n+on: daily\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  discussions: read\n+  actions: read\n+engine: copilot\n+tools:\n+  agentic-workflows:\n+  github:\n+    toolsets: [default]\n+  repo-memory:\n+    branch-name: memory/meta-orchestrators\n+    file-glob: \"metrics/**\"\n+timeout-minutes: 15\n+imports:\n+  - shared/mood.md\n+---\n+\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# Metrics Collector - Infrastructure Agent\n+\n+You are the Metrics Collector agent responsible for gathering daily performance metrics across the entire agentic workflow ecosystem and storing them in a structured format for analysis by meta-orchestrators.\n+\n+## Your Role\n+\n+As an infrastructure agent, you collect and persist performance data that enables:\n+- Historical trend analysis by Agent Performance Analyzer\n+- Campaign health assessment by Campaign Manager\n+- Workflow health monitoring by Workflow Health Manager\n+- Data-driven optimization decisions across the ecosystem\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Collection Date**: $(date +%Y-%m-%d)\n+- **Collection Time**: $(date +%H:%M:%S) UTC\n+- **Storage Path**: `/tmp/gh-aw/repo-memory/default/metrics/`\n+\n+## Metrics Collection Process\n+\n+### 1. Use Agentic Workflows Tool to Collect Workflow Metrics\n+\n+**Workflow Status and Runs**:\n+- Use the `status` tool to get a list of all workflows in the repository\n+- Use the `logs` tool to download workflow run data from the last 24 hours:\n+  ```\n+  Parameters:\n+  - start_date: \"-1d\" (last 24 hours)\n+  - Include all workflows (no workflow_name filter)\n+  ```\n+- From the logs data, extract for each workflow:\n+  - Total runs in last 24 hours\n+  - Successful runs (conclusion: \"success\")\n+  - Failed runs (conclusion: \"failure\", \"cancelled\", \"timed_out\")\n+  - Calculate success rate: `successful / total`\n+  - Token usage and costs (if available in logs)\n+  - Execution duration statistics\n+\n+**Safe Outputs from Logs**:\n+- The agentic-workflows logs tool provides information about:\n+  - Issues created by workflows (from safe-output operations)\n+  - PRs created by workflows\n+  - Comments added by workflows\n+  - Discussions created by workflows\n+- Extract and count these for each workflow\n+\n+**Additional Metrics via GitHub API**:\n+- Use GitHub MCP server (default toolset) to supplement with:\n+  - Engagement metrics: reactions on issues created by workflows\n+  - Comment counts on PRs created by workflows\n+  - Discussion reply counts\n+\n+**Quality Indicators**:\n+- For merged PRs: Calculate merge time (created_at to merged_at)\n+- For closed issues: Calculate close time (created_at to closed_at)\n+- Calculate PR merge rate: `merged PRs / total PRs created`\n+\n+### 2. Structure Metrics Data\n+\n+Create a JSON object following this schema:\n+\n+```json\n+{\n+  \"timestamp\": \"2024-12-24T00:00:00Z\",\n+  \"period\": \"daily\",\n+  \"collection_duration_seconds\": 45,\n+  \"workflows\": {\n+    \"workflow-name\": {\n+      \"safe_outputs\": {\n+        \"issues_created\": 5,\n+        \"prs_created\": 2,\n+        \"comments_added\": 10,\n+        \"discussions_created\": 1\n+      },\n+      \"workflow_runs\": {\n+        \"total\": 7,\n+        \"successful\": 6,\n+        \"failed\": 1,\n+        \"success_rate\": 0.857,\n+        \"avg_duration_seconds\": 180,\n+        \"total_tokens\": 45000,\n+        \"total_cost_usd\": 0.45\n+      },\n+      \"engagement\": {\n+        \"issue_reactions\": 12,\n+        \"pr_comments\": 8,\n+        \"discussion_replies\": 3\n+      },\n+      \"quality_indicators\": {\n+        \"pr_merge_rate\": 0.75,\n+        \"avg_issue_close_time_hours\": 48.5,\n+        \"avg_pr_merge_time_hours\": 72.3\n+      }\n+    }\n+  },\n+  \"ecosystem\": {\n+    \"total_workflows\": 120,\n+    \"active_workflows\": 85,\n+    \"total_safe_outputs\": 45,\n+    \"overall_success_rate\": 0.892,\n+    \"total_tokens\": 1250000,\n+    \"total_cost_usd\": 12.50\n+  }\n+}\n+```\n+\n+### 3. Store Metrics in Repo Memory\n+\n+**Daily Storage**:\n+- Write metrics to: `/tmp/gh-aw/repo-memory/default/metrics/daily/YYYY-MM-DD.json`\n+- Use today's date for the filename (e.g., `2024-12-24.json`)\n+\n+**Latest Snapshot**:\n+- Copy current metrics to: `/tmp/gh-aw/repo-memory/default/metrics/latest.json`\n+- This provides quick access to most recent data without date calculations\n+\n+**Create Directory Structure**:\n+- Ensure the directory exists: `mkdir -p /tmp/gh-aw/repo-memory/default/metrics/daily/`\n+\n+### 4. Cleanup Old Data\n+\n+**Retention Policy**:\n+- Keep last 30 days of daily metrics\n+- Delete daily files older than 30 days from the metrics directory\n+- Preserve `latest.json` (always keep)\n+\n+**Cleanup Command**:\n+```bash\n+find /tmp/gh-aw/repo-memory/default/metrics/daily/ -name \"*.json\" -mtime +30 -delete\n+```\n+\n+### 5. Calculate Ecosystem Aggregates\n+\n+**Total Workflows**:\n+- Use the agentic-workflows `status` tool to get count of all workflows\n+\n+**Active Workflows**:\n+- Count workflows that had at least one run in the last 24 hours (from logs data)\n+\n+**Total Safe Outputs**:\n+- Sum of all safe outputs (issues + PRs + comments + discussions) across all workflows\n+\n+**Overall Success Rate**:\n+- Calculate: `(sum of successful runs across all workflows) / (sum of total runs across all workflows)`\n+\n+**Total Resource Usage**:\n+- Sum total tokens used across all workflows\n+- Sum total cost across all workflows\n+\n+## Implementation Guidelines\n+\n+### Using Agentic Workflows Tool\n+\n+**Primary data source**: Use the agentic-workflows tool for all workflow run metrics:\n+1. Start with `status` tool to get workflow inventory\n+2. Use `logs` tool with `start_date: \"-1d\"` to collect last 24 hours of runs\n+3. Extract metrics from the log data (success/failure, tokens, costs, safe outputs)\n+\n+**Secondary data source**: Use GitHub MCP server for engagement metrics only:\n+- Reactions on issues/PRs created by workflows\n+- Comment counts\n+- Discussion replies\n+\n+### Handling Missing Data\n+\n+- If a workflow has no runs in the last 24 hours, set all run metrics to 0\n+- If a workflow has no safe outputs, set all safe output counts to 0\n+- If token/cost data is unavailable, omit or set to null\n+- Always include workflows in the metrics even if they have no activity (helps detect stalled workflows)\n+\n+### Workflow Name Extraction\n+\n+The agentic-workflows logs tool provides structured data with workflow names already extracted. Use this instead of parsing footers manually.\n+\n+### Performance Considerations\n+\n+- The agentic-workflows tool is optimized for log retrieval and analysis\n+- Use date filters (start_date: \"-1d\") to limit data collection scope\n+- Process logs in memory rather than making multiple API calls\n+- Cache workflow list from status tool\n+\n+### Error Handling\n+\n+- If agentic-workflows tool is unavailable, log error but don't fail the entire collection\n+- If a specific workflow's data can't be collected, log and continue with others\n+- Always write partial metrics even if some data is missing\n+\n+## Output Format\n+\n+At the end of collection:\n+\n+1. **Summary Log**:\n+   ```\n+   ✅ Metrics collection completed\n+\n+   📊 Collection Summary:\n+   - Workflows analyzed: 120\n+   - Active workflows: 85\n+   - Total safe outputs: 45\n+   - Overall success rate: 89.2%\n+   - Storage: /tmp/gh-aw/repo-memory/default/metrics/daily/2024-12-24.json\n+\n+   ⏱️  Collection took: 45 seconds\n+   ```\n+\n+2. **File Operations Log**:\n+   ```\n+   📝 Files written:\n+   - metrics/daily/2024-12-24.json\n+   - metrics/latest.json\n+\n+   🗑️  Cleanup:\n+   - Removed 1 old daily file(s)\n+   ```\n+\n+## Important Notes\n+\n+- **PRIMARY TOOL**: Use the agentic-workflows tool (`status`, `logs`) for all workflow run metrics\n+- **SECONDARY TOOL**: Use GitHub MCP server only for engagement metrics (reactions, comments)\n+- **DO NOT** create issues, PRs, or comments - this is a data collection agent only\n+- **DO NOT** analyze or interpret the metrics - that's the job of meta-orchestrators\n+- **ALWAYS** write valid JSON (test with `jq` before storing)\n+- **ALWAYS** include a timestamp in ISO 8601 format\n+- **ENSURE** directory structure exists before writing files\n+- **USE** repo-memory tool to persist data (it handles git operations automatically)\n+- **INCLUDE** token usage and cost metrics when available from logs\n+\n+## Success Criteria\n+\n+✅ Daily metrics file created in correct location\n+✅ Latest metrics snapshot updated\n+✅ Old metrics cleaned up (>30 days)\n+✅ Valid JSON format (validated with jq)\n+✅ All workflows included in metrics\n+✅ Ecosystem aggregates calculated correctly\n+✅ Collection completed within timeout\n+✅ No errors or warnings in execution log",
+          "snapshot_ref": "dc5deeeded392cb71788ce2d0ecb3661a1688a61",
+          "snapshot_blob_sha": "7b57c71119c565aa762625b1e58cf6d3be312d52",
+          "snapshot_file": "snapshots/RunWatch__homeles__dc5deeeded392cb71788ce2d0ecb3661a1688a61__metrics-collector.md",
+          "snapshot_bytes": 8429,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"homeles/RunWatch\",\"generated_owner\":\"homeles\",\"generated_repo\":\"RunWatch\",\"generated_workflow_path\":\".github/workflows/metrics-collector.lock.yml\",\"generated_workflow_file\":\"metrics-collector.lock.yml\",\"generated_html_url\":\"https://github.com/homeles/RunWatch/blob/f535d18a6b7b193b9710cd4fa3c525aa354631cb/.github/workflows/metrics-collector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "homeles/RunWatch:.github/workflows/metrics-collector.md",
+      "source_full_name": "homeles/RunWatch",
+      "md_path": ".github/workflows/metrics-collector.md",
+      "commit_sha": "4de080ae8b2554f3393671c9b4f2a3711dbc81a7",
+      "authored_at": "2026-03-04T21:27:21Z",
+      "committed_at": "2026-03-04T21:45:57Z",
+      "author_name": "Lupita Bot",
+      "author_email": "263059171+lupita-hom@users.noreply.github.com",
+      "author_login": "lupita-hom",
+      "author_account_type": "User",
+      "committer_name": "Lupita Bot",
+      "committer_email": "263059171+lupita-hom@users.noreply.github.com",
+      "committer_login": "lupita-hom",
+      "committer_account_type": "User",
+      "message": "fix: remove missing shared/mood.md import and compile metrics-collector workflow\n\n- Removed 'imports: shared/mood.md' (file doesn't exist)\n- Generated metrics-collector.lock.yml via gh aw compile",
+      "parent_shas": [
+        "b375c10213231e92d1cceeb84e049300de46ebe8"
+      ],
+      "tree_sha": "41c86cf73397a60ebf3e6d4a0977edd0517775e2",
+      "html_url": "https://github.com/homeles/RunWatch/commit/4de080ae8b2554f3393671c9b4f2a3711dbc81a7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "homeles/RunWatch:.github/workflows/metrics-collector.md",
+          "source_full_name": "homeles/RunWatch",
+          "md_path": ".github/workflows/metrics-collector.md",
+          "commit_sha": "4de080ae8b2554f3393671c9b4f2a3711dbc81a7",
+          "committed_at": "2026-03-04T21:45:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -16,8 +16,6 @@ tools:\n     branch-name: memory/meta-orchestrators\n     file-glob: \"metrics/**\"\n timeout-minutes: 15\n-imports:\n-  - shared/mood.md\n ---\n \n {{#runtime-import? .github/shared-instructions.md}}",
+          "snapshot_ref": "4de080ae8b2554f3393671c9b4f2a3711dbc81a7",
+          "snapshot_blob_sha": "47111a909638827e3cfe48ef212c771a16c471ed",
+          "snapshot_file": "snapshots/RunWatch__homeles__4de080ae8b2554f3393671c9b4f2a3711dbc81a7__metrics-collector.md",
+          "snapshot_bytes": 8401,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"homeles/RunWatch\",\"generated_owner\":\"homeles\",\"generated_repo\":\"RunWatch\",\"generated_workflow_path\":\".github/workflows/metrics-collector.lock.yml\",\"generated_workflow_file\":\"metrics-collector.lock.yml\",\"generated_html_url\":\"https://github.com/homeles/RunWatch/blob/f535d18a6b7b193b9710cd4fa3c525aa354631cb/.github/workflows/metrics-collector.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

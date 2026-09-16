@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+    "source_full_name": "elastic/elasticsearch-specification",
+    "source_owner": "elastic",
+    "source_repo": "elasticsearch-specification",
+    "md_path": ".github/workflows/spec-drift.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/elastic/elasticsearch-specification/blob/HEAD/.github/workflows/spec-drift.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "elastic/elasticsearch-specification",
+      "generated_owner": "elastic",
+      "generated_repo": "elasticsearch-specification",
+      "generated_workflow_path": ".github/workflows/spec-drift.lock.yml",
+      "generated_workflow_file": "spec-drift.lock.yml",
+      "generated_html_url": "https://github.com/elastic/elasticsearch-specification/blob/a3762336d9417277d9a9c20a0509314bc57ae667/.github/workflows/spec-drift.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:26:43+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+      "source_full_name": "elastic/elasticsearch-specification",
+      "md_path": ".github/workflows/spec-drift.md",
+      "commit_sha": "a14cd93e2f541674ee1621088d5d9794aaa9cbb3",
+      "authored_at": "2026-05-21T08:32:38Z",
+      "committed_at": "2026-05-21T08:32:38Z",
+      "author_name": "Matt Devy",
+      "author_email": "32791943+MattDevy@users.noreply.github.com",
+      "author_login": "MattDevy",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic spec drift workflow (#6295)",
+      "parent_shas": [
+        "6d02109107e9a3739247e0c296d2ad9ba1ec3ca7"
+      ],
+      "tree_sha": "452bf3dbb481d55ad2d4c9979b7c662479afe503",
+      "html_url": "https://github.com/elastic/elasticsearch-specification/commit/a14cd93e2f541674ee1621088d5d9794aaa9cbb3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+          "source_full_name": "elastic/elasticsearch-specification",
+          "md_path": ".github/workflows/spec-drift.md",
+          "commit_sha": "a14cd93e2f541674ee1621088d5d9794aaa9cbb3",
+          "committed_at": "2026-05-21T08:32:38Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 146,
+          "file_deletions": 0,
+          "file_changes": 146,
+          "file_patch": "@@ -0,0 +1,146 @@\n+---\n+name: Weekly Elasticsearch Specification Drift\n+description: Detect merged Elasticsearch REST API changes that are missing from the specification and open one PR per change\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      since:\n+        description: \"Only inspect Elasticsearch PRs merged on or after this YYYY-MM-DD date. Defaults to the last 7 days.\"\n+        required: false\n+        type: string\n+      max_prs:\n+        description: \"Maximum number of merged Elasticsearch PRs to inspect.\"\n+        required: false\n+        default: \"50\"\n+        type: string\n+  schedule: weekly on monday\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+strict: true\n+timeout-minutes: 45\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_PROVIDER_BASE_URL: \"https://elastic.litellm-prod.ai/v1\"\n+    COPILOT_MODEL: \"llm-gateway/claude-sonnet-4-6\"\n+    COPILOT_PROVIDER_API_KEY: \"${{ secrets.LITELLM_API_KEY }}\"\n+    COPILOT_PROVIDER_TYPE: \"openai\"\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    allowed-repos:\n+      - elastic/elasticsearch\n+      - elastic/elasticsearch-specification\n+    min-integrity: approved\n+    toolsets: [repos, issues, pull_requests]\n+\n+network:\n+  allowed:\n+    - defaults\n+    - elastic.litellm-prod.ai\n+\n+safe-outputs:\n+  create-pull-request:\n+    max: 10\n+    reviewers:\n+      - elastic/devtools-team\n+  add-labels:\n+    max: 10\n+  create-issue:\n+    max: 1\n+---\n+\n+# Weekly Elasticsearch Specification Drift\n+\n+Every run checks recently merged pull requests in `elastic/elasticsearch` and opens one pull\n+request in `elastic/elasticsearch-specification` for each Elasticsearch change that has an\n+observable REST API surface impact and is not already represented in this repository.\n+\n+## Inputs\n+\n+- `since`: optional `YYYY-MM-DD`. When omitted, inspect PRs merged in the last seven days.\n+- `max_prs`: optional maximum number of Elasticsearch PRs to inspect. Default: `50`.\n+\n+## Process\n+\n+1. Determine the merge window.\n+   - For `workflow_dispatch`, use `inputs.since` when present.\n+   - Otherwise compute the date seven days before the current run date.\n+\n+2. Query `elastic/elasticsearch` for pull requests merged after the selected date.\n+   - Inspect at most `inputs.max_prs` pull requests.\n+   - Prefer GraphQL or `gh pr list --repo elastic/elasticsearch --state merged --search \"merged:>=DATE\"`.\n+   - Fetch each candidate's title, body, labels, base branch, merge commit SHA, changed files, and diff.\n+\n+3. Classify each Elasticsearch PR.\n+   - Relevant changes include new endpoints, removed endpoints, changed routes or methods, path/query\n+     parameters, request bodies, response bodies, enum values, typed error bodies, API visibility,\n+     availability, stability, feature flags, documentation examples used by the generated API docs,\n+     and rest-api-spec JSON or YAML changes.\n+   - Skip PRs that only change implementation, tests, docs unrelated to generated API references,\n+     infrastructure, internal Java APIs, benchmarks, build logic, or transport-only behavior.\n+   - When uncertain, inspect the Elasticsearch diff and this repository before deciding. Do not open\n+     a PR just because a file path looks suspicious.\n+\n+4. Determine the Elasticsearch version target.\n+   - Read version labels from the Elasticsearch PR. Typical labels look like `v8.19.0`, `v9.4.0`,\n+     `v9.5.0`, or equivalent release labels.\n+   - Convert those labels to specification minor branches and backport labels. For example,\n+     `v9.4.0` maps to branch `9.4` and label `backport 9.4`; `v8.19.0` maps to `backport 8.19`.\n+   - Always open the initial specification PR against `main`.\n+   - Add backport labels for every relevant released minor branch. If the change only applies to\n+     main and should not be backported, add `skip-backport` and explain why in the PR body.\n+   - If an exact target branch is newer than the label allow-list in this workflow, open a single\n+     failure issue explaining which backport label must be added to the workflow.\n+\n+5. Compare against `elastic/elasticsearch-specification`.\n+   - Inspect `docs/add-new-api.md`, `docs/modeling-guide.md`, `docs/specification-structure.md`,\n+     `docs/style-guide.md`, and nearby files under `specification/` before editing.\n+   - Follow existing request/response/type layout patterns. Put shared types in `types.ts` or a\n+     suitable `_types` file, reuse existing aliases from `specification/_types`, and keep request\n+     definitions named `Request` and response definitions named `Response`.\n+   - Preserve `@rest_spec_name` and `@availability` conventions. Use the Elasticsearch target version\n+     for the `since` value on branches where a new API first appears.\n+   - Search existing spec files thoroughly before adding a new type or endpoint.\n+\n+6. Open one pull request per relevant Elasticsearch PR.\n+   - Do not combine unrelated Elasticsearch PRs into one specification PR.\n+   - Do not create a PR when the specification is already correct.\n+   - Before creating a PR, search existing pull requests in `elastic/elasticsearch-specification`.\n+     Check open PRs first, then recently closed or merged PRs from the same merge window. Search by\n+     Elasticsearch PR number, merge commit SHA, endpoint/API name, changed specification file names,\n+     and likely feature terms from the Elasticsearch PR title and labels.\n+   - Do not create a PR if an existing open PR already covers the same Elasticsearch change or the\n+     same API-surface feature, even if that PR does not mention the Elasticsearch PR number. Add the\n+     existing PR URL to the run summary instead.\n+   - Do not create a PR if a merged PR already covered the same Elasticsearch change or feature.\n+   - Use a branch name like `spec-drift/es-123456-short-topic`.\n+   - Use a title like `Update specification for elasticsearch#123456`.\n+   - Include the Elasticsearch PR URL, merge commit, version labels, API impact summary,\n+     files changed in this repository, and any uncertainty in the PR body.\n+   - Request review from `@elastic/devtools-team`.\n+   - Apply the `specification` label and either one or more `backport X.Y` labels or `skip-backport`.\n+\n+7. Validate changes before opening each PR.\n+   - Run the fastest relevant local checks available from repository metadata.\n+   - If validation cannot run, state why in the PR body.\n+\n+8. Report a no-op run by doing nothing.\n+   - If there are no relevant Elasticsearch PRs, or all relevant PRs are already reflected in the\n+     specification, do not open an issue or PR.\n+\n+## Guardrails\n+\n+- Only edit this repository for confirmed API-surface drift.\n+- Never open more than one PR for the same Elasticsearch PR in a single run.\n+- Prefer small, directly reviewable changes over broad generated rewrites.\n+- Do not edit workflow files, package manifests, lockfiles, generated output, or unrelated docs as part\n+  of the specification drift PRs.\n+- Keep the PR body honest about uncertainty; a narrowly scoped partial PR is better than inventing\n+  unverified API details.",
+          "snapshot_ref": "a14cd93e2f541674ee1621088d5d9794aaa9cbb3",
+          "snapshot_blob_sha": "4f0ce0443d7963df55fd35545c576faf997c969d",
+          "snapshot_file": "snapshots/elasticsearch-specification__elastic__a14cd93e2f541674ee1621088d5d9794aaa9cbb3__spec-drift.md",
+          "snapshot_bytes": 6917,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elasticsearch-specification\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elasticsearch-specification\",\"generated_workflow_path\":\".github/workflows/spec-drift.lock.yml\",\"generated_workflow_file\":\"spec-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elasticsearch-specification/blob/a3762336d9417277d9a9c20a0509314bc57ae667/.github/workflows/spec-drift.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+      "source_full_name": "elastic/elasticsearch-specification",
+      "md_path": ".github/workflows/spec-drift.md",
+      "commit_sha": "d061d43fd958eb8b702ea4c8bd07a2d93d2dd38e",
+      "authored_at": "2026-05-21T09:41:44Z",
+      "committed_at": "2026-05-21T09:41:44Z",
+      "author_name": "Matt Devy",
+      "author_email": "32791943+MattDevy@users.noreply.github.com",
+      "author_login": "MattDevy",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "spec-drift workflow use claude code instead of copilot (#6299)\n\n* Enable staged mode for spec-drift workflow\n\nAdds staged: true to the safe-outputs block so test runs preview\nproposed PRs/issues in the step summary without creating them.\n\n* use claude code in spec-drift\n\n* staged: false",
+      "parent_shas": [
+        "a14cd93e2f541674ee1621088d5d9794aaa9cbb3"
+      ],
+      "tree_sha": "91d51e2a9955f2ed0ba7981aa78bbeeccc4ba3a5",
+      "html_url": "https://github.com/elastic/elasticsearch-specification/commit/d061d43fd958eb8b702ea4c8bd07a2d93d2dd38e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+          "source_full_name": "elastic/elasticsearch-specification",
+          "md_path": ".github/workflows/spec-drift.md",
+          "commit_sha": "d061d43fd958eb8b702ea4c8bd07a2d93d2dd38e",
+          "committed_at": "2026-05-21T09:41:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 5,
+          "file_changes": 10,
+          "file_patch": "@@ -24,12 +24,11 @@ strict: true\n timeout-minutes: 45\n \n engine:\n-  id: copilot\n+  id: claude\n+  model: \"llm-gateway/claude-sonnet-4-6\"\n   env:\n-    COPILOT_PROVIDER_BASE_URL: \"https://elastic.litellm-prod.ai/v1\"\n-    COPILOT_MODEL: \"llm-gateway/claude-sonnet-4-6\"\n-    COPILOT_PROVIDER_API_KEY: \"${{ secrets.LITELLM_API_KEY }}\"\n-    COPILOT_PROVIDER_TYPE: \"openai\"\n+    ANTHROPIC_BASE_URL: \"https://elastic.litellm-prod.ai/\"\n+    ANTHROPIC_API_KEY: ${{ secrets.LITELLM_API_KEY }}\n \n tools:\n   github:\n@@ -46,6 +45,7 @@ network:\n     - elastic.litellm-prod.ai\n \n safe-outputs:\n+  staged: false\n   create-pull-request:\n     max: 10\n     reviewers:",
+          "snapshot_ref": "d061d43fd958eb8b702ea4c8bd07a2d93d2dd38e",
+          "snapshot_blob_sha": "1d62771f5a6dd9ab9347d142294bdda0514077cb",
+          "snapshot_file": "snapshots/elasticsearch-specification__elastic__d061d43fd958eb8b702ea4c8bd07a2d93d2dd38e__spec-drift.md",
+          "snapshot_bytes": 6868,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elasticsearch-specification\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elasticsearch-specification\",\"generated_workflow_path\":\".github/workflows/spec-drift.lock.yml\",\"generated_workflow_file\":\"spec-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elasticsearch-specification/blob/a3762336d9417277d9a9c20a0509314bc57ae667/.github/workflows/spec-drift.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+      "source_full_name": "elastic/elasticsearch-specification",
+      "md_path": ".github/workflows/spec-drift.md",
+      "commit_sha": "56cb2e713b22245e813b9ae3ffa5289490f867c1",
+      "authored_at": "2026-05-27T09:47:01Z",
+      "committed_at": "2026-05-27T09:47:01Z",
+      "author_name": "Matt Devy",
+      "author_email": "32791943+MattDevy@users.noreply.github.com",
+      "author_login": "MattDevy",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci(spec-drift): file issues instead of pull requests (#6315)\n\nThe weekly spec-drift workflow used to open one PR per missing\nElasticsearch REST API change. Switch it to opening one issue per change\nso the team can triage and assign work (often to the original\nElasticsearch PR author) before any specification edits land.\n\n- safe-outputs: replace create-pull-request / add-labels with\n  create-issue (max 10).\n- Workflow prompt: rewrite the per-change step to file an issue with the\n  ES PR URL, author, merge SHA, version labels, API impact summary, and\n  candidate spec files. Drop validation / file-edit steps; the workflow\n  no longer modifies this repo.\n- Backport labels: no longer applied automatically. Version labels are\n  recorded in the issue body; the team applies backport labels to the\n  follow-up PR when it is opened.\n- docs/spec-drift-check.md: align Goal, integrity rationale, and\n  Version And Backports sections with the issue-creation flow.\n- spec-drift.lock.yml: regenerated via gh aw compile.",
+      "parent_shas": [
+        "24a896a328aba82c6a525a1804ab3951c678fb9f"
+      ],
+      "tree_sha": "ade42ceff6fb215be4763db1539bb66977056562",
+      "html_url": "https://github.com/elastic/elasticsearch-specification/commit/56cb2e713b22245e813b9ae3ffa5289490f867c1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/elasticsearch-specification:.github/workflows/spec-drift.md",
+          "source_full_name": "elastic/elasticsearch-specification",
+          "md_path": ".github/workflows/spec-drift.md",
+          "commit_sha": "56cb2e713b22245e813b9ae3ffa5289490f867c1",
+          "committed_at": "2026-05-27T09:47:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 51,
+          "file_deletions": 58,
+          "file_changes": 109,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n name: Weekly Elasticsearch Specification Drift\n-description: Detect merged Elasticsearch REST API changes that are missing from the specification and open one PR per change\n+description: Detect merged Elasticsearch REST API changes that are missing from the specification and open one issue per change\n on:\n   workflow_dispatch:\n     inputs:\n@@ -46,21 +46,16 @@ network:\n \n safe-outputs:\n   staged: false\n-  create-pull-request:\n-    max: 10\n-    reviewers:\n-      - elastic/devtools-team\n-  add-labels:\n-    max: 10\n   create-issue:\n-    max: 1\n+    max: 10\n ---\n \n # Weekly Elasticsearch Specification Drift\n \n-Every run checks recently merged pull requests in `elastic/elasticsearch` and opens one pull\n-request in `elastic/elasticsearch-specification` for each Elasticsearch change that has an\n-observable REST API surface impact and is not already represented in this repository.\n+Every run checks recently merged pull requests in `elastic/elasticsearch` and opens one issue\n+in `elastic/elasticsearch-specification` for each Elasticsearch change that has an observable\n+REST API surface impact and is not already represented in this repository. The team triages\n+these issues and assigns the original Elasticsearch PR author when appropriate.\n \n ## Inputs\n \n@@ -86,61 +81,59 @@ observable REST API surface impact and is not already represented in this reposi\n    - Skip PRs that only change implementation, tests, docs unrelated to generated API references,\n      infrastructure, internal Java APIs, benchmarks, build logic, or transport-only behavior.\n    - When uncertain, inspect the Elasticsearch diff and this repository before deciding. Do not open\n-     a PR just because a file path looks suspicious.\n+     an issue just because a file path looks suspicious.\n \n 4. Determine the Elasticsearch version target.\n    - Read version labels from the Elasticsearch PR. Typical labels look like `v8.19.0`, `v9.4.0`,\n      `v9.5.0`, or equivalent release labels.\n-   - Convert those labels to specification minor branches and backport labels. For example,\n-     `v9.4.0` maps to branch `9.4` and label `backport 9.4`; `v8.19.0` maps to `backport 8.19`.\n-   - Always open the initial specification PR against `main`.\n-   - Add backport labels for every relevant released minor branch. If the change only applies to\n-     main and should not be backported, add `skip-backport` and explain why in the PR body.\n-   - If an exact target branch is newer than the label allow-list in this workflow, open a single\n-     failure issue explaining which backport label must be added to the workflow.\n+   - Record those labels in the issue so triagers know which specification minor branches will\n+     eventually need backports (for example `v9.4.0` implies `backport 9.4`; `v8.19.0` implies\n+     `backport 8.19`).\n+   - Do not apply backport labels to the issue; the team applies them to the follow-up PR when one\n+     is opened.\n \n 5. Compare against `elastic/elasticsearch-specification`.\n    - Inspect `docs/add-new-api.md`, `docs/modeling-guide.md`, `docs/specification-structure.md`,\n-     `docs/style-guide.md`, and nearby files under `specification/` before editing.\n-   - Follow existing request/response/type layout patterns. Put shared types in `types.ts` or a\n-     suitable `_types` file, reuse existing aliases from `specification/_types`, and keep request\n-     definitions named `Request` and response definitions named `Response`.\n-   - Preserve `@rest_spec_name` and `@availability` conventions. Use the Elasticsearch target version\n-     for the `since` value on branches where a new API first appears.\n-   - Search existing spec files thoroughly before adding a new type or endpoint.\n-\n-6. Open one pull request per relevant Elasticsearch PR.\n-   - Do not combine unrelated Elasticsearch PRs into one specification PR.\n-   - Do not create a PR when the specification is already correct.\n-   - Before creating a PR, search existing pull requests in `elastic/elasticsearch-specification`.\n-     Check open PRs first, then recently closed or merged PRs from the same merge window. Search by\n-     Elasticsearch PR number, merge commit SHA, endpoint/API name, changed specification file names,\n-     and likely feature terms from the Elasticsearch PR title and labels.\n-   - Do not create a PR if an existing open PR already covers the same Elasticsearch change or the\n-     same API-surface feature, even if that PR does not mention the Elasticsearch PR number. Add the\n-     existing PR URL to the run summary instead.\n-   - Do not create a PR if a merged PR already covered the same Elasticsearch change or feature.\n-   - Use a branch name like `spec-drift/es-123456-short-topic`.\n-   - Use a title like `Update specification for elasticsearch#123456`.\n-   - Include the Elasticsearch PR URL, merge commit, version labels, API impact summary,\n-     files changed in this repository, and any uncertainty in the PR body.\n-   - Request review from `@elastic/devtools-team`.\n-   - Apply the `specification` label and either one or more `backport X.Y` labels or `skip-backport`.\n-\n-7. Validate changes before opening each PR.\n-   - Run the fastest relevant local checks available from repository metadata.\n-   - If validation cannot run, state why in the PR body.\n-\n-8. Report a no-op run by doing nothing.\n+     `docs/style-guide.md`, and nearby files under `specification/` to understand where a fix\n+     would land.\n+   - Identify which specification files would need to change (request/response/type files under\n+     `specification/`, shared types in `_types`, etc.) and name them in the issue so the assignee\n+     has a starting point.\n+   - Search existing spec files thoroughly before declaring an API or type missing. If the\n+     specification already covers the change, do not open an issue.\n+\n+6. Open one issue per relevant Elasticsearch PR.\n+   - Do not combine unrelated Elasticsearch PRs into one issue.\n+   - Do not open an issue when the specification is already correct.\n+   - Before creating an issue, search existing issues and pull requests in\n+     `elastic/elasticsearch-specification`. Check open issues and PRs first, then recently closed\n+     or merged ones from the same merge window. Search by Elasticsearch PR number, merge commit\n+     SHA, endpoint/API name, likely specification file names, and feature terms from the\n+     Elasticsearch PR title and labels.\n+   - Do not open an issue if an existing open issue or PR already covers the same Elasticsearch\n+     change or the same API-surface feature, even if it does not mention the Elasticsearch PR\n+     number. Record the existing issue or PR URL in the run summary instead.\n+   - Do not open an issue if a merged PR already covered the same Elasticsearch change or feature.\n+   - Use a title like `Spec drift: update for elasticsearch#123456 (short topic)`.\n+   - In the issue body include:\n+     - The Elasticsearch PR URL, author handle, merge commit SHA, and merge date.\n+     - Version labels from the Elasticsearch PR and the implied specification minor branches that\n+       will need backports once the fix lands.\n+     - A concise API impact summary (new/removed endpoints, route or method changes, path/query\n+       parameters, request and response shape changes, enum values, typed errors, availability,\n+       stability, feature flags, rest-api-spec changes).\n+     - The specification files that look most likely to need edits.\n+     - Any uncertainty or follow-up questions for the triager.\n+     - A suggestion to consider assigning the original Elasticsearch PR author.\n+\n+7. Report a no-op run by doing nothing.\n    - If there are no relevant Elasticsearch PRs, or all relevant PRs are already reflected in the\n-     specification, do not open an issue or PR.\n+     specification, do not open an issue.\n \n ## Guardrails\n \n-- Only edit this repository for confirmed API-surface drift.\n-- Never open more than one PR for the same Elasticsearch PR in a single run.\n-- Prefer small, directly reviewable changes over broad generated rewrites.\n-- Do not edit workflow files, package manifests, lockfiles, generated output, or unrelated docs as part\n-  of the specification drift PRs.\n-- Keep the PR body honest about uncertainty; a narrowly scoped partial PR is better than inventing\n-  unverified API details.\n+- Only open issues for confirmed API-surface drift.\n+- Never open more than one issue for the same Elasticsearch PR in a single run.\n+- Do not modify files in this repository; this workflow only files issues.\n+- Keep the issue body honest about uncertainty; a narrowly scoped issue that flags gaps is better\n+  than inventing unverified API details.",
+          "snapshot_ref": "56cb2e713b22245e813b9ae3ffa5289490f867c1",
+          "snapshot_blob_sha": "a751481d53c9e7a8935df79e71c9401a76f7d4e2",
+          "snapshot_file": "snapshots/elasticsearch-specification__elastic__56cb2e713b22245e813b9ae3ffa5289490f867c1__spec-drift.md",
+          "snapshot_bytes": 6514,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/elasticsearch-specification\",\"generated_owner\":\"elastic\",\"generated_repo\":\"elasticsearch-specification\",\"generated_workflow_path\":\".github/workflows/spec-drift.lock.yml\",\"generated_workflow_file\":\"spec-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/elasticsearch-specification/blob/a3762336d9417277d9a9c20a0509314bc57ae667/.github/workflows/spec-drift.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

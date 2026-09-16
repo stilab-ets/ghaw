@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+    "source_full_name": "chrizbo/agentics-beyond-code",
+    "source_owner": "chrizbo",
+    "source_repo": "agentics-beyond-code",
+    "md_path": ".github/workflows/slack-reaction-intake.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/chrizbo/agentics-beyond-code/blob/HEAD/.github/workflows/slack-reaction-intake.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "chrizbo/agentics-beyond-code",
+      "generated_owner": "chrizbo",
+      "generated_repo": "agentics-beyond-code",
+      "generated_workflow_path": ".github/workflows/slack-reaction-intake.lock.yml",
+      "generated_workflow_file": "slack-reaction-intake.lock.yml",
+      "generated_html_url": "https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-reaction-intake.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:25:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-reaction-intake.md",
+      "commit_sha": "32d43074d483bfc6b4b6a492997c0d9fc6c056ae",
+      "authored_at": "2026-06-01T20:14:03Z",
+      "committed_at": "2026-06-01T20:14:03Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Slack reaction intake workflow (#222)",
+      "parent_shas": [
+        "dd9956cfc9fcf195ff7ef48e868a784172957745"
+      ],
+      "tree_sha": "1318a0244ed6739614caca31c6d0192927bffffa",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/32d43074d483bfc6b4b6a492997c0d9fc6c056ae",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-reaction-intake.md",
+          "commit_sha": "32d43074d483bfc6b4b6a492997c0d9fc6c056ae",
+          "committed_at": "2026-06-01T20:14:03Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 234,
+          "file_deletions": 0,
+          "file_changes": 234,
+          "file_patch": "@@ -0,0 +1,234 @@\n+---\n+description: |\n+  Fixture-first Slack reaction intake workflow. Processes Slack-shaped fixture\n+  JSON files, treats approved emoji reactions as lightweight intake signals,\n+  and creates labeled GitHub intake issues with Slack source context.\n+\n+engine:\n+  id: codex\n+  model: gpt-5-mini\n+\n+on:\n+  push:\n+    branches: [main]\n+    paths:\n+      - 'slack-fixtures/**/*.json'\n+      - 'slack-fixtures/*.json'\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+strict: true\n+timeout-minutes: 15\n+\n+network:\n+  allowed: [defaults, github]\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, issues]\n+    lockdown: false\n+    min-integrity: none\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  create-issue:\n+    title-prefix: \"[Slack Intake] \"\n+    max: 10\n+  add-labels:\n+    allowed:\n+      - triage-needed\n+      - from-slack\n+    max: 20\n+  noop:\n+---\n+\n+# Slack Reaction Intake\n+\n+You are a Slack reaction intake analyst for the repository\n+`${{ github.repository }}`. Your job is to process Slack-shaped fixture files in\n+`slack-fixtures/`, convert approved reaction signals into GitHub intake issues,\n+and label those issues for normal triage.\n+\n+This MVP is fixture-first. Do **not** call the Slack API. Do **not** require\n+Slack credentials. Treat `slack-fixtures/*.json` as the only Slack input.\n+\n+## Reaction Semantics\n+\n+Only this reaction creates an intake issue in the MVP:\n+\n+- `inbox_tray` — create a GitHub intake issue for a Slack bug report, feature\n+  request, customer problem, or operational request.\n+\n+These reactions are intentionally ignored by this workflow for now:\n+\n+- `memo`\n+- `pushpin`\n+- `warning`\n+- `white_check_mark`\n+\n+They are context, decision, risk, and done signals for other Slack-aware\n+workflows. Do not create issues for them in this workflow.\n+\n+## Process\n+\n+### Step 1: Identify Slack Fixture Files\n+\n+Determine which fixture files triggered this run.\n+\n+If triggered by push:\n+\n+```bash\n+git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^slack-fixtures/.*\\.json$' || echo \"No Slack fixture files in diff\"\n+```\n+\n+If triggered by `workflow_dispatch`, process all fixture files:\n+\n+```bash\n+find slack-fixtures -name '*.json' 2>/dev/null\n+```\n+\n+If no fixture files exist, call `noop` with:\n+\n+```text\n+Skipped - no Slack fixture files found.\n+```\n+\n+Then stop.\n+\n+### Step 2: Read Fixtures\n+\n+For each fixture file, read the JSON:\n+\n+```bash\n+cat <fixture-file>\n+```\n+\n+Fixtures may contain:\n+\n+- top-level `messages`\n+- top-level `events`\n+- channel or thread groupings with message-like objects\n+\n+Extract Slack messages with these fields when present:\n+\n+- `channel_id`\n+- `channel_name`\n+- `thread_ts`\n+- `message_ts`\n+- `permalink`\n+- `author_name`\n+- `created_at`\n+- `text`\n+- `reactions`\n+\n+Extract reaction events with these fields when present:\n+\n+- `event_id`\n+- `type`\n+- `reaction`\n+- `user_id`\n+- `channel_id`\n+- `message_ts`\n+- `thread_ts`\n+- `permalink`\n+- `received_at`\n+\n+### Step 3: Match Reaction Events to Messages\n+\n+Find messages that should create intake issues:\n+\n+- A message has `reactions` containing `inbox_tray`; or\n+- A top-level `reaction_added` event has `reaction: \"inbox_tray\"` and can be\n+  matched to a message by `channel_id` plus `message_ts`.\n+\n+When a matching event has no corresponding message text, skip it unless the\n+event itself contains enough text to create a useful issue. Do not create empty\n+or vague issues.\n+\n+### Step 4: Idempotency\n+\n+Before creating an issue, compute an idempotency key:\n+\n+```text\n+slack-reaction-intake:<channel_id>:<message_ts>:inbox_tray\n+```\n+\n+Check for existing open or closed issues that already contain this key:\n+\n+```bash\n+gh issue list --repo ${{ github.repository }} --state all \\\n+  --search \"slack-reaction-intake:<channel_id>:<message_ts>:inbox_tray\" \\\n+  --json number,title,state,url\n+```\n+\n+If any issue already exists for the key, skip creating a duplicate.\n+\n+Also skip if an existing issue body contains the same Slack permalink and was\n+created by Slack Reaction Intake.\n+\n+### Step 5: Create Intake Issues\n+\n+For each unique intake candidate, create one GitHub issue.\n+\n+The title should be short and actionable:\n+\n+```text\n+<concise request summary from Slack>\n+```\n+\n+The body should use this format:\n+\n+```markdown\n+## Slack Intake\n+\n+### Request\n+\n+<one-paragraph summary of the Slack request>\n+\n+### Source\n+\n+- Channel: `#channel-name`\n+- Reaction: `:inbox_tray:`\n+- Slack source: <permalink or \"fixture permalink unavailable\">\n+- Fixture: `slack-fixtures/<filename>.json`\n+\n+### Copied Slack Context\n+\n+> <short copied message excerpt>\n+\n+### Triage Notes\n+\n+- Created from a Slack reaction signal.\n+- Needs product triage before commitment.\n+\n+<!-- slack-reaction-intake:<channel_id>:<message_ts>:inbox_tray -->\n+```\n+\n+For source links, use the raw `permalink` from the fixture only when it starts\n+with `http://` or `https://`. If it is missing or redacted, write\n+`fixture permalink unavailable` instead of creating a markdown link.\n+\n+For copied Slack context author labels, prefer `author_name` only when it is a\n+human-readable display name. If it is missing, `unknown`, or looks like a Slack\n+ID such as `U123...`, `W123...`, or `B123...`, omit the author label or use\n+`Slack participant`. Do not expose raw Slack user IDs in GitHub issues.\n+\n+After creating the issue, add both labels:\n+\n+- `from-slack`\n+- `triage-needed`\n+\n+### Step 6: No Intake\n+\n+If fixture files were processed but no new `inbox_tray` intake issues were\n+created, call `noop` with:\n+\n+```text\n+No Slack inbox_tray reaction intake candidates found, or all candidates already had issues.\n+```",
+          "snapshot_ref": "32d43074d483bfc6b4b6a492997c0d9fc6c056ae",
+          "snapshot_blob_sha": "e65dbc1d63a8ae94f9b67c75034324b25cc80f6d",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__32d43074d483bfc6b4b6a492997c0d9fc6c056ae__slack-reaction-intake.md",
+          "snapshot_bytes": 5490,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-reaction-intake.lock.yml\",\"generated_workflow_file\":\"slack-reaction-intake.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-reaction-intake.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-reaction-intake.md",
+      "commit_sha": "656977ab9db42cc639d4ffe3623e985bf3133584",
+      "authored_at": "2026-06-01T20:36:26Z",
+      "committed_at": "2026-06-01T20:36:26Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Make Slack reaction intake deterministic (#225)",
+      "parent_shas": [
+        "8e290f2b35151ccfe537a619dd956776fb7744c9"
+      ],
+      "tree_sha": "626cfa4f46a241bde3dcd725ee781c5b5f15efdb",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/656977ab9db42cc639d4ffe3623e985bf3133584",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-reaction-intake.md",
+          "commit_sha": "656977ab9db42cc639d4ffe3623e985bf3133584",
+          "committed_at": "2026-06-01T20:36:26Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 33,
+          "file_deletions": 77,
+          "file_changes": 110,
+          "file_patch": "@@ -39,12 +39,10 @@ safe-outputs:\n   allowed-github-references: []\n   create-issue:\n     title-prefix: \"[Slack Intake] \"\n-    max: 10\n-  add-labels:\n-    allowed:\n-      - triage-needed\n+    labels:\n       - from-slack\n-    max: 20\n+      - triage-needed\n+    max: 10\n   noop:\n ---\n \n@@ -77,88 +75,46 @@ workflows. Do not create issues for them in this workflow.\n \n ## Process\n \n-### Step 1: Identify Slack Fixture Files\n+### Step 1: Extract Intake Candidates\n \n-Determine which fixture files triggered this run.\n-\n-If triggered by push:\n+Run the deterministic extractor and use its JSON as the source of truth:\n \n ```bash\n-git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^slack-fixtures/.*\\.json$' || echo \"No Slack fixture files in diff\"\n+node .github/scripts/slack-reaction-intake-candidates.mjs\n ```\n \n-If triggered by `workflow_dispatch`, process all fixture files:\n+Do not manually rediscover fixture files, parse raw fixture JSON, or call the\n+Slack API. The extractor returns:\n \n-```bash\n-find slack-fixtures -name '*.json' 2>/dev/null\n-```\n+- `fixture_files`\n+- `candidates`\n \n-If no fixture files exist, call `noop` with:\n+If `fixture_files` is empty, call `noop` with:\n \n ```text\n Skipped - no Slack fixture files found.\n ```\n \n Then stop.\n \n-### Step 2: Read Fixtures\n+If `candidates` is empty, call `noop` with:\n \n-For each fixture file, read the JSON:\n-\n-```bash\n-cat <fixture-file>\n+```text\n+No Slack inbox_tray reaction intake candidates found, or all candidates already had issues.\n ```\n \n-Fixtures may contain:\n-\n-- top-level `messages`\n-- top-level `events`\n-- channel or thread groupings with message-like objects\n-\n-Extract Slack messages with these fields when present:\n-\n-- `channel_id`\n-- `channel_name`\n-- `thread_ts`\n-- `message_ts`\n-- `permalink`\n-- `author_name`\n-- `created_at`\n-- `text`\n-- `reactions`\n-\n-Extract reaction events with these fields when present:\n-\n-- `event_id`\n-- `type`\n-- `reaction`\n-- `user_id`\n-- `channel_id`\n-- `message_ts`\n-- `thread_ts`\n-- `permalink`\n-- `received_at`\n-\n-### Step 3: Match Reaction Events to Messages\n-\n-Find messages that should create intake issues:\n-\n-- A message has `reactions` containing `inbox_tray`; or\n-- A top-level `reaction_added` event has `reaction: \"inbox_tray\"` and can be\n-  matched to a message by `channel_id` plus `message_ts`.\n-\n-When a matching event has no corresponding message text, skip it unless the\n-event itself contains enough text to create a useful issue. Do not create empty\n-or vague issues.\n+Then stop.\n \n-### Step 4: Idempotency\n+### Step 2: Idempotency\n \n Before creating an issue, compute an idempotency key:\n \n ```text\n slack-reaction-intake:<channel_id>:<message_ts>:inbox_tray\n ```\n \n+Use the `idempotency_key` returned by the extractor.\n+\n Check for existing open or closed issues that already contain this key:\n \n ```bash\n@@ -172,42 +128,39 @@ If any issue already exists for the key, skip creating a duplicate.\n Also skip if an existing issue body contains the same Slack permalink and was\n created by Slack Reaction Intake.\n \n-### Step 5: Create Intake Issues\n+### Step 3: Create Intake Issues\n \n For each unique intake candidate, create one GitHub issue.\n \n-The title should be short and actionable:\n-\n-```text\n-<concise request summary from Slack>\n-```\n+Use the extractor-provided `title` as the issue title. The safe output handler\n+will add the `[Slack Intake] ` prefix.\n \n-The body should use this format:\n+Use this body format:\n \n ```markdown\n ## Slack Intake\n \n ### Request\n \n-<one-paragraph summary of the Slack request>\n+<candidate.summary>\n \n ### Source\n \n-- Channel: `#channel-name`\n+- Channel: `<candidate.channel_name>`\n - Reaction: `:inbox_tray:`\n-- Slack source: <permalink or \"fixture permalink unavailable\">\n-- Fixture: `slack-fixtures/<filename>.json`\n+- Slack source: <candidate.permalink or \"fixture permalink unavailable\">\n+- Fixture: `<candidate.fixture>`\n \n ### Copied Slack Context\n \n-> <short copied message excerpt>\n+> <candidate.author_name>: <candidate.copied_context>\n \n ### Triage Notes\n \n - Created from a Slack reaction signal.\n - Needs product triage before commitment.\n \n-<!-- slack-reaction-intake:<channel_id>:<message_ts>:inbox_tray -->\n+<!-- <candidate.idempotency_key> -->\n ```\n \n For source links, use the raw `permalink` from the fixture only when it starts\n@@ -219,12 +172,15 @@ human-readable display name. If it is missing, `unknown`, or looks like a Slack\n ID such as `U123...`, `W123...`, or `B123...`, omit the author label or use\n `Slack participant`. Do not expose raw Slack user IDs in GitHub issues.\n \n-After creating the issue, add both labels:\n+The safe-output handler automatically adds both labels:\n \n - `from-slack`\n - `triage-needed`\n \n-### Step 6: No Intake\n+After all create-issue safe-output calls have been made, stop. Do not keep\n+analyzing the repository.\n+\n+### Step 4: No Intake\n \n If fixture files were processed but no new `inbox_tray` intake issues were\n created, call `noop` with:",
+          "snapshot_ref": "656977ab9db42cc639d4ffe3623e985bf3133584",
+          "snapshot_blob_sha": "72a9ab69c38656d414b10be7a0345437903761c8",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__656977ab9db42cc639d4ffe3623e985bf3133584__slack-reaction-intake.md",
+          "snapshot_bytes": 4690,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-reaction-intake.lock.yml\",\"generated_workflow_file\":\"slack-reaction-intake.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-reaction-intake.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-reaction-intake.md",
+      "commit_sha": "b6f6b74396c1c60968b76f41bc9f47a295c5e1bc",
+      "authored_at": "2026-06-02T02:57:01Z",
+      "committed_at": "2026-06-02T02:57:01Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Require Slack intake key in issues (#236)",
+      "parent_shas": [
+        "9ba19e7a665e5b7eaa57b8d776a64cfc93c6739c"
+      ],
+      "tree_sha": "2d60e78fd6eed8de0be02369695472fdb01bd7d1",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/b6f6b74396c1c60968b76f41bc9f47a295c5e1bc",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-reaction-intake.md",
+          "commit_sha": "b6f6b74396c1c60968b76f41bc9f47a295c5e1bc",
+          "committed_at": "2026-06-02T02:57:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 2,
+          "file_changes": 7,
+          "file_patch": "@@ -150,6 +150,7 @@ Use this body format:\n - Reaction: `:inbox_tray:`\n - Slack source: <candidate.permalink or \"fixture permalink unavailable\">\n - Fixture: `<candidate.fixture>`\n+- Slack intake key: `<candidate.idempotency_key>`\n \n ### Copied Slack Context\n \n@@ -159,10 +160,12 @@ Use this body format:\n \n - Created from a Slack reaction signal.\n - Needs product triage before commitment.\n-\n-<!-- <candidate.idempotency_key> -->\n ```\n \n+The issue body must include the exact `Slack intake key` line. Postback and\n+idempotency workflows use that key to find the source Slack thread and prevent\n+duplicate issues.\n+\n For source links, use the raw `permalink` from the fixture only when it starts\n with `http://` or `https://`. If it is missing or redacted, write\n `fixture permalink unavailable` instead of creating a markdown link.",
+          "snapshot_ref": "b6f6b74396c1c60968b76f41bc9f47a295c5e1bc",
+          "snapshot_blob_sha": "1b835df141da6a499ea871c93a202ad1bb54cb8b",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__b6f6b74396c1c60968b76f41bc9f47a295c5e1bc__slack-reaction-intake.md",
+          "snapshot_bytes": 4876,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-reaction-intake.lock.yml\",\"generated_workflow_file\":\"slack-reaction-intake.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-reaction-intake.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-reaction-intake.md",
+      "commit_sha": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+      "authored_at": "2026-06-11T23:15:04Z",
+      "committed_at": "2026-06-11T23:15:04Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "Chris Butler",
+      "committer_email": "chrizbo@gmail.com",
+      "committer_login": "chrizbo",
+      "committer_account_type": "User",
+      "message": "Align agentic workflows with public preview",
+      "parent_shas": [
+        "a24608637f521950641e8d29c56af54210f3a36b"
+      ],
+      "tree_sha": "661559c203ddf131009f00dc7bba3bd3042f8418",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-reaction-intake.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-reaction-intake.md",
+          "commit_sha": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+          "committed_at": "2026-06-11T23:15:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "",
+          "snapshot_ref": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+          "snapshot_blob_sha": "1a7d63b88b49402ac9bd9812931419e068777e5d",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__f2f40e1eb40456327ac1afd92f6a54229d6d278e__slack-reaction-intake.md",
+          "snapshot_bytes": 4897,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-reaction-intake.lock.yml\",\"generated_workflow_file\":\"slack-reaction-intake.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-reaction-intake.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

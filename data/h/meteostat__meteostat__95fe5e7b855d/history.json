@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "meteostat/meteostat:.github/workflows/bug-reproducer.md",
+    "source_full_name": "meteostat/meteostat",
+    "source_owner": "meteostat",
+    "source_repo": "meteostat",
+    "md_path": ".github/workflows/bug-reproducer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/meteostat/meteostat/blob/HEAD/.github/workflows/bug-reproducer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "meteostat/meteostat",
+      "generated_owner": "meteostat",
+      "generated_repo": "meteostat",
+      "generated_workflow_path": ".github/workflows/bug-reproducer.lock.yml",
+      "generated_workflow_file": "bug-reproducer.lock.yml",
+      "generated_html_url": "https://github.com/meteostat/meteostat/blob/9e1b3be36188152971c5b622497aa04b3a17f5f5/.github/workflows/bug-reproducer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:09+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "meteostat/meteostat:.github/workflows/bug-reproducer.md",
+      "source_full_name": "meteostat/meteostat",
+      "md_path": ".github/workflows/bug-reproducer.md",
+      "commit_sha": "4e625addc28fe1bf3ccb404d9fefd251d05e99d2",
+      "authored_at": "2026-02-14T18:09:57Z",
+      "committed_at": "2026-02-14T18:09:57Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add agentic workflow for automated bug reproduction (#284)\n\n* Initial plan\n\n* Add bug reproduction workflow\n\nCo-authored-by: clampr <12759785+clampr@users.noreply.github.com>\n\n* Fix bug reproducer workflow: use github.workspace and check for confirmed label\n\nCo-authored-by: clampr <12759785+clampr@users.noreply.github.com>\n\n* Improve security considerations with specific guidance\n\nCo-authored-by: clampr <12759785+clampr@users.noreply.github.com>\n\n* chore: update agent workflows\n\n* increase limits\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: clampr <12759785+clampr@users.noreply.github.com>\nCo-authored-by: clampr <christian.lamprecht@aol.de>",
+      "parent_shas": [
+        "51013f08e97121e81d52e809f05a9a105b700398"
+      ],
+      "tree_sha": "1e2a222c21b4fef16de1540e60c2d30c3f329472",
+      "html_url": "https://github.com/meteostat/meteostat/commit/4e625addc28fe1bf3ccb404d9fefd251d05e99d2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "meteostat/meteostat:.github/workflows/bug-reproducer.md",
+          "source_full_name": "meteostat/meteostat",
+          "md_path": ".github/workflows/bug-reproducer.md",
+          "commit_sha": "4e625addc28fe1bf3ccb404d9fefd251d05e99d2",
+          "committed_at": "2026-02-14T18:09:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 175,
+          "file_deletions": 0,
+          "file_changes": 175,
+          "file_patch": "@@ -0,0 +1,175 @@\n+---\n+description: Automatically reproduce bugs labeled with 'bug' and confirm or close them\n+on:\n+  issues:\n+    types: [labeled, opened]\n+roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+safe-outputs:\n+  add-comment:\n+    max: 10\n+  add-labels:\n+    allowed:\n+      - confirmed\n+    max: 10\n+  close-issue:\n+    max: 10\n+---\n+\n+# Bug Reproducer Agent\n+\n+You are an AI agent that attempts to reproduce bugs reported in issues labeled with \"bug\" in the ${{ github.repository }} repository.\n+\n+## Your Task\n+\n+When an issue is labeled with \"bug\" or opened with the \"bug\" label:\n+\n+1. **Check Prerequisites**: First verify:\n+   - The issue has the \"bug\" label\n+   - The issue does NOT already have the \"confirmed\" label (skip if already confirmed)\n+   - If these conditions aren't met, call the `noop` safe output\n+2. **Analyze the Issue**: Read the issue title and body carefully to understand the bug report\n+3. **Extract Code**: Look for code snippets or examples in the issue that demonstrate the bug\n+4. **Attempt Reproduction**: Try to reproduce the bug by:\n+   - Creating a test script based on the provided code\n+   - Installing necessary dependencies using `poetry install --all-groups`\n+   - Running the code and observing the behavior\n+   - Comparing expected vs actual results\n+5. **Report Results**: Based on your reproduction attempt:\n+   - **If reproducible**: Add a comment with reproduction details and add the \"confirmed\" label\n+   - **If not reproducible**: Add a comment explaining why it couldn't be reproduced and close the issue\n+\n+## Environment Setup\n+\n+This is a Python library using Poetry for dependency management. Before attempting reproduction:\n+\n+```bash\n+cd ${{ github.workspace }}\n+poetry install --all-groups\n+```\n+\n+## Reproduction Guidelines\n+\n+### Code Extraction\n+- Look for Python code blocks in the issue (marked with ```python)\n+- Extract imports, setup code, and the minimal example\n+- If no code is provided, check if the issue describes steps to reproduce\n+\n+### Running the Code\n+- Create a temporary test script in `/tmp/bug_reproduction_<issue_number>.py`\n+- Use `poetry run python /tmp/bug_reproduction_<issue_number>.py` to execute\n+- Capture both stdout and stderr\n+- Note any errors, tracebacks, or unexpected behavior\n+\n+### Common Meteostat Patterns\n+The library typically follows these patterns:\n+- Point objects: `ms.Point(lat, lon, elevation)`\n+- Getting data: `ms.daily()`, `ms.hourly()`, `ms.monthly()`\n+- Station queries: `ms.stations.nearby()`, `ms.stations.fetch()`\n+- Data fetching: `.fetch()` method on timeseries objects\n+- Interpolation: `ms.interpolate(timeseries, point)`\n+\n+### Handling Dependencies\n+- The library requires pandas, requests, pytz (automatically installed with poetry)\n+- Some examples may use matplotlib for plotting (skip plotting if not essential)\n+- Network access is needed for data providers\n+\n+## Comment Templates\n+\n+### If Bug is Confirmed\n+\n+Use the add-comment safe output with:\n+\n+```markdown\n+### 🐛 Bug Confirmed\n+\n+I was able to reproduce this issue. Here are the details:\n+\n+**Environment:**\n+- Meteostat version: [version from pyproject.toml]\n+- Python version: [version used]\n+\n+**Reproduction Steps:**\n+[Steps taken to reproduce]\n+\n+**Observed Behavior:**\n+[What actually happened - include error messages, tracebacks, or unexpected output]\n+\n+**Expected Behavior:**\n+[What should have happened based on the issue description]\n+\n+**Additional Notes:**\n+[Any additional observations or context]\n+\n+I'm adding the **confirmed** label to this issue.\n+```\n+\n+Then use the add-labels safe output to add the \"confirmed\" label.\n+\n+### If Bug Cannot Be Reproduced\n+\n+Use the add-comment safe output with:\n+\n+```markdown\n+### ✅ Unable to Reproduce\n+\n+I attempted to reproduce this issue but was unable to confirm the bug. Here's what I tried:\n+\n+**Environment:**\n+- Meteostat version: [version from pyproject.toml]\n+- Python version: [version used]\n+\n+**Reproduction Attempt:**\n+[Steps taken to reproduce]\n+\n+**Observed Behavior:**\n+[What actually happened - should match expected behavior]\n+\n+**Possible Reasons:**\n+- The issue may have already been fixed in the current version\n+- The issue might require specific conditions not mentioned in the report\n+- The provided code example might be incomplete or incorrect\n+- [Other specific reasons based on your analysis]\n+\n+**Recommendations:**\n+- Please verify if this issue still occurs with the latest version\n+- If the issue persists, please provide more details about your environment and steps to reproduce\n+- Feel free to reopen this issue with additional information if needed\n+\n+Closing this issue as it cannot be reproduced. If you can provide more details or if this issue persists, please reopen or create a new issue.\n+```\n+\n+Then use the close-issue safe output to close the issue.\n+\n+## Important Notes\n+\n+- **Only process issues with the \"bug\" label** - Check that the triggering issue has the \"bug\" label\n+- **Skip issues that already have \"confirmed\" label** - Don't re-process confirmed bugs\n+- **Be thorough but efficient** - Focus on the minimal reproduction case\n+- **Handle errors gracefully** - If you encounter errors during reproduction, document them clearly\n+- **Respect the environment** - Clean up temporary files after reproduction\n+- **Network requirements** - The library needs network access to fetch weather data from providers\n+\n+## Safe Outputs\n+\n+When you successfully complete your work:\n+- If you confirmed the bug: Use `add-comment` with details, then `add-labels` to add \"confirmed\"\n+- If you couldn't reproduce: Use `add-comment` with explanation, then `close-issue`\n+- **If the issue doesn't have the \"bug\" label or is already confirmed**: Call the `noop` safe output with a message explaining why no action was taken\n+\n+## Security Considerations\n+\n+- **Only run code from issues** - Don't fetch external scripts or download files from URLs\n+- **Use temporary directories** - Create test files in `/tmp/` to isolate them from the repository\n+- **Don't expose sensitive information** - Don't include environment variables, API keys, or system paths in comments\n+- **Be cautious with resource usage** - Set reasonable timeouts for test scripts to prevent infinite loops or excessive resource consumption\n+- **Avoid destructive operations** - Don't run code that:\n+  - Modifies files outside `/tmp/`\n+  - Makes network requests to external services beyond what's needed for testing\n+  - Attempts to access or modify system resources\n+  - Could consume excessive memory or CPU",
+          "snapshot_ref": "4e625addc28fe1bf3ccb404d9fefd251d05e99d2",
+          "snapshot_blob_sha": "86be12eac8a16775c354e73b91f1b72dbe0ac012",
+          "snapshot_file": "snapshots/meteostat__meteostat__4e625addc28fe1bf3ccb404d9fefd251d05e99d2__bug-reproducer.md",
+          "snapshot_bytes": 6449,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meteostat/meteostat\",\"generated_owner\":\"meteostat\",\"generated_repo\":\"meteostat\",\"generated_workflow_path\":\".github/workflows/bug-reproducer.lock.yml\",\"generated_workflow_file\":\"bug-reproducer.lock.yml\",\"generated_html_url\":\"https://github.com/meteostat/meteostat/blob/9e1b3be36188152971c5b622497aa04b3a17f5f5/.github/workflows/bug-reproducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "meteostat/meteostat:.github/workflows/bug-reproducer.md",
+      "source_full_name": "meteostat/meteostat",
+      "md_path": ".github/workflows/bug-reproducer.md",
+      "commit_sha": "27f17ce94033c3917bf77a66a52d8e68481bb43d",
+      "authored_at": "2026-02-14T18:12:12Z",
+      "committed_at": "2026-02-14T18:12:12Z",
+      "author_name": "clampr",
+      "author_email": "christian.lamprecht@aol.de",
+      "author_login": "clampr",
+      "author_account_type": "User",
+      "committer_name": "clampr",
+      "committer_email": "christian.lamprecht@aol.de",
+      "committer_login": "clampr",
+      "committer_account_type": "User",
+      "message": "fix: add workflow dispatch",
+      "parent_shas": [
+        "4e625addc28fe1bf3ccb404d9fefd251d05e99d2"
+      ],
+      "tree_sha": "d146d06f354070e18b32dc299ee6b65801e1746b",
+      "html_url": "https://github.com/meteostat/meteostat/commit/27f17ce94033c3917bf77a66a52d8e68481bb43d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "meteostat/meteostat:.github/workflows/bug-reproducer.md",
+          "source_full_name": "meteostat/meteostat",
+          "md_path": ".github/workflows/bug-reproducer.md",
+          "commit_sha": "27f17ce94033c3917bf77a66a52d8e68481bb43d",
+          "committed_at": "2026-02-14T18:12:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -3,6 +3,7 @@ description: Automatically reproduce bugs labeled with 'bug' and confirm or clos\n on:\n   issues:\n     types: [labeled, opened]\n+  workflow_dispatch: null\n roles: all\n permissions:\n   contents: read",
+          "snapshot_ref": "27f17ce94033c3917bf77a66a52d8e68481bb43d",
+          "snapshot_blob_sha": "c0795d6fb271370002f6ac8b9a701ffbda5a45c4",
+          "snapshot_file": "snapshots/meteostat__meteostat__27f17ce94033c3917bf77a66a52d8e68481bb43d__bug-reproducer.md",
+          "snapshot_bytes": 6475,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meteostat/meteostat\",\"generated_owner\":\"meteostat\",\"generated_repo\":\"meteostat\",\"generated_workflow_path\":\".github/workflows/bug-reproducer.lock.yml\",\"generated_workflow_file\":\"bug-reproducer.lock.yml\",\"generated_html_url\":\"https://github.com/meteostat/meteostat/blob/9e1b3be36188152971c5b622497aa04b3a17f5f5/.github/workflows/bug-reproducer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

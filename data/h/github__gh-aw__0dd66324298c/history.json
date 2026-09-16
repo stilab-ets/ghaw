@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/daily-go-test-parallelizer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/daily-go-test-parallelizer.lock.yml",
+      "generated_workflow_file": "daily-go-test-parallelizer.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-go-test-parallelizer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T11:42:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+      "commit_sha": "bf7f1e5d3a297c2aba57775f0083c9e77986b36a",
+      "authored_at": "2026-07-27T04:58:37Z",
+      "committed_at": "2026-07-27T04:58:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add daily Go test parallelizer workflow (#48274)",
+      "parent_shas": [
+        "870215a79912f85171230e5ffac272a2e0d406d6"
+      ],
+      "tree_sha": "9af7802dd9ec80227393160c9a4ab7ef4b2514a4",
+      "html_url": "https://github.com/github/gh-aw/commit/bf7f1e5d3a297c2aba57775f0083c9e77986b36a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+          "commit_sha": "bf7f1e5d3a297c2aba57775f0083c9e77986b36a",
+          "committed_at": "2026-07-27T04:58:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 81,
+          "file_deletions": 0,
+          "file_changes": 81,
+          "file_patch": "@@ -0,0 +1,81 @@\n+---\n+private: true\n+name: Daily Go Test Parallelizer\n+description: Adds t.Parallel to safe Go tests using daily round-robin analysis\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+  skip-if-match: 'is:pr is:open in:title \"[test-parallel]\"'\n+permissions:\n+  contents: read\n+  pull-requests: read\n+strict: true\n+timeout-minutes: 30\n+network:\n+  allowed:\n+    - defaults\n+    - go\n+sandbox:\n+  agent:\n+    sudo: false\n+tools:\n+  cache-memory:\n+    retention-days: 30\n+    allowed-extensions: [\".json\"]\n+  edit:\n+  bash:\n+    - \"*\"\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[test-parallel] \"\n+    labels: [automation, testing]\n+    draft: true\n+    expires: 3d\n+    if-no-changes: ignore\n+    protected-files: blocked\n+    allowed-files:\n+      - \"**/*_test.go\"\n+    max-patch-files: 1\n+    max-patch-size: 2048\n+  noop:\n+---\n+\n+# Daily Go Test Parallelizer\n+\n+Analyze one Go test file per run and add `t.Parallel()` only where parallel execution is demonstrably safe.\n+\n+## Select a file\n+\n+1. Use `grep` to list tracked `*_test.go` files containing top-level `Test` functions. Exclude `vendor/` and generated files, then sort paths lexicographically.\n+2. Read `/tmp/gh-aw/cache-memory/go-test-parallelizer/state.json` when it exists. It has this shape:\n+   `{\"last_file\":\"path/to/file_test.go\"}`.\n+3. Select the path after `last_file`, wrapping to the first path. If the cache is absent, malformed, or names a removed file, select the first path.\n+4. Analyze and modify at most that one file.\n+\n+## Analyze safety\n+\n+Add `t.Parallel()` at the start of eligible top-level tests. Also add it to eligible table-driven subtests when loop variables are safely captured.\n+\n+Do not parallelize tests that use or may conflict through:\n+\n+- `t.Setenv`, `os.Setenv`, `os.Chdir`, or other process-wide state\n+- shared mutable globals, singleton state, ordering assumptions, or package-level mocks\n+- fixed ports, fixed filesystem paths, shared databases, or shared external services\n+- unsafe loop-variable capture, timing dependencies, or explicit synchronization between tests\n+\n+Do not change assertions, test behavior, production code, dependencies, generated files, or vendored files. When safety is uncertain, make no change.\n+\n+## Validate\n+\n+After editing:\n+\n+1. Run the selected package with the race detector.\n+2. Run `go test ./...`.\n+3. Inspect the diff and confirm it contains only safe `t.Parallel()` additions in the selected file.\n+4. Revert the edit and use `noop` if either test command fails or the diff contains any other change.\n+\n+## Persist and report\n+\n+Always create `/tmp/gh-aw/cache-memory/go-test-parallelizer/` and write the selected path to `state.json`, even when no edit is safe, so the next daily run advances round-robin.\n+\n+If validation succeeds with a change, create one draft pull request describing the safety analysis and test results. Otherwise use `noop` with the selected path and a short reason.",
+          "snapshot_ref": "bf7f1e5d3a297c2aba57775f0083c9e77986b36a",
+          "snapshot_blob_sha": "3696fc4d6154e71bb330b6f5fed6393ab9261a47",
+          "snapshot_file": "snapshots/gh-aw__github__bf7f1e5d3a297c2aba57775f0083c9e77986b36a__daily-go-test-parallelizer.md",
+          "snapshot_bytes": 2864,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-go-test-parallelizer.lock.yml\",\"generated_workflow_file\":\"daily-go-test-parallelizer.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-go-test-parallelizer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+      "commit_sha": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+      "authored_at": "2026-07-30T07:02:05Z",
+      "committed_at": "2026-07-30T07:02:05Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable evals on 20 more workflows (#49078)",
+      "parent_shas": [
+        "9a9a67ff1b759de97722da8333824856fecaf039"
+      ],
+      "tree_sha": "626271d8ec79778c279ed9b99fbf769f3b7f18f8",
+      "html_url": "https://github.com/github/gh-aw/commit/8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+          "commit_sha": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+          "committed_at": "2026-07-30T07:02:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -38,6 +38,11 @@ safe-outputs:\n     max-patch-files: 1\n     max-patch-size: 2048\n   noop:\n+evals:\n+  - id: tests_analyzed\n+    question: Did the agent analyze Go tests to identify a safe candidate for t.Parallel?\n+  - id: pr_created_or_noop\n+    question: Did the agent create a pull request for a safe test change, or use noop when no safe change was available?\n ---\n \n # Daily Go Test Parallelizer",
+          "snapshot_ref": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+          "snapshot_blob_sha": "4b5ac7e6a70aa117c926b43b9d0d0b98202f21a8",
+          "snapshot_file": "snapshots/gh-aw__github__8fcdd9f048c3f75a5046372f4000abef92cdac1b__daily-go-test-parallelizer.md",
+          "snapshot_bytes": 3132,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-go-test-parallelizer.lock.yml\",\"generated_workflow_file\":\"daily-go-test-parallelizer.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-go-test-parallelizer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+      "commit_sha": "762694e90f6ce3ba62efa8b054827ec2a0da72ff",
+      "authored_at": "2026-08-03T12:46:13Z",
+      "committed_at": "2026-08-03T12:46:13Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Batch Daily Go Test Parallelizer to process up to 5 files per run (#49960)",
+      "parent_shas": [
+        "144da856603cf536350502551f89c1aa26948c6e"
+      ],
+      "tree_sha": "f070dc1aacb6b9ef4335ffb646066c085ad33771",
+      "html_url": "https://github.com/github/gh-aw/commit/762694e90f6ce3ba62efa8b054827ec2a0da72ff",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-go-test-parallelizer.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-go-test-parallelizer.md",
+          "commit_sha": "762694e90f6ce3ba62efa8b054827ec2a0da72ff",
+          "committed_at": "2026-08-03T12:46:13Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 29,
+          "file_deletions": 10,
+          "file_changes": 39,
+          "file_patch": "@@ -35,7 +35,7 @@ safe-outputs:\n     protected-files: blocked\n     allowed-files:\n       - \"**/*_test.go\"\n-    max-patch-files: 1\n+    max-patch-files: 25\n     max-patch-size: 2048\n   noop:\n evals:\n@@ -47,20 +47,29 @@ evals:\n \n # Daily Go Test Parallelizer\n \n-Analyze one Go test file per run and add `t.Parallel()` only where parallel execution is demonstrably safe.\n+Analyze up to twenty-five Go test files per run and add `t.Parallel()` only where parallel execution is demonstrably safe.\n \n ## Select a file\n \n 1. Use `grep` to list tracked `*_test.go` files containing top-level `Test` functions. Exclude `vendor/` and generated files, then sort paths lexicographically.\n 2. Read `/tmp/gh-aw/cache-memory/go-test-parallelizer/state.json` when it exists. It has this shape:\n    `{\"last_file\":\"path/to/file_test.go\"}`.\n-3. Select the path after `last_file`, wrapping to the first path. If the cache is absent, malformed, or names a removed file, select the first path.\n-4. Analyze and modify at most that one file.\n+3. Select up to 25 consecutive paths starting after `last_file`, wrapping to the first path. If the cache is absent, malformed, or names a removed file, start from the first path.\n+4. Analyze and modify only this selected batch (maximum 25 files).\n+5. Minimize token usage: avoid re-reading files you already analyzed, and do not paste full file contents into notes or outputs.\n \n ## Analyze safety\n \n Add `t.Parallel()` at the start of eligible top-level tests. Also add it to eligible table-driven subtests when loop variables are safely captured.\n \n+## Inline analysis agents (small context)\n+\n+1. For each selected path, call `parallel-safety-checker` exactly once with only that file path and the safety rules from this workflow.\n+2. Dispatch these inline agent calls in one parallel tool-use block when possible. If not possible, dispatch in small batches of 5.\n+3. Require compact JSON output from each sub-agent:\n+   `{\"file\":\"...\",\"safe\":true|false,\"reasons\":[\"...\"],\"candidate_tests\":[\"TestName\"]}`.\n+4. Use the JSON results to decide which files to edit. Keep aggregation notes short and avoid repeating unchanged rule text.\n+\n Do not parallelize tests that use or may conflict through:\n \n - `t.Setenv`, `os.Setenv`, `os.Chdir`, or other process-wide state\n@@ -72,15 +81,25 @@ Do not change assertions, test behavior, production code, dependencies, generate\n \n ## Validate\n \n-After editing:\n+After editing the selected batch:\n \n-1. Run the selected package with the race detector.\n-2. Run `go test ./...`.\n-3. Inspect the diff and confirm it contains only safe `t.Parallel()` additions in the selected file.\n-4. Revert the edit and use `noop` if either test command fails or the diff contains any other change.\n+1. Run `go test -race` once per unique modified package (deduplicate package paths across edited files).\n+2. Run `go test ./...` once after all candidate edits.\n+3. Inspect the diff and confirm it contains only safe `t.Parallel()` additions in selected files.\n+4. Revert the edit and use `noop` if any test command fails or the diff contains any other change.\n \n ## Persist and report\n \n-Always create `/tmp/gh-aw/cache-memory/go-test-parallelizer/` and write the selected path to `state.json`, even when no edit is safe, so the next daily run advances round-robin.\n+Always create `/tmp/gh-aw/cache-memory/go-test-parallelizer/` and write the last path from the selected batch to `state.json`, even when no edit is safe, so the next daily run advances round-robin.\n \n If validation succeeds with a change, create one draft pull request describing the safety analysis and test results. Otherwise use `noop` with the selected path and a short reason.\n+\n+## agent: `parallel-safety-checker`\n+---\n+description: Review one Go test file for safe t.Parallel additions with minimal context\n+model: gpt-5-mini\n+---\n+Given one `*_test.go` file path, read only that file and apply this workflow's safety rules.\n+Return compact JSON only in this exact shape:\n+`{\"file\":\"...\",\"safe\":true|false,\"reasons\":[\"...\"],\"candidate_tests\":[\"TestName\"]}`.\n+Set `safe` to false when uncertain.",
+          "snapshot_ref": "762694e90f6ce3ba62efa8b054827ec2a0da72ff",
+          "snapshot_blob_sha": "816c20fa03bcb80bf111c3a47c9ea2e29657a806",
+          "snapshot_file": "snapshots/gh-aw__github__762694e90f6ce3ba62efa8b054827ec2a0da72ff__daily-go-test-parallelizer.md",
+          "snapshot_bytes": 4436,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-go-test-parallelizer.lock.yml\",\"generated_workflow_file\":\"daily-go-test-parallelizer.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-go-test-parallelizer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "EvergineTeam/Meshoptimizer.NET:.github/workflows/ci-doctor.md",
+    "source_full_name": "EvergineTeam/Meshoptimizer.NET",
+    "source_owner": "EvergineTeam",
+    "source_repo": "Meshoptimizer.NET",
+    "md_path": ".github/workflows/ci-doctor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/EvergineTeam/Meshoptimizer.NET/blob/HEAD/.github/workflows/ci-doctor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "EvergineTeam/Meshoptimizer.NET",
+      "generated_owner": "EvergineTeam",
+      "generated_repo": "Meshoptimizer.NET",
+      "generated_workflow_path": ".github/workflows/ci-doctor.lock.yml",
+      "generated_workflow_file": "ci-doctor.lock.yml",
+      "generated_html_url": "https://github.com/EvergineTeam/Meshoptimizer.NET/blob/7c4629480bf71285ad48280108a4f894c9f73e78/.github/workflows/ci-doctor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "excluded_bot": 1
+    },
+    "collected_at_utc": "2026-08-04T11:26:59+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "EvergineTeam/Meshoptimizer.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/Meshoptimizer.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "2ba6c3c0d4d0fa7d18277cfa7cecf558d712b1aa",
+      "authored_at": "2026-08-03T09:13:10Z",
+      "committed_at": "2026-08-03T09:13:10Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: run the ci-doctor and binding-updater agents (#5)\n\nMeshoptimizer.NET consumed the toolbox's reusable workflows but had no agents of\nits own, so a failure here had nobody looking at it and a generator that choked\non a new construct would just stop the CD.\n\nBoth agents plus the weekly toolbox updater, matching the other four. Pinned to\nv1.11.3, the release whose ci-doctor can actually push a fix -- earlier ones\ndiagnosed correctly and then fell back to an issue.",
+      "parent_shas": [
+        "56f1b5a39a154c8437698a67a9474899b568bee5"
+      ],
+      "tree_sha": "480484511cf701e433db4a318939656e0db500a9",
+      "html_url": "https://github.com/EvergineTeam/Meshoptimizer.NET/commit/2ba6c3c0d4d0fa7d18277cfa7cecf558d712b1aa",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/Meshoptimizer.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/Meshoptimizer.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "2ba6c3c0d4d0fa7d18277cfa7cecf558d712b1aa",
+          "committed_at": "2026-08-03T09:13:10Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 122,
+          "file_deletions": 0,
+          "file_changes": 122,
+          "file_patch": "@@ -0,0 +1,122 @@\n+---\n+emoji: 🩺\n+name: CI Doctor\n+description: Triages failed CI/CD runs in a binding repository and fixes workflow configuration problems.\n+labels: [bindings, maintenance, reactive]\n+on:\n+  workflow_run:\n+    workflows: [\"CI\", \"CD\", \"Sync standards\"]\n+    types: [completed]\n+    branches: [main]\n+  workflow_dispatch:\n+if: contains(fromJson('[\"failure\",\"timed_out\"]'), github.event.workflow_run.conclusion)\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+model: claude-sonnet-5\n+max-turns: 25\n+max-ai-credits: 150\n+network:\n+  allowed: [defaults, github]\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+safe-outputs:\n+  # The doctor's whole job is editing workflow configuration, and GITHUB_TOKEN\n+  # may not write under .github/workflows/ -- that permission is App-only. Without\n+  # this the pull request fails and degrades to an issue carrying a manual link.\n+  github-app:\n+    client-id: ${{ vars.APP_CLIENT_ID }}\n+    private-key: ${{ secrets.APP_PRIVATE_KEY }}\n+  create-pull-request:\n+    title-prefix: \"fix(ci): \"\n+    labels: [agent:ci-fix]\n+    allow-workflows: true\n+    # Two independent gates guard the patch, and both must pass. `allowed-files`\n+    # is an exclusive allowlist: nothing outside these globs can ever be written,\n+    # not even ordinary source. `protected-files` is a separate policy covering\n+    # manifests, instruction files and everything under a top-level dot folder --\n+    # which is all of `.github/`, so it applies to every fix this agent exists to\n+    # make. Its default (`request_review`) cannot be honoured on this path: with a\n+    # GitHub App the push goes through the signed-commit API, which has no way to\n+    # open a pull request and then ask for changes, so it refuses outright and the\n+    # run degrades to an issue carrying a patch bundle.\n+    #\n+    # `allowed` lifts the second gate only. The first still confines the agent to\n+    # workflow files, and the pull request is reviewed by a human before merge --\n+    # which is where that judgement belongs, rather than blocking the proposal.\n+    protected-files: allowed\n+    allowed-files:\n+      - \".github/workflows/**\"\n+    draft: false\n+    if-no-changes: \"ignore\"\n+  create-issue:\n+    title-prefix: \"CI failure: \"\n+    labels: [agent:needs-human]\n+    allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n+    deduplicate-by-title: true\n+    max: 1\n+source: EvergineTeam/Evergine.Bindings@c6cb3217e05c978d287831bef05895075c263dfa\n+---\n+\n+# CI Doctor\n+\n+A workflow in this binding repository has failed. Diagnose it, and either fix it or hand it to whoever — human or agent — can.\n+\n+You are the **infrastructure** half of this repository's automation. The dividing line is sharp and you must not cross it:\n+\n+- **Yours**: anything under `.github/`. Workflow configuration, branch names, action refs, missing inputs, expired or absent secrets, runner problems, transient network failures.\n+- **Not yours**: anything under the generator directory or the generated output. If the fix belongs in C# code, you hand it off — you never edit it.\n+\n+Read `binding.yml` at the repository root first. It tells you which paths are generator source and which are generated output, so you can tell which side of that line a failure falls on.\n+\n+## What to do\n+\n+**1. Get the facts.** Fetch the failed run's logs and identify the job and step that failed, and the first error that is a cause rather than a consequence. A cascade of downstream errors usually has one real origin near the top.\n+\n+**2. Derive a failure key** of the form `<workflow>:<job>:<step>:<error-signature>`. The signature must be stable across runs: strip run numbers, timestamps, temporary paths and SHAs. `git fetch origin +refs/heads/main*` and `git fetch origin +refs/heads/feature-x*` are the same signature.\n+\n+**3. Check for an existing open issue with that key before writing anything.** If one exists, call `noop`. Thirteen repositories sharing one recurring fault must not produce thirteen issues per run.\n+\n+**4. Classify and act.** Exactly one of:\n+\n+### Workflow configuration → open a pull request\n+\n+A wrong branch name, a reusable workflow pointing at a ref that no longer resolves, a malformed or missing input, a typo. These are yours to fix. Keep the diff minimal — change what is broken and nothing else. In the pull request body, state what failed, why, and what the change does.\n+\n+Do not \"improve\" the workflow while you are in there. A pull request that fixes one line gets merged in a minute; one that also reorganises the file waits for a review that may never come.\n+\n+### Transient infrastructure → re-run once, then escalate\n+\n+Network timeouts, runner allocation failures, 5xx from nuget.org, rate limits. Re-run the failed workflow once. If the re-run succeeds, call `noop`: a flake that self-recovered is not worth a human's attention. If it fails again the same way, it is not a flake — open an issue with `agent:needs-human`.\n+\n+Never open a pull request for a transient failure. There is nothing to fix.\n+\n+### The generator or the specification → hand off\n+\n+The build failed because the generator cannot handle something new in the upstream specification, or because the generated code no longer compiles. Open an issue labelled **`agent:needs-regen`**.\n+\n+That label is not documentation, it is a trigger: it wakes the binding updater, which owns the generator. Say precisely what you found — the failing construct, the file, the compiler error — because the next agent starts from your issue and nothing else.\n+\n+### Upstream broke compatibility → stop\n+\n+The upstream specification changed in a way that cannot be absorbed by regenerating. Open an issue labelled **`agent:upstream-break`** and stop.\n+\n+This is a terminal state for automation, deliberately. Whether to adapt, pin to the previous version, or raise it upstream is a product decision. Lay out what changed and what the options are; do not choose.\n+\n+### Anything else → say so plainly\n+\n+If you cannot determine the cause with confidence, open an issue labelled `agent:needs-human` containing the failing job and step, the relevant log excerpt, your best hypothesis marked clearly as a hypothesis, and the exact commands to reproduce locally. A truthful \"I do not know, here is what I found\" is far more useful than a confident wrong diagnosis that sends someone down the wrong path for an afternoon.\n+\n+## Rules\n+\n+- **Never touch the default branch.** Every change goes through a pull request.\n+- **Never edit generator source or generated output.** That is the updater's job, and the boundary is what keeps both agents predictable.\n+- **Do not react to your own work.** If the failed run was triggered by an agent branch (`agent/*`) or by a bot actor, call `noop`. An agent that triages its own output loops, and loops cost money.\n+- **One intervention per failure.** Either a pull request, or a re-run, or an issue. Never several.\n+- **Report what you did not do.** If you fixed one problem but noticed another outside your remit, say so in the pull request body rather than silently widening the change.",
+          "snapshot_ref": "2ba6c3c0d4d0fa7d18277cfa7cecf558d712b1aa",
+          "snapshot_blob_sha": "0cdf3f4af4b4b2493cfed26e34be51f04e099e72",
+          "snapshot_file": "snapshots/Meshoptimizer.NET__EvergineTeam__2ba6c3c0d4d0fa7d18277cfa7cecf558d712b1aa__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/Meshoptimizer.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"Meshoptimizer.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/Meshoptimizer.NET/blob/7c4629480bf71285ad48280108a4f894c9f73e78/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/Meshoptimizer.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/Meshoptimizer.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "7c4629480bf71285ad48280108a4f894c9f73e78",
+      "authored_at": "2026-08-03T16:41:56Z",
+      "committed_at": "2026-08-03T16:41:56Z",
+      "author_name": "evergine-bindings-automation[bot]",
+      "author_email": "312213894+evergine-bindings-automation[bot]@users.noreply.github.com",
+      "author_login": "evergine-bindings-automation[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to the current toolbox release (#7)\n\nRepins the installed agentic workflows from\nc6cb3217e05c978d287831bef05895075c263dfa to\nd70d06b5525a011b293f81d5de14fd329eb36832 and recompiles.\n\nCo-authored-by: jcant0n <1783366+jcant0n@users.noreply.github.com>",
+      "parent_shas": [
+        "ca763c984897c7d6969fc4f029fabe5863fbd6c4"
+      ],
+      "tree_sha": "d6114d6e3cc87e7c711a888b711d56f32305dcbc",
+      "html_url": "https://github.com/EvergineTeam/Meshoptimizer.NET/commit/7c4629480bf71285ad48280108a4f894c9f73e78",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:evergine-bindings-automation[bot];312213894+evergine-bindings-automation[bot]@users.noreply.github.com;evergine-bindings-automation[bot]",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/Meshoptimizer.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/Meshoptimizer.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "7c4629480bf71285ad48280108a4f894c9f73e78",
+          "committed_at": "2026-08-03T16:41:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -61,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@c6cb3217e05c978d287831bef05895075c263dfa\n+source: EvergineTeam/Evergine.Bindings@d70d06b5525a011b293f81d5de14fd329eb36832\n ---\n \n # CI Doctor",
+          "snapshot_ref": "7c4629480bf71285ad48280108a4f894c9f73e78",
+          "snapshot_blob_sha": "6db3a244042e2362d5e7add32ca91b92d8a382a7",
+          "snapshot_file": "snapshots/Meshoptimizer.NET__EvergineTeam__7c4629480bf71285ad48280108a4f894c9f73e78__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/Meshoptimizer.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"Meshoptimizer.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/Meshoptimizer.NET/blob/7c4629480bf71285ad48280108a4f894c9f73e78/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

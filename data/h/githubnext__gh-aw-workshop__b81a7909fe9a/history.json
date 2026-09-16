@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+    "source_full_name": "githubnext/gh-aw-workshop",
+    "source_owner": "githubnext",
+    "source_repo": "gh-aw-workshop",
+    "md_path": ".github/workflows/workflow-skills-editor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/gh-aw-workshop/blob/HEAD/.github/workflows/workflow-skills-editor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/gh-aw-workshop",
+      "generated_owner": "githubnext",
+      "generated_repo": "gh-aw-workshop",
+      "generated_workflow_path": ".github/workflows/workflow-skills-editor.lock.yml",
+      "generated_workflow_file": "workflow-skills-editor.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workflow-skills-editor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:49:18+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workflow-skills-editor.md",
+      "commit_sha": "59283663651a9a77be3ce0923901b6f8d240d9ed",
+      "authored_at": "2026-07-11T15:41:33Z",
+      "committed_at": "2026-07-11T15:41:33Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add daily workflow prompt editor and route it through the workshop orchestrator (#137)",
+      "parent_shas": [
+        "a7b749cb945febd79b9003096ee9d99b3bca232e"
+      ],
+      "tree_sha": "cc834c074da13813f2384e8c17a6fcc93555d628",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/59283663651a9a77be3ce0923901b6f8d240d9ed",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workflow-skills-editor.md",
+          "commit_sha": "59283663651a9a77be3ce0923901b6f8d240d9ed",
+          "committed_at": "2026-07-11T15:41:33Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 171,
+          "file_deletions": 0,
+          "file_changes": 171,
+          "file_patch": "@@ -0,0 +1,171 @@\n+---\n+emoji: ✂️\n+name: Workflow Skills Editor\n+description: Daily workflow editor that trims workflow prompt bloat, removes duplication, and aligns workflow source content with GitHub Skills lesson tone.\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+    inputs:\n+      focus:\n+        description: \"Optional workflow improvement hint (for example: tone, duplication, structure, validation)\"\n+        required: false\n+        type: string\n+  skip-if-match: \"is:pr is:open label:workflow-editor\"\n+permissions:\n+  contents: read\n+  actions: read\n+  copilot-requests: write\n+  pull-requests: read\n+  issues: read\n+tools:\n+  agentic-workflows:\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[workflow-editor] \"\n+    labels: [workflow-editor, documentation]\n+    draft: true\n+    protected-files:\n+      policy: request_review\n+    allowed-files:\n+      - \".github/workflows/*.md\"\n+      - \".github/workflows/*.lock.yml\"\n+    if-no-changes: warn\n+network:\n+  allowed:\n+    - defaults\n+steps:\n+  - name: Gather workflow prompt state\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/data\n+      python3 <<'PY'\n+      import collections\n+      import json\n+      import pathlib\n+      import re\n+\n+      workflow_dir = pathlib.Path(\".github/workflows\")\n+      files = sorted(p for p in workflow_dir.glob(\"*.md\"))\n+\n+      paragraph_splitter = re.compile(r\"\\n\\s*\\n+\")\n+      heading_re = re.compile(r\"^##+\\s+\", re.MULTILINE)\n+      repeated_blocks = collections.defaultdict(set)\n+      entries = []\n+\n+      for path in files:\n+          text = path.read_text()\n+          body = text.split(\"\\n---\\n\", 1)[1] if text.startswith(\"---\\n\") and \"\\n---\\n\" in text else text\n+\n+          blocks = []\n+          for block in paragraph_splitter.split(body):\n+              normalized = \" \".join(block.split())\n+              if len(normalized.split()) < 18:\n+                  continue\n+              if normalized.startswith(\"# \"):\n+                  continue\n+              repeated_blocks[normalized].add(path.name)\n+              blocks.append(normalized)\n+\n+          entries.append(\n+              {\n+                  \"path\": str(path),\n+                  \"name\": path.name,\n+                  \"line_count\": len(text.splitlines()),\n+                  \"word_count\": len(re.findall(r\"\\S+\", text)),\n+                  \"heading_count\": len(heading_re.findall(body)),\n+                  \"long_block_count\": len(blocks),\n+              }\n+          )\n+\n+      duplicates = [\n+          {\n+              \"text\": text,\n+              \"files\": sorted(names),\n+              \"file_count\": len(names),\n+              \"word_count\": len(text.split()),\n+          }\n+          for text, names in repeated_blocks.items()\n+          if len(names) > 1\n+      ]\n+      duplicates.sort(key=lambda item: (-item[\"file_count\"], -item[\"word_count\"], item[\"text\"]))\n+\n+      pathlib.Path(\"/tmp/gh-aw/data/workflow-editor-state.json\").write_text(\n+          json.dumps(\n+              {\n+                  \"files\": entries,\n+                  \"file_count\": len(entries),\n+                  \"duplicate_blocks\": duplicates[:25],\n+              },\n+              indent=2,\n+          )\n+      )\n+      PY\n+---\n+\n+# Workflow Skills Editor\n+\n+You are a workflow editor for `.github/workflows/*.md`.\n+\n+Create exactly one draft pull request per run with one focused improvement to the\n+workflow source files.\n+\n+## Read first\n+\n+1. `/tmp/gh-aw/data/workflow-editor-state.json`\n+2. Only the workflow files you need from `.github/workflows/*.md`\n+\n+If `focus` is provided, use it to guide the next improvement while keeping the\n+change set coherent and small.\n+\n+## Mission\n+\n+Reduce prompt bloat, remove duplication, and align workflow source content with\n+GitHub Skills lesson tone: short, direct, supportive, practical, and\n+educational.\n+\n+## What counts as a good improvement\n+\n+Choose one bounded improvement that does at least one of these:\n+\n+- deletes repeated instructions that add little value\n+- merges overlapping guidance across nearby sections\n+- shortens long explanations without losing meaning, safety, or clarity\n+- rewrites dense text into lean, learner-friendly instructions\n+- tightens examples or validation guidance so the workflow stays educational and\n+  information-dense\n+\n+## Guardrails\n+\n+- Keep the workflow's purpose, trigger, permissions, safe outputs, and safety\n+  posture intact unless a small supporting fix is required.\n+- Prefer subtractive edits over additive edits.\n+- Change only the files needed for one coherent improvement.\n+- Do not edit files outside `.github/workflows/`.\n+- Do not edit `*.lock.yml` by hand.\n+- Preserve required validation, safe output, and no-op behavior.\n+- Avoid generic marketing language. Write like a GitHub Skills lesson.\n+\n+## Change process\n+\n+1. Pick the highest-value candidate from the state file or `focus`.\n+2. Read the relevant workflow source file or files.\n+3. Make one focused change set.\n+4. Compile every modified workflow source with the `agentic-workflows` compile\n+   tool using `--validate`.\n+5. Include the regenerated `*.lock.yml` files in the pull request.\n+\n+## Pull request body\n+\n+Explain:\n+\n+- what bloat or duplication was removed\n+- which workflow file or files changed\n+- how the revised wording is more Skills-like and easier to learn from\n+\n+## No-op rule\n+\n+Call `noop` with a concise reason when:\n+\n+- no workflow file needs a meaningful improvement\n+- the best candidate already has an open pull request\n+- `focus` does not match a real improvement opportunity",
+          "snapshot_ref": "59283663651a9a77be3ce0923901b6f8d240d9ed",
+          "snapshot_blob_sha": "b5149446b5edcffd41417eddbe73b82617cabcdd",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__59283663651a9a77be3ce0923901b6f8d240d9ed__workflow-skills-editor.md",
+          "snapshot_bytes": 5382,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workflow-skills-editor.lock.yml\",\"generated_workflow_file\":\"workflow-skills-editor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workflow-skills-editor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workflow-skills-editor.md",
+      "commit_sha": "e6f52354fa0324991b98e0787ce3371e2a976255",
+      "authored_at": "2026-07-11T16:34:21Z",
+      "committed_at": "2026-07-11T16:34:21Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add CLI vs UI paths to workshop steps and agentic workflows (#166)",
+      "parent_shas": [
+        "c45f51011470508833b55a9eb6cbe1a6bac4a424"
+      ],
+      "tree_sha": "aed6c2e3e7a2c1d3e9e0c8b8659d3af14fe64c68",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/e6f52354fa0324991b98e0787ce3371e2a976255",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workflow-skills-editor.md",
+          "commit_sha": "e6f52354fa0324991b98e0787ce3371e2a976255",
+          "committed_at": "2026-07-11T16:34:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -133,6 +133,9 @@ Choose one bounded improvement that does at least one of these:\n - rewrites dense text into lean, learner-friendly instructions\n - tightens examples or validation guidance so the workflow stays educational and\n   information-dense\n+- adds a missing UI path alternative alongside an existing CLI-only step (for\n+  example: `<details>` blocks for creating files, committing changes, or creating\n+  a repository via the GitHub web interface)\n \n ## Guardrails\n ",
+          "snapshot_ref": "e6f52354fa0324991b98e0787ce3371e2a976255",
+          "snapshot_blob_sha": "522be1f7265b134a0c767f2f0aa8e0a035ae63ce",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__e6f52354fa0324991b98e0787ce3371e2a976255__workflow-skills-editor.md",
+          "snapshot_bytes": 5587,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workflow-skills-editor.lock.yml\",\"generated_workflow_file\":\"workflow-skills-editor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workflow-skills-editor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workflow-skills-editor.md",
+      "commit_sha": "d2ff8f3dbec646307380b1ee44b42ba78f728a82",
+      "authored_at": "2026-07-11T16:47:45Z",
+      "committed_at": "2026-07-11T16:47:45Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Introduce shared workshop authoring guidelines to delay and minimize early `gh` CLI dependence (#173)",
+      "parent_shas": [
+        "5301174fb9bb54e53a93bd48f050cefeefa9f085"
+      ],
+      "tree_sha": "e978976ce640fbf1d3bc641e1bbeb60729fa0af2",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/d2ff8f3dbec646307380b1ee44b42ba78f728a82",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workflow-skills-editor.md",
+          "commit_sha": "d2ff8f3dbec646307380b1ee44b42ba78f728a82",
+          "committed_at": "2026-07-11T16:47:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -133,6 +133,8 @@ Choose one bounded improvement that does at least one of these:\n - rewrites dense text into lean, learner-friendly instructions\n - tightens examples or validation guidance so the workflow stays educational and\n   information-dense\n+- removes unnecessary early `gh` requirements and shifts `gh` setup later in the\n+  learner journey when possible\n - adds a missing UI path alternative alongside an existing CLI-only step (for\n   example: `<details>` blocks for creating files, committing changes, or creating\n   a repository via the GitHub web interface)",
+          "snapshot_ref": "d2ff8f3dbec646307380b1ee44b42ba78f728a82",
+          "snapshot_blob_sha": "3785f7e98a722a39c8567536c7c21c53838abf45",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__d2ff8f3dbec646307380b1ee44b42ba78f728a82__workflow-skills-editor.md",
+          "snapshot_bytes": 5700,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workflow-skills-editor.lock.yml\",\"generated_workflow_file\":\"workflow-skills-editor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workflow-skills-editor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workflow-skills-editor.md",
+      "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+      "authored_at": "2026-07-14T22:45:21Z",
+      "committed_at": "2026-07-14T22:45:21Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `expires: 1d` to all agentic workflow safe-outputs (#1125)",
+      "parent_shas": [
+        "b4fd7e2d2ad27cd43d5764482c3fe5e06dd8112d"
+      ],
+      "tree_sha": "a141fde523b6534bacfbf9f0f444b5474b1ad009",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/964af15393f94c1cd7239080ac7e2207139848fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workflow-skills-editor.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workflow-skills-editor.md",
+          "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "committed_at": "2026-07-14T22:45:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -30,6 +30,7 @@ safe-outputs:\n       - \".github/workflows/*.md\"\n       - \".github/workflows/*.lock.yml\"\n     if-no-changes: warn\n+    expires: 1d\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "snapshot_blob_sha": "efe4337f67ff17f144e68853afa234fee20bf83c",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__964af15393f94c1cd7239080ac7e2207139848fb__workflow-skills-editor.md",
+          "snapshot_bytes": 5716,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workflow-skills-editor.lock.yml\",\"generated_workflow_file\":\"workflow-skills-editor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workflow-skills-editor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

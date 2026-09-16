@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+    "source_full_name": "github/gh-aw-mcpg",
+    "source_owner": "github",
+    "source_repo": "gh-aw-mcpg",
+    "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-mcpg/blob/HEAD/.github/workflows/gateway-issue-dispatcher.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-mcpg",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-mcpg",
+      "generated_workflow_path": ".github/workflows/gateway-issue-dispatcher.lock.yml",
+      "generated_workflow_file": "gateway-issue-dispatcher.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/gateway-issue-dispatcher.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:48:30+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+      "commit_sha": "f13a440c0d9299bba0d28297550f68f42c12a56a",
+      "authored_at": "2026-03-26T19:51:04Z",
+      "committed_at": "2026-03-26T19:51:04Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "feat: add gateway issue dispatcher workflow\n\nAudits open 'gateway'-labeled issues in github/gh-aw every 6 hours,\ncreates tracking issues in github/gh-aw-mcpg with problem analysis\nand proposed solutions, then links the two via a comment.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "204ff33f57422fe40ecccc691966bc08817dcd5e"
+      ],
+      "tree_sha": "78aaf192977a43e8c25d4c542e3318654bfc4d02",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/f13a440c0d9299bba0d28297550f68f42c12a56a",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+          "commit_sha": "f13a440c0d9299bba0d28297550f68f42c12a56a",
+          "committed_at": "2026-03-26T19:51:04Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 141,
+          "file_deletions": 0,
+          "file_changes": 141,
+          "file_patch": "@@ -0,0 +1,141 @@\n+---\n+name: Gateway Issue Dispatcher\n+description: Audits github/gh-aw issues labeled 'gateway' and creates tracking issues in github/gh-aw-mcpg with proposed solutions\n+on:\n+  schedule: every 6h\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+tools:\n+  github:\n+    toolsets: [repos, issues]\n+    github-token: ${{ secrets.CROSS_REPO_PAT }}\n+    allowed-repos: [\"github/gh-aw\", \"github/gh-aw-mcpg\"]\n+    min-integrity: none\n+  bash: true\n+\n+safe-outputs:\n+  github-token: ${{ secrets.CROSS_REPO_PAT }}\n+  max-bot-mentions: 1\n+  create-issue:\n+    max: 10\n+    target-repo: \"github/gh-aw-mcpg\"\n+    labels: [gateway, from-gh-aw]\n+  add-comment:\n+    max: 10\n+    target: \"*\"\n+    target-repo: \"github/gh-aw\"\n+    discussions: false\n+    pull-requests: false\n+\n+timeout-minutes: 20\n+---\n+\n+# Gateway Issue Dispatcher\n+\n+**Goal**: Audit all open issues in `github/gh-aw` labeled `gateway`, create a\n+corresponding tracking issue in `github/gh-aw-mcpg` that describes the problem\n+and proposes a solution, then link the two issues via a comment.\n+\n+## Procedure\n+\n+### Step 1: Gather Gateway Issues\n+\n+List all **open** issues in `github/gh-aw` with the label `gateway`:\n+\n+```bash\n+gh issue list --repo github/gh-aw --label gateway --state open --json number,title,body,url,labels,createdAt --limit 100\n+```\n+\n+If there are no open gateway issues, report \"No open gateway issues found\" and\n+stop.\n+\n+### Step 2: Filter Already-Processed Issues\n+\n+For each gateway issue, check its comments for an existing link to a\n+`github/gh-aw-mcpg` issue. An issue is already processed if any comment\n+contains a URL matching `github.com/github/gh-aw-mcpg/issues/`.\n+\n+```bash\n+# For each issue number, check comments\n+gh issue view <NUMBER> --repo github/gh-aw --json comments --jq '.comments[].body' \\\n+  | grep -q 'github.com/github/gh-aw-mcpg/issues/' && echo \"SKIP\" || echo \"PROCESS\"\n+```\n+\n+**Skip** any issue that already has a linked `gh-aw-mcpg` issue. Only proceed\n+with unprocessed issues.\n+\n+If all issues are already processed, report \"All gateway issues already have\n+tracking issues\" and stop.\n+\n+### Step 3: Analyze and Create Tracking Issues\n+\n+For each unprocessed gateway issue:\n+\n+1. **Read the issue thoroughly** — understand the problem described, any error\n+   messages, configuration details, and expected vs actual behavior.\n+\n+2. **Research the codebase** — use the GitHub MCP tools to search the\n+   `github/gh-aw-mcpg` codebase for relevant files, functions, and existing\n+   related issues. Look at the project structure:\n+   - `internal/server/` — HTTP server (routed/unified modes)\n+   - `internal/config/` — Config parsing and validation\n+   - `internal/guard/` — Security guards (AllowOnly, WriteSink)\n+   - `internal/mcp/` — MCP protocol types\n+   - `internal/proxy/` — Proxy mode implementation\n+   - `internal/launcher/` — Backend process management\n+   - `guards/github-guard/` — Rust WASM guard\n+\n+3. **Create the tracking issue** in `github/gh-aw-mcpg` with:\n+   - A clear, descriptive title (prefix: `[gateway]`)\n+   - **Problem section**: Summarize the issue from gh-aw with a link back to the\n+     source issue\n+   - **Analysis section**: Identify which files/components are likely involved\n+   - **Proposed Solution section**: Describe a concrete implementation approach\n+     with specific files to change\n+   - **Source reference**: Link to the original `github/gh-aw` issue\n+\n+   Use this structure for the issue body:\n+\n+   ```markdown\n+   ### Problem\n+\n+   [Clear description of the problem from the gh-aw issue]\n+\n+   Source: <gh-aw issue URL>\n+\n+   ### Analysis\n+\n+   [Which components/files in gh-aw-mcpg are involved and why]\n+\n+   ### Proposed Solution\n+\n+   [Concrete steps to fix the problem, with specific files and changes]\n+\n+   ### Testing\n+\n+   [How to verify the fix works]\n+   ```\n+\n+### Step 4: Link the Issues\n+\n+After creating each tracking issue in `gh-aw-mcpg`, leave a comment on the\n+original `github/gh-aw` issue with a link:\n+\n+> Tracking issue created in gh-aw-mcpg: <link to new issue>\n+\n+This ensures the issue is marked as processed for future runs.\n+\n+## Important Notes\n+\n+- Only create issues for problems that are **actionable in the gh-aw-mcpg\n+  codebase**. If a gateway issue is purely about gh-aw configuration or\n+  documentation, note it but do not create a tracking issue.\n+- Be specific in proposed solutions — reference actual file paths, function\n+  names, and line numbers when possible.\n+- Do not duplicate existing open issues in gh-aw-mcpg. Before creating, search\n+  for similar open issues.\n+- Process issues in chronological order (oldest first).",
+          "snapshot_ref": "f13a440c0d9299bba0d28297550f68f42c12a56a",
+          "snapshot_blob_sha": "08bc31e991bc04dd20cb196b85825a28a7c7517d",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__f13a440c0d9299bba0d28297550f68f42c12a56a__gateway-issue-dispatcher.md",
+          "snapshot_bytes": 4536,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/gateway-issue-dispatcher.lock.yml\",\"generated_workflow_file\":\"gateway-issue-dispatcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/gateway-issue-dispatcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+      "commit_sha": "9cd5042916f1476b3e42dd407454ac04b5db2d31",
+      "authored_at": "2026-03-31T00:04:37Z",
+      "committed_at": "2026-03-31T00:04:37Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "feat: enable difc-proxy feature flag on all guarded workflows\n\nAdd features.difc-proxy: true to all 28 workflows that have\ntools.github with min-integrity and allowed-repos configured.\nThis is required after gh-aw PR #23471 made proxy filtering\nopt-in via the difc-proxy feature flag.\n\nRecompile all 31 workflows with gh aw compile.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "748e27842528cf28a4e220a3c9b6f6beeabb8083"
+      ],
+      "tree_sha": "7fbf83142cb5aa8e754baac225fc3fcd174a1860",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/9cd5042916f1476b3e42dd407454ac04b5db2d31",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+          "commit_sha": "9cd5042916f1476b3e42dd407454ac04b5db2d31",
+          "committed_at": "2026-03-31T00:04:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -32,6 +32,8 @@ safe-outputs:\n     pull-requests: false\n \n timeout-minutes: 20\n+features:\n+  difc-proxy: true\n ---\n \n # Gateway Issue Dispatcher",
+          "snapshot_ref": "9cd5042916f1476b3e42dd407454ac04b5db2d31",
+          "snapshot_blob_sha": "757ed7a6e427266e01b53a34e9678a3abfcc6c38",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__9cd5042916f1476b3e42dd407454ac04b5db2d31__gateway-issue-dispatcher.md",
+          "snapshot_bytes": 4565,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/gateway-issue-dispatcher.lock.yml\",\"generated_workflow_file\":\"gateway-issue-dispatcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/gateway-issue-dispatcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+      "commit_sha": "a27a8776347d147ff137e9ea908c2469e31f4747",
+      "authored_at": "2026-04-06T03:11:57Z",
+      "committed_at": "2026-04-06T03:11:57Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "Upgrade workflows from gh-aw v0.65.3 to v0.67.0\n\n- Run gh aw fix --write to migrate features.difc-proxy to\n  tools.github.integrity-proxy across 28 workflow .md files\n- Remove empty features: keys left behind by the migration\n- Recompile all 31 workflows with gh aw compile (v0.67.0)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "be02957e8bf36ee911f1d8de36e0bc31449a367e"
+      ],
+      "tree_sha": "fea3ad535b2640fc1c7a5fb9b132ad4e12199023",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/a27a8776347d147ff137e9ea908c2469e31f4747",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+          "commit_sha": "a27a8776347d147ff137e9ea908c2469e31f4747",
+          "committed_at": "2026-04-06T03:11:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 3,
+          "file_changes": 4,
+          "file_patch": "@@ -32,8 +32,6 @@ safe-outputs:\n     pull-requests: false\n \n timeout-minutes: 20\n-features:\n-  difc-proxy: true\n ---\n \n # Gateway Issue Dispatcher\n@@ -140,4 +138,4 @@ This ensures the issue is marked as processed for future runs.\n   names, and line numbers when possible.\n - Do not duplicate existing open issues in gh-aw-mcpg. Before creating, search\n   for similar open issues.\n-- Process issues in chronological order (oldest first).\n+- Process issues in chronological order (oldest first).\n\\ No newline at end of file",
+          "snapshot_ref": "a27a8776347d147ff137e9ea908c2469e31f4747",
+          "snapshot_blob_sha": "af72bf028985d368f24ecd0798cf80b9fe787ef2",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__a27a8776347d147ff137e9ea908c2469e31f4747__gateway-issue-dispatcher.md",
+          "snapshot_bytes": 4535,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/gateway-issue-dispatcher.lock.yml\",\"generated_workflow_file\":\"gateway-issue-dispatcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/gateway-issue-dispatcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+      "commit_sha": "a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+      "authored_at": "2026-04-11T14:36:49Z",
+      "committed_at": "2026-04-11T14:36:49Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "Disable threat-detection in all 31 workflows\n\nAdd threat-detection: { enabled: false } under safe-outputs in every\nworkflow .md file, then recompile all lock files. This removes the\ndetection job from all compiled workflows.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "206efeadcc8ecc0d7fc5516c530ef3f88d918dd3"
+      ],
+      "tree_sha": "24d552d253991b781a71e266c97d6472503f89c0",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+          "commit_sha": "a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+          "committed_at": "2026-04-11T14:36:49Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -18,6 +18,8 @@ tools:\n   bash: true\n \n safe-outputs:\n+  threat-detection:\n+    enabled: false\n   github-token: ${{ secrets.CROSS_REPO_PAT }}\n   max-bot-mentions: 1\n   create-issue:",
+          "snapshot_ref": "a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+          "snapshot_blob_sha": "50b4191b64164b4fa15c96f9f6736e539984ffb2",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__a0916a9d66ce391d5745f73ee7c4e94bdb0700a3__gateway-issue-dispatcher.md",
+          "snapshot_bytes": 4574,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/gateway-issue-dispatcher.lock.yml\",\"generated_workflow_file\":\"gateway-issue-dispatcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/gateway-issue-dispatcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+      "commit_sha": "45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+      "authored_at": "2026-07-10T02:35:35Z",
+      "committed_at": "2026-07-10T02:35:35Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "fix(workflows): migrate all workflows to copilot-requests: write permission\n\nMigrate all 32 remaining agentic workflows from COPILOT_GITHUB_TOKEN\nsecret-based authentication to the copilot-requests: write permission,\nwhich uses GitHub Actions token-based inference via S2S token exchange.\n\nThis eliminates the dependency on a manually-managed secret that can\nexpire, causing widespread smoke test failures (as seen in #9027 and\nrelated issues #9023-#9026).\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "aa1c0de9de1faf699de40992aafbd95461e195db"
+      ],
+      "tree_sha": "0326f13922d6ded65aafe19d8981bfdec75c132e",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/gateway-issue-dispatcher.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/gateway-issue-dispatcher.md",
+          "commit_sha": "45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+          "committed_at": "2026-07-10T02:35:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -8,6 +8,7 @@ on:\n permissions:\n   contents: read\n   issues: read\n+  copilot-requests: write\n \n tools:\n   github:",
+          "snapshot_ref": "45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+          "snapshot_blob_sha": "cef1e4e42bb5ce2953b6e056600c83dec6dc56bb",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__45a6fb81de50cc5e4c7dd0232522492a74ca8160__gateway-issue-dispatcher.md",
+          "snapshot_bytes": 4600,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/gateway-issue-dispatcher.lock.yml\",\"generated_workflow_file\":\"gateway-issue-dispatcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/gateway-issue-dispatcher.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "taosdata/TDengine:.github/workflows/weekly-report.md",
+    "source_full_name": "taosdata/TDengine",
+    "source_owner": "taosdata",
+    "source_repo": "TDengine",
+    "md_path": ".github/workflows/weekly-report.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/taosdata/TDengine/blob/HEAD/.github/workflows/weekly-report.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "taosdata/TDengine",
+      "generated_owner": "taosdata",
+      "generated_repo": "TDengine",
+      "generated_workflow_path": ".github/workflows/weekly-report.lock.yml",
+      "generated_workflow_file": "weekly-report.lock.yml",
+      "generated_html_url": "https://github.com/taosdata/TDengine/blob/b1aef34d7d75b3d105ad11f4dc5667972fa5a35d/.github/workflows/weekly-report.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "taosdata/TDengine:.github/workflows/weekly-report.md",
+      "source_full_name": "taosdata/TDengine",
+      "md_path": ".github/workflows/weekly-report.md",
+      "commit_sha": "34cda8affe1d9937ec4dfa7610232fc5f04ac77b",
+      "authored_at": "2026-03-08T06:59:17Z",
+      "committed_at": "2026-03-08T06:59:17Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add weekly repository report GitHub Agentic Workflow (#34709)\n\n* Initial plan\n\n* Add weekly report GitHub Agentic Workflow\n\nCo-authored-by: feici02 <5568663+feici02@users.noreply.github.com>\n\n* chore: fix review comments and re-compile [skip ci]\n\nSigned-off-by: WANG Xu <feici02@outlook.com>\n\n---------\n\nSigned-off-by: WANG Xu <feici02@outlook.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: feici02 <5568663+feici02@users.noreply.github.com>\nCo-authored-by: WANG Xu <feici02@outlook.com>",
+      "parent_shas": [
+        "5cab74d393ff08b20262f8fe79990d61dd94523f"
+      ],
+      "tree_sha": "f31e97e6b3ae1b48961213b05762a4f0abf3645f",
+      "html_url": "https://github.com/taosdata/TDengine/commit/34cda8affe1d9937ec4dfa7610232fc5f04ac77b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "taosdata/TDengine:.github/workflows/weekly-report.md",
+          "source_full_name": "taosdata/TDengine",
+          "md_path": ".github/workflows/weekly-report.md",
+          "commit_sha": "34cda8affe1d9937ec4dfa7610232fc5f04ac77b",
+          "committed_at": "2026-03-08T06:59:17Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 249,
+          "file_deletions": 0,
+          "file_changes": 249,
+          "file_patch": "@@ -0,0 +1,249 @@\n+---\n+name: Weekly Repository Report\n+description: >\n+  Generates a weekly read-only report covering PRs, Issues, and Branch Hygiene\n+  for the previous calendar week (Asia/Shanghai time) and posts it to GitHub Discussions.\n+on:\n+  schedule:\n+    - cron: \"0 22 * * 0\"\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  discussions: read\n+tools:\n+  github:\n+    mode: remote\n+    toolsets: [default, repos, issues, pull_requests]\n+    lockdown: false\n+safe-outputs:\n+  create-discussion:\n+    max: 1\n+---\n+\n+# Weekly Repository Report Generator\n+\n+You are a read-only reporting agent. Your ONLY write operation is posting a single GitHub Discussion with the weekly report. You must NOT create, update, comment on, label, assign, close, reopen, merge, or otherwise modify Pull Requests, Issues, or Branches.\n+\n+## Task\n+\n+Generate a comprehensive weekly report for the **taosdata/TDengine** repository covering the **previous calendar week in Asia/Shanghai (UTC+8) time**.\n+\n+### Date Calculation\n+\n+The reporting window is:\n+\n+- Start: Last Monday 00:00:00 Asia/Shanghai (i.e., the Monday that started 7 days before today)\n+- End: Last Sunday 23:59:59 Asia/Shanghai\n+\n+To calculate the exact UTC date range for API queries:\n+\n+- Asia/Shanghai is UTC+8\n+- Start UTC = Last Monday 00:00:00 +08:00 = Last Sunday 16:00:00 UTC (the day before)\n+- End UTC = Last Sunday 23:59:59 +08:00 = Last Sunday 15:59:59 UTC\n+\n+Use bash to compute the ISO 8601 date boundaries in UTC for use in API queries:\n+\n+```bash\n+# Compute Asia/Shanghai previous-week boundaries in UTC\n+python3 -c \"\n+from datetime import datetime, timedelta, timezone\n+\n+UTC8 = timezone(timedelta(hours=8))\n+now_cst = datetime.now(UTC8)\n+# Monday of current week in CST\n+current_monday_cst = now_cst - timedelta(days=now_cst.weekday())\n+current_monday_cst = current_monday_cst.replace(hour=0, minute=0, second=0, microsecond=0)\n+# Previous week\n+start_cst = current_monday_cst - timedelta(weeks=1)\n+end_cst = current_monday_cst - timedelta(seconds=1)\n+\n+start_utc = start_cst.astimezone(timezone.utc)\n+end_utc = end_cst.astimezone(timezone.utc)\n+\n+start_display = start_cst.strftime('%Y-%m-%d')\n+end_display = end_cst.strftime('%Y-%m-%d')\n+\n+print(f'START_UTC={start_utc.strftime(\\\"%Y-%m-%dT%H:%M:%SZ\\\")}')\n+print(f'END_UTC={end_utc.strftime(\\\"%Y-%m-%dT%H:%M:%SZ\\\")}')\n+print(f'WEEK_START_DISPLAY={start_display}')\n+print(f'WEEK_END_DISPLAY={end_display}')\n+\"\n+```\n+\n+### Data Collection Steps\n+\n+Using GitHub tools, collect the following data. For each query, handle errors gracefully — if a request fails, note the failure and continue with partial data.\n+\n+#### 1. Pull Requests\n+\n+Query PRs in `taosdata/TDengine` that were created, merged, closed, or still open within the reporting window:\n+\n+- **Opened** during the window: `repo:taosdata/TDengine is:pr created:START..END`\n+- **Merged** during the window: `repo:taosdata/TDengine is:pr is:merged merged:START..END`\n+- **Closed without merge** (terminated) during the window: `repo:taosdata/TDengine is:pr is:closed is:unmerged closed:START..END`\n+- **Still open** as of now: From the PRs opened during the window (`created:START..END`), select those whose state is still `open` as of END\n+\n+For each PR, collect:\n+\n+- Number, title, author (login)\n+- State (open / merged / closed)\n+- Created date, merged date or closed date\n+- HTML URL\n+- Head branch name (source branch)\n+\n+#### 2. Issues\n+\n+Query issues in `taosdata/TDengine` within the reporting window:\n+\n+- **Created** during the window: `repo:taosdata/TDengine is:issue created:START..END`\n+- **Closed** during the window: `repo:taosdata/TDengine is:issue is:closed closed:START..END`\n+- **Still open** created during window: filter from created list where state is open\n+\n+For each issue, collect:\n+\n+- Number, title, author (login)\n+- State (open / closed)\n+- Created date, closed date (if applicable)\n+- Labels, milestone\n+- HTML URL\n+\n+#### 3. Branch Hygiene\n+\n+- **Branches list**: Retrieve all branches in `taosdata/TDengine` (use pagination as needed). Exclude any branch matching `release/*` — do not list, count, or mention them.\n+- For **leftover branches**: Cross-reference branches that still exist with PRs that were **closed without merge** during the window. If the PR's head branch still exists in the repository, flag it.\n+- For **stale branches**: Identify non-`release/*` branches with no commits for ≥ 90 days.\n+\n+### Report Format\n+\n+After collecting data, compose the report in English using the following structure. Use markdown headings, bullet lists, and tables where appropriate. All dates should be displayed in Asia/Shanghai (CST) time in the format `YYYY-MM-DD`.\n+\n+---\n+\n+**Title**: `Weekly Report (WEEK_START_DISPLAY ~ WEEK_END_DISPLAY)`\n+\n+---\n+\n+```markdown\n+# Weekly Report (WEEK_START_DISPLAY ~ WEEK_END_DISPLAY)\n+\n+## 1. Highlights\n+\n+> _Top-level summary of the week._\n+\n+- **Merged PRs**: X PRs merged (highlight the most significant by title if any stand out)\n+- **New Issues**: Y issues opened; Z closed\n+- **Risks / Blockers**: Note any PRs with \"blocker\", \"critical\", or \"bug\" labels still open; note if key PRs have been open with no activity for > 5 days\n+- **Branch Hygiene Warning**: N leftover branch(es) from terminated PRs detected (see Section 4)\n+\n+---\n+\n+## 2. Pull Requests\n+\n+### Summary\n+\n+| Category | Count |\n+|---|---|\n+| Opened | X |\n+| Merged | X |\n+| Closed without merge | X |\n+| Still open | X |\n+\n+### Opened PRs\n+\n+| # | Title | Author | Status | Created | Closed/Merged | Branch | Link |\n+|---|---|---|---|---|---|---|---|\n+| ... | ... | ... | ... | ... | ... | ... | ... |\n+\n+### Merged PRs\n+\n+_(Same table columns as above)_\n+\n+### Closed without Merge (Terminated)\n+\n+_(Same table columns as above)_\n+\n+### Still Open\n+\n+_(Same table columns as above — include PRs from the window still open)_\n+\n+---\n+\n+## 3. Issues\n+\n+### Summary\n+\n+| Category | Count |\n+|---|---|\n+| Created | X |\n+| Closed | X |\n+| Still open | X |\n+\n+### Created\n+\n+| # | Title | Author | Status | Created | Closed | Labels | Milestone | Link |\n+|---|---|---|---|---|---|---|---|---|\n+| ... | ... | ... | ... | ... | ... | ... | ... | ... |\n+\n+### Closed\n+\n+_(Same table columns as above)_\n+\n+---\n+\n+## 4. Branch Hygiene\n+\n+> ⚠️ This section is read-only reporting. **No cleanup actions are triggered or recommended as automated steps.**\n+> Branches matching `release/*` are excluded from all subsections below.\n+\n+### 4A. Leftover Branches from Terminated PRs ⚠️ Critical\n+\n+Branches that still exist in the repository but whose PR was closed without merge:\n+\n+| PR | PR Title | Branch | Last Commit | Warning |\n+|---|---|---|---|---|\n+| #N | ... | branch-name | YYYY-MM-DD | ⚠️ Uncleaned branch — recommend maintainer review |\n+\n+_(If none: \"✅ No leftover branches from terminated PRs detected.\")_\n+\n+### 4B. New Branches\n+\n+_(List branches created during the reporting window if creation time is reliably available.\n+If not reliably determinable from the API, state: \"Branch creation timestamps are not directly available via the GitHub Branches API; this subsection is skipped.\")_\n+\n+### 4C. Stale / Inactive Branches (Suggested Review)\n+\n+> This is a best-effort inventory. No automated deletion is triggered.\n+\n+Branches with no commit activity for ≥ 90 days (excluding `release/*`):\n+\n+| Branch | Last Commit Date | Days Inactive |\n+|---|---|---|\n+| ... | ... | ... |\n+\n+_(If none: \"✅ No stale branches detected beyond the 90-day threshold.\")_\n+\n+---\n+\n+## 5. Errors / Missing Data\n+\n+_(List any API call failures, rate-limit hits, or data that could not be fetched. If all data was retrieved successfully, write \"✅ All data retrieved successfully.\")_\n+```\n+\n+---\n+\n+### Posting the Report\n+\n+After composing the report:\n+\n+1. Set the discussion title to: `Weekly Report (WEEK_START_DISPLAY ~ WEEK_END_DISPLAY)`\n+2. Post the report as a new GitHub Discussion in the repository using the `create-discussion` safe output.\n+3. Use the **\"General\"** category for the discussion (or the closest available category; do not create a new category — use whichever category exists that is most appropriate for announcements or general updates).\n+\n+### Strict Read-Only Constraints\n+\n+- Do **NOT** comment on, edit, close, label, assign, reopen, or merge any PR or Issue.\n+- Do **NOT** create, rename, or delete any branch.\n+- Do **NOT** create any new Issue.\n+- The only write operation you may perform is posting exactly one GitHub Discussion.\n+- If you encounter any limitation or error, document it in the \"Errors / Missing Data\" section and still post the discussion with partial data.",
+          "snapshot_ref": "34cda8affe1d9937ec4dfa7610232fc5f04ac77b",
+          "snapshot_blob_sha": "ee7ad595a089ece7cd2fe7c025dc15410ff0ca71",
+          "snapshot_file": "snapshots/TDengine__taosdata__34cda8affe1d9937ec4dfa7610232fc5f04ac77b__weekly-report.md",
+          "snapshot_bytes": 8406,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"taosdata/TDengine\",\"generated_owner\":\"taosdata\",\"generated_repo\":\"TDengine\",\"generated_workflow_path\":\".github/workflows/weekly-report.lock.yml\",\"generated_workflow_file\":\"weekly-report.lock.yml\",\"generated_html_url\":\"https://github.com/taosdata/TDengine/blob/b1aef34d7d75b3d105ad11f4dc5667972fa5a35d/.github/workflows/weekly-report.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

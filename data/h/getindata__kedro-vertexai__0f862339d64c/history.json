@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "getindata/kedro-vertexai:.github/workflows/dependabot-review.md",
+    "source_full_name": "getindata/kedro-vertexai",
+    "source_owner": "getindata",
+    "source_repo": "kedro-vertexai",
+    "md_path": ".github/workflows/dependabot-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/getindata/kedro-vertexai/blob/HEAD/.github/workflows/dependabot-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "getindata/kedro-vertexai",
+      "generated_owner": "getindata",
+      "generated_repo": "kedro-vertexai",
+      "generated_workflow_path": ".github/workflows/dependabot-review.lock.yml",
+      "generated_workflow_file": "dependabot-review.lock.yml",
+      "generated_html_url": "https://github.com/getindata/kedro-vertexai/blob/45fd3dd5b87f73709f0b0d6043bf71dfdf1431da/.github/workflows/dependabot-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "getindata/kedro-vertexai:.github/workflows/dependabot-review.md",
+      "source_full_name": "getindata/kedro-vertexai",
+      "md_path": ".github/workflows/dependabot-review.md",
+      "commit_sha": "0321a7c6e3288ffe802a8b4421f06df2339a0487",
+      "authored_at": "2026-03-25T12:49:11Z",
+      "committed_at": "2026-03-25T12:49:11Z",
+      "author_name": "Mateusz Pytel",
+      "author_email": "mateusz.pytel@xebia.com",
+      "author_login": "em-pe",
+      "author_account_type": "User",
+      "committer_name": "Mateusz Pytel",
+      "committer_email": "mateusz.pytel@xebia.com",
+      "committer_login": "em-pe",
+      "committer_account_type": "User",
+      "message": "feat: add core dep review agent, enable sonarcloud for dependabot\n\n  - Add dependabot-review.md: AI agent that fetches changelogs and\n    summarizes breaking changes for core dependency updates\n  - Replace bash changelog parsing with agent dispatch in dependabot-auto\n  - Fix script injection by using env vars instead of \\${{ }} interpolation\n  - Enable SonarCloud for dependabot PRs to unblock e2e tests",
+      "parent_shas": [
+        "2ebbd179705ff7bc4e13cc59117d4a24ccbd732e"
+      ],
+      "tree_sha": "e7cde65b3b514f25534d0876e043f3db4a637362",
+      "html_url": "https://github.com/getindata/kedro-vertexai/commit/0321a7c6e3288ffe802a8b4421f06df2339a0487",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "getindata/kedro-vertexai:.github/workflows/dependabot-review.md",
+          "source_full_name": "getindata/kedro-vertexai",
+          "md_path": ".github/workflows/dependabot-review.md",
+          "commit_sha": "0321a7c6e3288ffe802a8b4421f06df2339a0487",
+          "committed_at": "2026-03-25T12:49:11Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 114,
+          "file_deletions": 0,
+          "file_changes": 114,
+          "file_patch": "@@ -0,0 +1,114 @@\n+---\n+description: |\n+  Reviews core dependency updates on Dependabot PRs. Fetches the changelog\n+  between old and new versions, summarizes the most important changes, and\n+  comments on the PR tagging @em-pe for manual review.\n+\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      pr_number:\n+        description: \"Pull request number to review\"\n+        required: true\n+        type: string\n+\n+engine: claude\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - python\n+\n+safe-outputs:\n+  add-comment:\n+\n+tools:\n+  github:\n+    toolsets: [pull_requests]\n+  bash: true\n+  web-fetch:\n+\n+timeout-minutes: 10\n+---\n+\n+# Core Dependency Review Agent\n+\n+You are an AI agent that reviews core dependency updates for **kedro-vertexai**,\n+a Kedro plugin for Google Cloud Vertex AI Pipelines.\n+\n+Your job is to fetch the changelog for the updated dependency and provide a concise\n+summary of the most important changes to help the maintainer decide whether to merge.\n+\n+## Instructions\n+\n+### 1. Read the PR\n+\n+Read pull request #${{ github.event.inputs.pr_number }} in **${{ github.repository }}**.\n+Determine:\n+- Which dependency is being updated\n+- From which version to which version\n+\n+### 2. Fetch the Changelog\n+\n+Find and fetch the changelog or release notes between the old and new versions.\n+Try these sources in order:\n+\n+1. **PR body** — Dependabot often includes a changelog link or summary\n+2. **GitHub Releases** — check the package's GitHub repository for releases between the two versions\n+3. **PyPI** — `https://pypi.org/project/PACKAGE_NAME/NEW_VERSION/` often links to the changelog\n+4. **CHANGELOG file** — look for CHANGELOG.md, HISTORY.md, or CHANGES.rst in the package's repo\n+\n+For these core packages, the repos are:\n+- `kedro` → `kedro-org/kedro`\n+- `kfp` → `kubeflow/pipelines` (look for SDK-specific releases tagged `kfp-*`)\n+- `google-cloud-aiplatform` → `googleapis/python-aiplatform`\n+\n+### 3. Summarize Key Changes\n+\n+From the changelog, extract and summarize:\n+- **Breaking changes** that could affect kedro-vertexai\n+- **Deprecations** of APIs we might be using\n+- **New features** relevant to pipeline execution, deployment, or configuration\n+- **Bug fixes** for issues we might have encountered\n+- **Dependency changes** that could cause conflicts\n+\n+Skip irrelevant changes (e.g., documentation-only, unrelated subcomponents).\n+\n+### 4. Comment on the PR\n+\n+Add a single comment on PR #${{ github.event.inputs.pr_number }} with this structure:\n+\n+```\n+All CI checks passed for this core dependency update.\n+\n+@em-pe Please review and merge manually.\n+\n+### `package-name` X.Y.Z → A.B.C\n+\n+**Breaking changes:**\n+- (list or \"None\")\n+\n+**Deprecations:**\n+- (list or \"None\")\n+\n+**Notable changes:**\n+- (concise list of relevant changes)\n+\n+**Risk assessment:** Low/Medium/High — (one sentence explanation)\n+\n+<details>\n+<summary>Full changelog</summary>\n+\n+(raw changelog content, truncated if very long)\n+\n+</details>\n+```\n+\n+## Rules\n+\n+- Be concise — the maintainer wants a quick summary, not a wall of text\n+- Focus on changes relevant to kedro-vertexai (pipeline execution, KFP compilation, GCP integration, Pydantic models)\n+- If you cannot find a changelog, say so and link to the package's releases page\n+- Do NOT approve or merge the PR — only comment\n\\ No newline at end of file",
+          "snapshot_ref": "0321a7c6e3288ffe802a8b4421f06df2339a0487",
+          "snapshot_blob_sha": "9118e2fa38c6f3bd7db376e9ef4c9bdf1ebf2d36",
+          "snapshot_file": "snapshots/kedro-vertexai__getindata__0321a7c6e3288ffe802a8b4421f06df2339a0487__dependabot-review.md",
+          "snapshot_bytes": 3209,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"getindata/kedro-vertexai\",\"generated_owner\":\"getindata\",\"generated_repo\":\"kedro-vertexai\",\"generated_workflow_path\":\".github/workflows/dependabot-review.lock.yml\",\"generated_workflow_file\":\"dependabot-review.lock.yml\",\"generated_html_url\":\"https://github.com/getindata/kedro-vertexai/blob/45fd3dd5b87f73709f0b0d6043bf71dfdf1431da/.github/workflows/dependabot-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

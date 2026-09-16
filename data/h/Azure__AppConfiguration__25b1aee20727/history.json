@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/AppConfiguration:.github/workflows/issue-triage.md",
+    "source_full_name": "Azure/AppConfiguration",
+    "source_owner": "Azure",
+    "source_repo": "AppConfiguration",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/AppConfiguration/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/AppConfiguration",
+      "generated_owner": "Azure",
+      "generated_repo": "AppConfiguration",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/Azure/AppConfiguration/blob/d6b298c148e88de3ddfeee772755cf717d70191e/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/AppConfiguration:.github/workflows/issue-triage.md",
+      "source_full_name": "Azure/AppConfiguration",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "06380ae933e338430875693eedc0d65a11721cc9",
+      "authored_at": "2026-03-05T10:04:48Z",
+      "committed_at": "2026-03-05T10:04:48Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add issue triage agentic workflow (#1134)\n\n* Initial plan\n\n* Add issue triage agentic workflow\n\nCo-authored-by: RichardChen820 <99175581+RichardChen820@users.noreply.github.com>\n\n* Remove priority labels and team assignment from issue triage workflow\n\nCo-authored-by: RichardChen820 <99175581+RichardChen820@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: RichardChen820 <99175581+RichardChen820@users.noreply.github.com>",
+      "parent_shas": [
+        "ba42032bbb89c992708f757e783b4323ccd570c2"
+      ],
+      "tree_sha": "fc18838b4650ff3c05655d676a1977ce1d69cc50",
+      "html_url": "https://github.com/Azure/AppConfiguration/commit/06380ae933e338430875693eedc0d65a11721cc9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Azure/AppConfiguration:.github/workflows/issue-triage.md",
+          "source_full_name": "Azure/AppConfiguration",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "06380ae933e338430875693eedc0d65a11721cc9",
+          "committed_at": "2026-03-05T10:04:48Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 90,
+          "file_deletions": 0,
+          "file_changes": 90,
+          "file_patch": "@@ -0,0 +1,90 @@\n+---\n+description: Triage new issues by labeling them by type, identifying duplicates, and asking clarifying questions when the description is unclear.\n+on:\n+  issues:\n+    types: [opened]\n+permissions:\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [issues, search, labels]\n+safe-outputs:\n+  add-labels:\n+    allowed:\n+      - bug\n+      - enhancement\n+      - question\n+      - documentation\n+      - feature-request\n+      - duplicate\n+      - needs-more-info\n+      - good-first-issue\n+    max: 5\n+  add-comment:\n+    max: 1\n+    hide-older-comments: false\n+  update-issue:\n+    max: 1\n+network:\n+  allowed:\n+    - api.github.com\n+---\n+\n+# Issue Triage\n+\n+You are an expert issue triage assistant for the Azure App Configuration repository. When a new issue is opened, follow these steps **in order**:\n+\n+## Step 1: Understand the Issue\n+\n+Use the GitHub tools to retrieve the full issue details for issue number ${{ github.event.issue.number }} in the repository ${{ github.repository }}:\n+- Issue title: ${{ github.event.issue.title }}\n+- Use the `get_issue` tool to retrieve the complete issue body, author, and other details.\n+\n+Read the issue thoroughly before proceeding.\n+\n+## Step 2: Check for Duplicates\n+\n+Search for existing open and closed issues that may be duplicates of this one. Use keywords from the issue title and body to search for similar issues. If you find a likely duplicate:\n+1. Add the **duplicate** label to this issue.\n+2. Post a comment referencing the duplicate issue number with a brief explanation.\n+3. **Stop processing** — skip the remaining steps.\n+\n+If no duplicate is found, continue to Step 3.\n+\n+## Step 3: Classify the Issue Type\n+\n+Determine the issue type and add the appropriate label(s):\n+- **bug**: Reports of something not working correctly, unexpected behavior, errors, or crashes.\n+- **enhancement** / **feature-request**: Requests for new features, improvements, or new capabilities.\n+- **question**: Questions about how to use App Configuration, or how something works.\n+- **documentation**: Issues about missing, incorrect, or unclear documentation.\n+\n+Every non-duplicate issue must get at least one type label.\n+\n+## Step 4: Evaluate Clarity\n+\n+If the issue description is unclear, missing critical information, or lacks enough context to understand the problem:\n+1. Add the **needs-more-info** label.\n+2. Post a friendly comment asking for the specific missing information.\n+\n+For **bugs**, ask for:\n+- Steps to reproduce the issue\n+- Expected vs. actual behavior\n+- App Configuration SDK version and language/platform being used\n+- Any relevant error messages or stack traces\n+\n+For **feature requests**, ask for:\n+- The specific use case or scenario this would address\n+- Any workarounds currently being used\n+\n+For **questions**, ask for:\n+- The specific behavior or configuration they are trying to achieve\n+\n+Do NOT add `needs-more-info` if the issue is already clear and complete.\n+\n+## Guidelines\n+\n+- Be respectful and professional in all comments.\n+- Keep comments concise and actionable.\n+- Do not add more than 5 labels total.\n+- Thank the issue author when asking for more information.",
+          "snapshot_ref": "06380ae933e338430875693eedc0d65a11721cc9",
+          "snapshot_blob_sha": "58547760eee95aef8484e1e1caa523a290b96f73",
+          "snapshot_file": "snapshots/AppConfiguration__Azure__06380ae933e338430875693eedc0d65a11721cc9__issue-triage.md",
+          "snapshot_bytes": 3071,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/AppConfiguration\",\"generated_owner\":\"Azure\",\"generated_repo\":\"AppConfiguration\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/AppConfiguration/blob/d6b298c148e88de3ddfeee772755cf717d70191e/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

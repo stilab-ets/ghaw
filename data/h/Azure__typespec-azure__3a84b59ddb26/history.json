@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/typespec-azure:.github/workflows/docs-sync.md",
+    "source_full_name": "Azure/typespec-azure",
+    "source_owner": "Azure",
+    "source_repo": "typespec-azure",
+    "md_path": ".github/workflows/docs-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/typespec-azure/blob/HEAD/.github/workflows/docs-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/typespec-azure",
+      "generated_owner": "Azure",
+      "generated_repo": "typespec-azure",
+      "generated_workflow_path": ".github/workflows/docs-sync.lock.yml",
+      "generated_workflow_file": "docs-sync.lock.yml",
+      "generated_html_url": "https://github.com/Azure/typespec-azure/blob/54cebe143536bbe077d04fa9fa60b0261d0d918a/.github/workflows/docs-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/typespec-azure:.github/workflows/docs-sync.md",
+      "source_full_name": "Azure/typespec-azure",
+      "md_path": ".github/workflows/docs-sync.md",
+      "commit_sha": "b4b863c2499db7d4703ebea66df8a5c8c9cfe93a",
+      "authored_at": "2026-02-26T21:34:27Z",
+      "committed_at": "2026-02-26T21:34:27Z",
+      "author_name": "Timothee Guerin",
+      "author_email": "tiguerin@microsoft.com",
+      "author_login": "timotheeguerin",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "gh aw doc sync workflow (#3969)\n\nSetup repo for gh workflow(`gh aw init`) and add the doc sample workflow",
+      "parent_shas": [
+        "1b7a32a84554f978e0a19cafeace7de23128d0fa"
+      ],
+      "tree_sha": "de440366ba37325dbf6ad24a68fe3032fe7aeaac",
+      "html_url": "https://github.com/Azure/typespec-azure/commit/b4b863c2499db7d4703ebea66df8a5c8c9cfe93a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/typespec-azure:.github/workflows/docs-sync.md",
+          "source_full_name": "Azure/typespec-azure",
+          "md_path": ".github/workflows/docs-sync.md",
+          "commit_sha": "b4b863c2499db7d4703ebea66df8a5c8c9cfe93a",
+          "committed_at": "2026-02-26T21:34:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 64,
+          "file_deletions": 0,
+          "file_changes": 64,
+          "file_patch": "@@ -0,0 +1,64 @@\n+---\n+description: Daily workflow to identify documentation files that are out of sync with recent code changes and open a pull request with necessary updates.\n+on:\n+  schedule: daily on weekdays\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+    base-branch: main\n+  noop:\n+    max: 1\n+  missing-tool:\n+    create-issue: true\n+---\n+\n+# Documentation Sync\n+\n+You are an AI agent responsible for keeping the documentation in the **Azure/typespec-azure** repository up to date with recent code changes.\n+\n+## Your Task\n+\n+1. **Find recent code changes**: Look at commits on the `main` branch from the **last 7 days**. Focus on changes to source files in:\n+   - `packages/` (TypeSpec Azure libraries and emitters)\n+   - `core/packages/` (core TypeSpec packages)\n+\n+2. **Identify impacted documentation**: For each meaningful code change (new features, renamed APIs, changed behavior, new linting rules, removed functionality), determine which documentation files under `website/src/content/docs/` could be affected. Key documentation areas:\n+   - `website/src/content/docs/docs/libraries/` — per-library docs, linting rule docs, reference pages\n+   - `website/src/content/docs/docs/emitters/` — emitter documentation\n+   - `website/src/content/docs/docs/howtos/` — how-to guides\n+   - `website/src/content/docs/docs/reference/` — reference documentation\n+\n+3. **Check for gaps**: Compare the code changes against the existing docs. Look for:\n+   - New decorators, models, or operations that are undocumented\n+   - Linting rules added or changed in code but missing or outdated in the docs\n+   - Changed API signatures or behavior not reflected in examples\n+   - New features without corresponding how-to or reference documentation\n+   - Renamed or removed APIs still referenced in docs\n+\n+4. **Make updates**: For each documentation gap found, edit the relevant markdown files to bring them in sync with the code. Keep the existing writing style and formatting conventions. Be precise and minimal — only update what is necessary.\n+\n+5. **Open a pull request**: If you made any documentation updates, open a pull request with:\n+   - Title: `[docs-sync] Update documentation for recent code changes`\n+   - Body: A summary of what documentation was updated and why, referencing the relevant commits or PRs that introduced the code changes\n+   - Branch name: `docs-sync/update-<date>` where `<date>` is today's date in YYYY-MM-DD format\n+\n+## Guidelines\n+\n+- **Do not invent information.** Only document behavior you can verify from the source code.\n+- **Preserve existing style.** Match the tone, formatting, and structure of surrounding documentation.\n+- **Be conservative.** If you are unsure whether a code change requires a doc update, skip it.\n+- **One PR per run.** Batch all documentation updates into a single pull request.\n+- **Skip trivial changes.** Ignore refactors, test-only changes, CI changes, and dependency bumps that don't affect public APIs or documented behavior.\n+- **Markdown formatting**: Use GitHub-flavored markdown. For code examples, use ` ```tsp ` fenced blocks for TypeSpec code.\n+\n+## Safe Outputs\n+\n+- If you updated documentation files, use the `create-pull-request` safe output to open a PR.\n+- **If there is nothing to update** (docs are already in sync), call the `noop` safe output with a message like: \"Documentation is up to date — no changes needed for the past 7 days of commits.\"",
+          "snapshot_ref": "b4b863c2499db7d4703ebea66df8a5c8c9cfe93a",
+          "snapshot_blob_sha": "0f93e45e41591805f89fb7f09bd38a057945ecb6",
+          "snapshot_file": "snapshots/typespec-azure__Azure__b4b863c2499db7d4703ebea66df8a5c8c9cfe93a__docs-sync.md",
+          "snapshot_bytes": 3484,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/typespec-azure\",\"generated_owner\":\"Azure\",\"generated_repo\":\"typespec-azure\",\"generated_workflow_path\":\".github/workflows/docs-sync.lock.yml\",\"generated_workflow_file\":\"docs-sync.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/typespec-azure/blob/54cebe143536bbe077d04fa9fa60b0261d0d918a/.github/workflows/docs-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/typespec-azure:.github/workflows/docs-sync.md",
+      "source_full_name": "Azure/typespec-azure",
+      "md_path": ".github/workflows/docs-sync.md",
+      "commit_sha": "14692f9213b6f0ae52bc73a1b5142921854396ee",
+      "authored_at": "2026-06-25T02:41:01Z",
+      "committed_at": "2026-06-25T02:41:01Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade gh-aw to v0.80.9 and authenticate Copilot via GitHub Actions token (#4695)\n\nUpgrades the GitHub Agentic Workflows compiler from v0.68.1 to v0.80.9\nand switches Copilot inference from the `COPILOT_GITHUB_TOKEN` PAT to\nthe built-in GitHub Actions token via the `copilot-requests: write`\npermission (org-billed Copilot).\n\n### Source workflows\n- Added `copilot-requests: write` to `permissions:` in `doc-update.md`\nand `docs-sync.md`.\n\n```yaml\npermissions:\n  contents: read\n  copilot-requests: write\n```\n\n### Regenerated artifacts (`gh aw compile`)\n- `doc-update.lock.yml` / `docs-sync.lock.yml`: `compiler_version` →\nv0.80.9, `gh-aw-actions/setup@v0.80.9`, pinned action/container digests\nrefreshed. Inference now uses `COPILOT_GITHUB_TOKEN: ${{ github.token\n}}`; the `secrets.COPILOT_GITHUB_TOKEN` references and the \"Validate\nCOPILOT_GITHUB_TOKEN secret\" step are removed.\n- `.github/aw/actions-lock.json`: refreshed.\n- `agentics-maintenance.yml`: **new**, auto-emitted by v0.80.9 (daily\ncleanup for expiring safe outputs). Disable via `aw.json {\"maintenance\":\nfalse}` if undesired.\n\n### Tooling\n- Added `.github/workflows/agentics-maintenance.yml` to\n`.prettierignore` so the auto-generated maintenance file is excluded\nfrom the prettier format check (consistent with the existing\n`*.lock.yml` ignore entry).\n- Added `.github/workflows/agentics-maintenance.yml` to\n`.github/actionlint.yml` ignore list so the auto-generated maintenance\nfile is excluded from the actionlint workflow lint check (consistent\nwith the existing `*.lock.yml` ignore entry).\n\n### Notes\n- `.github/agents/agentic-workflows.agent.md` still references v0.68.1\ndoc URLs; left untouched (out of scope / restricted path).\n- Org must have centralized Copilot billing enabled for token-based\ninference to work.\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>",
+      "parent_shas": [
+        "9b1e06bef8263d02918e167c2af6338437edd70b"
+      ],
+      "tree_sha": "0c6fcd2e6860248a00ec6fc3819ca049e39dff7e",
+      "html_url": "https://github.com/Azure/typespec-azure/commit/14692f9213b6f0ae52bc73a1b5142921854396ee",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Azure/typespec-azure:.github/workflows/docs-sync.md",
+          "source_full_name": "Azure/typespec-azure",
+          "md_path": ".github/workflows/docs-sync.md",
+          "commit_sha": "14692f9213b6f0ae52bc73a1b5142921854396ee",
+          "committed_at": "2026-06-25T02:41:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -6,6 +6,7 @@ permissions:\n   contents: read\n   pull-requests: read\n   issues: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [default]",
+          "snapshot_ref": "14692f9213b6f0ae52bc73a1b5142921854396ee",
+          "snapshot_blob_sha": "200765efe29f76c48136c57c14c62c63f54b03ed",
+          "snapshot_file": "snapshots/typespec-azure__Azure__14692f9213b6f0ae52bc73a1b5142921854396ee__docs-sync.md",
+          "snapshot_bytes": 3510,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/typespec-azure\",\"generated_owner\":\"Azure\",\"generated_repo\":\"typespec-azure\",\"generated_workflow_path\":\".github/workflows/docs-sync.lock.yml\",\"generated_workflow_file\":\"docs-sync.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/typespec-azure/blob/54cebe143536bbe077d04fa9fa60b0261d0d918a/.github/workflows/docs-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

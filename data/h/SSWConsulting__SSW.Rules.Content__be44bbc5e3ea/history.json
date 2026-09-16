@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/semrush-fixer.md",
+    "source_full_name": "SSWConsulting/SSW.Rules.Content",
+    "source_owner": "SSWConsulting",
+    "source_repo": "SSW.Rules.Content",
+    "md_path": ".github/workflows/semrush-fixer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/HEAD/.github/workflows/semrush-fixer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SSWConsulting/SSW.Rules.Content",
+      "generated_owner": "SSWConsulting",
+      "generated_repo": "SSW.Rules.Content",
+      "generated_workflow_path": ".github/workflows/semrush-fixer.lock.yml",
+      "generated_workflow_file": "semrush-fixer.lock.yml",
+      "generated_html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/semrush-fixer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/semrush-fixer.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/semrush-fixer.md",
+      "commit_sha": "67bb4e6710eedbb0a88cf9f4ae6c42357721750b",
+      "authored_at": "2026-04-27T16:14:45Z",
+      "committed_at": "2026-04-27T16:14:45Z",
+      "author_name": "Chloe Lin [SSW]",
+      "author_email": "chloelin@ssw.com.au",
+      "author_login": "Aibono1225",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "add SEMrush SEO fixer agentic workflow (#12608)\n\nIntroduces an automated GitHub Copilot agentic workflow that detects and\nfixes duplicate SEO frontmatter fields flagged by SEMrush Site\nAudit, replacing the need for manual intervention.\n\n### What's changed\n\n- .github/workflows/semrush-fixer.md — declarative agentic workflow\ndefinition (source of truth)\n- .github/workflows/semrush-fixer.lock.yml — compiled workflow generated\nby gh aw compile (do not edit manually)\n - scripts/semrush/semrush_client.py — SEMrush Site Audit API client\n- scripts/semrush/frontmatter_utils.py — reads/writes MDX frontmatter\nfields\n- scripts/semrush/map_urls_to_files.py — maps SEMrush page URLs to local\nfile paths\n - scripts/semrush/requirements.txt — Python dependencies\n - scripts/semrush/README.md — usage documentation\n- .gitignore — added Python cache and .claude/settings.local.json\nignores\n\n### How it works\n\nThe workflow runs every Monday at 9:00 AM UTC (or manually via\nworkflow_dispatch):\n\n1. Queries SEMrush Site Audit API for duplicate_meta and duplicate_title\nissues\n2. For each affected /rules MDX file, uses GitHub Copilot (gpt-5-mini)\nto generate unique replacement values\n3. Opens up to 2 PRs (one per issue type) with a before/after table for\nhuman review — nothing is auto-merged\n\n---------\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "54db844b428afa220bb64ebb22bcfce3b395d939"
+      ],
+      "tree_sha": "2da47bda6bdff1158d40bd999f9df58dd2bfa4b7",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/67bb4e6710eedbb0a88cf9f4ae6c42357721750b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/semrush-fixer.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/semrush-fixer.md",
+          "commit_sha": "67bb4e6710eedbb0a88cf9f4ae6c42357721750b",
+          "committed_at": "2026-04-27T16:14:45Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 143,
+          "file_deletions": 0,
+          "file_changes": 143,
+          "file_patch": "@@ -0,0 +1,143 @@\n+---\n+description: >\n+  SEMrush duplicate SEO field fixer.\n+  Runs weekly, audits all SEMrush Site Audit issues, prioritises by page count,\n+  and fixes duplicate seoDescription and title frontmatter on /rules pages.\n+  Opens one pull request per issue type for human review.\n+name: SEMrush SEO Fixer\n+\n+on:\n+  schedule:\n+    - cron: \"0 9 * * 1\" # Every Monday at 9:00 AM UTC\n+  workflow_dispatch:\n+\n+engine:\n+  id: copilot\n+  model: gpt-5-mini\n+\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - \"api.semrush.com\"\n+\n+concurrency:\n+  group: \"semrush-fixer\"\n+  cancel-in-progress: true\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[SEMrush] \"\n+    max: 2\n+\n+tools:\n+  github:\n+    lockdown: false\n+    toolsets: [repos, pull_requests]\n+    min-integrity: unapproved\n+    github-token: \"${{ secrets.GITHUB_TOKEN }}\"\n+---\n+\n+## Context\n+\n+You are an SEO automation agent for SSW's rules website (ssw.com.au/rules).\n+Your goal is to fix duplicate SEO frontmatter fields flagged by SEMrush Site Audit.\n+\n+The repository lives at `${{ github.workspace }}`. All `/rules` pages are MDX files at:\n+```\n+public/uploads/rules/<slug>/rule.mdx\n+```\n+\n+You have the following shell commands available (run all of them directly as shell commands):\n+\n+- `pip install -q requests && python scripts/semrush/semrush_client.py list-issues` — lists all SEMrush issue types with page counts; items with `fixable_as` are ones you can fix\n+- `python scripts/semrush/semrush_client.py get-pages <issue_type>` — returns JSON array of `{url, file_path}` for a given issue type (`duplicate_meta` or `duplicate_title`)\n+- `python scripts/semrush/frontmatter_utils.py read <file_path>` — returns JSON with current `title` and `seoDescription`\n+- `python scripts/semrush/frontmatter_utils.py write <file_path> <field> \"<value>\"` — writes a new value to a frontmatter field; prints `OK` on success\n+\n+---\n+\n+## Step 1 — Audit and prioritise\n+\n+Run `pip install -q requests && python scripts/semrush/semrush_client.py list-issues` to see all current problems and their scale.\n+\n+From the results, identify which issue types are `fixable_as` (only `duplicate_meta` and `duplicate_title` are supported).\n+\n+**Prioritisation rules:**\n+- Skip an issue type if `count` is 0.\n+- If both are worth fixing, process the one with the higher count first.\n+- Briefly state your decision (what you will fix and why) before starting work.\n+\n+---\n+\n+## Step 2 — Fix each issue type\n+\n+For each issue type you decide to fix, follow this workflow:\n+\n+### 2a — Get affected pages\n+\n+Run:\n+```bash\n+python scripts/semrush/semrush_client.py get-pages <issue_type>\n+```\n+This returns a JSON array of `{url, file_path}` objects.\n+\n+### 2b — Fix each page\n+\n+For each page:\n+\n+1. Run `python scripts/semrush/frontmatter_utils.py read <file_path>` to get the current `title` and `seoDescription`.\n+2. Generate a unique replacement value based on the page title and content:\n+   - **seoDescription**: strictly under 160 characters, no filler openers\n+     (`Learn` / `Discover` / `Find out` / `In this article` / `This page`),\n+     no trailing full stop, specific and concrete.\n+   - **title**: must start with `Do you` and end with `?`, unique, descriptive,\n+     faithful to the page content. Example: `Do you use pull requests for all code changes?`\n+3. Run `python scripts/semrush/frontmatter_utils.py write <file_path> <field> \"<value>\"` to write the replacement.\n+4. If the write fails, try a different value and retry.\n+5. Keep track of values you have already written — never reuse a value across pages.\n+\n+### 2c — Commit and open a PR\n+\n+After all pages for this issue type are processed:\n+\n+1. Create a branch from `main`:\n+   - For `duplicate_meta`: `semrush/fix-duplicate-meta`\n+   - For `duplicate_title`: `semrush/fix-duplicate-titles`\n+2. Stage and commit only the files you modified:\n+   ```\n+   git add -- <file1> <file2> ...\n+   git commit -m \"fix(seo): replace duplicate <field> [SEMrush audit]\"\n+   git push origin <branch>\n+   ```\n+3. Check if an open PR already exists for this branch using the GitHub `pull_requests` toolset.\n+   If one exists, skip PR creation and log a message.\n+4. If no open PR exists, call `create-pull-request` (safe-output) **exactly once** with:\n+   - **title**: `Fix duplicate <seoDescription|title> for /rules (<N> pages)`\n+   - **body**: (see format below)\n+\n+**PR body format:**\n+\n+```markdown\n+Fixes duplicate `<field>` frontmatter on <N> /rules page(s) flagged by SEMrush Site Audit.\n+Only frontmatter was modified — page body and all other fields are unchanged.\n+New values were generated by AI.\n+\n+| File | Old <field> | New <field> |\n+|------|-------------|-------------|\n+| `<rel_path>` | <old value> | <new value> |\n+...\n+\n+> AI-generated — human review required before merge.\n+```\n+\n+---\n+\n+## Step 3 — Summary\n+\n+After all issue types are processed, output a summary:\n+- Which issue types were fixed and how many pages each\n+- Which were skipped and why\n+- Any pages that failed and were skipped",
+          "snapshot_ref": "67bb4e6710eedbb0a88cf9f4ae6c42357721750b",
+          "snapshot_blob_sha": "ed7c64ca976cc1509103904ed8e6e8cdb2265b3d",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__67bb4e6710eedbb0a88cf9f4ae6c42357721750b__semrush-fixer.md",
+          "snapshot_bytes": 4922,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/semrush-fixer.lock.yml\",\"generated_workflow_file\":\"semrush-fixer.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/semrush-fixer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

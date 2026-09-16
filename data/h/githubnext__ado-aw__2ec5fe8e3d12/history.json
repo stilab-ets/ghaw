@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/frontmatter-aligner.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/frontmatter-aligner.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/frontmatter-aligner.lock.yml",
+      "generated_workflow_file": "frontmatter-aligner.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/frontmatter-aligner.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:48:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/frontmatter-aligner.md",
+      "commit_sha": "d3af7e667034a42fb534becb820b0dadb7a9118a",
+      "authored_at": "2026-05-07T20:46:04Z",
+      "committed_at": "2026-05-07T20:46:04Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): add frontmatter-aligner gh-aw workflow (#448)",
+      "parent_shas": [
+        "0ca3a2530cfbb64d3d8c7c8cdc4d4213b7b05008"
+      ],
+      "tree_sha": "8ee8de5b040767966733faec53edd7bc5117736d",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/d3af7e667034a42fb534becb820b0dadb7a9118a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/frontmatter-aligner.md",
+          "commit_sha": "d3af7e667034a42fb534becb820b0dadb7a9118a",
+          "committed_at": "2026-05-07T20:46:04Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 171,
+          "file_deletions": 0,
+          "file_changes": 171,
+          "file_patch": "@@ -0,0 +1,171 @@\n+---\n+on:\n+  schedule: every 6 hours\n+  skip-if-match: \"is:issue is:open label:frontmatter-alignment\"\n+description: Compares ado-aw front matter schema with gh-aw and files an issue with a concrete Rust change proposal to align the two\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash: [\"*\"]\n+  web-fetch:\n+network:\n+  allowed: [defaults, rust]\n+runtimes:\n+  rust:\n+    version: \"stable\"\n+    action-repo: \"actions-rust-lang/setup-rust-toolchain\"\n+    action-version: \"v1\"\n+safe-outputs:\n+  create-issue:\n+    max: 1\n+    labels: [frontmatter-alignment]\n+---\n+\n+# Front Matter Aligner: ado-aw ↔ gh-aw\n+\n+You are a Rust engineer maintaining the **ado-aw** compiler — a CLI tool that compiles markdown agent definitions into Azure DevOps pipeline YAML. Your task is to keep the ado-aw front matter schema aligned with the upstream **gh-aw** (GitHub Agentic Workflows) schema.\n+\n+## Your Task\n+\n+1. Fetch the current gh-aw front matter schema documentation\n+2. Compare it against the ado-aw `FrontMatter` struct in Rust\n+3. Identify alignment gaps where ado-aw could adopt gh-aw fields without breaking existing functionality\n+4. Validate that your proposed Rust code changes compile correctly\n+5. File an issue with a concrete, ready-to-apply proposal\n+\n+If the schemas are already fully aligned (or no non-breaking additions are feasible), do nothing and exit without creating an issue.\n+\n+---\n+\n+## Step 1 — Fetch the gh-aw Schema\n+\n+Fetch the canonical front matter reference from:\n+\n+```\n+https://raw.githubusercontent.com/github/gh-aw/main/.github/aw/syntax.md\n+```\n+\n+This file documents every gh-aw frontmatter field. Read it carefully and extract the list of field names and their purposes.\n+\n+---\n+\n+## Step 2 — Read the ado-aw Schema\n+\n+Read `src/compile/types.rs`. Focus on:\n+\n+- The `FrontMatter` struct (search for `struct FrontMatter`) — this is the root front matter type\n+- Supporting types: `EngineOptions`, `ToolsConfig`, `RuntimesConfig`, `OnConfig`, `NetworkConfig`, `PermissionsConfig`\n+- Serde field names (check `#[serde(rename = \"...\")]` annotations)\n+\n+Build a complete list of the field names that ado-aw currently supports.\n+\n+---\n+\n+## Step 3 — Compare and Identify Gaps\n+\n+For each field in gh-aw's schema, determine:\n+\n+| Status | Meaning |\n+|--------|---------|\n+| ✅ Present | ado-aw already supports this field (same or equivalent serde name) |\n+| ⚠️ Partial | ado-aw has a similar concept but the field name or structure differs |\n+| ❌ Missing | ado-aw does not have this field at all |\n+\n+**Focus on fields that are:**\n+- Applicable to Azure DevOps pipelines (skip fields that are GitHub Actions-only with no ADO analogue)\n+- Non-breaking additions (adding `Option<T>` with `#[serde(default)]`)\n+- Meaningful for ado-aw users (e.g., `timeout-minutes`, `strict`, `run-name`, `env` extensions)\n+\n+**Skip fields that:**\n+- Are purely GitHub Actions/OIDC concepts (e.g., `github-token`, `github-app`, `id-token`)\n+- Require major architectural changes (e.g., `experiments`, `imports`, `import-schema`)\n+- Conflict with ado-aw's ADO-specific design (e.g., `runs-on`, `concurrency.job-discriminator`)\n+\n+---\n+\n+## Step 4 — Check for an Existing Open Issue\n+\n+Before proceeding, search open issues for one with the label `frontmatter-alignment`. If such an issue already exists, exit without creating a new one.\n+\n+---\n+\n+## Step 5 — Draft the Rust Changes\n+\n+For each alignment gap you decide to address, write the exact Rust code additions needed in `src/compile/types.rs`:\n+\n+1. Add the new field to the appropriate struct with:\n+   - `#[serde(default)]` so it is optional and backward-compatible\n+   - The exact serde field name matching gh-aw (use `#[serde(rename = \"...\")]` as needed)\n+   - A doc comment explaining the field and referencing its gh-aw equivalent\n+   - The correct Rust type (`Option<T>` for optional fields, `bool` with `#[serde(default)]` for flags)\n+\n+2. Note whether the field needs to be *used* anywhere in the compiler (e.g., wired into pipeline generation) or whether parsing and storing it is sufficient for now.\n+\n+3. Write a corresponding `docs/front-matter.md` documentation entry for the field.\n+\n+---\n+\n+## Step 6 — Validate the Proposal\n+\n+Apply the proposed changes temporarily to verify they compile:\n+\n+```bash\n+cargo check 2>&1\n+```\n+\n+If `cargo check` fails, fix the errors before proceeding. Once it passes, revert the temporary edits — the issue will carry the proposal, not committed code.\n+\n+---\n+\n+## Step 7 — File an Issue\n+\n+Create an issue with the following structure:\n+\n+**Title**: `feat: align FrontMatter fields with gh-aw schema — [brief summary of gaps found]`\n+\n+**Body**:\n+```markdown\n+## Front Matter Alignment Proposal: ado-aw ↔ gh-aw\n+\n+This issue was filed automatically by the `frontmatter-aligner` workflow after detecting schema drift.\n+\n+### Alignment Summary\n+\n+| Field | gh-aw | ado-aw (current) | Notes |\n+|-------|-------|------------------|-------|\n+| `field-name` | ✅ | ❌ | [why it's useful for ADO users] |\n+\n+### Proposed Changes to `src/compile/types.rs`\n+\n+For each missing field, include the exact Rust snippet to add:\n+\n+#### `field-name`\n+\n+**Where to add**: [struct name, after field `existing-field`]\n+\n+```rust\n+/// [doc comment explaining the field]\n+/// Aligned with gh-aw's `field-name` frontmatter field.\n+#[serde(default, rename = \"field-name\")]\n+pub field_name: Option<FieldType>,\n+```\n+\n+**Does it need compiler wiring?** [Yes — [describe what] / No — parsing only for now]\n+\n+### Proposed Changes to `docs/front-matter.md`\n+\n+```markdown\n+[documentation entry for the new field(s)]\n+```\n+\n+### Validation\n+\n+`cargo check` passed with the proposed changes applied.\n+\n+---\n+*Filed automatically by the frontmatter-aligner workflow.*\n+```",
+          "snapshot_ref": "d3af7e667034a42fb534becb820b0dadb7a9118a",
+          "snapshot_blob_sha": "7faea7c9bfe726f77ed6db0c712e84eeda407a7c",
+          "snapshot_file": "snapshots/ado-aw__githubnext__d3af7e667034a42fb534becb820b0dadb7a9118a__frontmatter-aligner.md",
+          "snapshot_bytes": 5695,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/frontmatter-aligner.lock.yml\",\"generated_workflow_file\":\"frontmatter-aligner.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/frontmatter-aligner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/frontmatter-aligner.md",
+      "commit_sha": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+      "authored_at": "2026-05-24T17:50:34Z",
+      "committed_at": "2026-05-24T17:50:34Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): add dev.azure.com and learn.microsoft.com to all network.allowed lists (#736)",
+      "parent_shas": [
+        "a1a98db75240f3dae6f2edf2eb4a8bbab720680a"
+      ],
+      "tree_sha": "6aba8911a30a93c9b59c41d7bb45a9b4a705e21d",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/8b10d174d0769f5e61962f3d2e37938ac9d86374",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/frontmatter-aligner.md",
+          "commit_sha": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+          "committed_at": "2026-05-24T17:50:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -13,7 +13,7 @@ tools:\n   bash: [\"*\"]\n   web-fetch:\n network:\n-  allowed: [defaults, rust]\n+  allowed: [defaults, rust, dev.azure.com, learn.microsoft.com]\n runtimes:\n   rust:\n     version: \"stable\"",
+          "snapshot_ref": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+          "snapshot_blob_sha": "cd57d2e434cab865a7b4995003d58492e2d67dd9",
+          "snapshot_file": "snapshots/ado-aw__githubnext__8b10d174d0769f5e61962f3d2e37938ac9d86374__frontmatter-aligner.md",
+          "snapshot_bytes": 5731,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/frontmatter-aligner.lock.yml\",\"generated_workflow_file\":\"frontmatter-aligner.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/frontmatter-aligner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/frontmatter-aligner.md",
+      "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "authored_at": "2026-06-14T17:57:37Z",
+      "committed_at": "2026-06-14T17:57:37Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): disable AI-credit limits and use copilot-requests permission (#1010)\n\nSet max-ai-credits: -1 and max-daily-ai-credits: -1 on every agentic workflow to remove the per-run and rolling-24h AIC guardrails. Add copilot-requests: write to each permissions block so Copilot inference uses the run's GITHUB_TOKEN instead of the COPILOT_GITHUB_TOKEN PAT, eliminating periodic token refreshes.\n\nLock files regenerated with gh aw compile (v0.79.6); also includes the actions-lock.json refresh, copilot-setup-steps.yml SHA bump, the generated agentics-maintenance.yml, and the gh-aw v0.79.6 agents/skills artifacts emitted by the same compile run.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e"
+      ],
+      "tree_sha": "9ddb4d6d49e0ee57f481587c53366bbbc8b6fc44",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/frontmatter-aligner.md",
+          "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "committed_at": "2026-06-14T17:57:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -7,6 +7,7 @@ permissions:\n   contents: read\n   pull-requests: read\n   issues: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [default]\n@@ -23,6 +24,8 @@ safe-outputs:\n   create-issue:\n     max: 1\n     labels: [frontmatter-alignment]\n+max-ai-credits: -1\n+max-daily-ai-credits: -1\n ---\n \n # Front Matter Aligner: ado-aw ↔ gh-aw",
+          "snapshot_ref": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "snapshot_blob_sha": "caf98b1f8d4f3c4069e4ab9c37a7fc6262710b0c",
+          "snapshot_file": "snapshots/ado-aw__githubnext__1e567a9a63b77d670b547544df5d7b2bf37b8985__frontmatter-aligner.md",
+          "snapshot_bytes": 5801,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/frontmatter-aligner.lock.yml\",\"generated_workflow_file\":\"frontmatter-aligner.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/frontmatter-aligner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/frontmatter-aligner.md",
+      "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "authored_at": "2026-07-02T09:30:40Z",
+      "committed_at": "2026-07-02T09:30:40Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): remove AI credit budget caps on agentic workflows (#1298)\n\nSet safe-outputs.threat-detection.max-ai-credits to -1 on all 19\ngh-aw workflows and recompile their lock files so both the agent and\nthreat-detection stages run with unlimited AI credit budgets.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "105e11b195b79286266bef2fe1347a90a414531f"
+      ],
+      "tree_sha": "802695ed1f750dceae8470c21cadf1030203215f",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/frontmatter-aligner.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/frontmatter-aligner.md",
+          "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "committed_at": "2026-07-02T09:30:40Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -21,6 +21,8 @@ runtimes:\n     action-repo: \"actions-rust-lang/setup-rust-toolchain\"\n     action-version: \"v1\"\n safe-outputs:\n+  threat-detection:\n+    max-ai-credits: -1\n   create-issue:\n     max: 1\n     labels: [frontmatter-alignment]",
+          "snapshot_ref": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "snapshot_blob_sha": "b4d6e34d1517fb468a72a295136b09f9b1af3db1",
+          "snapshot_file": "snapshots/ado-aw__githubnext__e06f17da0e8020a36fdff4b6033adc32f6b09ce1__frontmatter-aligner.md",
+          "snapshot_bytes": 5844,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/frontmatter-aligner.lock.yml\",\"generated_workflow_file\":\"frontmatter-aligner.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/frontmatter-aligner.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "royshil/obs-backgroundremoval:.github/workflows/validate-pr.md",
+    "source_full_name": "royshil/obs-backgroundremoval",
+    "source_owner": "royshil",
+    "source_repo": "obs-backgroundremoval",
+    "md_path": ".github/workflows/validate-pr.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/royshil/obs-backgroundremoval/blob/HEAD/.github/workflows/validate-pr.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "royshil/obs-backgroundremoval",
+      "generated_owner": "royshil",
+      "generated_repo": "obs-backgroundremoval",
+      "generated_workflow_path": ".github/workflows/validate-pr.lock.yml",
+      "generated_workflow_file": "validate-pr.lock.yml",
+      "generated_html_url": "https://github.com/royshil/obs-backgroundremoval/blob/04f7743dbd93619cecd292226e53fac46166d851/.github/workflows/validate-pr.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:22+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "royshil/obs-backgroundremoval:.github/workflows/validate-pr.md",
+      "source_full_name": "royshil/obs-backgroundremoval",
+      "md_path": ".github/workflows/validate-pr.md",
+      "commit_sha": "0dd2746cff35c59de74924737de2d5913e72ffe5",
+      "authored_at": "2026-03-30T22:54:20Z",
+      "committed_at": "2026-03-30T22:54:20Z",
+      "author_name": "Kaito Udagawa",
+      "author_email": "umireon@kaito.tokyo",
+      "author_login": "umireon",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Hermetic build (#846)\n\n* Hermetic build\n\nSigned-off-by: Kaito Udagawa <umireon@kaito.tokyo>\n\n* Fix for review comments\n\nSigned-off-by: Kaito Udagawa <umireon@kaito.tokyo>\n\n---------\n\nSigned-off-by: Kaito Udagawa <umireon@kaito.tokyo>",
+      "parent_shas": [
+        "a503c2daa89892967426a7b4bdc9a515222d22ff"
+      ],
+      "tree_sha": "a077534a2d4b16b23da63e651c24d9cd50cb1b81",
+      "html_url": "https://github.com/royshil/obs-backgroundremoval/commit/0dd2746cff35c59de74924737de2d5913e72ffe5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "royshil/obs-backgroundremoval:.github/workflows/validate-pr.md",
+          "source_full_name": "royshil/obs-backgroundremoval",
+          "md_path": ".github/workflows/validate-pr.md",
+          "commit_sha": "0dd2746cff35c59de74924737de2d5913e72ffe5",
+          "committed_at": "2026-03-30T22:54:20Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 202,
+          "file_deletions": 0,
+          "file_changes": 202,
+          "file_patch": "@@ -0,0 +1,202 @@\n+---\n+# SPDX-FileCopyrightText: 2026 Kaito Udagawa <umireon@kaito.tokyo>\n+#\n+# SPDX-License-Identifier: Apache-2.0\n+\n+strict: true\n+\n+description: Validate if this Pull Request meets our project criteria. COPILOT_GITHUB_TOKEN needs to be configured.\n+\n+metadata:\n+  author: Kaito Udagawa\n+  version: 1.1.1\n+  date: 2026-03-29\n+\n+engine:\n+  id: copilot\n+  model: gpt-5-mini\n+\n+on:\n+  label_command:\n+    name: validate\n+    events: [pull_request]\n+\n+  status-comment: false\n+\n+if: startsWith(github.ref, 'refs/pull/') && github.event.label.name == 'validate'\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+steps:\n+  - name: Fetch Pull Request commits\n+    shell: bash --noprofile --norc -euo pipefail -O nullglob {0}\n+    env:\n+      GH_TOKEN: ${{ github.token }}\n+    run: |\n+      ARGS=(\n+        \"repos/$GITHUB_REPOSITORY/pulls/${GITHUB_REF_NAME%/merge}/commits\"\n+        -H \"Accept: application/vnd.github+json\"\n+        -H \"X-GitHub-Api-Version: 2026-03-10\"\n+        --paginate\n+        --jq '[.[] | {sha: .sha, message: .commit.message, verification: .commit.verification}]'\n+      )\n+      gh api \"${ARGS[@]}\" > /tmp/gh-aw/agent/pr_commits.json\n+\n+  - name: Extract items on Pull Request Checklist\n+    shell: bash --noprofile --norc -euo pipefail -O nullglob {0}\n+    env:\n+      GH_TOKEN: ${{ github.token }}\n+    run: |\n+      VALID_ITEMS=(\n+        'I have read the latest CONTRIBUTING.md.'\n+        'I have acknowledged the licensing and patent grant policy.'\n+        'I have included the required license headers.'\n+        'I am confident with my code integrity.'\n+        'I have signed off and verified all my commits.'\n+      )\n+\n+      PR_NUMBER=\"${GITHUB_REF_NAME%/merge}\"\n+\n+      GH_PR_VIEW_ARGS=(\n+        --json body\n+        --jq '[.body | splits(\"\\r?\\n\") | try match(\"^- \\\\[[ xX]\\\\] (.*)$\") catch empty]'\n+      )\n+\n+      gh pr view \"$PR_NUMBER\" \"${GH_PR_VIEW_ARGS[@]}\" > /tmp/raw_pr_checklist.json\n+\n+      {\n+        echo '## Pull Request Checklist (Listing all the valid items, including not found errors)'\n+        echo\n+        for item in \"${VALID_ITEMS[@]}\"; do\n+          if ! jq -e -r --arg item \"$item\" '.[] | select(.captures[0].string == $item) | .string' /tmp/raw_pr_checklist.json; then\n+            echo \"# ERROR: No lines found for '$item'\"\n+          fi\n+        done\n+      } >/tmp/gh-aw/agent/pr_checklist.md\n+\n+safe-outputs:\n+  add-comment:\n+\n+  messages:\n+    append-only-comments: true\n+\n+  jobs:\n+    accept_validate_pr:\n+      name: Accept validate-pr\n+      description: Decide if the result of this workflow is acceptable.\n+\n+      inputs:\n+        commit_signing:\n+          description: A boolean value to represent if commit signing check is passed or not.\n+          required: true\n+          type: boolean\n+        dco:\n+          description: A boolean value to represent if DCO check is passed or not.\n+          required: true\n+          type: boolean\n+        pull_request_checklist:\n+          description: A boolean value to represent if Pull Request Checklist check is passed or not.\n+          required: true\n+          type: boolean\n+\n+      runs-on: ubuntu-slim\n+\n+      permissions: {}\n+\n+      steps:\n+        - name: Accept or Reject\n+          shell: bash --noprofile --norc -euo pipefail -O nullglob {0}\n+          run: |\n+            if ! [[ -f \"$GH_AW_AGENT_OUTPUT\" ]]; then\n+              echo \"No agent output found.\"\n+              exit 1\n+            fi\n+\n+            COUNT=\"$(jq '[.items[] | select(.type == \"accept_validate_pr\")] | length' \"$GH_AW_AGENT_OUTPUT\")\"\n+            if [[ \"$COUNT\" -ne 1 ]]; then\n+              echo \"ERROR: $COUNT inputs received, only one was expected.\"\n+              exit 1\n+            fi\n+\n+            COMMIT_SIGNING=\"$(jq -r '.items[] | select(.type == \"accept_validate_pr\") | .commit_signing' \"$GH_AW_AGENT_OUTPUT\")\"\n+            DCO=\"$(jq -r '.items[] | select(.type == \"accept_validate_pr\") | .dco' \"$GH_AW_AGENT_OUTPUT\")\"\n+            PULL_REQUEST_CHECKLIST=\"$(jq -r '.items[] | select(.type == \"accept_validate_pr\") | .pull_request_checklist' \"$GH_AW_AGENT_OUTPUT\")\"\n+\n+            rejected=0\n+            messages=()\n+\n+            if [[ \"$COMMIT_SIGNING\" != \"true\" ]]; then\n+              messages+=(\"Commit Signing check was rejected.\")\n+              rejected=1\n+            fi\n+\n+            if [[ \"$DCO\" != \"true\" ]]; then\n+              messages+=(\"DCO check was rejected.\")\n+              rejected=1\n+            fi\n+\n+            if [[ \"$PULL_REQUEST_CHECKLIST\" != \"true\" ]]; then\n+              messages+=(\"Pull Request Checklist check was rejected.\")\n+              rejected=1\n+            fi\n+\n+            if [[ \"$rejected\" -eq 1 ]]; then\n+              messages+=(\"ERROR: $GITHUB_JOB rejected this check.\")\n+            else\n+              messages+=(\"$GITHUB_JOB accepted the overall result.\")\n+            fi\n+\n+            for m in \"${messages[@]}\"; do\n+              printf '%s\\n' \"$m\"\n+            done\n+\n+            exit \"$rejected\"\n+\n+  activation-comments: false\n+  mentions:\n+    allow-team-members: false\n+    allow-context: false\n+  report-failure-as-issue: false\n+  staged: false\n+---\n+\n+# Validate Pull Request\n+\n+Validate if this Pull Request meets our project criteria.\n+\n+## Trigger\n+\n+This workflow is triggered by label command on Pull Request.\n+\n+## Checks\n+\n+- **Commit Signing**\n+  - **Input**: Read `/tmp/gh-aw/agent/pr_commits.json` for summarized commit objects.\n+  - **Verification**: Inspect the `verification` object of every commit on this Pull Request, and verify if all commits on this Pull Request are properly signed.\n+  - **Context**: Refer to `CONTRIBUTING.md` for this commit signing policy.\n+\n+- **DCO (Developer’s Certificate of Origin)**\n+  - **Input**: Read `/tmp/gh-aw/agent/pr_commits.json` for summarized commit objects.\n+  - **Verification**: Inspect the `message` field of every commit on this Pull Request, and verify if all commits on this Pull Request contain a valid `Signed-off-by:` trailer for DCO compliance.\n+  - **Context**: Refer to `CONTRIBUTING.md` for this policy.\n+\n+- **Pull Request Checklist**\n+  - **Input**: Read `/tmp/gh-aw/agent/pr_checklist.md` for extracted and sanitized Pull Request checklist using whitelist.\n+  - **Verification:** Read the extracted Pull Request checklist, and verify if it contains the Pull Request template and all the items are checked.\n+\n+## Outputs\n+\n+You MUST add a single pull request comment and use the accept tool once as described below.\n+\n+**Pull Request Comment**:\n+\n+- **Condition**: Always add a summary comment, regardless of the check result.\n+- **Output Format**: You MUST add a summary comment that describes what you verify on the Pull Request.\n+- **Summary Line**: The first line of your comment MUST be a single-line summary of this validation, starting with either ✅ or 🚫.\n+\n+**Accept tool**:\n+\n+- **Condition**: Always call the `accept_validate_pr` tool, regardless of the check result.\n+- **Output Format**: You MUST send the check result to the `accept_validate_pr` tool to control merge admittance, providing the three boolean fields: `commit_signing`, `dco`, and `pull_request_checklist`.",
+          "snapshot_ref": "0dd2746cff35c59de74924737de2d5913e72ffe5",
+          "snapshot_blob_sha": "e881cdfbb29e6ebbc728ee7112e7e8d774ef726e",
+          "snapshot_file": "snapshots/obs-backgroundremoval__royshil__0dd2746cff35c59de74924737de2d5913e72ffe5__validate-pr.md",
+          "snapshot_bytes": 6958,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"royshil/obs-backgroundremoval\",\"generated_owner\":\"royshil\",\"generated_repo\":\"obs-backgroundremoval\",\"generated_workflow_path\":\".github/workflows/validate-pr.lock.yml\",\"generated_workflow_file\":\"validate-pr.lock.yml\",\"generated_html_url\":\"https://github.com/royshil/obs-backgroundremoval/blob/04f7743dbd93619cecd292226e53fac46166d851/.github/workflows/validate-pr.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

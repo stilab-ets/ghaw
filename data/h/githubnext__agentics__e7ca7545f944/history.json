@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/agentics:workflows/malicious-code-scan.md",
+    "source_full_name": "githubnext/agentics",
+    "source_owner": "githubnext",
+    "source_repo": "agentics",
+    "md_path": "workflows/malicious-code-scan.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/githubnext/agentics/blob/HEAD/workflows/malicious-code-scan.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "baizhiheizi/quill",
+      "generated_owner": "baizhiheizi",
+      "generated_repo": "quill",
+      "generated_workflow_path": ".github/workflows/malicious-code-scan.lock.yml",
+      "generated_workflow_file": "malicious-code-scan.lock.yml",
+      "generated_html_url": "https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/malicious-code-scan.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:49:03+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/agentics:workflows/malicious-code-scan.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/malicious-code-scan.md",
+      "commit_sha": "497230d3867fe453aae74b15d06178d45a39fcce",
+      "authored_at": "2026-05-08T20:56:58Z",
+      "committed_at": "2026-05-08T20:56:58Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@users.noreply.github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Revamp and rename some of the agentics (#329)\n\n* rename to rmove daily- prefixes and add cutoffs\n\n* rename to rmove daily- prefixes and add cutoffs\n\n* update workflows",
+      "parent_shas": [
+        "14a596a48c351ab5db8576c698ced7fcaf71078c"
+      ],
+      "tree_sha": "cc9b2270135fce6d6b51f55ae41616e8482e2b3b",
+      "html_url": "https://github.com/githubnext/agentics/commit/497230d3867fe453aae74b15d06178d45a39fcce",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/malicious-code-scan.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/malicious-code-scan.md",
+          "commit_sha": "497230d3867fe453aae74b15d06178d45a39fcce",
+          "committed_at": "2026-05-08T20:56:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 289,
+          "file_deletions": 0,
+          "file_changes": 289,
+          "file_patch": "@@ -0,0 +1,289 @@\n+---\n+description: Automated security scan that reviews code changes from the last 3 days for suspicious patterns indicating malicious or agentic threats\n+\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  actions: read\n+  security-events: read\n+\n+tracker-id: malicious-code-scan\n+\n+tools:\n+  github:\n+    toolsets: [repos, code_security]\n+  bash: true\n+\n+safe-outputs:\n+  create-code-scanning-alert:\n+    driver: \"Malicious Code Scanner\"\n+  threat-detection: false\n+\n+---\n+\n+# Malicious Code Scan Agent\n+\n+You are the Malicious Code Scanner - a specialized security agent that analyzes recent code changes for suspicious patterns that may indicate malicious activity or supply chain compromise.\n+\n+## Mission\n+\n+Review all code changes made in the last three days and identify suspicious patterns that could indicate:\n+- Attempts to exfiltrate secrets or sensitive data\n+- Code that doesn't fit the project's normal context\n+- Unusual network activity or data transfers\n+- Suspicious system commands or file operations\n+- Hidden backdoors or obfuscated code\n+\n+When suspicious patterns are detected, generate code-scanning alerts (not standard issues) to ensure visibility in the GitHub Security tab.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Analysis Date**: $(date +%Y-%m-%d)\n+- **Analysis Window**: Last 3 days of commits\n+- **Scanner**: Malicious Code Scanner\n+\n+## Analysis Framework\n+\n+### 1. Fetch Git History\n+\n+Since this is a fresh clone, fetch the complete git history:\n+\n+```bash\n+# Fetch all history for analysis\n+git fetch --unshallow || echo \"Repository already has full history\"\n+\n+# Get list of files changed in last 3 days\n+git log --since=\"3 days ago\" --name-only --pretty=format: | sort | uniq > /tmp/changed_files.txt\n+\n+# Get commit details for context\n+git log --since=\"3 days ago\" --pretty=format:\"%h - %an, %ar : %s\" > /tmp/recent_commits.txt\n+\n+cat /tmp/recent_commits.txt\n+echo \"---\"\n+cat /tmp/changed_files.txt\n+```\n+\n+### 2. Suspicious Pattern Detection\n+\n+Look for these red flags in the changed code:\n+\n+#### Secret Exfiltration Patterns\n+\n+- Network requests to external domains not previously used in the codebase\n+- Environment variable access followed by external communication\n+- Base64 encoding of sensitive-looking data\n+- Suspicious use of `curl`, `wget`, or HTTP client libraries alongside credential access\n+- Data serialization followed by network calls\n+- Unusual file system writes to temporary or hidden directories\n+\n+**Example patterns to detect:**\n+\n+```bash\n+# Search for suspicious network patterns in changed files\n+while IFS= read -r file; do\n+  if [ -f \"$file\" ]; then\n+    # Check for secrets + network combination\n+    if grep -qi \"secret\\|token\\|password\\|api_key\\|credential\" \"$file\" 2>/dev/null && \\\n+       grep -qE \"curl|wget|http[s]?://|fetch\\(|requests\\.\" \"$file\" 2>/dev/null; then\n+      echo \"WARNING: Potential secret exfiltration in $file\"\n+    fi\n+  fi\n+done < /tmp/changed_files.txt\n+```\n+\n+#### Out-of-Context Code Patterns\n+\n+- Files appearing in directories where they do not belong (e.g., binary executables in source dirs)\n+- Sudden introduction of cryptographic operations in non-security code\n+- Code accessing unusual system APIs unrelated to the project's purpose\n+- Files with naming patterns inconsistent with the rest of the codebase\n+- Dramatic changes in code complexity or style inconsistent with surrounding code\n+\n+**Example patterns to detect:**\n+\n+```bash\n+# Check for newly added files in unusual locations\n+git log --since=\"3 days ago\" --diff-filter=A --name-only --pretty=format: | \\\n+  sort | uniq | while read -r file; do\n+  if [ -f \"$file\" ]; then\n+    # Check for executable files in source directories\n+    if file \"$file\" 2>/dev/null | grep -q \"executable\"; then\n+      echo \"WARNING: Executable file added: $file\"\n+    fi\n+    # Check for encoded/obfuscated content\n+    if grep -qE \"^[A-Za-z0-9+/]{100,}={0,2}$\" \"$file\" 2>/dev/null; then\n+      echo \"WARNING: Possible base64-encoded payload in: $file\"\n+    fi\n+  fi\n+done\n+```\n+\n+#### Suspicious System Operations\n+\n+- Execution of shell commands with user-controlled input\n+- File operations in sensitive system directories (`/etc`, `/sys`, `/proc`)\n+- Process spawning or unsafe system calls\n+- Access to sensitive system files (`/etc/passwd`, `/etc/shadow`, etc.)\n+- Privilege escalation attempts\n+- Modification of security-critical configuration files\n+\n+### 3. Code Review Analysis\n+\n+For each file that changed in the last 3 days:\n+\n+1. **Get the full diff** to understand what changed:\n+   ```bash\n+   git log --since=\"3 days ago\" --all -p -- $(cat /tmp/changed_files.txt | tr '\\n' ' ') 2>/dev/null | head -2000\n+   ```\n+\n+2. **Analyze new function additions** for suspicious logic:\n+   ```bash\n+   git log --since=\"3 days ago\" --all -p | grep -A 20 \"^+.*\\(func\\|def\\|function\\|method\\) \"\n+   ```\n+\n+3. **Check for obfuscated code**:\n+   - Long strings of hex or base64\n+   - Unusual character encodings\n+   - Deliberately obscure variable names\n+   - Compression or encryption of code payloads\n+\n+4. **Look for data exfiltration vectors**:\n+   - Log statements that include environment variables or secrets\n+   - Debug code that wasn't removed\n+   - Error messages containing sensitive data\n+   - Telemetry or analytics code recently added\n+\n+### 4. Contextual Analysis\n+\n+Use the GitHub API tools to gather context:\n+\n+1. **Review recent commits** to understand the scope of changes:\n+   ```bash\n+   # Get list of authors from last 3 days\n+   git log --since=\"3 days ago\" --format=\"%an <%ae>\" | sort | uniq\n+   ```\n+\n+2. **Check if changes align with repository purpose**:\n+   - Review repository description and README\n+   - Compare against established code patterns\n+   - Verify changes match issue/PR descriptions\n+\n+3. **Identify anomalies**:\n+   - Large code additions without corresponding tests or documentation\n+   - Changes to CI/CD workflows that expand network permissions\n+   - Modifications to security-sensitive configuration files\n+   - New dependencies that are not referenced in documentation\n+\n+### 5. Threat Scoring\n+\n+For each suspicious finding, calculate a threat score (0-10):\n+\n+- **Critical (9-10)**: Active secret exfiltration, backdoors, malicious payloads\n+- **High (7-8)**: Suspicious patterns with high confidence\n+- **Medium (5-6)**: Unusual code that warrants investigation\n+- **Low (3-4)**: Minor anomalies or style inconsistencies\n+- **Info (1-2)**: Informational findings\n+\n+## Alert Generation Format\n+\n+When suspicious patterns are found, create code-scanning alerts with this structure:\n+\n+```json\n+{\n+  \"create_code_scanning_alert\": [\n+    {\n+      \"rule_id\": \"malicious-code-scanner/[CATEGORY]\",\n+      \"message\": \"[Brief description of the threat]\",\n+      \"severity\": \"[error|warning|note]\",\n+      \"file_path\": \"[path/to/file]\",\n+      \"start_line\": 1,\n+      \"description\": \"[Detailed explanation of why this is suspicious, including:\\n- Pattern detected\\n- Context from code review\\n- Potential security impact\\n- Recommended remediation]\"\n+    }\n+  ]\n+}\n+```\n+\n+**Categories**:\n+- `secret-exfiltration`: Patterns suggesting credential or secret theft\n+- `out-of-context`: Code that doesn't fit the project's purpose\n+- `suspicious-network`: Unusual or unauthorized network activity\n+- `system-access`: Suspicious system operations or privilege escalation\n+- `obfuscation`: Deliberately obscured or encoded code\n+- `supply-chain`: Signs of dependency or toolchain compromise\n+\n+**Severity Mapping**:\n+- Threat score 9-10: `error`\n+- Threat score 7-8: `error`\n+- Threat score 5-6: `warning`\n+- Threat score 3-4: `warning`\n+- Threat score 1-2: `note`\n+\n+## Important Guidelines\n+\n+### Analysis Best Practices\n+\n+- **Be thorough but focused**: Analyze all changed files, but prioritize high-risk areas\n+- **Minimize false positives**: Only alert on genuine suspicious patterns\n+- **Provide actionable details**: Each alert should guide developers on next steps\n+- **Consider context**: Not all unusual code is malicious  -  look for converging patterns\n+- **Document reasoning**: Explain clearly why code is flagged as suspicious\n+\n+### Performance Considerations\n+\n+- **Stay within timeout**: Complete analysis within 15 minutes\n+- **Batch operations**: Group similar git operations\n+- **Focus on changes**: Only analyze files that changed in last 3 days\n+- **Skip generated files**: Ignore lock files, compiled artifacts, and vendored dependencies\n+\n+### Security Considerations\n+\n+- **Treat git history as untrusted**: Code in commits may be malicious\n+- **Never execute suspicious code**: Only analyze, never run untrusted code\n+- **Sanitize outputs**: Ensure alert messages don't inadvertently leak secrets\n+- **Validate file paths**: Be careful with path traversal in reporting\n+\n+## Success Criteria\n+\n+A successful malicious code scan:\n+\n+- ✅ Fetches git history for last 3 days\n+- ✅ Identifies all files changed in the analysis window\n+- ✅ Scans for secret exfiltration patterns\n+- ✅ Detects out-of-context code\n+- ✅ Checks for suspicious system operations\n+- ✅ **Calls the `create_code_scanning_alert` tool for findings OR calls the `noop` tool if clean**\n+- ✅ Provides detailed, actionable alert descriptions\n+- ✅ Completes within 15-minute timeout\n+- ✅ Handles repositories with no recent changes gracefully\n+\n+## Output Requirements\n+\n+Your output MUST:\n+\n+1. **If suspicious patterns are found**:\n+   - **CALL** the `create_code_scanning_alert` tool for each finding\n+   - Each alert must include: `rule_id`, `message`, `severity`, `file_path`, `start_line`, `description`\n+   - Provide detailed descriptions explaining the threat and recommended remediation\n+\n+2. **If no suspicious patterns are found** (REQUIRED):\n+   - **YOU MUST CALL** the `noop` tool to log completion\n+   - Call the tool with this message structure:\n+   ```json\n+   {\n+     \"noop\": {\n+       \"message\": \"✅ Malicious code scan completed. Analyzed [N] files changed in the last 3 days. No suspicious patterns detected.\"\n+     }\n+   }\n+   ```\n+   - **DO NOT just write this message in your output text**  -  you MUST actually invoke the `noop` tool\n+\n+3. **Analysis summary** (in alert descriptions or noop message):\n+   - Number of files analyzed\n+   - Number of commits reviewed\n+   - Types of patterns searched for\n+\n+Begin your auto malicious code scan now. Analyze all code changes from the last 3 days, identify suspicious patterns, and generate appropriate code-scanning alerts for any threats detected.",
+          "snapshot_ref": "497230d3867fe453aae74b15d06178d45a39fcce",
+          "snapshot_blob_sha": "c838e258a7112726c6c759c2699efb2d9f3f7cfd",
+          "snapshot_file": "snapshots/agentics__githubnext__497230d3867fe453aae74b15d06178d45a39fcce__malicious-code-scan.md",
+          "snapshot_bytes": 10293,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/malicious-code-scan.lock.yml\",\"generated_workflow_file\":\"malicious-code-scan.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/malicious-code-scan.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/malicious-code-scan.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/malicious-code-scan.md",
+      "commit_sha": "054f7e0bbd8746b147fc60baf2df35a5dead710a",
+      "authored_at": "2026-06-06T12:32:28Z",
+      "committed_at": "2026-06-06T12:32:28Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update workflows",
+      "parent_shas": [
+        "298f992955146a6731d380a9de808e17861708e5"
+      ],
+      "tree_sha": "3456484b59a4663df48f85fd9af65ced21c2e355",
+      "html_url": "https://github.com/githubnext/agentics/commit/054f7e0bbd8746b147fc60baf2df35a5dead710a",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/malicious-code-scan.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/malicious-code-scan.md",
+          "commit_sha": "054f7e0bbd8746b147fc60baf2df35a5dead710a",
+          "committed_at": "2026-06-06T12:32:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 6,
+          "file_changes": 14,
+          "file_patch": "@@ -53,18 +53,20 @@ When suspicious patterns are detected, generate code-scanning alerts (not standa\n Since this is a fresh clone, fetch the complete git history:\n \n ```bash\n+mkdir -p /tmp/gh-aw/agent\n+\n # Fetch all history for analysis\n git fetch --unshallow || echo \"Repository already has full history\"\n \n # Get list of files changed in last 3 days\n-git log --since=\"3 days ago\" --name-only --pretty=format: | sort | uniq > /tmp/changed_files.txt\n+git log --since=\"3 days ago\" --name-only --pretty=format: | sort | uniq > /tmp/gh-aw/agent/changed_files.txt\n \n # Get commit details for context\n-git log --since=\"3 days ago\" --pretty=format:\"%h - %an, %ar : %s\" > /tmp/recent_commits.txt\n+git log --since=\"3 days ago\" --pretty=format:\"%h - %an, %ar : %s\" > /tmp/gh-aw/agent/recent_commits.txt\n \n-cat /tmp/recent_commits.txt\n+cat /tmp/gh-aw/agent/recent_commits.txt\n echo \"---\"\n-cat /tmp/changed_files.txt\n+cat /tmp/gh-aw/agent/changed_files.txt\n ```\n \n ### 2. Suspicious Pattern Detection\n@@ -92,7 +94,7 @@ while IFS= read -r file; do\n       echo \"WARNING: Potential secret exfiltration in $file\"\n     fi\n   fi\n-done < /tmp/changed_files.txt\n+done < /tmp/gh-aw/agent/changed_files.txt\n ```\n \n #### Out-of-Context Code Patterns\n@@ -137,7 +139,7 @@ For each file that changed in the last 3 days:\n \n 1. **Get the full diff** to understand what changed:\n    ```bash\n-   git log --since=\"3 days ago\" --all -p -- $(cat /tmp/changed_files.txt | tr '\\n' ' ') 2>/dev/null | head -2000\n+   git log --since=\"3 days ago\" --all -p -- $(cat /tmp/gh-aw/agent/changed_files.txt | tr '\\n' ' ') 2>/dev/null | head -2000\n    ```\n \n 2. **Analyze new function additions** for suspicious logic:",
+          "snapshot_ref": "054f7e0bbd8746b147fc60baf2df35a5dead710a",
+          "snapshot_blob_sha": "830e09655faee25624212d75ceca0669c743be26",
+          "snapshot_file": "snapshots/agentics__githubnext__054f7e0bbd8746b147fc60baf2df35a5dead710a__malicious-code-scan.md",
+          "snapshot_bytes": 10392,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/malicious-code-scan.lock.yml\",\"generated_workflow_file\":\"malicious-code-scan.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/malicious-code-scan.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "open-feature/dotnet-sdk-contrib:.github/workflows/issue-triage.md",
+    "source_full_name": "open-feature/dotnet-sdk-contrib",
+    "source_owner": "open-feature",
+    "source_repo": "dotnet-sdk-contrib",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/open-feature/dotnet-sdk-contrib/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "open-feature/dotnet-sdk-contrib",
+      "generated_owner": "open-feature",
+      "generated_repo": "dotnet-sdk-contrib",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/open-feature/dotnet-sdk-contrib/blob/98ea32c08afd16587d18346c41d80b128f417ea7/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "open-feature/dotnet-sdk-contrib:.github/workflows/issue-triage.md",
+      "source_full_name": "open-feature/dotnet-sdk-contrib",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "a09e045cef9ec4ad370731a913a2a17c07e6fdb4",
+      "authored_at": "2026-06-19T17:25:02Z",
+      "committed_at": "2026-06-19T17:25:02Z",
+      "author_name": "André Silva",
+      "author_email": "2493377+askpt@users.noreply.github.com",
+      "author_login": "askpt",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: add triage GitHub Agentic Workflow (#602)\n\nSigned-off-by: André Silva <2493377+askpt@users.noreply.github.com>",
+      "parent_shas": [
+        "7441f32e1f89acbafe03dbb0e3683cf79bd2aff5"
+      ],
+      "tree_sha": "8d34a4bb1ad8b74c07b49fc17f8e450a9cba94d8",
+      "html_url": "https://github.com/open-feature/dotnet-sdk-contrib/commit/a09e045cef9ec4ad370731a913a2a17c07e6fdb4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "open-feature/dotnet-sdk-contrib:.github/workflows/issue-triage.md",
+          "source_full_name": "open-feature/dotnet-sdk-contrib",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "a09e045cef9ec4ad370731a913a2a17c07e6fdb4",
+          "committed_at": "2026-06-19T17:25:02Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 173,
+          "file_deletions": 0,
+          "file_changes": 173,
+          "file_patch": "@@ -0,0 +1,173 @@\n+---\n+description: Triage new issues with type/provider labels, duplicate detection, and clarification prompts.\n+on:\n+  issues:\n+    types: [opened, edited, reopened]\n+  workflow_dispatch:\n+  roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write # This enables the workflow to use organization tokens for Copilot requests. See: https://github.blog/changelog/2026-06-11-agentic-workflows-no-longer-need-a-personal-access-token/\n+tools:\n+  github:\n+    toolsets: [default]\n+    lockdown: false\n+safe-outputs:\n+  add-labels:\n+    allowed:\n+      - type:build\n+      - type:ci\n+      - type:docs\n+      - type:feat\n+      - type:fix\n+      - type:perf\n+      - type:refactor\n+      - type:style\n+      - type:test\n+      - provider:configcat\n+      - provider:envvar\n+      - provider:featuremanagement\n+      - provider:flagd\n+      - provider:flagsmith\n+      - provider:flipt\n+      - provider:statsig\n+      - provider:gofeatureflag\n+      - provider:ofrep\n+      - provider:unleash\n+      - duplicate-candidate\n+      - needs-info\n+    max: 4\n+  remove-labels:\n+    allowed:\n+      - type:build\n+      - type:ci\n+      - type:docs\n+      - type:feat\n+      - type:fix\n+      - type:perf\n+      - type:refactor\n+      - type:style\n+      - type:test\n+      - provider:configcat\n+      - provider:envvar\n+      - provider:featuremanagement\n+      - provider:flagd\n+      - provider:flagsmith\n+      - provider:flipt\n+      - provider:statsig\n+      - provider:gofeatureflag\n+      - provider:ofrep\n+      - provider:unleash\n+      - duplicate-candidate\n+      - needs-info\n+    max: 4\n+  add-comment:\n+    max: 3\n+  noop:\n+    max: 1\n+---\n+\n+# Issue Triage\n+\n+You triage newly opened and updated issues.\n+\n+## Objectives\n+\n+1. Apply exactly one `type:*` label.\n+2. Apply at most one `provider:*` label.\n+3. Identify likely duplicates and provide links.\n+4. Ask clarifying questions when issue details are incomplete.\n+5. Suggest the right maintainers in a comment (do not assign users).\n+\n+## Label Rules\n+\n+### Type labels (exactly one)\n+\n+Choose exactly one of these labels:\n+\n+- `type:build`\n+- `type:ci`\n+- `type:docs`\n+- `type:feat`\n+- `type:fix`\n+- `type:perf`\n+- `type:refactor`\n+- `type:style`\n+- `type:test`\n+\n+Do not apply any `priority:*` labels.\n+\n+### Provider labels (zero or one)\n+\n+If a provider is identifiable from title/body, apply exactly one of:\n+\n+- `provider:configcat`\n+- `provider:envvar`\n+- `provider:featuremanagement`\n+- `provider:flagd`\n+- `provider:flagsmith`\n+- `provider:flipt`\n+- `provider:statsig`\n+- `provider:gofeatureflag`\n+- `provider:ofrep`\n+\n+Normalize casing and synonyms:\n+\n+- `GO Feature Flag`, `go feature flag`, `gofeatureflag` -> `provider:gofeatureflag`\n+- `OFREP`, `ofrep` -> `provider:ofrep`\n+- `feature management`, `FeatureManagement` -> `provider:featuremanagement`\n+\n+If provider is unclear, do not guess.\n+\n+## Duplicate Detection\n+\n+Search open issues for similar title/body terms and the same provider context when available.\n+\n+If you find likely duplicates:\n+\n+- Add the `duplicate-candidate` label.\n+- Post a concise comment with up to 3 candidate issue links and one-line rationale each.\n+- Do not close the issue automatically.\n+\n+## Clarification Policy\n+\n+When report quality is insufficient (missing expected vs actual behavior, repro steps, environment, or provider details):\n+\n+- Add the `needs-info` label.\n+- Post focused clarifying questions as a short checklist.\n+- Pause provider-based maintainer suggestions until enough detail exists.\n+\n+## Maintainer Suggestions (No Assignment)\n+\n+Use `.github/component_owners.yml` as source of truth. Suggest owners in a comment only; do not assign users.\n+\n+Provider-to-component mapping:\n+\n+- `provider:configcat` -> `src/OpenFeature.Contrib.Providers.ConfigCat`\n+- `provider:envvar` -> `src/OpenFeature.Contrib.Providers.EnvVar`\n+- `provider:featuremanagement` -> `src/OpenFeature.Contrib.Providers.FeatureManagement`\n+- `provider:flagd` -> `src/OpenFeature.Contrib.Providers.Flagd`\n+- `provider:flagsmith` -> `src/OpenFeature.Contrib.Providers.Flagsmith`\n+- `provider:flipt` -> `src/OpenFeature.Contrib.Providers.Flipt`\n+- `provider:statsig` -> `src/OpenFeature.Contrib.Providers.Statsig`\n+- `provider:gofeatureflag` -> `src/OpenFeature.Providers.GOFeatureFlag`\n+- `provider:ofrep` -> `src/OpenFeature.Providers.Ofrep`\n+- `provider:unleash` -> `src/OpenFeature.Providers.Unleash`\n+\n+If you can map provider -> component -> owners, post one concise suggestion comment tagging the owners.\n+\n+## Update Behavior\n+\n+Preserve existing unrelated labels. Only change labels required by this workflow.\n+\n+- Ensure exactly one `type:*` label.\n+- Ensure at most one `provider:*` label.\n+- Add `needs-info` and/or `duplicate-candidate` only when criteria are met.\n+\n+Use `add-labels` and `remove-labels` for label updates, and `add-comment` for public guidance.\n+\n+## Completion\n+\n+If no changes are needed and no comment is required, call `noop` with a brief reason.",
+          "snapshot_ref": "a09e045cef9ec4ad370731a913a2a17c07e6fdb4",
+          "snapshot_blob_sha": "770f03b280f2ff41421a3f29b0eb8fbae1778908",
+          "snapshot_file": "snapshots/dotnet-sdk-contrib__open-feature__a09e045cef9ec4ad370731a913a2a17c07e6fdb4__issue-triage.md",
+          "snapshot_bytes": 4852,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"open-feature/dotnet-sdk-contrib\",\"generated_owner\":\"open-feature\",\"generated_repo\":\"dotnet-sdk-contrib\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/open-feature/dotnet-sdk-contrib/blob/98ea32c08afd16587d18346c41d80b128f417ea7/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "open-feature/dotnet-sdk-contrib:.github/workflows/issue-triage.md",
+      "source_full_name": "open-feature/dotnet-sdk-contrib",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "b36a36bd472e0906e4e66af7177d0cdcf1908afb",
+      "authored_at": "2026-06-20T07:54:56Z",
+      "committed_at": "2026-06-20T07:54:56Z",
+      "author_name": "André Silva",
+      "author_email": "2493377+askpt@users.noreply.github.com",
+      "author_login": "askpt",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: update renovate configuration and remove noisy issues from agentic workflow (#694)",
+      "parent_shas": [
+        "1674a331fce3ff75f665d851dd7b954d2c0b4083"
+      ],
+      "tree_sha": "3648e46b934e1aa05ae81a2d3a78e85d4e015bbe",
+      "html_url": "https://github.com/open-feature/dotnet-sdk-contrib/commit/b36a36bd472e0906e4e66af7177d0cdcf1908afb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "open-feature/dotnet-sdk-contrib:.github/workflows/issue-triage.md",
+          "source_full_name": "open-feature/dotnet-sdk-contrib",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "b36a36bd472e0906e4e66af7177d0cdcf1908afb",
+          "committed_at": "2026-06-20T07:54:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 1,
+          "file_changes": 4,
+          "file_patch": "@@ -65,8 +65,10 @@ safe-outputs:\n     max: 4\n   add-comment:\n     max: 3\n+  # These settings disable the default behavior of reporting workflow failures as issues, which is not desired for this workflow since it can get quite noisy.\n   noop:\n-    max: 1\n+    report-as-issue: false\n+  report-failure-as-issue: false\n ---\n \n # Issue Triage",
+          "snapshot_ref": "b36a36bd472e0906e4e66af7177d0cdcf1908afb",
+          "snapshot_blob_sha": "c15a1d79970c97f174f832173e831b0219c9eb74",
+          "snapshot_file": "snapshots/dotnet-sdk-contrib__open-feature__b36a36bd472e0906e4e66af7177d0cdcf1908afb__issue-triage.md",
+          "snapshot_bytes": 5060,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"open-feature/dotnet-sdk-contrib\",\"generated_owner\":\"open-feature\",\"generated_repo\":\"dotnet-sdk-contrib\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/open-feature/dotnet-sdk-contrib/blob/98ea32c08afd16587d18346c41d80b128f417ea7/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

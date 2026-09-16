@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/model-api-mapping-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/model-api-mapping-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/model-api-mapping-updater.lock.yml",
+      "generated_workflow_file": "model-api-mapping-updater.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/model-api-mapping-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:48:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/model-api-mapping-updater.md",
+      "commit_sha": "f9e4797aaac8d0b94c0a3d5d2b9993e8bb879a09",
+      "authored_at": "2026-06-30T04:21:39Z",
+      "committed_at": "2026-06-30T04:21:39Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: update invalid docker/setup-qemu-action SHA in release workflow (#5704)\n\n* Initial plan\n\n* refactor: extract shared config-writer test harness\n\n* fix: rename duplicate heading in arc-dind.md to pass markdownlint\n\nRenamed the second '## Build-tools sysroot image' heading to\n'## Sysroot staging lifecycle' to resolve MD024/no-duplicate-heading.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix: update invalid docker/setup-qemu-action SHA in Build Build-Tools job\n\nThe Build Build-Tools Image job pinned docker/setup-qemu-action to SHA\na3c050c5b9001e95079e262a6db77c5e7c7c3467 which no longer exists upstream.\nUpdate to 49b3bc8e6bdd4a60e6116a5414239cba5943d3cf (v3.2.0), matching the\nother jobs in this workflow.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* feat: add model-to-API endpoint mapping and daily updater workflow\n\nAdd docs/model-api-mapping.json mapping OpenAI and Anthropic models to\ntheir supported API endpoints (chat/completions vs responses vs messages).\n\nAdd an agentic workflow that refreshes the mapping daily from official\nprovider documentation and opens a PR if changes are detected.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "67568808220ede4cd725edf73d62b750b5798670"
+      ],
+      "tree_sha": "4dd05abf975e7af6842be63aeeaceba5666f92e5",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/f9e4797aaac8d0b94c0a3d5d2b9993e8bb879a09",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/model-api-mapping-updater.md",
+          "commit_sha": "f9e4797aaac8d0b94c0a3d5d2b9993e8bb879a09",
+          "committed_at": "2026-06-30T04:21:39Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 61,
+          "file_deletions": 0,
+          "file_changes": 61,
+          "file_patch": "@@ -0,0 +1,61 @@\n+---\n+emoji: 🗺️\n+description: Daily refresh of the model-to-API endpoint mapping from official OpenAI and Anthropic sources.\n+on:\n+  schedule: daily around 06:00 UTC\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [repos]\n+network:\n+  allowed:\n+    - defaults\n+    - platform.openai.com\n+    - api.openai.com\n+    - docs.anthropic.com\n+    - platform.claude.com\n+safe-outputs:\n+  create-pull-request:\n+    allowed-files:\n+      - docs/model-api-mapping.json\n+---\n+\n+# Model API Mapping Updater\n+\n+## Task\n+\n+Update `docs/model-api-mapping.json` with the latest model-to-API endpoint mappings from official provider documentation.\n+\n+## Data Sources\n+\n+1. **OpenAI**: Fetch the current model list and endpoint compatibility from `https://platform.openai.com/docs/models` and `https://platform.openai.com/docs/api-reference/responses`. Determine which models support `/v1/chat/completions`, `/v1/responses`, or both.\n+\n+2. **Anthropic**: Fetch the current model list from `https://docs.anthropic.com/en/docs/about-claude/models`. All Claude models use the `/v1/messages` endpoint.\n+\n+## Update Rules\n+\n+1. Read the current `docs/model-api-mapping.json`.\n+2. For each provider, verify existing model entries are still accurate and add any new models.\n+3. For OpenAI models:\n+   - GPT-5.x family and newer → `responses` only (unless docs explicitly state chat/completions support)\n+   - o-series reasoning models (o1, o3, o4) → check docs for dual support\n+   - GPT-4.x and older → typically `chat_completions` (some support both)\n+4. For Anthropic models:\n+   - All models use `messages` endpoint\n+   - Add any new model families (check for version bumps like opus-4-9, sonnet-4-7, etc.)\n+5. Update the `lastUpdated` timestamp to the current UTC time.\n+6. Preserve the JSON structure and schema.\n+\n+## Output\n+\n+- If the mapping changed, create a pull request with title \"chore: update model-to-API mapping (YYYY-MM-DD)\" containing only the updated `docs/model-api-mapping.json`.\n+- If no changes were detected, call `noop` with explanation \"Model-to-API mapping is already up to date.\"\n+\n+## Quality Checks\n+\n+- Validate the JSON is well-formed before committing.\n+- Do not remove existing model entries unless they are confirmed deprecated and removed from provider docs.\n+- Keep patterns consistent with existing entries (glob-style with `*` suffix).",
+          "snapshot_ref": "f9e4797aaac8d0b94c0a3d5d2b9993e8bb879a09",
+          "snapshot_blob_sha": "b95eadbbb8b5fb940dd81ac666f0a0edfa7b1a6e",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__f9e4797aaac8d0b94c0a3d5d2b9993e8bb879a09__model-api-mapping-updater.md",
+          "snapshot_bytes": 2361,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/model-api-mapping-updater.lock.yml\",\"generated_workflow_file\":\"model-api-mapping-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/model-api-mapping-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/model-api-mapping-updater.md",
+      "commit_sha": "7d74635872b07fb5fa601c1433edab809e991e97",
+      "authored_at": "2026-06-30T05:06:03Z",
+      "committed_at": "2026-06-30T05:06:03Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add model-to-API endpoint mapping and daily updater workflow (#5706)\n\n* feat: add model-to-API endpoint mapping and daily updater workflow\n\nAdd docs/model-api-mapping.json mapping OpenAI and Anthropic models to\ntheir supported API endpoints (chat/completions vs responses vs messages).\n\nAdd an agentic workflow that refreshes the mapping daily from official\nprovider documentation and opens a PR if changes are detected.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* feat(api-proxy): expose model-to-API endpoint mapping via /reflect\n\nLoad docs/model-api-mapping.json at startup and include it in the\n/reflect management endpoint response. This allows SDK drivers and\nharness scripts to query which endpoint a model requires (responses\nvs chat/completions vs messages) before making requests.\n\nAdds:\n- model-api-mapping.js: loader with glob-pattern lookup\n- model-api-mapping.json: bundled copy for the container image\n- model-api-mapping.test.js: unit tests for pattern matching and lookup\n- Dockerfile: includes new files in the image\n- management.js: adds model_api_mapping to /reflect response\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix: address review feedback on model-api-mapping files\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "f9e4797aaac8d0b94c0a3d5d2b9993e8bb879a09"
+      ],
+      "tree_sha": "4eeec1b3ce0b2c94ddf23a3224d2ff3b5a151cfc",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/7d74635872b07fb5fa601c1433edab809e991e97",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/model-api-mapping-updater.md",
+          "commit_sha": "7d74635872b07fb5fa601c1433edab809e991e97",
+          "committed_at": "2026-06-30T05:06:03Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -6,10 +6,14 @@ on:\n   workflow_dispatch:\n permissions:\n   contents: read\n+  pull-requests: read\n+  issues: read\n tools:\n   github:\n     mode: gh-proxy\n     toolsets: [repos]\n+  bash: true\n+  edit:\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "7d74635872b07fb5fa601c1433edab809e991e97",
+          "snapshot_blob_sha": "c3f0737c7249c96999f29dd0a2d223bb1afd2ee1",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__7d74635872b07fb5fa601c1433edab809e991e97__model-api-mapping-updater.md",
+          "snapshot_bytes": 2419,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/model-api-mapping-updater.lock.yml\",\"generated_workflow_file\":\"model-api-mapping-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/model-api-mapping-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/model-api-mapping-updater.md",
+      "commit_sha": "5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+      "authored_at": "2026-07-24T15:43:30Z",
+      "committed_at": "2026-07-24T15:43:30Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): migrate copilot workflows to copilot-requests auth (#6570)\n\nCOPILOT_GITHUB_TOKEN was removed from the repo, so copilot-engine\nworkflows relying on that PAT fail Copilot auth (HTTP 401 through the\napi-proxy sidecar, e.g. issue #6561 refactoring-scanner).\n\n- Add `copilot-requests: write` to the 15 default-copilot workflows\n  that were missing it, so Copilot inference uses the GitHub Actions\n  token (S2STOKENS) with central org billing instead of the PAT.\n- Delete smoke-copilot-pat (its sole purpose was testing the now-removed\n  COPILOT_GITHUB_TOKEN PAT path).\n- Recompile all workflows and run smoke post-processing. Compiled locks\n  now wire the agent to github.token and drop the hard\n  Validate COPILOT_GITHUB_TOKEN step. Recompile also picked up routine\n  toolchain/image version bumps (agent 0.27.37->0.27.41, mcpg\n  v0.4.3->v0.4.5, setup action v0.83.1->v0.83.2).\n\nNon-copilot engines (Claude/Codex/Gemini) are unchanged.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 0f60b144-4aef-4dd3-8db6-0b2e6f4924b7",
+      "parent_shas": [
+        "2fe4120f020cb87c7be17c1eafed3c1df1e631af"
+      ],
+      "tree_sha": "a7ce02a248998ab3ee475a2739b057b5dc75996b",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/model-api-mapping-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/model-api-mapping-updater.md",
+          "commit_sha": "5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+          "committed_at": "2026-07-24T15:43:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -5,6 +5,7 @@ on:\n   schedule: daily around 06:00 UTC\n   workflow_dispatch:\n permissions:\n+  copilot-requests: write\n   contents: read\n   pull-requests: read\n   issues: read",
+          "snapshot_ref": "5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+          "snapshot_blob_sha": "1688f8304977cce21eed8f6de2f89cd4b1166381",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__5e5ae7bf4013bc439776e5a4e819908a076e4d3e__model-api-mapping-updater.md",
+          "snapshot_bytes": 2445,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/model-api-mapping-updater.lock.yml\",\"generated_workflow_file\":\"model-api-mapping-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/model-api-mapping-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

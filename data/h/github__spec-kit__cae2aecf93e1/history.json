@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/spec-kit:.github/workflows/add-community-bundle.md",
+    "source_full_name": "github/spec-kit",
+    "source_owner": "github",
+    "source_repo": "spec-kit",
+    "md_path": ".github/workflows/add-community-bundle.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/spec-kit/blob/HEAD/.github/workflows/add-community-bundle.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/spec-kit",
+      "generated_owner": "github",
+      "generated_repo": "spec-kit",
+      "generated_workflow_path": ".github/workflows/add-community-bundle.lock.yml",
+      "generated_workflow_file": "add-community-bundle.lock.yml",
+      "generated_html_url": "https://github.com/github/spec-kit/blob/ab468c4db7d760cb15238a3718d85a2803921837/.github/workflows/add-community-bundle.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:47+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/spec-kit:.github/workflows/add-community-bundle.md",
+      "source_full_name": "github/spec-kit",
+      "md_path": ".github/workflows/add-community-bundle.md",
+      "commit_sha": "5760061316eb3092f7b58e58a17e9251bdb8e295",
+      "authored_at": "2026-07-21T17:28:40Z",
+      "committed_at": "2026-07-21T17:28:40Z",
+      "author_name": "Ben Buttigieg",
+      "author_email": "70525+BenBtg@users.noreply.github.com",
+      "author_login": "BenBtg",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add community bundle submission automation (#3553)\n\n* Add community bundle submission automation\n\nAdd the discovery-only community bundle catalog, online and offline catalog loading, and a restricted agentic workflow for validating bundle submissions and opening draft catalog PRs.\n\nAssisted-by: GitHub Copilot (model: GPT-5.6 Sol, autonomous)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: fbe794bc-667a-4c9e-b48b-825067debc6d\n\n* Address community bundle review feedback\n\nEnsure explicit install-allowed catalogs take precedence over built-in discovery, tighten component installability validation, and use issue-linked community branches.\n\nAssisted-by: GitHub Copilot (model: GPT-5.6 Sol, autonomous)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: fbe794bc-667a-4c9e-b48b-825067debc6d\n\n* Address follow-up bundle review feedback\n\nMake offline catalog coverage content-agnostic and require autonomous catalog commits to include the assisted-by trailer.\n\nAssisted-by: GitHub Copilot (model: GPT-5.6 Sol, autonomous)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: fbe794bc-667a-4c9e-b48b-825067debc6d\n\n* Harden bundle catalog table rendering\n\nRequire single-line escaped Markdown table values for untrusted submission metadata. The needs-info label used by validation is now present in the repository.\n\nAssisted-by: GitHub Copilot (model: GPT-5.6 Sol, autonomous)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: fbe794bc-667a-4c9e-b48b-825067debc6d\n\n* Clear stale bundle validation labels\n\nAllow the submission workflow to remove prior outcome labels before applying the current validation state.\n\nAssisted-by: GitHub Copilot (model: GPT-5.6 Sol, autonomous)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: fbe794bc-667a-4c9e-b48b-825067debc6d",
+      "parent_shas": [
+        "1f7290c97549c9c4b22ed7bdd23741c206936e33"
+      ],
+      "tree_sha": "ae3de3dd99b0dcbafab32ae5f20bf54387f12865",
+      "html_url": "https://github.com/github/spec-kit/commit/5760061316eb3092f7b58e58a17e9251bdb8e295",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/spec-kit:.github/workflows/add-community-bundle.md",
+          "source_full_name": "github/spec-kit",
+          "md_path": ".github/workflows/add-community-bundle.md",
+          "commit_sha": "5760061316eb3092f7b58e58a17e9251bdb8e295",
+          "committed_at": "2026-07-21T17:28:40Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 288,
+          "file_deletions": 0,
+          "file_changes": 288,
+          "file_patch": "@@ -0,0 +1,288 @@\n+---\n+description: \"Process community bundle submission issues - validate, add to catalog, and open a PR for maintainer review\"\n+emoji: \"📦\"\n+\n+on:\n+  issues:\n+    types: [labeled]\n+    names: [bundle-submission]\n+  skip-bots: [github-actions, copilot, dependabot]\n+\n+tools:\n+  edit:\n+  bash: [\"echo\", \"grep\", \"sort\", \"python3\", \"jq\", \"date\"]\n+  github:\n+    toolsets: [issues, repos]\n+    min-integrity: none\n+  web-fetch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+checkout:\n+  fetch-depth: 0\n+\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  create-pull-request:\n+    title-prefix: \"[bundle] \"\n+    labels: [bundle-submission, automated]\n+    draft: true\n+    max: 1\n+    allowed-files:\n+      - bundles/catalog.community.json\n+      - docs/community/bundles.md\n+    protected-files:\n+      policy: blocked\n+      exclude:\n+        - README.md\n+        - CHANGELOG.md\n+  add-comment:\n+    max: 2\n+  add-labels:\n+    allowed: [bundle-submission, validation-passed, validation-failed, needs-info]\n+    max: 3\n+  remove-labels:\n+    allowed: [validation-passed, validation-failed, needs-info]\n+---\n+\n+# Add Community Bundle from Issue Submission\n+\n+You are a catalog maintenance agent for the Spec Kit project. Process community\n+bundle submission issues and create draft pull requests that add or update\n+entries in the community bundle catalog.\n+\n+Community bundles are untrusted. Validate metadata and distribution evidence,\n+but do not claim to audit, endorse, or support bundle code or the components it\n+installs. Never register a submitted companion catalog automatically.\n+\n+## Triggering Conditions\n+\n+This workflow is triggered by an `issues: labeled` event and is gated to the\n+`bundle-submission` label. Before processing, verify that the issue title starts\n+with `[Bundle]:`. If it does not, stop without commenting.\n+\n+## Step 1 - Read and Parse the Issue\n+\n+Read issue #${{ github.event.issue.number }} and extract these issue-form fields:\n+\n+| Field | Issue Form ID | Required |\n+|-------|---------------|----------|\n+| Bundle ID | `bundle-id` | Yes |\n+| Bundle Name | `bundle-name` | Yes |\n+| Version | `version` | Yes |\n+| Role or Team | `role` | Yes |\n+| Description | `description` | Yes |\n+| Author | `author` | Yes |\n+| Repository URL | `repository` | Yes |\n+| Download URL | `download-url` | Yes |\n+| Documentation URL | `documentation` | Yes |\n+| License | `license` | Yes |\n+| Required Spec Kit Version | `speckit-version` | Yes |\n+| Integration Target | `integration` | No |\n+| Components Provided | `components-provided` | Yes |\n+| Required Component Catalogs | `required-catalogs` | Yes |\n+| Tags | `tags` | Yes |\n+| Key Features | `features` | Yes |\n+| Testing Details | `testing-details` | Yes |\n+| Example Usage | `example-usage` | Yes |\n+| Proposed Catalog Entry | `catalog-entry` | Yes |\n+\n+Issue-form values appear beneath headings matching their labels.\n+\n+## Step 2 - Validate the Submission\n+\n+Run every check and collect all failures before deciding the outcome.\n+\n+### 2a. Bundle ID and version\n+\n+- The bundle ID must match\n+  `^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$`.\n+- The version must be semantic version `X.Y.Z` with digits only and no `v`\n+  prefix.\n+\n+### 2b. Repository and documentation\n+\n+- Restrict repository and documentation URLs to public GitHub URLs before\n+  fetching them.\n+- Confirm the repository exists and contains `bundle.yml`, `README.md`, and a\n+  license file (`LICENSE`, `LICENSE.md`, or `LICENSE.txt`).\n+- The documentation URL must resolve to a readable Markdown file that explains\n+  the bundle's intended role, installed components, required catalogs, and\n+  installation steps.\n+- Confirm the repository's `bundle.yml` matches the submitted bundle ID,\n+  version, role, author, license, Spec Kit requirement, integration target, and\n+  component summary.\n+\n+### 2c. Release artifact\n+\n+- The download URL must be an HTTPS GitHub release asset URL under the submitted\n+  repository:\n+  `https://github.com/<owner>/<repo>/releases/download/<tag>/<asset>.zip`.\n+- Confirm the release exists, its tag corresponds to the submitted version\n+  (`vX.Y.Z` or `X.Y.Z`), and the exact ZIP asset is attached to that release.\n+- Confirm the asset name is versioned and consistent with the submitted bundle\n+  ID and version.\n+\n+Do not fetch arbitrary user-provided URLs. Do not claim the artifact was\n+executed or audited; rely on the required submission attestations for build and\n+installation evidence.\n+\n+### 2d. Catalog entry\n+\n+Parse the proposed JSON and require one entry under the submitted bundle ID.\n+Confirm that:\n+\n+- `id`, `name`, `version`, `role`, `description`, `author`, `license`,\n+  `download_url`, and `repository` match the submission and manifest.\n+- `requires.speckit_version` matches the submission.\n+- `provides` contains non-negative integer counts for `extensions`, `presets`,\n+  `steps`, and `workflows`, matching the manifest.\n+- `tags` contains 2-5 lowercase strings and matches the submitted tags.\n+- `verified` is the boolean value `false`. Community entries must never be\n+  marked verified.\n+\n+### 2e. Component resolution\n+\n+- `Required Component Catalogs` must explicitly say `None` or list every\n+  non-default extension, preset, workflow, and step catalog needed by the\n+  bundle.\n+- Compare the manifest references, README, required-catalog field, testing\n+  details, and example usage for consistency.\n+- If non-default catalogs are required, ensure each URL is HTTPS, the README\n+  documents the corresponding `catalog add` command, and the testing details\n+  say those catalogs were registered in the clean-project test.\n+- If the field says `None` but a component is not bundled and cannot be\n+  installed from a default Spec Kit catalog, fail validation and ask the\n+  submitter to list and document an install-allowed companion catalog.\n+\n+The community bundle catalog itself remains discovery-only. Companion catalog\n+URLs are documentation and validation metadata, not catalogs this workflow\n+should add to Spec Kit.\n+\n+### 2f. Checklists and testing evidence\n+\n+- Confirm every required checkbox in Testing Checklist and Submission\n+  Requirements is checked (`[x]`).\n+- Confirm Testing Details describe validation, build, artifact installation,\n+  and clean-project testing.\n+- Confirm Example Usage includes artifact installation and, when applicable,\n+  all required catalog setup commands.\n+\n+### Validation outcome\n+\n+If any check fails:\n+\n+1. Comment once with every failed check and a specific correction.\n+2. Remove `validation-passed`.\n+3. Add `validation-failed`; add `needs-info` when submitter input is needed.\n+4. Stop without editing files or creating a pull request.\n+\n+If all checks pass, remove `validation-failed` and `needs-info`, add\n+`validation-passed`, and continue.\n+\n+## Step 3 - Determine Add or Update\n+\n+Search `bundles/catalog.community.json` for the bundle ID.\n+\n+- If absent, add a new entry.\n+- If present, update the existing entry in place.\n+\n+Treat a submitted version lower than or equal to the existing catalog version\n+as a validation failure unless the issue clearly documents a metadata-only\n+correction at the same version.\n+\n+## Step 4 - Update the Community Catalog\n+\n+Edit `bundles/catalog.community.json`. Insert new entries alphabetically by\n+bundle ID. The entry shape is:\n+\n+```json\n+{\n+  \"<bundle-id>\": {\n+    \"name\": \"<bundle-name>\",\n+    \"id\": \"<bundle-id>\",\n+    \"version\": \"<version>\",\n+    \"role\": \"<role>\",\n+    \"description\": \"<description>\",\n+    \"author\": \"<author>\",\n+    \"license\": \"<license>\",\n+    \"download_url\": \"<download-url>\",\n+    \"repository\": \"<repository>\",\n+    \"requires\": {\n+      \"speckit_version\": \"<speckit-version>\"\n+    },\n+    \"provides\": {\n+      \"extensions\": 0,\n+      \"presets\": 0,\n+      \"steps\": 0,\n+      \"workflows\": 0\n+    },\n+    \"tags\": [\"<tag>\"],\n+    \"verified\": false\n+  }\n+}\n+```\n+\n+Use the validated proposed entry rather than inventing metadata. Keep\n+`verified: false`. Update the top-level `updated_at` to today's UTC date at\n+midnight and preserve the top-level `catalog_url`.\n+\n+Validate the complete file:\n+\n+```bash\n+python3 -c \"import json; json.load(open('bundles/catalog.community.json')); print('Valid JSON')\"\n+```\n+\n+## Step 5 - Update Community Documentation\n+\n+Add or update the bundle in `docs/community/bundles.md`. Keep rows alphabetical\n+by bundle name:\n+\n+```text\n+| <Name> | <Description> | `<role>` | <component counts> | <None or documented> | [<repo-name>](<repository>) |\n+```\n+\n+Before rendering the row, convert every user-derived display value to\n+single-line plain text: collapse CR/LF sequences to spaces, remove control\n+characters, and backslash-escape `\\`, `|`, backticks, `*`, `_`, `[`, `]`, `<`,\n+and `>`. Use the validated HTTPS GitHub repository URL unchanged only as the\n+Markdown link destination.\n+\n+Render component counts compactly, omitting zero-valued component types. Use\n+`None` when no companion catalogs are needed and `Documented` otherwise; the\n+repository README remains the source for the actual URLs.\n+\n+## Step 6 - Create a Draft Pull Request\n+\n+Create one draft pull request.\n+\n+- New entry branch:\n+  `community/${{ github.event.issue.number }}-add-<bundle-id>-bundle`\n+- Update branch:\n+  `community/${{ github.event.issue.number }}-update-<bundle-id>-bundle`\n+- New title: `Add <Bundle Name> bundle to community catalog`\n+- Update title: `Update <Bundle Name> bundle to v<version>`\n+\n+The commit and PR description must summarize the catalog and documentation\n+changes, list the validation results, include\n+`Closes #${{ github.event.issue.number }}`, and mention the submitter with\n+`cc @<issue-author>`.\n+\n+End the commit message with this authorship trailer:\n+\n+```text\n+Assisted-by: GitHub Copilot (model: <name-if-known>, autonomous)\n+```\n+\n+## Important Rules\n+\n+- Modify only `bundles/catalog.community.json` and\n+  `docs/community/bundles.md`.\n+- Keep JSON entries sorted by ID and documentation rows sorted by name.\n+- Never set a community bundle's `verified` field to true.\n+- Never add, enable, or change the policy of a submitted catalog.\n+- Never describe validation as a security audit or endorsement.\n+- Use `Closes`, not `Fixes`, for the submission issue.",
+          "snapshot_ref": "5760061316eb3092f7b58e58a17e9251bdb8e295",
+          "snapshot_blob_sha": "a54a35f890505513da88e34a37300d73bf72c34d",
+          "snapshot_file": "snapshots/spec-kit__github__5760061316eb3092f7b58e58a17e9251bdb8e295__add-community-bundle.md",
+          "snapshot_bytes": 9962,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/spec-kit\",\"generated_owner\":\"github\",\"generated_repo\":\"spec-kit\",\"generated_workflow_path\":\".github/workflows/add-community-bundle.lock.yml\",\"generated_workflow_file\":\"add-community-bundle.lock.yml\",\"generated_html_url\":\"https://github.com/github/spec-kit/blob/ab468c4db7d760cb15238a3718d85a2803921837/.github/workflows/add-community-bundle.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

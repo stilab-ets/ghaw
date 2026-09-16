@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "jurre/huebar:.github/workflows/code-review.md",
+    "source_full_name": "jurre/huebar",
+    "source_owner": "jurre",
+    "source_repo": "huebar",
+    "md_path": ".github/workflows/code-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/jurre/huebar/blob/HEAD/.github/workflows/code-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "jurre/huebar",
+      "generated_owner": "jurre",
+      "generated_repo": "huebar",
+      "generated_workflow_path": ".github/workflows/code-review.lock.yml",
+      "generated_workflow_file": "code-review.lock.yml",
+      "generated_html_url": "https://github.com/jurre/huebar/blob/9028f7587c2c260d75489adf013a3a57a120100e/.github/workflows/code-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:57:24+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "jurre/huebar:.github/workflows/code-review.md",
+      "source_full_name": "jurre/huebar",
+      "md_path": ".github/workflows/code-review.md",
+      "commit_sha": "fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+      "authored_at": "2026-02-15T20:51:58Z",
+      "committed_at": "2026-02-15T20:51:58Z",
+      "author_name": "Jurre",
+      "author_email": "jurre@github.com",
+      "author_login": "jurre",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows: code review and release notes (#33)\n\n- code-review: Reviews PRs against AGENTS.md guidelines on every PR\n  (error handling, security APIs, accessibility, feedback loops, etc.)\n- release-notes: Generates user-friendly release highlights on publish\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "dbdc36cbeb9222b1bbd89faaf6315d644e29071b"
+      ],
+      "tree_sha": "c3cc3ecccb041188b15f38007ef36717c233c157",
+      "html_url": "https://github.com/jurre/huebar/commit/fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jurre/huebar:.github/workflows/code-review.md",
+          "source_full_name": "jurre/huebar",
+          "md_path": ".github/workflows/code-review.md",
+          "commit_sha": "fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+          "committed_at": "2026-02-15T20:51:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 92,
+          "file_deletions": 0,
+          "file_changes": 92,
+          "file_patch": "@@ -0,0 +1,92 @@\n+---\n+description: Reviews pull requests against AGENTS.md guidelines for code quality, safety, and Swift best practices\n+on:\n+  pull_request:\n+    types: [opened, synchronize]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [pull_requests, repos]\n+safe-outputs:\n+  create-pull-request-review-comment:\n+    max: 10\n+    side: \"RIGHT\"\n+  submit-pull-request-review:\n+    max: 1\n+  messages:\n+    footer: \"> Reviewed by [{workflow_name}]({run_url})\"\n+timeout-minutes: 10\n+---\n+\n+# HueBar Code Quality Reviewer\n+\n+You are a code reviewer for HueBar, a native macOS menubar app (SwiftUI, macOS 15+) for controlling Philips Hue lights. Your job is to review pull requests against the project's established guidelines and Swift best practices.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Pull Request**: #${{ github.event.pull_request.number }}\n+\n+## Step 1: Read Project Guidelines\n+\n+Use the GitHub tools to fetch the contents of `AGENTS.md` from the repository's default branch. This file contains all project conventions you must enforce. Pay special attention to:\n+\n+- **Error handling** — No silent `try?`; always log with `os.Logger`\n+- **Security APIs** — Check return values of Security framework functions (fail-closed)\n+- **Model mutability** — `var` for optimistically-updated fields; direct mutation, no struct reconstruction\n+- **Event stream** — Debounce bulk events before refreshing\n+- **UI feedback loops** — Guard `onChange` with `isUserDragging` for sliders\n+- **Type safety** — Enums over string keys; `guard let` over force-unwraps\n+- **Concurrency** — Document `nonisolated(unsafe)` with `// SAFETY:` comments\n+- **Accessibility** — Every interactive control needs `.accessibilityLabel()`; sliders need `.accessibilityValue()`\n+- **Accent color** — Never use global `.tint()`; apply `.tint(.hueAccent)` only to specific controls\n+- **Network addresses** — Never split on `\":\"` to parse host/port; use `IPValidation.parseHostPort()`\n+- **Multi-bridge** — Features must iterate all bridges, not just the first\n+\n+## Step 2: Fetch PR Details\n+\n+Use the GitHub tools to:\n+1. Get the pull request details for PR #${{ github.event.pull_request.number }}\n+2. Get the diff of the pull request\n+3. Get the list of changed files\n+\n+## Step 3: Review the Code\n+\n+Focus **only on changed lines**. Look for violations of the AGENTS.md guidelines, plus:\n+\n+- **Silent error swallowing** — `try?` without logging\n+- **Force-unwraps** (`!`) that should be `guard let`\n+- **Struct reconstruction** instead of direct property mutation for optimistic updates\n+- **Missing accessibility** on new interactive controls\n+- **Feedback loops** in `onChange` handlers (especially for sliders)\n+- **`nonisolated(unsafe)`** without a `// SAFETY:` comment\n+- **Unchecked Security framework** return values\n+- **Global `.tint()` modifiers** on view hierarchies\n+- **String-based dispatch** that should use enums\n+- **IPv6-unsafe** host/port parsing\n+- **Single-bridge assumptions** (only checking first bridge)\n+\n+**Do NOT comment on:**\n+- Code style, formatting, or whitespace\n+- Things that are correct and working\n+- Existing code that wasn't changed in this PR\n+- Minor naming preferences\n+\n+## Step 4: Write Review Comments\n+\n+For each genuine issue found:\n+1. Create a review comment using `create-pull-request-review-comment`\n+2. Reference the specific file and line\n+3. Explain why it violates the guideline and what to do instead\n+4. Be concise — 1-3 sentences per comment\n+\n+## Step 5: Submit Review\n+\n+Submit the review using `submit-pull-request-review`:\n+- **APPROVE** if no issues found\n+- **REQUEST_CHANGES** if there are guideline violations that must be fixed\n+- **COMMENT** if there are only minor suggestions\n+\n+Keep the summary brief. If approving, a single sentence is fine.",
+          "snapshot_ref": "fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+          "snapshot_blob_sha": "11fd39f8757ad9b93f5f012b87ac5a70b77a7200",
+          "snapshot_file": "snapshots/huebar__jurre__fae2b1bbcc974ae523b463acdb3cda5cda7c4e10__code-review.md",
+          "snapshot_bytes": 3779,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jurre/huebar\",\"generated_owner\":\"jurre\",\"generated_repo\":\"huebar\",\"generated_workflow_path\":\".github/workflows/code-review.lock.yml\",\"generated_workflow_file\":\"code-review.lock.yml\",\"generated_html_url\":\"https://github.com/jurre/huebar/blob/9028f7587c2c260d75489adf013a3a57a120100e/.github/workflows/code-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

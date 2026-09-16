@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+    "source_full_name": "dotnet/xharness",
+    "source_owner": "dotnet",
+    "source_repo": "xharness",
+    "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/xharness/blob/HEAD/.github/workflows/runtime-failure-observer.agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/xharness",
+      "generated_owner": "dotnet",
+      "generated_repo": "xharness",
+      "generated_workflow_path": ".github/workflows/runtime-failure-observer.agent.lock.yml",
+      "generated_workflow_file": "runtime-failure-observer.agent.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/xharness/blob/65e5795252474ebd04e4e872bd4152e86c558209/.github/workflows/runtime-failure-observer.agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:32+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+      "source_full_name": "dotnet/xharness",
+      "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+      "commit_sha": "2447cbe5d295f67963ad60a2c2fbb6451b3296ae",
+      "authored_at": "2026-06-08T13:16:05Z",
+      "committed_at": "2026-06-08T13:16:05Z",
+      "author_name": "Milos Kotlar",
+      "author_email": "kotlarmilos@gmail.com",
+      "author_login": "kotlarmilos",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows for runtime failure observer and Maestro auto-merge (#1606)\n\n* Add agentic workflows for CI scan, runtime failure observer, and Maestro auto-merge\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Address code review feedback\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Drop ci-scan workflow, wrap pr-failure-scan skill, simplify auto-merge\n\n- Remove the ci-scan agentic workflow (def-72 outer-loop KBE scanner).\n- Add pr-failure-scan.agent.md: a /pr-failure-scan slash command that\n  imports the existing .github/skills/pr-failure-scan skill, guarded to\n  PR comments, posting one consolidated triage comment via safe-outputs.\n- Fix maestro-auto-merge reviewer gate 6: hand CI gating to the finalize\n  job instead of relying on a synchronize re-run that never fires on CI\n  completion.\n- Simplify maestro-auto-merge-finalize.yml: drop the rerun/attempt-cap\n  machinery; require green required checks + 4h idle, skip on unknown\n  check state, and pin the merge to the validated head SHA.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Drop pr-failure-scan agentic workflow\n\nRemove the pr-failure-scan.agent.md workflow and its lock. The underlying\n.github/skills/pr-failure-scan skill remains available for direct use.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Remove header comment from maestro-auto-merge-finalize.yml\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Remove tally step from runtime-failure-observer\n\nDrop Step 8 (Tally) and the now-unused coverage dir creation.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Improve pr-failure-scan skill description for triggering\n\nFold trigger contexts into the description field and make it more explicit\nper the skill-creator guidance, so the skill activates on CI-triage requests\neven when not named directly.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Address review feedback on agentic workflows\n\n- maestro-auto-merge: add a no-downgrade gate so the reviewer never labels a\n  dependency PR that downgrades or pins a package to an equal version.\n- runtime-failure-observer: assess source against the xharness version the\n  failing runtime build actually consumed (not blindly HEAD) to avoid drift,\n  and note this matters more as more consuming repos are added.\n- runtime-failure-observer: when a complete small-bounds fix does not fit, prefer\n  a clearly-marked best-effort draft PR (partial fix + analysis + human-finish)\n  or a diagnosability draft PR that adds logging when analysis is inconclusive,\n  falling back to an issue only when neither fits.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* runtime-failure-observer: drop issue creation\n\nRemove the create-issue safe output and Step 7 issue template. The workflow\nnow only opens PRs (complete, best-effort draft, or diagnosability draft); when\nnone fit it records a skip and emits nothing. Dedup still reads existing issues.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Milos Kotlar <kotlarmilos@github.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "fa7fbebf9168e8858971f9d0c71b2b08f2f7b106"
+      ],
+      "tree_sha": "13e1bc2d816a24e5ffe71d67444b8965abdd489e",
+      "html_url": "https://github.com/dotnet/xharness/commit/2447cbe5d295f67963ad60a2c2fbb6451b3296ae",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+          "source_full_name": "dotnet/xharness",
+          "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+          "commit_sha": "2447cbe5d295f67963ad60a2c2fbb6451b3296ae",
+          "committed_at": "2026-06-08T13:16:05Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 266,
+          "file_deletions": 0,
+          "file_changes": 266,
+          "file_patch": "@@ -0,0 +1,266 @@\n+---\n+description: |\n+  Periodic cross-repo observer. Scans `dnceng-public` runtime pipelines\n+  that drive xharness (iOS, tvOS, MacCatalyst, Android, WASM, NativeAOT\n+  outer loop), filters failures to xharness-side improvement candidates,\n+  and opens a PR in `dotnet/xharness` with a small, targeted fix\n+  (improved diagnostic, narrow retry, exit-code propagation). Agent\n+  reads from `dotnet/runtime` only; all writes are to `dotnet/xharness`\n+  via `safe-outputs`.\n+\n+on:\n+  schedule: every 12h\n+  workflow_dispatch:\n+  roles: [admin, maintain, write]\n+\n+if: github.repository == 'dotnet/xharness'\n+\n+timeout-minutes: 60\n+\n+permissions: read-all\n+\n+concurrency:\n+  group: runtime-failure-observer\n+  cancel-in-progress: false\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - dev.azure.com\n+    - helix.dot.net\n+    - \"*.blob.core.windows.net\"\n+\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests, issues, search]\n+  bash: [\"git\", \"find\", \"ls\", \"cat\", \"grep\", \"head\", \"tail\", \"wc\", \"curl\", \"jq\", \"tee\", \"sed\", \"awk\", \"tr\", \"cut\", \"sort\", \"uniq\", \"xargs\", \"echo\", \"date\", \"mkdir\", \"test\", \"env\", \"basename\", \"dirname\", \"gh\", \"printf\"]\n+  edit:\n+\n+checkout:\n+  fetch-depth: 50\n+\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  create-pull-request:\n+    title-prefix: \"[runtime-observer] \"\n+    labels: [infrastructure]\n+    draft: true\n+    allowed-files:\n+      - \"src/Microsoft.DotNet.XHarness.Apple/**\"\n+      - \"src/Microsoft.DotNet.XHarness.Android/**\"\n+      - \"src/Microsoft.DotNet.XHarness.CLI/**\"\n+      - \"src/Microsoft.DotNet.XHarness.Common/**\"\n+      - \"src/Microsoft.DotNet.XHarness.iOS.Shared/**\"\n+      - \"src/Microsoft.DotNet.XHarness.TestRunners.*/**\"\n+      - \"tests/Microsoft.DotNet.XHarness.Apple.Tests/**\"\n+      - \"tests/Microsoft.DotNet.XHarness.Android.Tests/**\"\n+      - \"tests/Microsoft.DotNet.XHarness.CLI.Tests/**\"\n+      - \"tests/Microsoft.DotNet.XHarness.Common.Tests/**\"\n+      - \"tests/Microsoft.DotNet.XHarness.iOS.Shared.Tests/**\"\n+      - \"tests/Microsoft.DotNet.XHarness.TestRunners.Tests/**\"\n+    max: 2\n+  add-comment:\n+    target: \"*\"\n+    max: 5\n+    hide-older-comments: true\n+---\n+\n+# Runtime Failure Observer (xharness)\n+\n+You watch `dotnet/runtime` CI for failures whose root cause sits inside xharness, and turn the most actionable ones into small PRs against `dotnet/xharness` (improved diagnostic message, narrow retry on known-transient exit code, missing exit-code propagation, doc update).\n+\n+The agent reads `dotnet/runtime` and the failing build logs. It never writes to runtime. All writes are to this repo (`dotnet/xharness`) via `safe-outputs`.\n+\n+## Hard rules\n+\n+1. **All writes via `safe-outputs`.** No direct `gh pr create`. The fix PR is opened by the `create-pull-request` safe-output. This workflow never opens issues; if a failure cannot be turned into a PR, emit nothing.\n+2. **Cap per run: 2 PRs.** On cap, record `skipped: cap reached` and stop.\n+3. **Every PR title starts with `[runtime-observer] `.** PRs are opened as drafts.\n+4. **Small-fix bounds for complete autofix PRs.** A *complete* fix PR must satisfy all of: `<=` 30 changed lines total, `<=` 2 files (one source + one test), no new public API, no protocol change, no native code change. If the fix needs more, do not silently truncate it: open a clearly-marked best-effort/diagnosability **draft** PR (Step 5) that a human finishes. Best-effort and diagnosability draft PRs may exceed these bounds but must be marked work-in-progress and must still avoid new public API, protocol changes, and native code.\n+5. **Don't propose fixes for runtime test bugs.** If the failure is in the test binary itself (assertion in the test code, missing mock, runtime API regression), record `skipped: runtime-side issue` and emit nothing.\n+6. **Never assume.** Cite the runtime build URL, the Helix work item URL, the xharness command line, and the exact stderr / exit code in every PR body.\n+7. **Dedup.** Before emitting, search open and recently merged PRs / issues in `dotnet/xharness` for the same xharness-signature. On match: `existing-PR #<n>` or `existing-issue #<n>`, emit nothing.\n+8. **Same-run dedup cache.** Persist `(exit_code, command, signature_norm)` keys in `/tmp/gh-aw/agent/filed.tsv`. On hit: `dup-this-run`, skip.\n+9. **All state under `/tmp/gh-aw/agent/`.**\n+10. **AzDO API: anonymous only.** Stay on `https://dev.azure.com/dnceng-public/public/_apis/build/...`.\n+11. **Pre-bind every URL with `?` or `&` to a variable on its own line, then `curl -s \"$url\"`.**\n+\n+## Pipelines to scan\n+\n+| Definition ID | Name | Notes |\n+|---|---|---|\n+| 154 | runtime-extra-platforms | Apple mobile + Android + WASM + NativeAOT outer loop |\n+| 223 | runtime-android | Android devices |\n+| 224 | runtime-androidemulator | Android emulator |\n+| 225 | runtime-ioslike | iOS / tvOS device |\n+| 226 | runtime-ioslikesimulator | iOS / tvOS simulator |\n+| 228 | runtime-maccatalyst | MacCatalyst |\n+| 260 | runtime-ioslike-coreclr | iOS-like CoreCLR |\n+| 261 | runtime-ioslike-mono | iOS-like Mono |\n+| 265 | runtime-nativeaot-outerloop | NativeAOT outer loop (mobile slice) |\n+\n+## xharness exit codes (improvement targets)\n+\n+These exit codes from `src/Microsoft.DotNet.XHarness.Common/CLI/ExitCode.cs` are the prime PR candidates. They map cleanly to small diagnostic / retry / propagation fixes.\n+\n+| Exit code | Name | Typical improvement |\n+|---|---|---|\n+| 70 | TIMED_OUT | Surface the configured timeout in the error message; suggest the `--timeout` flag in stderr. |\n+| 71 | GENERAL_FAILURE | Add structured context (command, target, last-seen state) to the stderr line. |\n+| 78 | PACKAGE_INSTALLATION_FAILURE | Log the `mlaunch` / `adb` stderr verbatim instead of just \"install failed\". |\n+| 79 | FAILED_TO_GET_BUNDLE_INFO | Log the bundle path and the `plutil` / Info.plist parse error. |\n+| 80 | APP_CRASH | Surface the crash report path (sym / unsym) in stderr. |\n+| 81 | DEVICE_NOT_FOUND | Narrow retry once after a 5s pause; log the device discovery query and the available devices list. |\n+| 82 | RETURN_CODE_NOT_SET | Log the last heartbeat timestamp and the wait condition that timed out. |\n+| 83 | APP_LAUNCH_FAILURE | Log the launch arguments and the system log slice from the relevant timeframe. |\n+\n+Exit codes outside this table: record `skipped: exit code <n> not in improvement table` and stop.\n+\n+## Step 1. Set up\n+\n+```bash\n+for def in 154 223 224 225 226 228 260 261 265; do\n+  url=\"https://dev.azure.com/dnceng-public/public/_apis/build/builds?definitions=${def}&branchName=refs/heads/main&statusFilter=completed&resultFilter=failed,partiallySucceeded&%24top=10&api-version=7.1\"\n+  curl -s \"$url\" | tee \"/tmp/gh-aw/agent/builds-${def}.json\" | jq -r '.value[] | \"\\(.id) \\(.result) \\(.finishTime)\"' | head\n+done\n+```\n+\n+Per definition, pick `source` = most recent failed build inside the last 7 days. Older: `skipped: stale (>7d)`.\n+\n+## Step 2. Walk timelines, find xharness invocations\n+\n+For each `source`:\n+\n+```bash\n+src_id=<source build id>\n+url=\"https://dev.azure.com/dnceng-public/public/_apis/build/builds/${src_id}/timeline?api-version=7.1\"\n+curl -s \"$url\" | tee /tmp/gh-aw/agent/timeline-${src_id}.json\n+```\n+\n+Reconstruct `Stage -> Phase -> Job -> Task` via `parentId`. A failed leaf with non-null `log.id` is a candidate.\n+\n+Filter to Helix work items only. xharness runs inside Helix work items, not on the AzDO agent. From the `Send to Helix` task log, extract `Sent Helix Job: <GUID>`:\n+\n+```bash\n+log_url='<Send to Helix task log url>'\n+curl -s \"$log_url\" | tee /tmp/gh-aw/agent/helix-send.log\n+grep -oE 'Sent Helix Job: [a-f0-9-]+' /tmp/gh-aw/agent/helix-send.log\n+```\n+\n+For each Helix job, list failing work items:\n+\n+```bash\n+url=\"https://helix.dot.net/api/jobs/<jobId>/workitems?api-version=2019-06-17\"\n+curl -s \"$url\" | tee /tmp/gh-aw/agent/helix-${jobId}.json\n+```\n+\n+A work item is an xharness invocation candidate if `ConsoleOutputUri` contains an xharness command (`xharness apple`, `xharness android`, `xharness wasm`, or `dotnet exec .../Microsoft.DotNet.XHarness.CLI.dll`). Fetch the console and scan for:\n+\n+- An `xharness` command line (find the last \"Running command\" line if present, otherwise the launcher script invocation).\n+- An exit code line: `Exit code: <n>` or `exited with code <n>` or `ExitCode=<n>`.\n+- The error context: the last 50 lines before exit.\n+\n+## Step 3. Match against the improvement table\n+\n+For each work-item failure, extract:\n+\n+- `exit_code` (int)\n+- `command` (one line, sanitized: strip absolute paths, GUIDs, machine names, helix work-item GUIDs)\n+- `signature` (the first stderr line that is not a generic xharness banner, normalized)\n+\n+If `exit_code` is not in the improvement table: `skipped: exit code <n> not in improvement table`.\n+\n+Look back at the previous 5 builds on the same definition. The same `(exit_code, command, signature_norm)` tuple must appear in `>= 2` of them to be considered stable. Otherwise: `skipped: weak signature`.\n+\n+## Step 4. Dedup against existing xharness work\n+\n+```bash\n+gh issue list --repo dotnet/xharness --state all --limit 50 \\\n+  --search \"[runtime-observer] in:title $sig_short\" --json number,title,state,url\n+gh pr list --repo dotnet/xharness --state all --limit 50 \\\n+  --search \"[runtime-observer] in:title $sig_short\" --json number,title,state,url\n+```\n+\n+On match (open or merged in last 30 days): `existing-PR #<n>` / `existing-issue #<n>`. Emit nothing.\n+\n+Same-run cache:\n+```bash\n+key=\"${exit_code}|<command_norm>|<signature_norm>\"\n+test -f /tmp/gh-aw/agent/filed.tsv && cut -f1 /tmp/gh-aw/agent/filed.tsv | grep -Fxq \"$key\" && echo \"dup-this-run\"\n+printf '%s\\t%s\\n' \"$key\" \"aw_<id>\" >> /tmp/gh-aw/agent/filed.tsv\n+```\n+\n+## Step 5. Decide which kind of PR\n+\n+Read the relevant xharness source file from the table below, then choose an outcome:\n+\n+- **Small-bounds fix** (rule 4 holds): emit `create-pull-request` with the complete fix (Step 6).\n+- **Best-effort draft PR** (the right fix is clearly xharness-side but exceeds small-bounds, similar to runtime's \"best effort PRs\"): emit a draft `create-pull-request` that applies as much of the fix as you can safely do, with a detailed analysis and an explicit \"human must finish this\" note at the top of the body. Mark it clearly as work-in-progress.\n+- **Diagnosability draft PR** (the analysis is inconclusive because the logs don't capture enough): if additional logging/diagnostics in the relevant xharness path would make the next occurrence diagnosable, emit a draft `create-pull-request` that adds that logging, with the analysis explaining what signal is currently missing and what the new logging will reveal.\n+\n+If none of these fit (the change needs a new public API, a protocol change with `mlaunch`/`adb`/Helix, native code, or coordination with runtime test infra): record `skipped: needs human design, out of small-fix scope` and emit nothing. This workflow does not open issues.\n+\n+| Exit code | Likely source file |\n+|---|---|\n+| 70 TIMED_OUT | `src/Microsoft.DotNet.XHarness.CLI/Commands/XHarnessCommand.cs` (timeout reporting); platform runner under `src/Microsoft.DotNet.XHarness.Apple/AppOperations/` or `src/Microsoft.DotNet.XHarness.Android/` for the actual timeout path. |\n+| 71 GENERAL_FAILURE | `src/Microsoft.DotNet.XHarness.Apple/ExitCodeDetector.cs` and Android-side exit-code mappers under `src/Microsoft.DotNet.XHarness.Android/`. |\n+| 78 PACKAGE_INSTALLATION_FAILURE | `src/Microsoft.DotNet.XHarness.Apple/AppOperations/AppInstaller.cs` and Android install commands under `src/Microsoft.DotNet.XHarness.CLI/Commands/Android/`. |\n+| 79 FAILED_TO_GET_BUNDLE_INFO | `src/Microsoft.DotNet.XHarness.iOS.Shared/AppBundleInformationParser.cs` (note: lives in `iOS.Shared`, not `Apple`). |\n+| 80 APP_CRASH | `src/Microsoft.DotNet.XHarness.Apple/CrashSnapshotReporterFactory.cs` and `src/Microsoft.DotNet.XHarness.iOS.Shared/CrashSnapshotReporter.cs`. |\n+| 81 DEVICE_NOT_FOUND | `src/Microsoft.DotNet.XHarness.iOS.Shared/Hardware/HardwareDeviceLoader.cs` and Android device loader under `src/Microsoft.DotNet.XHarness.Android/`. |\n+| 82 RETURN_CODE_NOT_SET | Test orchestration under `src/Microsoft.DotNet.XHarness.Apple/Orchestration/` (`TestOrchestrator.cs`, `RunOrchestrator.cs`, `BaseOrchestrator.cs`) and Android orchestration. |\n+| 83 APP_LAUNCH_FAILURE | `src/Microsoft.DotNet.XHarness.Apple/AppOperations/AppRunner.cs` and Android-side run command under `src/Microsoft.DotNet.XHarness.CLI/Commands/Android/`. |\n+\n+Before drafting the fix, **read the file** with the exact path above. Read it at the xharness version the failing runtime build actually consumed, not blindly at `HEAD`: the runtime build pins an xharness package (see its `eng/Version.Details.xml` / restored `Microsoft.DotNet.XHarness.CLI` version), and that can lag xharness `HEAD`. Assess \"is the recommendation already implemented?\" against the consumed version, then port the actual change onto `HEAD` (the PR targets xharness `main`). If the two diverge enough that the path or surrounding code differs, note the drift in the PR body. This matters more as we add repos that consume xharness at different versions (e.g. maui). If the path no longer exists at `HEAD` (refactor since this table was written): record `skipped: source path stale, table needs update` and stop, do not improvise. If the recommendation is already implemented at `HEAD` (the stderr line already includes the context the failure says is missing): skip with `recommendation already present in source`.\n+\n+For DEVICE_NOT_FOUND retry: never blindly add retry. Verify (a) the discovery query is deterministic, (b) the failure is transient (signature appears, then absent in a later build on the same SHA), (c) the retry is bounded (`max=1`, pause 5s). If any of those don't hold, record `skipped: retry preconditions not met` and emit nothing.\n+\n+## Step 6. Draft the PR\n+\n+Use the PR body template below. Stage exactly the files you change; never `git add -A`.\n+\n+````markdown\n+## Why\n+\n+`dotnet/runtime` build [<build-id>](<azdo build url>) hit xharness exit code `<n> <NAME>` on `<helix queue>` (definition `<def-id> <def-name>`).\n+\n+Observed in `>= <count>` of the last 5 builds on this definition. Latest occurrence: [<helix work item>](<console uri>).\n+\n+### xharness command\n+\n+```\n+<sanitized command line>\n+```\n+\n+### Stderr excerpt\n+\n+```\n+<sanitized last 20 lines before exit, no paths/GUIDs/machine names>\n+```\n+\n+## What this PR changes\n+\n+<one-line: improve stderr context / narrow retry / surface diagnostic / propagate exit code>\n+\n+<source-file:line change rationale; cite HEAD source>\n+\n+## Expected effect on runtime CI\n+\n+The next runtime build that hits the same condition will show:\n+\n+<concrete new stderr line OR concrete new retry behavior>\n+\n+This does not change the public API. This does not change the protocol with `mlaunch` / `adb` / Helix.\n+\n+## Test\n+\n+<test file path; what it asserts>\n+\n+---\n+\n+Drafted by [`runtime-failure-observer`](https://github.com/dotnet/xharness/blob/main/.github/workflows/runtime-failure-observer.agent.md). Human review required before merge. The runtime build link is the source of truth for the diagnosis; if the build artifacts have rolled off, regenerate the observation from a fresh build.\n+````\n+\n+Branch name: `runtime-observer/exit-<n>-<short-slug>`. Slug is `[a-z0-9-]+` derived from the command (e.g., `apple-test-ios-simulator`).",
+          "snapshot_ref": "2447cbe5d295f67963ad60a2c2fbb6451b3296ae",
+          "snapshot_blob_sha": "04867f1069b13f2b4d9011cfd1ca002901b37b0d",
+          "snapshot_file": "snapshots/xharness__dotnet__2447cbe5d295f67963ad60a2c2fbb6451b3296ae__runtime-failure-observer.agent.md",
+          "snapshot_bytes": 15154,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/xharness\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"xharness\",\"generated_workflow_path\":\".github/workflows/runtime-failure-observer.agent.lock.yml\",\"generated_workflow_file\":\"runtime-failure-observer.agent.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/xharness/blob/65e5795252474ebd04e4e872bd4152e86c558209/.github/workflows/runtime-failure-observer.agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+      "source_full_name": "dotnet/xharness",
+      "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+      "commit_sha": "2b6e3667f81d5530cbdf5d248a33b95a332f822f",
+      "authored_at": "2026-06-19T07:13:02Z",
+      "committed_at": "2026-06-19T07:13:02Z",
+      "author_name": "Milos Kotlar",
+      "author_email": "kotlarmilos@gmail.com",
+      "author_login": "kotlarmilos",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Isolate agentic workflow authentication (#1622)\n\nAuthenticate both agentic workflows via a dedicated, isolated environment\nrather than the shared default token. Regenerate the compiled lock files.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8d6fae7775722b0ec2c57d119efc164ec36cb837"
+      ],
+      "tree_sha": "dcf9e8ce8f9e6ebd7f25ee44cd05f0fc2291b8d8",
+      "html_url": "https://github.com/dotnet/xharness/commit/2b6e3667f81d5530cbdf5d248a33b95a332f822f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+          "source_full_name": "dotnet/xharness",
+          "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+          "commit_sha": "2b6e3667f81d5530cbdf5d248a33b95a332f822f",
+          "committed_at": "2026-06-19T07:13:02Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 0,
+          "file_changes": 7,
+          "file_patch": "@@ -13,6 +13,13 @@ on:\n   workflow_dispatch:\n   roles: [admin, maintain, write]\n \n+environment: copilot-pat-pool\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_PAT }}\n+\n if: github.repository == 'dotnet/xharness'\n \n timeout-minutes: 60",
+          "snapshot_ref": "2b6e3667f81d5530cbdf5d248a33b95a332f822f",
+          "snapshot_blob_sha": "08e2908fbc23b72b80ebffdb3472155afadb476c",
+          "snapshot_file": "snapshots/xharness__dotnet__2b6e3667f81d5530cbdf5d248a33b95a332f822f__runtime-failure-observer.agent.md",
+          "snapshot_bytes": 15268,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/xharness\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"xharness\",\"generated_workflow_path\":\".github/workflows/runtime-failure-observer.agent.lock.yml\",\"generated_workflow_file\":\"runtime-failure-observer.agent.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/xharness/blob/65e5795252474ebd04e4e872bd4152e86c558209/.github/workflows/runtime-failure-observer.agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+      "source_full_name": "dotnet/xharness",
+      "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+      "commit_sha": "a0534aec8f776d258392f0266cbdb9cc97e1dd98",
+      "authored_at": "2026-06-19T07:35:09Z",
+      "committed_at": "2026-06-19T07:35:09Z",
+      "author_name": "Milos Kotlar",
+      "author_email": "kotlarmilos@gmail.com",
+      "author_login": "kotlarmilos",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[runtime-failure-observer] Inline curl calls and require fetched evidence before opening PRs (#1612)\n\n* runtime-failure-observer: fix network egress and ban ungrounded PRs\n\nThe observer agent's shell commands were intermittently denied. The\ncopilot harness authorizes a command only by its first token, but the\nprompt instructed the agent to pre-bind URLs (`url=...` then\n`curl \"$url\"`) and to loop over definitions with `for`. Those forms\nstart with an assignment or keyword, so the harness rejected them with\n\"Permission denied and could not request permission from user\" even\nthough the firewall allowlist contains .dev.azure.com and\n.helix.dot.net. Across the three real runs this produced three\ndifferent outcomes (worked around, noop, and a false report_incomplete\nthat blamed the firewall).\n\nChanges to runtime-failure-observer.agent.md (prompt body, imported at\nruntime via {{#runtime-import}}, so no lock recompile needed):\n\n- Rule 11 now requires every shell command to begin with an\n  allow-listed program; inline URLs into `curl ... -o file`, no\n  variable pre-bind, no loops. Step 1, Step 2, and the Step 4 dedup\n  cache snippet are rewritten to match.\n- New Step 0 preflight proves egress with one inlined curl and, on\n  failure, emits an accurate report_incomplete (harness command\n  authorization, not firewall) instead of misdiagnosing the firewall.\n- New rule 6b forbids opening a PR unless the build timeline and Helix\n  console were actually downloaded this run; no citing build ids,\n  Helix GUIDs, exit codes, or stderr from memory or inference.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Tighten wording to match prompt style\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Address review feedback: shell-safe placeholders and allowed safe-output\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "f39fb5f3b7d454c4ac817355912407895cc2fc68"
+      ],
+      "tree_sha": "f6383b904d119a1558fac2c439003a08d57bcc00",
+      "html_url": "https://github.com/dotnet/xharness/commit/a0534aec8f776d258392f0266cbdb9cc97e1dd98",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+          "source_full_name": "dotnet/xharness",
+          "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+          "commit_sha": "a0534aec8f776d258392f0266cbdb9cc97e1dd98",
+          "committed_at": "2026-06-19T07:35:09Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 25,
+          "file_deletions": 19,
+          "file_changes": 44,
+          "file_patch": "@@ -87,12 +87,12 @@ The agent reads `dotnet/runtime` and the failing build logs. It never writes to\n 3. **Every PR title starts with `[runtime-observer] `.** PRs are opened as drafts.\n 4. **Small-fix bounds for complete autofix PRs.** A *complete* fix PR must satisfy all of: `<=` 30 changed lines total, `<=` 2 files (one source + one test), no new public API, no protocol change, no native code change. If the fix needs more, do not silently truncate it: open a clearly-marked best-effort/diagnosability **draft** PR (Step 5) that a human finishes. Best-effort and diagnosability draft PRs may exceed these bounds but must be marked work-in-progress and must still avoid new public API, protocol changes, and native code.\n 5. **Don't propose fixes for runtime test bugs.** If the failure is in the test binary itself (assertion in the test code, missing mock, runtime API regression), record `skipped: runtime-side issue` and emit nothing.\n-6. **Never assume.** Cite the runtime build URL, the Helix work item URL, the xharness command line, and the exact stderr / exit code in every PR body.\n+6. **Never assume; cite only what you fetched this run.** Cite the runtime build URL, the Helix work item URL, the xharness command line, and the exact stderr / exit code in every PR body. If any required fetch (build list, timeline, Helix work items, console log) failed, was empty, or was denied, emit nothing for that candidate — never reconstruct a build id, URL, GUID, exit code, or stderr from memory or inference.\n 7. **Dedup.** Before emitting, search open and recently merged PRs / issues in `dotnet/xharness` for the same xharness-signature. On match: `existing-PR #<n>` or `existing-issue #<n>`, emit nothing.\n 8. **Same-run dedup cache.** Persist `(exit_code, command, signature_norm)` keys in `/tmp/gh-aw/agent/filed.tsv`. On hit: `dup-this-run`, skip.\n 9. **All state under `/tmp/gh-aw/agent/`.**\n 10. **AzDO API: anonymous only.** Stay on `https://dev.azure.com/dnceng-public/public/_apis/build/...`.\n-11. **Pre-bind every URL with `?` or `&` to a variable on its own line, then `curl -s \"$url\"`.**\n+11. **Start every shell command with an allow-listed program (`curl`, `jq`, `gh`, `grep`, `printf`, ...).** The harness authorizes by first token only, so a command beginning with `url=...`, `key=...`, or `for` is denied with `Permission denied and could not request permission from user` even when the firewall allows the domain. Inline each URL into a single `curl ... -o <file>` (keep `%24` for `$top`); never pre-bind URLs to variables or loop over `curl`.\n \n ## Pipelines to scan\n \n@@ -125,42 +125,49 @@ These exit codes from `src/Microsoft.DotNet.XHarness.Common/CLI/ExitCode.cs` are\n \n Exit codes outside this table: record `skipped: exit code <n> not in improvement table` and stop.\n \n+## Step 0. Preflight: confirm network egress\n+\n+Prove the harness will let `curl` reach the public AzDO API before scanning (rule 11):\n+\n+```bash\n+curl -s \"https://dev.azure.com/dnceng-public/public/_apis/build/builds?definitions=154&branchName=refs/heads/main&statusFilter=completed&resultFilter=failed,partiallySucceeded&%24top=1&api-version=7.1\" -o /tmp/gh-aw/agent/preflight.json\n+jq -r '.count' /tmp/gh-aw/agent/preflight.json\n+```\n+\n+Valid JSON: continue. If `curl` itself is denied, that is the harness rejecting the command form, not the firewall (`.dev.azure.com` and `.helix.dot.net` are allow-listed). If an inlined first-token `curl` still fails, record `skipped: harness denied inlined curl to dev.azure.com; firewall already allows it` and stop. Never blame the firewall allowlist and never open a PR.\n+\n ## Step 1. Set up\n \n+Run one inlined `curl` per definition id in `154 223 224 225 226 228 260 261 265`, substituting the id in the URL and the `-o` path:\n+\n ```bash\n-for def in 154 223 224 225 226 228 260 261 265; do\n-  url=\"https://dev.azure.com/dnceng-public/public/_apis/build/builds?definitions=${def}&branchName=refs/heads/main&statusFilter=completed&resultFilter=failed,partiallySucceeded&%24top=10&api-version=7.1\"\n-  curl -s \"$url\" | tee \"/tmp/gh-aw/agent/builds-${def}.json\" | jq -r '.value[] | \"\\(.id) \\(.result) \\(.finishTime)\"' | head\n-done\n+curl -s \"https://dev.azure.com/dnceng-public/public/_apis/build/builds?definitions=154&branchName=refs/heads/main&statusFilter=completed&resultFilter=failed,partiallySucceeded&%24top=10&api-version=7.1\" -o /tmp/gh-aw/agent/builds-154.json\n+jq -r '.value[] | \"\\(.id) \\(.result) \\(.finishTime)\"' /tmp/gh-aw/agent/builds-154.json | head\n ```\n \n Per definition, pick `source` = most recent failed build inside the last 7 days. Older: `skipped: stale (>7d)`.\n \n ## Step 2. Walk timelines, find xharness invocations\n \n-For each `source`:\n+For each `source` (inline the build id in place of `SRCID`):\n \n ```bash\n-src_id=<source build id>\n-url=\"https://dev.azure.com/dnceng-public/public/_apis/build/builds/${src_id}/timeline?api-version=7.1\"\n-curl -s \"$url\" | tee /tmp/gh-aw/agent/timeline-${src_id}.json\n+curl -s \"https://dev.azure.com/dnceng-public/public/_apis/build/builds/SRCID/timeline?api-version=7.1\" -o \"/tmp/gh-aw/agent/timeline-SRCID.json\"\n ```\n \n Reconstruct `Stage -> Phase -> Job -> Task` via `parentId`. A failed leaf with non-null `log.id` is a candidate.\n \n Filter to Helix work items only. xharness runs inside Helix work items, not on the AzDO agent. From the `Send to Helix` task log, extract `Sent Helix Job: <GUID>`:\n \n ```bash\n-log_url='<Send to Helix task log url>'\n-curl -s \"$log_url\" | tee /tmp/gh-aw/agent/helix-send.log\n+curl -s \"<Send to Helix task log url>\" -o /tmp/gh-aw/agent/helix-send.log\n grep -oE 'Sent Helix Job: [a-f0-9-]+' /tmp/gh-aw/agent/helix-send.log\n ```\n \n-For each Helix job, list failing work items:\n+For each Helix job, list failing work items (inline the job id in place of `JOBID`):\n \n ```bash\n-url=\"https://helix.dot.net/api/jobs/<jobId>/workitems?api-version=2019-06-17\"\n-curl -s \"$url\" | tee /tmp/gh-aw/agent/helix-${jobId}.json\n+curl -s \"https://helix.dot.net/api/jobs/JOBID/workitems?api-version=2019-06-17\" -o \"/tmp/gh-aw/agent/helix-JOBID.json\"\n ```\n \n A work item is an xharness invocation candidate if `ConsoleOutputUri` contains an xharness command (`xharness apple`, `xharness android`, `xharness wasm`, or `dotnet exec .../Microsoft.DotNet.XHarness.CLI.dll`). Fetch the console and scan for:\n@@ -192,11 +199,10 @@ gh pr list --repo dotnet/xharness --state all --limit 50 \\\n \n On match (open or merged in last 30 days): `existing-PR #<n>` / `existing-issue #<n>`. Emit nothing.\n \n-Same-run cache:\n+Same-run cache. Use the `<exit_code>|<command_norm>|<signature_norm>` key inline, never via a variable (rule 11):\n ```bash\n-key=\"${exit_code}|<command_norm>|<signature_norm>\"\n-test -f /tmp/gh-aw/agent/filed.tsv && cut -f1 /tmp/gh-aw/agent/filed.tsv | grep -Fxq \"$key\" && echo \"dup-this-run\"\n-printf '%s\\t%s\\n' \"$key\" \"aw_<id>\" >> /tmp/gh-aw/agent/filed.tsv\n+grep -Fxq \"70|apple-test-maccatalyst|run-timed-out\" /tmp/gh-aw/agent/filed.tsv 2>/dev/null && echo \"dup-this-run\"\n+printf '%s\\n' \"70|apple-test-maccatalyst|run-timed-out\" >> /tmp/gh-aw/agent/filed.tsv\n ```\n \n ## Step 5. Decide which kind of PR",
+          "snapshot_ref": "a0534aec8f776d258392f0266cbdb9cc97e1dd98",
+          "snapshot_blob_sha": "55267e5611e9db3f3bed6163215dcfbadc8a0784",
+          "snapshot_file": "snapshots/xharness__dotnet__a0534aec8f776d258392f0266cbdb9cc97e1dd98__runtime-failure-observer.agent.md",
+          "snapshot_bytes": 16859,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/xharness\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"xharness\",\"generated_workflow_path\":\".github/workflows/runtime-failure-observer.agent.lock.yml\",\"generated_workflow_file\":\"runtime-failure-observer.agent.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/xharness/blob/65e5795252474ebd04e4e872bd4152e86c558209/.github/workflows/runtime-failure-observer.agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+      "source_full_name": "dotnet/xharness",
+      "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+      "commit_sha": "5d58a231a8a5e322bdd27da674a7059e4d2e7220",
+      "authored_at": "2026-06-30T11:00:10Z",
+      "committed_at": "2026-06-30T11:00:10Z",
+      "author_name": "Vitek Karas",
+      "author_email": "10670590+vitek-karas@users.noreply.github.com",
+      "author_login": "vitek-karas",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add PAT pool support to agentic workflows (#1626)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "a0534aec8f776d258392f0266cbdb9cc97e1dd98"
+      ],
+      "tree_sha": "81b07696485eaaa828b18f6282c28df1002835ce",
+      "html_url": "https://github.com/dotnet/xharness/commit/5d58a231a8a5e322bdd27da674a7059e4d2e7220",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+          "source_full_name": "dotnet/xharness",
+          "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+          "commit_sha": "5d58a231a8a5e322bdd27da674a7059e4d2e7220",
+          "committed_at": "2026-06-30T11:00:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 27,
+          "file_deletions": 1,
+          "file_changes": 28,
+          "file_patch": "@@ -12,13 +12,39 @@ on:\n   schedule: every 12h\n   workflow_dispatch:\n   roles: [admin, maintain, write]\n+  permissions: {}\n+\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in an isolated `copilot-pat-pool` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n \n environment: copilot-pat-pool\n \n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_PAT }}\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n \n if: github.repository == 'dotnet/xharness'\n ",
+          "snapshot_ref": "5d58a231a8a5e322bdd27da674a7059e4d2e7220",
+          "snapshot_blob_sha": "23fd060949e89ea29b2ab2f90b45ad8da2496c0f",
+          "snapshot_file": "snapshots/xharness__dotnet__5d58a231a8a5e322bdd27da674a7059e4d2e7220__runtime-failure-observer.agent.md",
+          "snapshot_bytes": 18109,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/xharness\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"xharness\",\"generated_workflow_path\":\".github/workflows/runtime-failure-observer.agent.lock.yml\",\"generated_workflow_file\":\"runtime-failure-observer.agent.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/xharness/blob/65e5795252474ebd04e4e872bd4152e86c558209/.github/workflows/runtime-failure-observer.agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+      "source_full_name": "dotnet/xharness",
+      "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+      "commit_sha": "5972976146cc400e19cca63695409841d2609a37",
+      "authored_at": "2026-07-16T08:38:35Z",
+      "committed_at": "2026-07-16T08:38:35Z",
+      "author_name": "Vitek Karas",
+      "author_email": "10670590+vitek-karas@users.noreply.github.com",
+      "author_login": "vitek-karas",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix PAT pool dependency for detection jobs (#1634)\n\nUpdate the generated agent workflows so detection can access the selected PAT pool output.\n\n\nCopilot-Session: 7eda5835-9acc-4f62-863d-58303cbe30f6\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "6e3f7251a2d482f71f6e6c786ded8d3b80dae792"
+      ],
+      "tree_sha": "6fd253145ed3d3635f236a87a9e451c3a3c09685",
+      "html_url": "https://github.com/dotnet/xharness/commit/5972976146cc400e19cca63695409841d2609a37",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/xharness:.github/workflows/runtime-failure-observer.agent.md",
+          "source_full_name": "dotnet/xharness",
+          "md_path": ".github/workflows/runtime-failure-observer.agent.md",
+          "commit_sha": "5972976146cc400e19cca63695409841d2609a37",
+          "committed_at": "2026-07-16T08:38:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 14,
+          "file_changes": 15,
+          "file_patch": "@@ -31,20 +31,7 @@ environment: copilot-pat-pool\n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: |\n-      ${{ case(\n-        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n-        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n-        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n-        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n-        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n-        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n-        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n-        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n-        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n-        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        'NO COPILOT PAT AVAILABLE')\n-      }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, 'NO COPILOT PAT AVAILABLE') }}\n \n if: github.repository == 'dotnet/xharness'\n ",
+          "snapshot_ref": "5972976146cc400e19cca63695409841d2609a37",
+          "snapshot_blob_sha": "b4815807efb646f6b019213c0cc40343017243c4",
+          "snapshot_file": "snapshots/xharness__dotnet__5972976146cc400e19cca63695409841d2609a37__runtime-failure-observer.agent.md",
+          "snapshot_bytes": 18006,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/xharness\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"xharness\",\"generated_workflow_path\":\".github/workflows/runtime-failure-observer.agent.lock.yml\",\"generated_workflow_file\":\"runtime-failure-observer.agent.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/xharness/blob/65e5795252474ebd04e4e872bd4152e86c558209/.github/workflows/runtime-failure-observer.agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

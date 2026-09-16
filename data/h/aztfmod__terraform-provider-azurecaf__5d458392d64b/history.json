@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+    "source_full_name": "aztfmod/terraform-provider-azurecaf",
+    "source_owner": "aztfmod",
+    "source_repo": "terraform-provider-azurecaf",
+    "md_path": ".github/workflows/weekly-azure-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/HEAD/.github/workflows/weekly-azure-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "aztfmod/terraform-provider-azurecaf",
+      "generated_owner": "aztfmod",
+      "generated_repo": "terraform-provider-azurecaf",
+      "generated_workflow_path": ".github/workflows/weekly-azure-sync.lock.yml",
+      "generated_workflow_file": "weekly-azure-sync.lock.yml",
+      "generated_html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/weekly-azure-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:24:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/weekly-azure-sync.md",
+      "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+      "authored_at": "2026-03-23T08:48:57Z",
+      "committed_at": "2026-03-23T08:48:57Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Add new skills and workflows for resource management and testing\n\n- Create e2e-test-runner skill for end-to-end testing procedures.\n- Add example-generator skill to generate Terraform example configurations.\n- Implement issue-to-resource-spec skill for parsing resource requests from GitHub issues.\n- Introduce naming-rules-drift-check skill to verify Azure naming rules against current definitions.\n- Develop pr-compliance-check skill to validate pull request compliance with project standards.\n- Establish pre-release-validation skill for comprehensive checks before release tagging.\n- Create readme-resource-table skill to update resource status in README.md.\n- Add regression-test-runner skill for running full CI test suite and reporting results.\n- Implement release-notes-generator skill for generating release notes from CHANGELOG.md.\n- Create resource-bulk-import skill for batch importing Azure resources into resourceDefinition.json.\n- Develop resource-completeness-check skill to compare resource definitions against existing resources.\n- Introduce resource-diff-report skill for comparing different versions of resourceDefinition.json.\n- Add semver-assessment skill to analyze changes and determine semantic version bumps.\n- Implement test-failure-diagnosis skill for diagnosing test failures and suggesting fixes.\n- Create workflows for contributor welcome, issue-to-PR automation, nightly regression testing, PR review, release validation, and weekly Azure sync.",
+      "parent_shas": [
+        "98993a22009e05fd03064fe6cd256f734dda1cc7"
+      ],
+      "tree_sha": "5e4a5255a5439a57cb125630c194b32024091487",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/575609f79f8432185b89444d13113fa40d7e9553",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/weekly-azure-sync.md",
+          "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+          "committed_at": "2026-03-23T08:48:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 68,
+          "file_deletions": 0,
+          "file_changes": 68,
+          "file_patch": "@@ -0,0 +1,68 @@\n+---\n+description: |\n+  Weekly workflow that discovers new Azure resources and checks for CAF \n+  slug drift. Creates GitHub issues for gaps and mismatches so maintainers\n+  can prioritize adding or updating resource definitions.\n+\n+on:\n+  schedule: \"0 9 * * 1\"\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: write\n+\n+network:\n+  allowed:\n+    - defaults\n+    - learn.microsoft.com\n+    - registry.terraform.io\n+\n+tools:\n+  github:\n+    lockdown: true\n+    toolsets: [issues]\n+  bash:\n+    - \"python3 *\"\n+    - \"grep *\"\n+    - \"sort *\"\n+    - \"comm *\"\n+    - \"wc *\"\n+    - \"cat *\"\n+    - \"curl *\"\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[azure-sync] \"\n+    labels: [automated, azure-sync, enhancement]\n+    close-older-issues: true\n+\n+source: local\n+engine: copilot\n+---\n+\n+# Weekly Azure Sync\n+\n+Check for new Azure resources and CAF slug changes on a weekly basis.\n+\n+## Process\n+\n+### 1. Resource discovery\n+- Extract supported resource names from `resourceDefinition.json`\n+- Compare against the known Terraform azurerm resources in `completness/existing_tf_resources.txt`\n+- Identify any new resources that should be added\n+\n+### 2. CAF slug check\n+- Fetch the latest CAF abbreviations page from Microsoft Learn\n+- Compare official slugs against the provider's current slug values\n+- Identify mismatches\n+\n+### 3. Create issues\n+If gaps or drift are found:\n+- Create a GitHub issue summarizing the findings\n+- Title: `[azure-sync] <count> new resources and <count> slug changes detected — <date>`\n+- Include a prioritized list of resources to add or update\n+- Label each finding by category (compute, storage, networking, etc.)\n+\n+If no changes detected:\n+- Exit silently, no issue needed",
+          "snapshot_ref": "575609f79f8432185b89444d13113fa40d7e9553",
+          "snapshot_blob_sha": "fa42b6d1be2c555519da0eaedfc3f1487f5e4cc4",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__575609f79f8432185b89444d13113fa40d7e9553__weekly-azure-sync.md",
+          "snapshot_bytes": 1662,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/weekly-azure-sync.lock.yml\",\"generated_workflow_file\":\"weekly-azure-sync.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/weekly-azure-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/weekly-azure-sync.md",
+      "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+      "authored_at": "2026-05-14T01:19:22Z",
+      "committed_at": "2026-05-14T01:36:04Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "chore(workflows): recompile agentic workflows with gh-aw v0.72.1\n\n- regenerate all 10 .lock.yml files (was v0.61.0); add 6 missing lock files\n- migrate strict-mode permissions to safe-outputs in 3 workflows\n- replace deprecated tools.github.repos with allowed-repos\n- adopt fuzzy schedules and terraform ecosystem identifier\n\n🤖 - Generated by Copilot",
+      "parent_shas": [
+        "5345a4f1c60e9112d20ae7c7b6e9399318ce2d7a"
+      ],
+      "tree_sha": "8de1b8c85449891565dbd801ce496a93893c1eb1",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/76763b42c2a7a3489689f9f3ba318908329c2432",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/weekly-azure-sync.md",
+          "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "committed_at": "2026-05-14T01:36:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -5,18 +5,18 @@ description: |\n   can prioritize adding or updating resource definitions.\n \n on:\n-  schedule: \"0 9 * * 1\"\n+  schedule: weekly on monday\n   workflow_dispatch:\n \n permissions:\n   contents: read\n-  issues: write\n+  issues: read\n \n network:\n   allowed:\n     - defaults\n     - learn.microsoft.com\n-    - registry.terraform.io\n+    - terraform\n \n tools:\n   github:",
+          "snapshot_ref": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "snapshot_blob_sha": "8f57eb3f1ddcb2cd6b0f1b7cb3ad7b2807e2f613",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__76763b42c2a7a3489689f9f3ba318908329c2432__weekly-azure-sync.md",
+          "snapshot_bytes": 1654,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/weekly-azure-sync.lock.yml\",\"generated_workflow_file\":\"weekly-azure-sync.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/weekly-azure-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/weekly-azure-sync.md",
+      "commit_sha": "a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+      "authored_at": "2026-05-14T03:42:05Z",
+      "committed_at": "2026-05-14T03:42:05Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "ci+docs: fix nightly regression, agentic workflow firewall paths, doc accuracy\n\nWorkflow fixes (resolves #462, #465, #468):\n\n- nightly-regression: add setup-go + setup-terraform pre-agent steps so make test_e2e_quick can find the terraform binary; rework run-script to use 'set -o pipefail' and capture per-suite exit codes through tee (assignment after tee was always seeing tee's $?, masking failures as exit 0). Step now always exits 0 so the agent can decide whether to file an issue.\n\n- issue-arborist: move pre-downloaded issues.json + issues-schema.json out of /tmp/gh-aw/issues-data/ (firewall-reserved by gh-aw v0.72.1) to ${GITHUB_WORKSPACE}/.gh-aw-data/, and update all path references in the agent prompt body.\n\n- weekly-azure-sync: move python3+curl resource-discovery work into a pre-agent step that writes pre-computed files to ${GITHUB_WORKSPACE}/.gh-aw-data/{supported,azurerm,missing,counts.env,caf-abbreviations.html}; tighten agent bash allowlist to read-only tools (cat/grep/head/tail/sort/comm/wc) since python3 is denied inside the firewall sandbox.\n\nAll 3 lock files recompiled with 'gh aw compile --approve' (v0.72.1) including the new hashicorp/setup-terraform@v4 action approval recorded in .github/aw/actions-lock.json. Compile output: 0 errors, 0 warnings.\n\nDocumentation accuracy + Doc-Ops pass:\n\n- README.md: fix 3 run-on regressions from PR #469's bulk substitution where missing newlines collapsed adjacent list items / fenced-code lines; replace broken 'make test_resource_constraints' references with 'make test_resource_matrix' (whose Makefile help string already covers constraint validation); add missing 'error_when_exceeding_max_length' parameter row that was on the schema but absent from the table.\n\n- TESTING.md: remove 2 references to integration test files that do not exist (integration_cross_resource_test.go, integration_naming_convention_types_test.go); add integration_all_resources_complete_test.go; soften 1 hedging phrase per writing-style instructions.\n\n- E2E_IMPLEMENTATION_SUMMARY.md, e2e/README.md: minor style fixes (hedging, dangling empty-body bullet).\n\n- docs/index.md, docs/resources/{azurecaf_name,azurecaf_naming_convention}.md, docs/data-sources/azurecaf_name.md, .github/CONTRIBUTING.md: align documented resource count from '400+' to actual '401' (verified via 'jq length resourceDefinition.json'); makes the line-44 CHANGELOG claim from PR #469 actually accurate.\n\n- .gitignore: exclude .copilot-tracking/ working notes from version control.\n\n- CHANGELOG.md: add [Unreleased] entries documenting all of the above.",
+      "parent_shas": [
+        "1a5641a12b57dc4e7b18cf99cac594a375a37e35"
+      ],
+      "tree_sha": "d3cc550330852bf0ef3103d24795836df8c7d0ca",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/weekly-azure-sync.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/weekly-azure-sync.md",
+          "commit_sha": "a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+          "committed_at": "2026-05-14T03:42:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 67,
+          "file_deletions": 8,
+          "file_changes": 75,
+          "file_patch": "@@ -23,20 +23,60 @@ tools:\n     lockdown: true\n     toolsets: [issues]\n   bash:\n-    - \"python3 *\"\n     - \"grep *\"\n     - \"sort *\"\n     - \"comm *\"\n     - \"wc *\"\n     - \"cat *\"\n-    - \"curl *\"\n+    - \"head *\"\n+    - \"tail *\"\n \n safe-outputs:\n   create-issue:\n     title-prefix: \"[azure-sync] \"\n     labels: [automated, azure-sync, enhancement]\n     close-older-issues: true\n \n+steps:\n+  - name: Pre-compute resource gap and slug data\n+    env:\n+      GH_AW_OUT: ${{ github.workspace }}/.gh-aw-data\n+    run: |\n+      set -o pipefail\n+      mkdir -p \"$GH_AW_OUT\"\n+\n+      # 1. Supported resources from the provider's resourceDefinition.json\n+      python3 -c \"import json; print('\\n'.join(sorted({r['name'] for r in json.load(open('resourceDefinition.json'))})))\" \\\n+        > \"$GH_AW_OUT/supported.txt\"\n+\n+      # 2. Known azurerm resources tracked in completness/existing_tf_resources.txt\n+      sort -u completness/existing_tf_resources.txt > \"$GH_AW_OUT/azurerm.txt\"\n+\n+      # 3. Diff: resources in azurerm.txt but missing from supported.txt\n+      comm -23 \"$GH_AW_OUT/azurerm.txt\" \"$GH_AW_OUT/supported.txt\" > \"$GH_AW_OUT/missing.txt\"\n+\n+      # 4. Counts\n+      {\n+        echo \"AZURERM_TOTAL=$(wc -l < \"$GH_AW_OUT/azurerm.txt\" | tr -d ' ')\"\n+        echo \"SUPPORTED_TOTAL=$(wc -l < \"$GH_AW_OUT/supported.txt\" | tr -d ' ')\"\n+        echo \"MISSING_TOTAL=$(wc -l < \"$GH_AW_OUT/missing.txt\" | tr -d ' ')\"\n+      } > \"$GH_AW_OUT/counts.env\"\n+\n+      # 5. CAF abbreviations page (best-effort; agent should note if empty)\n+      if curl -fsSL --max-time 30 \\\n+          \"https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations\" \\\n+          > \"$GH_AW_OUT/caf-abbreviations.html\"; then\n+        echo \"CAF_FETCH=ok\" >> \"$GH_AW_OUT/counts.env\"\n+      else\n+        echo \"CAF_FETCH=failed\" >> \"$GH_AW_OUT/counts.env\"\n+        : > \"$GH_AW_OUT/caf-abbreviations.html\"\n+      fi\n+\n+      echo \"----- counts -----\"\n+      cat \"$GH_AW_OUT/counts.env\"\n+      echo \"----- first 20 missing -----\"\n+      head -n 20 \"$GH_AW_OUT/missing.txt\"\n+\n source: local\n engine: copilot\n ---\n@@ -45,17 +85,36 @@ engine: copilot\n \n Check for new Azure resources and CAF slug changes on a weekly basis.\n \n+## Pre-computed inputs\n+\n+The pre-agent step has already produced the following files under\n+`${GITHUB_WORKSPACE}/.gh-aw-data/` — read them with `cat`, `head`, `tail`,\n+`grep`, `sort`, `comm`, or `wc`:\n+\n+- `supported.txt` — sorted unique resource names from `resourceDefinition.json`.\n+- `azurerm.txt` — sorted unique azurerm resource names from `completness/existing_tf_resources.txt`.\n+- `missing.txt` — azurerm resources NOT present in `supported.txt`.\n+- `counts.env` — `AZURERM_TOTAL`, `SUPPORTED_TOTAL`, `MISSING_TOTAL`, `CAF_FETCH`.\n+- `caf-abbreviations.html` — Microsoft Learn CAF abbreviations page (empty if `CAF_FETCH=failed`).\n+\n+Do NOT attempt to run `python3` or `curl` from inside the agent sandbox — those\n+tools are intentionally not allowed. The data above is the source of truth.\n+\n ## Process\n \n ### 1. Resource discovery\n-- Extract supported resource names from `resourceDefinition.json`\n-- Compare against the known Terraform azurerm resources in `completness/existing_tf_resources.txt`\n-- Identify any new resources that should be added\n+- Read `counts.env` for totals.\n+- Read `missing.txt` for the gap list.\n+- Skip any line beginning with `azurerm_` followed by a name that ends in\n+  `_data_source`, `_versions`, or otherwise represents a data source rather\n+  than a manageable resource.\n \n ### 2. CAF slug check\n-- Fetch the latest CAF abbreviations page from Microsoft Learn\n-- Compare official slugs against the provider's current slug values\n-- Identify mismatches\n+- If `CAF_FETCH=ok`, parse `caf-abbreviations.html` with `grep` to extract\n+  resource → abbreviation pairs and compare against the provider's current\n+  slug values from `resourceDefinition.json` (use `grep` for spot checks).\n+- If `CAF_FETCH=failed`, note the failure in the report and continue with the\n+  resource discovery section only.\n \n ### 3. Create issues\n If gaps or drift are found:",
+          "snapshot_ref": "a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+          "snapshot_blob_sha": "4a68ab40eb07488db3dd6ab42820ade9bae70435",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__a59df36ab7592e4b88bc8b65b68edb1b008b8313__weekly-azure-sync.md",
+          "snapshot_bytes": 4351,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/weekly-azure-sync.lock.yml\",\"generated_workflow_file\":\"weekly-azure-sync.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/weekly-azure-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

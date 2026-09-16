@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+    "source_full_name": "iamnbutler/sol-ui",
+    "source_owner": "iamnbutler",
+    "source_repo": "sol-ui",
+    "md_path": ".github/workflows/daily-test-improver.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/iamnbutler/sol-ui/blob/HEAD/.github/workflows/daily-test-improver.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "iamnbutler/sol-ui",
+      "generated_owner": "iamnbutler",
+      "generated_repo": "sol-ui",
+      "generated_workflow_path": ".github/workflows/daily-test-improver.lock.yml",
+      "generated_workflow_file": "daily-test-improver.lock.yml",
+      "generated_html_url": "https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-test-improver.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:57:14+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+      "source_full_name": "iamnbutler/sol-ui",
+      "md_path": ".github/workflows/daily-test-improver.md",
+      "commit_sha": "9289ca8c7b4dba09854d2d47d167afe265fda62e",
+      "authored_at": "2025-08-26T16:22:26Z",
+      "committed_at": "2025-08-26T16:22:26Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "improvers",
+      "parent_shas": [
+        "870b868d86934766a6bbf6d50e35183d549da41a"
+      ],
+      "tree_sha": "b3ca0a839f066aa96de8c95abbe3c35a269db7af",
+      "html_url": "https://github.com/iamnbutler/sol-ui/commit/9289ca8c7b4dba09854d2d47d167afe265fda62e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+          "source_full_name": "iamnbutler/sol-ui",
+          "md_path": ".github/workflows/daily-test-improver.md",
+          "commit_sha": "9289ca8c7b4dba09854d2d47d167afe265fda62e",
+          "committed_at": "2025-08-26T16:22:26Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 161,
+          "file_deletions": 0,
+          "file_changes": 161,
+          "file_patch": "@@ -0,0 +1,161 @@\n+---\n+on:\n+    workflow_dispatch:\n+    schedule:\n+        # Run daily at 2am UTC, all days except Saturday and Sunday\n+        - cron: \"0 2 * * 1-5\"\n+    stop-after: +48h # workflow will no longer trigger after 48 hours\n+\n+\n+timeout_minutes: 30\n+\n+permissions:\n+  contents: write # needed to create branches, files, and pull requests in this repo without a fork\n+  issues: write # needed to create report issue\n+  pull-requests: write # needed to create results pull request\n+  actions: read\n+  checks: read\n+  statuses: read\n+\n+tools:\n+  github:\n+    allowed:\n+      [\n+        create_issue,\n+        update_issue,\n+        add_issue_comment,\n+        create_or_update_file,\n+        create_branch,\n+        delete_file,\n+        push_files,\n+        update_pull_request,\n+      ]\n+  claude:\n+    allowed:\n+      Edit:\n+      MultiEdit:\n+      Write:\n+      NotebookEdit:\n+      WebFetch:\n+      WebSearch:\n+      # Configure bash build commands here, or enabled the agentics/shared/build-tools.md file at the end of this file and edit there\n+      #Bash: [\":*\"]\n+      Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n+\n+steps:\n+  - name: Checkout repository\n+    uses: actions/checkout@v3\n+\n+  - name: Check if action.yml exists\n+    id: check_build_steps_file\n+    run: |\n+      if [ -f \".github/actions/daily-test-improver/coverage-steps/action.yml\" ]; then\n+        echo \"exists=true\" >> $GITHUB_OUTPUT\n+      else\n+        echo \"exists=false\" >> $GITHUB_OUTPUT\n+      fi\n+    shell: bash\n+  - name: Build the project and produce coverage report\n+    if: steps.check_build_steps_file.outputs.exists == 'true'\n+    uses: ./.github/actions/daily-test-improver/coverage-steps\n+    id: build-steps\n+\n+---\n+\n+# Daily Test Coverage Improver\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for the GitHub repository `${{ github.repository }}`. You're really good at all kinds of tasks. You're excellent at everything.\n+\n+1. Build steps configuration.\n+\n+   1a. Check if `.github/actions/daily-test-improver/coverage-steps/action.yml` exists in this repo. Note this path is relative to the current directory (the root of the repo). If it exists then continue to step 2. If it doesn't then we need to create it:\n+   \n+   1b. Have a careful think about the CI commands needed to build the project, run tests, produce a coverage report and upload it as an artifact. Do this by carefully reading any existing documentation and CI files in the repository that do similar things, and by looking at any build scripts, project files, dev guides and so on in the repository. \n+\n+   1c. Create the file `.github/actions/daily-test-improver/coverage-steps/action.yml` containing these steps, ensuring that the action.yml file is valid.\n+\n+   1d. Before running any of the steps, make a pull request for the addition of this file, with title \"Updates to complete configuration of ${{ github.workflow }}\", explaining that adding these build steps to your repo will make this workflow more reliable and effective.\n+\n+    - Use Bash `git add ...`, `git commit ...`, `git push ...` etc. to push the changes to your branch.\n+\n+    - Use Bash `gh pr create --repo ${{ github.repository }} ...` to create a pull request with the changes.\n+   \n+   1e. Try to run through the steps you worked out manually one by one. If the a step needs updating, then update the pull request you created in step 1d, using `update_pull_request` to make the update. Continue through all the steps. If you can't get it to work, then create an issue describing the problem and exit the entire workflow.\n+   \n+   1f. Exit the entire workflow with a message saying that the configuration needs to be completed by merging the pull request you created in step c.\n+\n+2. Decide what to work on.\n+\n+   2a. You can assume that the repository is in a state where the steps in `.github/actions/daily-test-improver/coverage-steps/action.yml` have been run and a test coverage report has been generated, perhaps with other detailed coverage information. Look at the steps in `.github/actions/daily-test-improver/coverage-steps/action.yml` to work out where the coverage report should be, and find it. If you can't find the coverage report, work out why the build or coverage generation failed, then create an issue describing the problem and exit the entire workflow.\n+\n+   2b. Read the coverge report. Be detailed, looking to understand the files, functions, branches, and lines of code that are not covered by tests. Look for areas where you can add meaningful tests that will improve coverage.\n+   \n+   2c. Check the most recent pull request with title starting with \"${{ github.workflow }}\" (it may have been closed) and see what the status of things was there. These are your notes from last time you did your work, and may include useful recommendations for future areas to work on.\n+\n+   2d. Check for any other pull requests you created before with title starting with \"${{ github.workflow }}\". Don't work on adding any tests that overlap with what was done there.\n+\n+   2e. Based on all of the above, select multiple areas of relatively low coverage to work on that appear tractable for further test additions.\n+\n+3. For each area identified, do the following:\n+\n+   3a. Create a new branch\n+   \n+   3b. Write new tests to improve coverage. Ensure that the tests are meaningful and cover edge cases where applicable.\n+\n+   3c. Build the tests if necessary and remove any build errors.\n+   \n+   3d. Run the new tests to ensure they pass.\n+\n+   3e. Once you have added the tests, re-run the test suite again collecting coverage information. Check that overall coverage has improved. If coverage has not improved then exit.\n+\n+   3f. Apply any automatic code formatting used in the repo\n+   \n+   3g. Run any appropriate code linter used in the repo and ensure no new linting errors remain.\n+\n+   3h. If you were able to improve coverage, create a draft pull request with your changes, including a description of the improvements made and any relevant context.\n+\n+    - Use Bash `git add ...`, `git commit ...`, `git push ...` etc. to push the changes to your branch.\n+\n+    - Use Bash `gh pr create --repo ${{ github.repository }} ...` to create a pull request with the changes.\n+\n+    - Do NOT include the coverage report or any generated coverage files in the pull request. Check this very carefully after creating the pull request by looking at the added files and removing them if they shouldn't be there. We've seen before that you have a tendency to add large coverage files that you shouldn't, so be careful here.\n+\n+    - In the description of the pull request, include\n+      - A summary of the changes made\n+      - The problems you found\n+      - The actions you took\n+      - The changes in test coverage achieved - give numbers from the coverage reports\n+      - Include exact coverage numbers before and after the changes, drawing from the coverage reports\n+      - Include changes in numbers for overall coverage\n+      - If coverage numbers a guesstimates, rather than based on coverage reports, say so. Don't blag, be honest. Include the exact commands the user will need to run to validate accurate coverage numbers.\n+      - List possible other areas for future improvement\n+      - In a collapsed section list\n+        - all bash commands you ran\n+        - all web searches you performed\n+        - all web pages you fetched \n+\n+    - After creation, check the pull request to ensure it is correct, includes all expected files, and doesn't include any unwanted files or changes. Make any necessary corrections by pushing further commits to the branch.\n+\n+4. If you think you found bugs in the code while adding tests, also create one single combined issue for all of them, starting the title of the issue with \"${{ github.workflow }}\". Do not include fixes in your pull requests unless you are 100% certain the bug is real and the fix is right.\n+\n+5. If you encounter any problems or have questions, include this information in the pull request or issue to seek clarification or assistance.\n+\n+6. Create a file in the root directory of the repo called \"workflow-complete.txt\" with the text \"Workflow completed successfully\".\n+\n+@include agentics/shared/no-push-to-main.md\n+\n+@include agentics/shared/tool-refused.md\n+\n+@include agentics/shared/include-link.md\n+\n+@include agentics/shared/job-summary.md\n+\n+@include agentics/shared/xpia.md\n+\n+@include agentics/shared/gh-extra-tools.md\n+\n+<!-- You can whitelist tools in the agentics/shared/build-tools.md file, and include it here. -->\n+<!-- This should be done with care, as tools may  -->\n+<!-- include agentics/shared/build-tools.md -->",
+          "snapshot_ref": "9289ca8c7b4dba09854d2d47d167afe265fda62e",
+          "snapshot_blob_sha": "ca15fccea2d3ede0b03acd7d718a2c32590ec644",
+          "snapshot_file": "snapshots/sol-ui__iamnbutler__9289ca8c7b4dba09854d2d47d167afe265fda62e__daily-test-improver.md",
+          "snapshot_bytes": 8746,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/sol-ui\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"sol-ui\",\"generated_workflow_path\":\".github/workflows/daily-test-improver.lock.yml\",\"generated_workflow_file\":\"daily-test-improver.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-test-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+      "source_full_name": "iamnbutler/sol-ui",
+      "md_path": ".github/workflows/daily-test-improver.md",
+      "commit_sha": "32277bafd8afac906b9e675ad49fb62fc0056275",
+      "authored_at": "2025-08-26T16:49:34Z",
+      "committed_at": "2025-08-26T16:49:34Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "improvers",
+      "parent_shas": [
+        "9289ca8c7b4dba09854d2d47d167afe265fda62e"
+      ],
+      "tree_sha": "1c7887e800fdf3c1f3b3f891296b57d6ef88768c",
+      "html_url": "https://github.com/iamnbutler/sol-ui/commit/32277bafd8afac906b9e675ad49fb62fc0056275",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+          "source_full_name": "iamnbutler/sol-ui",
+          "md_path": ".github/workflows/daily-test-improver.md",
+          "commit_sha": "32277bafd8afac906b9e675ad49fb62fc0056275",
+          "committed_at": "2025-08-26T16:49:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -39,8 +39,8 @@ tools:\n       WebFetch:\n       WebSearch:\n       # Configure bash build commands here, or enabled the agentics/shared/build-tools.md file at the end of this file and edit there\n-      #Bash: [\":*\"]\n-      Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n+      Bash: [\":*\"]\n+      #Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n \n steps:\n   - name: Checkout repository",
+          "snapshot_ref": "32277bafd8afac906b9e675ad49fb62fc0056275",
+          "snapshot_blob_sha": "eb04f70873114aa2ee18cc937ff874df39bd829d",
+          "snapshot_file": "snapshots/sol-ui__iamnbutler__32277bafd8afac906b9e675ad49fb62fc0056275__daily-test-improver.md",
+          "snapshot_bytes": 8746,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/sol-ui\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"sol-ui\",\"generated_workflow_path\":\".github/workflows/daily-test-improver.lock.yml\",\"generated_workflow_file\":\"daily-test-improver.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-test-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+      "source_full_name": "iamnbutler/sol-ui",
+      "md_path": ".github/workflows/daily-test-improver.md",
+      "commit_sha": "92e31de790512448d050c8c1817d6e69f85b0262",
+      "authored_at": "2025-08-26T19:41:50Z",
+      "committed_at": "2025-08-26T19:41:50Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update improvers",
+      "parent_shas": [
+        "96795e72c7b2cf2a38eb4c8704a036efccfd1bdb"
+      ],
+      "tree_sha": "a8cacffb09a6d9d64be4fbeddad3b6249be9bec6",
+      "html_url": "https://github.com/iamnbutler/sol-ui/commit/92e31de790512448d050c8c1817d6e69f85b0262",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/sol-ui:.github/workflows/daily-test-improver.md",
+          "source_full_name": "iamnbutler/sol-ui",
+          "md_path": ".github/workflows/daily-test-improver.md",
+          "commit_sha": "92e31de790512448d050c8c1817d6e69f85b0262",
+          "committed_at": "2025-08-26T19:41:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 52,
+          "file_deletions": 31,
+          "file_changes": 83,
+          "file_patch": "@@ -38,9 +38,9 @@ tools:\n       NotebookEdit:\n       WebFetch:\n       WebSearch:\n-      # Configure bash build commands here, or enabled the agentics/shared/build-tools.md file at the end of this file and edit there\n-      Bash: [\":*\"]\n-      #Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n+      # Configure bash build commands here, or in .github/workflows/agentics/daily-test-improver.config.md\n+      #Bash: [\":*\"]\n+      Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh issue comment:*\"]\n \n steps:\n   - name: Checkout repository\n@@ -68,53 +68,71 @@ steps:\n \n Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for the GitHub repository `${{ github.repository }}`. You're really good at all kinds of tasks. You're excellent at everything.\n \n-1. Build steps configuration.\n+1. Testing research (if not done before).\n \n-   1a. Check if `.github/actions/daily-test-improver/coverage-steps/action.yml` exists in this repo. Note this path is relative to the current directory (the root of the repo). If it exists then continue to step 2. If it doesn't then we need to create it:\n+   1a. Check if an open issue with title \"${{ github.workflow }}: Research and Plan\" exists. If it does, read the issue and its comments, paying particular attention to comments from repository maintainers, then continue to step 2. If not, follow the steps below to create it:\n+\n+    1b. Research the repository to understand its purpose, functionality, and technology stack. Look at the README.md, project documentation, code files, and any other relevant information.\n+\n+    1c. Research the current state of test coverage in the repository. Look for existing test files, coverage reports, and any related issues or pull requests.\n+\n+    1d. Create an issue with title \"${{ github.workflow }}: Research and Plan\" that includes:\n+      - A summary of your findings about the repository, its testing strategies, its test coverage\n+      - A plan for how you will approach improving test coverage, including specific areas to focus on and strategies to use\n+      - Details of the commands needed to run to build the project, run tests, and generate coverage reports\n+      - Details of how tests are organized in the repo, and how new tests should be organized\n+      - Opportunities for new ways of greatly increasing test coverage\n+      - Any questions or clarifications needed from maintainers\n+\n+    1e. Continue to step 2. \n+\n+2. Build steps configuration.\n+\n+   2a. Check if `.github/actions/daily-test-improver/coverage-steps/action.yml` exists in this repo. Note this path is relative to the current directory (the root of the repo). If it exists then continue to step 3. If it doesn't then we need to create it:\n    \n-   1b. Have a careful think about the CI commands needed to build the project, run tests, produce a coverage report and upload it as an artifact. Do this by carefully reading any existing documentation and CI files in the repository that do similar things, and by looking at any build scripts, project files, dev guides and so on in the repository. \n+   2b. Have a careful think about the CI commands needed to build the project, run tests, produce a coverage report and upload it as an artifact. Do this by carefully reading any existing documentation and CI files in the repository that do similar things, and by looking at any build scripts, project files, dev guides and so on in the repository. \n \n-   1c. Create the file `.github/actions/daily-test-improver/coverage-steps/action.yml` containing these steps, ensuring that the action.yml file is valid.\n+   2c. Create the file `.github/actions/daily-test-improver/coverage-steps/action.yml` containing these steps, ensuring that the action.yml file is valid.\n \n-   1d. Before running any of the steps, make a pull request for the addition of this file, with title \"Updates to complete configuration of ${{ github.workflow }}\", explaining that adding these build steps to your repo will make this workflow more reliable and effective.\n+   2d. Before running any of the steps, make a pull request for the addition of this file, with title \"Updates to complete configuration of ${{ github.workflow }}\", explaining that adding these build steps to your repo will make this workflow more reliable and effective.\n \n     - Use Bash `git add ...`, `git commit ...`, `git push ...` etc. to push the changes to your branch.\n \n     - Use Bash `gh pr create --repo ${{ github.repository }} ...` to create a pull request with the changes.\n    \n-   1e. Try to run through the steps you worked out manually one by one. If the a step needs updating, then update the pull request you created in step 1d, using `update_pull_request` to make the update. Continue through all the steps. If you can't get it to work, then create an issue describing the problem and exit the entire workflow.\n+   2e. Try to run through the steps you worked out manually one by one. If the a step needs updating, then update the pull request you created in step 2d, using `update_pull_request` to make the update. Continue through all the steps. If you can't get it to work, then create an issue describing the problem and exit the entire workflow.\n    \n-   1f. Exit the entire workflow with a message saying that the configuration needs to be completed by merging the pull request you created in step c.\n+   2f. Exit the entire workflow with a message saying that the configuration needs to be completed by merging the pull request you created in step 2d.\n \n-2. Decide what to work on.\n+3. Decide what to work on.\n \n-   2a. You can assume that the repository is in a state where the steps in `.github/actions/daily-test-improver/coverage-steps/action.yml` have been run and a test coverage report has been generated, perhaps with other detailed coverage information. Look at the steps in `.github/actions/daily-test-improver/coverage-steps/action.yml` to work out where the coverage report should be, and find it. If you can't find the coverage report, work out why the build or coverage generation failed, then create an issue describing the problem and exit the entire workflow.\n+   3a. You can assume that the repository is in a state where the steps in `.github/actions/daily-test-improver/coverage-steps/action.yml` have been run and a test coverage report has been generated, perhaps with other detailed coverage information. Look at the steps in `.github/actions/daily-test-improver/coverage-steps/action.yml` to work out where the coverage report should be, and find it. If you can't find the coverage report, work out why the build or coverage generation failed, then create an issue describing the problem and exit the entire workflow.\n \n-   2b. Read the coverge report. Be detailed, looking to understand the files, functions, branches, and lines of code that are not covered by tests. Look for areas where you can add meaningful tests that will improve coverage.\n+   3b. Read the coverge report. Be detailed, looking to understand the files, functions, branches, and lines of code that are not covered by tests. Look for areas where you can add meaningful tests that will improve coverage.\n    \n-   2c. Check the most recent pull request with title starting with \"${{ github.workflow }}\" (it may have been closed) and see what the status of things was there. These are your notes from last time you did your work, and may include useful recommendations for future areas to work on.\n+   3c. Check the most recent pull request with title starting with \"${{ github.workflow }}\" (it may have been closed) and see what the status of things was there. These are your notes from last time you did your work, and may include useful recommendations for future areas to work on.\n \n-   2d. Check for any other pull requests you created before with title starting with \"${{ github.workflow }}\". Don't work on adding any tests that overlap with what was done there.\n+   3d. Check for any other pull requests you created before with title starting with \"${{ github.workflow }}\". Don't work on adding any tests that overlap with what was done there.\n \n-   2e. Based on all of the above, select multiple areas of relatively low coverage to work on that appear tractable for further test additions.\n+   3e. Based on all of the above, select multiple areas of relatively low coverage to work on that appear tractable for further test additions.\n \n-3. For each area identified, do the following:\n+4. For each area identified, do the following:\n \n-   3a. Create a new branch\n+   4a. Create a new branch\n    \n-   3b. Write new tests to improve coverage. Ensure that the tests are meaningful and cover edge cases where applicable.\n+   4b. Write new tests to improve coverage. Ensure that the tests are meaningful and cover edge cases where applicable.\n \n-   3c. Build the tests if necessary and remove any build errors.\n+   4c. Build the tests if necessary and remove any build errors.\n    \n-   3d. Run the new tests to ensure they pass.\n+   4d. Run the new tests to ensure they pass.\n \n-   3e. Once you have added the tests, re-run the test suite again collecting coverage information. Check that overall coverage has improved. If coverage has not improved then exit.\n+   4e. Once you have added the tests, re-run the test suite again collecting coverage information. Check that overall coverage has improved. If coverage has not improved then exit.\n \n-   3f. Apply any automatic code formatting used in the repo\n+   4f. Apply any automatic code formatting used in the repo\n    \n-   3g. Run any appropriate code linter used in the repo and ensure no new linting errors remain.\n+   4g. Run any appropriate code linter used in the repo and ensure no new linting errors remain.\n \n-   3h. If you were able to improve coverage, create a draft pull request with your changes, including a description of the improvements made and any relevant context.\n+   4h. If you were able to improve coverage, create a draft pull request with your changes, including a description of the improvements made and any relevant context.\n \n     - Use Bash `git add ...`, `git commit ...`, `git push ...` etc. to push the changes to your branch.\n \n@@ -138,11 +156,11 @@ Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for\n \n     - After creation, check the pull request to ensure it is correct, includes all expected files, and doesn't include any unwanted files or changes. Make any necessary corrections by pushing further commits to the branch.\n \n-4. If you think you found bugs in the code while adding tests, also create one single combined issue for all of them, starting the title of the issue with \"${{ github.workflow }}\". Do not include fixes in your pull requests unless you are 100% certain the bug is real and the fix is right.\n+5. If you think you found bugs in the code while adding tests, also create one single combined issue for all of them, starting the title of the issue with \"${{ github.workflow }}\". Do not include fixes in your pull requests unless you are 100% certain the bug is real and the fix is right.\n \n-5. If you encounter any problems or have questions, include this information in the pull request or issue to seek clarification or assistance.\n+6. If you encounter any problems or have questions, include this information in the pull request or issue to seek clarification or assistance.\n \n-6. Create a file in the root directory of the repo called \"workflow-complete.txt\" with the text \"Workflow completed successfully\".\n+7. Create a file in the root directory of the repo called \"workflow-complete.txt\" with the text \"Workflow completed successfully\".\n \n @include agentics/shared/no-push-to-main.md\n \n@@ -156,6 +174,9 @@ Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for\n \n @include agentics/shared/gh-extra-tools.md\n \n-<!-- You can whitelist tools in the agentics/shared/build-tools.md file, and include it here. -->\n-<!-- This should be done with care, as tools may  -->\n-<!-- include agentics/shared/build-tools.md -->\n+<!-- You can whitelist tools in .github/workflows/build-tools.md file -->\n+@include? agentics/build-tools.md\n+\n+<!-- You can customize prompting and tools in .github/workflows/agentics/daily-test-improver.config.md -->\n+@include? agentics/daily-test-improver.config.md\n+",
+          "snapshot_ref": "92e31de790512448d050c8c1817d6e69f85b0262",
+          "snapshot_blob_sha": "5a55d84f22bf6c340f064c15db1e8cf96bbd446c",
+          "snapshot_file": "snapshots/sol-ui__iamnbutler__92e31de790512448d050c8c1817d6e69f85b0262__daily-test-improver.md",
+          "snapshot_bytes": 10064,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/sol-ui\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"sol-ui\",\"generated_workflow_path\":\".github/workflows/daily-test-improver.lock.yml\",\"generated_workflow_file\":\"daily-test-improver.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-test-improver.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

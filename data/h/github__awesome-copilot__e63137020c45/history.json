@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+    "source_full_name": "github/awesome-copilot",
+    "source_owner": "github",
+    "source_repo": "awesome-copilot",
+    "md_path": ".github/workflows/resource-staleness-report.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/awesome-copilot/blob/HEAD/.github/workflows/resource-staleness-report.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/awesome-copilot",
+      "generated_owner": "github",
+      "generated_repo": "awesome-copilot",
+      "generated_workflow_path": ".github/workflows/resource-staleness-report.lock.yml",
+      "generated_workflow_file": "resource-staleness-report.lock.yml",
+      "generated_html_url": "https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/resource-staleness-report.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:08+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/resource-staleness-report.md",
+      "commit_sha": "05ab97934a8e2cfeaffc9230ca27735870ed39d4",
+      "authored_at": "2026-02-18T23:19:17Z",
+      "committed_at": "2026-02-18T23:19:17Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "Aaron Powell",
+      "committer_email": "me@aaron-powell.com",
+      "committer_login": "aaronpowell",
+      "committer_account_type": "User",
+      "message": "Add weekly resource staleness report agentic workflow\n\nScans agents, prompts, instructions, hooks, and skills folders to\nidentify resources that haven't had a major change in over 30 days\n(stale) or 14 days (aging). Runs weekly or on demand and files a\nGitHub issue with the report.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "84804535127a89f3f12af65f9ab0bb72094c5c4f"
+      ],
+      "tree_sha": "5b53bc002fa39bca7e54c649ab127d1b8d2b294d",
+      "html_url": "https://github.com/github/awesome-copilot/commit/05ab97934a8e2cfeaffc9230ca27735870ed39d4",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/resource-staleness-report.md",
+          "commit_sha": "05ab97934a8e2cfeaffc9230ca27735870ed39d4",
+          "committed_at": "2026-02-18T23:19:17Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 103,
+          "file_deletions": 0,
+          "file_changes": 103,
+          "file_patch": "@@ -0,0 +1,103 @@\n+---\n+description: Weekly report identifying stale and aging resources across agents, prompts, instructions, hooks, and skills folders\n+on:\n+  schedule: weekly\n+permissions:\n+  contents: read\n+tools:\n+  github:\n+    toolsets: [repos]\n+safe-outputs:\n+  create-issue:\n+    max: 1\n+    close-older-issues: true\n+  noop:\n+---\n+\n+# Resource Staleness Report\n+\n+You are an AI agent that audits the resources in this repository to identify ones that may need attention based on how long it has been since their last meaningful change.\n+\n+## Your Task\n+\n+Analyze all files in the following directories to determine when each file last had a **major** (substantive) change committed:\n+\n+- `agents/` (`.agent.md` files)\n+- `prompts/` (`.prompt.md` files)\n+- `instructions/` (`.instructions.md` files)\n+- `hooks/` (folders — check the folder's files)\n+- `skills/` (folders — check the folder's files)\n+\n+### What Counts as a Major Change\n+\n+A **major** change is one that modifies the actual content or behavior of the resource. Use `git log` with `--diff-filter=M` and `--follow` to find when files were last substantively modified.\n+\n+**Ignore** the following — these are NOT major changes:\n+\n+- File renames or moves (`R` status in git)\n+- Whitespace-only or line-ending fixes\n+- Commits whose messages indicate bulk formatting, renaming, or automated updates (e.g., \"fix line endings\", \"rename files\", \"bulk update\", \"normalize\")\n+- Changes that only touch frontmatter metadata without changing the instructions/content body\n+\n+### How to Determine Last Major Change\n+\n+For each resource file, run:\n+\n+```bash\n+git log -1 --format=\"%H %ai\" --diff-filter=M -- <filepath>\n+```\n+\n+This gives the most recent commit that **modified** (not just renamed) the file. If a file has never been modified (only added), use the commit that added it:\n+\n+```bash\n+git log -1 --format=\"%H %ai\" --diff-filter=A -- <filepath>\n+```\n+\n+For hook and skill folders, check all files within the folder and use the **most recent** major change date across any file in that folder.\n+\n+### Classification\n+\n+Based on today's date, classify each resource:\n+\n+- **🔴 Stale** — last major change was **more than 30 days ago**\n+- **🟡 Aging** — last major change was **between 14 and 30 days ago**\n+- Resources changed within the last 14 days are **fresh** and should NOT be listed\n+\n+### Output Format\n+\n+Create an issue with the title: `📋 Resource Staleness Report`\n+\n+Organize the issue body as follows:\n+\n+```markdown\n+### Summary\n+\n+- **Stale (>30 days):** X resources\n+- **Aging (14–30 days):** Y resources\n+- **Fresh (<14 days):** Z resources (not listed below)\n+\n+### 🔴 Stale Resources (>30 days since last major change)\n+\n+| Resource | Type | Last Major Change | Days Ago |\n+|----------|------|-------------------|----------|\n+| `agents/example.agent.md` | Agent | 2025-01-15 | 45 |\n+\n+### 🟡 Aging Resources (14–30 days since last major change)\n+\n+| Resource | Type | Last Major Change | Days Ago |\n+|----------|------|-------------------|----------|\n+| `prompts/example.prompt.md` | Prompt | 2025-02-01 | 20 |\n+```\n+\n+If a category has no resources, include the header with a note: \"✅ No resources in this category.\"\n+\n+Use `<details>` blocks to collapse sections with more than 15 entries.\n+\n+## Guidelines\n+\n+- Process all resource types: agents, prompts, instructions, hooks, and skills.\n+- For **hooks** and **skills**, treat the entire folder as one resource. Report it by folder name and use the most recent change date of any file within.\n+- Sort tables by \"Days Ago\" descending (oldest first).\n+- If there are no stale or aging resources at all, call the `noop` safe output with the message: \"All resources have been updated within the last 14 days. No staleness report needed.\"\n+- Do not include fresh resources in the tables — only mention the count in the summary.\n+- Use the `create-issue` safe output to file the report. Previous reports will be automatically closed.",
+          "snapshot_ref": "05ab97934a8e2cfeaffc9230ca27735870ed39d4",
+          "snapshot_blob_sha": "72970fca036ee1f1ee4a53d4490ef304e1da8338",
+          "snapshot_file": "snapshots/awesome-copilot__github__05ab97934a8e2cfeaffc9230ca27735870ed39d4__resource-staleness-report.md",
+          "snapshot_bytes": 3881,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/resource-staleness-report.lock.yml\",\"generated_workflow_file\":\"resource-staleness-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/resource-staleness-report.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/resource-staleness-report.md",
+      "commit_sha": "0528d4104c09b857053d9c6e54c3b9083017d3a8",
+      "authored_at": "2026-05-15T06:33:29Z",
+      "committed_at": "2026-05-15T06:33:29Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows update (#1727)\n\n* adding a deeper analysis of the oldest items in the report\n\n* Updating aw",
+      "parent_shas": [
+        "e66aa802401760aed477350714529e7882aef04a"
+      ],
+      "tree_sha": "a216c8866066c1a3de21b310dd715b1cba77ca6a",
+      "html_url": "https://github.com/github/awesome-copilot/commit/0528d4104c09b857053d9c6e54c3b9083017d3a8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/resource-staleness-report.md",
+          "commit_sha": "0528d4104c09b857053d9c6e54c3b9083017d3a8",
+          "committed_at": "2026-05-15T06:33:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 37,
+          "file_deletions": 0,
+          "file_changes": 37,
+          "file_patch": "@@ -63,6 +63,26 @@ Based on today's date, classify each resource:\n - **🟡 Aging** — last major change was **between 14 and 30 days ago**\n - Resources changed within the last 14 days are **fresh** and should NOT be listed\n \n+### Deeper Review for the Oldest Stale Resources\n+\n+After producing the age-based inventory, perform a **content review** of the **10 oldest stale resources**.\n+\n+For each of those 10 resources:\n+\n+1. Read the current file contents (for hooks and skills, inspect the folder's primary instruction file and any bundled files that materially affect behavior).\n+2. Determine whether the resource is:\n+   - **Materially stale** — guidance is outdated, incomplete in an important way, or references older patterns that should be replaced\n+   - **Problematic** — guidance is misleading, harmful, overly broad, or likely to produce poor results even if it is not version-stale\n+   - **Mostly current** — old by date, but still broadly aligned with current best practices\n+3. Identify the most important concrete issues. Focus on substantive problems, not minor wording nits.\n+4. Recommend what should be done next:\n+   - **Immediate rework/removal**\n+   - **Targeted refresh**\n+   - **Minor modernization**\n+   - **No urgent change needed**\n+\n+Do **not** assume that old automatically means bad. The deeper review should separate truly risky resources from ones that are simply old.\n+\n ### Output Format\n \n Create an issue with the title: `📋 Resource Staleness Report`\n@@ -87,6 +107,19 @@ Organize the issue body as follows:\n | Resource | Type | Last Major Change | Days Ago |\n |----------|------|-------------------|----------|\n | `prompts/example.prompt.md` | Prompt | 2025-02-01 | 20 |\n+\n+### Deep Review: 10 Oldest Stale Resources\n+\n+| Resource | Verdict | Key Problems | Recommended Action |\n+|----------|---------|--------------|--------------------|\n+| `instructions/example.instructions.md` | Materially stale | References older framework defaults and misses current patterns | Targeted refresh |\n+\n+### Priority Actions\n+\n+1. Immediate rework/removal: `resource-a`, `resource-b`\n+2. Targeted refresh: `resource-c`, `resource-d`\n+3. Minor modernization: `resource-e`\n+4. No urgent change needed: `resource-f`\n ```\n \n If a category has no resources, include the header with a note: \"✅ No resources in this category.\"\n@@ -98,6 +131,10 @@ Use `<details>` blocks to collapse sections with more than 15 entries.\n - Process all resource types: agents, prompts, instructions, hooks, and skills.\n - For **hooks** and **skills**, treat the entire folder as one resource. Report it by folder name and use the most recent change date of any file within.\n - Sort tables by \"Days Ago\" descending (oldest first).\n+- After building the stale table, inspect the **10 oldest stale resources** in more depth and include the deeper review section.\n+- In the deeper review, prefer **high-signal issues**: outdated version assumptions, deprecated APIs, misleading instructions, harmful heuristics, unsafe defaults, or instructions that are scoped too broadly.\n+- If a resource is old but still sound, explicitly say so. The goal is to prioritize maintenance work, not just restate age.\n+- Keep the deeper review concise but specific. Each row should explain the main problem and the best next step.\n - If there are no stale or aging resources at all, call the `noop` safe output with the message: \"All resources have been updated within the last 14 days. No staleness report needed.\"\n - Do not include fresh resources in the tables — only mention the count in the summary.\n - Use the `create-issue` safe output to file the report. Previous reports will be automatically closed.",
+          "snapshot_ref": "0528d4104c09b857053d9c6e54c3b9083017d3a8",
+          "snapshot_blob_sha": "ec5e747bf96d17f2b66aef7e9567f7f66a1e149d",
+          "snapshot_file": "snapshots/awesome-copilot__github__0528d4104c09b857053d9c6e54c3b9083017d3a8__resource-staleness-report.md",
+          "snapshot_bytes": 6135,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/resource-staleness-report.lock.yml\",\"generated_workflow_file\":\"resource-staleness-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/resource-staleness-report.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/resource-staleness-report.md",
+      "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "authored_at": "2026-07-03T00:08:42Z",
+      "committed_at": "2026-07-03T00:08:42Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix PR duplicate check not running on external contributor submissions (#2188)\n\n* Initial plan\n\n* Fix PR duplicate check not running on external contributor submissions\n\nAdd forks: [\\\"*\\\"] and roles: all to pr-duplicate-check.md so the\nagentic workflow runs for all PR authors, including external contributors\nsubmitting from forks. Previously, the generated lock.yml contained:\n- A fork repository check blocking all fork PRs from running\n- A team membership check (admin/maintainer/write) blocking external contributors\n\nRecompiled with gh aw compile to regenerate pr-duplicate-check.lock.yml.\nThe pre_activation job (which held the membership gate) is now removed,\nand the activation job runs unconditionally for all pull_request events.\n\nCloses #2121\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* fixing a bunch of warnings on all the agentic workflows\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: Aaron Powell <me@aaron-powell.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8c68eba69048c2f87389ab9fa99d28f694a11846"
+      ],
+      "tree_sha": "ca59b4fcc7e2b196a97fdc5e923e9571a0db4091",
+      "html_url": "https://github.com/github/awesome-copilot/commit/3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/resource-staleness-report.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/resource-staleness-report.md",
+          "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "committed_at": "2026-07-03T00:08:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -4,6 +4,7 @@ on:\n   schedule: weekly\n permissions:\n   contents: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [repos]",
+          "snapshot_ref": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "snapshot_blob_sha": "07b8d32a6caf029b0146f545ea1930e899ae490f",
+          "snapshot_file": "snapshots/awesome-copilot__github__3bd22bc0f4bc4e54f3a288de7d485a48e78718c3__resource-staleness-report.md",
+          "snapshot_bytes": 6161,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/resource-staleness-report.lock.yml\",\"generated_workflow_file\":\"resource-staleness-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/resource-staleness-report.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

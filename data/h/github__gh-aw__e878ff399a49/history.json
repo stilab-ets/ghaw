@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/daily-evals-report.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/daily-evals-report.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/daily-evals-report.lock.yml",
+      "generated_workflow_file": "daily-evals-report.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-evals-report.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:42:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-evals-report.md",
+      "commit_sha": "d8e041675a8241bd36a056b0d6922c5e7d8f7f5e",
+      "authored_at": "2026-07-15T19:50:49Z",
+      "committed_at": "2026-07-15T19:50:49Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add daily-evals-report workflow (#45805)",
+      "parent_shas": [
+        "705138790ebaecb6619d17fddb9f042a57400a00"
+      ],
+      "tree_sha": "42b11e93f3137a509dca89b4d20659d4e8c11ff9",
+      "html_url": "https://github.com/github/gh-aw/commit/d8e041675a8241bd36a056b0d6922c5e7d8f7f5e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-evals-report.md",
+          "commit_sha": "d8e041675a8241bd36a056b0d6922c5e7d8f7f5e",
+          "committed_at": "2026-07-15T19:50:49Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 242,
+          "file_deletions": 0,
+          "file_changes": 242,
+          "file_patch": "@@ -0,0 +1,242 @@\n+---\n+private: true\n+emoji: \"🧪\"\n+description: Daily data science report analyzing evals feature adoption, per-question pass rates, and quality trends across agentic workflows\n+on:\n+  schedule: daily around 8:00\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+max-daily-ai-credits: 3000\n+engine:\n+  id: codex\n+  model: gpt-5.4\n+tracker-id: daily-evals-report\n+sandbox:\n+  agent:\n+    sudo: false\n+features:\n+  gh-aw-detection: true\n+timeout-minutes: 45\n+imports:\n+  - uses: shared/meta-analysis-base.md\n+    with:\n+      toolsets: [default, actions]\n+  - uses: shared/daily-audit-base.md\n+    with:\n+      title-prefix: \"[evals] \"\n+      expires: 7d\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  max-bot-mentions: 1\n+  create-issue:\n+    title-prefix: \"[evals] \"\n+    labels: [evals, automated-analysis]\n+    close-older-issues: true\n+    expires: 7d\n+    max: 1\n+---\n+\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# Daily Evals Feature Report\n+\n+You are a data scientist analyzing the `evals` feature in GitHub Agentic Workflows.\n+The `evals` feature lets workflow authors declare BinEval-style binary YES/NO questions\n+that are automatically evaluated after each run. Results are stored as `evals.jsonl`\n+artifacts per run and persisted to dedicated `evals/<workflow-id>` git branches.\n+\n+## Mission\n+\n+Analyze the last 7 days of workflow runs that use the `evals` feature. Compute per-question\n+YES/NO pass rates, identify workflows with failing evals, and produce a data science summary.\n+When the evals feature is degraded or broken, produce an actionable issue to guide investigation.\n+\n+## Context\n+\n+- Repository: `${{ github.repository }}`\n+- Run ID: `${{ github.run_id }}`\n+- Window: last 7 full days ending at workflow start (UTC)\n+\n+## Phase 1: Fetch Evals Runs\n+\n+Call the `logs` MCP tool once to download runs with evals artifacts from the past 7 days.\n+\n+**Tool**: `logs`\n+**Parameters**:\n+```json\n+{\n+  \"workflow_name\": \"\",\n+  \"count\": 100,\n+  \"start_date\": \"-7d\",\n+  \"artifacts\": [\"evals\", \"usage\"]\n+}\n+```\n+\n+Logs are saved to `/tmp/gh-aw/aw-mcp/logs/run-<id>/`.\n+\n+Do **not** enumerate every workflow first. One broad fetch is the right starting point.\n+\n+## Phase 2: Discover Evals Data\n+\n+For each downloaded run directory at `/tmp/gh-aw/aw-mcp/logs/run-<id>/`:\n+\n+1. Check for `evals/evals.jsonl` (or `evals.jsonl` at root if flattened).\n+2. Read `aw_info.json` (or `activation/aw_info.json`) to get:\n+   - `workflow_name` (or `workflow.name`)\n+   - `conclusion` (success / failure / cancelled)\n+   - Whether evals were declared (check for an `evals` key or the presence of the evals job in the run)\n+3. Note runs where the workflow declares evals but `evals.jsonl` is absent — these are **evals job failures**.\n+\n+Cap analysis at **40 runs total**. Apply prioritization before capping: first include all runs that produced `evals.jsonl` (up to 40), then fill any remaining capacity with evals-failure runs (declared evals but no results). If there are more than 40 runs with evals results, use the most recent 40 and note in the report that analysis was capped. Evals failures are still recorded even if the 40-run cap is reached from results-only runs — count them but do not analyze their artifacts.\n+\n+## Phase 3: Parse Evals JSONL\n+\n+For each `evals.jsonl` found, read every JSONL line. Each record contains:\n+- `id` — question ID\n+- `question` — question text\n+- `answer` — `\"YES\"` or `\"NO\"`\n+- Optionally: `confidence`, `rationale`, `model`\n+\n+Extract per-run:\n+- Workflow name and run ID\n+- Per-question answer list\n+- Overall pass/fail: **pass** if every question is YES, **fail** if any question is NO\n+\n+## Phase 4: Aggregate Statistics\n+\n+### Per-Workflow\n+\n+For each unique workflow:\n+- `runs_with_evals_results` — runs that produced `evals.jsonl`\n+- `runs_evals_job_failed` — runs that declared evals but produced no `evals.jsonl`\n+- `evals_job_success_rate` = `runs_with_evals_results / (runs_with_evals_results + runs_evals_job_failed) * 100`\n+- `run_pass_rate` = runs where all questions are YES / `runs_with_evals_results * 100`\n+- Per-question: `yes_rate` = YES count / `runs_with_evals_results * 100`\n+- `lowest_scoring_question` — question ID + text with the lowest `yes_rate`\n+\n+### Cross-Workflow Summary\n+\n+- `total_workflows_with_evals` — unique workflow count\n+- `total_runs_analyzed` — total runs checked\n+- `total_evals_results` — runs with `evals.jsonl`\n+- `total_evals_failures` — runs with evals declared but no results\n+- `overall_evals_job_success_rate` = `total_evals_results / (total_evals_results + total_evals_failures) * 100`\n+- `overall_yes_rate` — YES answers / total answers across all runs\n+- `most_failing_questions` — top 3 questions (by NO rate) across all workflows\n+\n+## Phase 5: Classify Feature Health\n+\n+| Status | Condition |\n+|---|---|\n+| **HEALTHY** | `overall_evals_job_success_rate >= 80%` AND `overall_yes_rate >= 60%` |\n+| **DEGRADED** | `overall_evals_job_success_rate` between 50–80%, OR `overall_yes_rate` between 30–60% |\n+| **BROKEN** | `overall_evals_job_success_rate < 50%`, OR zero evals runs found, OR evals job not producing any results |\n+\n+## Phase 6: Generate Output\n+\n+### HEALTHY or DEGRADED — Create Issue with Data Science Summary\n+\n+Create one GitHub issue.\n+\n+**Title**: `[evals] Daily Evals Feature Report - YYYY-MM-DD` (date in UTC, ISO 8601 format, e.g. `2026-07-15`)\n+\n+**Body structure** (use `###` or lower for all headers):\n+\n+```markdown\n+### Executive Summary\n+\n+[2–3 sentences: total workflows, runs analyzed, overall health status, headline finding]\n+\n+> [!NOTE]\n+> Status: HEALTHY / DEGRADED / BROKEN — [one-line reason]\n+\n+### Key Metrics\n+\n+| Metric | Value |\n+|---|---|\n+| Workflows with evals | N |\n+| Runs analyzed | N |\n+| Runs with evals results | N |\n+| Evals job success rate | X% |\n+| Overall YES rate | X% |\n+\n+### Per-Workflow Pass Rates\n+\n+| Workflow | Runs | Evals Job Success | Run Pass Rate | Lowest-Scoring Question |\n+|---|---|---|---|---|\n+| workflow-name | N | X% | X% | \"question text\" (X% YES) |\n+\n+<details>\n+<summary>Per-Question Breakdown per Workflow</summary>\n+\n+For each workflow, show a table:\n+\n+| Question ID | Question | YES | NO | YES Rate |\n+|---|---|---|---|---|\n+| builds | Does the generated code compile? | 8 | 2 | 80% |\n+\n+</details>\n+\n+### Quality Signals\n+\n+[Top 3 failing questions with YES rate and affected workflows — these are regressions or areas needing prompt improvement]\n+\n+### Recommendations\n+\n+[2–3 concrete actions, for example:\n+- Which workflow prompts to improve based on low YES rates\n+- Whether the evals model is appropriate for the question complexity\n+- Any evals job failures to investigate]\n+\n+### References\n+\n+[Up to 3 run URLs as `[§<run-id>](<url>)` links]\n+```\n+\n+### BROKEN — Create Actionable Issue\n+\n+When the evals feature is BROKEN (job success rate < 50% or zero results), the issue body\n+must include actionable investigation steps instead of the data science summary.\n+\n+> [!CAUTION]\n+> Status: BROKEN — the evals job is not producing results.\n+\n+#### Investigation Checklist\n+\n+1. Run `gh aw audit <run-id>` on the most recent evals-declaring workflow run to inspect the evals job steps.\n+2. Check if the `evals` artifact is present: `gh run download <run-id> -n evals`.\n+3. Look for errors in the evals engine execution step: `Parse BinEval results`.\n+4. Verify that the `evals` frontmatter config is valid (each question must have `id` and `question`).\n+5. Check if the agentic engine has sufficient credit budget: compare `max-ai-credits` vs actual usage.\n+6. Check whether the evals branch `evals/<workflow-id>` exists and contains recent commits.\n+\n+#### Affected Runs\n+\n+List up to 5 run IDs where evals were declared but produced no results, with direct links.\n+\n+### No Data — Noop\n+\n+If no runs with the evals artifact are found in the 7-day window and no workflows declare evals:\n+```\n+noop(\"No evals-enabled workflow runs found in the last 7 days. The evals feature may not yet be widely adopted in this repository.\")\n+```\n+\n+If workflows declared evals but zero results were produced:\n+```\n+noop(\"Evals declared in N workflows but no evals.jsonl artifacts found. Use [evals-alert] issue.\")\n+```\n+(Skip the noop and create the BROKEN issue instead in this case.)\n+\n+## Token Budget Guidelines\n+\n+- **One broad `logs` call** — do not enumerate workflows individually before calling logs.\n+- **Cap at 40 runs** — stop analyzing once the cap is reached.\n+- **Summarize, do not transcribe** — report statistics, not raw JSONL content.\n+- **Stop after `create_issue` or `noop`** — no extra tool calls after publishing.\n+\n+Begin your analysis now. Download the logs, analyze evals results, and publish the report.",
+          "snapshot_ref": "d8e041675a8241bd36a056b0d6922c5e7d8f7f5e",
+          "snapshot_blob_sha": "37bfd6c959103672a5ab508ebcddfa211b419ec4",
+          "snapshot_file": "snapshots/gh-aw__github__d8e041675a8241bd36a056b0d6922c5e7d8f7f5e__daily-evals-report.md",
+          "snapshot_bytes": 8623,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-evals-report.lock.yml\",\"generated_workflow_file\":\"daily-evals-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-evals-report.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-evals-report.md",
+      "commit_sha": "36884336ee4366866880539677bbd7864122497e",
+      "authored_at": "2026-07-19T09:39:37Z",
+      "committed_at": "2026-07-19T09:39:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add top-level `model` field, deprecate `engine.model` (#46570)",
+      "parent_shas": [
+        "74058183471b424ce264dcd057765ceafe8931c6"
+      ],
+      "tree_sha": "762b0c8619a348af864fefcde591badf2ac6b5ea",
+      "html_url": "https://github.com/github/gh-aw/commit/36884336ee4366866880539677bbd7864122497e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-evals-report.md",
+          "commit_sha": "36884336ee4366866880539677bbd7864122497e",
+          "committed_at": "2026-07-19T09:39:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -11,9 +11,9 @@ permissions:\n   issues: read\n   pull-requests: read\n max-daily-ai-credits: 3000\n+model: gpt-5.4\n engine:\n   id: codex\n-  model: gpt-5.4\n tracker-id: daily-evals-report\n sandbox:\n   agent:\n@@ -239,4 +239,4 @@ noop(\"Evals declared in N workflows but no evals.jsonl artifacts found. Use [eva\n - **Summarize, do not transcribe** — report statistics, not raw JSONL content.\n - **Stop after `create_issue` or `noop`** — no extra tool calls after publishing.\n \n-Begin your analysis now. Download the logs, analyze evals results, and publish the report.\n+Begin your analysis now. Download the logs, analyze evals results, and publish the report.\n\\ No newline at end of file",
+          "snapshot_ref": "36884336ee4366866880539677bbd7864122497e",
+          "snapshot_blob_sha": "96929ba77d848c3802be4f5614d3032244148fad",
+          "snapshot_file": "snapshots/gh-aw__github__36884336ee4366866880539677bbd7864122497e__daily-evals-report.md",
+          "snapshot_bytes": 8620,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-evals-report.lock.yml\",\"generated_workflow_file\":\"daily-evals-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-evals-report.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-evals-report.md",
+      "commit_sha": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+      "authored_at": "2026-07-20T08:57:28Z",
+      "committed_at": "2026-07-20T08:57:28Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: enable evals in 64 agentic workflows (#46774)",
+      "parent_shas": [
+        "e1781d5df4cfe3027452bb4b5d206db82b035a71"
+      ],
+      "tree_sha": "d0e212d2340ccfd9923388017178ac3c18fcb1f9",
+      "html_url": "https://github.com/github/gh-aw/commit/b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-evals-report.md",
+          "commit_sha": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+          "committed_at": "2026-07-20T08:57:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -39,6 +39,11 @@ safe-outputs:\n     close-older-issues: true\n     expires: 7d\n     max: 1\n+evals:\n+  - id: evals_data_analyzed\n+    question: Did the agent analyze evals feature adoption and per-question pass rates across agentic workflows?\n+  - id: report_created\n+    question: Was a data science report produced with quality trends and adoption metrics?\n ---\n \n {{#runtime-import? .github/shared-instructions.md}}",
+          "snapshot_ref": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+          "snapshot_blob_sha": "9f06cc0de57eb42222a1c9ffe5dde3ccb84e5649",
+          "snapshot_file": "snapshots/gh-aw__github__b124884b3e2d09c0b3a0c948f7b27c8d863e2a39__daily-evals-report.md",
+          "snapshot_bytes": 8882,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-evals-report.lock.yml\",\"generated_workflow_file\":\"daily-evals-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-evals-report.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-evals-report.md",
+      "commit_sha": "f25181066dbe6183f0e04c89ccd66dfd5bf37a86",
+      "authored_at": "2026-08-03T12:43:15Z",
+      "committed_at": "2026-08-03T12:43:15Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[evals] Count failed `push_evals_state` runs as evals job failures in Daily Evals report (#49967)",
+      "parent_shas": [
+        "a0dd503d6cfec557cbabe9a99640d88424252b07"
+      ],
+      "tree_sha": "1f579dadf74aeed1570aafd0df3f2bb313e7f8aa",
+      "html_url": "https://github.com/github/gh-aw/commit/f25181066dbe6183f0e04c89ccd66dfd5bf37a86",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-evals-report.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-evals-report.md",
+          "commit_sha": "f25181066dbe6183f0e04c89ccd66dfd5bf37a86",
+          "committed_at": "2026-08-03T12:43:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 4,
+          "file_changes": 11,
+          "file_patch": "@@ -95,9 +95,12 @@ For each downloaded run directory at `/tmp/gh-aw/aw-mcp/logs/run-<id>/`:\n    - `workflow_name` (or `workflow.name`)\n    - `conclusion` (success / failure / cancelled)\n    - Whether evals were declared (check for an `evals` key or the presence of the evals job in the run)\n-3. Note runs where the workflow declares evals but `evals.jsonl` is absent — these are **evals job failures**.\n+3. Detect **evals job failures** by scanning job conclusions:\n+   - runs where the workflow declares evals but `evals.jsonl` is absent\n+   - runs where job `push_evals_state` exists and has a failed conclusion (`failure`, `timed_out`, or `cancelled`)\n+   - if both conditions happen in the same run, count it once\n \n-Cap analysis at **40 runs total**. Apply prioritization before capping: first include all runs that produced `evals.jsonl` (up to 40), then fill any remaining capacity with evals-failure runs (declared evals but no results). If there are more than 40 runs with evals results, use the most recent 40 and note in the report that analysis was capped. Evals failures are still recorded even if the 40-run cap is reached from results-only runs — count them but do not analyze their artifacts.\n+Cap analysis at **40 runs total**. Apply prioritization before capping: first include all runs that produced `evals.jsonl` (up to 40), then fill any remaining capacity with evals-failure runs. If there are more than 40 runs with evals results, use the most recent 40 and note in the report that analysis was capped. Evals failures are still recorded even if the 40-run cap is reached from results-only runs — count them but do not analyze their artifacts.\n \n ## Phase 3: Parse Evals JSONL\n \n@@ -118,7 +121,7 @@ Extract per-run:\n \n For each unique workflow:\n - `runs_with_evals_results` — runs that produced `evals.jsonl`\n-- `runs_evals_job_failed` — runs that declared evals but produced no `evals.jsonl`\n+- `runs_evals_job_failed` — runs that either declared evals but produced no `evals.jsonl`, or had a failed `push_evals_state` job\n - `evals_job_success_rate` = `runs_with_evals_results / (runs_with_evals_results + runs_evals_job_failed) * 100`\n - `run_pass_rate` = runs where all questions are YES / `runs_with_evals_results * 100`\n - Per-question: `yes_rate` = YES count / `runs_with_evals_results * 100`\n@@ -129,7 +132,7 @@ For each unique workflow:\n - `total_workflows_with_evals` — unique workflow count\n - `total_runs_analyzed` — total runs checked\n - `total_evals_results` — runs with `evals.jsonl`\n-- `total_evals_failures` — runs with evals declared but no results\n+- `total_evals_failures` — runs with evals job failure conditions (missing results and/or failed `push_evals_state`)\n - `overall_evals_job_success_rate` = `total_evals_results / (total_evals_results + total_evals_failures) * 100`\n - `overall_yes_rate` — YES answers / total answers across all runs\n - `most_failing_questions` — top 3 questions (by NO rate) across all workflows",
+          "snapshot_ref": "f25181066dbe6183f0e04c89ccd66dfd5bf37a86",
+          "snapshot_blob_sha": "1ccdba3ad3e3cf0d4979b57b7b427e1615d637d8",
+          "snapshot_file": "snapshots/gh-aw__github__f25181066dbe6183f0e04c89ccd66dfd5bf37a86__daily-evals-report.md",
+          "snapshot_bytes": 9145,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-evals-report.lock.yml\",\"generated_workflow_file\":\"daily-evals-report.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-evals-report.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

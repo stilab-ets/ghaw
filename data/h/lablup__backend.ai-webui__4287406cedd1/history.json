@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+    "source_full_name": "lablup/backend.ai-webui",
+    "source_owner": "lablup",
+    "source_repo": "backend.ai-webui",
+    "md_path": ".github/workflows/e2e-watchdog.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/lablup/backend.ai-webui/blob/HEAD/.github/workflows/e2e-watchdog.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "lablup/backend.ai-webui",
+      "generated_owner": "lablup",
+      "generated_repo": "backend.ai-webui",
+      "generated_workflow_path": ".github/workflows/e2e-watchdog.lock.yml",
+      "generated_workflow_file": "e2e-watchdog.lock.yml",
+      "generated_html_url": "https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/e2e-watchdog.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:57:55+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/e2e-watchdog.md",
+      "commit_sha": "46cfb1e60e5ca3a9f6ed185fbae0039b11ea897a",
+      "authored_at": "2026-02-09T15:14:22Z",
+      "committed_at": "2026-02-09T15:14:22Z",
+      "author_name": "Jong Eun Lee",
+      "author_email": "jongeun@lablup.com",
+      "author_login": "yomybaby",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "refactor(FR-1027): rename e2e-healer to e2e-watchdog and remove healing features (#5280)",
+      "parent_shas": [
+        "25d709face1b084ab76c29858527fe256639fde2"
+      ],
+      "tree_sha": "0906a04615ecbc5bf9c1db27a3c71d1ba2a673e9",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/46cfb1e60e5ca3a9f6ed185fbae0039b11ea897a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/e2e-watchdog.md",
+          "commit_sha": "46cfb1e60e5ca3a9f6ed185fbae0039b11ea897a",
+          "committed_at": "2026-02-09T15:14:22Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 144,
+          "file_deletions": 0,
+          "file_changes": 144,
+          "file_patch": "@@ -0,0 +1,144 @@\n+---\n+description: |\n+  Run Playwright E2E tests on weekdays at 09:00 KST (00:00 UTC) and report failures as GitHub issues.\n+\n+on:\n+  workflow_dispatch:\n+  schedule:\n+    - cron: \"0 0 * * 1-5\"\n+\n+permissions: read-all\n+\n+timeout-minutes: 120\n+\n+engine: copilot\n+\n+env:\n+  # Endpoints\n+  E2E_WEBUI_ENDPOINT: ${{ vars.E2E_WEBUI_ENDPOINT }}\n+  E2E_WEBSERVER_ENDPOINT: ${{ vars.E2E_WEBSERVER_ENDPOINT }}\n+  # Admin credentials\n+  E2E_ADMIN_EMAIL: ${{ vars.E2E_ADMIN_EMAIL }}\n+  E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}\n+  # User credentials\n+  E2E_USER_EMAIL: ${{ vars.E2E_USER_EMAIL }}\n+  E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}\n+  # User2 credentials\n+  E2E_USER2_EMAIL: ${{ vars.E2E_USER2_EMAIL }}\n+  E2E_USER2_PASSWORD: ${{ secrets.E2E_USER2_PASSWORD }}\n+  # Monitor credentials\n+  E2E_MONITOR_EMAIL: ${{ vars.E2E_MONITOR_EMAIL }}\n+  E2E_MONITOR_PASSWORD: ${{ secrets.E2E_MONITOR_PASSWORD }}\n+  # Domain admin credentials\n+  E2E_DOMAIN_ADMIN_EMAIL: ${{ vars.E2E_DOMAIN_ADMIN_EMAIL }}\n+  E2E_DOMAIN_ADMIN_PASSWORD: ${{ secrets.E2E_DOMAIN_ADMIN_PASSWORD }}\n+\n+network:\n+  allowed:\n+    - node\n+    - npm\n+    - playwright\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"e2e: \"\n+    labels: [automation, e2e, playwright]\n+    max: 1\n+  add-comment:\n+    target: \"*\"\n+\n+steps:\n+  - uses: actions/setup-node@v4\n+    with:\n+      node-version: '20'\n+  - uses: pnpm/action-setup@v4\n+    with:\n+      version: 10\n+  - name: Print E2E endpoints\n+    run: |\n+      echo \"=== E2E Test Configuration ===\"\n+      echo \"E2E_WEBUI_ENDPOINT: $E2E_WEBUI_ENDPOINT\"\n+      echo \"E2E_WEBSERVER_ENDPOINT: $E2E_WEBSERVER_ENDPOINT\"\n+  - run: pnpm install --frozen-lockfile --prefer-offline\n+  - name: Get Playwright version\n+    id: playwright-version\n+    run: echo \"version=$(pnpm exec playwright --version | cut -d' ' -f2)\" >> $GITHUB_OUTPUT\n+  - name: Cache Playwright browsers\n+    uses: actions/cache@v4\n+    id: playwright-cache\n+    with:\n+      path: ~/.cache/ms-playwright\n+      key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}\n+  - name: Install Playwright browsers\n+    if: steps.playwright-cache.outputs.cache-hit != 'true'\n+    run: pnpm exec playwright install --with-deps chromium\n+  - name: Run E2E tests\n+    id: e2e-tests\n+    continue-on-error: true\n+    run: pnpm playwright test e2e/ --grep-invert @visual --reporter=html,json --output=test-results\n+  - name: Save test results\n+    run: |\n+      mkdir -p /tmp/gh-aw/e2e-results\n+      cp -r playwright-report /tmp/gh-aw/e2e-results/ 2>/dev/null || true\n+      cp -r test-results /tmp/gh-aw/e2e-results/ 2>/dev/null || true\n+      echo \"TEST_EXIT_CODE=${{ steps.e2e-tests.outcome == 'success' && '0' || '1' }}\" >> /tmp/gh-aw/e2e-results/summary.env\n+  - uses: actions/upload-artifact@v4\n+    if: always()\n+    with:\n+      name: playwright-report\n+      path: playwright-report/\n+      retention-days: 30\n+\n+tools:\n+  github:\n+    toolsets: [default, issues]\n+  bash:\n+    - \"ls*\"\n+    - \"cat*\"\n+    - \"git status*\"\n+---\n+\n+# E2E Watchdog\n+\n+You are an AI ops engineer for `${{ github.repository }}`. Run weekday Playwright E2E tests at 09:00 KST (00:00 UTC) or on manual dispatch, and report any failures as GitHub issues.\n+\n+## Environment\n+- Dependencies and Playwright browsers are pre-installed in the `steps` phase.\n+- E2E tests have already been executed in the `steps` phase before the agent starts.\n+- Test results are available at `/tmp/gh-aw/e2e-results/` directory.\n+- Tests run against the deployed endpoint: `E2E_WEBUI_ENDPOINT` (set via repository variables).\n+\n+## CRITICAL: Secret Protection Rules\n+**NEVER include any of the following in issues, comments, or logs:**\n+- Passwords, API keys, tokens, or any credential values\n+- Email addresses used for authentication (E2E_*_EMAIL values)\n+- Any environment variable values that contain sensitive data\n+- URLs with embedded credentials or tokens\n+\n+**When reporting issues:**\n+- Use `[REDACTED]` for any sensitive values\n+- Only mention that credentials are \"configured\" or \"missing\", never show actual values\n+- For endpoints, you may show the URL but redact any auth tokens in query strings\n+\n+## Execution plan\n+1) Analyze: Read test results from `/tmp/gh-aw/e2e-results/`. Check `summary.env` for overall status and `playwright-report/` for detailed results.\n+2) Failure analysis:\n+   - Collect failing specs (file, title, error, screenshot/video paths).\n+   - Review recent WebUI changes: Use GitHub MCP to fetch recent commits and merged PRs on `main` branch (last 7 days or ~20 commits).\n+   - For each failure, determine the likely cause category:\n+     - **WebUI change**: If a recent PR modified related components/pages, mention the PR number and title.\n+     - **Backend change**: If the failure appears unrelated to recent WebUI changes (e.g., API response changes, new required fields, authentication issues).\n+     - **Server/config issue**: If the failure suggests environment problems (e.g., timeout, connection refused, missing resources, permission errors).\n+   - Summarize findings in Markdown with cause category for each failure.\n+3) Issue creation:\n+   - Open/refresh a single issue via `safe-outputs.create-issue` (title prefix `e2e:`) with:\n+     - Commit SHA, workflow run link, env file used\n+     - Failing cases list with **cause analysis** (WebUI PR / Backend / Server issue)\n+     - Related PRs if applicable (link to PR numbers)\n+     - Repro command\n+   - Attach key log snippets; avoid uploading large artifacts directly to the issue body.\n+4) Housekeeping: keep output minimal and focused on actionable information.\n+\n+## Output expectations\n+- Always produce a short run summary (pass/fail, counts, env source) in the workflow log.\n+- Issues must use safe outputs (no direct write APIs). One issue max per run; reuse if already open for current failures.",
+          "snapshot_ref": "46cfb1e60e5ca3a9f6ed185fbae0039b11ea897a",
+          "snapshot_blob_sha": "eef9b573900c115976575c80b48b35371c17d395",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__46cfb1e60e5ca3a9f6ed185fbae0039b11ea897a__e2e-watchdog.md",
+          "snapshot_bytes": 5727,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/e2e-watchdog.lock.yml\",\"generated_workflow_file\":\"e2e-watchdog.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/e2e-watchdog.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/e2e-watchdog.md",
+      "commit_sha": "4968a7fd1260c2da7f549e7b05547b4dbf241c86",
+      "authored_at": "2026-05-08T14:41:34Z",
+      "committed_at": "2026-05-08T14:41:34Z",
+      "author_name": "yomybaby",
+      "author_email": "jongeun@lablup.com",
+      "author_login": "yomybaby",
+      "author_account_type": "User",
+      "committer_name": "yomybaby",
+      "committer_email": "jongeun@lablup.com",
+      "committer_login": "yomybaby",
+      "committer_account_type": "User",
+      "message": "feat(FR-2840): migrate to pnpm v11 (#7307)\n\nResolves #7296(FR-2840)\n\n## Summary\n\nUpgrade the repo from pnpm v10 to pnpm v11 in a single PR. Predecessor PR #7297 (FR-2839) temporarily pinned CI workflows to pnpm v10 to unblock CI; this PR completes the migration so we don't get stuck on v10.\n\n## Key decisions and rationale\n\nThe migration ran into several pnpm 11 behavior changes and upstream bugs that required explicit decisions. These were discussed and chosen during implementation; this section is the lasting record so the decisions don't have to be re-derived in review.\n\n### 1. Single PR for the whole migration\n\n**Decision**: deliver as one PR (config moves + workflow updates + lockfile regen).\n\n**Rationale**: lockfile regen, config moves (`pnpm.overrides` → `pnpm-workspace.yaml`), `onlyBuiltDependencies` → `allowBuilds` conversion, and the workflow `version: 11` bump must land **atomically** — splitting forces an intermediate commit where either CI is on v10 with v11 config (breaks) or on v11 with v10 config (breaks). The dev plan documents this reasoning at `.specs/FR-2840-pnpm-v11-migration/dev-plan.md`.\n\n### 2. Drop `package.json` `pnpm` field; absorb `overrides` into `pnpm-workspace.yaml`\n\n**Decision**: move the three `overrides` (`tar-fs@2`, `node-forge`, `@codemirror/state`) into `pnpm-workspace.yaml` and delete the top-level `pnpm` block from `package.json`.\n\n**Rationale**: pnpm 11 no longer reads the `pnpm` field in `package.json`. Leaving it would silently lose those overrides at install time.\n\n### 3. `onlyBuiltDependencies` (list) → `allowBuilds` (map)\n\n**Decision**: 1:1 conversion — same 9 packages (`bufferutil`, `core-js`, `core-js-pure`, `electron`, `es5-ext`, `esbuild`, `sharp`, `unrs-resolver`, `utf-8-validate`).\n\n**Rationale**: `onlyBuiltDependencies` was removed in pnpm 11; `allowBuilds` is its replacement.\n\n### 4. Drop `minimumReleaseAgeExclude` block entirely\n\n**Decision**: remove the seven entries (`react@19.2.4`, `i18next@25.7.4`, `antd@6.1.3`, …).\n\n**Rationale**: those entries pinned exact versions that the catalog has long since moved past. Under pnpm 11 the entries no longer match anything in the resolved tree, so they're dead config.\n\n### 5. Drop `engine-strict=true` from `.npmrc`\n\n**Decision**: remove the line; replace `.npmrc` with a one-line comment about scope.\n\n**Rationale**: pnpm 11 enforces `engines.pnpm` natively when set, and v11 narrows `.npmrc` to auth/registry settings only.\n\n### 6. Bump `pnpm/action-setup` references to `@v5` everywhere (also fixes `vitest.yml@v4`)\n\n**Decision**: every `pnpm/action-setup` reference uses `@v5` or the matching v5 SHA; `.github/aw/actions-lock.json` is updated to the v5 SHA (`a8198c4bff370c8506180b035930dea56dbd5288`).\n\n**Rationale**: `vitest.yml:146` was on `@v4` while siblings were `@v5` — flagged as cleanup during PR #7297 review. While in the area, also bumped agentic `e2e-watchdog.md`/`e2e-healer.md` and the SHA-pinned `.lock.yml` siblings so the next gh-aw regen doesn't re-introduce v4.\n\n### 7. CI: every install lane uses `--frozen-lockfile`; `--config.minimum-release-age=0` only on the weekly-merge job\n\n**Decision**: see the table below. Every CI `pnpm install` runs `--frozen-lockfile`. The single intrinsic exception is `weekly-merge-branch-lockfiles.yml`, whose purpose **is** to re-resolve and merge per-branch lockfiles.\n\n| Workflow | Mode | Override needed? |\n|---|---|---|\n| `vitest.yml` (3 jobs) | `--frozen-lockfile` (was `--merge-git-branch-lockfiles --no-frozen-lockfile`) | ❌ No |\n| `package.yml` (5 lines) | `--frozen-lockfile` (was `--no-frozen-lockfile`) | ❌ No |\n| `daily-test-improver/coverage-steps/action.yml` | `--frozen-lockfile` (was `--no-frozen-lockfile`) | ❌ No |\n| `publish-backend.ai-{ui,docs-toolkit}.yml` | `--frozen-lockfile` | ❌ No |\n| `e2e-{watchdog,healer}.{md,lock.yml}` | `--frozen-lockfile --prefer-offline` | ❌ No |\n| `weekly-merge-branch-lockfiles.yml` | `--merge-git-branch-lockfiles --no-frozen-lockfile --config.minimum-release-age=0` | ✅ Yes (intrinsic) |\n\n**Rationale**: pnpm 11's stricter `minimumReleaseAge` enforcement breaks `pnpm install` against this dep tree in two ways the upstream does not yet fix:\n\n1. **`ERR_PNPM_MISSING_TIME` (cache/metadata bug)** — pnpm 11 fatals on packages whose npm registry abbreviated metadata is missing the `time` field, even though the full metadata file has it. Tracked in [pnpm/pnpm#9963](https://github.com/pnpm/pnpm/issues/9963) (closed but recurring) and [pnpm/pnpm#9968](https://github.com/pnpm/pnpm/issues/9968) (10.16.1 fix is partial). Maintainer comment on #9963: *\"the error should not happen at all. The full metadata and the abbreviated one are stored at different locations.\"* The recommended `pnpm store prune` workaround did not produce stable results — re-tested after each iteration and the error reappeared on different packages.\n2. **Optional/platform binaries fataling** — `vitest`/`rollup`'s `optionalDependencies` declares 15+ `@rollup/rollup-*` platform binaries. Pnpm 11 fatals on each one's missing `time` metadata. Same shape as [pnpm/pnpm#10699 (open)](https://github.com/pnpm/pnpm/issues/10699).\n\nThese bugs only fire during **resolution**. Once the lockfile is generated, `--frozen-lockfile` installs from it without re-resolving and never touches the time check — so 99% of CI lanes don't need any workaround at all. Only `weekly-merge-branch-lockfiles.yml` has to re-resolve (its purpose is to merge per-branch lockfiles into the canonical), so it's the only place that carries the override.\n\nThis decision was the result of three rounds of refinement: started with override on every install, narrowed to \"only re-resolve lanes\" after empirical scoping, then narrowed again to \"only the one re-resolve lane that exists\" by switching the rest to `--frozen-lockfile`. The earlier exclude-list approach (add offending packages to `minimumReleaseAgeExclude`) was attempted and abandoned — empirical iteration grew the list past 30 entries without converging because every new rollup architecture binary, every metadata corruption, and every recent typescript-eslint family bump re-broke it.\n\n### 8. Trade-off accepted with `--frozen-lockfile`\n\n**Decision**: PRs that change deps must run `pnpm install` locally and commit the updated lockfile (or branch lockfile) before pushing. CI no longer auto-resolves on those PRs.\n\n**Rationale**: stricter contract, but more honest. CI's role is to verify, not to silently mutate the lockfile. Local devs that hit MISSING_TIME / NO_MATURE during their manual install can use `pnpm install --config.minimum-release-age=0` as a one-off until upstream pnpm fixes #9963 / #10699.\n\n### 9. Keep `minimumReleaseAge: 10080` in `pnpm-workspace.yaml`\n\n**Decision**: don't lower the policy value to 0 or 1440 just because pnpm 11 makes it painful.\n\n**Rationale**: the 7-day supply-chain protection is a deliberate project policy. The pnpm 11 enforcement bugs are temporary upstream issues; the policy outlives them. Workflow-level override scopes the relaxation to the one place that genuinely needs it (the merge job, which a human reviews before merging the resulting PR).\n\n### 10. Out of scope (deliberate)\n\n- Per-branch `pnpm-lock.<branch>.yaml` files for other developers' branches are intentionally **not** consolidated in this PR. The `weekly-merge-branch-lockfiles` workflow already handles that on its own cadence.\n- Pre-existing TypeScript errors (`packages/backend.ai-client/src/client.ts` implicit-`any`s, `DeleteForeverVFolderModalV2.tsx` `BulkPurgeVFoldersV2Input.options`) — verified to exist on `main`, not introduced by this migration.\n- Re-evaluating the long-term `minimumReleaseAge` policy. Spec §5.4.1 documents the single CI exception; a strategic decision can come in a follow-up once pnpm fixes the upstream bugs.\n\n## Test plan\n\n- [x] `pnpm install --frozen-lockfile` succeeds locally under pnpm 11.0.8 against the regenerated lockfile (~10s, no MISSING_TIME / NO_MATURE errors).\n- [x] `bash scripts/verify.sh` — Relay/Lint/Format pass; TypeScript failures are confirmed pre-existing on `main` (verified by checking out `main` and re-running). Out of scope for this PR.\n- [ ] CI on this PR — `Analyze`/`CodeQL`/`triage`/`mergeability_check`/`auto-label`/`sync-project-status` pass.\n- [ ] After merge, re-run failed CI on a recent PR (e.g. on top of this) and confirm `pnpm -v` reports 11.x and the install step passes.\n\n## Spec\n\nFull migration spec is committed in this PR at `.specs/FR-2840-pnpm-v11-migration/spec.md` with the §8 acceptance checklist for the reviewer to tick.",
+      "parent_shas": [
+        "3c023bbcbce245561dcc3c89d8b00e99db03783c"
+      ],
+      "tree_sha": "88a6065f17211f992a79b7cb100464c94cdaa9b0",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/4968a7fd1260c2da7f549e7b05547b4dbf241c86",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/e2e-watchdog.md",
+          "commit_sha": "4968a7fd1260c2da7f549e7b05547b4dbf241c86",
+          "committed_at": "2026-05-08T14:41:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -51,9 +51,9 @@ steps:\n   - uses: actions/setup-node@v4\n     with:\n       node-version: '20'\n-  - uses: pnpm/action-setup@v4\n+  - uses: pnpm/action-setup@v5\n     with:\n-      version: 10\n+      version: 11\n   - name: Print E2E endpoints\n     run: |\n       echo \"=== E2E Test Configuration ===\"",
+          "snapshot_ref": "4968a7fd1260c2da7f549e7b05547b4dbf241c86",
+          "snapshot_blob_sha": "2ab06fe1864f4defc2844b17a8c74436569450ae",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__4968a7fd1260c2da7f549e7b05547b4dbf241c86__e2e-watchdog.md",
+          "snapshot_bytes": 5727,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/e2e-watchdog.lock.yml\",\"generated_workflow_file\":\"e2e-watchdog.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/e2e-watchdog.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/e2e-watchdog.md",
+      "commit_sha": "0177ac94755a2fab39b6c3b6de4e3ba3352fa78a",
+      "authored_at": "2026-05-12T01:46:05Z",
+      "committed_at": "2026-05-12T01:46:06Z",
+      "author_name": "yomybaby",
+      "author_email": "jongeun@lablup.com",
+      "author_login": "yomybaby",
+      "author_account_type": "User",
+      "committer_name": "yomybaby",
+      "committer_email": "jongeun@lablup.com",
+      "committer_login": "yomybaby",
+      "committer_account_type": "User",
+      "message": "chore(FR-2865): disable scheduled runs for E2E Watchdog and Healer (#7356)\n\nResolves #7355(FR-2865)\n\n## Summary\n\nDisable the weekday cron (`0 0 * * 1-5`, 09:00 KST) that drives the **E2E Watchdog** and **E2E Healer** agentic workflows. They become manual-only (still launchable via `workflow_dispatch` from the Actions tab).\n\n## Why\n\nThese scheduled runs are currently noisy / not actively maintained. We'd rather suspend the cron than keep filing automated failure issues. Re-enabling is a one-line revert.\n\n## Changes\n\n- `.github/workflows/e2e-healer.md` — drop the `schedule:` trigger from the gh-aw source.\n- `.github/workflows/e2e-healer.lock.yml` — drop the `schedule:` trigger from the generated lock.\n- `.github/workflows/e2e-watchdog.md` — same.\n- `.github/workflows/e2e-watchdog.lock.yml` — same.\n\n`workflow_dispatch:` and the e2e-healer self-test `pull_request:` (path-scoped to the healer files) are kept.\n\n## Verification\n\n- `grep -n \"schedule:\\|cron:\" .github/workflows/e2e-{healer,watchdog}.{md,lock.yml}` returns nothing.\n- After merge, the workflows should not appear in the next day's scheduled run list.",
+      "parent_shas": [
+        "7992da53776fc97a6bc4600a4e29787928b357d1"
+      ],
+      "tree_sha": "e8e0a2bae16067ce1e5980bf74d6d658f3c4fbf9",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/0177ac94755a2fab39b6c3b6de4e3ba3352fa78a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/e2e-watchdog.md",
+          "commit_sha": "0177ac94755a2fab39b6c3b6de4e3ba3352fa78a",
+          "committed_at": "2026-05-12T01:46:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -4,8 +4,6 @@ description: |\n \n on:\n   workflow_dispatch:\n-  schedule:\n-    - cron: \"0 0 * * 1-5\"\n \n permissions: read-all\n ",
+          "snapshot_ref": "0177ac94755a2fab39b6c3b6de4e3ba3352fa78a",
+          "snapshot_blob_sha": "630641cf5eba73d51c39f21fcc216540a6d8e39a",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__0177ac94755a2fab39b6c3b6de4e3ba3352fa78a__e2e-watchdog.md",
+          "snapshot_bytes": 5689,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/e2e-watchdog.lock.yml\",\"generated_workflow_file\":\"e2e-watchdog.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/e2e-watchdog.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/e2e-watchdog.md",
+      "commit_sha": "4f5711e5ce1fe6bed98852b5707491b7e12bf7c6",
+      "authored_at": "2026-06-14T11:28:53Z",
+      "committed_at": "2026-06-14T11:28:53Z",
+      "author_name": "nowgnuesLee",
+      "author_email": "192685612+nowgnuesLee@users.noreply.github.com",
+      "author_login": "nowgnuesLee",
+      "author_account_type": "User",
+      "committer_name": "nowgnuesLee",
+      "committer_email": "192685612+nowgnuesLee@users.noreply.github.com",
+      "committer_login": "nowgnuesLee",
+      "committer_account_type": "User",
+      "message": "fix(FR-3080): pin awf firewall to v0.25.60 in gh-aw lock files to fix install 404 (#7888)\n\nResolves #7803 (FR-3080)\n\nFixes two distinct bugs that break the repo's gh-aw agentic workflows.\n\n## Bug 1 — awf install 404 (the original FR-3080)\n\nThe installer (`gh-aw-firewall/main/install.sh`) downloads the `awf-bundle.js` asset, but `AWF_VERSION` was pinned to **v0.7.0**, a release that does **not** ship `awf-bundle.js`. Result: `curl .../releases/download/v0.7.0/awf-bundle.js` returns **404** and the job fails.\n\n`storybook-coverage-checker` was already unblocked in #7667 (pin bumped to **v0.25.60**). The other four lock files were left on `v0.7.0`. This PR pins them to **v0.25.60** too, in the three generated spots per file (install `AWF_VERSION=` line, `awf_version` safe-outputs config, `--image-tag`):\n\n- `e2e-healer.lock.yml`\n- `e2e-watchdog.lock.yml`\n- `weekly-team-status.lock.yml`\n- `daily-test-improver.lock.yml`\n\nAll five gh-aw workflows now pin the same `awf` version.\n\n## Bug 2 — Node 20 vs pnpm 11 crash (E2E workflows)\n\nSurfaced on this PR's CI: the `E2E Watchdog & Healer` `agent` job dies at `pnpm install`, before the awf step:\n\n```\nwarn: This version of pnpm requires at least Node.js v22.13\nwarn: The current version of Node.js is v20.20.2\nError [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: node:sqlite\n```\n\nThe repo pins `packageManager: pnpm@11.1.1`, which requires Node ≥ v22.13 (it loads the `node:sqlite` builtin). But `e2e-watchdog.md` / `e2e-healer.md` hardcoded `node-version: '20'`, so pnpm crashes on load.\n\nEvery other workflow in the repo reads the Node version from `.nvmrc` (currently `24`) via `node-version-file: '.nvmrc'` instead of hardcoding. This PR aligns the two E2E workflows with that convention — in both the `.md` sources and their `.lock.yml` files:\n\n```diff\n-      node-version: '20'\n+      node-version-file: '.nvmrc'\n```\n\nThis also prevents the same drift from recurring whenever `.nvmrc` is bumped.\n\n## Why hand-edit the generated `.lock.yml` files?\n\nThese `.lock.yml` files are generated artifacts (\"DO NOT EDIT\"), but recompiling via `gh aw compile` is currently non-viable: the local compiler (`gh aw` v0.68.1, vs. the v0.34.5 that generated these locks) fails strict-mode validation because the workflow `.md` sources declare secrets in their `env:` section — a newer rule that would require migrating each workflow's secret handling to engine-specific config. That is a separate toolchain migration, out of scope here. The hand-edit matches the existing repo precedent (#7667), and both the `.md` source (the real input) and the generated `.lock.yml` are updated so they stay consistent.\n\n## Notes\n\n- Non-blocking infra fix — these agentic workflows are not required PR checks.\n- A follow-up issue should track the proper `gh aw` toolchain migration (secrets-in-env) so future `gh aw compile` runs work and these lock files can be regenerated rather than hand-edited.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+      "parent_shas": [
+        "b28b7186a7e29c6d23bf9f59b2da05f3b8bf9d98"
+      ],
+      "tree_sha": "e1391a1565263e3f7000a8ce1da1ad5950071951",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/4f5711e5ce1fe6bed98852b5707491b7e12bf7c6",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/e2e-watchdog.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/e2e-watchdog.md",
+          "commit_sha": "4f5711e5ce1fe6bed98852b5707491b7e12bf7c6",
+          "committed_at": "2026-06-14T11:28:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -48,7 +48,7 @@ safe-outputs:\n steps:\n   - uses: actions/setup-node@v4\n     with:\n-      node-version: '20'\n+      node-version-file: '.nvmrc'\n   - uses: pnpm/action-setup@v5\n     with:\n       version: 11",
+          "snapshot_ref": "4f5711e5ce1fe6bed98852b5707491b7e12bf7c6",
+          "snapshot_blob_sha": "da46550e9ab85b4b2cca443c0deeadc904860f9e",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__4f5711e5ce1fe6bed98852b5707491b7e12bf7c6__e2e-watchdog.md",
+          "snapshot_bytes": 5698,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/e2e-watchdog.lock.yml\",\"generated_workflow_file\":\"e2e-watchdog.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/e2e-watchdog.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

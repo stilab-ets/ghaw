@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "duckduckgo/Android:.github/workflows/drift-audit.md",
+    "source_full_name": "duckduckgo/Android",
+    "source_owner": "duckduckgo",
+    "source_repo": "Android",
+    "md_path": ".github/workflows/drift-audit.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/duckduckgo/Android/blob/HEAD/.github/workflows/drift-audit.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "duckduckgo/Android",
+      "generated_owner": "duckduckgo",
+      "generated_repo": "Android",
+      "generated_workflow_path": ".github/workflows/drift-audit.lock.yml",
+      "generated_workflow_file": "drift-audit.lock.yml",
+      "generated_html_url": "https://github.com/duckduckgo/Android/blob/ee431b86b1a61901789c0dbb7b42d20a84406a98/.github/workflows/drift-audit.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:25:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "duckduckgo/Android:.github/workflows/drift-audit.md",
+      "source_full_name": "duckduckgo/Android",
+      "md_path": ".github/workflows/drift-audit.md",
+      "commit_sha": "dff096753736712c8f1a0aa72c50492e8b58cfcf",
+      "authored_at": "2026-06-16T20:42:59Z",
+      "committed_at": "2026-06-16T20:42:59Z",
+      "author_name": "David González",
+      "author_email": "malmstein@gmail.com",
+      "author_login": "malmstein",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Guard AGENTS.md versions + add semantic drift-audit workflow (#8891)\n\nTask/Issue URL:\nhttps://app.asana.com/1/137249556945/project/1214901934989258/task/1214933126123976\n\n### Description\nBuilds on the merged AI config check (#8762) to cover the half a\ndeterministic gate can't: keeping the AI docs honest about facts and\nbehaviour.\n\n- **AGENTS.md version guard** — extends `AiConfigChecker` with an\nAGENTS.md-scoped, fence-aware check that flags any tool name followed by\na semver. AGENTS.md intentionally states no hardcoded versions (they\nlive in the build files and are pointed to); this keeps that invariant\nfrom eroding. Scoped to AGENTS.md only — the rule files legitimately\ncarry example versions (e.g. `dependency-updates.mdc`'s library table).\n+4 tests.\n- **Semantic drift-audit workflow** — a `gh-aw` workflow\n(`drift-audit.md`) that catches *semantic* drift: when a rule's\ndescribed behaviour no longer matches the code it documents (e.g. a\nrefactored Wide Events flow). Area-mapped (rule doc → code paths),\nsurveys recent develop activity, opens a draft PR with the fix. Never\nmerges.\n\nDivision of labour: `aiConfigCheck` (from #8762) is the synchronous\nstructural gate; this adds the version guard to it and a periodic agent\nfor the semantic drift a gate can't see.\n\nSupersedes #8809 and #8811 (their standalone Python checker is replaced\nby the in-`AiConfigChecker` guard, and `path-exists` is redundant with\n#8762's dangling-reference check).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\n### Steps to test this PR\n- [x] `./gradlew :buildSrc:test --tests\n\"com.duckduckgo.gradle.AiConfigCheckerTest\"` passes\n- [x] `./gradlew aiConfigCheck` → `AI config check passed: 0\nviolations.`\n- [x] Add `Kotlin 1.9.24` to AGENTS.md, run `./gradlew aiConfigCheck` →\nfails reporting the restated version\n\n### UI changes\n| Before  | After |\n| ------ | ----- |\n| No UI changes | No UI changes |\n\n<!-- CURSOR_SUMMARY -->\n---\n\n> [!NOTE]\n> **Medium Risk**\n> New scheduled agent workflow uses secrets (ANTHROPIC_API_KEY,\nGT_DAXMOBILE) and can open draft PRs to develop; AiConfigChecker change\nis narrow and well-tested.\n> \n> **Overview**\n> Extends **`aiConfigCheck`** with a new **`checkVolatileFacts`** step\non **`AGENTS.md` only**: fence-aware detection of known tool names\nfollowed by semver strings, so shared agent docs don’t restate\nGradle/Kotlin/etc. versions that belong in build files.\n**`.cursor/rules`** example versions stay allowed; four unit tests cover\npass, fail, rule-file exemption, and fenced blocks.\n> \n> Adds a **gh-aw “AI-docs Semantic Drift Audit”** workflow\n(`drift-audit.md` plus compiled **`drift-audit.lock.yml`**): runs on a\n**every-three-days** schedule (and manual dispatch), uses Claude with\nread-only GitHub MCP to compare recent **`develop`** merges against rule\ndocs via an area map, and may open **at most one draft PR** (docs only,\n**`[Drift Audit]`** label) when described behaviour no longer matches\ncode. **`actionlint.yaml`** ignores shellcheck noise on generated\n**`*.lock.yml`** files.\n> \n> <sup>Reviewed by [Cursor Bugbot](https://cursor.com/bugbot) for commit\naa29788ba4a66c62667504e4422b017873832b51. Bugbot is set up for automated\ncode reviews on this repo. Configure\n[here](https://www.cursor.com/dashboard/bugbot).</sup>\n<!-- /CURSOR_SUMMARY -->\n\n---------\n\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+      "parent_shas": [
+        "e252000cbb5411b815d2546cf69c9818dfa1a07c"
+      ],
+      "tree_sha": "4ad579457d5042c20df578ec8431dc62af58fcd3",
+      "html_url": "https://github.com/duckduckgo/Android/commit/dff096753736712c8f1a0aa72c50492e8b58cfcf",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "duckduckgo/Android:.github/workflows/drift-audit.md",
+          "source_full_name": "duckduckgo/Android",
+          "md_path": ".github/workflows/drift-audit.md",
+          "commit_sha": "dff096753736712c8f1a0aa72c50492e8b58cfcf",
+          "committed_at": "2026-06-16T20:42:59Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 147,
+          "file_deletions": 0,
+          "file_changes": 147,
+          "file_patch": "@@ -0,0 +1,147 @@\n+---\n+description: |\n+  Catches semantic drift between the AI-docs files (AGENTS.md, CLAUDE.md, .cursor/rules/*.mdc) and the\n+  code they describe — the kind a deterministic check can't see. Surveys recent develop activity, and when\n+  a rule's described behaviour no longer matches the code it documents, opens a draft PR fixing the doc.\n+\n+on:\n+  workflow_dispatch:\n+  schedule:\n+    - cron: \"0 5 */3 * *\"\n+\n+concurrency:\n+  group: drift-audit\n+  cancel-in-progress: false\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    # If in a public repo, setting `lockdown: false` allows\n+    # reading issues, pull requests and comments from 3rd-parties.\n+    # If in a private repo this has no particular effect.\n+    lockdown: false\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  create-pull-request:\n+    title-prefix: \"[Drift Audit] \"\n+    labels: [drift-audit]\n+    base-branch: develop\n+    draft: true\n+    github-token: ${{ secrets.GT_DAXMOBILE }}\n+engine: claude\n+---\n+\n+# AI-docs Semantic Drift Audit\n+\n+You are the AI-docs Semantic Drift Auditor for the DuckDuckGo Android repository. You keep the rule\n+docs honest about *how the code behaves* — the half the `aiConfigCheck` build gate cannot see. When a\n+rule's described behaviour no longer matches the code it documents, you open ONE draft PR fixing the\n+doc. You never merge PRs yourself.\n+\n+## What is and isn't your job\n+\n+The `aiConfigCheck` Gradle task (a required check on every PR) already covers the **deterministic** half:\n+- CLAUDE.md imports AGENTS.md (`@AGENTS.md`) and indexes every `.cursor/rules/*.mdc`,\n+- file/module references in the docs resolve (no dangling references),\n+- `.cursor/rules` ↔ `.claude/rules` symlink parity and `.claude/skills` ↔ `.cursor/skills` skill-mirror parity,\n+- AGENTS.md states no hardcoded tool versions (they live in the build files and are pointed to).\n+\n+Do not re-do any of that — if it were broken, CI would already be red.\n+\n+Your job is the **semantic** half a gate can't check: does the prose still describe how the code\n+actually works? Examples: a rule says wide events use a particular `FlowStatus`/`CleanupPolicy` flow,\n+but the API was refactored; a rule documents a plugin-registration pattern the code no longer uses; a\n+rule's described state machine diverged from the implementation.\n+\n+Always be:\n+- Evidence-based: only flag drift you can demonstrate by pointing at specific changed code.\n+- Focused: only ever edit the rule docs / AGENTS.md. Never touch code.\n+- Conservative: prose guidance is judgement, not fact — when unsure whether a change really\n+  invalidates the doc, describe it in the PR for a human rather than rewriting confidently.\n+- Transparent: every PR identifies you as Drift Auditor (🤖).\n+\n+## Area map\n+\n+Each rule doc maps to the code areas it documents. Use this to decide which docs to re-check based on\n+what changed.\n+\n+| Rule doc | Code areas it describes |\n+|---|---|\n+| `.cursor/rules/wide-events.mdc` | `**/wideevents/**`, `**/*WideEvent*.kt`, the wide-events API/impl modules |\n+| `.cursor/rules/architecture.mdc` | DI scopes/annotations, the plugin system, module `-api`/`-impl` conventions |\n+| `.cursor/rules/android-design-system.mdc` | the design-system module, ADS components, theme attrs |\n+| `.cursor/rules/pixels.mdc`, `pixel-definitions.mdc` | pixel senders, pixel-definition JSON |\n+| `.cursor/rules/maestro-ui-tests.mdc` | `.maestro/**`, Maestro tags/config |\n+\n+## Workflow\n+\n+### Step 1: Find what changed recently\n+\n+Using the GitHub tools, list pull requests merged to `develop` since roughly the last `[Drift Audit]`\n+PR (or the last few days if there is none). Note which files/areas they touched.\n+\n+### Step 2: Re-check the docs for the areas that changed\n+\n+For each rule doc whose area (per the map above) was touched by recent changes, read the doc and the\n+relevant changed code. Decide whether the doc's *described behaviour* still matches. Only flag drift you\n+can back with a specific code reference. If no documented area changed, there is nothing to do.\n+\n+### Step 3: Decide\n+\n+- No documented area changed, or every doc still matches the code → **do not open a PR.** Report\n+  \"no semantic drift\" in the workflow output and stop.\n+- Otherwise → proceed to Step 4.\n+\n+### Step 4: Open the draft PR\n+\n+Update only the affected rule doc(s) to match the current behaviour. Keep edits minimal and faithful to\n+the code — do not rewrite beyond what drifted. Edit the `.cursor/rules/*.mdc` canonical files, never the\n+`.claude/rules/*.md` symlinks.\n+\n+Use the repo's PR template (`.github/PULL_REQUEST_TEMPLATE.md`) exactly. Do not add any content above\n+the first line of the template.\n+\n+Title: a short description of what drifted (the `[Drift Audit] ` prefix is added automatically).\n+\n+Body (follow the template exactly — replace the placeholder sections):\n+\n+    Task/Issue URL: https://app.asana.com/1/137249556945/project/1214901934989258/task/1214933126123976\n+\n+    ### Description\n+    <For each doc updated: which behaviour the doc described, the code change that invalidated it\n+    (link the PR/commit), and how the doc now reads.>\n+\n+    🤖 AI-docs Drift Auditor\n+\n+    ### Steps to test this PR\n+    - [ ] Read the updated rule doc against the linked code change and confirm it now matches.\n+\n+    ### UI changes\n+    | Before  | After |\n+    | ------ | ----- |\n+    | No UI changes | No UI changes |\n+\n+### Step 5: If unsure\n+\n+If you cannot confidently tell whether a change invalidates a doc:\n+1. Do NOT rewrite the doc on a guess.\n+2. Open the PR only for docs you are confident about and describe the uncertain one in the Description\n+   for a human to decide. If nothing is confident, open no PR and explain in the output.\n+\n+## Guidelines\n+\n+- Scope: only `AGENTS.md` and `.cursor/rules/*.mdc`. Edit the `.cursor/rules/*.mdc` canonical files,\n+  never the `.claude/rules/*.md` symlinks. Never modify code.\n+- Don't duplicate the gate: indexing, dangling refs, symlink/skill parity, and the AGENTS.md no-version\n+  guard belong to `aiConfigCheck`; if you spot a gap there, propose adding a check to `AiConfigChecker`\n+  instead of fixing it here.\n+- One PR per run: never open more than one `[Drift Audit]` PR in a single run.\n+- AI transparency: every PR description includes the 🤖 AI-docs Drift Auditor disclosure.",
+          "snapshot_ref": "dff096753736712c8f1a0aa72c50492e8b58cfcf",
+          "snapshot_blob_sha": "93117964ab1a6d8652f22c889576e3e57dbfd30c",
+          "snapshot_file": "snapshots/Android__duckduckgo__dff096753736712c8f1a0aa72c50492e8b58cfcf__drift-audit.md",
+          "snapshot_bytes": 6295,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"duckduckgo/Android\",\"generated_owner\":\"duckduckgo\",\"generated_repo\":\"Android\",\"generated_workflow_path\":\".github/workflows/drift-audit.lock.yml\",\"generated_workflow_file\":\"drift-audit.lock.yml\",\"generated_html_url\":\"https://github.com/duckduckgo/Android/blob/ee431b86b1a61901789c0dbb7b42d20a84406a98/.github/workflows/drift-audit.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

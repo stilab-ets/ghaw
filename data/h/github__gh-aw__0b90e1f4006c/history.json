@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/example-failure-category-filter.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/example-failure-category-filter.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/example-failure-category-filter.lock.yml",
+      "generated_workflow_file": "example-failure-category-filter.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/example-failure-category-filter.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T11:44:25+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/example-failure-category-filter.md",
+      "commit_sha": "abd280f78350f3f21792dbad7cc0bd4facb67fd2",
+      "authored_at": "2026-06-17T14:38:55Z",
+      "committed_at": "2026-06-17T14:38:55Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add failure category filtering to report-failure-as-issue (#39721)",
+      "parent_shas": [
+        "5fa9196b1c9996408f136f9e65183ee226335fdf"
+      ],
+      "tree_sha": "c1916f28bacc569b5fbf90e1f03e5b0ec5a1122b",
+      "html_url": "https://github.com/github/gh-aw/commit/abd280f78350f3f21792dbad7cc0bd4facb67fd2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/example-failure-category-filter.md",
+          "commit_sha": "abd280f78350f3f21792dbad7cc0bd4facb67fd2",
+          "committed_at": "2026-06-17T14:38:55Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 73,
+          "file_deletions": 0,
+          "file_changes": 73,
+          "file_patch": "@@ -0,0 +1,73 @@\n+---\n+name: Example Failure Category Filter\n+on:\n+  workflow_dispatch:\n+safe-outputs:\n+  report-failure-as-issue:\n+    - agent_failure           # Only report genuine agent-side failures\n+    - missing_safe_outputs    # Only report when outputs are missing\n+    - missing_tool            # Only report when functionality is missing\n+    - missing_data            # Only report when required data is unavailable\n+    # Excluded categories (won't create issues):\n+    # - report_incomplete: Infrastructure/tool failures\n+    # - inference_access_error: AI server transient errors\n+    # - ai_credits_rate_limit_error: AI rate limits\n+    # - mcp_policy_error: MCP policy violations\n+  create-issue:\n+---\n+\n+# Example: Failure Category Filtering\n+\n+This workflow demonstrates the `report-failure-as-issue` category filtering feature with both inclusion and exclusion syntax.\n+\n+## Context\n+\n+For scheduled workflows that frequently encounter transient infrastructure failures:\n+- Docker registry timeouts\n+- AI server 5xx errors\n+- Firewall startup failures\n+- MCP image pull intermittent failures\n+\n+Traditional `report-failure-as-issue: false` suppresses ALL failure reports, including genuine agent bugs.\n+\n+## Solution\n+\n+Use category filtering to only report actionable failures:\n+\n+### Inclusion Syntax (include only these categories)\n+\n+```yaml\n+safe-outputs:\n+  report-failure-as-issue:\n+    - agent_failure\n+    - missing_safe_outputs\n+    - missing_tool\n+    - missing_data\n+```\n+\n+### Exclusion Syntax (exclude these categories, report all others)\n+\n+```yaml\n+safe-outputs:\n+  report-failure-as-issue:\n+    - \"!inference_access_error\"        # Exclude AI server transient errors\n+    - \"!ai_credits_rate_limit_error\"   # Exclude AI rate limits\n+    - \"!report_incomplete\"             # Exclude infrastructure failures\n+    - \"!mcp_policy_error\"              # Exclude MCP policy violations\n+```\n+\n+### Mixed Syntax (include these, but not those)\n+\n+```yaml\n+safe-outputs:\n+  report-failure-as-issue:\n+    - agent_failure                    # Include agent failures\n+    - missing_safe_outputs             # Include missing outputs\n+    - \"!unknown_model_ai_credits\"      # But exclude unknown model AI credits\n+```\n+\n+This prevents noise while preserving actionable signals.\n+\n+## Task\n+\n+Create an issue summarizing this feature.",
+          "snapshot_ref": "abd280f78350f3f21792dbad7cc0bd4facb67fd2",
+          "snapshot_blob_sha": "ec327208adb29c6ceb374cd7b0053d4161f598c6",
+          "snapshot_file": "snapshots/gh-aw__github__abd280f78350f3f21792dbad7cc0bd4facb67fd2__example-failure-category-filter.md",
+          "snapshot_bytes": 2266,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/example-failure-category-filter.lock.yml\",\"generated_workflow_file\":\"example-failure-category-filter.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/example-failure-category-filter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/example-failure-category-filter.md",
+      "commit_sha": "e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+      "authored_at": "2026-06-18T12:58:44Z",
+      "committed_at": "2026-06-18T12:58:44Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add private: true to all non-upstream agentic workflows (#40048)",
+      "parent_shas": [
+        "bb2f7a91a1c14b4a8ca3939ae8e4ec95bc56aa24"
+      ],
+      "tree_sha": "fcd9661b8682d94a6d8620bcaa73705bc4558c23",
+      "html_url": "https://github.com/github/gh-aw/commit/e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/example-failure-category-filter.md",
+          "commit_sha": "e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+          "committed_at": "2026-06-18T12:58:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -1,4 +1,5 @@\n ---\n+private: true\n name: Example Failure Category Filter\n on:\n   workflow_dispatch:",
+          "snapshot_ref": "e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+          "snapshot_blob_sha": "919ec5c585af239a9a423e2eb33e24e53d90bf93",
+          "snapshot_file": "snapshots/gh-aw__github__e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5__example-failure-category-filter.md",
+          "snapshot_bytes": 2280,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/example-failure-category-filter.lock.yml\",\"generated_workflow_file\":\"example-failure-category-filter.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/example-failure-category-filter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/example-failure-category-filter.md",
+      "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "authored_at": "2026-06-28T18:46:18Z",
+      "committed_at": "2026-06-28T18:46:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Apply remaining changes (#42119)",
+      "parent_shas": [
+        "f0cf4df7343e548bebb36985a895314e136469ef"
+      ],
+      "tree_sha": "30b81bf66f1fefd910376450ca0b8d58890ef22c",
+      "html_url": "https://github.com/github/gh-aw/commit/a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/example-failure-category-filter.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/example-failure-category-filter.md",
+          "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "committed_at": "2026-06-28T18:46:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -3,6 +3,11 @@ private: true\n name: Example Failure Category Filter\n on:\n   workflow_dispatch:\n+\n+sandbox:\n+  agent:\n+    sudo: false\n+\n safe-outputs:\n   report-failure-as-issue:\n     - agent_failure           # Only report genuine agent-side failures",
+          "snapshot_ref": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "snapshot_blob_sha": "06145b3964183b4edbe56130e9a617e83f19fc4a",
+          "snapshot_file": "snapshots/gh-aw__github__a2c8ef53839b08f76646833fd1859f4d1cf7079d__example-failure-category-filter.md",
+          "snapshot_bytes": 2316,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/example-failure-category-filter.lock.yml\",\"generated_workflow_file\":\"example-failure-category-filter.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/example-failure-category-filter.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

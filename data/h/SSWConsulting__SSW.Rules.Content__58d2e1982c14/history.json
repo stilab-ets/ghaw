@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+    "source_full_name": "SSWConsulting/SSW.Rules.Content",
+    "source_owner": "SSWConsulting",
+    "source_repo": "SSW.Rules.Content",
+    "md_path": ".github/workflows/content-campaign.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/HEAD/.github/workflows/content-campaign.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SSWConsulting/SSW.Rules.Content",
+      "generated_owner": "SSWConsulting",
+      "generated_repo": "SSW.Rules.Content",
+      "generated_workflow_path": ".github/workflows/content-campaign.lock.yml",
+      "generated_workflow_file": "content-campaign.lock.yml",
+      "generated_html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-campaign.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:32+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-campaign.md",
+      "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "authored_at": "2026-04-01T05:40:31Z",
+      "committed_at": "2026-04-01T05:40:31Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Add agentic workflows for auditing SSW Rules (#12307)\n\n<!-- **Tip: Use [SSW Rule Writer\nGPT](https://chat.openai.com/g/g-cOvrRzEnU-ssw-rules-writer) for help\nwith writing rules 🤖** -->\n>\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nEmail Subject - Do you avoid redundant linking (aka have a single link\nto a single location)? | SSW.Rules\n\n> 2. What was changed?\n\nThis PR adds a number of agentic workflows to SSW Rules that work\ntogether to update content on SSW Rules and catalog the work that has\nbeen done. I've included a mermaid diagram with a description of the\nflows as well as how to use them in the README referenced in this PR.\n\nBefore merging I also need to add the following new secrets to the repo\n\n- [x] TAVILY_API_KEY\n- [x] COPILOT_GITHUB_TOKEN\n- [x] CONTENTHAWK_GITHUB_PAT\n- [x] Give workflows permissions to creat/approve pull requests\n\n<img width=\"1619\" height=\"646\" alt=\"CleanShot 2026-03-27 at 15 00 18\"\nsrc=\"https://github.com/user-attachments/assets/a8cce0a9-0573-4c25-ac24-ba9bc56045a0\"\n/>\n\n**Figure: Proposed new flows**\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\n@18-th",
+      "parent_shas": [
+        "8f64357ba47cf0dbc014d929abac603d03708dfa"
+      ],
+      "tree_sha": "7bbf19cca2a23bcaabc508b0a79fbe890d86c405",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-campaign.md",
+          "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "committed_at": "2026-04-01T05:40:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 311,
+          "file_deletions": 0,
+          "file_changes": 311,
+          "file_patch": "@@ -0,0 +1,311 @@\n+---\n+description: >\n+  Agent 1 (Detective) of the ContentHawk pipeline.\n+  Scans content files based on user-provided search scope, extracts category\n+  and date metadata from each file, sorts them by the user's processing\n+  priority, and commits a markdown snapshot tracking file to a new branch,\n+  then opens a pull request.\n+  The snapshot is a markdown table listing every file with its metadata so\n+  Agent 2 can iterate over rows to find issues and Agent 3 can raise PRs\n+  grouped by the intent label.\n+  Also creates a custom GitHub label derived from the user's intent for\n+  Agent 2 to inject into issues and Agent 3 to bundle PRs.\n+  Stops immediately if an open catalog-tracking PR already exists for this\n+  intent to avoid duplicates.\n+name: Content Campaign (Agent 1)\n+\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      search_scope:\n+        description: \"Which content files to scan and how to filter them (e.g. '.NET rules under content/rules that are not archived', 'all public pages in content folder').\"\n+        required: true\n+      processing_priority:\n+        description: \"How to sort the file list for processing order (e.g. 'first sort by created date ascending, then by lastUpdated descending').\"\n+        required: true\n+      intent:\n+        description: \"What Agent 2 should look for and act on (e.g. 'archive all legacy rules and populate archive reason including modern rule reference').\"\n+        required: true\n+      issue_preferences:\n+        description: \"Preferences for how Agent 2 creates issues (e.g. 'use template .github/ISSUE_TEMPLATE/content-review.md, max 20 issues per run').\"\n+        required: true\n+      pr_preferences:\n+        description: \"Preferences for how Agent 3 creates PRs (e.g. 'use template .github/PULL_REQUEST_TEMPLATE/content-fix.md, bundle up to 5 related issues per PR').\"\n+        required: true\n+      label_name:\n+        description: \"GitHub label slug to tie the pipeline together (e.g. 'archive-legacy-rules'). Agent 2 applies it to issues, Agent 3 queries by it.\"\n+        required: true\n+\n+engine:\n+  id: copilot\n+  model: gpt-5-mini\n+\n+mcp-servers:\n+  tavily:\n+    command: npx\n+    args: [\"-y\", \"tavily-mcp\"]\n+    env:\n+      TAVILY_API_KEY: \"${{ secrets.TAVILY_API_KEY }}\"\n+    allowed: [\"tavily_search\" ]\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - \"*.tavily.com\"\n+\n+safe-outputs:\n+  report-failure-as-issue: false\n+  create-pull-request:\n+    protected-files: allowed\n+    allowed-files:\n+      - .github/ContentHawk/TODO/*.md\n+    title-prefix: \"[Content Catalog] \"\n+    max: 1\n+  add-labels:\n+    target: \"*\"\n+    max: 1\n+\n+steps:\n+  - name: Guard — label must not already exist\n+    uses: actions/github-script@v7\n+    with:\n+      script: |\n+        try {\n+          await github.rest.issues.getLabel({\n+            owner: context.repo.owner,\n+            repo: context.repo.repo,\n+            name: '${{ inputs.label_name }}'\n+          });\n+          core.setFailed(\n+            `Label '${{ inputs.label_name }}' already exists in this repository. ` +\n+            `Choose a different label_name or delete the existing label first.`\n+          );\n+        } catch (error) {\n+          if (error.status === 404) {\n+            core.info(`Label '${{ inputs.label_name }}' does not exist yet. Proceeding.`);\n+          } else {\n+            core.setFailed(`Failed to check label: ${error.message}`);\n+          }\n+        }\n+tools:\n+  github:\n+    toolsets: [default]\n+    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+  tavily:\n+    tools: [search, search_news]\n+\n+post-steps:\n+  - name: Workflow Summary\n+    if: always()\n+    env:\n+      INPUT_SEARCH_SCOPE: ${{ inputs.search_scope }}\n+      INPUT_PROCESSING_PRIORITY: ${{ inputs.processing_priority }}\n+      INPUT_INTENT: ${{ inputs.intent }}\n+      INPUT_LABEL_NAME: ${{ inputs.label_name }}\n+    run: |\n+      echo \"## ContentHawk — Agent 1 (Detective)\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      # Show the inputs that were provided\n+      echo \"### Inputs\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Field               | Value |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"|---------------------|-------|\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Search Scope        | $INPUT_SEARCH_SCOPE |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Processing Priority | $INPUT_PROCESSING_PRIORITY |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Intent              | $INPUT_INTENT |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Label               | \\`$INPUT_LABEL_NAME\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      # List any files the agent created or modified\n+      echo \"### Agent Output\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      if [ -d /tmp/gh-aw ]; then\n+        echo \"\\`\\`\\`\" >> \"$GITHUB_STEP_SUMMARY\"\n+        find /tmp/gh-aw -type f | head -30 >> \"$GITHUB_STEP_SUMMARY\"\n+        echo \"\\`\\`\\`\" >> \"$GITHUB_STEP_SUMMARY\"\n+      else\n+        echo \"_No agent output directory found._\" >> \"$GITHUB_STEP_SUMMARY\"\n+      fi\n+---\n+\n+## Important context\n+\n+This workflow is **Agent 1 (Detective)** in a three-agent pipeline called **ContentHawk**:\n+\n+- **Agent 1 (this workflow)**: Catalogs content files and creates a snapshot tracking file. Creates a label for the intent.\n+- **Agent 2**: Reads the snapshot, checks each file against the intent, and opens GitHub issues for files that match. Uses the label and issue preferences captured here.\n+- **Agent 3**: Reads issues with the intent label and raises PRs to resolve them. Uses the PR preferences captured here.\n+\n+The snapshot file you create must contain **all the information** Agent 2 and Agent 3 need — every user prompt is persisted into the snapshot so downstream agents are self-contained.\n+\n+## Inputs provided by the user\n+\n+All six prompts are captured and must be written into the snapshot file:\n+\n+| Prompt              | Value                                | Used by        |\n+|---------------------|--------------------------------------|----------------|\n+| Search Scope        | `${{ inputs.search_scope }}`         | Agent 1        |\n+| Processing Priority | `${{ inputs.processing_priority }}`  | Agent 1        |\n+| Intent              | `${{ inputs.intent }}`               | Agents 1, 2, 3 |\n+| Issue Preferences   | `${{ inputs.issue_preferences }}`    | Agent 2        |\n+| PR Preferences      | `${{ inputs.pr_preferences }}`       | Agent 3        |\n+| Label Name          | `${{ inputs.label_name }}`           | Agents 1, 2, 3 |\n+\n+---\n+\n+\n+### Step 1 — Create the intent label\n+\n+Create a GitHub label named exactly `${{ inputs.label_name }}` with a distinguishing color and the intent as its description. Use the `--force` flag so re-runs update rather than fail:\n+\n+```bash\n+gh label create \"${{ inputs.label_name }}\" --color \"D93F0B\" --description \"${{ inputs.intent }}\" --force\n+```\n+\n+### Step 2 — Discover, filter, and sort content files\n+\n+The user's search scope is:\n+\n+```\n+${{ inputs.search_scope }}\n+```\n+\n+Follow this procedure exactly:\n+\n+#### 2a. List candidate files\n+\n+Parse the search scope to identify the **directory/file-type scope** (which directories and extensions to scan). List every file that matches.\n+\n+#### 2b. Read and filter each candidate — MANDATORY\n+\n+The search scope may also contain **content-level criteria** (conditions about a file's contents, front-matter values, or metadata — e.g. \"files that contain lorem ipsum\", \"non-archived files\", \"files tagged with X\").\n+\n+For **every** candidate file from 2a you **must**:\n+\n+1. Read the file's full content.\n+2. Evaluate it against **every** content-level criterion in the search scope.\n+3. If the file **fails any criterion**, **exclude it** — do NOT add it to the snapshot.\n+\n+**Do NOT skip this step.** A file that lives in the right directory but fails a content-level criterion must be excluded. If the search scope says \"files that contain lorem ipsum\", every file without the text \"lorem ipsum\" must be dropped. If it says \"non-archived\", every file with an archived flag must be dropped. When in doubt, exclude.\n+\n+**Verification**: Before adding any file to `passed_files`, also confirm it is relevant to the user's intent:\n+\n+```\n+${{ inputs.intent }}\n+```\n+\n+If a file passes the search scope criteria but is clearly unrelated to the intent, exclude it.\n+\n+**Using Web Search for Relevance Validation**: During verification, if you need to confirm whether content is relevant to the intent (e.g., checking if a technology mentioned in the file is deprecated, outdated, or has been replaced), use the Tavily search tool. For example:\n+- If the intent involves archiving legacy documentation, search for the technology/framework to check deprecation status\n+- If the intent involves updating outdated content, search for the topic to verify current recommendations\n+- Formulate queries like \"[technology] deprecated\", \"[technology] end of life\", or \"[topic] current best practices\"\n+\n+Search results should inform your decision about whether the file is relevant to the user's intent. If search results indicate the content is obsolete or unrelated to current recommendations, exclude the file.\n+\n+Build a `passed_files` list containing only files that satisfy **all** criteria. Files that fail go into an internal `excluded_files` list (you do not need to write this list anywhere, but you must track it to ensure they are not in the snapshot).\n+\n+#### 2c. Extract metadata from passed files\n+\n+For each file in `passed_files`:\n+\n+1. **CategoryList** — look for any categorisation mechanism (front-matter tags, categories, labels, folder structure). If found, extract as a comma-separated string. Otherwise use `uncategorized`.\n+2. **Created** — a date field representing original creation/publication (e.g. `date`, `created`, `publishedAt`). Format `YYYY-MM-DD`. If absent, use `-`.\n+3. **LastUpdated** — a date field representing last modification (e.g. `lastUpdated`, `updatedAt`, `modified`, `lastChecked`). If absent, use `-`.\n+\n+#### 2d. Sort\n+\n+Sort `passed_files` according to the user's processing priority:\n+\n+```\n+${{ inputs.processing_priority }}\n+```\n+\n+Interpret this as a sort specification. For example, \"first sort by created then lastUpdated\" means sort primarily by Created date, then break ties with LastUpdated date. Apply ascending order unless the user explicitly says descending. Rows with `-` dates sort last.\n+\n+**The snapshot table must contain ONLY the files in `passed_files` after this step. No other files.**\n+\n+### Step 3 — Write the snapshot tracking file\n+\n+Determine today's date in `YYYY-MM-DD` format. Create the file:\n+\n+```\n+.github/ContentHawk/TODO/<todays-date>_Snapshot_${{ inputs.label_name }}.md\n+```\n+\n+For example: `.github/ContentHawk/TODO/2026-03-05_Snapshot_archive-legacy-rules.md`\n+\n+The file must follow this **exact** structure:\n+\n+```markdown\n+# Content Campaign\n+\n+## Agent Configuration\n+\n+| Field               | Value                                           |\n+|---------------------|-------------------------------------------------|\n+| Intent              | ${{ inputs.intent }}                            |\n+| Search Scope        | ${{ inputs.search_scope }}                      |\n+| Processing Priority | ${{ inputs.processing_priority }}               |\n+| Issue Preferences   | ${{ inputs.issue_preferences }}                 |\n+| PR Preferences      | ${{ inputs.pr_preferences }}                    |\n+| Label               | `${{ inputs.label_name }}`                      |\n+| Created             | <today's date in YYYY-MM-DD>                    |\n+\n+## Files to Review\n+\n+| Path        | CategoryList   | Created    | LastUpdated   | CheckedDate | CheckResult |\n+|-------------|----------------|------------|---------------|-------------|-------------|\n+| <file-path> | <CategoryList> | <Created>  | <LastUpdated> | -           | pending     |\n+```\n+\n+Rules for the table:\n+\n+- One row per non-skipped file from Step 2.\n+- Rows are in the sort order determined by the processing priority (NOT alphabetical unless that is what the user requested).\n+- `CheckedDate` is always `-` (Agent 2 fills this in later).\n+- `CheckResult` is always `pending` (Agent 2 updates this later).\n+\n+### Step 4 — Open the pull request\n+\n+Create a pull request with the title `[Content Catalog] {description}` where {description} is a very brief description of the intent from a branch named `ContentHawk/TODO/${{ inputs.label_name }}` into `main`.\n+\n+Use this PR body:\n+\n+```markdown\n+## Intent\n+\n+${{ inputs.intent }}\n+\n+## Search Scope\n+\n+${{ inputs.search_scope }}\n+\n+## Processing Priority\n+\n+${{ inputs.processing_priority }}\n+\n+## Label for flagged issues\n+\n+`${{ inputs.label_name }}`\n+\n+## Issue Preferences (for Agent 2)\n+\n+${{ inputs.issue_preferences }}\n+\n+## PR Preferences (for Agent 3)\n+\n+${{ inputs.pr_preferences }}\n+\n+## Snapshot file\n+\n+The full file list with metadata is in `.github/ContentHawk/TODO/<todays-date>_Snapshot_${{ inputs.label_name }}.md` on this branch.\n+\n+- **Agent 2** will iterate over the table rows in order, check each file against the intent, update `CheckedDate` and `CheckResult`, and open issues with the `${{ inputs.label_name }}` label.\n+- **Agent 3** will read issues labelled `${{ inputs.label_name }}` and raise PRs to resolve them.\n+```\n+\n+After the PR is created, **add the label** `${{ inputs.label_name }}` to the PR. This is the user's custom intent label (created in Step 1) and is separate from the `catalog-tracking` label that is applied automatically. Use the add-labels tool to apply it to the PR.",
+          "snapshot_ref": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "snapshot_blob_sha": "b66ef3baa03afd5a2771d70cec17f5723345e7da",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__e231121470b4ba5338e933dc2171d3b1fd3ded2b__content-campaign.md",
+          "snapshot_bytes": 13412,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-campaign.lock.yml\",\"generated_workflow_file\":\"content-campaign.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-campaign.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-campaign.md",
+      "commit_sha": "9bd7e3b3b8074f1a47c1ba82c8f7f70990ff42ff",
+      "authored_at": "2026-04-24T01:35:29Z",
+      "committed_at": "2026-04-24T01:35:29Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Upgrade gh-aw and add improvements (#12563)\n\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nGitHub agentic worlkflows were failing due to an MCP Firewall issue with\nthe latest copilot release.\n\nWhile I was testing ContentHawk on a sample repo I also found more\nissues with it's outputs\n\n> 2. What was changed?\n\n- Upgraded GitHub agentic workflows to latest version\n- Added deterministic guard to content fixer for open issues to save\nbuild minutes\n- Added deterministic guard for running content fixer only when Content\nCampaign files are present\n- Bumped model up to `claude sonnet 4.6` (PRs suggestions by GPT-5-mini\nwere trivial)\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\nIvan",
+      "parent_shas": [
+        "3a2191571c2e88ac1245edd66847a8acbe29b27d"
+      ],
+      "tree_sha": "723155b1f1fc936042a5217e68fbd07c2ec87ba8",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/9bd7e3b3b8074f1a47c1ba82c8f7f70990ff42ff",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-campaign.md",
+          "commit_sha": "9bd7e3b3b8074f1a47c1ba82c8f7f70990ff42ff",
+          "committed_at": "2026-04-24T01:35:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 27,
+          "file_deletions": 23,
+          "file_changes": 50,
+          "file_patch": "@@ -62,9 +62,7 @@ safe-outputs:\n     allowed-files:\n       - .github/ContentHawk/TODO/*.md\n     title-prefix: \"[Content Catalog] \"\n-    max: 1\n-  add-labels:\n-    target: \"*\"\n+    labels: [\"${{ inputs.label_name }}\"]\n     max: 1\n \n steps:\n@@ -89,12 +87,26 @@ steps:\n             core.setFailed(`Failed to check label: ${error.message}`);\n           }\n         }\n+  - name: Create intent label\n+    uses: actions/github-script@v7\n+    env:\n+      LABEL_NAME: ${{ inputs.label_name }}\n+      LABEL_DESCRIPTION: ${{ inputs.intent }}\n+    with:\n+      github-token: ${{ secrets.CONTENTHAWK_GITHUB_PAT }}\n+      script: |\n+        const name = process.env.LABEL_NAME;\n+        await github.rest.issues.createLabel({\n+          owner: context.repo.owner,\n+          repo: context.repo.repo,\n+          name,\n+          color: 'D93F0B',\n+        });\n+        core.info(`Created label '${name}'`);\n tools:\n   github:\n     toolsets: [default]\n     github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n-  tavily:\n-    tools: [search, search_news]\n \n post-steps:\n   - name: Workflow Summary\n@@ -157,15 +169,7 @@ All six prompts are captured and must be written into the snapshot file:\n ---\n \n \n-### Step 1 — Create the intent label\n-\n-Create a GitHub label named exactly `${{ inputs.label_name }}` with a distinguishing color and the intent as its description. Use the `--force` flag so re-runs update rather than fail:\n-\n-```bash\n-gh label create \"${{ inputs.label_name }}\" --color \"D93F0B\" --description \"${{ inputs.intent }}\" --force\n-```\n-\n-### Step 2 — Discover, filter, and sort content files\n+### Step 1 — Discover, filter, and sort content files\n \n The user's search scope is:\n \n@@ -175,15 +179,15 @@ ${{ inputs.search_scope }}\n \n Follow this procedure exactly:\n \n-#### 2a. List candidate files\n+#### 1a. List candidate files\n \n Parse the search scope to identify the **directory/file-type scope** (which directories and extensions to scan). List every file that matches.\n \n-#### 2b. Read and filter each candidate — MANDATORY\n+#### 1b. Read and filter each candidate — MANDATORY\n \n The search scope may also contain **content-level criteria** (conditions about a file's contents, front-matter values, or metadata — e.g. \"files that contain lorem ipsum\", \"non-archived files\", \"files tagged with X\").\n \n-For **every** candidate file from 2a you **must**:\n+For **every** candidate file from 1a you **must**:\n \n 1. Read the file's full content.\n 2. Evaluate it against **every** content-level criterion in the search scope.\n@@ -208,15 +212,15 @@ Search results should inform your decision about whether the file is relevant to\n \n Build a `passed_files` list containing only files that satisfy **all** criteria. Files that fail go into an internal `excluded_files` list (you do not need to write this list anywhere, but you must track it to ensure they are not in the snapshot).\n \n-#### 2c. Extract metadata from passed files\n+#### 1c. Extract metadata from passed files\n \n For each file in `passed_files`:\n \n 1. **CategoryList** — look for any categorisation mechanism (front-matter tags, categories, labels, folder structure). If found, extract as a comma-separated string. Otherwise use `uncategorized`.\n 2. **Created** — a date field representing original creation/publication (e.g. `date`, `created`, `publishedAt`). Format `YYYY-MM-DD`. If absent, use `-`.\n 3. **LastUpdated** — a date field representing last modification (e.g. `lastUpdated`, `updatedAt`, `modified`, `lastChecked`). If absent, use `-`.\n \n-#### 2d. Sort\n+#### 1d. Sort\n \n Sort `passed_files` according to the user's processing priority:\n \n@@ -228,7 +232,7 @@ Interpret this as a sort specification. For example, \"first sort by created then\n \n **The snapshot table must contain ONLY the files in `passed_files` after this step. No other files.**\n \n-### Step 3 — Write the snapshot tracking file\n+### Step 2 — Write the snapshot tracking file\n \n Determine today's date in `YYYY-MM-DD` format. Create the file:\n \n@@ -264,12 +268,12 @@ The file must follow this **exact** structure:\n \n Rules for the table:\n \n-- One row per non-skipped file from Step 2.\n+- One row per non-skipped file from Step 1.\n - Rows are in the sort order determined by the processing priority (NOT alphabetical unless that is what the user requested).\n - `CheckedDate` is always `-` (Agent 2 fills this in later).\n - `CheckResult` is always `pending` (Agent 2 updates this later).\n \n-### Step 4 — Open the pull request\n+### Step 3 — Open the pull request\n \n Create a pull request with the title `[Content Catalog] {description}` where {description} is a very brief description of the intent from a branch named `ContentHawk/TODO/${{ inputs.label_name }}` into `main`.\n \n@@ -308,4 +312,4 @@ The full file list with metadata is in `.github/ContentHawk/TODO/<todays-date>_S\n - **Agent 3** will read issues labelled `${{ inputs.label_name }}` and raise PRs to resolve them.\n ```\n \n-After the PR is created, **add the label** `${{ inputs.label_name }}` to the PR. This is the user's custom intent label (created in Step 1) and is separate from the `catalog-tracking` label that is applied automatically. Use the add-labels tool to apply it to the PR.\n+The `${{ inputs.label_name }}` label is applied to the PR automatically at creation time (configured in `safe-outputs.create-pull-request.labels`). You do not need to apply it separately.",
+          "snapshot_ref": "9bd7e3b3b8074f1a47c1ba82c8f7f70990ff42ff",
+          "snapshot_blob_sha": "128d2b701f89aafb187d13a79ed56f65feba8fa0",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__9bd7e3b3b8074f1a47c1ba82c8f7f70990ff42ff__content-campaign.md",
+          "snapshot_bytes": 13457,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-campaign.lock.yml\",\"generated_workflow_file\":\"content-campaign.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-campaign.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-campaign.md",
+      "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "authored_at": "2026-05-15T01:11:10Z",
+      "committed_at": "2026-05-15T01:11:10Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 Installing ContentHawk (#12715)\n\nUpgraded ContentHawk using the brand new schmick Claude skill for\ninstalling it 😉.\n\n\n**What changed?**\nI reworked the workflows to avoid the need for a user to supply a custom\nGitHub token (`CONTENTHAWK_GITHUB_PAT`). The main thing that changed is\nthat `Content Judge` no longer triggers using `workflow_dispatch` as\nthis would require a personalised GitHub token to be used. Triggering\nGitHub within Agentic workflows requires a custom GitHub token unless\nthey are triggered via `safe_outputs` (The workflow level permissions\nfor agentic workflows enforce this).\n\n**Changes**\n- Removed all references to `CONTENTHAWK_GITHUB_PAT`\n- 👨‍⚖️Updated `Content Judge PR` to trigger when `Content Judge`\nfinishes running\n- 👨‍⚖️Updated `Content Judge PR` to get inputs from workflow artefacts\nto circumvent permissions issues\n- 🗾Update `Content Campaign` to run existing label in [pre-activation\nsteps](https://github.github.com/gh-aw/reference/triggers/#pre-activation-steps-onsteps)\nto allow for job level GITHUB_TOKEN permissions.",
+      "parent_shas": [
+        "9205018548c1659e85a538d9795e6d08efe03112"
+      ],
+      "tree_sha": "785242e56c1a6e859cb7d930c0fc14327b379444",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-campaign.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-campaign.md",
+          "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "committed_at": "2026-05-15T01:11:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 45,
+          "file_deletions": 42,
+          "file_changes": 87,
+          "file_patch": "@@ -18,13 +18,13 @@ on:\n   workflow_dispatch:\n     inputs:\n       search_scope:\n-        description: \"Which content files to scan and how to filter them (e.g. '.NET rules under content/rules that are not archived', 'all public pages in content folder').\"\n+        description: \"Which content files to scan and how to filter them (e.g. 'all blog files').\"\n         required: true\n       processing_priority:\n         description: \"How to sort the file list for processing order (e.g. 'first sort by created date ascending, then by lastUpdated descending').\"\n         required: true\n       intent:\n-        description: \"What Agent 2 should look for and act on (e.g. 'archive all legacy rules and populate archive reason including modern rule reference').\"\n+        description: \"What Agent 2 should look for and act on (e.g. 'archive all outdated blog posts on the topic of AI').\"\n         required: true\n       issue_preferences:\n         description: \"Preferences for how Agent 2 creates issues (e.g. 'use template .github/ISSUE_TEMPLATE/content-review.md, max 20 issues per run').\"\n@@ -33,8 +33,48 @@ on:\n         description: \"Preferences for how Agent 3 creates PRs (e.g. 'use template .github/PULL_REQUEST_TEMPLATE/content-fix.md, bundle up to 5 related issues per PR').\"\n         required: true\n       label_name:\n-        description: \"GitHub label slug to tie the pipeline together (e.g. 'archive-legacy-rules'). Agent 2 applies it to issues, Agent 3 queries by it.\"\n+        description: \"GitHub label slug to tie the pipeline together (e.g. 'archive-outdated-blog-posts'). Agent 2 applies it to issues, Agent 3 queries by it.\"\n         required: true\n+  permissions:\n+    issues: write\n+  steps:\n+    - name: Guard — label must not already exist\n+      uses: actions/github-script@v7\n+      with:\n+        script: |\n+          try {\n+            await github.rest.issues.getLabel({\n+              owner: context.repo.owner,\n+              repo: context.repo.repo,\n+              name: '${{ inputs.label_name }}'\n+            });\n+            core.setFailed(\n+              `Label '${{ inputs.label_name }}' already exists in this repository. ` +\n+              `Choose a different label_name or delete the existing label first.`\n+            );\n+          } catch (error) {\n+            if (error.status === 404) {\n+              core.info(`Label '${{ inputs.label_name }}' does not exist yet. Proceeding.`);\n+            } else {\n+              core.setFailed(`Failed to check label: ${error.message}`);\n+            }\n+          }\n+    - name: Create intent label\n+      uses: actions/github-script@v7\n+      env:\n+        LABEL_NAME: ${{ inputs.label_name }}\n+        LABEL_DESCRIPTION: ${{ inputs.intent }}\n+      with:\n+        github-token: ${{ secrets.GITHUB_TOKEN }}\n+        script: |\n+          const name = process.env.LABEL_NAME;\n+          await github.rest.issues.createLabel({\n+            owner: context.repo.owner,\n+            repo: context.repo.repo,\n+            name,\n+            color: 'D93F0B',\n+          });\n+          core.info(`Created label '${name}'`);\n \n engine:\n   id: copilot\n@@ -65,48 +105,11 @@ safe-outputs:\n     labels: [\"${{ inputs.label_name }}\"]\n     max: 1\n \n-steps:\n-  - name: Guard — label must not already exist\n-    uses: actions/github-script@v7\n-    with:\n-      script: |\n-        try {\n-          await github.rest.issues.getLabel({\n-            owner: context.repo.owner,\n-            repo: context.repo.repo,\n-            name: '${{ inputs.label_name }}'\n-          });\n-          core.setFailed(\n-            `Label '${{ inputs.label_name }}' already exists in this repository. ` +\n-            `Choose a different label_name or delete the existing label first.`\n-          );\n-        } catch (error) {\n-          if (error.status === 404) {\n-            core.info(`Label '${{ inputs.label_name }}' does not exist yet. Proceeding.`);\n-          } else {\n-            core.setFailed(`Failed to check label: ${error.message}`);\n-          }\n-        }\n-  - name: Create intent label\n-    uses: actions/github-script@v7\n-    env:\n-      LABEL_NAME: ${{ inputs.label_name }}\n-      LABEL_DESCRIPTION: ${{ inputs.intent }}\n-    with:\n-      github-token: ${{ secrets.CONTENTHAWK_GITHUB_PAT }}\n-      script: |\n-        const name = process.env.LABEL_NAME;\n-        await github.rest.issues.createLabel({\n-          owner: context.repo.owner,\n-          repo: context.repo.repo,\n-          name,\n-          color: 'D93F0B',\n-        });\n-        core.info(`Created label '${name}'`);\n+\n tools:\n   github:\n     toolsets: [default]\n-    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+    github-token: \"${{ secrets.GITHUB_TOKEN }}\"\n \n post-steps:\n   - name: Workflow Summary",
+          "snapshot_ref": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "snapshot_blob_sha": "7dc5acef482f5260998a2b8952d681f51711f5dc",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__0a9e7b77dc698a3fb4ea446221daf3c33523439b__content-campaign.md",
+          "snapshot_bytes": 13444,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-campaign.lock.yml\",\"generated_workflow_file\":\"content-campaign.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-campaign.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

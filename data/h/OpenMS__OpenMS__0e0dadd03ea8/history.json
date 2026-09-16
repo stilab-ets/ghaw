@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+    "source_full_name": "OpenMS/OpenMS",
+    "source_owner": "OpenMS",
+    "source_repo": "OpenMS",
+    "md_path": ".github/workflows/doc-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/OpenMS/OpenMS/blob/HEAD/.github/workflows/doc-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "OpenMS/OpenMS",
+      "generated_owner": "OpenMS",
+      "generated_repo": "OpenMS",
+      "generated_workflow_path": ".github/workflows/doc-sync.lock.yml",
+      "generated_workflow_file": "doc-sync.lock.yml",
+      "generated_html_url": "https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/doc-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:07+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+      "source_full_name": "OpenMS/OpenMS",
+      "md_path": ".github/workflows/doc-sync.md",
+      "commit_sha": "dfc123055bca880e7b5a6225969c92bd69e0d51b",
+      "authored_at": "2026-03-04T10:15:43Z",
+      "committed_at": "2026-03-04T10:15:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add daily agentic workflow to keep documentation in sync with code changes (#8832)\n\n* Initial plan\n\n* Add daily documentation sync agentic workflow\n\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>",
+      "parent_shas": [
+        "5e1a21aee4890814e82c72cf954071e590dcf3d9"
+      ],
+      "tree_sha": "5c5534ceafc443b6c9b227fdbf10e38de750a777",
+      "html_url": "https://github.com/OpenMS/OpenMS/commit/dfc123055bca880e7b5a6225969c92bd69e0d51b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+          "source_full_name": "OpenMS/OpenMS",
+          "md_path": ".github/workflows/doc-sync.md",
+          "commit_sha": "dfc123055bca880e7b5a6225969c92bd69e0d51b",
+          "committed_at": "2026-03-04T10:15:43Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 101,
+          "file_deletions": 0,
+          "file_changes": 101,
+          "file_patch": "@@ -0,0 +1,101 @@\n+---\n+description: Daily workflow to identify documentation files that are out of sync with recent code changes and open a pull request with the necessary updates.\n+on:\n+  schedule: daily on weekdays\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    mode: remote\n+    toolsets: [default]\n+  bash: true\n+  edit:\n+  web-fetch:\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[doc-sync] \"\n+    labels: [documentation, automated]\n+    draft: false\n+    if-no-changes: ignore\n+checkout:\n+  fetch-depth: 0\n+---\n+\n+# Documentation Sync Agent\n+\n+You are a documentation maintenance agent for the OpenMS project — a C++ library for LC-MS data management and mass spectrometry analyses.\n+\n+## Your Task\n+\n+Your goal is to identify documentation files that are out of sync with recent code changes (from the last 7 days) and open a pull request with the necessary updates.\n+\n+## Steps to Follow\n+\n+### 1. Find Recent Code Changes\n+\n+Run the following bash command to find source code files that changed in the last 7 days. This focuses on actual source files (C++, Python, CMake) rather than documentation files:\n+\n+```bash\n+git log --since=\"7 days ago\" --name-only --pretty=format: | sort -u | grep -v '^$' | grep -E '\\.(cpp|h|hpp|py|cmake)$|CMakeLists\\.txt'\n+```\n+\n+If there are no recent code changes, output a brief summary and stop — there is nothing to update.\n+\n+### 2. Identify Relevant Documentation\n+\n+For each changed code area, identify the relevant documentation files to check. Documentation in this repository lives in:\n+\n+- `README.md` — top-level project overview and quickstart\n+- `CONTRIBUTING.md` — contributor guidelines\n+- `AGENTS.md` — agent/AI coding guidelines\n+- `CLAUDE.md` — AI model–specific guidelines\n+- `doc/doxygen/` — standalone Doxygen documentation files (`.dox` files and parameter documentation in `doc/doxygen/public/`, `doc/doxygen/common/`, etc.)\n+- Header files (`*.h`, `*.hpp`) that contain Doxygen `/** ... */` comment blocks\n+\n+Focus only on documentation that is **directly related** to the changed source files. Do NOT rewrite documentation speculatively or for unchanged code areas.\n+\n+### 3. Analyze Each Documentation File\n+\n+For each relevant documentation file:\n+\n+1. Read the current content of the documentation file.\n+2. Read the changed source files that are related to the documentation.\n+3. Determine whether the documentation is still accurate:\n+   - Are class/function names mentioned in docs still correct?\n+   - Are described parameters, options, or behaviors still valid?\n+   - Are code examples still syntactically correct (API not renamed/removed)?\n+   - Are installation or build instructions still accurate?\n+4. If the documentation is accurate, skip it.\n+5. If the documentation is out of date, note what needs to change and why.\n+\n+### 4. Update Documentation\n+\n+For each documentation file that needs updating:\n+\n+- Make **minimal, targeted edits** — only fix what is actually wrong or outdated.\n+- Do NOT restructure, reformat, or rewrite content that is still accurate.\n+- Preserve the existing writing style, tone, and formatting conventions.\n+- Do NOT add new sections unless there are significant new features undocumented.\n+- Do NOT delete content unless it describes something that was removed from the codebase.\n+\n+### 5. Create a Pull Request\n+\n+After making all necessary edits, create a pull request with:\n+\n+- A clear title describing what documentation was updated and why.\n+- A body that lists:\n+  - Which source files changed (triggering the doc review)\n+  - Which documentation files were updated\n+  - A brief description of each change made and why it was necessary\n+\n+If you find no documentation that needs updating, do NOT create a pull request. Simply output a summary confirming that all documentation is up to date.\n+\n+## Important Guidelines\n+\n+- Be conservative: only update documentation when you are confident it is incorrect or misleading.\n+- Do not introduce new inaccuracies while fixing existing ones.\n+- If you are uncertain whether a code change affects the documentation, skip that file.\n+- Prefer fixing factual errors (wrong function names, obsolete parameters, removed features) over style improvements.\n+- The OpenMS project uses C++20 and Doxygen for documentation. Respect existing Doxygen comment conventions.",
+          "snapshot_ref": "dfc123055bca880e7b5a6225969c92bd69e0d51b",
+          "snapshot_blob_sha": "339f4e9cf45de3bbd099d1ff61c83c61a9931f43",
+          "snapshot_file": "snapshots/OpenMS__OpenMS__dfc123055bca880e7b5a6225969c92bd69e0d51b__doc-sync.md",
+          "snapshot_bytes": 4283,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"OpenMS/OpenMS\",\"generated_owner\":\"OpenMS\",\"generated_repo\":\"OpenMS\",\"generated_workflow_path\":\".github/workflows/doc-sync.lock.yml\",\"generated_workflow_file\":\"doc-sync.lock.yml\",\"generated_html_url\":\"https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/doc-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+      "source_full_name": "OpenMS/OpenMS",
+      "md_path": ".github/workflows/doc-sync.md",
+      "commit_sha": "205cb35488e4b7ef02f64cf1bc93a41af45a3621",
+      "authored_at": "2026-03-06T07:56:50Z",
+      "committed_at": "2026-03-06T07:56:50Z",
+      "author_name": "Julianus Pfeuffer",
+      "author_email": "8102638+jpfeuffer@users.noreply.github.com",
+      "author_login": "jpfeuffer",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update pull request instructions in doc-sync.md\n\nClarified instructions for creating a pull request.",
+      "parent_shas": [
+        "38a397dfe8dfbbcf71daea8be39d910cc746e686"
+      ],
+      "tree_sha": "dad0c2ab017f2576da45562f6c451bcf8b196074",
+      "html_url": "https://github.com/OpenMS/OpenMS/commit/205cb35488e4b7ef02f64cf1bc93a41af45a3621",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+          "source_full_name": "OpenMS/OpenMS",
+          "md_path": ".github/workflows/doc-sync.md",
+          "commit_sha": "205cb35488e4b7ef02f64cf1bc93a41af45a3621",
+          "committed_at": "2026-03-06T07:56:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -82,7 +82,7 @@ For each documentation file that needs updating:\n \n ### 5. Create a Pull Request\n \n-After making all necessary edits, create a pull request with:\n+After making all necessary edits, create a pull request to the develop branch you stupid bot, with:\n \n - A clear title describing what documentation was updated and why.\n - A body that lists:",
+          "snapshot_ref": "205cb35488e4b7ef02f64cf1bc93a41af45a3621",
+          "snapshot_blob_sha": "6af5e0dc9a25432f0e9a458b5b060ac1b0b82087",
+          "snapshot_file": "snapshots/OpenMS__OpenMS__205cb35488e4b7ef02f64cf1bc93a41af45a3621__doc-sync.md",
+          "snapshot_bytes": 4321,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"OpenMS/OpenMS\",\"generated_owner\":\"OpenMS\",\"generated_repo\":\"OpenMS\",\"generated_workflow_path\":\".github/workflows/doc-sync.lock.yml\",\"generated_workflow_file\":\"doc-sync.lock.yml\",\"generated_html_url\":\"https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/doc-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+      "source_full_name": "OpenMS/OpenMS",
+      "md_path": ".github/workflows/doc-sync.md",
+      "commit_sha": "7530c2e0f69a052a4efda6204c6e304669dbfdc9",
+      "authored_at": "2026-03-06T12:31:18Z",
+      "committed_at": "2026-03-06T12:31:18Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Fix doc-sync workflow: set base branch to 'develop' instead of defaulting to 'main'\n\nThe Documentation Sync Agent's create-pull-request safe output was failing\nwith 'fatal: couldn't find remote ref main' because OpenMS uses 'develop'\nas its default branch. Added explicit base: develop configuration.\n\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>",
+      "parent_shas": [
+        "99051324c67e166ac2fb00d821481d4660071396"
+      ],
+      "tree_sha": "ad2408394bfdf31166df14b1562982f1f2e09f6b",
+      "html_url": "https://github.com/OpenMS/OpenMS/commit/7530c2e0f69a052a4efda6204c6e304669dbfdc9",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+          "source_full_name": "OpenMS/OpenMS",
+          "md_path": ".github/workflows/doc-sync.md",
+          "commit_sha": "7530c2e0f69a052a4efda6204c6e304669dbfdc9",
+          "committed_at": "2026-03-06T12:31:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -15,6 +15,7 @@ tools:\n   web-fetch:\n safe-outputs:\n   create-pull-request:\n+    base: develop\n     title-prefix: \"[doc-sync] \"\n     labels: [documentation, automated]\n     draft: false",
+          "snapshot_ref": "7530c2e0f69a052a4efda6204c6e304669dbfdc9",
+          "snapshot_blob_sha": "6f2169fbb3baa17eec26f964a8502107978147a3",
+          "snapshot_file": "snapshots/OpenMS__OpenMS__7530c2e0f69a052a4efda6204c6e304669dbfdc9__doc-sync.md",
+          "snapshot_bytes": 4339,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"OpenMS/OpenMS\",\"generated_owner\":\"OpenMS\",\"generated_repo\":\"OpenMS\",\"generated_workflow_path\":\".github/workflows/doc-sync.lock.yml\",\"generated_workflow_file\":\"doc-sync.lock.yml\",\"generated_html_url\":\"https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/doc-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+      "source_full_name": "OpenMS/OpenMS",
+      "md_path": ".github/workflows/doc-sync.md",
+      "commit_sha": "46c250f43bf9e50ca3a7554a04f19bdd73c62c2c",
+      "authored_at": "2026-03-09T12:06:12Z",
+      "committed_at": "2026-03-09T12:06:12Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix doc-sync safe output base branch configuration (#8859)\n\n* Initial plan\n\n* [DOC] Fix doc-sync base branch config key\n\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>",
+      "parent_shas": [
+        "83170561ca8bb4937aabd8c3c93f46401c8cfc18"
+      ],
+      "tree_sha": "5adca7b50e8dfe9a3416220d39f16d78fd953a87",
+      "html_url": "https://github.com/OpenMS/OpenMS/commit/46c250f43bf9e50ca3a7554a04f19bdd73c62c2c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "OpenMS/OpenMS:.github/workflows/doc-sync.md",
+          "source_full_name": "OpenMS/OpenMS",
+          "md_path": ".github/workflows/doc-sync.md",
+          "commit_sha": "46c250f43bf9e50ca3a7554a04f19bdd73c62c2c",
+          "committed_at": "2026-03-09T12:06:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -15,7 +15,7 @@ tools:\n   web-fetch:\n safe-outputs:\n   create-pull-request:\n-    base: develop\n+    base-branch: develop\n     title-prefix: \"[doc-sync] \"\n     labels: [documentation, automated]\n     draft: false",
+          "snapshot_ref": "46c250f43bf9e50ca3a7554a04f19bdd73c62c2c",
+          "snapshot_blob_sha": "c2f29fd948f1bacffcb5e0e86e7dad2dfdefd8e7",
+          "snapshot_file": "snapshots/OpenMS__OpenMS__46c250f43bf9e50ca3a7554a04f19bdd73c62c2c__doc-sync.md",
+          "snapshot_bytes": 4346,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"OpenMS/OpenMS\",\"generated_owner\":\"OpenMS\",\"generated_repo\":\"OpenMS\",\"generated_workflow_path\":\".github/workflows/doc-sync.lock.yml\",\"generated_workflow_file\":\"doc-sync.lock.yml\",\"generated_html_url\":\"https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/doc-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/api.adoptium.net:.github/workflows/production-branch-checker.md",
+    "source_full_name": "adoptium/api.adoptium.net",
+    "source_owner": "adoptium",
+    "source_repo": "api.adoptium.net",
+    "md_path": ".github/workflows/production-branch-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/api.adoptium.net/blob/HEAD/.github/workflows/production-branch-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/api.adoptium.net",
+      "generated_owner": "adoptium",
+      "generated_repo": "api.adoptium.net",
+      "generated_workflow_path": ".github/workflows/production-branch-checker.lock.yml",
+      "generated_workflow_file": "production-branch-checker.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/api.adoptium.net/blob/26f4d909231f5457ecd872a64263683937819fff/.github/workflows/production-branch-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/api.adoptium.net:.github/workflows/production-branch-checker.md",
+      "source_full_name": "adoptium/api.adoptium.net",
+      "md_path": ".github/workflows/production-branch-checker.md",
+      "commit_sha": "bd7da7dd64736b5312b062a5b2641f50aebf19a8",
+      "authored_at": "2026-05-29T15:25:37Z",
+      "committed_at": "2026-05-29T15:25:37Z",
+      "author_name": "George Adams",
+      "author_email": "georgeadams1995@gmail.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "George Adams",
+      "committer_email": "georgeadams1995@gmail.com",
+      "committer_login": "gdams",
+      "committer_account_type": "User",
+      "message": "Add production branch checker workflow and update dependabot config",
+      "parent_shas": [
+        "3d03d336a2f4096044cee275d2eeffed56857998"
+      ],
+      "tree_sha": "ab164c63c0d353493a12fff379b031c82f79974f",
+      "html_url": "https://github.com/adoptium/api.adoptium.net/commit/bd7da7dd64736b5312b062a5b2641f50aebf19a8",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/api.adoptium.net:.github/workflows/production-branch-checker.md",
+          "source_full_name": "adoptium/api.adoptium.net",
+          "md_path": ".github/workflows/production-branch-checker.md",
+          "commit_sha": "bd7da7dd64736b5312b062a5b2641f50aebf19a8",
+          "committed_at": "2026-05-29T15:25:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 346,
+          "file_deletions": 0,
+          "file_changes": 346,
+          "file_patch": "@@ -0,0 +1,346 @@\n+---\n+on:\n+  pull_request:\n+    branches: [ production ]\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+features:\n+  copilot-requests: true\n+\n+safe-outputs:\n+  add-comment:\n+    hide-older-comments: true\n+  allowed-domains:\n+    - \"*.adoptium.net\"\n+\n+checkout:\n+  fetch-depth: 0\n+\n+concurrency:\n+  group: production-branch-checker-${{ github.ref }}\n+  cancel-in-progress: true\n+\n+timeout-minutes: 30\n+---\n+\n+# Production Branch Merge Checker\n+\n+You are a production deployment risk-analysis agent for the **Adoptium API**\n+(`api.adoptium.net`). Your job is to analyse pull requests that merge `main`\n+into the `production` branch, produce a concise summary of **meaningful\n+changes**, assign a **merge risk level**, and provide **post-merge validation\n+guidance** — all posted as a single PR comment.\n+\n+## Context\n+\n+This repository contains the Adoptium API v3 — a Kotlin / Maven / Quarkus\n+application that serves binary metadata for Eclipse Temurin OpenJDK builds.\n+\n+The deployment model is:\n+\n+| Branch | Environment | Kubernetes Namespace | URL |\n+|--------|-------------|---------------------|-----|\n+| `main` | Staging | `api-staging` | `https://staging-api.adoptium.net` |\n+| `production` | **Production** | `api` | `https://api.adoptium.net` |\n+\n+Merging `main` → `production` triggers a Docker image build and a Kubernetes\n+redeployment of both the **Frontend** (REST API) and the **Updater** (data\n+sync) into the production namespace.\n+\n+### Key modules\n+\n+| Module | Role |\n+|--------|------|\n+| `adoptium-frontend-parent/adoptium-api-v3-frontend` | REST API frontend (Quarkus) |\n+| `adoptium-api-v3-persistence` | MongoDB persistence layer |\n+| `adoptium-updater-parent/adoptium-api-v3-updater` | Periodic data updater (GitHub → DB) |\n+| `adoptium-models-parent/*` | Shared data models |\n+| `adoptium-api-v3-telemetry` | Application Insights telemetry |\n+| `adoptium-frontend-parent/adoptium-frontend-assets` | OpenAPI specs & static assets |\n+| `deploy/` | Dockerfile, Kubernetes & MongoDB configs |\n+\n+### What matters vs what doesn't\n+\n+**High-signal changes** (always include in summary):\n+- REST API endpoint changes (new routes, changed request/response shapes, removed endpoints)\n+- Database schema or query changes in persistence layer\n+- Updater logic changes (data source parsing, refresh intervals, new data sources)\n+- Deployment configuration changes (`deploy/`, Dockerfiles, Kubernetes manifests)\n+- MongoDB configuration or migration changes\n+- Authentication / security changes\n+- OpenAPI spec changes\n+- Application configuration changes (`application.properties`, `application.yaml`)\n+- Feature flag or environment variable changes\n+\n+**Low-signal changes** (exclude from the summary or mention only as a one-line count):\n+- Dependency version bumps in `pom.xml` (unless a major version change or known-breaking)\n+- Maven plugin version updates\n+- CI workflow changes (`.github/workflows/`) — unless they affect deployment\n+- Code style / formatting changes\n+- Test-only changes (mention count but don't detail)\n+- Documentation-only changes (`*.md`, `*.adoc`)\n+- `.gitignore`, `.editorconfig`, and other tooling config\n+\n+## Instructions\n+\n+### Step 1: Gather the diff\n+\n+Examine all files changed in this PR. Use the diff between the `production`\n+branch (base) and the PR head (which is `main`) to identify every changed file.\n+\n+Categorise each changed file into one of these buckets:\n+\n+| Category | Examples | Signal |\n+|----------|----------|--------|\n+| **API / Frontend** | `adoptium-frontend-parent/**/*.kt`, OpenAPI specs | High |\n+| **Persistence** | `adoptium-api-v3-persistence/**/*.kt` | High |\n+| **Updater** | `adoptium-updater-parent/**/*.kt` | High |\n+| **Models** | `adoptium-models-parent/**/*.kt` | High |\n+| **Deployment** | `deploy/**`, `Dockerfile`, `docker-compose.yml` | High |\n+| **Telemetry** | `adoptium-api-v3-telemetry/**` | Medium |\n+| **Config** | `application.properties`, `application.yaml`, env vars | High |\n+| **Dependencies** | `pom.xml` (version bumps only) | Low — skip |\n+| **CI/Workflows** | `.github/workflows/**` (non-deploy) | Low — skip |\n+| **Tests only** | `**/test/**` | Low — count only |\n+| **Docs** | `*.md`, `*.adoc`, `docs/**` | Low — skip |\n+| **Tooling** | `.gitignore`, `.editorconfig`, `mvnw*` | Low — skip |\n+\n+### Step 2: Summarise meaningful changes\n+\n+For every file in a **High** or **Medium** signal category, read the diff and\n+write a concise, human-readable summary of what changed. Group changes by\n+module. Focus on *behaviour* changes, not line-by-line diffs:\n+\n+- \"Added new `/v3/assets/latest` endpoint that returns the latest release per platform\"\n+- \"Changed MongoDB query in `ReleaseRepository` to filter by vendor field\"\n+- \"Updated updater refresh interval from 6 minutes to 3 minutes\"\n+- \"Modified Dockerfile to use multi-stage build with JDK 21\"\n+\n+For **Low** signal files, emit a single line like:\n+> 📦 12 dependency version bumps in pom.xml files (no major version changes)\n+> 🧪 8 test files changed\n+> 📝 3 documentation files updated\n+\n+If a `pom.xml` change includes a **major version bump** of a runtime dependency\n+(not a Maven plugin), or adds/removes a dependency, promote it to High signal\n+and include it in the detailed summary.\n+\n+### Step 3: Live endpoint comparison (staging vs production)\n+\n+When the diff includes changes to **API / Frontend**, **Models**, or\n+**Persistence** code, probe the live APIs to show reviewers the concrete\n+effect of the changes. This makes the report far more useful than a\n+code-only diff.\n+\n+#### Which endpoints to check\n+\n+Map changed source files to API routes:\n+\n+| Source file pattern | API route to probe |\n+|--------------------|-----------------------|\n+| `routes/info/AvailableReleasesResource.kt` | `/v3/info/available_releases` |\n+| `routes/info/ReleaseListResource.kt` | `/v3/info/release_versions` |\n+| `routes/info/ReleaseNotesResource.kt` | `/v3/info/release_notes/{feature_version}` |\n+| `routes/info/TypesResource.kt` | `/v3/types/*` |\n+| `routes/AssetsResource.kt` | `/v3/assets/feature_releases/{version}/ga` |\n+| `routes/VersionResource.kt` | `/v3/version/*` |\n+| `routes/packages/BinaryResource.kt` | `/v3/binary/latest/{version}/ga/linux/x64/jdk/hotspot/normal/eclipse` |\n+| `routes/packages/InstallerResource.kt` | `/v3/installer/latest/{version}/ga/windows/x64/jdk/hotspot/normal/eclipse` |\n+| `routes/packages/ChecksumResource.kt` | `/v3/checksum/latest/{version}/ga/linux/x64/jdk/hotspot/normal/eclipse` |\n+| `routes/packages/SignatureResource.kt` | `/v3/signature/latest/{version}/ga/linux/x64/jdk/hotspot/normal/eclipse` |\n+| `routes/CdxaResource.kt` | `/v3/cdxas/{feature_version}` |\n+| `routes/AttestationAliasResource.kt` | `/v3/attestations/{feature_version}` |\n+| `routes/stats/DownloadStatsResource.kt` | `/v3/stats/downloads/total` |\n+| Model classes (`adoptium-models-parent/**`) | All of the above (models are shared) |\n+| Persistence classes | All of the above (persistence is shared) |\n+\n+For `{version}` / `{feature_version}` placeholders, use the **latest GA\n+feature version** obtained from\n+`/v3/info/available_releases` → `most_recent_feature_version`.\n+\n+#### How to probe\n+\n+For each affected route:\n+\n+1. **Fetch from staging:** `https://staging-api.adoptium.net{route}`\n+2. **Fetch from production:** `https://api.adoptium.net{route}`\n+3. Compare the JSON responses structurally (ignore ordering of array elements\n+   and ephemeral fields like `updated_at` timestamps).\n+\n+#### What to report\n+\n+For each probed endpoint, report one of:\n+\n+| Result | Meaning |\n+|--------|---------|\n+| ✅ **Identical** | Staging and production return the same response |\n+| 🆕 **New endpoint** | Staging returns 200, production returns 404 |\n+| ⚠️ **Response differs** | Structural diff — show the key differences |\n+| 🔴 **Staging error** | Staging returns 4xx/5xx — flag for investigation |\n+| ⏭️ **Skipped** | Endpoint requires path params that can't be auto-resolved |\n+\n+When responses differ, summarise the differences concisely:\n+- New fields added to the response\n+- Fields removed from the response\n+- Changed field types or value patterns\n+- Different array lengths (e.g., \"staging returns 12 releases, production returns 11\")\n+- Different HTTP status codes\n+\n+Do **not** dump full JSON payloads. Show only the structural differences.\n+\n+#### When to skip\n+\n+- If no API / Frontend / Models / Persistence files changed, skip this step\n+  entirely and note: \"No API-affecting changes detected — live comparison skipped.\"\n+- If staging is unreachable (connection timeout or 5xx on health check), note\n+  the failure and skip live comparison. Do not let this block the report.\n+- Binary download endpoints (`/v3/binary/`) — only check the redirect URL and\n+  HTTP status, do not download the actual binary.\n+\n+### Step 4: Assess merge risk\n+\n+Assign an overall risk level based on the following criteria:\n+\n+#### 🔴 HIGH RISK\n+Assign HIGH if **any** of the following are true:\n+- REST API endpoint signatures changed (path, method, request/response types)\n+- REST API endpoints removed or renamed\n+- Database schema changes or new MongoDB indexes\n+- Deployment configuration changes (Dockerfile base image, K8s manifests, resource limits)\n+- MongoDB connection or authentication changes\n+- Changes to the data updater that alter what data is stored or how it is parsed\n+- OpenAPI spec breaking changes (removed fields, changed types)\n+- Security-related changes (auth, CORS, TLS)\n+- Environment variable additions/removals that require infra changes\n+- Quarkus version upgrade (major or minor)\n+\n+#### 🟡 MEDIUM RISK\n+Assign MEDIUM if **none** of the HIGH triggers apply, but **any** of these do:\n+- New API endpoints added (additive, non-breaking)\n+- Query logic changes in persistence layer (same schema, different queries)\n+- Updater timing or scheduling changes\n+- Telemetry configuration changes\n+- New or modified application config properties\n+- Addition of new data sources to the updater\n+- Non-trivial refactoring of shared model classes\n+\n+#### 🟢 LOW RISK\n+Assign LOW if **only** these types of changes are present:\n+- Dependency version bumps (patch/minor, no known breaking changes)\n+- Test-only changes\n+- Documentation updates\n+- Code style / formatting\n+- CI workflow changes that don't affect deployment\n+- Maven plugin updates\n+\n+### Step 5: Generate post-merge validation checklist\n+\n+Based on the changes detected, produce a targeted checklist of things to\n+verify after merging to production. Only include checks relevant to what\n+actually changed — don't dump a generic checklist.\n+\n+**Always include** (for any non-trivial merge):\n+- [ ] Verify pods restarted successfully in `api` namespace\n+- [ ] Check `https://api.adoptium.net/v3/info/available_releases` returns 200\n+- [ ] Confirm no error spike in Application Insights (first 15 minutes)\n+\n+**If API endpoints changed:**\n+- [ ] Verify affected endpoints return expected responses\n+- [ ] Check OpenAPI spec at `https://api.adoptium.net/q/openapi` is updated\n+- [ ] Verify no 404s or 500s on changed routes\n+\n+**If persistence/database changed:**\n+- [ ] Monitor MongoDB query performance (slow query log)\n+- [ ] Verify data integrity — spot-check a few releases via API\n+\n+**If updater changed:**\n+- [ ] Verify updater pod is running and scheduling correctly\n+- [ ] Check that next incremental update completes without errors\n+- [ ] Confirm release data is being refreshed (compare timestamps)\n+\n+**If deployment config changed:**\n+- [ ] Verify container image was built and pushed correctly\n+- [ ] Check resource utilisation (CPU/memory) is within expected bounds\n+- [ ] Confirm health check endpoints are passing\n+\n+**If telemetry changed:**\n+- [ ] Verify telemetry data is flowing to Application Insights\n+- [ ] Check for any new custom metrics/events appearing\n+\n+### Step 6: Produce the report\n+\n+Output a single markdown PR comment with this structure:\n+\n+```markdown\n+## 🚀 Production Merge Report\n+\n+### Risk Level: 🔴 HIGH / 🟡 MEDIUM / 🟢 LOW\n+\n+> One-sentence summary of why this risk level was assigned.\n+\n+### Changes Summary\n+\n+#### API / Frontend\n+- Description of each meaningful change\n+\n+#### Persistence\n+- Description of each meaningful change\n+\n+#### Updater\n+- Description of each meaningful change\n+\n+(only include sections for modules that have high/medium signal changes)\n+\n+#### Low-Signal Changes\n+- 📦 N dependency version bumps\n+- 🧪 N test files changed\n+- 📝 N documentation files updated\n+\n+### Live Endpoint Comparison (Staging vs Production)\n+\n+| Endpoint | Status | Details |\n+|----------|--------|---------|\n+| `/v3/info/available_releases` | ✅ Identical | — |\n+| `/v3/assets/feature_releases/21/ga` | ⚠️ Differs | Staging returns 12 releases (new: 21.0.7_6), prod has 11 |\n+| `/v3/binary/latest/21/ga/linux/x64/jdk/hotspot/normal/eclipse` | ✅ Identical | Same redirect URL |\n+| `/v3/stats/downloads/total` | 🆕 New | Returns 200 on staging, 404 on production |\n+\n+(only include this section when API-affecting changes are detected)\n+\n+### Post-Merge Validation Checklist\n+\n+- [ ] Verify pods restarted successfully in `api` namespace\n+- [ ] Check `https://api.adoptium.net/v3/info/available_releases` returns 200\n+- [ ] Confirm no error spike in Application Insights (first 15 minutes)\n+- [ ] (additional checks based on what changed)\n+\n+### Staging Verification\n+\n+> Before merging, confirm these changes have been validated on staging:\n+> `https://staging-api.adoptium.net`\n+>\n+> - [ ] Staging API is healthy and serving requests\n+> - [ ] Changed endpoints tested on staging\n+> - [ ] No new errors in staging Application Insights\n+```\n+\n+### Important rules\n+\n+- **Be concise.** Reviewers want a quick read, not a novel. Aim for one line\n+  per change in the summary.\n+- **Focus on behaviour, not code.** \"Added rate limiting to `/v3/assets`\" is\n+  useful. \"Modified line 47 of AssetsResource.kt\" is not.\n+- **Never list individual dependency bumps** unless they are major version\n+  changes of runtime dependencies. Just give a count.\n+- **Risk assessment must be conservative.** If in doubt between two levels,\n+  pick the higher one. It's better to over-warn than under-warn.\n+- **The checklist must be actionable.** Every item should be something a human\n+  can actually do and verify. Include specific URLs where possible.\n+- **Always mention staging.** Remind reviewers to verify on\n+  `https://staging-api.adoptium.net` before merging to production.\n+- **Don't invent changes.** Only report what is actually in the diff. If the\n+  diff is entirely dependency bumps, say so and assign LOW risk.\n+- Post the report as a PR comment.\n\\ No newline at end of file",
+          "snapshot_ref": "bd7da7dd64736b5312b062a5b2641f50aebf19a8",
+          "snapshot_blob_sha": "73a6037fde8d2c076e45e035912b3c3aeb4350e9",
+          "snapshot_file": "snapshots/api.adoptium.net__adoptium__bd7da7dd64736b5312b062a5b2641f50aebf19a8__production-branch-checker.md",
+          "snapshot_bytes": 14410,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/api.adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"api.adoptium.net\",\"generated_workflow_path\":\".github/workflows/production-branch-checker.lock.yml\",\"generated_workflow_file\":\"production-branch-checker.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/api.adoptium.net/blob/26f4d909231f5457ecd872a64263683937819fff/.github/workflows/production-branch-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/api.adoptium.net:.github/workflows/production-branch-checker.md",
+      "source_full_name": "adoptium/api.adoptium.net",
+      "md_path": ".github/workflows/production-branch-checker.md",
+      "commit_sha": "8e3298d5f343f00d363026dca5e30050130c2d7c",
+      "authored_at": "2026-06-01T10:55:32Z",
+      "committed_at": "2026-06-01T10:55:32Z",
+      "author_name": "George Adams",
+      "author_email": "georgeadams1995@gmail.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "George Adams",
+      "committer_email": "georgeadams1995@gmail.com",
+      "committer_login": "gdams",
+      "committer_account_type": "User",
+      "message": "refine production readiness workflow",
+      "parent_shas": [
+        "1111c6cf17a07f6271c0fdbbabcf9b507aceafb8"
+      ],
+      "tree_sha": "b1195faf8069f8b1ee9718746b7724b8d9a07ca8",
+      "html_url": "https://github.com/adoptium/api.adoptium.net/commit/8e3298d5f343f00d363026dca5e30050130c2d7c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/api.adoptium.net:.github/workflows/production-branch-checker.md",
+          "source_full_name": "adoptium/api.adoptium.net",
+          "md_path": ".github/workflows/production-branch-checker.md",
+          "commit_sha": "8e3298d5f343f00d363026dca5e30050130c2d7c",
+          "committed_at": "2026-06-01T10:55:32Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 1,
+          "file_changes": 11,
+          "file_patch": "@@ -16,6 +16,11 @@ safe-outputs:\n   allowed-domains:\n     - \"*.adoptium.net\"\n \n+network:\n+  allowed:\n+    - defaults\n+    - \"*.adoptium.net\"\n+\n checkout:\n   fetch-depth: 0\n \n@@ -215,11 +220,15 @@ Assign HIGH if **any** of the following are true:\n - OpenAPI spec breaking changes (removed fields, changed types)\n - Security-related changes (auth, CORS, TLS)\n - Environment variable additions/removals that require infra changes\n-- Quarkus version upgrade (major or minor)\n+- Quarkus **major** version upgrade (e.g. 3.x → 4.x)\n \n #### 🟡 MEDIUM RISK\n Assign MEDIUM if **none** of the HIGH triggers apply, but **any** of these do:\n+- Quarkus minor/patch version upgrade (e.g. 3.35 → 3.36) — these are frequent\n+  and low-risk in practice\n - New API endpoints added (additive, non-breaking)\n+- Changes to `/v3/stats/**` endpoints — stats routes are only consumed\n+  internally, so changes here do not affect external consumers\n - Query logic changes in persistence layer (same schema, different queries)\n - Updater timing or scheduling changes\n - Telemetry configuration changes",
+          "snapshot_ref": "8e3298d5f343f00d363026dca5e30050130c2d7c",
+          "snapshot_blob_sha": "782a091e9ec4429d3b1dede3dd0074e7278e4df5",
+          "snapshot_file": "snapshots/api.adoptium.net__adoptium__8e3298d5f343f00d363026dca5e30050130c2d7c__production-branch-checker.md",
+          "snapshot_bytes": 14726,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/api.adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"api.adoptium.net\",\"generated_workflow_path\":\".github/workflows/production-branch-checker.lock.yml\",\"generated_workflow_file\":\"production-branch-checker.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/api.adoptium.net/blob/26f4d909231f5457ecd872a64263683937819fff/.github/workflows/production-branch-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

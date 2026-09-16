@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+    "source_full_name": "wp-media/wp-rocket",
+    "source_owner": "wp-media",
+    "source_repo": "wp-rocket",
+    "md_path": ".github/workflows/pr-release-doc-generator.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/wp-media/wp-rocket/blob/HEAD/.github/workflows/pr-release-doc-generator.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "wp-media/wp-rocket",
+      "generated_owner": "wp-media",
+      "generated_repo": "wp-rocket",
+      "generated_workflow_path": ".github/workflows/pr-release-doc-generator.lock.yml",
+      "generated_workflow_file": "pr-release-doc-generator.lock.yml",
+      "generated_html_url": "https://github.com/wp-media/wp-rocket/blob/c91602b1a425f14ee8603e382a0372073ccc264f/.github/workflows/pr-release-doc-generator.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:42+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+      "source_full_name": "wp-media/wp-rocket",
+      "md_path": ".github/workflows/pr-release-doc-generator.md",
+      "commit_sha": "a20459871c63b7e9aa4d1b17a6c13d2b347118cb",
+      "authored_at": "2026-02-20T17:25:33Z",
+      "committed_at": "2026-02-20T17:25:33Z",
+      "author_name": "Mathieu Lamiot",
+      "author_email": "mathieu.lamiot@free.fr",
+      "author_login": "MathieuLamiot",
+      "author_account_type": "User",
+      "committer_name": "Mathieu Lamiot",
+      "committer_email": "mathieu.lamiot@free.fr",
+      "committer_login": "MathieuLamiot",
+      "committer_account_type": "User",
+      "message": "Add the agentic workflow for doc generation on PR to trunk",
+      "parent_shas": [
+        "8e93445347f8946539cc409bafbb4c7b78ced5c9"
+      ],
+      "tree_sha": "e688afba1a790b948e8e6e6e8e6424b0259da59a",
+      "html_url": "https://github.com/wp-media/wp-rocket/commit/a20459871c63b7e9aa4d1b17a6c13d2b347118cb",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+          "source_full_name": "wp-media/wp-rocket",
+          "md_path": ".github/workflows/pr-release-doc-generator.md",
+          "commit_sha": "a20459871c63b7e9aa4d1b17a6c13d2b347118cb",
+          "committed_at": "2026-02-20T17:25:33Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 310,
+          "file_deletions": 0,
+          "file_changes": 310,
+          "file_patch": "@@ -0,0 +1,310 @@\n+---\n+on:\n+  pull_request:\n+    types: [opened, reopened]\n+    branches:\n+      - trunk\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+engine: claude\n+name: PR Release Documentation Generator\n+strict: true\n+timeout-minutes: 60\n+env:\n+  SLACK_BOT_TOKEN: ${{ secrets.DOC_WORKFLOW_SLACK_TOKEN }}\n+tools:\n+  bash:\n+    - grep -r 'apply_filters\\|add_filter\\|do_action\\|add_action' inc/\n+    - grep -rn 'apply_filters\\|add_filter\\|do_action\\|add_action' inc/\n+    - git diff\n+    - git diff HEAD\n+    - git log --oneline -20\n+    - git show\n+    - curl -s -X POST https://slack.com/api/chat.postMessage\n+    - curl -s -X POST https://slack.com/api/files.upload\n+    - curl -s -X POST https://slack.com/api/files.getUploadURLExternal\n+    - curl -s -X POST https://slack.com/api/files.completeUploadExternal\n+    - cat\n+  github:\n+    toolsets:\n+      - default\n+  cache-memory: true\n+---\n+\n+# PR Release Documentation Generator\n+\n+You are an AI agent that generates structured internal release documentation for WP Rocket pull requests targeting the `trunk` branch. Your audience is the product, support, and engineering teams.\n+\n+## Your Mission\n+\n+Analyze all code changes in this PR and produce comprehensive release notes covering: new features (with user-facing and technical explanations), enhancements, bug fixes, all changes to WordPress filters and action hooks, and any database/storage changes. The goal is documentation that lets the support team investigate issues and the engineering team understand what shipped.\n+\n+## Task Steps\n+\n+### Step 1 — Read the PR Details\n+\n+Use GitHub tools to gather context:\n+\n+- Use `get_pull_request` to read the PR: title, number, description, author, base branch, head branch, and labels.\n+- Use `list_pull_request_files` to get the full list of changed files with their status (added, modified, deleted) and patch content.\n+- If the diff is large or truncated, use `get_pull_request_diff` or `get_commit` on the head commit for additional context.\n+\n+Note the PR number — you will use it to name the output file.\n+\n+### Step 2 — Analyze the Code Changes\n+\n+Work through each changed file systematically:\n+\n+**For PHP files (`*.php`):**\n+- Read the patch/diff carefully to understand what was added, modified, or removed\n+- Identify the purpose of each change: new feature, enhancement, bug fix, refactor, or removal\n+- Look for changes to plugin options (calls to `get_option`, `update_option`, `add_option` with `wp_rocket_settings` or individual option keys)\n+- Look for changes to transients (`get_transient`, `set_transient`, `delete_transient`)\n+- Look for custom database table operations (`$wpdb->query`, `$wpdb->insert`, custom table names)\n+- Look for changes to post meta (`get_post_meta`, `update_post_meta`, `add_post_meta`)\n+- Use bash grep on the repository to find context around any class or function you need more detail on\n+\n+**For WordPress filters and hooks — be exhaustive:**\n+\n+Search the diff and changed files for all of the following patterns:\n+- `apply_filters(` — a public filter hook (note the filter name and parameters)\n+- `add_filter(` — a filter being registered\n+- `do_action(` — an action hook being fired\n+- `add_action(` — an action being registered\n+\n+For each one found, determine if it is:\n+- **New** (added in this PR's diff)\n+- **Changed** (parameters or behavior modified)\n+- **Removed** (deleted from the diff)\n+\n+Use bash grep to verify filter names and find their full signature if the diff is truncated:\n+```bash\n+grep -rn \"rocket_your_filter_name\" inc/\n+```\n+\n+**For JS/CSS files:** Note any user-visible UI changes, new admin settings panels, or front-end behavior changes.\n+\n+**For view/template files (`views/`):** Note any new settings fields, admin UI additions, or removed UI elements.\n+\n+### Step 3 — Categorize All Changes\n+\n+Produce a mental inventory before writing the doc:\n+\n+- **New Features**: Entirely new capabilities a user or developer can use\n+- **Enhancements**: Improvements to existing features (performance, UX, reliability)\n+- **Bug Fixes**: Issues resolved (reference issue numbers if mentioned in the PR description)\n+- **Removals**: Features, options, or hooks that no longer exist\n+- **Internal/Refactors**: Pure code quality changes with no user-facing impact (document briefly or skip)\n+\n+### Step 4 — Generate the Release Documentation\n+\n+Write a comprehensive Markdown document following this exact structure. Omit any section that has no content for this PR.\n+\n+```markdown\n+# Release Notes — PR #[NUMBER]: [TITLE]\n+\n+**Date**: [YYYY-MM-DD]\n+**PR**: [#NUMBER](https://github.com/wp-media/wp-rocket/pull/NUMBER)\n+**Author**: @[github_username]\n+\n+## Summary\n+\n+[1–3 sentences describing the overall purpose of this PR and its impact. Be specific.]\n+\n+## New Features\n+\n+### [Feature Name]\n+\n+**User-facing**: [What the end user sees or can do differently. Describe UI changes, new settings, new behavior. Be concrete.]\n+\n+**Technical overview**: [How the feature works at a high level. Which modules/classes are involved. What the data flow looks like. Entry points for the engineering team to find the code.]\n+\n+**Data & storage**:\n+- Options: `option_key` stored in `wp_options` via `wp_rocket_settings`\n+- Transients: `transient_name` (expiry, purpose)\n+- DB tables: `table_name` (schema summary if new)\n+- Post meta: `meta_key` (purpose)\n+\n+**Key entry points**:\n+- `ClassName` in `inc/Engine/FeatureName/ClassName.php`\n+- `function_name()` in `inc/functions/file.php`\n+\n+**Notes for support**: [What support should check when investigating issues with this feature: which option to look for in the database, what transient value should look like, what the expected behavior is step by step.]\n+\n+## Enhancements\n+\n+- **[Enhancement title]**: [What was improved and why. Reference the class/function affected if helpful.]\n+\n+## Bug Fixes\n+\n+- **[Fix title]**: [What the bug was, what the fix does.] (Fixes #ISSUE_NUMBER)\n+\n+## WordPress Filters & Hooks\n+\n+### New Filters\n+\n+For each new filter, provide the full code signature and a description:\n+\n+```php\n+/**\n+ * [What this filter does. What it allows developers to change.]\n+ *\n+ * @since [version — leave blank if unknown]\n+ * @param  [type]  $param_name  [Description of the parameter]\n+ * @return [type]  [Description of what should be returned]\n+ */\n+apply_filters( 'rocket_filter_name', $default_value, $optional_extra_param );\n+```\n+\n+[Usage example if non-obvious:]\n+```php\n+add_filter( 'rocket_filter_name', function( $value ) {\n+    return $value;\n+});\n+```\n+\n+### Changed Filters\n+\n+| Filter | What changed |\n+|--------|-------------|\n+| `rocket_filter_name` | [Old behavior → new behavior. New parameter added. Return type changed.] |\n+\n+### Removed Filters\n+\n+- `rocket_filter_name` — [Why it was removed. What replaces it, if anything.]\n+\n+### New Actions\n+\n+- `rocket_action_name` — [When it fires. What parameters are passed. What developers can hook into it for.]\n+\n+### Changed Actions\n+\n+| Action | What changed |\n+|--------|-------------|\n+| `rocket_action_name` | [Description of the change] |\n+\n+### Removed Actions\n+\n+- `rocket_action_name` — [Why removed. Replacement if any.]\n+\n+## Database & Storage Changes\n+\n+[List all new or modified WordPress options, transients, custom DB tables, or post meta introduced or changed by this PR. Include the key names so the support team can inspect them directly in the database.]\n+\n+| Type | Key / Table name | Purpose | Added / Changed / Removed |\n+|------|-----------------|---------|--------------------------|\n+| Option | `wp_rocket_settings[key]` | [purpose] | Added |\n+| Transient | `transient_name` | [purpose] | Changed |\n+| DB table | `wpr_table_name` | [purpose] | Added |\n+\n+## Backward Compatibility Notes\n+\n+[Breaking changes, deprecated functions, options that were renamed or removed, migration logic that runs on upgrade. If none, omit this section.]\n+\n+## Notes for Support\n+\n+[A plain-language guide for the support team on this PR's changes:\n+- What settings to look for in the database to confirm the feature is active\n+- What transient values should look like when the feature has run\n+- Step-by-step: how to reproduce/test the feature manually\n+- Common issues or edge cases to be aware of]\n+```\n+\n+### Step 5 — Write the File\n+\n+Write the full generated document to a file named `release-notes-pr-[NUMBER].md` (replace [NUMBER] with the actual PR number) using bash. Use a heredoc to avoid quoting issues:\n+\n+```bash\n+cat > release-notes-pr-NUMBER.md << 'RELEASE_NOTES_EOF'\n+[full markdown content here]\n+RELEASE_NOTES_EOF\n+```\n+\n+Verify the file was written successfully.\n+\n+This file will be automatically captured in the `agent-artifacts` artifact that gh-aw uploads after the agent completes.\n+\n+### Step 6 — Post to Slack\n+\n+Use the Slack Web API with the bot token from the `SLACK_BOT_TOKEN` environment variable to notify the team.\n+\n+**6a — Post a summary message:**\n+\n+```bash\n+curl -s -X POST https://slack.com/api/chat.postMessage \\\n+  -H \"Authorization: Bearer $SLACK_BOT_TOKEN\" \\\n+  -H \"Content-Type: application/json\" \\\n+  -d '{\n+    \"channel\": \"#wpmedia_wprocket-log\",\n+    \"text\": \"📋 *Release notes generated for PR #[NUMBER]: [TITLE]*\\n\\n[2-3 sentence summary of what this PR brings]\\n\\n<https://github.com/wp-media/wp-rocket/pull/NUMBER|View PR>\"\n+  }'\n+```\n+\n+**6b — Upload the markdown file:**\n+\n+Slack's current file upload API uses a two-step process. First get an upload URL, then complete the upload:\n+\n+```bash\n+# Step 1: Get upload URL\n+UPLOAD_RESPONSE=$(curl -s -X POST https://slack.com/api/files.getUploadURLExternal \\\n+  -H \"Authorization: Bearer $SLACK_BOT_TOKEN\" \\\n+  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n+  --data-urlencode \"filename=release-notes-pr-NUMBER.md\" \\\n+  --data-urlencode \"length=$(wc -c < release-notes-pr-NUMBER.md)\")\n+\n+UPLOAD_URL=$(echo \"$UPLOAD_RESPONSE\" | grep -o '\"upload_url\":\"[^\"]*\"' | cut -d'\"' -f4)\n+FILE_ID=$(echo \"$UPLOAD_RESPONSE\" | grep -o '\"file_id\":\"[^\"]*\"' | cut -d'\"' -f4)\n+\n+# Step 2: Upload file content to the URL\n+curl -s -X POST \"$UPLOAD_URL\" \\\n+  -F \"file=@release-notes-pr-NUMBER.md\"\n+\n+# Step 3: Complete upload and share to channel\n+curl -s -X POST https://slack.com/api/files.completeUploadExternal \\\n+  -H \"Authorization: Bearer $SLACK_BOT_TOKEN\" \\\n+  -H \"Content-Type: application/json\" \\\n+  -d \"{\n+    \\\"files\\\": [{\\\"id\\\": \\\"$FILE_ID\\\"}],\n+    \\\"channel_id\\\": \\\"#wpmedia_wprocket-log\\\",\n+    \\\"initial_comment\\\": \\\"Full release notes for PR #NUMBER\\\"\n+  }\"\n+```\n+\n+Check the response JSON for `\"ok\": true` to confirm success. If posting fails, log the error but do not abort — the artifact is still available.\n+\n+### Step 7 — Edge Case Handling\n+\n+Before writing the file and posting to Slack, assess whether this PR has meaningful release-worthy content:\n+\n+- **Skip documentation if** the PR only touches: `.github/`, `tests/`, `languages/`, `bin/`, `*.yml`, `*.json` config files, `README.md`, `CONTRIBUTING.md`, or similar non-functional files.\n+- **Still document if** even a single PHP, JS, or CSS file with user-facing impact is changed.\n+\n+If no meaningful content exists, post a brief Slack message:\n+\n+```\n+ℹ️ PR #[NUMBER] was opened targeting trunk but contains no release-worthy code changes. No release notes generated.\n+```\n+\n+Then exit.\n+\n+## Documentation Quality Guidelines\n+\n+- **Be specific**: Name the actual options, transients, filter names, and class names involved. Do not write vague descriptions.\n+- **Think like support**: The support team will use this to investigate production issues. Tell them exactly what to look for in the database.\n+- **Think like an engineer onboarding**: Give enough technical context that someone unfamiliar with the feature can navigate to the relevant code quickly.\n+- **Filters are critical**: Be exhaustive about WordPress filters and actions. Missing one means developers won't know it exists.\n+- **Be accurate**: If you are unsure about something, grep the codebase for more context rather than guessing.\n+- **Omit empty sections**: If there are no bug fixes, don't include a \"Bug Fixes\" section.\n+\n+## Important Notes\n+\n+- The PR number and title are available from the `get_pull_request` tool response.\n+- You have bash available to grep the codebase for additional context when the diff alone is insufficient.\n+- The `SLACK_BOT_TOKEN` env var contains the Slack bot token. Never log or expose it.\n+- The generated file will be automatically included in the GitHub Actions artifact — you do not need to explicitly upload it to GitHub.",
+          "snapshot_ref": "a20459871c63b7e9aa4d1b17a6c13d2b347118cb",
+          "snapshot_blob_sha": "b30f2a87dcb9800a61cc7d31ccb593679642a555",
+          "snapshot_file": "snapshots/wp-rocket__wp-media__a20459871c63b7e9aa4d1b17a6c13d2b347118cb__pr-release-doc-generator.md",
+          "snapshot_bytes": 12382,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"wp-media/wp-rocket\",\"generated_owner\":\"wp-media\",\"generated_repo\":\"wp-rocket\",\"generated_workflow_path\":\".github/workflows/pr-release-doc-generator.lock.yml\",\"generated_workflow_file\":\"pr-release-doc-generator.lock.yml\",\"generated_html_url\":\"https://github.com/wp-media/wp-rocket/blob/c91602b1a425f14ee8603e382a0372073ccc264f/.github/workflows/pr-release-doc-generator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+      "source_full_name": "wp-media/wp-rocket",
+      "md_path": ".github/workflows/pr-release-doc-generator.md",
+      "commit_sha": "10aba745361e0215c990ffde0d1b40fb6573b8df",
+      "authored_at": "2026-02-20T21:22:01Z",
+      "committed_at": "2026-02-20T21:22:01Z",
+      "author_name": "Mathieu Lamiot",
+      "author_email": "mathieu.lamiot@free.fr",
+      "author_login": "MathieuLamiot",
+      "author_account_type": "User",
+      "committer_name": "Mathieu Lamiot",
+      "committer_email": "mathieu.lamiot@free.fr",
+      "committer_login": "MathieuLamiot",
+      "committer_account_type": "User",
+      "message": "Post to Slack handled in a dedicated action, not by the agent",
+      "parent_shas": [
+        "a20459871c63b7e9aa4d1b17a6c13d2b347118cb"
+      ],
+      "tree_sha": "83fa341ff8a2b4dddbb6413bbfa006eaa958410f",
+      "html_url": "https://github.com/wp-media/wp-rocket/commit/10aba745361e0215c990ffde0d1b40fb6573b8df",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+          "source_full_name": "wp-media/wp-rocket",
+          "md_path": ".github/workflows/pr-release-doc-generator.md",
+          "commit_sha": "10aba745361e0215c990ffde0d1b40fb6573b8df",
+          "committed_at": "2026-02-20T21:22:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 61,
+          "file_changes": 68,
+          "file_patch": "@@ -16,8 +16,6 @@ engine: claude\n name: PR Release Documentation Generator\n strict: true\n timeout-minutes: 60\n-env:\n-  SLACK_BOT_TOKEN: ${{ secrets.DOC_WORKFLOW_SLACK_TOKEN }}\n tools:\n   bash:\n     - grep -r 'apply_filters\\|add_filter\\|do_action\\|add_action' inc/\n@@ -26,10 +24,6 @@ tools:\n     - git diff HEAD\n     - git log --oneline -20\n     - git show\n-    - curl -s -X POST https://slack.com/api/chat.postMessage\n-    - curl -s -X POST https://slack.com/api/files.upload\n-    - curl -s -X POST https://slack.com/api/files.getUploadURLExternal\n-    - curl -s -X POST https://slack.com/api/files.completeUploadExternal\n     - cat\n   github:\n     toolsets:\n@@ -230,68 +224,20 @@ Verify the file was written successfully.\n \n This file will be automatically captured in the `agent-artifacts` artifact that gh-aw uploads after the agent completes.\n \n-### Step 6 — Post to Slack\n+### Step 6 — Edge Case Handling\n \n-Use the Slack Web API with the bot token from the `SLACK_BOT_TOKEN` environment variable to notify the team.\n-\n-**6a — Post a summary message:**\n-\n-```bash\n-curl -s -X POST https://slack.com/api/chat.postMessage \\\n-  -H \"Authorization: Bearer $SLACK_BOT_TOKEN\" \\\n-  -H \"Content-Type: application/json\" \\\n-  -d '{\n-    \"channel\": \"#wpmedia_wprocket-log\",\n-    \"text\": \"📋 *Release notes generated for PR #[NUMBER]: [TITLE]*\\n\\n[2-3 sentence summary of what this PR brings]\\n\\n<https://github.com/wp-media/wp-rocket/pull/NUMBER|View PR>\"\n-  }'\n-```\n-\n-**6b — Upload the markdown file:**\n-\n-Slack's current file upload API uses a two-step process. First get an upload URL, then complete the upload:\n-\n-```bash\n-# Step 1: Get upload URL\n-UPLOAD_RESPONSE=$(curl -s -X POST https://slack.com/api/files.getUploadURLExternal \\\n-  -H \"Authorization: Bearer $SLACK_BOT_TOKEN\" \\\n-  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n-  --data-urlencode \"filename=release-notes-pr-NUMBER.md\" \\\n-  --data-urlencode \"length=$(wc -c < release-notes-pr-NUMBER.md)\")\n-\n-UPLOAD_URL=$(echo \"$UPLOAD_RESPONSE\" | grep -o '\"upload_url\":\"[^\"]*\"' | cut -d'\"' -f4)\n-FILE_ID=$(echo \"$UPLOAD_RESPONSE\" | grep -o '\"file_id\":\"[^\"]*\"' | cut -d'\"' -f4)\n-\n-# Step 2: Upload file content to the URL\n-curl -s -X POST \"$UPLOAD_URL\" \\\n-  -F \"file=@release-notes-pr-NUMBER.md\"\n-\n-# Step 3: Complete upload and share to channel\n-curl -s -X POST https://slack.com/api/files.completeUploadExternal \\\n-  -H \"Authorization: Bearer $SLACK_BOT_TOKEN\" \\\n-  -H \"Content-Type: application/json\" \\\n-  -d \"{\n-    \\\"files\\\": [{\\\"id\\\": \\\"$FILE_ID\\\"}],\n-    \\\"channel_id\\\": \\\"#wpmedia_wprocket-log\\\",\n-    \\\"initial_comment\\\": \\\"Full release notes for PR #NUMBER\\\"\n-  }\"\n-```\n-\n-Check the response JSON for `\"ok\": true` to confirm success. If posting fails, log the error but do not abort — the artifact is still available.\n-\n-### Step 7 — Edge Case Handling\n-\n-Before writing the file and posting to Slack, assess whether this PR has meaningful release-worthy content:\n+Before writing the file, assess whether this PR has meaningful release-worthy content:\n \n - **Skip documentation if** the PR only touches: `.github/`, `tests/`, `languages/`, `bin/`, `*.yml`, `*.json` config files, `README.md`, `CONTRIBUTING.md`, or similar non-functional files.\n - **Still document if** even a single PHP, JS, or CSS file with user-facing impact is changed.\n \n-If no meaningful content exists, post a brief Slack message:\n+If no meaningful content exists, write a file named `release-notes-pr-[NUMBER].md` containing only:\n \n ```\n-ℹ️ PR #[NUMBER] was opened targeting trunk but contains no release-worthy code changes. No release notes generated.\n+NO_RELEASE_NOTES\n ```\n \n-Then exit.\n+Then exit. A separate pipeline step will read this marker and skip the Slack notification.\n \n ## Documentation Quality Guidelines\n \n@@ -306,5 +252,5 @@ Then exit.\n \n - The PR number and title are available from the `get_pull_request` tool response.\n - You have bash available to grep the codebase for additional context when the diff alone is insufficient.\n-- The `SLACK_BOT_TOKEN` env var contains the Slack bot token. Never log or expose it.\n-- The generated file will be automatically included in the GitHub Actions artifact — you do not need to explicitly upload it to GitHub.\n+- The generated file will be automatically captured in the `agent-artifacts` artifact that gh-aw uploads after you complete — you do not need to do anything to upload it to GitHub.\n+- Slack notification is handled by a separate pipeline step after the agent finishes. Your only responsibility is to write the file.",
+          "snapshot_ref": "10aba745361e0215c990ffde0d1b40fb6573b8df",
+          "snapshot_blob_sha": "2beff8f523b3fb0470bb2915cce75ac30d01f8e5",
+          "snapshot_file": "snapshots/wp-rocket__wp-media__10aba745361e0215c990ffde0d1b40fb6573b8df__pr-release-doc-generator.md",
+          "snapshot_bytes": 10272,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"wp-media/wp-rocket\",\"generated_owner\":\"wp-media\",\"generated_repo\":\"wp-rocket\",\"generated_workflow_path\":\".github/workflows/pr-release-doc-generator.lock.yml\",\"generated_workflow_file\":\"pr-release-doc-generator.lock.yml\",\"generated_html_url\":\"https://github.com/wp-media/wp-rocket/blob/c91602b1a425f14ee8603e382a0372073ccc264f/.github/workflows/pr-release-doc-generator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+      "source_full_name": "wp-media/wp-rocket",
+      "md_path": ".github/workflows/pr-release-doc-generator.md",
+      "commit_sha": "535b90f05ed450cd0cf50af6282c187dcf63fbbe",
+      "authored_at": "2026-02-20T21:52:51Z",
+      "committed_at": "2026-02-20T21:52:51Z",
+      "author_name": "Mathieu Lamiot",
+      "author_email": "mathieu.lamiot@free.fr",
+      "author_login": "MathieuLamiot",
+      "author_account_type": "User",
+      "committer_name": "Mathieu Lamiot",
+      "committer_email": "mathieu.lamiot@free.fr",
+      "committer_login": "MathieuLamiot",
+      "committer_account_type": "User",
+      "message": "Force the doc to be written in the exported path",
+      "parent_shas": [
+        "4ccc9f33d4d22a83e2a50213e8005cd4d217eb6e"
+      ],
+      "tree_sha": "51a796d92a0f47737c1ff0df6a81991a97d9d499",
+      "html_url": "https://github.com/wp-media/wp-rocket/commit/535b90f05ed450cd0cf50af6282c187dcf63fbbe",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+          "source_full_name": "wp-media/wp-rocket",
+          "md_path": ".github/workflows/pr-release-doc-generator.md",
+          "commit_sha": "535b90f05ed450cd0cf50af6282c187dcf63fbbe",
+          "committed_at": "2026-02-20T21:52:51Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 5,
+          "file_changes": 10,
+          "file_patch": "@@ -212,17 +212,17 @@ add_filter( 'rocket_filter_name', function( $value ) {\n \n ### Step 5 — Write the File\n \n-Write the full generated document to a file named `release-notes-pr-[NUMBER].md` (replace [NUMBER] with the actual PR number) using bash. Use a heredoc to avoid quoting issues:\n+Write the full generated document to `/tmp/gh-aw/agent/release-notes-pr-[NUMBER].md` (replace [NUMBER] with the actual PR number) using bash. Use a heredoc to avoid quoting issues:\n \n ```bash\n-cat > release-notes-pr-NUMBER.md << 'RELEASE_NOTES_EOF'\n+cat > /tmp/gh-aw/agent/release-notes-pr-NUMBER.md << 'RELEASE_NOTES_EOF'\n [full markdown content here]\n RELEASE_NOTES_EOF\n ```\n \n-Verify the file was written successfully.\n+Verify the file was written correctly with `cat /tmp/gh-aw/agent/release-notes-pr-NUMBER.md`.\n \n-This file will be automatically captured in the `agent-artifacts` artifact that gh-aw uploads after the agent completes.\n+**Important**: the file must go to `/tmp/gh-aw/agent/` — this is the only directory gh-aw includes in the `agent-artifacts` artifact upload. Files written to the workspace or anywhere else will not be captured.\n \n ### Step 6 — Edge Case Handling\n \n@@ -231,7 +231,7 @@ Before writing the file, assess whether this PR has meaningful release-worthy co\n - **Skip documentation if** the PR only touches: `.github/`, `tests/`, `languages/`, `bin/`, `*.yml`, `*.json` config files, `README.md`, `CONTRIBUTING.md`, or similar non-functional files.\n - **Still document if** even a single PHP, JS, or CSS file with user-facing impact is changed.\n \n-If no meaningful content exists, write a file named `release-notes-pr-[NUMBER].md` containing only:\n+If no meaningful content exists, write a file at `/tmp/gh-aw/agent/release-notes-pr-[NUMBER].md` containing only:\n \n ```\n NO_RELEASE_NOTES",
+          "snapshot_ref": "535b90f05ed450cd0cf50af6282c187dcf63fbbe",
+          "snapshot_blob_sha": "077685b05a16e7ae580ca219ee6d4520d9caa434",
+          "snapshot_file": "snapshots/wp-rocket__wp-media__535b90f05ed450cd0cf50af6282c187dcf63fbbe__pr-release-doc-generator.md",
+          "snapshot_bytes": 10451,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"wp-media/wp-rocket\",\"generated_owner\":\"wp-media\",\"generated_repo\":\"wp-rocket\",\"generated_workflow_path\":\".github/workflows/pr-release-doc-generator.lock.yml\",\"generated_workflow_file\":\"pr-release-doc-generator.lock.yml\",\"generated_html_url\":\"https://github.com/wp-media/wp-rocket/blob/c91602b1a425f14ee8603e382a0372073ccc264f/.github/workflows/pr-release-doc-generator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+      "source_full_name": "wp-media/wp-rocket",
+      "md_path": ".github/workflows/pr-release-doc-generator.md",
+      "commit_sha": "2402ddcbdb27246cc4a95a658216022b71116a98",
+      "authored_at": "2026-02-20T22:18:30Z",
+      "committed_at": "2026-02-20T22:18:30Z",
+      "author_name": "Mathieu Lamiot",
+      "author_email": "mathieu.lamiot@free.fr",
+      "author_login": "MathieuLamiot",
+      "author_account_type": "User",
+      "committer_name": "Mathieu Lamiot",
+      "committer_email": "mathieu.lamiot@free.fr",
+      "committer_login": "MathieuLamiot",
+      "committer_account_type": "User",
+      "message": "Timeout after 20 minutes the GH AW",
+      "parent_shas": [
+        "a248148b146065a016ceabeadb475dc2268130ac"
+      ],
+      "tree_sha": "4181c25e9c9b0e419ad6df909f15b3d0e0aa8406",
+      "html_url": "https://github.com/wp-media/wp-rocket/commit/2402ddcbdb27246cc4a95a658216022b71116a98",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+          "source_full_name": "wp-media/wp-rocket",
+          "md_path": ".github/workflows/pr-release-doc-generator.md",
+          "commit_sha": "2402ddcbdb27246cc4a95a658216022b71116a98",
+          "committed_at": "2026-02-20T22:18:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -15,7 +15,7 @@ network:\n engine: claude\n name: PR Release Documentation Generator\n strict: true\n-timeout-minutes: 60\n+timeout-minutes: 20\n tools:\n   bash:\n     - grep -r 'apply_filters\\|add_filter\\|do_action\\|add_action' inc/",
+          "snapshot_ref": "2402ddcbdb27246cc4a95a658216022b71116a98",
+          "snapshot_blob_sha": "14569bc60ab54563aa3e10c93328ff28bfe16650",
+          "snapshot_file": "snapshots/wp-rocket__wp-media__2402ddcbdb27246cc4a95a658216022b71116a98__pr-release-doc-generator.md",
+          "snapshot_bytes": 10451,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"wp-media/wp-rocket\",\"generated_owner\":\"wp-media\",\"generated_repo\":\"wp-rocket\",\"generated_workflow_path\":\".github/workflows/pr-release-doc-generator.lock.yml\",\"generated_workflow_file\":\"pr-release-doc-generator.lock.yml\",\"generated_html_url\":\"https://github.com/wp-media/wp-rocket/blob/c91602b1a425f14ee8603e382a0372073ccc264f/.github/workflows/pr-release-doc-generator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+      "source_full_name": "wp-media/wp-rocket",
+      "md_path": ".github/workflows/pr-release-doc-generator.md",
+      "commit_sha": "7534f1fbeab6b42c801b277251066a262c8aef79",
+      "authored_at": "2026-08-03T09:22:43Z",
+      "committed_at": "2026-08-03T09:22:43Z",
+      "author_name": "Mathieu Lamiot",
+      "author_email": "mathieu.lamiot@free.fr",
+      "author_login": "MathieuLamiot",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Chore: pin PR release doc generator workflow to Sonnet (#8666)\n\nCo-authored-by: Claude Sonnet 5 <noreply@anthropic.com>",
+      "parent_shas": [
+        "a3ea59fcd12f0885f379070b598553f4ae02da8a"
+      ],
+      "tree_sha": "ba63eb1b53ffd1a654c26f59db4d4e9977649d7b",
+      "html_url": "https://github.com/wp-media/wp-rocket/commit/7534f1fbeab6b42c801b277251066a262c8aef79",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "wp-media/wp-rocket:.github/workflows/pr-release-doc-generator.md",
+          "source_full_name": "wp-media/wp-rocket",
+          "md_path": ".github/workflows/pr-release-doc-generator.md",
+          "commit_sha": "7534f1fbeab6b42c801b277251066a262c8aef79",
+          "committed_at": "2026-08-03T09:22:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -13,6 +13,7 @@ network:\n     - defaults\n     - github\n engine: claude\n+model: sonnet\n name: PR Release Documentation Generator\n strict: true\n timeout-minutes: 20",
+          "snapshot_ref": "7534f1fbeab6b42c801b277251066a262c8aef79",
+          "snapshot_blob_sha": "6fb6969d85d98021cd4ce06fd6d10d1657632ff2",
+          "snapshot_file": "snapshots/wp-rocket__wp-media__7534f1fbeab6b42c801b277251066a262c8aef79__pr-release-doc-generator.md",
+          "snapshot_bytes": 10465,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"wp-media/wp-rocket\",\"generated_owner\":\"wp-media\",\"generated_repo\":\"wp-rocket\",\"generated_workflow_path\":\".github/workflows/pr-release-doc-generator.lock.yml\",\"generated_workflow_file\":\"pr-release-doc-generator.lock.yml\",\"generated_html_url\":\"https://github.com/wp-media/wp-rocket/blob/c91602b1a425f14ee8603e382a0372073ccc264f/.github/workflows/pr-release-doc-generator.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

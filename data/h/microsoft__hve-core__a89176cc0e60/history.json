@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+    "source_full_name": "microsoft/hve-core",
+    "source_owner": "microsoft",
+    "source_repo": "hve-core",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/hve-core/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/hve-core",
+      "generated_owner": "microsoft",
+      "generated_repo": "hve-core",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/hve-core/blob/1ca367ae1796dc35595348807ea40eee67c8d36d/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:58:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+      "source_full_name": "microsoft/hve-core",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "b348b68f9f1bece6078b4098201062b442307c3d",
+      "authored_at": "2026-04-01T18:46:26Z",
+      "committed_at": "2026-04-01T18:46:26Z",
+      "author_name": "Marcel Bindseil",
+      "author_email": "marcelbindseil@gmail.com",
+      "author_login": "bindsi",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): add agentic workflows for automated issue triage, implementation, PR review, dependency review, and doc-staleness detection (#1219)\n\n# feat(agents): add sub-issue decomposition to Issue Triage Agent and\nagentic workflows documentation\n\nThis PR enhances the Issue Triage Agent with automatic sub-issue\ndecomposition for oversized issues and adds comprehensive documentation\ncovering the full agentic workflow pipeline in hve-core.\n\nThe triage agent gained the ability to break down broad issues into\nindependently deliverable sub-issues, creating them via the GitHub API\nand linking them to the parent. A new architecture documentation page\nmaps the end-to-end flow from issue creation through automated triage,\nimplementation, and PR review, with Mermaid process flow diagrams and a\ncatalog of all interactive agents.\n\n## Description\n\n\n### Agentic Workflows\n\nFive workflows configured with the `gh aw` Copilot engine, each\ntriggered by specific GitHub events:\n\n- **issue-triage** (*issue-triage.md*): triggered on issue opened or\nlabeled `needs-triage`. Classifies issues, applies labels from an\nallowlist, detects duplicates, and assesses quality with semantic\ncoherence and scope validation checks. Removes `needs-triage` after\nprocessing. Uses `checkout: false` since it operates entirely through\nGitHub MCP tools.\n- **issue-implement** (*issue-implement.md*): triggered on issue labeled\n`agent-ready` by admin/maintainer/write users. Reads the issue, searches\nthe codebase, implements changes, and creates a PR. An **Instruction\nPriority** section overrides the imported task-implementor agent's\nsubagent orchestration procedure, directing the AI to follow only the\nworkflow's 6-step linear procedure.\n- **pr-first-pass-review** (*pr-first-pass-review.md*): triggered on PR\nopened or marked ready for review. Reviews non-maintainer PRs across\nfive dimensions: issue alignment, template compliance, coding standards,\ncode quality, and consolidated feedback. An **Instruction Priority**\nsection overrides imported agent multi-pass procedures.\n- **dependency-pr-review** (*dependency-pr-review.md*): triggered on\nDependabot PRs touching dependency files. Reviews version bumps for\nlicense compatibility, SHA pinning compliance, and environment\nsynchronization. Auto-approves safe patch and minor bumps; flags major\nbumps for human review.\n- **doc-update-check** (*doc-update-check.md*): triggered on push to\nmain touching code paths. Detects stale documentation by mapping code\nfiles to their documentation counterparts and creates issues with\n`documentation`, `needs-triage`, and `agent-ready` labels — chaining\ninto **issue-implement** for automated documentation fixes.\n\n### Agent Enhancements\n\nThe **Issue Triage Agent** (*issue-triage.agent.md*) received a new step\n8 for decomposing oversized issues. When an issue touches multiple\ncomponents, contains independent acceptance criteria, or implies\nsequential phases, the agent breaks it into focused sub-issues.\n\n- Added decomposition signal detection: multi-component scope, unrelated\nacceptance criteria, independent phases, and effort estimation\n- Each sub-issue is created with `mcp_github_issue_write` and linked to\nthe parent via `mcp_github_sub_issue_write`\n- Sub-issues receive the same type and component labels but not\n`agent-ready`, leaving that for a subsequent triage pass\n- The parent issue serves as an epic-style tracker and does not receive\n`agent-ready` when sub-issues are created\n- Updated the constraints section to permit issue creation only in the\ncontext of decomposition\n- Updated the frontmatter description to reflect the new decomposing\ncapability\n- Added comment placement guidance to *dependency-reviewer.agent.md* for\ninline vs. general review comments.\n\n### Documentation\n\nA new *Agentic Workflows* page\n(*docs/architecture/agentic-workflows.md*) documents the complete\nautomated and interactive agent ecosystem:\n\n- End-to-end Mermaid flowchart tracing an issue from creation through\ntriage, implementation, PR review, and merge (including the new\nsub-issue decomposition step)\n- State diagram illustrating label-driven handoffs (`needs-triage` →\nclassified → `agent-ready` → PR opened → `review-passed` → merged)\n- System overview diagram showing how automated workflows and\ninteractive agents share instruction files, tracking artifacts, and\nGitHub labels\n- Workflow configuration table mapping `.md` source files to compiled\nlock files, triggers, and agents\n- Catalog of interactive agents: RPI Orchestration, Prompt Builder,\nSecurity Reviewer, Code Review, Doc Ops, Backlog Management, and Project\nPlanning\n\nThe architecture README (*docs/architecture/README.md*) gained a\ncross-reference to the new page in the Further Reading section.\n\n### Other Changes\n\n- Updated generated plugin READMEs (*plugins/github/README.md*,\n*plugins/hve-core-all/README.md*, *plugins/hve-core/README.md*)\nreflecting agent catalog changes from `npm run plugin:generate`\n\n## Related Issue(s)\n\nNone\n\n## Type of Change\n\n**Code & Documentation:**\n\n* [ ] Bug fix (non-breaking change fixing an issue)\n* [x] New feature (non-breaking change adding functionality)\n* [ ] Breaking change (fix or feature causing existing functionality to\nchange)\n* [x] Documentation update\n\n**Infrastructure & Configuration:**\n\n* [x] GitHub Actions workflow\n* [ ] Linting configuration (markdown, PowerShell, etc.)\n* [ ] Security configuration\n* [ ] DevContainer configuration\n* [ ] Dependency update\n\n**AI Artifacts:**\n\n* [x] Reviewed contribution with `prompt-builder` agent and addressed\nall feedback\n* [ ] Copilot instructions (`.github/instructions/*.instructions.md`)\n* [ ] Copilot prompt (`.github/prompts/*.prompt.md`)\n* [x] Copilot agent (`.github/agents/*.agent.md`)\n* [ ] Copilot skill (`.github/skills/*/SKILL.md`)\n\n**Other:**\n\n* [ ] Script/automation (`.ps1`, `.sh`, `.py`)\n* [x] Other (please describe): GitHub Agentic Workflow configuration\nfiles (`.github/workflows/*.md`)\n\n## Sample Prompts (for AI Artifact Contributions)\n\n**User Request:**\n\nTriage a newly opened issue that spans agents, scripts, and extension\nchanges with broad acceptance criteria.\n\n**Execution Flow:**\n\n1. The Issue Triage Agent reads the issue and classifies by type and\ncomponent.\n2. Step 8 detects multiple component references and independent\nacceptance criteria.\n3. The agent creates focused sub-issues using `mcp_github_issue_write`,\neach targeting a single component.\n4. Sub-issues are linked to the parent via `mcp_github_sub_issue_write`.\n5. A summary comment is posted on the parent issue listing all\nsub-issues.\n6. The parent retains type and component labels but does not receive\n`agent-ready`.\n\n**Output Artifacts:**\n\n- New GitHub sub-issues linked to the parent, each with action-oriented\ntitles and focused acceptance criteria\n- Summary comment on the parent issue with sub-issue links\n\n**Success Indicators:**\n\n- Parent issue has sub-issues visible in the GitHub UI\n- Each sub-issue is scoped to a single component with clear acceptance\ncriteria\n- No `agent-ready` label on the parent or sub-issues (awaiting\nsubsequent triage)\n\n## Testing\n\n**Automated validation:**\n\n| Check | Status |\n|---|---|\n| `npm run lint:md` | Passed (0 errors in changed files) |\n| `npm run spell-check` | Passed (0 issues in 255 files) |\n| `npm run lint:frontmatter` | Passed (0 errors in 382 files) |\n| `npm run validate:skills` | Passed (9/9 skills valid) |\n| `npm run lint:ps` | Passed (all files clean) |\n| `npm run lint:md-links` | Passed (0 broken links) |\n\n**Manual testing:**\n\n- Not performed. Changes are documentation and agent prompt\nmodifications.\n\n## Checklist\n\n### Required Checks\n\n* [x] Documentation is updated (if applicable)\n* [x] Files follow existing naming conventions\n* [ ] Changes are backwards compatible (if applicable) (N/A — new\ncapability added, no existing behavior removed)\n* [ ] Tests added for new functionality (if applicable) (N/A — agent\nprompt and documentation changes, no unit test framework applicable)\n\n### AI Artifact Contributions\n<!-- If contributing an agent, prompt, instruction, or skill, complete\nthese checks -->\n* [x] Used `/prompt-analyze` to review contribution\n* [x] Addressed all feedback from `prompt-builder` review\n* [x] Verified contribution follows common standards and type-specific\nrequirements\n\n### Required Automated Checks\n\nThe following validation commands must pass before merging:\n\n* [x] Markdown linting: `npm run lint:md`\n* [x] Spell checking: `npm run spell-check`\n* [x] Frontmatter validation: `npm run lint:frontmatter`\n* [x] Skill structure validation: `npm run validate:skills`\n* [x] Link validation: `npm run lint:md-links`\n* [x] PowerShell analysis: `npm run lint:ps`\n\n## Security Considerations\n<!-- ⚠️ WARNING: Do not commit sensitive information such as API keys,\npasswords, or personal data -->\n* [x] This PR does not contain any sensitive or NDA information\n* [x] Any new dependencies have been reviewed for security issues (N/A —\nno new dependencies)\n* [x] Security-related scripts follow the principle of least privilege\n(N/A — no security script changes)\n\n## GHCP Artifact Maturity\n\n| File | Type | Maturity | Notes |\n|---|---|---|---|\n| `.github/agents/github/issue-triage.agent.md` | Agent | stable | Added\nsub-issue decomposition step |\n\n## Additional Notes\n\n- The plugin READMEs under `plugins/` are generated output from `npm run\nplugin:generate` and should not be edited directly.\n- The `.vscode/mcp.json` and `.vscode/settings.json` changes are local\nconfiguration improvements unrelated to the core feature.\n\n---------\n\nSigned-off-by: Marcel Bindseil <marcelbindseil@gmail.com>\nCo-authored-by: Bill Berry <WilliamBerryiii@users.noreply.github.com>\nCo-authored-by: Chris Montazer <17170709+rezatnoMsirhC@users.noreply.github.com>",
+      "parent_shas": [
+        "f4797fe4e2e4d74507b0119e883c73e129e902c9"
+      ],
+      "tree_sha": "7736da31192f7963661e90341abb64b74741f44f",
+      "html_url": "https://github.com/microsoft/hve-core/commit/b348b68f9f1bece6078b4098201062b442307c3d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+          "source_full_name": "microsoft/hve-core",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "b348b68f9f1bece6078b4098201062b442307c3d",
+          "committed_at": "2026-04-01T18:46:26Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 110,
+          "file_deletions": 0,
+          "file_changes": 110,
+          "file_patch": "@@ -0,0 +1,110 @@\n+---\n+description: \"Classifies new issues, applies labels, detects duplicates, and assesses implementation readiness\"\n+on:\n+  issues:\n+    types: [opened, labeled]\n+    names: [needs-triage]\n+  roles: [admin, maintainer, write, triage]\n+  skip-bots: [\"dependabot[bot]\", \"github-actions[bot]\"]\n+  reaction: eyes\n+\n+engine: copilot\n+timeout-minutes: 10\n+\n+imports:\n+  - ../agents/issue-triage.agent.md\n+\n+checkout: false\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+safe-outputs:\n+  add-comment:\n+    max: 3\n+    target: \"triggering\"\n+  add-labels:\n+    allowed:\n+      - feature\n+      - bug\n+      - documentation\n+      - maintenance\n+      - infrastructure\n+      - enhancement\n+      - security\n+      - breaking-change\n+      - agents\n+      - prompts\n+      - instructions\n+      - skills\n+      - good-first-issue\n+      - agent-ready\n+    blocked: [admin-only, do-not-triage]\n+    max: 5\n+  remove-labels:\n+    allowed: [needs-triage]\n+    max: 1\n+  create-issue:\n+    max: 5\n+    labels: [needs-triage]\n+  noop:\n+    max: 1\n+---\n+\n+# Issue Triage\n+\n+Automatically triage new issues and issues labeled `needs-triage`. Classify\n+by type and component, detect duplicates, assess quality, and optionally\n+mark qualifying issues for automated implementation.\n+\n+## Activation Guard\n+\n+**You MUST call `noop` and stop immediately if any of these conditions are true:**\n+\n+* The event type is `labeled` and the triggering label is not `needs-triage`. Call `noop` with message \"Skipping: triggering label is not needs-triage.\"\n+* The issue already has type labels (`feature`, `bug`, `documentation`, `maintenance`, `enhancement`, `security`, `breaking-change`) and does not have the `needs-triage` label. Call `noop` with message \"Skipping: issue is already triaged.\"\n+* The issue is closed. Call `noop` with message \"Skipping: issue is closed.\"\n+\n+**Failure to call `noop` when no triage action is taken will cause workflow failure.**\n+\n+Only proceed with triage when:\n+\n+* The event is `issues.opened` (new issue), OR\n+* The event is `issues.labeled` and the label is `needs-triage`\n+\n+AND the issue does not already have type labels applied.\n+\n+## Triage Procedure\n+\n+Follow the triage workflow defined in your imported agent instructions:\n+\n+1. Read the issue title, body, labels, and template metadata.\n+2. Classify the issue type using conventional commit patterns from the triage instructions.\n+3. Classify the component from bug report dropdowns or body content analysis.\n+4. Search for duplicate or related issues among open issues.\n+5. Assess issue quality: check for missing required fields, vague descriptions, semantic coherence, and scope relevance.\n+6. Remove `needs-triage` and apply determined type and component labels.\n+7. Evaluate whether the issue qualifies for `agent-ready` using conservative criteria.\n+\n+For each step, follow the detailed guidance in the Issue Triage Agent instructions.\n+\n+## Output Behavior\n+\n+* **Well-formed issue:** Remove `needs-triage`, add type label(s) and component label(s). If all `agent-ready` criteria are met, also add `agent-ready`.\n+* **Issue needing more info:** Remove `needs-triage`, add type label if determinable, add a comment requesting specific missing information.\n+* **Potential duplicate found:** Proceed with normal triage AND add a comment noting the related issue(s). Do not add a `duplicate` label.\n+* **Unclassifiable issue:** Remove `needs-triage`, add a comment asking the author to clarify the issue type and scope.\n+\n+## Constraints\n+\n+* Do not close issues.\n+* Do not assign issues.\n+* Do not modify the issue title or body.\n+* Do not add labels not in the `allowed` list.\n+* Limit to at most 3 comments per triage run.\n+* Be constructive and welcoming in all comments.\n+\n+---\n+\n+🤖 Crafted with precision by ✨Copilot following brilliant human instruction, then carefully refined by our team of discerning human reviewers.",
+          "snapshot_ref": "b348b68f9f1bece6078b4098201062b442307c3d",
+          "snapshot_blob_sha": "94a8c9dda50ac789e71cfc97036d8145852c3db6",
+          "snapshot_file": "snapshots/hve-core__microsoft__b348b68f9f1bece6078b4098201062b442307c3d__issue-triage.md",
+          "snapshot_bytes": 3805,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/hve-core\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"hve-core\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/hve-core/blob/1ca367ae1796dc35595348807ea40eee67c8d36d/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+      "source_full_name": "microsoft/hve-core",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "1bf0c2bf858692f9122807f59b20b4f7d9d5b677",
+      "authored_at": "2026-06-12T17:55:17Z",
+      "committed_at": "2026-06-12T17:55:17Z",
+      "author_name": "Bill Berry",
+      "author_email": "WilliamBerryiii@users.noreply.github.com",
+      "author_login": "WilliamBerryiii",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs: remove generated footers (#1919)\n\n# Pull Request\n\n## Description\n\nThis PR removes generated footer blocks from a targeted set of\n`.github/` Markdown files.\n\nThe diff is deletion-only and removes 244 lines across 61 Markdown\nfiles:\n\n* 11 skill `SKILL.md` files\n* 44 skill reference Markdown files\n* 5 workflow documentation Markdown files\n* `.github/CUSTOM-AGENTS.md`\n\nNo package, dependency, script, workflow YAML, or non-Markdown files are\nchanged.\n\n## Related Issue(s)\n\nFixes #1906\n\n## Type of Change\n\nSelect all that apply:\n\n**Code & Documentation:**\n\n* [ ] Bug fix (non-breaking change fixing an issue)\n* [ ] New feature (non-breaking change adding functionality)\n* [ ] Breaking change (fix or feature causing existing functionality to\nchange)\n* [x] Documentation update\n\n**Infrastructure & Configuration:**\n\n* [ ] GitHub Actions workflow\n* [ ] Linting configuration (markdown, PowerShell, etc.)\n* [ ] Security configuration\n* [ ] DevContainer configuration\n* [ ] Dependency update\n\n**AI Artifacts:**\n\n* [ ] Reviewed contribution with `prompt-builder` agent and addressed\nall feedback\n* [ ] Copilot instructions (`.github/instructions/*.instructions.md`)\n* [ ] Copilot prompt (`.github/prompts/*.prompt.md`)\n* [ ] Copilot agent (`.github/agents/*.agent.md`)\n* [x] Copilot skill (`.github/skills/*/SKILL.md`)\n\n> Note for AI Artifact Contributors:\n>\n> * Agents: Research, indexing/referencing other project (using standard\nVS Code GitHub Copilot/MCP tools), planning, and general implementation\nagents likely already exist. Review `.github/agents/` before creating\nnew ones.\n> * Skills: Must include both bash and PowerShell scripts. See\n[Skills](../docs/contributing/skills.md).\n> * Model Versions: Only contributions targeting the **latest Anthropic\nand OpenAI models** will be accepted. Older model versions (e.g.,\nGPT-3.5, Claude 3) will be rejected.\n> * See [Agents Not\nAccepted](../docs/contributing/custom-agents.md#agents-not-accepted) and\n[Model Version\nRequirements](../docs/contributing/ai-artifacts-common.md#model-version-requirements).\n\n**Other:**\n\n* [ ] Script/automation (`.ps1`, `.sh`, `.py`)\n* [ ] Other (please describe):\n\n## Sample Prompts (for AI Artifact Contributions)\n\nThis PR does not add a new AI artifact or change skill behavior. It\nremoves generated footer text from existing skill Markdown files and\nreference documentation.\n\n**User Request:**\n\nNo new usage prompt is introduced by this cleanup.\n\n**Execution Flow:**\n\nNo execution flow changes. Existing skill invocation and behavior are\nunchanged.\n\n**Output Artifacts:**\n\nNo new output artifacts are introduced by this cleanup.\n\n**Success Indicators:**\n\nReviewers can confirm the targeted generated footer blocks were removed\nand that changed Markdown files continue to pass scoped markdown\nlinting.\n\nFor detailed contribution requirements, see:\n\n* Common Standards:\n[docs/contributing/ai-artifacts-common.md](../docs/contributing/ai-artifacts-common.md)\n- Shared standards for XML blocks, markdown quality, RFC 2119,\nvalidation, and testing\n* Agents:\n[docs/contributing/custom-agents.md](../docs/contributing/custom-agents.md)\n- Agent configurations with tools and behavior patterns\n* Prompts:\n[docs/contributing/prompts.md](../docs/contributing/prompts.md) -\nWorkflow-specific guidance with template variables\n* Instructions:\n[docs/contributing/instructions.md](../docs/contributing/instructions.md)\n- Technology-specific standards with glob patterns\n* Skills: [docs/contributing/skills.md](../docs/contributing/skills.md)\n- Task execution utilities with cross-platform scripts\n\n## Testing\n\n* Passed scoped Markdown linting for the changed Markdown files:\n\n  ```text\n  markdownlint-cli2 v0.22.1 (markdownlint v0.40.0)\n  Summary: 0 error(s)\n  ```\n\nBroad repository validation was not rerun for this body update.\n\n## Checklist\n\n### Required Checks\n\n* [x] Documentation is updated (if applicable)\n* [x] Files follow existing naming conventions\n* [x] Changes are backwards compatible (if applicable)\n* [x] Tests added for new functionality (if applicable) (N/A - no new\nfunctionality)\n\n### AI Artifact Contributions\n\n* [ ] Used `/prompt-analyze` to review contribution\n* [ ] Addressed all feedback from `prompt-builder` review\n* [ ] Verified contribution follows common standards and type-specific\nrequirements\n\n### Required Automated Checks\n\nThe following validation commands must pass before merging:\n\n* [x] Markdown linting: `npm run lint:md` (scoped markdownlint was run\nagainst changed Markdown files)\n* [ ] Spell checking: `npm run spell-check`\n* [ ] Frontmatter validation: `npm run lint:frontmatter`\n* [ ] Skill structure validation: `npm run validate:skills`\n* [ ] Link validation: `npm run lint:md-links`\n* [ ] PowerShell analysis: `npm run lint:ps`\n* [ ] Plugin freshness: `npm run plugin:generate`\n* [ ] Docusaurus tests: `npm run docs:test`\n\n## Security Considerations\n\n* [x] This PR does not contain any sensitive or NDA information\n* [x] Any new dependencies have been reviewed for security issues (N/A -\nno dependency files changed)\n* [x] Security-related scripts follow the principle of least privilege\n(N/A - no scripts changed)\n\n## Additional Notes\n\nThis PR is intentionally scoped to a partial generated-footer cleanup\nand does not claim repo-wide footer removal.",
+      "parent_shas": [
+        "4044819ff20a4b52bf6c19bf16c5fcc69ef547c1"
+      ],
+      "tree_sha": "79f93d42cba5e630e04ccc11c259954cd459e31b",
+      "html_url": "https://github.com/microsoft/hve-core/commit/1bf0c2bf858692f9122807f59b20b4f7d9d5b677",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+          "source_full_name": "microsoft/hve-core",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "1bf0c2bf858692f9122807f59b20b4f7d9d5b677",
+          "committed_at": "2026-06-12T17:55:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 4,
+          "file_changes": 4,
+          "file_patch": "@@ -104,7 +104,3 @@ For each step, follow the detailed guidance in the Issue Triage Agent instructio\n * Do not add labels not in the `allowed` list.\n * Limit to at most 3 comments per triage run.\n * Be constructive and welcoming in all comments.\n-\n----\n-\n-🤖 Crafted with precision by ✨Copilot following brilliant human instruction, then carefully refined by our team of discerning human reviewers.",
+          "snapshot_ref": "1bf0c2bf858692f9122807f59b20b4f7d9d5b677",
+          "snapshot_blob_sha": "065d2c354288b4276db0b5ff59778df733fc98d7",
+          "snapshot_file": "snapshots/hve-core__microsoft__1bf0c2bf858692f9122807f59b20b4f7d9d5b677__issue-triage.md",
+          "snapshot_bytes": 3652,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/hve-core\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"hve-core\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/hve-core/blob/1ca367ae1796dc35595348807ea40eee67c8d36d/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+      "source_full_name": "microsoft/hve-core",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "3420081fc8ca7b9904dafb206445b01b6e4b38d6",
+      "authored_at": "2026-06-29T18:25:10Z",
+      "committed_at": "2026-06-29T18:25:10Z",
+      "author_name": "Bill Berry",
+      "author_email": "WilliamBerryiii@users.noreply.github.com",
+      "author_login": "WilliamBerryiii",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(agents): remove issue-triage decomposition and improve labeling (#2223)\n\n# Pull Request\n\n## Description\n\nIssue triage was over-creating issues and bloating the backlog. Two\ncompounding causes are removed: the agent's \"Decompose Oversized Issues\"\nstep and the workflow's `create-issue` safe-output (which permitted up\nto 5 new `needs-triage` issues per run, each re-triggering triage).\nLabeling guidance is also upgraded by folding the repository's real\nlabel taxonomy (type, area, priority) into the agent and expanding the\nworkflow allow-list.\n\n* Remove decomposition from the issue-triage agent and the workflow\n`create-issue` safe-output.\n* Add a Repository Labels reference (type/area/priority) and a priority\nrubric to the agent.\n* Expand workflow `add-labels.allowed` to the full taxonomy and\nrecompile the lock file.\n* Sync eval expectations (drop decomposition, broaden to area, add\npriority and no-issue-creation).\n\n## Related Issue(s)\n\nCloses #2222\n\n## Type of Change\n\n**Code & Documentation:**\n\n* [ ] Bug fix (non-breaking change fixing an issue)\n* [ ] New feature (non-breaking change adding functionality)\n* [ ] Breaking change (fix or feature causing existing functionality to\nchange)\n* [ ] Documentation update\n\n**Infrastructure & Configuration:**\n\n* [x] GitHub Actions workflow\n* [ ] Linting configuration (markdown, PowerShell, etc.)\n* [ ] Security configuration\n* [ ] DevContainer configuration\n* [ ] Dependency update\n\n**AI Artifacts:**\n\n* [ ] Reviewed contribution with `prompt-builder` agent and addressed\nall feedback\n* [ ] Copilot instructions (`.github/instructions/*.instructions.md`)\n* [ ] Copilot prompt (`.github/prompts/*.prompt.md`)\n* [x] Copilot agent (`.github/agents/*.agent.md`)\n* [ ] Copilot skill (`.github/skills/*/SKILL.md`)\n* [ ] Copilot hook (`.github/hooks/*/*.json`)\n* [x] Eval spec added/updated for changed AI artifacts (`evals/`)\n\n**Other:**\n\n* [ ] Script/automation (`.ps1`, `.sh`, `.py`)\n* [ ] Other (please describe):\n\n## Testing\n\n* `npm run lint:md`, `npm run lint:frontmatter`, `npm run\nlint:ai-artifacts`, `npm run eval:lint:vally`, `npm run spell-check` all\npass.\n* Workflow lock regenerated with `gh aw compile`; confirmed no\n`create-issue` handler and a 37-label allow-list.\n\n## Checklist\n\n### Required Checks\n\n* [x] Documentation is updated (if applicable)\n* [x] Files follow existing naming conventions\n* [x] Changes are backwards compatible (if applicable)\n* [ ] Tests added for new functionality (if applicable)\n\n### Required Automated Checks\n\n* [x] Markdown linting: `npm run lint:md`\n* [x] Spell checking: `npm run spell-check`\n* [x] Frontmatter validation: `npm run lint:frontmatter`\n* [ ] Skill structure validation: `npm run validate:skills`\n* [ ] Link validation: `npm run lint:md-links`\n* [ ] PowerShell analysis: `npm run lint:ps`\n* [ ] Eval spec schema and coverage (if AI artifacts changed): `npm run\neval:lint:schema`\n* [ ] Plugin freshness: `npm run plugin:generate`\n* [ ] Docusaurus tests: `npm run docs:test`\n\n## Security Considerations\n\n* [x] This PR does not contain any sensitive or NDA information\n* [x] Any new dependencies have been reviewed for security issues\n* [x] Security-related scripts follow the principle of least privilege\n\n## Additional Notes\n\nThe triage agent now only updates labels and comments on the triggering\nissue. The triage type set is kept at 7 and step numbering preserved so\neval contract references stay valid. The `good-first-issue` label was\ncreated to match the existing allow-list entry.",
+      "parent_shas": [
+        "9ac46ed434c0e2e091a4d4b6b8439f9f5c0feeb2"
+      ],
+      "tree_sha": "9526e6fa3132f2825920dd83067aeb2accb9802d",
+      "html_url": "https://github.com/microsoft/hve-core/commit/3420081fc8ca7b9904dafb206445b01b6e4b38d6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/hve-core:.github/workflows/issue-triage.md",
+          "source_full_name": "microsoft/hve-core",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "3420081fc8ca7b9904dafb206445b01b6e4b38d6",
+          "committed_at": "2026-06-29T18:25:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 27,
+          "file_deletions": 7,
+          "file_changes": 34,
+          "file_patch": "@@ -30,24 +30,44 @@ safe-outputs:\n       - bug\n       - documentation\n       - maintenance\n-      - infrastructure\n       - enhancement\n       - security\n       - breaking-change\n       - agents\n       - prompts\n       - instructions\n       - skills\n+      - scripts\n+      - workflows\n+      - extension\n+      - packaging\n+      - automation\n+      - ci\n+      - build\n+      - dependencies\n+      - devcontainer\n+      - testing\n+      - evals\n+      - linting\n+      - tooling\n+      - infrastructure\n+      - configuration\n+      - design-thinking\n+      - accessibility\n+      - ado\n+      - copilot\n+      - foundation\n+      - priority-1\n+      - priority-2\n+      - priority-3\n+      - priority-4\n       - good-first-issue\n       - agent-ready\n     blocked: [admin-only, do-not-triage]\n     max: 5\n   remove-labels:\n     allowed: [needs-triage]\n     max: 1\n-  create-issue:\n-    max: 5\n-    labels: [needs-triage]\n   noop:\n     max: 1\n ---\n@@ -81,17 +101,17 @@ Follow the triage workflow defined in your imported agent instructions:\n \n 1. Read the issue title, body, labels, and template metadata.\n 2. Classify the issue type using conventional commit patterns from the triage instructions.\n-3. Classify the component from bug report dropdowns or body content analysis.\n+3. Classify the area(s) from bug report dropdowns or body content analysis.\n 4. Search for duplicate or related issues among open issues.\n 5. Assess issue quality: check for missing required fields, vague descriptions, semantic coherence, and scope relevance.\n-6. Remove `needs-triage` and apply determined type and component labels.\n+6. Remove `needs-triage` and apply determined type, area, and priority labels.\n 7. Evaluate whether the issue qualifies for `agent-ready` using conservative criteria.\n \n For each step, follow the detailed guidance in the Issue Triage Agent instructions.\n \n ## Output Behavior\n \n-* **Well-formed issue:** Remove `needs-triage`, add type label(s) and component label(s). If all `agent-ready` criteria are met, also add `agent-ready`.\n+* **Well-formed issue:** Remove `needs-triage`, add the type, area, and priority labels. If all `agent-ready` criteria are met, also add `agent-ready`.\n * **Issue needing more info:** Remove `needs-triage`, add type label if determinable, add a comment requesting specific missing information.\n * **Potential duplicate found:** Proceed with normal triage AND add a comment noting the related issue(s). Do not add a `duplicate` label.\n * **Unclassifiable issue:** Remove `needs-triage`, add a comment asking the author to clarify the issue type and scope.",
+          "snapshot_ref": "3420081fc8ca7b9904dafb206445b01b6e4b38d6",
+          "snapshot_blob_sha": "10c9c1a955a3042ba7c119da38d125cc91eeb44e",
+          "snapshot_file": "snapshots/hve-core__microsoft__3420081fc8ca7b9904dafb206445b01b6e4b38d6__issue-triage.md",
+          "snapshot_bytes": 4010,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/hve-core\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"hve-core\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/hve-core/blob/1ca367ae1796dc35595348807ea40eee67c8d36d/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

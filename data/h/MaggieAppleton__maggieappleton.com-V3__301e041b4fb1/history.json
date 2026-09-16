@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+    "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+    "source_owner": "MaggieAppleton",
+    "source_repo": "maggieappleton.com-V3",
+    "md_path": ".github/workflows/code-quality-improver.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/HEAD/.github/workflows/code-quality-improver.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "generated_owner": "MaggieAppleton",
+      "generated_repo": "maggieappleton.com-V3",
+      "generated_workflow_path": ".github/workflows/code-quality-improver.lock.yml",
+      "generated_workflow_file": "code-quality-improver.lock.yml",
+      "generated_html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/code-quality-improver.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/code-quality-improver.md",
+      "commit_sha": "fe63881d509267378be9fc7a2d16841ad5681500",
+      "authored_at": "2026-02-25T09:05:14Z",
+      "committed_at": "2026-02-25T09:05:14Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "Maggie Appleton",
+      "committer_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "committer_login": "MaggieAppleton",
+      "committer_account_type": "User",
+      "message": "Add code-quality-improver agentic workflow\n\nDaily scheduled workflow (weekdays) that acts as a senior developer\nreviewing one source directory at a time (round-robin via cache-memory).\nOpens draft PRs with targeted improvements to code quality, readability,\nand consistency. Auto-expires PRs after 14 days.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "4f3997c484c8841c4e1f83b97e982361b902f6dc"
+      ],
+      "tree_sha": "d1bd549dd91ff41057ddca35ba2755b335e2c6a6",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/fe63881d509267378be9fc7a2d16841ad5681500",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/code-quality-improver.md",
+          "commit_sha": "fe63881d509267378be9fc7a2d16841ad5681500",
+          "committed_at": "2026-02-25T09:05:14Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 76,
+          "file_deletions": 0,
+          "file_changes": 76,
+          "file_patch": "@@ -0,0 +1,76 @@\n+---\n+on:\n+  schedule: daily on weekdays\n+\n+permissions: read-all\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  cache-memory: true\n+\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+    draft: true\n+    title-prefix: \"[code-quality] \"\n+    expires: 14\n+  noop:\n+\n+network:\n+  allowed: [defaults, node]\n+---\n+\n+# Code Quality Improver\n+\n+You are a senior developer performing a daily code quality review of this Astro/JavaScript personal website repository. Your goal is to improve code quality, maintainability, consistency, and readability — one focused area per day.\n+\n+## Process (Round-Robin)\n+\n+1. **List target areas** — the main source directories to review:\n+   - `src/components/`\n+   - `src/layouts/`\n+   - `src/pages/`\n+   - `src/utils/`\n+   - `src/scripts/`\n+   - `src/plugins/`\n+   - `src/content/`\n+\n+2. **Read cache-memory** to find out which directory was reviewed last. Select the **next directory** in the list (wrap around when you reach the end).\n+\n+3. **Inspect the selected directory** — read the files in that directory. Focus on:\n+   - **Bugs and logical flaws**: incorrect conditionals, off-by-one errors, unhandled edge cases, null/undefined dereferences, async/await misuse\n+   - **Readability**: unclear variable names, magic numbers/strings, deeply nested logic that could be flattened, functions that do too much\n+   - **Self-documenting code**: add JSDoc comments to exported functions and complex logic; rename variables or functions to better express intent\n+   - **Consistency**: ensure similar patterns are implemented the same way across files (e.g., error handling, data fetching, component prop patterns)\n+   - **Dead code**: unused variables, imports, or functions\n+   - **Maintainability**: opportunities to extract reusable helpers, simplify complex expressions, reduce duplication\n+\n+4. **Select one file** to improve — choose the file with the highest-value improvements. Focus on changes that make the code meaningfully better, not cosmetic tweaks.\n+\n+5. **Make targeted edits** to that one file:\n+   - Fix any bugs or logical flaws you found\n+   - Improve naming and structure for clarity\n+   - Add JSDoc comments to exported functions that lack them\n+   - Simplify overly complex expressions\n+   - Do NOT change functionality — only improve clarity and correctness\n+   - Do NOT reformat the entire file — make surgical, purposeful edits\n+\n+6. **Update cache-memory** with the directory you just processed.\n+\n+**Before creating a PR**, use GitHub search to check if a `[code-quality]` draft PR is already open (search `repo:maggieappleton/maggieappleton.com-V3 is:pr is:open in:title \"[code-quality]\"`). If one already exists, call `noop` instead of opening another.\n+\n+7. **Open a draft PR** with your changes titled: `Improve <filename>` with:\n+   - A clear description of what was changed and why\n+   - Specific notes on any bugs fixed or logical issues resolved\n+   - An explanation of any renamed symbols so reviewers can verify the intent is preserved\n+\n+8. If after reviewing the selected directory you find **nothing worth improving**, call `noop` to signal you completed the review with no changes needed, and still update cache-memory so the next run moves on.\n+\n+## Guidelines\n+\n+- Prefer clarity over cleverness\n+- Small, reviewable PRs are better than large sweeping changes\n+- When in doubt about intent, leave a comment explaining your interpretation rather than changing behaviour\n+- Never modify content files in `src/content/` — only code files (`.ts`, `.js`, `.astro`)\n+- Respect the existing code style (spacing, quote style, etc.)",
+          "snapshot_ref": "fe63881d509267378be9fc7a2d16841ad5681500",
+          "snapshot_blob_sha": "ed3cfe4d7e843cb200af0176596e20da69e18e4c",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__fe63881d509267378be9fc7a2d16841ad5681500__code-quality-improver.md",
+          "snapshot_bytes": 3541,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/code-quality-improver.lock.yml\",\"generated_workflow_file\":\"code-quality-improver.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/code-quality-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/code-quality-improver.md",
+      "commit_sha": "7116bc2e8b5fddf124e9284c63e97a037b619412",
+      "authored_at": "2026-02-25T10:07:53Z",
+      "committed_at": "2026-02-25T10:07:53Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "Maggie Appleton",
+      "committer_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "committer_login": "MaggieAppleton",
+      "committer_account_type": "User",
+      "message": "Remove duplicate PR check from code-quality-improver prompt\n\nAllow new PRs to be opened even when existing code-quality PRs are\nstill open for review.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "fe63881d509267378be9fc7a2d16841ad5681500"
+      ],
+      "tree_sha": "4cb7fbd3ea661199d9c7dc8a060b1bd7ddaf5196",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/7116bc2e8b5fddf124e9284c63e97a037b619412",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/code-quality-improver.md",
+          "commit_sha": "7116bc2e8b5fddf124e9284c63e97a037b619412",
+          "committed_at": "2026-02-25T10:07:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -58,8 +58,6 @@ You are a senior developer performing a daily code quality review of this Astro/\n \n 6. **Update cache-memory** with the directory you just processed.\n \n-**Before creating a PR**, use GitHub search to check if a `[code-quality]` draft PR is already open (search `repo:maggieappleton/maggieappleton.com-V3 is:pr is:open in:title \"[code-quality]\"`). If one already exists, call `noop` instead of opening another.\n-\n 7. **Open a draft PR** with your changes titled: `Improve <filename>` with:\n    - A clear description of what was changed and why\n    - Specific notes on any bugs fixed or logical issues resolved",
+          "snapshot_ref": "7116bc2e8b5fddf124e9284c63e97a037b619412",
+          "snapshot_blob_sha": "e62101ecc98db994a5e92dddd2434d10f22c02ff",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__7116bc2e8b5fddf124e9284c63e97a037b619412__code-quality-improver.md",
+          "snapshot_bytes": 3283,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/code-quality-improver.lock.yml\",\"generated_workflow_file\":\"code-quality-improver.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/code-quality-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/code-quality-improver.md",
+      "commit_sha": "6bd55a3624fb480d794b235b00659f6400075781",
+      "authored_at": "2026-02-25T10:22:01Z",
+      "committed_at": "2026-02-25T10:22:01Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Revert duplicate VersionDropdown fix; add open-PR dedup check to code-quality reviewer\n\nCo-authored-by: MaggieAppleton <5599295+MaggieAppleton@users.noreply.github.com>",
+      "parent_shas": [
+        "023ac1625687256c457b6b30360671230eb82265"
+      ],
+      "tree_sha": "9d3cee5237667e3c5edbea4e9d2cfc34bf4d3386",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/6bd55a3624fb480d794b235b00659f6400075781",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/code-quality-improver.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/code-quality-improver.md",
+          "commit_sha": "6bd55a3624fb480d794b235b00659f6400075781",
+          "committed_at": "2026-02-25T10:22:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 5,
+          "file_changes": 12,
+          "file_patch": "@@ -46,24 +46,26 @@ You are a senior developer performing a daily code quality review of this Astro/\n    - **Dead code**: unused variables, imports, or functions\n    - **Maintainability**: opportunities to extract reusable helpers, simplify complex expressions, reduce duplication\n \n-4. **Select one file** to improve — choose the file with the highest-value improvements. Focus on changes that make the code meaningfully better, not cosmetic tweaks.\n+4. **Check for existing open PRs** — before selecting a file, list all open pull requests in the repository. If any open PR (including draft PRs) already touches or fixes the same file or issue you are considering, skip that file and pick a different one. This avoids creating duplicate PRs for work that is already in progress.\n \n-5. **Make targeted edits** to that one file:\n+5. **Select one file** to improve — choose the file with the highest-value improvements. Focus on changes that make the code meaningfully better, not cosmetic tweaks.\n+\n+6. **Make targeted edits** to that one file:\n    - Fix any bugs or logical flaws you found\n    - Improve naming and structure for clarity\n    - Add JSDoc comments to exported functions that lack them\n    - Simplify overly complex expressions\n    - Do NOT change functionality — only improve clarity and correctness\n    - Do NOT reformat the entire file — make surgical, purposeful edits\n \n-6. **Update cache-memory** with the directory you just processed.\n+7. **Update cache-memory** with the directory you just processed.\n \n-7. **Open a draft PR** with your changes titled: `Improve <filename>` with:\n+8. **Open a draft PR** with your changes titled: `Improve <filename>` with:\n    - A clear description of what was changed and why\n    - Specific notes on any bugs fixed or logical issues resolved\n    - An explanation of any renamed symbols so reviewers can verify the intent is preserved\n \n-8. If after reviewing the selected directory you find **nothing worth improving**, call `noop` to signal you completed the review with no changes needed, and still update cache-memory so the next run moves on.\n+9. If after reviewing the selected directory you find **nothing worth improving**, call `noop` to signal you completed the review with no changes needed, and still update cache-memory so the next run moves on.\n \n ## Guidelines\n ",
+          "snapshot_ref": "6bd55a3624fb480d794b235b00659f6400075781",
+          "snapshot_blob_sha": "23a1ba5c5eeaaf16eb077e3d6451b15a384891bb",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__6bd55a3624fb480d794b235b00659f6400075781__code-quality-improver.md",
+          "snapshot_bytes": 3615,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/code-quality-improver.lock.yml\",\"generated_workflow_file\":\"code-quality-improver.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/code-quality-improver.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

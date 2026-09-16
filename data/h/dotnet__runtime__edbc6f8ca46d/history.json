@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+    "source_full_name": "dotnet/runtime",
+    "source_owner": "dotnet",
+    "source_repo": "runtime",
+    "md_path": ".github/workflows/breaking-change-doc.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/runtime/blob/HEAD/.github/workflows/breaking-change-doc.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/runtime",
+      "generated_owner": "dotnet",
+      "generated_repo": "runtime",
+      "generated_workflow_path": ".github/workflows/breaking-change-doc.lock.yml",
+      "generated_workflow_file": "breaking-change-doc.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/runtime/blob/10c04f707d28097296d509a66c6123ee848361e0/.github/workflows/breaking-change-doc.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:25:26+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+      "source_full_name": "dotnet/runtime",
+      "md_path": ".github/workflows/breaking-change-doc.md",
+      "commit_sha": "950349b9907f5f8c8d56a99223b27e00edfb21f2",
+      "authored_at": "2026-04-04T00:41:47Z",
+      "committed_at": "2026-04-04T00:41:47Z",
+      "author_name": "Eric StJohn",
+      "author_email": "ericstj@microsoft.com",
+      "author_login": "ericstj",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Convert breaking-change-doc workflow to GitHub agentic workflow (#126009)\n\nTested skill locally in CLI. I think I now have all the frontmatter\ncorrect. Review when you are ready @jeffhandley\n@dotnet/runtime-infrastructure\n\n---------\n\nCo-authored-by: Jeff Handley <jeffhandley@users.noreply.github.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "711b7e5b11fbcd0383a138ed552f831bd8056270"
+      ],
+      "tree_sha": "061f59392918ba515ffa7f46561ba8c49836b747",
+      "html_url": "https://github.com/dotnet/runtime/commit/950349b9907f5f8c8d56a99223b27e00edfb21f2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+          "source_full_name": "dotnet/runtime",
+          "md_path": ".github/workflows/breaking-change-doc.md",
+          "commit_sha": "950349b9907f5f8c8d56a99223b27e00edfb21f2",
+          "committed_at": "2026-04-04T00:41:47Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 142,
+          "file_deletions": 0,
+          "file_changes": 142,
+          "file_patch": "@@ -0,0 +1,142 @@\n+---\n+description: >\n+  Generate breaking change documentation for merged PRs labeled\n+  needs-breaking-change-doc-created. Produces two markdown files\n+  (issue-draft.md and pr-comment.md) and optionally comments on the PR.\n+\n+concurrency:\n+  group: \"breaking-change-doc-${{ github.event.pull_request.number || inputs.pr_number || github.run_id }}\"\n+  cancel-in-progress: true\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+\n+tools:\n+  bash: [\"pwsh\", \"gh\"]\n+\n+safe-outputs:\n+  add-comment:\n+    target: \"*\"\n+  noop:\n+    report-as-issue: false  # Disable posting noop messages as issue comments\n+\n+if: |\n+  github.event_name == 'workflow_dispatch' ||\n+  (\n+    !github.event.repository.fork &&\n+    github.event.pull_request.merged &&\n+    contains(github.event.pull_request.labels.*.name, 'needs-breaking-change-doc-created')\n+  )\n+\n+post-steps:\n+  - name: Upload breaking change drafts\n+    if: always()\n+    uses: actions/upload-artifact@v4\n+    with:\n+      name: breaking-change-docs\n+      path: artifacts/docs/breakingChanges/\n+      retention-days: 30\n+      if-no-files-found: ignore\n+\n+on:\n+  pull_request_target:\n+    types: [closed, labeled]\n+  workflow_dispatch:\n+    inputs:\n+      pr_number:\n+        description: \"Pull Request Number\"\n+        required: true\n+        type: string\n+      suppress_output:\n+        description: \"Suppress workflow output (dry-run — only produce markdown workflow artifacts)\"\n+        required: false\n+        type: boolean\n+        default: false\n+# ###############################################################\n+# Override the COPILOT_GITHUB_TOKEN secret usage for the workflow\n+# with a randomly-selected token from a pool of secrets.\n+#\n+# As soon as organization-level billing is offered for Agentic\n+# Workflows, this stop-gap approach will be removed.\n+#\n+# See: /.github/actions/select-copilot-pat/README.md\n+# ###############################################################\n+\n+  # Add the pre-activation step of selecting a random PAT from the supplied secrets\n+  steps:\n+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+      name: Checkout the select-copilot-pat action folder\n+      with:\n+        persist-credentials: false\n+        sparse-checkout: .github/actions/select-copilot-pat\n+        sparse-checkout-cone-mode: true\n+        fetch-depth: 1\n+\n+    - id: select-copilot-pat\n+      name: Select Copilot token from pool\n+      uses: ./.github/actions/select-copilot-pat\n+      env:\n+        SECRET_0: ${{ secrets.COPILOT_PAT_0 }}\n+        SECRET_1: ${{ secrets.COPILOT_PAT_1 }}\n+        SECRET_2: ${{ secrets.COPILOT_PAT_2 }}\n+        SECRET_3: ${{ secrets.COPILOT_PAT_3 }}\n+        SECRET_4: ${{ secrets.COPILOT_PAT_4 }}\n+        SECRET_5: ${{ secrets.COPILOT_PAT_5 }}\n+        SECRET_6: ${{ secrets.COPILOT_PAT_6 }}\n+        SECRET_7: ${{ secrets.COPILOT_PAT_7 }}\n+        SECRET_8: ${{ secrets.COPILOT_PAT_8 }}\n+        SECRET_9: ${{ secrets.COPILOT_PAT_9 }}\n+\n+# Add the pre-activation output of the randomly selected PAT\n+jobs:\n+  pre-activation:\n+    outputs:\n+      copilot_pat_number: ${{ steps.select-copilot-pat.outputs.copilot_pat_number }}\n+\n+# Override the COPILOT_GITHUB_TOKEN expression used in the activation job\n+# Consume the PAT number from the pre-activation step and select the corresponding secret\n+engine:\n+  id: copilot\n+  env:\n+    # We cannot use line breaks in this expression as it leads to a syntax error in the compiled workflow\n+    # If none of the `COPILOT_PAT_#` secrets were selected, then the default COPILOT_GITHUB_TOKEN is used\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pre_activation.outputs.copilot_pat_number == '0', secrets.COPILOT_PAT_0, needs.pre_activation.outputs.copilot_pat_number == '1', secrets.COPILOT_PAT_1, needs.pre_activation.outputs.copilot_pat_number == '2', secrets.COPILOT_PAT_2, needs.pre_activation.outputs.copilot_pat_number == '3', secrets.COPILOT_PAT_3, needs.pre_activation.outputs.copilot_pat_number == '4', secrets.COPILOT_PAT_4, needs.pre_activation.outputs.copilot_pat_number == '5', secrets.COPILOT_PAT_5, needs.pre_activation.outputs.copilot_pat_number == '6', secrets.COPILOT_PAT_6, needs.pre_activation.outputs.copilot_pat_number == '7', secrets.COPILOT_PAT_7, needs.pre_activation.outputs.copilot_pat_number == '8', secrets.COPILOT_PAT_8, needs.pre_activation.outputs.copilot_pat_number == '9', secrets.COPILOT_PAT_9, secrets.COPILOT_GITHUB_TOKEN) }}\n+---\n+\n+# Breaking Change Documentation\n+\n+Create breaking change documentation for the pull request identified below.\n+\n+## PR to document\n+\n+- If triggered by a pull request event, the PR number is `${{ github.event.pull_request.number }}`.\n+- If triggered by `workflow_dispatch`, the PR number is `${{ github.event.inputs.pr_number }}`.\n+\n+## Dry-run mode\n+\n+- If triggered by `workflow_dispatch` with `suppress_output` = `true`,\n+  **do not** post a comment on the PR after producing the files. Just\n+  write the markdown files and stop.\n+- For pull_request triggers, always post the comment.\n+\n+## Instructions\n+\n+Using the breaking-change-doc skill from\n+`.github/skills/breaking-change-doc/SKILL.md`, execute **all steps (0 through\n+6)** for the PR above.\n+\n+In Step 6, if dry-run mode is active, skip publishing any output to the pull\n+request. The generated files in `artifacts/docs/breakingChanges/` are\n+automatically uploaded as a workflow artifact named **breaking-change-docs**\n+and can be downloaded from the workflow run summary page.\n+\n+## When no action is needed\n+\n+If no action is needed (PR has no area label, documentation already exists,\n+etc.), you MUST call the `noop` tool with a message explaining why:\n+\n+```json\n+{\"noop\": {\"message\": \"No action needed: [brief explanation]\"}}\n+```",
+          "snapshot_ref": "950349b9907f5f8c8d56a99223b27e00edfb21f2",
+          "snapshot_blob_sha": "3abd66915e76a8c624fbc933b3730a2eaee31b3c",
+          "snapshot_file": "snapshots/runtime__dotnet__950349b9907f5f8c8d56a99223b27e00edfb21f2__breaking-change-doc.md",
+          "snapshot_bytes": 5622,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/runtime\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"runtime\",\"generated_workflow_path\":\".github/workflows/breaking-change-doc.lock.yml\",\"generated_workflow_file\":\"breaking-change-doc.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/runtime/blob/10c04f707d28097296d509a66c6123ee848361e0/.github/workflows/breaking-change-doc.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+      "source_full_name": "dotnet/runtime",
+      "md_path": ".github/workflows/breaking-change-doc.md",
+      "commit_sha": "0160e214998584c76b9c1ed5b87d3afbba9d40ed",
+      "authored_at": "2026-05-08T19:26:42Z",
+      "committed_at": "2026-05-08T19:26:42Z",
+      "author_name": "Jeff Handley",
+      "author_email": "jeffhandley@users.noreply.github.com",
+      "author_login": "jeffhandley",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Migrate Copilot PAT pool to shared workflow import (#127946)\n\nReplaces the per-workflow inline `select-copilot-pat` action with the\nshared `pat_pool.md` now usable with in gh-aw v0.71.5. The new pattern\nfixes a bug where `COPILOT_PAT_0` was always selected because activation\n`needs:` did not incorporate jobs referenced in `engine.env` expressions\n(https://github.com/github/gh-aw/issues/30232, fixed in v0.71.5).\n\nAlso adds a workflow that monitors the PAT pool health.\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "54e46095dd3f192e1a8cf2576a252044c02c25d0"
+      ],
+      "tree_sha": "567550e0479c79d0c4177fccaa63bb123e2a5f61",
+      "html_url": "https://github.com/dotnet/runtime/commit/0160e214998584c76b9c1ed5b87d3afbba9d40ed",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+          "source_full_name": "dotnet/runtime",
+          "md_path": ".github/workflows/breaking-change-doc.md",
+          "commit_sha": "0160e214998584c76b9c1ed5b87d3afbba9d40ed",
+          "committed_at": "2026-05-08T19:26:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 43,
+          "file_changes": 50,
+          "file_patch": "@@ -54,55 +54,19 @@ on:\n         required: false\n         type: boolean\n         default: false\n+\n # ###############################################################\n-# Override the COPILOT_GITHUB_TOKEN secret usage for the workflow\n-# with a randomly-selected token from a pool of secrets.\n-#\n-# As soon as organization-level billing is offered for Agentic\n-# Workflows, this stop-gap approach will be removed.\n-#\n-# See: /.github/actions/select-copilot-pat/README.md\n+# Override COPILOT_GITHUB_TOKEN with a random PAT from the pool.\n+# This stop-gap will be removed when org billing is available.\n+# See: .github/workflows/shared/pat_pool.README.md for more info.\n # ###############################################################\n+imports:\n+  - shared/pat_pool.md\n \n-  # Add the pre-activation step of selecting a random PAT from the supplied secrets\n-  steps:\n-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n-      name: Checkout the select-copilot-pat action folder\n-      with:\n-        persist-credentials: false\n-        sparse-checkout: .github/actions/select-copilot-pat\n-        sparse-checkout-cone-mode: true\n-        fetch-depth: 1\n-\n-    - id: select-copilot-pat\n-      name: Select Copilot token from pool\n-      uses: ./.github/actions/select-copilot-pat\n-      env:\n-        SECRET_0: ${{ secrets.COPILOT_PAT_0 }}\n-        SECRET_1: ${{ secrets.COPILOT_PAT_1 }}\n-        SECRET_2: ${{ secrets.COPILOT_PAT_2 }}\n-        SECRET_3: ${{ secrets.COPILOT_PAT_3 }}\n-        SECRET_4: ${{ secrets.COPILOT_PAT_4 }}\n-        SECRET_5: ${{ secrets.COPILOT_PAT_5 }}\n-        SECRET_6: ${{ secrets.COPILOT_PAT_6 }}\n-        SECRET_7: ${{ secrets.COPILOT_PAT_7 }}\n-        SECRET_8: ${{ secrets.COPILOT_PAT_8 }}\n-        SECRET_9: ${{ secrets.COPILOT_PAT_9 }}\n-\n-# Add the pre-activation output of the randomly selected PAT\n-jobs:\n-  pre-activation:\n-    outputs:\n-      copilot_pat_number: ${{ steps.select-copilot-pat.outputs.copilot_pat_number }}\n-\n-# Override the COPILOT_GITHUB_TOKEN expression used in the activation job\n-# Consume the PAT number from the pre-activation step and select the corresponding secret\n engine:\n   id: copilot\n   env:\n-    # We cannot use line breaks in this expression as it leads to a syntax error in the compiled workflow\n-    # If none of the `COPILOT_PAT_#` secrets were selected, then the default COPILOT_GITHUB_TOKEN is used\n-    COPILOT_GITHUB_TOKEN: ${{ case(needs.pre_activation.outputs.copilot_pat_number == '0', secrets.COPILOT_PAT_0, needs.pre_activation.outputs.copilot_pat_number == '1', secrets.COPILOT_PAT_1, needs.pre_activation.outputs.copilot_pat_number == '2', secrets.COPILOT_PAT_2, needs.pre_activation.outputs.copilot_pat_number == '3', secrets.COPILOT_PAT_3, needs.pre_activation.outputs.copilot_pat_number == '4', secrets.COPILOT_PAT_4, needs.pre_activation.outputs.copilot_pat_number == '5', secrets.COPILOT_PAT_5, needs.pre_activation.outputs.copilot_pat_number == '6', secrets.COPILOT_PAT_6, needs.pre_activation.outputs.copilot_pat_number == '7', secrets.COPILOT_PAT_7, needs.pre_activation.outputs.copilot_pat_number == '8', secrets.COPILOT_PAT_8, needs.pre_activation.outputs.copilot_pat_number == '9', secrets.COPILOT_PAT_9, secrets.COPILOT_GITHUB_TOKEN) }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, secrets.COPILOT_GITHUB_TOKEN) }}\n ---\n \n # Breaking Change Documentation",
+          "snapshot_ref": "0160e214998584c76b9c1ed5b87d3afbba9d40ed",
+          "snapshot_blob_sha": "8da0dbd845c69984a9f8e717ddf4cd5fb9cb02dd",
+          "snapshot_file": "snapshots/runtime__dotnet__0160e214998584c76b9c1ed5b87d3afbba9d40ed__breaking-change-doc.md",
+          "snapshot_bytes": 3849,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/runtime\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"runtime\",\"generated_workflow_path\":\".github/workflows/breaking-change-doc.lock.yml\",\"generated_workflow_file\":\"breaking-change-doc.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/runtime/blob/10c04f707d28097296d509a66c6123ee848361e0/.github/workflows/breaking-change-doc.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+      "source_full_name": "dotnet/runtime",
+      "md_path": ".github/workflows/breaking-change-doc.md",
+      "commit_sha": "8e883c7e4182b463fffef07f242d8388373d7050",
+      "authored_at": "2026-07-08T07:48:32Z",
+      "committed_at": "2026-07-08T07:48:32Z",
+      "author_name": "Jeff Handley",
+      "author_email": "jeffhandley@users.noreply.github.com",
+      "author_login": "jeffhandley",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade gh-aw to v0.81.6 and isolate agentic workflows into copilot-pat-pool environment (#129840)\n\n- Upgrade gh-aw to v0.81.6 (all agentic workflows recompiled)\n- Update PAT Pool workflow to require an environment input\n- Update PAT Pool README\n- Update PAT Pool comments and template in all workflows\n- Remove copilot-echo workflow that is no longer needed\n\n> [!NOTE]\n> Portions of this pull request description were updated with the\nassistance of GitHub Copilot.\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ce8db36a2e5b7c556c4a8bff8c05785db3d4d4b5"
+      ],
+      "tree_sha": "89b406b985c608143d77acb3b86b88b481bac6ac",
+      "html_url": "https://github.com/dotnet/runtime/commit/8e883c7e4182b463fffef07f242d8388373d7050",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+          "source_full_name": "dotnet/runtime",
+          "md_path": ".github/workflows/breaking-change-doc.md",
+          "commit_sha": "8e883c7e4182b463fffef07f242d8388373d7050",
+          "committed_at": "2026-07-08T07:48:32Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 24,
+          "file_deletions": 5,
+          "file_changes": 29,
+          "file_patch": "@@ -56,17 +56,36 @@ on:\n         default: false\n \n # ###############################################################\n-# Override COPILOT_GITHUB_TOKEN with a random PAT from the pool.\n-# This stop-gap will be removed when org billing is available.\n-# See: .github/workflows/shared/pat_pool.README.md for more info.\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in an isolated `copilot-pat-pool` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n # ###############################################################\n imports:\n-  - shared/pat_pool.md\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n+\n+environment: copilot-pat-pool\n \n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, secrets.COPILOT_GITHUB_TOKEN) }}\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n ---\n \n # Breaking Change Documentation",
+          "snapshot_ref": "8e883c7e4182b463fffef07f242d8388373d7050",
+          "snapshot_blob_sha": "7028780306f94ec0a51f3e475b87bd5ddbd9efbe",
+          "snapshot_file": "snapshots/runtime__dotnet__8e883c7e4182b463fffef07f242d8388373d7050__breaking-change-doc.md",
+          "snapshot_bytes": 4088,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/runtime\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"runtime\",\"generated_workflow_path\":\".github/workflows/breaking-change-doc.lock.yml\",\"generated_workflow_file\":\"breaking-change-doc.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/runtime/blob/10c04f707d28097296d509a66c6123ee848361e0/.github/workflows/breaking-change-doc.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+      "source_full_name": "dotnet/runtime",
+      "md_path": ".github/workflows/breaking-change-doc.md",
+      "commit_sha": "23860fbb246a18fdfec2e0a590850ece0eec9358",
+      "authored_at": "2026-07-22T06:58:10Z",
+      "committed_at": "2026-07-22T06:58:10Z",
+      "author_name": "Matous Kozak",
+      "author_email": "55735845+matouskozak@users.noreply.github.com",
+      "author_login": "matouskozak",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix agentic threat-detection auth by recompiling pat_pool workflows with gh-aw v0.82.6 (#131156)\n\nAgentic workflows that use the shared `pat_pool` job show a\nfalse-positive **\"agentic threat detected / results could not be\nparsed\"** banner (e.g. #131122) — the threat-detection job simply can't\nauthenticate.\n\n**Cause:** under gh-aw **v0.81.6**, the generated `detection` job's\n`needs:` is hardcoded to `[activation, agent]` and omits the custom\n`pat_pool` job. So `needs.pat_pool.outputs.pat_number` is empty,\n`COPILOT_GITHUB_TOKEN` falls back to `'NO COPILOT PAT AVAILABLE'`,\ninference returns 503, and no `THREAT_DETECTION_RESULT` is emitted.\nFixed upstream in **v0.82.6** (github/gh-aw#44202); `holistic-review`\nalready runs v0.82.6 without the bug.\n\n**Fix:** recompiled the 5 affected workflows with gh-aw v0.82.6. Each\n`detection` job now depends on `pat_pool`:\n\n```diff\n   detection:\n     needs:\n       - activation\n       - agent\n+      - pat_pool\n```\n\nThe `.md` `COPILOT_GITHUB_TOKEN` is flattened to a single line because\nv0.82.6's new `Check for OAuth tokens` step emits invalid YAML from a\nmultiline value (same as `holistic-review.md`).\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "207f27695dc65b8b261f7cc7e2dc0a2af517278f"
+      ],
+      "tree_sha": "0565fa4364cabe56a3e4593019f6f052cc17873a",
+      "html_url": "https://github.com/dotnet/runtime/commit/23860fbb246a18fdfec2e0a590850ece0eec9358",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/runtime:.github/workflows/breaking-change-doc.md",
+          "source_full_name": "dotnet/runtime",
+          "md_path": ".github/workflows/breaking-change-doc.md",
+          "commit_sha": "23860fbb246a18fdfec2e0a590850ece0eec9358",
+          "committed_at": "2026-07-22T06:58:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 14,
+          "file_changes": 15,
+          "file_patch": "@@ -72,20 +72,7 @@ environment: copilot-pat-pool\n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: |\n-      ${{ case(\n-        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n-        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n-        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n-        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n-        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n-        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n-        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n-        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n-        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n-        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        'NO COPILOT PAT AVAILABLE')\n-      }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, 'NO COPILOT PAT AVAILABLE') }}\n ---\n \n # Breaking Change Documentation",
+          "snapshot_ref": "23860fbb246a18fdfec2e0a590850ece0eec9358",
+          "snapshot_blob_sha": "fd1f37338ae13429acb22c8792bc0c8fef7187f2",
+          "snapshot_file": "snapshots/runtime__dotnet__23860fbb246a18fdfec2e0a590850ece0eec9358__breaking-change-doc.md",
+          "snapshot_bytes": 3985,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/runtime\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"runtime\",\"generated_workflow_path\":\".github/workflows/breaking-change-doc.lock.yml\",\"generated_workflow_file\":\"breaking-change-doc.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/runtime/blob/10c04f707d28097296d509a66c6123ee848361e0/.github/workflows/breaking-change-doc.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/archivx-agentic-workflows-analyzer.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/archivx-agentic-workflows-analyzer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/archivx-agentic-workflows-analyzer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/archivx-agentic-workflows-analyzer.lock.yml",
+      "generated_workflow_file": "archivx-agentic-workflows-analyzer.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/archivx-agentic-workflows-analyzer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:19+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/archivx-agentic-workflows-analyzer.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/archivx-agentic-workflows-analyzer.md",
+      "commit_sha": "3de14a6b512b0eae8e8a7f29ef6c3c75f2ebed65",
+      "authored_at": "2026-08-02T17:38:08Z",
+      "committed_at": "2026-08-02T17:38:08Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add archivx agentic workflows analyzer with glowmotion animated diagrams (#49816)",
+      "parent_shas": [
+        "6056aca220c0ec18afbfb3dc19784a6518ca9f7b"
+      ],
+      "tree_sha": "04c0a2b55ce0e665befdb6e38eb83acc0e10d95a",
+      "html_url": "https://github.com/github/gh-aw/commit/3de14a6b512b0eae8e8a7f29ef6c3c75f2ebed65",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/archivx-agentic-workflows-analyzer.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/archivx-agentic-workflows-analyzer.md",
+          "commit_sha": "3de14a6b512b0eae8e8a7f29ef6c3c75f2ebed65",
+          "committed_at": "2026-08-02T17:38:08Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 176,
+          "file_deletions": 0,
+          "file_changes": 176,
+          "file_patch": "@@ -0,0 +1,176 @@\n+---\n+emoji: \"🌅\"\n+name: Archivx — Animated Workflow Visualizer\n+description: Weekly animated visual summary of agentic workflow health using glowmotion\n+on:\n+  schedule: weekly on monday around 09:00\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  actions: read\n+engine: claude\n+timeout-minutes: 30\n+max-ai-credits: 500\n+skills:\n+  - SylphAI-Inc/skills/skills/glowmotion@0a3dc91bab4ca2be12882540f5812ccbbcf01e40\n+tools:\n+  cli-proxy: true\n+  agentic-workflows:\n+  bash: true\n+steps:\n+  - name: Download agentic workflow logs (last 7 days)\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/aw-mcp/logs\n+      ./gh-aw logs --start-date -7d --count 200 -o /tmp/gh-aw/aw-mcp/logs\n+safe-outputs:\n+  create-discussion:\n+    category: \"General\"\n+    title-prefix: \"[archivx] \"\n+    expires: 30d\n+    max: 1\n+  upload-artifact:\n+    max-uploads: 1\n+    retention-days: 30\n+    allowed-paths:\n+      - \"*.html\"\n+features:\n+  gh-aw-detection: true\n+sandbox:\n+  agent:\n+    sudo: false\n+evals:\n+  - id: animated_diagram_generated\n+    question: Did the agent generate an animated HTML diagram using glowmotion?\n+  - id: discussion_created\n+    question: Was a discussion created with the visual analysis of agentic workflow health?\n+---\n+\n+# Archivx — Animated Workflow Visualizer\n+\n+You are Archivx, an animated workflow visualizer that creates premium animated HTML summaries of agentic workflow health and activity using the glowmotion skill.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Run Date**: $(date +%Y-%m-%d)\n+\n+## Mission\n+\n+Analyze the past 7 days of agentic workflow runs and generate an animated visual summary using the glowmotion skill. Upload the diagram as an artifact and create a discussion with key insights.\n+\n+{{#runtime-import? shared/aw-logs-24h-fetch-prompt.md}}\n+\n+## Step 1: Collect Workflow Data\n+\n+Workflow logs for the past 7 days have been pre-downloaded to `/tmp/gh-aw/aw-mcp/logs/`. Read the `aw_info.json` metadata files to extract:\n+- Total runs and overall success rate\n+- Top 5 workflows by run count\n+- Top 3 failing workflows\n+- Engine distribution (claude, copilot, codex, gemini)\n+- Average token usage\n+\n+```bash\n+# Count total runs\n+ls /tmp/gh-aw/aw-mcp/logs/ | wc -l\n+\n+# Read metadata from all runs\n+for d in /tmp/gh-aw/aw-mcp/logs/*/; do\n+  cat \"$d/aw_info.json\" 2>/dev/null || true\n+done\n+```\n+\n+If fewer than 5 runs are found, call `noop` with message:\n+\"Insufficient workflow data for visual summary (fewer than 5 runs in the past 7 days).\"\n+Then stop immediately.\n+\n+## Step 2: Locate Glowmotion Scripts\n+\n+Find the glowmotion `layout.py` script:\n+```bash\n+find /tmp/gh-aw -name \"layout.py\" 2>/dev/null | head -1\n+```\n+\n+Derive `GLOWMOTION_SCRIPTS` as the directory containing `layout.py`. If not found, stop and report the error.\n+\n+## Step 3: Generate the Animated Diagram\n+\n+### 3a. Author the Graph JSON\n+\n+Write a graph JSON to `/tmp/gh-aw/agent/glowmotion-graph.json` describing the agentic workflow ecosystem as an `architecture` diagram:\n+\n+- **mode**: `\"architecture\"`\n+- **darkTheme**: `\"aurora\"` (appropriate for data/ML topics)\n+- **title**: `\"Agentic Workflow Health\"`\n+- **titleHighlight**: the overall success-rate percentage (e.g., `\"94% healthy\"`)\n+- **subtitle**: the date range covered (e.g., `\"Past 7 days — YYYY-MM-DD\"`)\n+- **summary**: exactly 3 cards — total runs, top engine, most active workflow\n+- **nodes**: group the top workflows by category (analysis, triage, security/scanning, CI/release, reporting) as service boxes with `type: \"service\"`\n+- **groups**: one group per category\n+- **journeys**: at least one animated path showing a typical workflow execution flow (trigger → agent → safe-output)\n+- **edges**: show key data flows between categories\n+\n+### 3b. Render\n+\n+```bash\n+python3 \"${GLOWMOTION_SCRIPTS}/layout.py\" /tmp/gh-aw/agent/glowmotion-graph.json --render /tmp/gh-aw/agent/agentic-workflows-archivx.html\n+```\n+\n+### 3c. Verify\n+\n+```bash\n+python3 \"${GLOWMOTION_SCRIPTS}/check_diagram.py\" /tmp/gh-aw/agent/agentic-workflows-archivx.html\n+```\n+\n+Fix every violation by editing `/tmp/gh-aw/agent/glowmotion-graph.json` and re-rendering until the checker prints `0 violations`.\n+\n+## Step 4: Upload the Artifact\n+\n+Upload `/tmp/gh-aw/agent/agentic-workflows-archivx.html` as artifact named `archivx-animated-diagram` (HTML, opens in any browser).\n+\n+## Step 5: Create Discussion\n+\n+Create a discussion titled `[archivx] Agentic Workflow Visual Summary — YYYY-MM-DD`.\n+\n+**Comment Formatting**: Use h3 (`###`) or lower for all headers. Wrap long content with `<details><summary>View Details</summary>...</details>`.\n+\n+### Discussion Body Structure\n+\n+```\n+### Overview\n+\n+2-3 sentence narrative of workflow health for the past 7 days.\n+\n+---\n+\n+### Key Metrics\n+\n+| Metric | Value |\n+|---|---|\n+| Total Runs | N |\n+| Success Rate | N% |\n+| Top Engine | engine-name |\n+| Most Active Workflow | workflow-name |\n+\n+---\n+\n+### Animated Diagram\n+\n+The animated architecture diagram is attached as workflow artifact **archivx-animated-diagram**.\n+\n+> The HTML file opens directly in any browser. It includes a ☀/☾ light-dark toggle and a ⏯ pause button, and honors reduced-motion preferences.\n+\n+---\n+\n+### Top Failures\n+\n+(collapsible — top 3 failing workflows with failure counts)\n+\n+---\n+\n+### Workflow Activity\n+\n+(collapsible — table of top 10 workflows with run counts and success rates)\n+```",
+          "snapshot_ref": "3de14a6b512b0eae8e8a7f29ef6c3c75f2ebed65",
+          "snapshot_blob_sha": "f80d619288d54b5f0df2b32362b0633212342bf4",
+          "snapshot_file": "snapshots/gh-aw__github__3de14a6b512b0eae8e8a7f29ef6c3c75f2ebed65__archivx-agentic-workflows-analyzer.md",
+          "snapshot_bytes": 5333,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/archivx-agentic-workflows-analyzer.lock.yml\",\"generated_workflow_file\":\"archivx-agentic-workflows-analyzer.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/archivx-agentic-workflows-analyzer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

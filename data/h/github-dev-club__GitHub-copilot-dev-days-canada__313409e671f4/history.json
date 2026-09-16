@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github-dev-club/GitHub-copilot-dev-days-canada:.github/workflows/auto-label-triage.md",
+    "source_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+    "source_owner": "github-dev-club",
+    "source_repo": "GitHub-copilot-dev-days-canada",
+    "md_path": ".github/workflows/auto-label-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/blob/HEAD/.github/workflows/auto-label-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+      "generated_owner": "github-dev-club",
+      "generated_repo": "GitHub-copilot-dev-days-canada",
+      "generated_workflow_path": ".github/workflows/auto-label-triage.lock.yml",
+      "generated_workflow_file": "auto-label-triage.lock.yml",
+      "generated_html_url": "https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/blob/6aa1d1a91ee51f8987084300444bea5c5053489f/.github/workflows/auto-label-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github-dev-club/GitHub-copilot-dev-days-canada:.github/workflows/auto-label-triage.md",
+      "source_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+      "md_path": ".github/workflows/auto-label-triage.md",
+      "commit_sha": "d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+      "authored_at": "2026-02-15T17:23:17Z",
+      "committed_at": "2026-02-15T17:23:17Z",
+      "author_name": "Ve Sharma",
+      "author_email": "62218708+VeVarunSharma@users.noreply.github.com",
+      "author_login": "VeVarunSharma",
+      "author_account_type": "User",
+      "committer_name": "Ve Sharma",
+      "committer_email": "62218708+VeVarunSharma@users.noreply.github.com",
+      "committer_login": "VeVarunSharma",
+      "committer_account_type": "User",
+      "message": "feat: create talk proposal workflows",
+      "parent_shas": [
+        "dea9a2044664cb2b84866159c77b69b1b1966afb"
+      ],
+      "tree_sha": "a0e75a1a7986b35f2da47496dea9421ac754e1bc",
+      "html_url": "https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/commit/d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github-dev-club/GitHub-copilot-dev-days-canada:.github/workflows/auto-label-triage.md",
+          "source_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+          "md_path": ".github/workflows/auto-label-triage.md",
+          "commit_sha": "d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+          "committed_at": "2026-02-15T17:23:17Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 94,
+          "file_deletions": 0,
+          "file_changes": 94,
+          "file_patch": "@@ -0,0 +1,94 @@\n+---\n+description: Automatically label and triage new talk and demo proposals with city chapter labels and welcome comments.\n+on:\n+  issues:\n+    types: [opened]\n+roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+  update-issue:\n+    max: 1\n+  noop:\n+---\n+\n+# Auto-Label & Triage Talk/Demo Proposals\n+\n+You are an AI agent that automatically classifies and triages new talk and demo proposals for GitHub Dev Club, a multi-city meetup series.\n+\n+## Your Task\n+\n+When a new issue is opened, analyze it and do the following:\n+\n+### 1. Detect City Chapter\n+\n+Read the issue body and look for the **City Chapter** field. Apply the matching city label:\n+\n+| City mentioned | Label to apply   |\n+| -------------- | ---------------- |\n+| Vancouver      | `city:vancouver` |\n+| Calgary        | `city:calgary`   |\n+| Toronto        | `city:toronto`   |\n+| Montreal       | `city:montreal`  |\n+| Any / Flexible | `city:flexible`  |\n+\n+If no city is mentioned or the field is blank, do **not** apply a city label.\n+\n+### 2. Detect Talk Type / Length\n+\n+Check the issue labels and body to determine the type:\n+\n+- If the issue has the label `Talk`:\n+  - If the body mentions \"lightning\" or \"5 min\" → also apply the label `lightning-talk`\n+  - If the body mentions \"full presentation\" or \"10-20 min\" → also apply the label `full-talk`\n+- If the issue has the label `Demo` → also apply the label `demo`\n+\n+### 3. Post a Welcome & Triage Comment\n+\n+Post a single comment on the issue with:\n+\n+```\n+🎉 **Thanks for submitting a proposal to GitHub Dev Club!**\n+\n+### How voting works\n+Community members can **react with 👍** on this issue to upvote this talk.\n+Top-voted proposals get priority when we build the agenda for each event.\n+\n+### What happens next\n+1. An organizer will review and confirm your city chapter & event\n+2. Your proposal will appear on our voting leaderboard\n+3. Selected talks will be confirmed ~2 weeks before the event\n+\n+---\n+_Organizer checklist:_\n+- [ ] City label verified\n+- [ ] Assigned to event milestone\n+- [ ] Speaker info complete\n+- [ ] Scheduled on agenda\n+```\n+\n+### 4. Apply Labels via update-issue\n+\n+Use the `update-issue` safe output to add the detected labels to the issue. Combine the city label and the type label into one update.\n+\n+## Guidelines\n+\n+- Only process issues that have either the `Talk` or `Demo` label.\n+- If the issue does not have a `Talk` or `Demo` label, call the `noop` safe output with the message: \"Issue is not a talk or demo proposal — skipping.\"\n+- Be case-insensitive when matching city names.\n+- Do **not** assign the issue to anyone — organizers do that manually.\n+- Do **not** assign a milestone — organizers do that manually to map proposals to events.\n+- If there is nothing to do, call the `noop` safe output.\n+\n+## Safe Outputs\n+\n+- Use `update-issue` to apply labels.\n+- Use `add-comment` to post the welcome/triage comment.\n+- Use `noop` if the issue is not a proposal or no action is needed.",
+          "snapshot_ref": "d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+          "snapshot_blob_sha": "969fd13b6cd8cb48ecdee3e77d7629a7a271386f",
+          "snapshot_file": "snapshots/GitHub-copilot-dev-days-canada__github-dev-club__d3dfc8350b4bbf693e272869b5ee70b65d2f6713__auto-label-triage.md",
+          "snapshot_bytes": 3000,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github-dev-club/GitHub-copilot-dev-days-canada\",\"generated_owner\":\"github-dev-club\",\"generated_repo\":\"GitHub-copilot-dev-days-canada\",\"generated_workflow_path\":\".github/workflows/auto-label-triage.lock.yml\",\"generated_workflow_file\":\"auto-label-triage.lock.yml\",\"generated_html_url\":\"https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/blob/6aa1d1a91ee51f8987084300444bea5c5053489f/.github/workflows/auto-label-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

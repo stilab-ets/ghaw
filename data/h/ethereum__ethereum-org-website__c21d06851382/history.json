@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+    "source_full_name": "ethereum/ethereum-org-website",
+    "source_owner": "ethereum",
+    "source_repo": "ethereum-org-website",
+    "md_path": ".github/workflows/pr-reviewer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/ethereum/ethereum-org-website/blob/HEAD/.github/workflows/pr-reviewer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "ethereum/ethereum-org-website",
+      "generated_owner": "ethereum",
+      "generated_repo": "ethereum-org-website",
+      "generated_workflow_path": ".github/workflows/pr-reviewer.lock.yml",
+      "generated_workflow_file": "pr-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/ethereum/ethereum-org-website/blob/a582d6af767ffc70bc9d4731458a9b417c758498/.github/workflows/pr-reviewer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:26:56+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+      "source_full_name": "ethereum/ethereum-org-website",
+      "md_path": ".github/workflows/pr-reviewer.md",
+      "commit_sha": "5fa168a8967cbf4ed3d0a5bfa95b405f4c74c1e2",
+      "authored_at": "2026-07-10T17:38:42Z",
+      "committed_at": "2026-07-10T17:53:21Z",
+      "author_name": "Pablo Pettinari",
+      "author_email": "pettinarip@gmail.com",
+      "author_login": "pettinarip",
+      "author_account_type": "User",
+      "committer_name": "Pablo Pettinari",
+      "committer_email": "pettinarip@gmail.com",
+      "committer_login": "pettinarip",
+      "committer_account_type": "User",
+      "message": "feat: gh-aw intake automation — PR review, triage, and digest workflows (phase 1)\n\nFour agentic workflows (plus gh-aw's generated maintenance workflow) to\nimprove intake throughput; baseline to beat is time-to-first-review\nP75 = 6.32 days.\n\n- pr-reviewer: lane-aware, verdict-first first-pass review of same-repo\n  PRs with routing labels\n- backlog-sweeper: weekday sweep of the 8 oldest unreviewed PRs (forks\n  included) with evidence-based recommend-close labels; never closes\n- issue-triager: labels-only classification of new issues; never comments\n- team-digest: weekday Discord digest of the PR/issue queue\n\nAll agents run read-only (strict: true); writes go through allowlisted\nsafe-outputs with per-run caps. Actions and containers are SHA-pinned.\nPrompts tuned via a read-only dry-run simulation against the live queue.",
+      "parent_shas": [
+        "1e9fc199e753579595d0a627c27990b6786c90ee"
+      ],
+      "tree_sha": "af10b691c391897648be17f98639a307a79c3863",
+      "html_url": "https://github.com/ethereum/ethereum-org-website/commit/5fa168a8967cbf4ed3d0a5bfa95b405f4c74c1e2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+          "source_full_name": "ethereum/ethereum-org-website",
+          "md_path": ".github/workflows/pr-reviewer.md",
+          "commit_sha": "5fa168a8967cbf4ed3d0a5bfa95b405f4c74c1e2",
+          "committed_at": "2026-07-10T17:53:21Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 65,
+          "file_deletions": 0,
+          "file_changes": 65,
+          "file_patch": "@@ -0,0 +1,65 @@\n+---\n+name: PR Reviewer (team)\n+description: Lane-aware, verdict-first first-pass review of same-repo pull requests\n+on:\n+  pull_request:\n+    types: [opened, ready_for_review]\n+    draft: false\n+  skip-bots:\n+    - allcontributors[bot]\n+    - github-actions[bot]\n+    - dependabot[bot]\n+if: github.event.pull_request.head.repo.full_name == github.repository\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+engine:\n+  id: claude\n+network: defaults\n+strict: true\n+timeout-minutes: 10\n+tools:\n+  github:\n+    toolsets: [default, actions]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+    hide-older-comments: true\n+  add-labels:\n+    max: 3\n+    allowed:\n+      - \"needs review 👀\"\n+      - \"needs dev approval 🧑‍💻\"\n+      - \"needs design approval 🧑‍🎨\"\n+      - \"needs product review 🕵️\"\n+      - \"needs technical content review 🧑‍🏫\"\n+      - \"content 🖋️\"\n+      - \"translation 🌍\"\n+      - \"documentation 📖\"\n+      - \"dependencies 📦\"\n+      - \"tooling 🔧\"\n+      - \"config ⚙️\"\n+  noop:\n+  report-failure-as-issue: false\n+pre-agent-steps:\n+  - name: Pre-fetch PR diff and metadata\n+    env:\n+      GH_TOKEN: ${{ github.token }}\n+      PR_NUMBER: ${{ github.event.pull_request.number }}\n+      REPO: ${{ github.repository }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent\n+      { gh pr diff \"$PR_NUMBER\" --repo \"$REPO\" || true; } | head -n 3000 > /tmp/gh-aw/agent/pr-diff.patch\n+      gh pr view \"$PR_NUMBER\" --repo \"$REPO\" \\\n+        --json number,title,body,author,isDraft,baseRefName,headRefName,additions,deletions,changedFiles,files,labels \\\n+        > /tmp/gh-aw/agent/pr-meta.json\n+imports:\n+  - shared/pr-review-core.md\n+---\n+\n+Review pull request #${{ github.event.pull_request.number }} in ${{ github.repository }} following the core instructions below.\n+\n+This run handles same-repo (team) pull requests. Team authors know the codebase — skip the pleasantries you would give a first-time contributor, keep the verdict and findings tight, and hold code to full convention depth.",
+          "snapshot_ref": "5fa168a8967cbf4ed3d0a5bfa95b405f4c74c1e2",
+          "snapshot_blob_sha": "e9163a44d37ef08d397a4671d317a94e3824967b",
+          "snapshot_file": "snapshots/ethereum-org-website__ethereum__5fa168a8967cbf4ed3d0a5bfa95b405f4c74c1e2__pr-reviewer.md",
+          "snapshot_bytes": 2036,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ethereum/ethereum-org-website\",\"generated_owner\":\"ethereum\",\"generated_repo\":\"ethereum-org-website\",\"generated_workflow_path\":\".github/workflows/pr-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ethereum/ethereum-org-website/blob/a582d6af767ffc70bc9d4731458a9b417c758498/.github/workflows/pr-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+      "source_full_name": "ethereum/ethereum-org-website",
+      "md_path": ".github/workflows/pr-reviewer.md",
+      "commit_sha": "fa28f527358a65428aa9462426aaa641d5b77c44",
+      "authored_at": "2026-07-13T13:11:25Z",
+      "committed_at": "2026-07-13T13:11:25Z",
+      "author_name": "Pablo Pettinari",
+      "author_email": "pettinarip@gmail.com",
+      "author_login": "pettinarip",
+      "author_account_type": "User",
+      "committer_name": "Pablo Pettinari",
+      "committer_email": "pettinarip@gmail.com",
+      "committer_login": "pettinarip",
+      "committer_account_type": "User",
+      "message": "fix: sweep 5 PRs per run, allow correcting stale type labels\n\n- backlog-sweeper: 8 -> 5 PRs per run (comment cap 5, label cap 15) to\n  fit the 15-minute timeout with per-PR comment/diff lookups\n- pr-reviewer + sweeper: scoped remove-labels safe output (type labels\n  only) so stale path-labeler labels that survive force-pushes get\n  corrected; routing/status labels stay human-only\n- .gitattributes: add trailing newline",
+      "parent_shas": [
+        "5fa168a8967cbf4ed3d0a5bfa95b405f4c74c1e2"
+      ],
+      "tree_sha": "8cca4e7b4eaa54fe385d82a03cdd2846e06f8cdb",
+      "html_url": "https://github.com/ethereum/ethereum-org-website/commit/fa28f527358a65428aa9462426aaa641d5b77c44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+          "source_full_name": "ethereum/ethereum-org-website",
+          "md_path": ".github/workflows/pr-reviewer.md",
+          "commit_sha": "fa28f527358a65428aa9462426aaa641d5b77c44",
+          "committed_at": "2026-07-13T13:11:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 9,
+          "file_deletions": 0,
+          "file_changes": 9,
+          "file_patch": "@@ -41,6 +41,15 @@ safe-outputs:\n       - \"dependencies 📦\"\n       - \"tooling 🔧\"\n       - \"config ⚙️\"\n+  remove-labels:\n+    max: 2\n+    allowed:\n+      - \"content 🖋️\"\n+      - \"translation 🌍\"\n+      - \"documentation 📖\"\n+      - \"dependencies 📦\"\n+      - \"tooling 🔧\"\n+      - \"config ⚙️\"\n   noop:\n   report-failure-as-issue: false\n pre-agent-steps:",
+          "snapshot_ref": "fa28f527358a65428aa9462426aaa641d5b77c44",
+          "snapshot_blob_sha": "869744027c7592464062e282ba2dd06da4c3df49",
+          "snapshot_file": "snapshots/ethereum-org-website__ethereum__fa28f527358a65428aa9462426aaa641d5b77c44__pr-reviewer.md",
+          "snapshot_bytes": 2234,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ethereum/ethereum-org-website\",\"generated_owner\":\"ethereum\",\"generated_repo\":\"ethereum-org-website\",\"generated_workflow_path\":\".github/workflows/pr-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ethereum/ethereum-org-website/blob/a582d6af767ffc70bc9d4731458a9b417c758498/.github/workflows/pr-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+      "source_full_name": "ethereum/ethereum-org-website",
+      "md_path": ".github/workflows/pr-reviewer.md",
+      "commit_sha": "c274c13bd7812a56e1335fc7a4d8e0bba7438c89",
+      "authored_at": "2026-07-15T07:08:43Z",
+      "committed_at": "2026-07-15T07:08:43Z",
+      "author_name": "Pablo Pettinari",
+      "author_email": "pettinarip@gmail.com",
+      "author_login": "pettinarip",
+      "author_account_type": "User",
+      "committer_name": "Pablo Pettinari",
+      "committer_email": "pettinarip@gmail.com",
+      "committer_login": "pettinarip",
+      "committer_account_type": "User",
+      "message": "ci(aw): stop agentic workflows posting no-op runs to tracking issue\n\nSet report-as-issue: false on the noop safe-output for all four agentic\nworkflows (backlog-sweeper, issue-triager, pr-reviewer, team-digest) so\nno-op runs no longer comment on the [aw] No-Op Runs issue (#18803).\n\nRecompiling drops the now-unneeded agentics-maintenance.yml, which only\nexisted to manage the expiring no-op tracking issue.",
+      "parent_shas": [
+        "1473dc4036fa1aab7b983f589efb737220fb1639"
+      ],
+      "tree_sha": "4053b9f834889e1cb2f0432f15b9d910f68d80e2",
+      "html_url": "https://github.com/ethereum/ethereum-org-website/commit/c274c13bd7812a56e1335fc7a4d8e0bba7438c89",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "ethereum/ethereum-org-website:.github/workflows/pr-reviewer.md",
+          "source_full_name": "ethereum/ethereum-org-website",
+          "md_path": ".github/workflows/pr-reviewer.md",
+          "commit_sha": "c274c13bd7812a56e1335fc7a4d8e0bba7438c89",
+          "committed_at": "2026-07-15T07:08:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -51,6 +51,7 @@ safe-outputs:\n       - \"tooling 🔧\"\n       - \"config ⚙️\"\n   noop:\n+    report-as-issue: false\n   report-failure-as-issue: false\n pre-agent-steps:\n   - name: Pre-fetch PR diff and metadata",
+          "snapshot_ref": "c274c13bd7812a56e1335fc7a4d8e0bba7438c89",
+          "snapshot_blob_sha": "5c01cd1d8854e90933fcdea45dbaf4de21a6c04b",
+          "snapshot_file": "snapshots/ethereum-org-website__ethereum__c274c13bd7812a56e1335fc7a4d8e0bba7438c89__pr-reviewer.md",
+          "snapshot_bytes": 2261,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ethereum/ethereum-org-website\",\"generated_owner\":\"ethereum\",\"generated_repo\":\"ethereum-org-website\",\"generated_workflow_path\":\".github/workflows/pr-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ethereum/ethereum-org-website/blob/a582d6af767ffc70bc9d4731458a9b417c758498/.github/workflows/pr-reviewer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+    "source_full_name": "astronomer/dag-factory",
+    "source_owner": "astronomer",
+    "source_repo": "dag-factory",
+    "md_path": ".github/workflows/review-bot-prs.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/astronomer/dag-factory/blob/HEAD/.github/workflows/review-bot-prs.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "astronomer/dag-factory",
+      "generated_owner": "astronomer",
+      "generated_repo": "dag-factory",
+      "generated_workflow_path": ".github/workflows/review-bot-prs.lock.yml",
+      "generated_workflow_file": "review-bot-prs.lock.yml",
+      "generated_html_url": "https://github.com/astronomer/dag-factory/blob/3b6a4ced85cd6a1bf961fecaee9c94c52463e094/.github/workflows/review-bot-prs.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:37+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+      "source_full_name": "astronomer/dag-factory",
+      "md_path": ".github/workflows/review-bot-prs.md",
+      "commit_sha": "21c6102455d7ad7aa3f1f4b5d9031776319b772b",
+      "authored_at": "2026-06-17T15:01:37Z",
+      "committed_at": "2026-06-17T15:01:37Z",
+      "author_name": "Tatiana Al-Chueyr",
+      "author_email": "tatiana.alchueyr@gmail.com",
+      "author_login": "tatiana",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add hourly bot-PR safety review (GitHub Agentic Workflow) (#786)\n\nAdds a scheduled **GitHub Agentic Workflow**\n([gh-aw](https://github.com/githubnext/gh-aw)) that reviews open\n**Dependabot / pre-commit-ci** PRs in dag-factory once an hour and posts\na single advisory comment per PR — **✅ Safe to merge / ⏸️ Hold / ⚠️\nReview carefully**.\n\nIt is a port of our internal `review-bot-prs` Claude Code skill, scoped\nto **this repo only**. The agent runs **read-only**: its only routine\nwrite is posting a PR comment. A \"nothing to review\" run logs a no-op to\nthe Actions run summary (not an issue); gh-aw opens a tracking issue\nonly on an incomplete run or a missing tool. It cannot approve, merge,\nrebase, or push — those are not granted.\n\n> [!NOTE]\n> Ships in **preview-only mode** (`safe-outputs.staged: true`): comments\nare rendered in the Actions run summary (🎭) and **not posted**. A small\nstacked [follow-up\nPR](https://github.com/astronomer/dag-factory/pull/788) removes that\nflag to go live, once we've eyeballed a few real runs.\n\n## How it works\n\nEach run (gated by a pre-activation check that skips the run entirely\nwhen there are no open bot PRs, to avoid burning Copilot minutes)\nevaluates every open `app/dependabot` / `app/pre-commit-ci` PR on:\n\n- **Cooldown** — honours the repo's 7-day Dependabot cooldown; security\nupdates are exempt.\n- **Security** — checks OSV / advisories for the new version.\n- **Risk / blast radius** — direct vs transitive vs dev-only, breaking\nchanges.\n- **CI gate** — all required checks green, and flags checks still\nawaiting \"Approve and run\". Encodes the dag-factory nuance that\n`Static-Check` only runs pre-commit against `dagfactory/* uv.lock`, so\nmarkdownlint / markdown-link-check bumps are *not* exercised by green\nCI.\n- **Tag integrity** (github-actions bumps) — verifies the pinned SHA\nactually resolves from the tag named in the `# vX` comment (supply-chain\ncheck).\n\nIt is idempotent across hourly runs (skips PRs it has already commented\non) and applies `min-integrity: approved`, so injected content from\nunapproved external accounts on a PR thread is filtered out before the\nagent sees it. Engine: **GitHub Copilot**.\n\n### Files\n\n| File | Purpose |\n|---|---|\n| `.github/workflows/review-bot-prs.md` | Workflow **source** (edit\nthis) |\n| `.github/workflows/review-bot-prs.lock.yml` | Generated Action — runs\non the schedule. Regenerate with `gh aw compile`; do not hand-edit |\n| `.github/workflows/aw.json` | gh-aw config; `maintenance: false` so\ncompile does not emit the `agentics-maintenance.yml` companion (we\ncreate no expiring issues) |\n| `.github/dependabot.yml` | Reconciled by `gh aw compile` — adds an\n`ignore` for the compiler-locked `github/gh-aw-actions` pin. Note:\ncompile re-serialises this file, so the diff also reorders keys and\ndrops the #765 grouping comments (functional content unchanged) |\n| `.github/aw/actions-lock.json`, `.gitattributes` | gh-aw infra: pinned\naction SHAs for reproducible compiles, and marking `*.lock.yml` as\ngenerated (`linguist-generated`, `merge=ours`) |\n| `.pre-commit-config.yaml` | Top-level `exclude` for the **generated**\ngh-aw files (`*.lock.yml`, `actions-lock.json`) so whitespace/EOF/format\nhooks don't rewrite generated output. The hand-edited\n`review-bot-prs.md` source is *not* excluded — it gets normal hygiene |\n| `.github/zizmor.yml` | Exempts the generated `review-bot-prs.lock.yml`\nfrom zizmor's `template-injection` rule (see Security) |\n| `AGENTS.md` | New \"Automated Agentic Workflows\" section documenting\nthe above |\n\n## Security\n\nGitHub Advanced Security (zizmor) flagged `template-injection` on five\n`${{ … }}` expansions in the generated `review-bot-prs.lock.yml`. All\nfive are gh-aw-generated and use non-attacker-controllable sources:\n\n- `${{ steps.parse-guard-vars.outputs.* }}` — gh-aw's own values parsed\nfrom this workflow's **static** frontmatter (the `allowed-repos` /\n`min-integrity` guard; trusted/blocked-user lists are empty), not event\ninput.\n- `${{ vars.GH_AW_DEFAULT_*_MAX_AI_CREDITS || '…' }}` — a repo-admin-set\nActions variable.\n\nThe lock is regenerated on every `gh aw compile`, so it can't carry\ninline `# zizmor: ignore` comments. `.github/zizmor.yml` exempts that\none generated file from the `template-injection` rule **only**; every\nhand-written workflow stays fully covered. The defenses that make this\nsafe are unchanged: the agent runs **read-only** behind gh-aw's network\nfirewall, can only `add-comment`, and `min-integrity: approved` filters\nunapproved PR-thread content before the agent sees it.\n\n## Why\n\nDependabot opens a steady stream of dependency-bump PRs. Each one needs\nthe same checks before merge (cooldown, CVEs, blast radius, real CI\ncoverage, action SHA↔tag integrity). Automating the first-pass triage\ngives maintainers a consistent, auditable recommendation on every bot PR\nwithout anyone having to remember the full rubric — while keeping merge\na human decision.\n\n## Verification\n\n- `gh aw compile` → **0 errors, 0 warnings**; `.lock.yml` regenerated\nand committed in sync.\n- A pre-merge dry-run via `gh aw trial\n./.github/workflows/review-bot-prs.md --logical-repo\nastronomer/dag-factory --delete-host-repo-after` was attempted, but the\ntrial harness hung on the sandbox-clone step and did not complete — so\nvalidation is via **staged mode** instead (below).\n- Ships **staged** (`safe-outputs.staged: true`): the first\nscheduled/manual runs on `main` only *preview* comments in the Actions\nrun summary (🎭) — nothing is posted. We confirm the output there before\nthe stacked follow-up PR removes staging.\n\n### Requirements to enable\n\n- **Auth is the no-PAT path:** `permissions: copilot-requests: write`\nroutes Copilot inference through the org's Copilot subscription via the\nbuilt-in Actions token — no `ANTHROPIC_API_KEY`, no\n`COPILOT_GITHUB_TOKEN` secret. Requires the org to have a Copilot\nsubscription with centralized billing enabled (otherwise fall back to a\n`COPILOT_GITHUB_TOKEN` PAT).\n- Scheduled runs only fire from the **default branch**, so this takes\neffect once merged to `main`.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+      "parent_shas": [
+        "998ea2c3270ede97e6a2b9413550bc49de5c3dcb"
+      ],
+      "tree_sha": "1d28d65d0c6cef169ae9586881ceb3b38c723762",
+      "html_url": "https://github.com/astronomer/dag-factory/commit/21c6102455d7ad7aa3f1f4b5d9031776319b772b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+          "source_full_name": "astronomer/dag-factory",
+          "md_path": ".github/workflows/review-bot-prs.md",
+          "commit_sha": "21c6102455d7ad7aa3f1f4b5d9031776319b772b",
+          "committed_at": "2026-06-17T15:01:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 183,
+          "file_deletions": 0,
+          "file_changes": 183,
+          "file_patch": "@@ -0,0 +1,183 @@\n+---\n+# review-bot-prs — daily Dependabot / pre-commit-ci PR safety review for dag-factory.\n+#\n+# This is a GitHub Agentic Workflow (github.com/githubnext/gh-aw). It is the source\n+# of truth; the runnable Action is the generated `review-bot-prs.lock.yml` sibling.\n+# After editing this file, run `gh aw compile` and commit BOTH files.\n+#\n+# Ported from the internal `review-bot-prs` Claude Code skill, scoped to dag-factory\n+# only (no cross-repo access). The agent runs read-only; its only routine action is\n+# posting one advisory comment per bot PR via safe-outputs (a \"nothing to review\" run\n+# logs a no-op to the Actions run summary, not an issue). gh-aw opens a tracking issue\n+# only if a run is incomplete or needs a missing tool. It cannot approve, merge, rebase,\n+# or push — those capabilities are simply not granted.\n+\n+on:\n+  # Daily sweep, plus a manual \"Run workflow\" button.\n+  schedule: daily\n+  workflow_dispatch:\n+\n+  # Pre-activation guard: skip the (paid) agent run unless there is at least one open\n+  # bot PR that does not already have this workflow's review comment.\n+  permissions:\n+    pull-requests: read\n+  steps:\n+    - id: check\n+      # Tolerate the non-zero exit below: a \"nothing new to review\" run should SKIP\n+      # the agent cleanly (run stays green), not mark the whole workflow failed. gh-aw\n+      # gates the agent on this step's outcome (check_result), so exit 1 = skip,\n+      # exit 0 = run.\n+      continue-on-error: true\n+      env:\n+        GH_TOKEN: ${{ github.token }}\n+      run: |\n+        set -o pipefail\n+        bot_prs=$(gh pr list --repo \"$GITHUB_REPOSITORY\" --state open --limit 200 --json number,author \\\n+          --jq '.[] | select(.author.login==\"app/dependabot\" or .author.login==\"app/pre-commit-ci\") | .number')\n+        count=0\n+        unreviewed=0\n+\n+        while IFS= read -r pr; do\n+          [ -n \"$pr\" ] || continue\n+          count=$((count + 1))\n+          if gh api --paginate \"repos/$GITHUB_REPOSITORY/issues/$pr/comments\" --jq '.[].body' \\\n+            | grep -Eq 'gh-aw-workflow-id: review-bot-prs|Bot PR safety review'; then\n+            continue\n+          fi\n+          unreviewed=$((unreviewed + 1))\n+        done <<< \"$bot_prs\"\n+\n+        echo \"Open bot PRs: $count\"\n+        echo \"Unreviewed bot PRs: $unreviewed\"\n+        [ \"$unreviewed\" -gt 0 ]\n+\n+# Only run the agent when the guard above found at least one unreviewed open bot PR.\n+if: needs.pre_activation.outputs.check_result == 'success'\n+\n+# GitHub Copilot engine (gh-aw default). No ANTHROPIC_API_KEY or PAT: the\n+# `copilot-requests: write` permission below routes inference through the org's\n+# Copilot subscription using the built-in Actions token.\n+engine: copilot\n+\n+# The agent job is read-only — every GitHub write goes through the safe-outputs job.\n+# `copilot-requests: write` is the no-PAT Copilot auth path; the reads are what the\n+# review needs (PRs, issues, repo contents, and check/commit status for the CI gate).\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  checks: read\n+  statuses: read\n+  actions: read\n+  copilot-requests: write\n+\n+# This workflow only ever touches dag-factory itself.\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests, issues]\n+    allowed-repos: \"${{ github.repository }}\"\n+    # Only read content at 'approved' integrity or higher (the default for public repos).\n+    # Same-repo bot PRs (Dependabot / pre-commit-ci, non-fork) qualify; injected content\n+    # from unapproved external accounts on the PR thread is filtered out before the agent.\n+    min-integrity: approved\n+  bash: [\"gh:*\", \"git:*\", \"curl:*\", \"jq:*\", \"python3:*\", \"date\", \"grep\", \"sort\", \"head\", \"cat\"]\n+  web-fetch:\n+\n+# Egress firewall: GitHub plus the advisory / version sources the review needs.\n+network:\n+  allowed:\n+    - defaults\n+    - api.osv.dev\n+    - python      # ecosystem identifier (pypi.org + pythonhosted, etc.)\n+\n+# The ONLY action this workflow can take: post one advisory comment per bot PR.\n+# Approve / merge / push are not declared, so the agent has no way to perform them.\n+safe-outputs:\n+  # PREVIEW-ONLY for first rollout: comments render in the Actions run summary (🎭)\n+  # instead of being posted. Delete this line (or set it to false) to start posting for real.\n+  staged: true\n+  # The \"nothing to review\" steady state calls noop (see the prompt). Report it to the run\n+  # summary only — NOT as a new issue — so the daily schedule doesn't open issues each run.\n+  noop:\n+    report-as-issue: false\n+  add-comment:\n+    target: \"*\"        # comment on each bot PR it reviews (not just a triggering one)\n+    max: 20            # cap comments per run\n+    footer: false      # we append our own footer with a hidden workflow-id marker for idempotency\n+\n+timeout-minutes: 20\n+---\n+\n+# Bot PR safety review — dag-factory\n+\n+You are reviewing open **bot dependency-bump PRs** in `${{ github.repository }}`\n+(authored by `app/dependabot` or `app/pre-commit-ci`). For each one, decide whether\n+it is safe to merge and post a short advisory comment.\n+\n+**You never approve, merge, rebase, or push.** Your only action is posting one comment\n+per PR — merging is always a separate human decision.\n+\n+## Steps\n+\n+1. **List** open PRs authored by `app/dependabot` or `app/pre-commit-ci`\n+   (`gh pr list --repo ${{ github.repository }} --state open --limit 200 --json number,title,author,labels,createdAt,url`).\n+   **Skip any PR that already carries a comment from this workflow** (search the PR's\n+   comments for the `gh-aw-workflow-id: review-bot-prs` marker, or a prior \"Bot PR safety\n+   review\" comment) — stay idempotent across the daily runs.\n+\n+2. For each remaining PR, answer **all** of these:\n+\n+   - **Cooldown.** dag-factory configures a **7-day Dependabot cooldown** on all three\n+     ecosystems — `github-actions`, `pre-commit`, and `uv` (`.github/dependabot.yml`; the\n+     `uv` block landed in PR #765, merged 2026-06-09, with minor/patch grouping). A bump\n+     younger than 7 days **violates** cooldown **unless it is a security update** (security\n+     updates are exempt → cooldown **N/A**, not \"violated\"). Routine grouped `uv` (Python)\n+     bumps now open and are subject to the 7-day cooldown like the others — only treat a\n+     `uv` PR's cooldown as N/A when you can confirm it is a security update (advisory in the\n+     PR body / OSV).\n+   - **Security.** Does the bump fix a known CVE/GHSA, and does the *new* version carry\n+     any known advisory? Check OSV (`POST https://api.osv.dev/v1/query`) and the PR body.\n+   - **Risk / blast radius.** Direct vs transitive vs dev-only dependency, breaking\n+     changes, and whether CI actually exercises the change.\n+   - **CI gate.** Are all required checks green on the head SHA? Flag any check that is\n+     pending, failing, or **awaiting maintainer authorization** (\"Approve and run\") — a\n+     \"green\" PR with half its checks un-triggered is not validated.\n+     **dag-factory nuance:** the `Static-Check` job runs\n+     `pre-commit run --files dagfactory/* uv.lock`, so it exercises\n+     `ruff` / `black` / `codespell` / `uv-lock` but **NOT** `markdownlint` or\n+     `markdown-link-check` (no `.md` file is in the `--files` list). Green CI does **not**\n+     prove a markdownlint / markdown-link-check bump is clean — say so explicitly.\n+   - **Tag integrity (github-actions bumps only).** For a SHA-pinned action\n+     (`uses: owner/action@<sha>  # vX`), verify the new commit SHA in the diff *actually*\n+     resolves from the tag named in the trailing comment\n+     (`gh api repos/<owner>/<action>/git/ref/tags/<tag>`, dereferencing annotated tags,\n+     trying the `v` prefix both ways). A SHA that does not match the tag — or a\n+     tag-not-found — is a supply-chain red flag → force **⚠️ Review carefully**.\n+\n+3. **Post one comment per PR** with a clear verdict and a one-line reason per axis:\n+   - **✅ Safe to merge**\n+   - **⏸️ Hold** (e.g. cooldown not yet elapsed)\n+   - **⚠️ Review carefully — do not merge** (any red flag above)\n+\n+   Keep it public-safe: no customer data, internal hostnames, or private links.\n+\n+4. **End every posted comment** with this footer (fill the timestamp with the current\n+   UTC time, `date -u +\"%Y-%m-%d %H:%M UTC\"`). Keep the hidden marker exactly as written;\n+   the pre-activation guard uses it to avoid duplicate comments across runs:\n+\n+   ```markdown\n+   <!-- gh-aw-workflow-id: review-bot-prs -->\n+   ---\n+   *This review comment was generated by an agent. It is advisory only and does not\n+   approve or merge the PR. Reviewed on <YYYY-MM-DD HH:MM UTC>.*\n+   ```\n+\n+**If there is nothing to comment on** — every open bot PR was skipped because it is\n+already reviewed (the normal steady state after the first run), or no unreviewed bot PR\n+remains — you **MUST** call the `noop` tool with a short message\n+(`{\"noop\": {\"message\": \"No unreviewed bot PRs\"}}`). A safe-outputs run that finishes\n+without calling any tool fails silently with no usable output; `noop` is how you report\n+\"no action needed\" (it goes to the run summary, not a new issue or comment).\n+\n+If you cannot complete an axis (e.g. a tool or network host is unavailable), say so in\n+the comment rather than guessing.",
+          "snapshot_ref": "21c6102455d7ad7aa3f1f4b5d9031776319b772b",
+          "snapshot_blob_sha": "6a51d53eb990d0b27082ebf32e87f48054060660",
+          "snapshot_file": "snapshots/dag-factory__astronomer__21c6102455d7ad7aa3f1f4b5d9031776319b772b__review-bot-prs.md",
+          "snapshot_bytes": 9106,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"astronomer/dag-factory\",\"generated_owner\":\"astronomer\",\"generated_repo\":\"dag-factory\",\"generated_workflow_path\":\".github/workflows/review-bot-prs.lock.yml\",\"generated_workflow_file\":\"review-bot-prs.lock.yml\",\"generated_html_url\":\"https://github.com/astronomer/dag-factory/blob/3b6a4ced85cd6a1bf961fecaee9c94c52463e094/.github/workflows/review-bot-prs.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+      "source_full_name": "astronomer/dag-factory",
+      "md_path": ".github/workflows/review-bot-prs.md",
+      "commit_sha": "20bae5759482f65a8275faa55370b2605c20e050",
+      "authored_at": "2026-06-17T15:22:12Z",
+      "committed_at": "2026-06-17T15:22:12Z",
+      "author_name": "Tatiana Al-Chueyr",
+      "author_email": "tatiana.alchueyr@gmail.com",
+      "author_login": "tatiana",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable review-bot-prs posting (remove staged mode) (#788)\n\n## What\n\nFollow-up to merged #786. This is still the go-live PR for\n`review-bot-prs`: it removes `safe-outputs.staged: true` so the workflow\nposts advisory comments to bot PRs instead of only rendering previews in\nthe Actions run summary.\n\nThis branch has also been updated on top of the merged #786 changes and\nincludes two fixes found from the first manual staged runs on `main`:\n\n- Manual dispatch now labels `aw_context` as gh-aw internal JSON and\ntells users to leave it blank. A free-form value caused the first run to\nfail during generated `fromJSON(...)` template evaluation.\n- `tools.github.allowed-repos` now uses a literal repo allowlist\n(`astronomer/dag-factory`) instead of `${{ github.repository }}`. The\nsecond run got past activation but the MCP gateway rejected the\nexpression string with `allow-only.repos string must be 'all' or\n'public'`.\n\n## Changes\n\n- Remove `safe-outputs.staged: true`, enabling real PR comments.\n- Keep the workflow scoped to this repo with a runtime-valid GitHub MCP\nallowlist.\n- Add a clearer manual-dispatch `aw_context` description.\n- Update `AGENTS.md` to describe the live rollout state, literal repo\nscope, and manual-dispatch caveat.\n- Regenerate `review-bot-prs.lock.yml` with `gh aw compile`.\n\n## Verification\n\n- `gh aw compile review-bot-prs --no-check-update --show-all` -> 0\nerrors, 0 warnings.\n- `gh aw compile review-bot-prs --no-emit --strict --no-check-update\n--actionlint --validate --zizmor --poutine --show-all` -> 0 errors, 0\nwarnings.\n- Verified generated lock has `GH_AW_INFO_STAGED: \"false\"` and GitHub\nguard `repos: [\"astronomer/dag-factory\"]`.\n- `git diff --check -- . ':!.github/workflows/review-bot-prs.lock.yml'`\npassed.\n- YAML parse checks passed.\n- Targeted pre-commit passed; `markdown-link-check` also passed with\nnetwork access.\n\n## Notes\n\nThe latest staged run without `aw_context` confirmed activation now\nworks and exposed the GitHub MCP guard issue fixed here. After this PR\nmerges, run the workflow manually with `aw_context` blank before waiting\nfor the daily schedule.\n\n---------\n\nCo-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "21c6102455d7ad7aa3f1f4b5d9031776319b772b"
+      ],
+      "tree_sha": "a56a593b6e57d277856d1290cfb85627443a4067",
+      "html_url": "https://github.com/astronomer/dag-factory/commit/20bae5759482f65a8275faa55370b2605c20e050",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+          "source_full_name": "astronomer/dag-factory",
+          "md_path": ".github/workflows/review-bot-prs.md",
+          "commit_sha": "20bae5759482f65a8275faa55370b2605c20e050",
+          "committed_at": "2026-06-17T15:22:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 4,
+          "file_changes": 12,
+          "file_patch": "@@ -16,6 +16,12 @@ on:\n   # Daily sweep, plus a manual \"Run workflow\" button.\n   schedule: daily\n   workflow_dispatch:\n+    inputs:\n+      aw_context:\n+        default: \"\"\n+        description: \"Leave blank for manual runs. Internal JSON used only by gh-aw.\"\n+        required: false\n+        type: string\n \n   # Pre-activation guard: skip the (paid) agent run unless there is at least one open\n   # bot PR that does not already have this workflow's review comment.\n@@ -75,7 +81,8 @@ permissions:\n tools:\n   github:\n     toolsets: [repos, pull_requests, issues]\n-    allowed-repos: \"${{ github.repository }}\"\n+    allowed-repos:\n+      - astronomer/dag-factory\n     # Only read content at 'approved' integrity or higher (the default for public repos).\n     # Same-repo bot PRs (Dependabot / pre-commit-ci, non-fork) qualify; injected content\n     # from unapproved external accounts on the PR thread is filtered out before the agent.\n@@ -93,9 +100,6 @@ network:\n # The ONLY action this workflow can take: post one advisory comment per bot PR.\n # Approve / merge / push are not declared, so the agent has no way to perform them.\n safe-outputs:\n-  # PREVIEW-ONLY for first rollout: comments render in the Actions run summary (🎭)\n-  # instead of being posted. Delete this line (or set it to false) to start posting for real.\n-  staged: true\n   # The \"nothing to review\" steady state calls noop (see the prompt). Report it to the run\n   # summary only — NOT as a new issue — so the daily schedule doesn't open issues each run.\n   noop:",
+          "snapshot_ref": "20bae5759482f65a8275faa55370b2605c20e050",
+          "snapshot_blob_sha": "5ff8e1f2be7b5935707a25d17245c74fc87ce0a6",
+          "snapshot_file": "snapshots/dag-factory__astronomer__20bae5759482f65a8275faa55370b2605c20e050__review-bot-prs.md",
+          "snapshot_bytes": 9096,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"astronomer/dag-factory\",\"generated_owner\":\"astronomer\",\"generated_repo\":\"dag-factory\",\"generated_workflow_path\":\".github/workflows/review-bot-prs.lock.yml\",\"generated_workflow_file\":\"review-bot-prs.lock.yml\",\"generated_html_url\":\"https://github.com/astronomer/dag-factory/blob/3b6a4ced85cd6a1bf961fecaee9c94c52463e094/.github/workflows/review-bot-prs.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+      "source_full_name": "astronomer/dag-factory",
+      "md_path": ".github/workflows/review-bot-prs.md",
+      "commit_sha": "10c3b67fe7c2e73113cf8403528c443ca3845caa",
+      "authored_at": "2026-06-23T13:35:35Z",
+      "committed_at": "2026-06-23T13:35:35Z",
+      "author_name": "Pankaj Singh",
+      "author_email": "98807258+pankajastro@users.noreply.github.com",
+      "author_login": "pankajastro",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Remove uv.lock and its references (#804)\n\n## Summary\n- Delete the tracked `uv.lock` file from the repository\n- Remove the `uv-lock` pre-commit hook in `.pre-commit-config.yaml` so\nthe file is no longer regenerated on commit\n- Drop the `uv.lock` argument from the `static-check` script in\n`pyproject.toml`\n\n## Test plan\n- [ ] `pre-commit run --all-files` passes without the `uv-lock` hook\n- [ ] `hatch run tests:static-check` runs without referencing the\nremoved file\n\ncloses: BOSS-500\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\n---------\n\nCo-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+      "parent_shas": [
+        "5e1bfee6f81cb73dd2ec126d9a49ecbff23cb9d3"
+      ],
+      "tree_sha": "e6b24f7358978deb3f5f6439185703d4dfe0d1ad",
+      "html_url": "https://github.com/astronomer/dag-factory/commit/10c3b67fe7c2e73113cf8403528c443ca3845caa",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "astronomer/dag-factory:.github/workflows/review-bot-prs.md",
+          "source_full_name": "astronomer/dag-factory",
+          "md_path": ".github/workflows/review-bot-prs.md",
+          "commit_sha": "10c3b67fe7c2e73113cf8403528c443ca3845caa",
+          "committed_at": "2026-06-23T13:35:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -147,8 +147,8 @@ per PR — merging is always a separate human decision.\n      pending, failing, or **awaiting maintainer authorization** (\"Approve and run\") — a\n      \"green\" PR with half its checks un-triggered is not validated.\n      **dag-factory nuance:** the `Static-Check` job runs\n-     `pre-commit run --files dagfactory/* uv.lock`, so it exercises\n-     `ruff` / `black` / `codespell` / `uv-lock` but **NOT** `markdownlint` or\n+     `pre-commit run --files dagfactory/*`, so it exercises\n+     `ruff` / `black` / `codespell` but **NOT** `markdownlint` or\n      `markdown-link-check` (no `.md` file is in the `--files` list). Green CI does **not**\n      prove a markdownlint / markdown-link-check bump is clean — say so explicitly.\n    - **Tag integrity (github-actions bumps only).** For a SHA-pinned action",
+          "snapshot_ref": "10c3b67fe7c2e73113cf8403528c443ca3845caa",
+          "snapshot_blob_sha": "8ca04f5e6ac7069fa210d5ac7c5d861190f84969",
+          "snapshot_file": "snapshots/dag-factory__astronomer__10c3b67fe7c2e73113cf8403528c443ca3845caa__review-bot-prs.md",
+          "snapshot_bytes": 9076,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"astronomer/dag-factory\",\"generated_owner\":\"astronomer\",\"generated_repo\":\"dag-factory\",\"generated_workflow_path\":\".github/workflows/review-bot-prs.lock.yml\",\"generated_workflow_file\":\"review-bot-prs.lock.yml\",\"generated_html_url\":\"https://github.com/astronomer/dag-factory/blob/3b6a4ced85cd6a1bf961fecaee9c94c52463e094/.github/workflows/review-bot-prs.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

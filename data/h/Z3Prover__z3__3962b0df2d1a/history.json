@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/issue-backlog-processor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/issue-backlog-processor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/issue-backlog-processor.lock.yml",
+      "generated_workflow_file": "issue-backlog-processor.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/issue-backlog-processor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:45+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/issue-backlog-processor.md",
+      "commit_sha": "4ebf4533651bca92e4cf0a2639c952c5cee75506",
+      "authored_at": "2026-02-24T16:54:49Z",
+      "committed_at": "2026-02-24T16:54:49Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add issue-backlog-processor agentic workflow\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "d2f6dd0d5a74d8af9aafd0f9a2c9b7c23216bbca"
+      ],
+      "tree_sha": "1cb71fe14e068a24b10a84208f617f1d8e4ede9e",
+      "html_url": "https://github.com/Z3Prover/z3/commit/4ebf4533651bca92e4cf0a2639c952c5cee75506",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/issue-backlog-processor.md",
+          "commit_sha": "4ebf4533651bca92e4cf0a2639c952c5cee75506",
+          "committed_at": "2026-02-24T16:54:49Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 250,
+          "file_deletions": 0,
+          "file_changes": 250,
+          "file_patch": "@@ -0,0 +1,250 @@\n+---\n+description: Processes the backlog of open issues every second day, creates a discussion with findings, and comments on relevant issues\n+\n+on:\n+  schedule: every 2 days\n+  workflow_dispatch:\n+\n+permissions: read-all\n+\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [default]\n+\n+safe-outputs:\n+  create-discussion:\n+    title-prefix: \"[Issue Backlog] \"\n+    category: \"Agentic Workflows\"\n+    close-older-discussions: true\n+  add-comment:\n+    max: 20\n+  github-token: ${{ secrets.GITHUB_TOKEN }}\n+\n+timeout-minutes: 60\n+---\n+\n+# Issue Backlog Processor\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. You are an expert AI agent tasked with processing the backlog of open issues in the Z3 theorem prover repository `${{ github.repository }}`. Your mission is to analyze open issues systematically and help maintainers manage the backlog effectively by surfacing actionable insights and providing helpful comments.\n+\n+## Your Task\n+\n+### 1. Initialize or Resume Progress (Cache Memory)\n+\n+Check your cache memory for:\n+- List of issue numbers already processed and commented on in previous runs\n+- Issues previously flagged for closure, duplication, or merge\n+- Date of last run\n+\n+If cache data exists:\n+- Skip re-commenting on issues already commented in a recent run (within the last 4 days)\n+- Re-evaluate previously flagged issues to see if their status has changed\n+- Note any new issues that opened since the last run\n+\n+If this is the first run or memory is empty, initialize a fresh tracking structure.\n+\n+### 2. Fetch Open Issues\n+\n+Use the GitHub API to list all open issues in the repository:\n+- Retrieve all open issues (paginate through all pages to get the full list)\n+- Exclude pull requests (filter where `pull_request` is not present)\n+- Sort by last updated date (most recently updated first)\n+- For each issue, collect:\n+  - Issue number, title, body, labels, author\n+  - Date created and last updated\n+  - Number of comments\n+  - All comments (for issues with comments)\n+  - Any referenced pull requests, commits, or other issues\n+\n+### 3. Analyze Each Issue\n+\n+For each open issue, perform the following analysis:\n+\n+#### 3.1 Identify Issues to Close\n+\n+An issue can be safely closed if any of the following apply:\n+- A merged pull request explicitly references the issue (e.g., \"fixes #NNN\", \"closes #NNN\") and the fix has been shipped\n+- Comments from the reporter or maintainers indicate the issue is resolved\n+- The described behavior no longer occurs in the current codebase (based on code inspection or comments confirming resolution)\n+- The issue is a question that has been fully answered and no further action is needed\n+- The issue is clearly obsolete (e.g., references a version or feature that no longer exists)\n+\n+**Be conservative**: When in doubt, do NOT flag an issue for closure. Only flag issues where you have high confidence.\n+\n+#### 3.2 Identify Duplicate or Mergeable Issues\n+\n+An issue may be a duplicate or candidate for merging if:\n+- Another open issue describes the same bug, behavior, or feature request\n+- The same root cause has been identified across multiple issues\n+- Issues are closely related enough that they should be tracked together\n+\n+For each potential duplicate, identify:\n+- The original or canonical issue it duplicates\n+- The reason you believe they are related\n+\n+#### 3.3 Identify Suggested Fixes\n+\n+For issues describing bugs, incorrect behavior, or missing features:\n+- Analyze the issue description, stack traces, SMT-LIB2 examples, or code snippets provided\n+- Identify the likely Z3 component(s) involved (e.g., SAT solver, arithmetic theory, string solver, API, language bindings)\n+- Point to specific source files or modules in `src/` that are likely relevant\n+- Suggest what kind of fix might be needed (e.g., edge case handling, missing method, API inconsistency)\n+\n+Focus on issues where a reasonable fix can be concisely described. Do not guess at fixes for complex soundness or performance issues.\n+\n+#### 3.4 Determine If a Comment Is Warranted\n+\n+Add a comment to an issue if you have **genuinely useful and specific information** to contribute, such as:\n+- A related merged PR or commit that might resolve or partially address the issue\n+- A confirmed duplicate with a reference to the canonical issue\n+- A request for clarification or additional diagnostic information that would help resolve the issue\n+- Confirmation that a fix has been shipped in a recent release\n+- Specific guidance on which component to look at for a fix\n+\n+**Do NOT add generic comments**, low-value acknowledgments, or comments that simply restate the issue.\n+\n+### 4. Create a Discussion with Findings\n+\n+Create a GitHub Discussion summarizing the analysis results.\n+\n+**Title:** \"[Issue Backlog] Backlog Analysis - [Date]\"\n+\n+**Content structure:**\n+\n+```markdown\n+# Issue Backlog Analysis - [Date]\n+\n+## Executive Summary\n+\n+- **Total open issues analyzed**: N\n+- **Issues recommended for closure**: N\n+- **Potential duplicates / merge candidates**: N\n+- **Issues with suggested fixes**: N\n+- **Issues commented on**: N\n+\n+---\n+\n+## Issues Recommended for Closure\n+\n+These issues appear to be already resolved, no longer relevant, or fully answered.\n+\n+| Issue | Title | Reason for Closure |\n+|-------|-------|-------------------|\n+| #NNN | [title] | [reasoning] |\n+...\n+\n+---\n+\n+## Potential Duplicates / Merge Candidates\n+\n+These issues appear to overlap with other open or closed issues.\n+\n+| Issue | Title | Duplicate of | Notes |\n+|-------|-------|-------------|-------|\n+| #NNN | [title] | #MMM | [reasoning] |\n+...\n+\n+---\n+\n+## Issues with Suggested Fixes\n+\n+These issues have identifiable root causes or affected components.\n+\n+### #NNN - [Issue Title]\n+\n+- **Component**: [e.g., arithmetic solver, Python bindings, SMT-LIB2 parser]\n+- **Relevant source files**: [e.g., `src/smt/theory_arith.cpp`]\n+- **Suggested fix direction**: [concise description]\n+\n+...\n+\n+---\n+\n+## Issues Needing More Information\n+\n+These issues lack sufficient detail to investigate or reproduce.\n+\n+| Issue | Title | Missing Information |\n+|-------|-------|-------------------|\n+| #NNN | [title] | [what is needed] |\n+...\n+\n+---\n+\n+## Notable Issues Deserving Attention\n+\n+Issues that are particularly impactful or have been waiting a long time.\n+\n+| Issue | Title | Age | Notes |\n+|-------|-------|-----|-------|\n+| #NNN | [title] | [days old] | [why notable] |\n+...\n+\n+---\n+\n+*Automated by Issue Backlog Processor - runs every 2 days*\n+```\n+\n+### 5. Comment on Issues\n+\n+For each issue identified in step 3.4 as warranting a comment, post a helpful comment using the `add-comment` safe output.\n+\n+**Comment guidelines:**\n+- Be specific and actionable\n+- Reference relevant PRs, commits, or other issues by number\n+- Use a professional and respectful tone\n+- Identify yourself as an automated analysis agent at the end of each comment\n+- For potential closures, ask the reporter to confirm whether the issue is still relevant\n+- For duplicates, politely link to the canonical issue\n+\n+Example comment for a potentially resolved issue:\n+```\n+It appears that PR #MMM (merged on [date]) may have addressed this issue by [brief description]. Could you confirm whether this problem still occurs with the latest code? If it has been resolved, we can close this issue.\n+\n+*This comment was added by the automated Issue Backlog Processor.*\n+```\n+\n+Example comment for a duplicate:\n+```\n+This issue appears to be related to (or a duplicate of) #MMM which describes a similar problem. Linking the two for tracking purposes.\n+\n+*This comment was added by the automated Issue Backlog Processor.*\n+```\n+\n+### 6. Update Cache Memory\n+\n+After completing the analysis, update cache memory with:\n+- List of issue numbers processed in this run\n+- Issues that were commented on (to avoid duplicate comments in future runs)\n+- Issues flagged for closure, duplication, or merge\n+- Date and timestamp of this run\n+- Count of total issues analyzed\n+\n+## Guidelines\n+\n+- **Prioritize accuracy over coverage**: It is better to analyze 20 issues well than 200 issues poorly\n+- **Be conservative on closures**: Incorrectly closing a valid issue is harmful; when in doubt, keep it open\n+- **Respect the community**: Z3 is used by researchers, security engineers, and developers — treat all issues respectfully\n+- **Focus on actionable output**: Every item in the discussion should be actionable for a maintainer\n+- **Avoid comment spam**: Do not add comments unless they provide specific and useful information\n+- **Understand Z3's complexity**: Soundness bugs (wrong answers) are critical and should never be auto-closed\n+\n+## Z3-Specific Context\n+\n+Z3 is an industrial-strength theorem prover and SMT solver used in program verification, security analysis, and formal methods. Key components to be aware of:\n+\n+- **SMT solver** (`src/smt/`): Core solving engine with theory plugins\n+- **SAT solver** (`src/sat/`): Boolean satisfiability engine\n+- **Theory solvers**: Arithmetic (`src/smt/theory_arith*`), arrays, bit-vectors, strings, etc.\n+- **API** (`src/api/`): C API and language bindings (Python, Java, C#, OCaml, Go, JavaScript)\n+- **Tactics** (`src/tactic/`): Configurable solving strategies\n+- **Parser** (`src/parsers/`): SMT-LIB2 and other input formats\n+\n+When analyzing issues, consider:\n+- Whether the issue has a reproducible SMT-LIB2 test case (important for SMT solver bugs)\n+- Whether the issue affects a specific language binding or the core solver\n+- Whether it is a soundness issue (critical), performance issue (important), or API/usability issue (moderate)\n+- The Z3 version mentioned and whether it has since been fixed in a newer release",
+          "snapshot_ref": "4ebf4533651bca92e4cf0a2639c952c5cee75506",
+          "snapshot_blob_sha": "0a98f5e3c5e53aacf3eab9c3db714713fff1795d",
+          "snapshot_file": "snapshots/z3__Z3Prover__4ebf4533651bca92e4cf0a2639c952c5cee75506__issue-backlog-processor.md",
+          "snapshot_bytes": 9463,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/issue-backlog-processor.lock.yml\",\"generated_workflow_file\":\"issue-backlog-processor.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/issue-backlog-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/issue-backlog-processor.md",
+      "commit_sha": "3bc7623f030eecd64ecd709a0e26050c1322336d",
+      "authored_at": "2026-03-12T20:01:30Z",
+      "committed_at": "2026-03-12T20:01:30Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add noop report-as-issue: false to all agentic workflow frontmatter\n\nPrevents no-op workflow runs from posting comments to the [aw] No-Op\nRuns tracking issue by setting safe-outputs.noop.report-as-issue: false\nin all 13 agentic workflow .md files.\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "30afc4ab5aeac6ea5d8c465c97af91e8f6d7297d"
+      ],
+      "tree_sha": "d50d89daf10d9c5aaf207f18b72b4502ba86450d",
+      "html_url": "https://github.com/Z3Prover/z3/commit/3bc7623f030eecd64ecd709a0e26050c1322336d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/issue-backlog-processor.md",
+          "commit_sha": "3bc7623f030eecd64ecd709a0e26050c1322336d",
+          "committed_at": "2026-03-12T20:01:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -19,6 +19,8 @@ safe-outputs:\n     close-older-discussions: true\n   add-comment:\n     max: 20\n+  noop:\n+    report-as-issue: false\n   github-token: ${{ secrets.GITHUB_TOKEN }}\n \n timeout-minutes: 60",
+          "snapshot_ref": "3bc7623f030eecd64ecd709a0e26050c1322336d",
+          "snapshot_blob_sha": "c7831cd62623c581926d5f8de1830cba734152be",
+          "snapshot_file": "snapshots/z3__Z3Prover__3bc7623f030eecd64ecd709a0e26050c1322336d__issue-backlog-processor.md",
+          "snapshot_bytes": 9498,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/issue-backlog-processor.lock.yml\",\"generated_workflow_file\":\"issue-backlog-processor.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/issue-backlog-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/issue-backlog-processor.md",
+      "commit_sha": "2ce410d45e70772d1a4f82d4bb624dfed77ad370",
+      "authored_at": "2026-04-11T17:21:01Z",
+      "committed_at": "2026-04-11T17:21:01Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Issue Backlog Processor: prevent context exhaustion by batching and requiring safe output (#9272)\n\n* Initial plan\n\n* Fix Issue Backlog Processor: limit batch size and require safe output\n\n- Add CRITICAL instruction requiring create-discussion or noop before finishing\n- Limit processing to 30 issues per run to avoid context exhaustion\n- Add lazy comment fetching with concrete criteria\n- Add batch cursor tracking in cache memory for pagination across runs\n- Add explicit MANDATORY note before create-discussion step\n- Improve guidelines with always-produce-output, batch processing rules\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/8c4e23ac-8562-423b-baf7-62986f23abe0\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "4a1f448a06119befd416413fc5493e00b9611b6d"
+      ],
+      "tree_sha": "3560be35e6b3dea8cb2877554148195177022a6c",
+      "html_url": "https://github.com/Z3Prover/z3/commit/2ce410d45e70772d1a4f82d4bb624dfed77ad370",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/issue-backlog-processor.md",
+          "commit_sha": "2ce410d45e70772d1a4f82d4bb624dfed77ad370",
+          "committed_at": "2026-04-11T17:21:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 15,
+          "file_deletions": 4,
+          "file_changes": 19,
+          "file_patch": "@@ -32,6 +32,8 @@ timeout-minutes: 60\n \n Your name is ${{ github.workflow }}. You are an expert AI agent tasked with processing the backlog of open issues in the Z3 theorem prover repository `${{ github.repository }}`. Your mission is to analyze open issues systematically and help maintainers manage the backlog effectively by surfacing actionable insights and providing helpful comments.\n \n+> **CRITICAL**: You MUST call either `create-discussion` or `noop` before finishing, under all circumstances. Even if you only analyzed a small number of issues, always produce output. Never exit without calling one of these tools.\n+\n ## Your Task\n \n ### 1. Initialize or Resume Progress (Cache Memory)\n@@ -40,25 +42,28 @@ Check your cache memory for:\n - List of issue numbers already processed and commented on in previous runs\n - Issues previously flagged for closure, duplication, or merge\n - Date of last run\n+- The batch cursor: the last issue number processed (used for pagination across runs)\n \n If cache data exists:\n - Skip re-commenting on issues already commented in a recent run (within the last 4 days)\n - Re-evaluate previously flagged issues to see if their status has changed\n - Note any new issues that opened since the last run\n+- Resume from where the previous run left off (use the stored batch cursor)\n \n If this is the first run or memory is empty, initialize a fresh tracking structure.\n \n-### 2. Fetch Open Issues\n+### 2. Fetch Open Issues (Batched)\n \n-Use the GitHub API to list all open issues in the repository:\n-- Retrieve all open issues (paginate through all pages to get the full list)\n+Use the GitHub API to list open issues in the repository. **Process at most 30 issues per run** to stay within context limits (this limit is based on the average size of Z3 issues including body text and inline code snippets; larger issues may require processing fewer):\n+- Retrieve one page (30 issues) of open issues\n - Exclude pull requests (filter where `pull_request` is not present)\n - Sort by last updated date (most recently updated first)\n+- If cache has a batch cursor from the last run, fetch the next page after that cursor; otherwise start from the most recently updated issues\n - For each issue, collect:\n   - Issue number, title, body, labels, author\n   - Date created and last updated\n   - Number of comments\n-  - All comments (for issues with comments)\n+  - **Do NOT fetch comments for every issue up front.** Only fetch comments for a specific issue when at least one of the following is true: the body mentions a version number (potential closure), the title contains words like \"duplicate\", \"same as\", or \"related to\" (potential duplicate), or the issue has labels such as \"question\", \"help wanted\", or \"wontfix\" (potential closure/status change). Fetch comments lazily, one issue at a time, only when one of these criteria is met.\n   - Any referenced pull requests, commits, or other issues\n \n ### 3. Analyze Each Issue\n@@ -110,6 +115,8 @@ Add a comment to an issue if you have **genuinely useful and specific informatio\n \n ### 4. Create a Discussion with Findings\n \n+**MANDATORY**: You MUST call `create-discussion` now, even if you only analyzed a few issues or found nothing actionable. If there is genuinely nothing to report, call `noop` instead. Do not skip this step.\n+\n Create a GitHub Discussion summarizing the analysis results.\n \n **Title:** \"[Issue Backlog] Backlog Analysis - [Date]\"\n@@ -224,9 +231,13 @@ After completing the analysis, update cache memory with:\n - Issues flagged for closure, duplication, or merge\n - Date and timestamp of this run\n - Count of total issues analyzed\n+- Batch cursor: the issue number of the last issue processed in this run, so the next run can continue from where this one left off\n \n ## Guidelines\n \n+- **Always produce output**: You MUST call `create-discussion` or `noop` before finishing — never exit silently. If in doubt about whether there is enough to report, call `create-discussion` with a brief summary.\n+- **Batch processing**: Only analyze up to 30 issues per run. Store a cursor in cache memory so subsequent runs pick up where you left off.\n+- **Lazy comment fetching**: Do NOT bulk-fetch all comments for all issues. Only fetch comments for a specific issue when one of these criteria is met: the body mentions a version number, the title contains duplicate/related keywords, or the issue has status-relevant labels (e.g., \"question\", \"help wanted\", \"wontfix\").\n - **Prioritize accuracy over coverage**: It is better to analyze 20 issues well than 200 issues poorly\n - **Be conservative on closures**: Incorrectly closing a valid issue is harmful; when in doubt, keep it open\n - **Respect the community**: Z3 is used by researchers, security engineers, and developers — treat all issues respectfully",
+          "snapshot_ref": "2ce410d45e70772d1a4f82d4bb624dfed77ad370",
+          "snapshot_blob_sha": "0feeeaf6b4015bf18fc0927157c651bdfd001b8d",
+          "snapshot_file": "snapshots/z3__Z3Prover__2ce410d45e70772d1a4f82d4bb624dfed77ad370__issue-backlog-processor.md",
+          "snapshot_bytes": 11677,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/issue-backlog-processor.lock.yml\",\"generated_workflow_file\":\"issue-backlog-processor.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/issue-backlog-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/issue-backlog-processor.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/issue-backlog-processor.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -13,6 +13,7 @@ tools:\n     toolsets: [default]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-discussion:\n     title-prefix: \"[Issue Backlog] \"\n     category: \"Agentic Workflows\"",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "741dc3a2beaacabe8f7502a9786be07e2c565735",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__issue-backlog-processor.md",
+          "snapshot_bytes": 11710,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/issue-backlog-processor.lock.yml\",\"generated_workflow_file\":\"issue-backlog-processor.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/issue-backlog-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/issue-backlog-processor.md",
+      "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "authored_at": "2026-07-28T09:22:11Z",
+      "committed_at": "2026-07-28T09:22:11Z",
+      "author_name": "Nikolaj Bjorner",
+      "author_email": "nbjorner@microsoft.com",
+      "author_login": "NikolajBjorner",
+      "author_account_type": "User",
+      "committer_name": "Nikolaj Bjorner",
+      "committer_email": "nbjorner@microsoft.com",
+      "committer_login": "NikolajBjorner",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow auth by using Actions token-based Copilot inference\n\nThe COPILOT_GITHUB_TOKEN PAT secret expired, causing HTTP 401 auth\nfailures in all agentic workflows that referenced it. Switch these\nworkflows to GitHub Actions token-based Copilot inference by adding\n'copilot-requests: write' to their permissions (matching the already-\nworking code-simplifier and release-notes-updater workflows), so the\nengine uses the ephemeral github.token instead of the expired PAT.\n\nRecompiled with gh-aw v0.81.6 (repo's pinned version) to keep the diff\nminimal. Affected: api-coherence-checker, issue-backlog-processor,\nmemory-safety-report, academic-citation-tracker, smtlib-benchmark-finder,\nworkflow-suggestion-agent, specbot-crash-analyzer, tptp-benchmark.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 57b9b87e-950a-49ea-bbb3-ed585646a5a9",
+      "parent_shas": [
+        "18d8d7a7bd437cc25a532e3903a560f7c9a4b787"
+      ],
+      "tree_sha": "281bc4545bd45a13a519164dfb8873e3dd7f3e15",
+      "html_url": "https://github.com/Z3Prover/z3/commit/b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/issue-backlog-processor.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/issue-backlog-processor.md",
+          "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "committed_at": "2026-07-28T09:22:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 1,
+          "file_changes": 7,
+          "file_patch": "@@ -5,7 +5,12 @@ on:\n   schedule: every 2 days\n   workflow_dispatch:\n \n-permissions: read-all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  discussions: read\n+  copilot-requests: write\n \n tools:\n   cache-memory: true",
+          "snapshot_ref": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "snapshot_blob_sha": "a2ce534a9683bb90ae78d1bf536df7d5af77b5b7",
+          "snapshot_file": "snapshots/z3__Z3Prover__b1168b48680a7b35d639f0243cf5b8c8a3ff0277__issue-backlog-processor.md",
+          "snapshot_bytes": 11801,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/issue-backlog-processor.lock.yml\",\"generated_workflow_file\":\"issue-backlog-processor.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/issue-backlog-processor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

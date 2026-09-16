@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/ai-executor-integration.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/ai-executor-integration.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/ai-executor-integration.lock.yml",
+      "generated_workflow_file": "ai-executor-integration.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/ai-executor-integration.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:38+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/ai-executor-integration.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/ai-executor-integration.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 150,
+          "file_deletions": 0,
+          "file_changes": 150,
+          "file_patch": "@@ -0,0 +1,150 @@\n+---\n+name: 'AI Executor Integration'\n+description: 'Tests AI executor in prompt and full modes, validates AI configuration and prompt generation for all tools'\n+on:\n+  pull_request:\n+    paths:\n+      - 'src/utils/ai-executor.ts'\n+      - 'src/config/ai-config.ts'\n+      - 'src/prompts/**'\n+      - 'src/tools/**'\n+  schedule:\n+    - cron: '0 6 * * *'\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+  pull-requests: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[ai-executor]'\n+  add-comment:\n+tools:\n+  bash: true\n+  github:\n+    toolsets: [issues, pull_requests]\n+---\n+\n+# AI Executor Integration\n+\n+You validate the AI execution subsystem of the MCP server, testing both prompt mode (always available) and full mode (when OpenRouter API key is configured).\n+\n+## Context\n+\n+The mcp-adr-analysis-server operates in two modes:\n+\n+1. **Prompt Mode** (default, no API key): Returns structured prompts that the calling LLM can execute\n+2. **Full Mode** (with `OPENROUTER_API_KEY`): Sends prompts to OpenRouter.ai and returns AI-generated results\n+\n+Key files:\n+\n+- `src/utils/ai-executor.ts` — Core AI execution logic with caching and retry\n+- `src/config/ai-config.ts` — AI configuration management (model, temperature, tokens)\n+- `src/prompts/` — Prompt templates for each tool\n+\n+## Validation Steps\n+\n+### Step 1: Test Prompt Mode\n+\n+This must always work, regardless of API key availability:\n+\n+```bash\n+EXECUTION_MODE=prompt NODE_ENV=test npm test -- tests/utils/ai-executor.test.ts --verbose\n+```\n+\n+Verify that:\n+\n+- The AI executor initializes without errors\n+- All tools can generate prompts without an API key\n+- Prompt output follows the expected structure\n+\n+### Step 2: Validate AI Configuration\n+\n+```bash\n+node -e \"\n+  import { getAIConfig } from './dist/src/config/ai-config.js';\n+  const config = getAIConfig();\n+  console.log('AI Config loaded successfully');\n+  console.log('Model:', config.model);\n+  console.log('Execution mode:', config.executionMode);\n+  if (!config.model || !config.executionMode) {\n+    console.error('Invalid AI configuration');\n+    process.exit(1);\n+  }\n+  console.log('AI configuration valid');\n+\"\n+```\n+\n+### Step 3: Test Prompt Generation\n+\n+Run prompt-related tests to verify all tools can generate valid prompts:\n+\n+```bash\n+npm test -- --testPathPattern=\"prompt.*test\" --verbose\n+```\n+\n+### Step 4: Test Full Mode (if API key available)\n+\n+If the `OPENROUTER_API_KEY` secret is available, test full mode:\n+\n+```bash\n+EXECUTION_MODE=full OPENROUTER_API_KEY=$OPENROUTER_API_KEY AI_MODEL=anthropic/claude-3-haiku NODE_ENV=test npm test -- tests/utils/ai-executor.test.ts --verbose\n+```\n+\n+If the API key is not available, skip this step and note it in the report.\n+\n+### Step 5: Verify Integration Points\n+\n+Check that the AI executor properly integrates with:\n+\n+- The caching system (results should be cacheable)\n+- The knowledge graph (AI results should be recordable)\n+- Error handling (API failures should fall back to prompt mode gracefully)\n+\n+## On Failure\n+\n+If any step fails:\n+\n+1. **For PR events**: Add a comment to the PR with:\n+   - Which test(s) failed\n+   - Whether the failure is in prompt mode (critical) or full mode (may be API-related)\n+   - Suggested fix\n+\n+2. **For schedule/dispatch events**: Create an issue:\n+\n+**Title**: `[ai-executor] {failure description}`\n+\n+**Body**:\n+\n+```markdown\n+## AI Executor Integration Failure\n+\n+**Trigger**: {schedule/dispatch}\n+**Date**: {date}\n+**API Key Available**: {yes/no}\n+\n+### Failure Details\n+\n+{which step failed and full error output}\n+\n+### Diagnosis\n+\n+{analysis of whether this is a code issue, API issue, or configuration issue}\n+\n+### Recommended Fix\n+\n+1. {step 1}\n+2. {step 2}\n+\n+---\n+\n+_Generated by AI Executor Integration agentic workflow_\n+```\n+\n+## On Success\n+\n+- **For PR events**: Add a brief comment confirming AI executor tests passed (note which modes were tested)\n+- **For schedule/dispatch events**: No issue needed\n+\n+---\n+\n+_Replaces: .github/agents/ai-executor-integration.yml_",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "5d4702d87a4d04357044240e60e70be4ef24f230",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__ai-executor-integration.md",
+          "snapshot_bytes": 3894,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/ai-executor-integration.lock.yml\",\"generated_workflow_file\":\"ai-executor-integration.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/ai-executor-integration.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/ai-executor-integration.md",
+      "commit_sha": "3b8b49ba616902846f15de6597dc7c4d370a6db6",
+      "authored_at": "2026-02-17T14:33:13Z",
+      "committed_at": "2026-02-17T14:33:13Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: add missing setup steps to ai-executor-integration workflow (#499)\n\nThe AI Executor Integration agentic workflow was failing at the\ninfrastructure level because it lacked dependency installation and\nbuild steps. The Copilot agent would attempt to run tests with no\nnode_modules or dist/ directory.\n\nAdd Step 0 (Install Dependencies and Build) matching the pattern\nused by the working mcp-server-validation workflow: apt build tools,\nnpm ci with fallback, tree-sitter rebuild, and npm run build.\n\nCloses #481\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "bd464a0e2804272a5443c62239a34af6297bdd92"
+      ],
+      "tree_sha": "24841f4a14d2525c733ab1da4842471e84c597da",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/3b8b49ba616902846f15de6597dc7c4d370a6db6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/ai-executor-integration.md",
+          "commit_sha": "3b8b49ba616902846f15de6597dc7c4d370a6db6",
+          "committed_at": "2026-02-17T14:33:13Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 26,
+          "file_deletions": 0,
+          "file_changes": 26,
+          "file_patch": "@@ -43,6 +43,32 @@ Key files:\n \n ## Validation Steps\n \n+### Step 0: Install Dependencies and Build\n+\n+Install build tools required for native module compilation (e.g., tree-sitter), then install npm dependencies with error-tolerant fallbacks, and build the project.\n+\n+```bash\n+# Install build tools for native modules (requires sudo)\n+sudo apt-get update -qq && sudo apt-get install -y build-essential python3 || echo \"⚠️ Could not install build tools (may already be present)\"\n+\n+# Install npm dependencies with fallback\n+if ! npm ci; then\n+  echo \"⚠️ npm ci failed, falling back to npm install...\"\n+  npm install\n+fi\n+\n+# Rebuild tree-sitter native bindings (non-blocking)\n+echo \"🔨 Rebuilding tree-sitter native bindings...\"\n+if ! npm rebuild tree-sitter; then\n+  echo \"⚠️ Tree-sitter rebuild failed, but continuing (tests handle graceful fallback)\"\n+fi\n+\n+# Build the project (required for dist/ artifacts)\n+npm run build\n+```\n+\n+If `npm` is not available or both install commands fail, Steps 1-5 will not be able to run. Report the dependency installation failure as the root cause.\n+\n ### Step 1: Test Prompt Mode\n \n This must always work, regardless of API key availability:",
+          "snapshot_ref": "3b8b49ba616902846f15de6597dc7c4d370a6db6",
+          "snapshot_blob_sha": "24170733dc2cff302b10f5774e3f904a1ef81f9f",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__3b8b49ba616902846f15de6597dc7c4d370a6db6__ai-executor-integration.md",
+          "snapshot_bytes": 4918,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/ai-executor-integration.lock.yml\",\"generated_workflow_file\":\"ai-executor-integration.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/ai-executor-integration.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/ai-executor-integration.md",
+      "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "authored_at": "2026-03-16T17:48:59Z",
+      "committed_at": "2026-03-16T17:48:59Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: add node ecosystem to gh-aw network allowlist for agentic workflows\n\nAll agentic workflows that run `npm ci` were failing because the gh-aw\nsandbox firewall blocked `nodejs.org`, preventing node-gyp from\ndownloading Node.js headers needed to compile tree-sitter native modules.\n\nAdd `network: allowed: [defaults, node]` to 7 workflow frontmatters:\n- deployment-pattern-validation.md\n- mcp-server-validation.md\n- esm-module-validation.md\n- knowledge-graph-validation.md\n- docs-noob-tester.md\n- mcp-tool-checker.md\n- ai-executor-integration.md\n\nThe `node` ecosystem identifier adds nodejs.org, npmjs.org, yarnpkg.com,\ndeno.land, bun.sh, and related domains to the firewall allowlist.\nRecompiled all lock files via `gh aw compile`.\n\nFixes #632\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2877451dca32cd49ad472fd7ef99825c028fe121"
+      ],
+      "tree_sha": "c6f58323d5517991601c231a1f6edcda0c151d60",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-executor-integration.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/ai-executor-integration.md",
+          "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "committed_at": "2026-03-16T17:48:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -22,6 +22,10 @@ tools:\n   bash: true\n   github:\n     toolsets: [issues, pull_requests]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n ---\n \n # AI Executor Integration",
+          "snapshot_ref": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "snapshot_blob_sha": "69f8d3ed1c41cde358e481acecb95a9489dd4c5f",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__72f88fa814801e4acb65e1eaf7f4f0437de3fdef__ai-executor-integration.md",
+          "snapshot_bytes": 4964,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/ai-executor-integration.lock.yml\",\"generated_workflow_file\":\"ai-executor-integration.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/ai-executor-integration.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

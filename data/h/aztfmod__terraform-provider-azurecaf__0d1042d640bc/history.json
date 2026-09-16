@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/issue-to-pr-agent.md",
+    "source_full_name": "aztfmod/terraform-provider-azurecaf",
+    "source_owner": "aztfmod",
+    "source_repo": "terraform-provider-azurecaf",
+    "md_path": ".github/workflows/issue-to-pr-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/HEAD/.github/workflows/issue-to-pr-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "aztfmod/terraform-provider-azurecaf",
+      "generated_owner": "aztfmod",
+      "generated_repo": "terraform-provider-azurecaf",
+      "generated_workflow_path": ".github/workflows/issue-to-pr-agent.lock.yml",
+      "generated_workflow_file": "issue-to-pr-agent.lock.yml",
+      "generated_html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/issue-to-pr-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:38+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/issue-to-pr-agent.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/issue-to-pr-agent.md",
+      "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+      "authored_at": "2026-03-23T08:48:57Z",
+      "committed_at": "2026-03-23T08:48:57Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Add new skills and workflows for resource management and testing\n\n- Create e2e-test-runner skill for end-to-end testing procedures.\n- Add example-generator skill to generate Terraform example configurations.\n- Implement issue-to-resource-spec skill for parsing resource requests from GitHub issues.\n- Introduce naming-rules-drift-check skill to verify Azure naming rules against current definitions.\n- Develop pr-compliance-check skill to validate pull request compliance with project standards.\n- Establish pre-release-validation skill for comprehensive checks before release tagging.\n- Create readme-resource-table skill to update resource status in README.md.\n- Add regression-test-runner skill for running full CI test suite and reporting results.\n- Implement release-notes-generator skill for generating release notes from CHANGELOG.md.\n- Create resource-bulk-import skill for batch importing Azure resources into resourceDefinition.json.\n- Develop resource-completeness-check skill to compare resource definitions against existing resources.\n- Introduce resource-diff-report skill for comparing different versions of resourceDefinition.json.\n- Add semver-assessment skill to analyze changes and determine semantic version bumps.\n- Implement test-failure-diagnosis skill for diagnosing test failures and suggesting fixes.\n- Create workflows for contributor welcome, issue-to-PR automation, nightly regression testing, PR review, release validation, and weekly Azure sync.",
+      "parent_shas": [
+        "98993a22009e05fd03064fe6cd256f734dda1cc7"
+      ],
+      "tree_sha": "5e4a5255a5439a57cb125630c194b32024091487",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/575609f79f8432185b89444d13113fa40d7e9553",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/issue-to-pr-agent.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/issue-to-pr-agent.md",
+          "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+          "committed_at": "2026-03-23T08:48:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 87,
+          "file_deletions": 0,
+          "file_changes": 87,
+          "file_patch": "@@ -0,0 +1,87 @@\n+---\n+description: |\n+  Automated workflow that processes issues labeled 'new-resource' to\n+  research the resource, create a branch, add the resource definition,\n+  build, test, and open a pull request.\n+\n+on:\n+  issues:\n+    types: [labeled]\n+\n+permissions:\n+  contents: write\n+  pull-requests: write\n+  issues: read\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    lockdown: true\n+    toolsets: [issues, pull_requests]\n+  bash:\n+    - \"git *\"\n+    - \"go *\"\n+    - \"make *\"\n+    - \"grep *\"\n+    - \"sed *\"\n+    - \"cat *\"\n+    - \"python3 *\"\n+    - \"curl *\"\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[auto] \"\n+    labels: [automated, new-resource]\n+  add-comment: {}\n+\n+source: local\n+engine: copilot\n+---\n+\n+# Issue to PR Agent\n+\n+When an issue is labeled `new-resource`, automatically research the requested Azure resource and create a PR to add it.\n+\n+## Trigger condition\n+\n+Only proceed if the label added is `new-resource`. Otherwise, exit immediately.\n+\n+## Process\n+\n+### 1. Parse the issue\n+Extract the Azure resource type name from the issue title and body. Look for patterns like:\n+- `azurerm_<resource_name>`\n+- \"Add support for <resource name>\"\n+- Resource provider namespace mentions\n+\n+### 2. Check if already supported\n+Search `resourceDefinition.json` for the resource name:\n+```bash\n+grep '\"name\": \"<resource_name>\"' resourceDefinition.json\n+```\n+If found, comment on the issue: \"This resource is already supported.\" and close with label `already-supported`.\n+\n+### 3. Research naming constraints\n+Follow the azure-naming-research skill procedure:\n+1. Look up CAF abbreviation on the Microsoft Learn page\n+2. Look up Azure naming rules\n+3. Derive field values\n+\n+### 4. Create branch and add resource\n+```bash\n+git checkout -b add/<resource_name>\n+```\n+- Add the JSON entry to `resourceDefinition.json` in alphabetical order\n+- Run `go generate && make build`\n+- Update `CHANGELOG.md`\n+- Commit all changes\n+\n+### 5. Open pull request\n+Create a PR with:\n+- Title: `Add <resource_name> resource type`\n+- Body: Include the researched constraints, JSON entry, and reference to the issue\n+- Link to the originating issue with `Closes #<issue_number>`\n+\n+### 6. Comment on issue\n+Comment: \"PR #<pr_number> has been created to add this resource.\"",
+          "snapshot_ref": "575609f79f8432185b89444d13113fa40d7e9553",
+          "snapshot_blob_sha": "c38539a5c9444c96bf187678113ded412add9f0b",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__575609f79f8432185b89444d13113fa40d7e9553__issue-to-pr-agent.md",
+          "snapshot_bytes": 2188,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/issue-to-pr-agent.lock.yml\",\"generated_workflow_file\":\"issue-to-pr-agent.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/issue-to-pr-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/issue-to-pr-agent.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/issue-to-pr-agent.md",
+      "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+      "authored_at": "2026-05-14T01:19:22Z",
+      "committed_at": "2026-05-14T01:36:04Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "chore(workflows): recompile agentic workflows with gh-aw v0.72.1\n\n- regenerate all 10 .lock.yml files (was v0.61.0); add 6 missing lock files\n- migrate strict-mode permissions to safe-outputs in 3 workflows\n- replace deprecated tools.github.repos with allowed-repos\n- adopt fuzzy schedules and terraform ecosystem identifier\n\n🤖 - Generated by Copilot",
+      "parent_shas": [
+        "5345a4f1c60e9112d20ae7c7b6e9399318ce2d7a"
+      ],
+      "tree_sha": "8de1b8c85449891565dbd801ce496a93893c1eb1",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/76763b42c2a7a3489689f9f3ba318908329c2432",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/issue-to-pr-agent.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/issue-to-pr-agent.md",
+          "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "committed_at": "2026-05-14T01:36:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -9,9 +9,9 @@ on:\n     types: [labeled]\n \n permissions:\n-  contents: write\n-  pull-requests: write\n+  contents: read\n   issues: read\n+  pull-requests: read\n \n network: defaults\n ",
+          "snapshot_ref": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "snapshot_blob_sha": "e3f9cd4ba16363ae1ae01eeebf6cc52188c26e60",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__76763b42c2a7a3489689f9f3ba318908329c2432__issue-to-pr-agent.md",
+          "snapshot_bytes": 2186,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/issue-to-pr-agent.lock.yml\",\"generated_workflow_file\":\"issue-to-pr-agent.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/issue-to-pr-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

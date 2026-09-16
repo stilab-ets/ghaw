@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/schema-sync.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/schema-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/schema-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/schema-sync.lock.yml",
+      "generated_workflow_file": "schema-sync.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/schema-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:48:13+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/schema-sync.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/schema-sync.md",
+      "commit_sha": "875fecb9a1ad6e71d109598a28469cf11a5dff8a",
+      "authored_at": "2026-05-08T18:24:09Z",
+      "committed_at": "2026-05-08T18:24:09Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add daily schema-sync workflow and README schema links (#2747)\n\nAdd a daily agentic workflow (schema-sync) that monitors commits for\nchanges to source files that affect AWF schemas and specs, then opens\nPRs to keep documentation in sync with implementation.\n\nUses cache-memory to track the last processed commit SHA so that only\nnew commits are analyzed on subsequent runs (first run processes the\nlast 7 days).\n\nAlso adds links to audit.schema.json, token-usage.schema.json, and\nschemas/README.md in the main README's Explore the docs section.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ab3073c2867b470e68ccaddddfc6a985c264b365"
+      ],
+      "tree_sha": "31066f1704c4020ec06bf18e0886ed4cc929fad2",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/875fecb9a1ad6e71d109598a28469cf11a5dff8a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/schema-sync.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/schema-sync.md",
+          "commit_sha": "875fecb9a1ad6e71d109598a28469cf11a5dff8a",
+          "committed_at": "2026-05-08T18:24:09Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 114,
+          "file_deletions": 0,
+          "file_changes": 114,
+          "file_patch": "@@ -0,0 +1,114 @@\n+---\n+name: Schema & Spec Sync\n+description: >\n+  Daily workflow that reviews recent commits for changes to source files that\n+  affect AWF schemas and specifications, then opens a PR updating any out-of-date\n+  schema or spec documents.\n+on:\n+  schedule: daily on weekdays\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+engine: copilot\n+strict: true\n+timeout-minutes: 20\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+    - github\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, pull_requests]\n+  cache-memory: true\n+  bash: [\"*\"]\n+  edit:\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+    labels: [automation, schemas]\n+    title-prefix: \"docs: \"\n+---\n+\n+# Schema & Spec Sync\n+\n+You are a documentation maintenance agent. Your job is to review recent commits\n+to source files and update the AWF schema/spec documents when they have drifted\n+from the implementation.\n+\n+## Source → Schema/Spec Mapping\n+\n+These source files drive schema and spec content:\n+\n+| Source files | Target documents |\n+|---|---|\n+| `src/config-file.ts`, `src/types.ts`, `src/cli.ts` | `docs/awf-config.schema.json`, `docs/awf-config-spec.md` |\n+| `src/squid-config.ts`, `src/logs/log-parser.ts` | `schemas/audit.schema.json` |\n+| `containers/api-proxy/token-tracker.js`, `containers/api-proxy/server.js` | `schemas/token-usage.schema.json` |\n+| Any of the above | `schemas/README.md` (if versioning/structure changes) |\n+\n+## Procedure\n+\n+### 1. Load last-processed commit\n+\n+Read `/tmp/gh-aw/cache-memory/schema-sync-state.json`. It stores:\n+```json\n+{ \"last_commit_sha\": \"<sha>\", \"updated\": \"YYYY-MM-DD-HH-MM-SS\" }\n+```\n+\n+- If the file exists, use `last_commit_sha` as the starting point.\n+- If the file does NOT exist (first run), use commits from the **last 7 days**.\n+\n+### 2. Fetch relevant commits\n+\n+Use the GitHub MCP tools to list commits on the default branch (`main`) since\n+the starting point. Filter to commits that modify any of the source files listed\n+in the mapping table above.\n+\n+If no relevant commits are found, write the current HEAD SHA to\n+`/tmp/gh-aw/cache-memory/schema-sync-state.json` and use the `noop` safe output.\n+\n+### 3. Analyze changes\n+\n+For each relevant commit, read the diff to understand what changed:\n+\n+- **New CLI flags or config fields** → update `docs/awf-config.schema.json` (add property) and `docs/awf-config-spec.md` (add CLI mapping row)\n+- **New/removed audit log fields** → update `schemas/audit.schema.json` (add/remove property, update `required` array if needed)\n+- **New/removed token-usage fields** → update `schemas/token-usage.schema.json` (add/remove property, update `required` array if needed)\n+- **Renamed fields or type changes** → update the relevant schema and note it as a breaking change in the description\n+\n+### 4. Make the updates\n+\n+Use the `edit` tool to update the affected schema/spec files. Follow these rules:\n+\n+- **JSON Schema files**: Maintain valid JSON. Add new properties in alphabetical order within the `properties` object. Include `type` and `description` for every property.\n+- **awf-config-spec.md**: Keep the CLI mapping table in Section 5 sorted by config path. Use the same format as existing rows.\n+- **schemas/README.md**: Only update if the schema structure or versioning approach changed.\n+- **Do NOT bump `$id` URLs** — those are updated at release time only.\n+\n+### 5. Create a PR (if changes were made)\n+\n+If any files were updated, use the `create-pull-request` safe output with:\n+- Title: `\"docs: sync schemas and specs with source changes\"`\n+- Body: A summary of what changed and which commits triggered the update.\n+- Branch: `docs/schema-sync-<date>` where date is `YYYY-MM-DD`\n+\n+If no schema/spec updates are needed (source changes didn't affect the contract),\n+use the `noop` safe output.\n+\n+### 6. Save state\n+\n+Write the HEAD commit SHA to `/tmp/gh-aw/cache-memory/schema-sync-state.json`\n+using filesystem-safe timestamp format `YYYY-MM-DD-HH-MM-SS` (no colons, no `T`, no `Z`):\n+```json\n+{ \"last_commit_sha\": \"<HEAD SHA>\", \"updated\": \"YYYY-MM-DD-HH-MM-SS\" }\n+```\n+\n+## Important Notes\n+\n+- Only update schemas when the **wire format** or **config contract** actually changed.\n+  Internal refactors that don't change external behavior should NOT trigger updates.\n+- If you're unsure whether a change affects the schema, err on the side of NOT updating.\n+- Keep commit messages in PR descriptions concise — link to the relevant commits.",
+          "snapshot_ref": "875fecb9a1ad6e71d109598a28469cf11a5dff8a",
+          "snapshot_blob_sha": "d49370572503cd179fd72832a5971b5a4f643fb8",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__875fecb9a1ad6e71d109598a28469cf11a5dff8a__schema-sync.md",
+          "snapshot_bytes": 4375,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/schema-sync.lock.yml\",\"generated_workflow_file\":\"schema-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/schema-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/schema-sync.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/schema-sync.md",
+      "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "authored_at": "2026-07-23T23:02:50Z",
+      "committed_at": "2026-07-23T23:02:50Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: use github.token for copilot-engine workflows (drop removed COPILOT_GITHUB_TOKEN secret) (#6556)\n\n* ci: add copilot-requests perm, use github.token for copilot engine\n\nThe COPILOT_GITHUB_TOKEN secret was removed from the repo, causing every\ncopilot-engine workflow that referenced secrets.COPILOT_GITHUB_TOKEN to\nsend an empty token to the api-proxy and get HTTP 401 from\napi.githubcopilot.com. Adding the copilot-requests: write permission lets\ngh-aw compile the built-in github.token as COPILOT_GITHUB_TOKEN instead,\nremoving the dependency on the deleted secret.\n\n* ci: fix BYOK copilot token source\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "9bfc72605e300278fe2ee93171b65db8ccaa9e6b"
+      ],
+      "tree_sha": "b4c8e557b01c145c68a8b3a54e0522567891ad4e",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/schema-sync.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/schema-sync.md",
+          "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "committed_at": "2026-07-23T23:02:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -7,6 +7,7 @@ description: >\n on:\n   schedule: daily on weekdays\n permissions:\n+  copilot-requests: write\n   contents: read\n   pull-requests: read\n   issues: read",
+          "snapshot_ref": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "snapshot_blob_sha": "22f2a3036b62a38978f50bcefb52be3e9052fd4b",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__02cb22631932cfbeae4d633edf8f0202dbbf6b5d__schema-sync.md",
+          "snapshot_bytes": 4401,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/schema-sync.lock.yml\",\"generated_workflow_file\":\"schema-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/schema-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

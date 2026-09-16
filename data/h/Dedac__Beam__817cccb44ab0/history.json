@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Dedac/Beam:.github/workflows/weekly-improvements.md",
+    "source_full_name": "Dedac/Beam",
+    "source_owner": "Dedac",
+    "source_repo": "Beam",
+    "md_path": ".github/workflows/weekly-improvements.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Dedac/Beam/blob/HEAD/.github/workflows/weekly-improvements.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Dedac/Beam",
+      "generated_owner": "Dedac",
+      "generated_repo": "Beam",
+      "generated_workflow_path": ".github/workflows/weekly-improvements.lock.yml",
+      "generated_workflow_file": "weekly-improvements.lock.yml",
+      "generated_html_url": "https://github.com/Dedac/Beam/blob/e1e3af92829f13caf0f9b586518e782d82004f34/.github/workflows/weekly-improvements.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:25:08+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Dedac/Beam:.github/workflows/weekly-improvements.md",
+      "source_full_name": "Dedac/Beam",
+      "md_path": ".github/workflows/weekly-improvements.md",
+      "commit_sha": "405e1d6d741a603a087da9d79fba9e7076aa226e",
+      "authored_at": "2026-04-22T14:44:20Z",
+      "committed_at": "2026-04-22T14:44:20Z",
+      "author_name": "Richard Goforth",
+      "author_email": "dedac@github.com",
+      "author_login": "Dedac",
+      "author_account_type": "User",
+      "committer_name": "Richard Goforth",
+      "committer_email": "dedac@github.com",
+      "committer_login": "Dedac",
+      "committer_account_type": "User",
+      "message": "Add weekly improvements agentic workflow\n\nAdds a weekly scheduled workflow that analyzes the Beam codebase and\ncreates a prioritized GitHub issue with the top 3 improvements.\nIncludes auto-cleanup of previous reports.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "747f32ae4524c95d1a51f1c057ccb4141c513209"
+      ],
+      "tree_sha": "650d4e66397b8168807eb2498775466343e638fb",
+      "html_url": "https://github.com/Dedac/Beam/commit/405e1d6d741a603a087da9d79fba9e7076aa226e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Dedac/Beam:.github/workflows/weekly-improvements.md",
+          "source_full_name": "Dedac/Beam",
+          "md_path": ".github/workflows/weekly-improvements.md",
+          "commit_sha": "405e1d6d741a603a087da9d79fba9e7076aa226e",
+          "committed_at": "2026-04-22T14:44:20Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 119,
+          "file_deletions": 0,
+          "file_changes": 119,
+          "file_patch": "@@ -0,0 +1,119 @@\n+---\n+description: Weekly analysis of the Beam application to identify and prioritize the top 3 improvements.\n+on:\n+  schedule: weekly\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+timeout-minutes: 15\n+tools:\n+  github:\n+    toolsets: [default, actions]\n+  bash: true\n+network:\n+  allowed:\n+    - dotnet\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  max-bot-mentions: 1\n+  create-issue:\n+    title-prefix: \"Weekly Improvements:\"\n+    labels: [report, improvements]\n+    close-older-issues: true\n+    expires: 14\n+    max: 1\n+---\n+\n+# Weekly Improvement Analysis for Beam\n+\n+You are a senior software engineer analyzing the **Beam** application — a Blazor WebAssembly social media app hosted in ASP.NET Core with a SQL Server backend, EF Core, and .NET.\n+\n+## Your Task\n+\n+Analyze the repository and produce a **prioritized list of the top 3 improvements** that would have the highest impact on this application. Create a single GitHub issue summarizing your findings.\n+\n+## Analysis Process\n+\n+1. **Review the codebase structure** — Examine the projects (Beam.Server, Beam.Client, Beam.Shared, Beam.Data, Beam.Animation), their dependencies, and overall architecture.\n+\n+2. **Check recent activity** — Look at recent commits, open issues, and pull requests for context on what's been changing and what problems have been reported.\n+\n+3. **Identify improvement areas** — Consider:\n+   - Security vulnerabilities or missing best practices\n+   - Performance bottlenecks or inefficiencies\n+   - Missing or insufficient tests\n+   - Outdated dependencies or framework versions\n+   - Code quality, maintainability, and architecture concerns\n+   - Missing documentation or developer experience gaps\n+   - Accessibility and UX improvements\n+\n+4. **Prioritize** — Rank improvements by impact (security > reliability > performance > maintainability > features). Consider effort vs. value.\n+\n+## Output Format\n+\n+Create an issue with the following structure:\n+\n+```markdown\n+### Summary\n+\n+Brief overview of the repository's current health and the focus areas for this week's recommendations.\n+\n+### 🥇 #1: [Title of highest priority improvement]\n+\n+**Impact**: High | Medium | Low\n+**Effort**: High | Medium | Low\n+**Category**: Security | Performance | Testing | Dependencies | Architecture | Documentation\n+\n+[2-3 sentence description of the improvement and why it matters.]\n+\n+<details>\n+<summary>Implementation guidance</summary>\n+\n+[Specific, actionable steps to implement this improvement. Reference file paths where relevant.]\n+\n+</details>\n+\n+### 🥈 #2: [Title of second priority improvement]\n+\n+**Impact**: High | Medium | Low\n+**Effort**: High | Medium | Low\n+**Category**: Security | Performance | Testing | Dependencies | Architecture | Documentation\n+\n+[2-3 sentence description.]\n+\n+<details>\n+<summary>Implementation guidance</summary>\n+\n+[Specific steps.]\n+\n+</details>\n+\n+### 🥉 #3: [Title of third priority improvement]\n+\n+**Impact**: High | Medium | Low\n+**Effort**: High | Medium | Low\n+**Category**: Security | Performance | Testing | Dependencies | Architecture | Documentation\n+\n+[2-3 sentence description.]\n+\n+<details>\n+<summary>Implementation guidance</summary>\n+\n+[Specific steps.]\n+\n+</details>\n+\n+### Recommendations\n+\n+[One paragraph summarizing recommended next steps and any trends observed.]\n+```\n+\n+## Guidelines\n+\n+- Be specific and actionable — reference actual files, packages, or patterns you found.\n+- Don't repeat the same improvements every week; look for new insights.\n+- If the codebase is in great shape, say so and suggest stretch goals instead.\n+- Use `###` or lower for all headers (never `#` or `##`).",
+          "snapshot_ref": "405e1d6d741a603a087da9d79fba9e7076aa226e",
+          "snapshot_blob_sha": "2ce3858fee060d3f7960a0fb56f6820da7405985",
+          "snapshot_file": "snapshots/Beam__Dedac__405e1d6d741a603a087da9d79fba9e7076aa226e__weekly-improvements.md",
+          "snapshot_bytes": 3605,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Dedac/Beam\",\"generated_owner\":\"Dedac\",\"generated_repo\":\"Beam\",\"generated_workflow_path\":\".github/workflows/weekly-improvements.lock.yml\",\"generated_workflow_file\":\"weekly-improvements.lock.yml\",\"generated_html_url\":\"https://github.com/Dedac/Beam/blob/e1e3af92829f13caf0f9b586518e782d82004f34/.github/workflows/weekly-improvements.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

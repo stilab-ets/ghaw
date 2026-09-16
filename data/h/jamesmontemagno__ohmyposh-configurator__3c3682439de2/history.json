@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "jamesmontemagno/ohmyposh-configurator:.github/workflows/weekly-segment-sync.md",
+    "source_full_name": "jamesmontemagno/ohmyposh-configurator",
+    "source_owner": "jamesmontemagno",
+    "source_repo": "ohmyposh-configurator",
+    "md_path": ".github/workflows/weekly-segment-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/jamesmontemagno/ohmyposh-configurator/blob/HEAD/.github/workflows/weekly-segment-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "jamesmontemagno/ohmyposh-configurator",
+      "generated_owner": "jamesmontemagno",
+      "generated_repo": "ohmyposh-configurator",
+      "generated_workflow_path": ".github/workflows/weekly-segment-sync.lock.yml",
+      "generated_workflow_file": "weekly-segment-sync.lock.yml",
+      "generated_html_url": "https://github.com/jamesmontemagno/ohmyposh-configurator/blob/b691706204b332cce43d2314a46592c43f7de347/.github/workflows/weekly-segment-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:57:20+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "jamesmontemagno/ohmyposh-configurator:.github/workflows/weekly-segment-sync.md",
+      "source_full_name": "jamesmontemagno/ohmyposh-configurator",
+      "md_path": ".github/workflows/weekly-segment-sync.md",
+      "commit_sha": "c426ec206d3d236899a333f9a0dc5842f0e5cc7c",
+      "authored_at": "2026-08-01T13:43:22Z",
+      "committed_at": "2026-08-01T13:43:22Z",
+      "author_name": "James Montemagno",
+      "author_email": "james.montemagno@gmail.com",
+      "author_login": "jamesmontemagno",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add weekly segment sync agent (#76)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: eff6d92b-9493-4d5b-a046-24dc978d7a06",
+      "parent_shas": [
+        "34ac38b4fdb149565dbd11f6992fc46d75b74f92"
+      ],
+      "tree_sha": "11cc22a77f9dd50e48cbc5c5d42dc2d2adbf3df9",
+      "html_url": "https://github.com/jamesmontemagno/ohmyposh-configurator/commit/c426ec206d3d236899a333f9a0dc5842f0e5cc7c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jamesmontemagno/ohmyposh-configurator:.github/workflows/weekly-segment-sync.md",
+          "source_full_name": "jamesmontemagno/ohmyposh-configurator",
+          "md_path": ".github/workflows/weekly-segment-sync.md",
+          "commit_sha": "c426ec206d3d236899a333f9a0dc5842f0e5cc7c",
+          "committed_at": "2026-08-01T13:43:22Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 79,
+          "file_deletions": 0,
+          "file_changes": 79,
+          "file_patch": "@@ -0,0 +1,79 @@\n+---\n+description: \"Weekly Oh My Posh segment metadata synchronization\"\n+on:\n+  schedule: weekly on monday\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  copilot-requests: write\n+\n+engine:\n+  id: copilot\n+\n+network: defaults\n+\n+tools:\n+  bash:\n+    - \"npm ci\"\n+    - \"npm run segments:sync:upstream -- --scope=all --cadence=weekly --strictness=report\"\n+    - \"npm run segments:sync:upstream -- --scope=all --cadence=weekly --strictness=report-and-fix\"\n+    - \"npm run validate\"\n+    - \"npm run lint\"\n+    - \"npm run test:run\"\n+    - \"npm run build\"\n+    - \"node scripts/validate-icons.js\"\n+    - \"git status --short\"\n+    - \"git diff --check\"\n+    - \"git diff -- public/segments docs/segment-upstream-sync-report.md src/components/PreviewPanel\"\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[segment-sync] \"\n+    draft: true\n+    max: 1\n+    fallback-as-issue: false\n+    if-no-changes: ignore\n+    allowed-branches:\n+      - \"automation/segment-sync-*\"\n+    max-patch-files: 30\n+    max-patch-size: 1024\n+\n+timeout-minutes: 30\n+max-turns: 50\n+max-daily-ai-credits: 2000\n+---\n+\n+# Weekly Oh My Posh Segment Synchronization\n+\n+Maintain `public/segments/` against the official Oh My Posh segment documentation.\n+\n+## Procedure\n+\n+1. Run `npm ci`.\n+2. Run the report-only upstream audit:\n+   ```bash\n+   npm run segments:sync:upstream -- --scope=all --cadence=weekly --strictness=report\n+   ```\n+3. Run the safe automatic synchronization:\n+   ```bash\n+   npm run segments:sync:upstream -- --scope=all --cadence=weekly --strictness=report-and-fix\n+   ```\n+4. Review `docs/segment-upstream-sync-report.md` and the working-tree diff.\n+5. For each newly added or changed segment, ensure:\n+   - its runtime ID matches the documented sample configuration;\n+   - its icon ID exists in `src/constants/nerdFontIcons.ts`;\n+   - preview mock data exists in `src/components/PreviewPanel/mockData.ts`;\n+   - the template gallery's `public/configs/samples/all-segments.json` includes the type;\n+   - generated JSON preserves escaped Unicode.\n+6. Do not bulk overwrite intentional configurator presentation defaults solely because their colors, spacing, or descriptions differ from upstream samples. Apply only verified runtime-ID, template, property, option, cache, and missing-segment updates.\n+7. Run `node scripts/validate-icons.js`, `npm run validate`, `npm run lint`, `npm run test:run`, and `npm run build`.\n+\n+## Pull Request Policy\n+\n+- If no source, metadata, preview, gallery, or report files changed after the audit, stop without creating a pull request.\n+- If validated changes exist, create exactly one draft PR from a branch named `automation/segment-sync-<yyyy-mm-dd>`.\n+- Use title: `Sync Oh My Posh segment metadata`.\n+- In the PR body, summarize added, removed, and changed runtime IDs; identify anything left for manual review; and list the validation commands run.\n+- Do not modify files outside the segment catalog, preview support, all-segments gallery, sync report, or changelog.",
+          "snapshot_ref": "c426ec206d3d236899a333f9a0dc5842f0e5cc7c",
+          "snapshot_blob_sha": "402ab0195233199aa7171bc137fa330dc9dbd339",
+          "snapshot_file": "snapshots/ohmyposh-configurator__jamesmontemagno__c426ec206d3d236899a333f9a0dc5842f0e5cc7c__weekly-segment-sync.md",
+          "snapshot_bytes": 2957,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jamesmontemagno/ohmyposh-configurator\",\"generated_owner\":\"jamesmontemagno\",\"generated_repo\":\"ohmyposh-configurator\",\"generated_workflow_path\":\".github/workflows/weekly-segment-sync.lock.yml\",\"generated_workflow_file\":\"weekly-segment-sync.lock.yml\",\"generated_html_url\":\"https://github.com/jamesmontemagno/ohmyposh-configurator/blob/b691706204b332cce43d2314a46592c43f7de347/.github/workflows/weekly-segment-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

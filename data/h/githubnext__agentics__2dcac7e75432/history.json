@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/agentics:workflows/large-file-simplifier.md",
+    "source_full_name": "githubnext/agentics",
+    "source_owner": "githubnext",
+    "source_repo": "agentics",
+    "md_path": "workflows/large-file-simplifier.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/githubnext/agentics/blob/HEAD/workflows/large-file-simplifier.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "baizhiheizi/quill",
+      "generated_owner": "baizhiheizi",
+      "generated_repo": "quill",
+      "generated_workflow_path": ".github/workflows/large-file-simplifier.lock.yml",
+      "generated_workflow_file": "large-file-simplifier.lock.yml",
+      "generated_html_url": "https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/large-file-simplifier.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:49:03+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/agentics:workflows/large-file-simplifier.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/large-file-simplifier.md",
+      "commit_sha": "fc4ab36dedc44e2a1cdc195cecce262f06c81230",
+      "authored_at": "2026-05-05T14:57:37Z",
+      "committed_at": "2026-05-05T14:57:37Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update",
+      "parent_shas": [
+        "cb460be15eabba032126af2613cc8f1dc38b75ae"
+      ],
+      "tree_sha": "142b5efe700171f7a5ea72d398af780779f1db21",
+      "html_url": "https://github.com/githubnext/agentics/commit/fc4ab36dedc44e2a1cdc195cecce262f06c81230",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/large-file-simplifier.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/large-file-simplifier.md",
+          "commit_sha": "fc4ab36dedc44e2a1cdc195cecce262f06c81230",
+          "committed_at": "2026-05-05T14:57:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 205,
+          "file_deletions": 0,
+          "file_changes": 205,
+          "file_patch": "@@ -0,0 +1,205 @@\n+---\n+name: Large File Simplifier\n+description: Analyzes source files to identify the largest file and creates an actionable issue with a detailed refactoring plan when it exceeds healthy size thresholds\n+on:\n+  workflow_dispatch:\n+  schedule: daily on weekdays\n+  skip-if-match: 'is:issue is:open in:title \"[large-file-simplifier]\"'\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tracker-id: large-file-simplifier\n+\n+imports:\n+  - shared/formatting.md\n+  - shared/reporting.md\n+\n+safe-outputs:\n+  create-issue:\n+    expires: 2d\n+    title-prefix: \"[large-file-simplifier] \"\n+    labels: [refactoring, code-health, automated-analysis]\n+    assignees: copilot\n+    max: 1\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash:\n+    - \"git ls-tree -r --name-only HEAD\"\n+    - \"git ls-tree -r -l --full-name HEAD\"\n+    - \"git ls-tree -r --name-only HEAD | grep -E * | grep -vE * | xargs wc -l 2>/dev/null\"\n+    - \"git ls-tree -r --name-only HEAD | grep -E * | xargs wc -l 2>/dev/null\"\n+    - \"wc -l *\"\n+    - \"head -n * *\"\n+    - \"tail -n * *\"\n+    - \"grep -n * *\"\n+    - \"sort *\"\n+    - \"cat *\"\n+\n+timeout-minutes: 20\n+---\n+\n+# Large File Simplifier Agent\n+\n+You are the Large File Simplifier Agent — a code health specialist that identifies oversized source files and creates detailed, actionable refactoring plans. You analyze file structure, identify logical boundaries, and produce an issue with concrete guidance for splitting large files into smaller, focused modules.\n+\n+## Mission\n+\n+Analyze the repository's source files to identify the largest file and determine if it requires refactoring. Create an issue only when a file exceeds healthy size thresholds, providing a specific plan for splitting it into smaller, more focused files.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Analysis Date**: $(date +%Y-%m-%d)\n+- **Workspace**: ${{ github.workspace }}\n+\n+## Phase 1: Identify the Largest Source File\n+\n+### 1.1 Determine Repository Languages\n+\n+Examine the repository to understand which programming languages are used. Check file extensions, build configuration, and directory structure.\n+\n+### 1.2 Find Source Files by Size\n+\n+Find all tracked non-test source files and sort by line count:\n+\n+```bash\n+git ls-tree -r --name-only HEAD \\\n+  | grep -E '\\.(go|py|ts|tsx|js|jsx|rb|java|rs|cs|cpp|c|h|hpp|swift|kt|scala|php)$' \\\n+  | grep -vE '(_test\\.go|\\.test\\.(ts|js|tsx|jsx)|\\.spec\\.(ts|js|tsx|jsx)|test_[^/]*\\.py|[^/]*_test\\.py|_spec\\.rb|Test\\.java|Tests\\.cs)$' \\\n+  | xargs wc -l 2>/dev/null \\\n+  | sort -rn \\\n+  | head -20\n+```\n+\n+**Skip these files:**\n+- Test files (any test naming convention for the language)\n+- Generated files (in `dist/`, `build/`, `target/`, `vendor/`, `node_modules/` or containing \"Code generated\", \"DO NOT EDIT\", \"AUTO-GENERATED\")\n+- Lock files, configuration files, and data files\n+\n+### 1.3 Apply Size Threshold\n+\n+**Healthy file size threshold: 500 lines**\n+\n+If the largest non-test source file is **under 500 lines**, do NOT proceed with refactoring. Output a status message and stop:\n+\n+```\n+✅ All files are healthy! Largest file: [FILE_PATH] ([LINE_COUNT] lines)\n+No refactoring needed today.\n+```\n+\n+If the largest file is **500 or more lines**, proceed to Phase 2.\n+\n+## Phase 2: Analyze File Structure\n+\n+### 2.1 Read and Understand the File\n+\n+Read the full content of the largest file. Understand:\n+- The programming language and its conventions for file organization\n+- What the file exports or exposes publicly\n+- Dependencies and imports used\n+\n+### 2.2 Identify Logical Boundaries\n+\n+Look for natural splitting points:\n+\n+```bash\n+grep -n \"^func\\|^class\\|^def\\|^module\\|^impl\\|^struct\\|^type\\|^interface\\|^export\\|^pub \" <LARGE_FILE> | head -50\n+```\n+\n+Identify:\n+- **Distinct responsibilities**: Groups of functions that serve different purposes\n+- **Related clusters**: Functions that call each other frequently and share state\n+- **Utility code**: Helper functions used across multiple concerns\n+- **Type definitions**: Structs, classes, or interfaces that could live in dedicated files\n+\n+### 2.3 Plan the Split\n+\n+Design a split that:\n+- Groups related functions together by single responsibility\n+- Keeps each new file under 300 lines where possible\n+- Follows language conventions (e.g., one class per file in Java, feature-based in Go)\n+- Minimizes cross-file dependencies\n+- Preserves the public API unchanged\n+\n+## Phase 3: Create Issue\n+\n+If the file exceeds 500 lines, create an issue with the following structure:\n+\n+```markdown\n+### Overview\n+\n+The file `[FILE_PATH]` has grown to [LINE_COUNT] lines, making it harder to navigate and maintain. This task involves refactoring it into smaller, more focused files.\n+\n+### Current State\n+\n+- **File**: `[FILE_PATH]`\n+- **Size**: [LINE_COUNT] lines\n+- **Language**: [language]\n+\n+<details>\n+<summary><b>Structural Analysis</b></summary>\n+\n+[Description of what the file contains: key functions, classes, modules, and their groupings]\n+\n+</details>\n+\n+### Refactoring Strategy\n+\n+#### Proposed File Splits\n+\n+Based on the file's structure, split it into the following modules:\n+\n+1. **`[new_file_1]`**\n+   - Contents: [list key functions/classes]\n+   - Responsibility: [single-purpose description]\n+   - Estimated LOC: [count]\n+\n+2. **`[new_file_2]`**\n+   - Contents: [list key functions/classes]\n+   - Responsibility: [single-purpose description]\n+   - Estimated LOC: [count]\n+\n+3. **`[new_file_3]`** *(if needed)*\n+   - Contents: [list key functions/classes]\n+   - Responsibility: [single-purpose description]\n+   - Estimated LOC: [count]\n+\n+### Implementation Guidelines\n+\n+1. **Preserve Behavior**: All existing functionality must work identically after the split\n+2. **Maintain Public API**: Keep exported/public symbols accessible with the same names\n+3. **Update Imports**: Fix all import paths throughout the codebase\n+4. **Test After Each Split**: Run the test suite after each incremental change\n+5. **One File at a Time**: Split one module at a time to make review easier\n+\n+### Acceptance Criteria\n+\n+- [ ] Original file is split into focused modules\n+- [ ] Each new file is under 300 lines\n+- [ ] All tests pass after refactoring\n+- [ ] No breaking changes to public API\n+- [ ] All import paths updated correctly\n+\n+---\n+\n+**Priority**: Medium\n+**Effort**: [Small/Medium/Large based on complexity]\n+**Expected Impact**: Improved code navigability, easier testing, reduced merge conflicts\n+```\n+\n+## Important Guidelines\n+\n+- **Only create issues when threshold is exceeded**: Do not create issues for files under 500 lines\n+- **Skip generated files**: Ignore files in `dist/`, `build/`, `target/`, `vendor/`, or files with a header indicating they are generated (e.g., \"Code generated\", \"DO NOT EDIT\")\n+- **Skip test files**: Focus on production source code only\n+- **Be specific and actionable**: Provide concrete file split suggestions, not vague advice\n+- **Consider language idioms**: Suggest splits that follow the conventions of the repository's primary language (e.g., one class per file in Java, grouped by feature in Go, modules by responsibility in Python)\n+- **Estimate effort realistically**: Large files with many dependencies may require significant refactoring effort\n+- **One file per run**: Only target the single largest file to keep issues focused\n+\n+Begin your analysis now. Find the largest source file, assess if it needs refactoring, and create an issue only if necessary.",
+          "snapshot_ref": "fc4ab36dedc44e2a1cdc195cecce262f06c81230",
+          "snapshot_blob_sha": "d0a3119a492172e573045579d155e7ad9a2085c3",
+          "snapshot_file": "snapshots/agentics__githubnext__fc4ab36dedc44e2a1cdc195cecce262f06c81230__large-file-simplifier.md",
+          "snapshot_bytes": 7281,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/large-file-simplifier.lock.yml\",\"generated_workflow_file\":\"large-file-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/large-file-simplifier.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

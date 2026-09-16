@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+    "source_full_name": "githubnext/gh-aw-workshop",
+    "source_owner": "githubnext",
+    "source_repo": "gh-aw-workshop",
+    "md_path": ".github/workflows/workshop-link-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/gh-aw-workshop/blob/HEAD/.github/workflows/workshop-link-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/gh-aw-workshop",
+      "generated_owner": "githubnext",
+      "generated_repo": "gh-aw-workshop",
+      "generated_workflow_path": ".github/workflows/workshop-link-checker.lock.yml",
+      "generated_workflow_file": "workshop-link-checker.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workshop-link-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:49:19+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workshop-link-checker.md",
+      "commit_sha": "e9d407a7e53c4d5f49c2552a09b0a85c82e66447",
+      "authored_at": "2026-07-11T21:11:40Z",
+      "committed_at": "2026-07-11T21:11:40Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `workshop-link-checker` workflow to detect and report broken workshop links (#210)",
+      "parent_shas": [
+        "d49fda933a3200d8c7766f12098497debfba31f6"
+      ],
+      "tree_sha": "b16c8510fcb5c332e2ffc76a409df9bcae01f5fe",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/e9d407a7e53c4d5f49c2552a09b0a85c82e66447",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workshop-link-checker.md",
+          "commit_sha": "e9d407a7e53c4d5f49c2552a09b0a85c82e66447",
+          "committed_at": "2026-07-11T21:11:40Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 175,
+          "file_deletions": 0,
+          "file_changes": 175,
+          "file_patch": "@@ -0,0 +1,175 @@\n+---\n+emoji: 🔗\n+name: Workshop Link Checker\n+description: >\n+  Daily broken-link validator for workshop markdown files. Scans workshop/*.md,\n+  validates external URLs and internal anchors, and files or updates\n+  broken-link issues with exact file/line/URL details.\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+  bash: true\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[workshop-link-checker] \"\n+    labels: [broken-link]\n+    deduplicate-by-title: true\n+    max: 50\n+  add-comment:\n+    max: 50\n+timeout-minutes: 30\n+steps:\n+  - name: Gather workshop markdown files\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/data\n+\n+      if [ -d workshop ]; then\n+        find workshop -type f -name \"*.md\" | sort | jq -R . | jq -sc '{workshop_files: .}' > /tmp/gh-aw/data/repo-state.json\n+      else\n+        jq -n '{workshop_files: []}' > /tmp/gh-aw/data/repo-state.json\n+      fi\n+\n+      echo \"=== Repo state ===\" && cat /tmp/gh-aw/data/repo-state.json\n+---\n+\n+# Workshop Link Checker\n+\n+You are a QA automation agent for the **\"Learning GitHub Agentic Workflows\"** workshop.\n+\n+Your job is to detect broken links in workshop markdown files and report actionable findings.\n+\n+---\n+\n+## Phase 1 — Load Inputs\n+\n+1. Read `/tmp/gh-aw/data/repo-state.json`.\n+2. Extract `workshop_files`.\n+3. If `workshop_files` is empty, call `noop` with a short explanation.\n+\n+---\n+\n+## Phase 2 — Extract Links from Markdown\n+\n+For each file in `workshop_files`, extract links with line numbers:\n+\n+- Inline links: `[text](url)`\n+- Reference-style links: `[text][ref]` plus matching definitions `[ref]: url`\n+- Autolinks: `<https://example.com>`\n+\n+Rules:\n+\n+- Ignore image links (`![alt](url)` and `![alt][ref]`).\n+- Ignore mailto links.\n+- Ignore links inside fenced code blocks.\n+- Resolve relative links against the source file location.\n+- Keep the original source line number for every discovered link.\n+\n+Build a normalized list of records:\n+\n+```json\n+[\n+  {\n+    \"file\": \"workshop/11-build-daily-status.md\",\n+    \"line\": 123,\n+    \"raw_link\": \"../README.md#overview\",\n+    \"resolved_kind\": \"internal\",\n+    \"resolved_target\": \"README.md#overview\"\n+  }\n+]\n+```\n+\n+---\n+\n+## Phase 3 — Validate Links\n+\n+Validate each extracted link and collect only broken ones.\n+\n+### External URLs (`http://` or `https://`)\n+\n+1. Send an HTTP `HEAD` request first.\n+2. If `HEAD` is unsupported (405/501), retry with a standard `GET` request and do not analyze response-body content.\n+3. Follow redirects (3xx) and validate the final response.\n+4. For `HEAD` and fallback `GET`, treat as broken when response is:\n+   - network failure / DNS failure / TLS failure\n+   - any 4xx or 5xx status code\n+\n+Record status code or error in `reason`.\n+\n+### Internal / relative links\n+\n+1. Resolve the path to a repository file.\n+2. If the target file does not exist, mark as broken (`missing file`).\n+3. If the link includes an anchor (`#...`):\n+   - Parse headings from the target markdown file.\n+   - Generate GitHub-style heading slugs:\n+     - lowercase\n+     - trim surrounding whitespace\n+     - replace spaces with `-`\n+     - remove punctuation except `-` and `_`\n+     - disambiguate duplicates with `-1`, `-2`, etc.\n+   - If the anchor is missing, mark as broken (`missing anchor`).\n+\n+For internal links to non-markdown files, only validate file existence.\n+\n+---\n+\n+## Phase 4 — Open or Update Broken-Link Issues\n+\n+For each broken link record, create a deterministic issue key hash:\n+\n+`bl-<lowercase-hex sha256(utf8(\\\"f=\\\" + len(file) + \\\":\\\" + file + \\\"|l=\\\" + line + \\\"|u=\\\" + len(raw_link) + \\\":\\\" + raw_link))>`\n+\n+Example source string:\n+\n+`workshop/11-build-daily-status.md|123|../README.md#overview`\n+\n+Then:\n+\n+1. At the start of this phase, list open issues with label `broken-link` once and cache them locally.\n+2. Search that cached list for an existing issue whose title contains the exact key hash.\n+3. If no matching issue exists, call `create-issue` with:\n+   - **Title**: `Broken link in <file> at line <line> [bl-<hash>]`\n+   - **Body** including:\n+     - file path\n+     - line number\n+     - raw link\n+     - resolved target\n+     - failure reason/status\n+     - checked-at timestamp (UTC)\n+4. If a matching issue exists, call `add-comment` on that issue with:\n+   - updated failure details\n+   - checked-at timestamp\n+   - note that the link is still broken\n+\n+Do not create duplicate issues for the same key in one run.\n+\n+---\n+\n+## Phase 5 — No-op When Clean\n+\n+If no broken links were found, call `noop` with a concise summary:\n+\n+`Scanned <N> files and validated <M> links — no broken links found.`\n+\n+---\n+\n+## Output quality requirements\n+\n+- Every broken-link report must include file, line, URL, and reason.\n+- Keep issue/comment text concise and actionable.\n+- Never call write tools other than `create-issue`, `add-comment`, and `noop`.",
+          "snapshot_ref": "e9d407a7e53c4d5f49c2552a09b0a85c82e66447",
+          "snapshot_blob_sha": "70f63e94651b89c0b517cdbd22197b5af46e7d40",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__e9d407a7e53c4d5f49c2552a09b0a85c82e66447__workshop-link-checker.md",
+          "snapshot_bytes": 4933,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workshop-link-checker.lock.yml\",\"generated_workflow_file\":\"workshop-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workshop-link-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workshop-link-checker.md",
+      "commit_sha": "b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+      "authored_at": "2026-07-12T10:07:36Z",
+      "committed_at": "2026-07-12T10:07:36Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add non-numbered header guidance and normalize existing docs (#338)",
+      "parent_shas": [
+        "a3da970e22d283127a97f7074a34c21b47f9c187"
+      ],
+      "tree_sha": "a49443f217004e084d006f10ae18289d001ac84f",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workshop-link-checker.md",
+          "commit_sha": "b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+          "committed_at": "2026-07-12T10:07:36Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 5,
+          "file_changes": 10,
+          "file_patch": "@@ -55,15 +55,15 @@ Your job is to detect broken links in workshop markdown files and report actiona\n \n ---\n \n-## Phase 1 — Load Inputs\n+## Load Inputs\n \n 1. Read `/tmp/gh-aw/data/repo-state.json`.\n 2. Extract `workshop_files`.\n 3. If `workshop_files` is empty, call `noop` with a short explanation.\n \n ---\n \n-## Phase 2 — Extract Links from Markdown\n+## Extract Links from Markdown\n \n For each file in `workshop_files`, extract links with line numbers:\n \n@@ -95,7 +95,7 @@ Build a normalized list of records:\n \n ---\n \n-## Phase 3 — Validate Links\n+## Validate Links\n \n Validate each extracted link and collect only broken ones.\n \n@@ -128,7 +128,7 @@ For internal links to non-markdown files, only validate file existence.\n \n ---\n \n-## Phase 4 — Open or Update Broken-Link Issues\n+## Open or Update Broken-Link Issues\n \n For each broken link record, create a deterministic issue key hash:\n \n@@ -160,7 +160,7 @@ Do not create duplicate issues for the same key in one run.\n \n ---\n \n-## Phase 5 — No-op When Clean\n+## No-op When Clean\n \n If no broken links were found, call `noop` with a concise summary:\n ",
+          "snapshot_ref": "b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+          "snapshot_blob_sha": "a6c0fe50a4b9d1cccecac8ebbf1930a45dce11f2",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__b898e85c5ae64f7bebccc130d1396b9a5c2646ea__workshop-link-checker.md",
+          "snapshot_bytes": 4873,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workshop-link-checker.lock.yml\",\"generated_workflow_file\":\"workshop-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workshop-link-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workshop-link-checker.md",
+      "commit_sha": "0ab95d17b8bde4eea2c48246c2b9b2c2140611fd",
+      "authored_at": "2026-07-12T17:25:28Z",
+      "committed_at": "2026-07-12T17:25:28Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Consolidate `workshop-link-checker` output to a single issue thread per run (#431)",
+      "parent_shas": [
+        "6721b005dd6ae855b94c916fef2f8d2924527c02"
+      ],
+      "tree_sha": "d40b7dcf45ee2a2389d6fc0cfaf9cb6d19f0ffb3",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/0ab95d17b8bde4eea2c48246c2b9b2c2140611fd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workshop-link-checker.md",
+          "commit_sha": "0ab95d17b8bde4eea2c48246c2b9b2c2140611fd",
+          "committed_at": "2026-07-12T17:25:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 24,
+          "file_deletions": 29,
+          "file_changes": 53,
+          "file_patch": "@@ -28,9 +28,9 @@ safe-outputs:\n     title-prefix: \"[workshop-link-checker] \"\n     labels: [broken-link]\n     deduplicate-by-title: true\n-    max: 50\n+    max: 1\n   add-comment:\n-    max: 50\n+    max: 1\n timeout-minutes: 30\n steps:\n   - name: Gather workshop markdown files\n@@ -128,35 +128,30 @@ For internal links to non-markdown files, only validate file existence.\n \n ---\n \n-## Open or Update Broken-Link Issues\n-\n-For each broken link record, create a deterministic issue key hash:\n-\n-`bl-<lowercase-hex sha256(utf8(\\\"f=\\\" + len(file) + \\\":\\\" + file + \\\"|l=\\\" + line + \\\"|u=\\\" + len(raw_link) + \\\":\\\" + raw_link))>`\n-\n-Example source string:\n-\n-`workshop/11-build-daily-status.md|123|../README.md#overview`\n-\n-Then:\n-\n-1. At the start of this phase, list open issues with label `broken-link` once and cache them locally.\n-2. Search that cached list for an existing issue whose title contains the exact key hash.\n-3. If no matching issue exists, call `create-issue` with:\n-   - **Title**: `Broken link in <file> at line <line> [bl-<hash>]`\n-   - **Body** including:\n-     - file path\n-     - line number\n-     - raw link\n-     - resolved target\n-     - failure reason/status\n+## Open or Update the Broken-Links Issue\n+\n+When broken links exist, report all of them in a single issue thread.\n+\n+1. Build one Markdown table containing every broken link with columns:\n+   - `File`\n+   - `Line`\n+   - `Link`\n+   - `Resolved target`\n+   - `Reason`\n+2. Search open issues with label `broken-link` for an exact title match:\n+   - `Broken links found`\n+3. If no such issue exists, call `create-issue` once with:\n+   - **Title**: `Broken links found`\n+   - **Body**:\n+     - short summary with number of files scanned and broken links found\n      - checked-at timestamp (UTC)\n-4. If a matching issue exists, call `add-comment` on that issue with:\n-   - updated failure details\n-   - checked-at timestamp\n-   - note that the link is still broken\n+     - the full Markdown table of broken links\n+4. If the issue exists, call `add-comment` once on that issue with:\n+   - checked-at timestamp (UTC)\n+   - short summary with number of files scanned and broken links found\n+   - the full Markdown table of broken links\n \n-Do not create duplicate issues for the same key in one run.\n+Never create one issue per link. Use one issue per run and one comment update at most.\n \n ---\n ",
+          "snapshot_ref": "0ab95d17b8bde4eea2c48246c2b9b2c2140611fd",
+          "snapshot_blob_sha": "7c8a83ffb045517e7413362f623dfab89902d889",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__0ab95d17b8bde4eea2c48246c2b9b2c2140611fd__workshop-link-checker.md",
+          "snapshot_bytes": 4757,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workshop-link-checker.lock.yml\",\"generated_workflow_file\":\"workshop-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workshop-link-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/workshop-link-checker.md",
+      "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+      "authored_at": "2026-07-14T22:45:21Z",
+      "committed_at": "2026-07-14T22:45:21Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `expires: 1d` to all agentic workflow safe-outputs (#1125)",
+      "parent_shas": [
+        "b4fd7e2d2ad27cd43d5764482c3fe5e06dd8112d"
+      ],
+      "tree_sha": "a141fde523b6534bacfbf9f0f444b5474b1ad009",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/964af15393f94c1cd7239080ac7e2207139848fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/workshop-link-checker.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/workshop-link-checker.md",
+          "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "committed_at": "2026-07-14T22:45:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -29,6 +29,7 @@ safe-outputs:\n     labels: [broken-link]\n     deduplicate-by-title: true\n     max: 1\n+    expires: 1d\n   add-comment:\n     max: 1\n timeout-minutes: 30",
+          "snapshot_ref": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "snapshot_blob_sha": "11b04efcc71901be9b4b69c8bc7f9f11d7cbebcb",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__964af15393f94c1cd7239080ac7e2207139848fb__workshop-link-checker.md",
+          "snapshot_bytes": 4773,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/workshop-link-checker.lock.yml\",\"generated_workflow_file\":\"workshop-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/workshop-link-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

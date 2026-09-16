@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+    "source_full_name": "githubnext/agentics",
+    "source_owner": "githubnext",
+    "source_repo": "agentics",
+    "md_path": "workflows/duplicate-code-detector.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/githubnext/agentics/blob/HEAD/workflows/duplicate-code-detector.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "ptarmiganlabs/butler-sos",
+      "generated_owner": "ptarmiganlabs",
+      "generated_repo": "butler-sos",
+      "generated_workflow_path": ".github/workflows/duplicate-code-detector.lock.yml",
+      "generated_workflow_file": "duplicate-code-detector.lock.yml",
+      "generated_html_url": "https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/duplicate-code-detector.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "excluded_bot": 1,
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:49:02+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/duplicate-code-detector.md",
+      "commit_sha": "d19056381ba48cb1f7c78510c23069701fa7ae87",
+      "authored_at": "2026-02-18T02:39:55Z",
+      "committed_at": "2026-02-18T02:39:55Z",
+      "author_name": "github-actions[bot]",
+      "author_email": "41898282+github-actions[bot]@users.noreply.github.com",
+      "author_login": "github-actions[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Duplicate Code Detector workflow (#168)\n\nThis workflow automatically identifies duplicate code patterns across the\ncodebase and suggests refactoring opportunities. It analyzes recent changes\nto catch new duplication early and creates focused, actionable issues.\n\nSource: https://github.com/github/gh-aw/blob/v0.45.5/.github/workflows/duplicate-code-detector.md\nMerge rate: 79% (76 merged PRs out of 96 proposed)\n\nKey features:\n- Semantic pattern matching beyond text similarity\n- Focuses on recently changed files\n- Creates max 3 issues per run to avoid overwhelm\n- Auto-assigns issues to @copilot for remediation\n- Language-agnostic approach\n\nPhase 1: No consistency issues found\nPhase 2: Proposing Duplicate Code Detector (79% merge rate)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ebf240fb0d46f2cd7d654ab228f5c4aa50e29356"
+      ],
+      "tree_sha": "5fc12073612faea843d896e8a56f5c46896c229d",
+      "html_url": "https://github.com/githubnext/agentics/commit/d19056381ba48cb1f7c78510c23069701fa7ae87",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:github-actions[bot];41898282+github-actions[bot]@users.noreply.github.com;github-actions[bot]",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/duplicate-code-detector.md",
+          "commit_sha": "d19056381ba48cb1f7c78510c23069701fa7ae87",
+          "committed_at": "2026-02-18T02:39:55Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 223,
+          "file_deletions": 0,
+          "file_changes": 223,
+          "file_patch": "@@ -0,0 +1,223 @@\n+---\n+name: Duplicate Code Detector\n+description: Identifies duplicate code patterns across the codebase and suggests refactoring opportunities\n+on:\n+  workflow_dispatch:\n+  schedule: daily\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+engine: codex\n+safe-outputs:\n+  create-issue:\n+    expires: 2d\n+    title-prefix: \"[duplicate-code] \"\n+    labels: [code-quality, automated-analysis]\n+    assignees: copilot\n+    group: true\n+    max: 3\n+timeout-minutes: 15\n+strict: true\n+---\n+\n+# Duplicate Code Detection\n+\n+Analyze code to identify duplicated patterns using semantic analysis. Report significant findings that require refactoring.\n+\n+## Task\n+\n+Detect and report code duplication by:\n+\n+1. **Analyzing Recent Commits**: Review changes in the latest commits\n+2. **Detecting Duplicated Code**: Identify similar or duplicated code patterns using semantic analysis\n+3. **Reporting Findings**: Create a detailed issue if significant duplication is detected (threshold: >10 lines or 3+ similar patterns)\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Commit ID**: ${{ github.event.head_commit.id }}\n+- **Triggered by**: @${{ github.actor }}\n+\n+## Analysis Workflow\n+\n+### 1. Changed Files Analysis\n+\n+Identify and analyze modified files:\n+- Determine files changed in the recent commits using `git log` and `git diff`\n+- Focus on source code files (programming language files)\n+- **Exclude test files** from analysis (files matching patterns: `*_test.*`, `*.test.*`, `*.spec.*`, `test_*.*`, or located in directories named `test`, `tests`, `__tests__`, or `spec`)\n+- **Exclude generated files** and build artifacts\n+- **Exclude workflow files** from analysis (files under `.github/workflows/*`)\n+- Use code exploration tools to understand file structure\n+- Read modified file contents to examine changes\n+\n+### 2. Duplicate Detection\n+\n+Apply analysis to find duplicates:\n+\n+**Pattern Search**:\n+- Search for duplication indicators using grep and code search:\n+  - Similar function signatures\n+  - Repeated logic blocks\n+  - Similar variable naming patterns\n+  - Near-identical code blocks\n+- Look for functions with similar names across different files\n+- Identify structural similarities in code organization\n+\n+**Semantic Analysis**:\n+- Compare code blocks for logical similarity beyond textual matching\n+- Identify different implementations of the same functionality\n+- Look for copy-paste patterns with minor variations\n+\n+### 3. Duplication Evaluation\n+\n+Assess findings to identify true code duplication:\n+\n+**Duplication Types**:\n+- **Exact Duplication**: Identical code blocks in multiple locations\n+- **Structural Duplication**: Same logic with minor variations (different variable names, etc.)\n+- **Functional Duplication**: Different implementations of the same functionality\n+- **Copy-Paste Programming**: Similar code blocks that could be extracted into shared utilities\n+\n+**Assessment Criteria**:\n+- **Severity**: Amount of duplicated code (lines of code, number of occurrences)\n+- **Impact**: Where duplication occurs (critical paths, frequently called code)\n+- **Maintainability**: How duplication affects code maintainability\n+- **Refactoring Opportunity**: Whether duplication can be easily refactored\n+\n+### 4. Issue Reporting\n+\n+Create separate issues for each distinct duplication pattern found (maximum 3 patterns per run). Each pattern should get its own issue to enable focused remediation.\n+\n+**When to Create Issues**:\n+- Only create issues if significant duplication is found (threshold: >10 lines of duplicated code OR 3+ instances of similar patterns)\n+- **Create one issue per distinct duplication pattern** - do NOT bundle multiple patterns in a single issue\n+- Limit to the top 3 most significant patterns if more are found\n+- Use the `create_issue` tool from safe-outputs MCP **once for each pattern**\n+\n+**Issue Contents for Each Pattern**:\n+- **Executive Summary**: Brief description of this specific duplication pattern\n+- **Duplication Details**: Specific locations and code blocks for this pattern only\n+- **Severity Assessment**: Impact and maintainability concerns for this pattern\n+- **Refactoring Recommendations**: Suggested approaches to eliminate this pattern\n+- **Code Examples**: Concrete examples with file paths and line numbers for this pattern\n+\n+## Detection Scope\n+\n+### Report These Issues\n+\n+- Identical or nearly identical functions in different files\n+- Repeated code blocks that could be extracted to utilities\n+- Similar classes or modules with overlapping functionality\n+- Copy-pasted code with minor modifications\n+- Duplicated business logic across components\n+\n+### Skip These Patterns\n+\n+- Standard boilerplate code (imports, exports, package declarations)\n+- Test setup/teardown code (acceptable duplication in tests)\n+- **All test files** (files matching: `*_test.*`, `*.test.*`, `*.spec.*`, `test_*.*`, or in `test/`, `tests/`, `__tests__/`, `spec/` directories)\n+- **All workflow files** (files under `.github/workflows/*`)\n+- Configuration files with similar structure\n+- Language-specific patterns (constructors, getters/setters)\n+- Small code snippets (<5 lines) unless highly repetitive\n+- Generated code or vendored dependencies\n+\n+### Analysis Depth\n+\n+- **Primary Focus**: Files changed in recent commits (excluding test files and workflow files)\n+- **Secondary Analysis**: Check for duplication with existing codebase\n+- **Cross-Reference**: Look for patterns across the repository\n+- **Historical Context**: Consider if duplication is new or existing\n+\n+## Issue Template\n+\n+For each distinct duplication pattern found, create a separate issue using this structure:\n+\n+````markdown\n+# 🔍 Duplicate Code Detected: [Pattern Name]\n+\n+*Analysis of commit ${{ github.event.head_commit.id }}*\n+\n+**Assignee**: @copilot\n+\n+## Summary\n+\n+[Brief overview of this specific duplication pattern]\n+\n+## Duplication Details\n+\n+### Pattern: [Description]\n+- **Severity**: High/Medium/Low\n+- **Occurrences**: [Number of instances]\n+- **Locations**:\n+  - `path/to/file1.ext` (lines X-Y)\n+  - `path/to/file2.ext` (lines A-B)\n+- **Code Sample**:\n+  ````[language]\n+  [Example of duplicated code]\n+  ````\n+\n+## Impact Analysis\n+\n+- **Maintainability**: [How this affects code maintenance]\n+- **Bug Risk**: [Potential for inconsistent fixes]\n+- **Code Bloat**: [Impact on codebase size]\n+\n+## Refactoring Recommendations\n+\n+1. **[Recommendation 1]**\n+   - Extract common functionality to: `suggested/path/utility.ext`\n+   - Estimated effort: [hours/complexity]\n+   - Benefits: [specific improvements]\n+\n+2. **[Recommendation 2]**\n+   [... additional recommendations ...]\n+\n+## Implementation Checklist\n+\n+- [ ] Review duplication findings\n+- [ ] Prioritize refactoring tasks\n+- [ ] Create refactoring plan\n+- [ ] Implement changes\n+- [ ] Update tests\n+- [ ] Verify no functionality broken\n+\n+## Analysis Metadata\n+\n+- **Analyzed Files**: [count]\n+- **Detection Method**: Semantic code analysis\n+- **Commit**: ${{ github.event.head_commit.id }}\n+- **Analysis Date**: [timestamp]\n+````\n+\n+## Operational Guidelines\n+\n+### Security\n+- Never execute untrusted code or commands\n+- Only use read-only analysis tools\n+- Do not modify files during analysis\n+\n+### Efficiency\n+- Focus on recently changed files first\n+- Use semantic analysis for meaningful duplication, not superficial matches\n+- Stay within timeout limits (balance thoroughness with execution time)\n+\n+### Accuracy\n+- Verify findings before reporting\n+- Distinguish between acceptable patterns and true duplication\n+- Consider language-specific idioms and best practices\n+- Provide specific, actionable recommendations\n+\n+### Issue Creation\n+- Create **one issue per distinct duplication pattern** - do NOT bundle multiple patterns in a single issue\n+- Limit to the top 3 most significant patterns if more are found\n+- Only create issues if significant duplication is found\n+- Include sufficient detail for coding agents to understand and act on findings\n+- Provide concrete examples with file paths and line numbers\n+- Suggest practical refactoring approaches\n+- Assign issue to @copilot for automated remediation\n+- Use descriptive titles that clearly identify the specific pattern (e.g., \"Duplicate Code: Error Handling Pattern in Parser Module\")\n+\n+**Objective**: Improve code quality by identifying and reporting meaningful code duplication that impacts maintainability. Focus on actionable findings that enable automated or manual refactoring.",
+          "snapshot_ref": "d19056381ba48cb1f7c78510c23069701fa7ae87",
+          "snapshot_blob_sha": "d8fa76682ac49e8c1bd580648067afed68ec1a60",
+          "snapshot_file": "snapshots/agentics__githubnext__d19056381ba48cb1f7c78510c23069701fa7ae87__duplicate-code-detector.md",
+          "snapshot_bytes": 8289,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/duplicate-code-detector.lock.yml\",\"generated_workflow_file\":\"duplicate-code-detector.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/duplicate-code-detector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/duplicate-code-detector.md",
+      "commit_sha": "e27d226f4597f87b76ee86d8b4c6ae222288f70c",
+      "authored_at": "2026-02-26T12:54:28Z",
+      "committed_at": "2026-02-26T12:54:28Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "remove engines",
+      "parent_shas": [
+        "5d6f916a73671a6f50841824182a5f19dd1ef316"
+      ],
+      "tree_sha": "1b37fee2da79c9fcdbc43495b313c797496232d7",
+      "html_url": "https://github.com/githubnext/agentics/commit/e27d226f4597f87b76ee86d8b4c6ae222288f70c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/duplicate-code-detector.md",
+          "commit_sha": "e27d226f4597f87b76ee86d8b4c6ae222288f70c",
+          "committed_at": "2026-02-26T12:54:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -8,7 +8,6 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n-engine: codex\n safe-outputs:\n   create-issue:\n     expires: 2d",
+          "snapshot_ref": "e27d226f4597f87b76ee86d8b4c6ae222288f70c",
+          "snapshot_blob_sha": "ead6e07dd416761c60c34526d1f3accf87f8557e",
+          "snapshot_file": "snapshots/agentics__githubnext__e27d226f4597f87b76ee86d8b4c6ae222288f70c__duplicate-code-detector.md",
+          "snapshot_bytes": 8275,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/duplicate-code-detector.lock.yml\",\"generated_workflow_file\":\"duplicate-code-detector.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/duplicate-code-detector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/duplicate-code-detector.md",
+      "commit_sha": "1591361a690358c7b85d8b759f3121fc33840113",
+      "authored_at": "2026-03-19T03:06:45Z",
+      "committed_at": "2026-03-19T03:06:45Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update workflows",
+      "parent_shas": [
+        "851905c06e905bf362a9f6cc54f912e3df747d55"
+      ],
+      "tree_sha": "a820d5bf146c813e7b3b8bc1bb83783cdba464ba",
+      "html_url": "https://github.com/githubnext/agentics/commit/1591361a690358c7b85d8b759f3121fc33840113",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/duplicate-code-detector.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/duplicate-code-detector.md",
+          "commit_sha": "1591361a690358c7b85d8b759f3121fc33840113",
+          "committed_at": "2026-03-19T03:06:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 1,
+          "file_changes": 5,
+          "file_patch": "@@ -1,13 +1,16 @@\n ---\n name: Duplicate Code Detector\n description: Identifies duplicate code patterns across the codebase and suggests refactoring opportunities\n+\n on:\n   workflow_dispatch:\n   schedule: daily\n+\n permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n+\n safe-outputs:\n   create-issue:\n     expires: 2d\n@@ -16,8 +19,8 @@ safe-outputs:\n     assignees: copilot\n     group: true\n     max: 3\n+\n timeout-minutes: 15\n-strict: true\n ---\n \n # Duplicate Code Detection",
+          "snapshot_ref": "1591361a690358c7b85d8b759f3121fc33840113",
+          "snapshot_blob_sha": "da651b09904bbaee7a04fcf63ab4bf26fa1b13c9",
+          "snapshot_file": "snapshots/agentics__githubnext__1591361a690358c7b85d8b759f3121fc33840113__duplicate-code-detector.md",
+          "snapshot_bytes": 8266,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/duplicate-code-detector.lock.yml\",\"generated_workflow_file\":\"duplicate-code-detector.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/duplicate-code-detector.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

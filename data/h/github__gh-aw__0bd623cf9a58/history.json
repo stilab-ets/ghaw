@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/squad-game-planner.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/squad-game-planner.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/squad-game-planner.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/squad-game-planner.lock.yml",
+      "generated_workflow_file": "squad-game-planner.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/squad-game-planner.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:47:14+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/squad-game-planner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/squad-game-planner.md",
+      "commit_sha": "57d128a0ed79e84db54fc4e0540752897aca6dd9",
+      "authored_at": "2026-08-03T21:32:43Z",
+      "committed_at": "2026-08-03T21:32:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add squad-game-planner daily agentic workflow (#50055)\n\n* Add squad-game-planner daily workflow\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Move Squad bootstrap into shared/squad.md, run squad init in activation job\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Inline Squad bootstrap into squad-game-planner.md, drop shared/squad.md\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Split squad-game-planner into game workflow + shared/squad.md import\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Address review: version override, remove redundant checkout, reorganize engine/tools/network\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Remove copilot-sdk from squad engine config; not needed for --agent squad\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* bundling squad\n\n* recompile\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\nCo-authored-by: Peli de Halleux <pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "13e4b550f01b2112b0f6f30399dd08fd31e0a64d"
+      ],
+      "tree_sha": "8afac11b1b214cf9c998013ed525dd91fdd3a959",
+      "html_url": "https://github.com/github/gh-aw/commit/57d128a0ed79e84db54fc4e0540752897aca6dd9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/squad-game-planner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/squad-game-planner.md",
+          "commit_sha": "57d128a0ed79e84db54fc4e0540752897aca6dd9",
+          "committed_at": "2026-08-03T21:32:43Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 68,
+          "file_deletions": 0,
+          "file_changes": 68,
+          "file_patch": "@@ -0,0 +1,68 @@\n+---\n+private: true\n+emoji: \"🎮\"\n+name: Squad Game Planner\n+description: Uses Squad (bradygaster/squad) multi-agent planning to design a new game concept daily and file the plan as tracked issues\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+network:\n+  allowed:\n+    - defaults\n+imports:\n+  - shared/squad.md\n+tools:\n+  bash: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[squad:plan] \"\n+    labels: [squad:plan]\n+    group: true\n+    max: 12\n+    expires: 1\n+    close-older-issues: true\n+    close-older-key: squad-game-planner\n+---\n+\n+# Squad Game Planner\n+\n+Use the Squad (https://github.com/bradygaster/squad) team to plan a\n+brand-new, original game concept today.\n+\n+## Task\n+\n+1. Confirm Squad is initialized: `.squad/team.md` should exist. If the team\n+   has not been formed yet, propose a small squad appropriate for game\n+   design and production — for example a Lead, a Game Designer, a Gameplay\n+   Programmer, and a Tester — and confirm it before continuing.\n+2. Invent one new, small-to-medium-scope game concept that has not already\n+   been planned by a prior run (check open and recently closed issues\n+   labeled `squad:plan` for titles to avoid repeating a concept).\n+3. Work with the Squad team to break the concept down into a plan covering\n+   at minimum: core gameplay loop, target platform, art/style direction,\n+   minimum viable feature set, and a rough milestone breakdown (e.g.\n+   prototype, vertical slice, playable demo).\n+4. File the plan as a parent tracking issue titled with the game's name,\n+   followed by one sub-issue per milestone or major workstream (design,\n+   engineering, art, testing, etc.), using `temporary_id`/`parent` to link\n+   sub-issues to the parent. Every issue must carry the `squad:plan` label.\n+5. In the parent issue body, summarize the concept, the milestone plan, and\n+   which Squad team member is responsible for each workstream.\n+\n+## Notes\n+\n+- Each issue created today auto-closes after 1 day; the next scheduled run\n+  starts a fresh concept, and this run's `close-older-issues` setting closes\n+  any still-open issues from the previous run so the tracker only ever\n+  reflects the latest plan.\n+- If Squad cannot produce a usable plan (for example the CLI is unavailable\n+  or misconfigured), call `noop` with a short explanation instead of filing\n+  incomplete issues.",
+          "snapshot_ref": "57d128a0ed79e84db54fc4e0540752897aca6dd9",
+          "snapshot_blob_sha": "c7286a9b9c12944b2f8da90cd17713dac7bf6b4d",
+          "snapshot_file": "snapshots/gh-aw__github__57d128a0ed79e84db54fc4e0540752897aca6dd9__squad-game-planner.md",
+          "snapshot_bytes": 2446,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/squad-game-planner.lock.yml\",\"generated_workflow_file\":\"squad-game-planner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/squad-game-planner.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "inference-sh/shadcn-registry:.github/workflows/code-review.md",
+    "source_full_name": "inference-sh/shadcn-registry",
+    "source_owner": "inference-sh",
+    "source_repo": "shadcn-registry",
+    "md_path": ".github/workflows/code-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/inference-sh/shadcn-registry/blob/HEAD/.github/workflows/code-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "inference-sh/shadcn-registry",
+      "generated_owner": "inference-sh",
+      "generated_repo": "shadcn-registry",
+      "generated_workflow_path": ".github/workflows/code-review.lock.yml",
+      "generated_workflow_file": "code-review.lock.yml",
+      "generated_html_url": "https://github.com/inference-sh/shadcn-registry/blob/6fabe5d8e980407c6116c33be151cf6f595a7fc7/.github/workflows/code-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:57:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "inference-sh/shadcn-registry:.github/workflows/code-review.md",
+      "source_full_name": "inference-sh/shadcn-registry",
+      "md_path": ".github/workflows/code-review.md",
+      "commit_sha": "f64e3bc0018cf85186ea2d4360846474a3105265",
+      "authored_at": "2026-05-19T08:11:17Z",
+      "committed_at": "2026-05-19T08:11:51Z",
+      "author_name": "okaris",
+      "author_email": "omerkarisman@gmail.com",
+      "author_login": "okaris",
+      "author_account_type": "User",
+      "committer_name": "okaris",
+      "committer_email": "omerkarisman@gmail.com",
+      "committer_login": "okaris",
+      "committer_account_type": "User",
+      "message": "Add gh-aw code review workflow\n\nAutomated AI code review on push to main using Claude.\nBot PRs target dev branch.",
+      "parent_shas": [
+        "4a5399c4332cd8c8bfcbd0f5ecb2381bddb233c5"
+      ],
+      "tree_sha": "b6102c4ddc6294320b64f3882e492c02e56669b6",
+      "html_url": "https://github.com/inference-sh/shadcn-registry/commit/f64e3bc0018cf85186ea2d4360846474a3105265",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "inference-sh/shadcn-registry:.github/workflows/code-review.md",
+          "source_full_name": "inference-sh/shadcn-registry",
+          "md_path": ".github/workflows/code-review.md",
+          "commit_sha": "f64e3bc0018cf85186ea2d4360846474a3105265",
+          "committed_at": "2026-05-19T08:11:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 86,
+          "file_deletions": 0,
+          "file_changes": 86,
+          "file_patch": "@@ -0,0 +1,86 @@\n+---\n+description: \"AI code review on push to main\"\n+on:\n+  push:\n+    branches: [main]\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+engine:\n+  id: claude\n+\n+runtimes:\n+  node:\n+    version: \"22\"\n+\n+network:\n+  allowed:\n+    - node\n+\n+steps:\n+  - name: Save commit range\n+    env:\n+      BEFORE_SHA: ${{ github.event.before }}\n+      AFTER_SHA: ${{ github.event.after }}\n+    run: |\n+      echo \"${BEFORE_SHA}..${AFTER_SHA}\" > /tmp/gh-aw/commit-range.txt\n+      git log --oneline \"${BEFORE_SHA}..${AFTER_SHA}\" > /tmp/gh-aw/commit-log.txt 2>&1 || true\n+      git diff \"${BEFORE_SHA}..${AFTER_SHA}\" > /tmp/gh-aw/commit-diff.txt 2>&1 || true\n+  - name: Install dependencies\n+    run: |\n+      npm ci 2>&1 || npm install 2>&1 || true\n+    continue-on-error: true\n+  - name: Run lint\n+    run: |\n+      npx next lint > /tmp/gh-aw/lint-results.txt 2>&1 || true\n+    continue-on-error: true\n+\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  create-pull-request:\n+    base-branch: dev\n+    title-prefix: \"[code-review] \"\n+    labels: [code-review, ai]\n+    reviewers: [okaris]\n+    max: 5\n+\n+timeout-minutes: 30\n+---\n+\n+# Code Review on Push\n+\n+You are an expert code reviewer for a UI component registry (shadcn-based). Review pushed code for patterns/antipatterns.\n+\n+## Step 1: Check Lint Results\n+\n+```bash\n+cat /tmp/gh-aw/lint-results.txt\n+```\n+\n+Fix any lint errors first.\n+\n+## Step 2: Read the Diff\n+\n+```bash\n+cat /tmp/gh-aw/commit-range.txt\n+cat /tmp/gh-aw/commit-log.txt\n+cat /tmp/gh-aw/commit-diff.txt\n+```\n+\n+**Only review code from the commit diff. Do not scan unrelated parts of the repository.**\n+\n+If the diff is empty, use the noop tool.\n+\n+## Step 3: Review\n+\n+- Compare against existing component patterns\n+- Check accessibility (aria attrs, keyboard nav, focus management)\n+- Check for proper TypeScript typing\n+- Flag style inconsistencies with existing components\n+\n+## Output\n+\n+Open **separate PRs** for each independent fix. Only fix things you're confident about.",
+          "snapshot_ref": "f64e3bc0018cf85186ea2d4360846474a3105265",
+          "snapshot_blob_sha": "8786e1e107174a3082cbae47fe9bbe25da651b5c",
+          "snapshot_file": "snapshots/shadcn-registry__inference-sh__f64e3bc0018cf85186ea2d4360846474a3105265__code-review.md",
+          "snapshot_bytes": 1919,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"inference-sh/shadcn-registry\",\"generated_owner\":\"inference-sh\",\"generated_repo\":\"shadcn-registry\",\"generated_workflow_path\":\".github/workflows/code-review.lock.yml\",\"generated_workflow_file\":\"code-review.lock.yml\",\"generated_html_url\":\"https://github.com/inference-sh/shadcn-registry/blob/6fabe5d8e980407c6116c33be151cf6f595a7fc7/.github/workflows/code-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "inference-sh/shadcn-registry:.github/workflows/code-review.md",
+      "source_full_name": "inference-sh/shadcn-registry",
+      "md_path": ".github/workflows/code-review.md",
+      "commit_sha": "fdb6a9ec35c374a30d5abf18b7791a01f592846b",
+      "authored_at": "2026-05-19T08:13:55Z",
+      "committed_at": "2026-05-19T08:13:55Z",
+      "author_name": "okaris",
+      "author_email": "omerkarisman@gmail.com",
+      "author_login": "okaris",
+      "author_account_type": "User",
+      "committer_name": "okaris",
+      "committer_email": "omerkarisman@gmail.com",
+      "committer_login": "okaris",
+      "committer_account_type": "User",
+      "message": "Trigger code review on dev push instead of main",
+      "parent_shas": [
+        "f64e3bc0018cf85186ea2d4360846474a3105265"
+      ],
+      "tree_sha": "eca284d42c6f23c7ded4fc10e6a05a77e44b9c2b",
+      "html_url": "https://github.com/inference-sh/shadcn-registry/commit/fdb6a9ec35c374a30d5abf18b7791a01f592846b",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "inference-sh/shadcn-registry:.github/workflows/code-review.md",
+          "source_full_name": "inference-sh/shadcn-registry",
+          "md_path": ".github/workflows/code-review.md",
+          "commit_sha": "fdb6a9ec35c374a30d5abf18b7791a01f592846b",
+          "committed_at": "2026-05-19T08:13:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -2,7 +2,7 @@\n description: \"AI code review on push to main\"\n on:\n   push:\n-    branches: [main]\n+    branches: [dev]\n \n permissions:\n   contents: read",
+          "snapshot_ref": "fdb6a9ec35c374a30d5abf18b7791a01f592846b",
+          "snapshot_blob_sha": "9ec1fe7a261cbd93b7d278339135442d35682f83",
+          "snapshot_file": "snapshots/shadcn-registry__inference-sh__fdb6a9ec35c374a30d5abf18b7791a01f592846b__code-review.md",
+          "snapshot_bytes": 1918,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"inference-sh/shadcn-registry\",\"generated_owner\":\"inference-sh\",\"generated_repo\":\"shadcn-registry\",\"generated_workflow_path\":\".github/workflows/code-review.lock.yml\",\"generated_workflow_file\":\"code-review.lock.yml\",\"generated_html_url\":\"https://github.com/inference-sh/shadcn-registry/blob/6fabe5d8e980407c6116c33be151cf6f595a7fc7/.github/workflows/code-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

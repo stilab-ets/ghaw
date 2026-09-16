@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+    "source_full_name": "microsoft/pxt-arcade",
+    "source_owner": "microsoft",
+    "source_repo": "pxt-arcade",
+    "md_path": ".github/workflows/documentation.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/pxt-arcade/blob/HEAD/.github/workflows/documentation.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/pxt-arcade",
+      "generated_owner": "microsoft",
+      "generated_repo": "pxt-arcade",
+      "generated_workflow_path": ".github/workflows/documentation.lock.yml",
+      "generated_workflow_file": "documentation.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/pxt-arcade/blob/370b78d93952779e837315b7f98a19558f8b0a63/.github/workflows/documentation.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:58:42+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+      "source_full_name": "microsoft/pxt-arcade",
+      "md_path": ".github/workflows/documentation.md",
+      "commit_sha": "26871bf6d89f4ebd02abd64575a735c4b049ea22",
+      "authored_at": "2025-12-10T19:16:53Z",
+      "committed_at": "2025-12-10T19:16:53Z",
+      "author_name": "Vritant Bhardwaj",
+      "author_email": "vritoku@gmail.com",
+      "author_login": "vritant24",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add a documentation workflow (#7242)\n\n* add doc workflow\n\n* update script to compile all\n\n* add instructions for when no doc updates are necessary",
+      "parent_shas": [
+        "653b116448edd85817ceacac377c17f0f6b7a998"
+      ],
+      "tree_sha": "48c18a9426576fafab74bfba276bd4d1d8b75e9b",
+      "html_url": "https://github.com/microsoft/pxt-arcade/commit/26871bf6d89f4ebd02abd64575a735c4b049ea22",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+          "source_full_name": "microsoft/pxt-arcade",
+          "md_path": ".github/workflows/documentation.md",
+          "commit_sha": "26871bf6d89f4ebd02abd64575a735c4b049ea22",
+          "committed_at": "2025-12-10T19:16:53Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 111,
+          "file_deletions": 0,
+          "file_changes": 111,
+          "file_patch": "@@ -0,0 +1,111 @@\n+---\n+name: AI Documentation Check\n+on:\n+  pull_request:\n+    types: [labeled]\n+    names: [ai-doc-check]\n+\n+permissions: read-all\n+engine: copilot\n+tools:\n+  bash: true\n+  github:\n+    read-only: true\n+    allowed:\n+      - get_pull_request\n+      - list_pull_request_files\n+safe-outputs:\n+  add-comment:\n+    target: 'triggering'\n+    max: 1\n+---\n+\n+# Documentation Review Agent\n+\n+You are a documentation quality reviewer for the MakeCode Arcade project. Your job is to analyze pull request changes and identify documentation gaps.\n+\n+## Your Task\n+\n+When a PR is labeled with `ai-doc-check`, review the changes to determine if documentation is missing or needs updates.\n+\n+### Step 1: Analyze the PR\n+\n+First, get the PR details and changed files:\n+\n+- PR number: `${{ needs.activation.outputs.pr_number }}`\n+- Use the `github` tool to fetch PR information and file changes\n+\n+### Step 2: Identify Documentation Needs\n+\n+Review the code changes and determine:\n+\n+1. **New Features**: Are there new APIs, blocks, functions, classes, or user-facing features that need documentation?\n+2. **Changed Features**: Have existing APIs, blocks, or features been modified in ways that affect how users interact with them?\n+\n+**Important Guidelines:**\n+\n+- **Only flag documentation gaps for consumer-facing changes** (APIs, blocks, user features, behavior changes)\n+- **Do NOT flag** internal implementation changes, refactoring, or code cleanup that doesn't affect end users\n+- **Do NOT recommend documentation** for private functions, internal helpers, or implementation details\n+- **Focus on the `docs/` folder** and JSDoc comments (`//% block`, `//% help`, standard JSDoc)\n+- **Avoid verbose documentation** - only recommend what's truly necessary for users\n+\n+### Step 3: Check Existing Documentation\n+\n+For each identified change that needs documentation:\n+\n+1. Search the `docs/` folder for existing related documentation\n+2. Check if the changed code files have JSDoc comments or block annotations\n+3. Determine if documentation exists, is outdated, or is missing\n+\n+### Step 4: Generate Findings\n+\n+Create a structured comment with your findings. Use this format:\n+\n+```markdown\n+## 📚 Documentation Review Results\n+\n+**Summary**: [Brief 1-2 sentence overview of findings - e.g., \"Found 3 new APIs that need documentation and 1 feature change requiring doc updates\" or \"All changes are well documented\" or \"No user-facing changes detected\"]\n+\n+<details>\n+<summary>📋 View Detailed Findings</summary>\n+\n+**If documentation updates are needed:**\n+\n+### Documentation Needed\n+[For each item that needs documentation:]\n+\n+#### [Feature/API Name]\n+- **Type**: New Feature | Changed Feature\n+- **Location**: `path/to/file.ts` (lines X-Y)\n+- **Current State**: Missing documentation | Documentation needs update\n+- **Impact**: Brief description of what changed and why it affects users\n+- **Suggested Documentation**:\n+  - [ ] Add/Update docs in `docs/[relevant-section]`\n+  - [ ] Add/Update JSDoc comments in the code\n+  - [ ] Specific details about what should be documented\n+\n+</details>\n+\n+---\n+\n+### 📝 Next Steps\n+\n+@[PR_AUTHOR] To apply these documentation recommendations, please reply to this comment and ask:\n+> @copilot please apply these documentation suggestions\n+\n+**If no documentation updates are needed:**\n+This PR is good to go from a documentation perspective!\n+```\n+\n+### Step 5: Post the Comment\n+\n+Use the `add-comment` safe output to post your findings to the PR.\n+\n+## Important Notes\n+\n+- Be specific about what documentation is needed and where\n+- Distinguish between truly necessary documentation and nice-to-have\n+- Focus on user impact, not implementation details\n+- Keep recommendations actionable and clear\n+- Only analyze changes in this PR, not the entire codebase",
+          "snapshot_ref": "26871bf6d89f4ebd02abd64575a735c4b049ea22",
+          "snapshot_blob_sha": "16c4c18959ded804c6496990841486ea97e581ac",
+          "snapshot_file": "snapshots/pxt-arcade__microsoft__26871bf6d89f4ebd02abd64575a735c4b049ea22__documentation.md",
+          "snapshot_bytes": 3688,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/pxt-arcade\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"pxt-arcade\",\"generated_workflow_path\":\".github/workflows/documentation.lock.yml\",\"generated_workflow_file\":\"documentation.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/pxt-arcade/blob/370b78d93952779e837315b7f98a19558f8b0a63/.github/workflows/documentation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+      "source_full_name": "microsoft/pxt-arcade",
+      "md_path": ".github/workflows/documentation.md",
+      "commit_sha": "c3e5bd805985ea99cbddc06eb82f90f5c57b4bf2",
+      "authored_at": "2025-12-10T23:23:12Z",
+      "committed_at": "2025-12-10T23:23:12Z",
+      "author_name": "Vritant Bhardwaj",
+      "author_email": "vritoku@gmail.com",
+      "author_login": "vritant24",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update documentation workflow to check all commits (#7243)\n\n* update documentation workflow to check all commits in the pr\n\n* regen triage with newest compiler",
+      "parent_shas": [
+        "f30a84215c4dbc10b02a0c57ba8ac03e1fc13d58"
+      ],
+      "tree_sha": "8621bba274665cb282e9b3ff3195898477ae9334",
+      "html_url": "https://github.com/microsoft/pxt-arcade/commit/c3e5bd805985ea99cbddc06eb82f90f5c57b4bf2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+          "source_full_name": "microsoft/pxt-arcade",
+          "md_path": ".github/workflows/documentation.md",
+          "commit_sha": "c3e5bd805985ea99cbddc06eb82f90f5c57b4bf2",
+          "committed_at": "2025-12-10T23:23:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 2,
+          "file_changes": 8,
+          "file_patch": "@@ -12,8 +12,11 @@ tools:\n   github:\n     read-only: true\n     allowed:\n-      - get_pull_request\n-      - list_pull_request_files\n+      - pull_request_read\n+      - get_commit\n+      - list_commits\n+      - search_code\n+      - semantic_code_search\n safe-outputs:\n   add-comment:\n     target: 'triggering'\n@@ -34,6 +37,7 @@ First, get the PR details and changed files:\n \n - PR number: `${{ needs.activation.outputs.pr_number }}`\n - Use the `github` tool to fetch PR information and file changes\n+- **IMPORTANT**: You must analyze ALL changes in the PR, not just the last commit. Use `git diff origin/master...HEAD` or `git diff origin/master..HEAD` to get all changes from the base branch to the PR head\n \n ### Step 2: Identify Documentation Needs\n ",
+          "snapshot_ref": "c3e5bd805985ea99cbddc06eb82f90f5c57b4bf2",
+          "snapshot_blob_sha": "2dd0da40d7b6dd0528c2351b5ad49559882f6b4c",
+          "snapshot_file": "snapshots/pxt-arcade__microsoft__c3e5bd805985ea99cbddc06eb82f90f5c57b4bf2__documentation.md",
+          "snapshot_bytes": 3954,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/pxt-arcade\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"pxt-arcade\",\"generated_workflow_path\":\".github/workflows/documentation.lock.yml\",\"generated_workflow_file\":\"documentation.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/pxt-arcade/blob/370b78d93952779e837315b7f98a19558f8b0a63/.github/workflows/documentation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+      "source_full_name": "microsoft/pxt-arcade",
+      "md_path": ".github/workflows/documentation.md",
+      "commit_sha": "fde69dd5ea5b192e0ca139edc01556006327c649",
+      "authored_at": "2026-02-12T23:22:51Z",
+      "committed_at": "2026-02-12T23:22:51Z",
+      "author_name": "Vritant Bhardwaj",
+      "author_email": "vritoku@gmail.com",
+      "author_login": "vritant24",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "update gh aw (#7446)",
+      "parent_shas": [
+        "b3ac6c63507bfe0125f5204051c7cc9a40b6d0ef"
+      ],
+      "tree_sha": "859d9a4da6320774febee9a7e7f7e6336092859b",
+      "html_url": "https://github.com/microsoft/pxt-arcade/commit/fde69dd5ea5b192e0ca139edc01556006327c649",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/pxt-arcade:.github/workflows/documentation.md",
+          "source_full_name": "microsoft/pxt-arcade",
+          "md_path": ".github/workflows/documentation.md",
+          "commit_sha": "fde69dd5ea5b192e0ca139edc01556006327c649",
+          "committed_at": "2026-02-12T23:22:51Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -16,7 +16,6 @@ tools:\n       - get_commit\n       - list_commits\n       - search_code\n-      - semantic_code_search\n safe-outputs:\n   add-comment:\n     target: 'triggering'",
+          "snapshot_ref": "fde69dd5ea5b192e0ca139edc01556006327c649",
+          "snapshot_blob_sha": "28a003130a050ef243203ffa2054032f32304d47",
+          "snapshot_file": "snapshots/pxt-arcade__microsoft__fde69dd5ea5b192e0ca139edc01556006327c649__documentation.md",
+          "snapshot_bytes": 3925,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/pxt-arcade\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"pxt-arcade\",\"generated_workflow_path\":\".github/workflows/documentation.lock.yml\",\"generated_workflow_file\":\"documentation.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/pxt-arcade/blob/370b78d93952779e837315b7f98a19558f8b0a63/.github/workflows/documentation.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

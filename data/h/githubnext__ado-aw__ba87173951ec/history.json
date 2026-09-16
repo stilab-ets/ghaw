@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/test-reducer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/test-reducer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/test-reducer.lock.yml",
+      "generated_workflow_file": "test-reducer.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/test-reducer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:48:56+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/test-reducer.md",
+      "commit_sha": "4733c7604c705bcece84e3e9f6f4770aaa591e5c",
+      "authored_at": "2026-05-18T18:14:08Z",
+      "committed_at": "2026-05-18T18:14:08Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): add test-reducer agentic workflow (#626)",
+      "parent_shas": [
+        "8480ae88d0b1f3a679cf8c8c03ddb88fed46ff75"
+      ],
+      "tree_sha": "99631cb0254aecfd9db79aa4fcc2afbf09960211",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/4733c7604c705bcece84e3e9f6f4770aaa591e5c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/test-reducer.md",
+          "commit_sha": "4733c7604c705bcece84e3e9f6f4770aaa591e5c",
+          "committed_at": "2026-05-18T18:14:08Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 290,
+          "file_deletions": 0,
+          "file_changes": 290,
+          "file_patch": "@@ -0,0 +1,290 @@\n+---\n+on:\n+  schedule: every 12h\n+description: Holistically audits the test suite for duplicate, redundant, and incorrect tests, then fixes them in a pull request\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash: [\"*\"]\n+  cache-memory: true\n+network:\n+  allowed: [defaults, rust]\n+timeout-minutes: 60\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+    protected-files: fallback-to-issue\n+    allowed-files:\n+      - \"src/**\"\n+      - \"tests/**\"\n+      - \"ado-aw-derive/**\"\n+  create-issue:\n+    max: 1\n+    labels: [test-quality]\n+---\n+\n+# Test Reducer\n+\n+You are a senior Rust engineer responsible for the long-term health of the **ado-aw** test suite. Your job is to take a holistic view of all tests in the codebase, identify problems across three categories, and fix them in a focused, reviewable pull request.\n+\n+The three problem categories you target are:\n+\n+1. **Duplicate / redundant tests** — two or more tests that exercise the exact same code path with the same inputs and assertions, or tests whose coverage is a strict subset of another test already present.\n+2. **Vacuous / low-value tests** — tests that make assertions that can never fail (e.g. `assert!(true)`, comparing a value to itself, asserting a trivially-constructed struct is equal to itself) or tests that exercise no real behaviour (empty bodies, single `let _ = ...` assignments with no assertion).\n+3. **Incorrect tests** — tests whose assertions are wrong for the feature they claim to verify (the test name describes feature X but the body tests feature Y, or the expected value is hard-coded to a stale value that would let a regression pass unnoticed).\n+\n+Your goal each run is to produce **at most one** focused, reviewable PR. Keep the diff small — one category, one module, one concern per run.\n+\n+---\n+\n+## Step 1 — Load Previous State\n+\n+Read cache-memory to understand what prior runs covered so you do not repeat yourself:\n+\n+```bash\n+cat /tmp/gh-aw/cache-memory/test-reducer-state.json 2>/dev/null || echo '{}'\n+```\n+\n+The state tracks:\n+- `last_run` — ISO date of the previous run\n+- `modules_completed` — list of modules already analysed this cycle\n+- `next_module` — module to start from this run (round-robin rotation)\n+- `open_pr` — PR number if one was opened and not yet merged\n+- `history` — last 10 run summaries\n+\n+If `open_pr` is set, check whether it is still open before doing any work:\n+\n+```bash\n+gh pr view <open_pr> --json state,title 2>/dev/null || echo '{\"state\":\"not-found\"}'\n+```\n+\n+If the PR is still open (`\"state\":\"OPEN\"`), exit with `noop` and message: \"Waiting for PR #N to be reviewed before opening another.\"\n+\n+Also check whether a test-reducer PR is already open:\n+\n+```bash\n+gh pr list --search \"is:open in:title test-reducer\" --limit 5\n+```\n+\n+---\n+\n+## Step 2 — Discover All Tests\n+\n+Build the project and enumerate every test in the workspace:\n+\n+```bash\n+cargo build --tests 2>&1 | tail -5\n+cargo test -- --list 2>&1 | grep \"::\" | sort > /tmp/all-tests.txt\n+wc -l /tmp/all-tests.txt\n+```\n+\n+Also collect the test source files to analyse:\n+\n+```bash\n+# Unit tests (inline #[cfg(test)] blocks)\n+grep -rn '#\\[test\\]' src/ --include='*.rs' -l | sort > /tmp/unit-test-files.txt\n+\n+# Integration test files\n+ls tests/*.rs 2>/dev/null | sort > /tmp/integration-test-files.txt\n+\n+cat /tmp/unit-test-files.txt /tmp/integration-test-files.txt\n+```\n+\n+---\n+\n+## Step 3 — Select Scope for This Run\n+\n+Using the `next_module` value from cache-memory, pick one module to analyse deeply this run. Rotate through the following list in order, cycling back to the start:\n+\n+```\n+src/sanitize.rs\n+src/validate.rs\n+src/fuzzy_schedule.rs\n+src/compile/filter_ir.rs\n+src/compile/pr_filters.rs\n+src/compile/codemods/\n+src/compile/types.rs\n+src/hash.rs\n+src/ndjson.rs\n+tests/compiler_tests.rs     (sections — pick one section of ~500 lines at a time)\n+tests/bash_lint_tests.rs\n+```\n+\n+Read the selected module in full:\n+\n+```bash\n+cat <selected-file>\n+```\n+\n+For large files (>500 lines) use a windowed read and track the line offset in cache-memory:\n+\n+```bash\n+sed -n '<start>,<end>p' <file>\n+```\n+\n+---\n+\n+## Step 4 — Identify Problems\n+\n+For each test function in the selected module, apply the following checks.\n+\n+### 4a — Duplicate / Redundant Tests\n+\n+A test is a candidate for removal if:\n+\n+- Its name differs from another test only by a numeric suffix or minor wording, AND its body is identical or differs only in whitespace/comments.\n+- Its assertions are a strict subset of the assertions in another test in the same module.\n+- It tests a trivial property that every other test implicitly exercises (e.g. \"calling `compile()` returns `Ok`\" when every other compile test already asserts on the output).\n+\n+**Action**: Remove the weaker duplicate. If both are equally strong, keep the one with the more descriptive name and remove the other.\n+\n+### 4b — Vacuous / Low-Value Tests\n+\n+A test is vacuous if any of the following are true:\n+\n+- Its body contains only `assert!(true)` or `assert_eq!(x, x)`.\n+- It constructs a value and immediately drops it without any assertion.\n+- It calls a function, discards the result with `let _ = ...`, and makes no assertions.\n+- All assertions use hard-coded magic constants that would pass even if the implementation returned a completely different value (e.g. `assert_eq!(result.len(), 0)` when the result is always empty regardless of input).\n+\n+**Action**: Either rewrite the test to make a meaningful assertion, or remove it if there is genuinely nothing to assert and the test provides no documentation value.\n+\n+### 4c — Incorrect Tests\n+\n+A test is incorrect if any of the following are true:\n+\n+- The test name describes feature A, but the body exercises feature B.\n+- The `assert_eq!` expected value is stale — it matches the output of an old implementation and would silently accept a regression if the implementation changed to produce the wrong output again.\n+- The test calls a helper with arguments that do not match the documented contract (e.g. passes an empty string to a function that requires a non-empty string, then asserts the error message — but the real production code would never call it with an empty string).\n+- The test setup deliberately bypasses the invariants that production code relies on, making the test useless as a regression guard.\n+\n+**Action**: Correct the test so that it accurately validates the feature it claims to cover. If the test is fundamentally unsalvageable, replace it with a correct one.\n+\n+---\n+\n+## Step 5 — Plan Changes\n+\n+Before editing any file, list every change you intend to make:\n+\n+```\n+File: src/sanitize.rs\n+- Remove test `test_sanitize_empty` (duplicate of `test_sanitize_value_empty_string` — same body)\n+- Rewrite test `test_url_passthrough` — assertion `assert!(true)` is vacuous; replace with assertion on sanitized output\n+```\n+\n+Keep the scope small: fix at most **5 tests** per run. If you find more than 5 issues, pick the 5 highest-value fixes and defer the rest.\n+\n+---\n+\n+## Step 6 — Apply Changes\n+\n+Apply only the changes you planned in Step 5. Do not touch unrelated code.\n+\n+After each edit, verify the file still compiles:\n+\n+```bash\n+cargo check 2>&1 | tail -20\n+```\n+\n+---\n+\n+## Step 7 — Verify\n+\n+Run the full test suite and confirm no regressions:\n+\n+```bash\n+cargo test 2>&1\n+cargo clippy --all-targets --all-features 2>&1 | grep -E \"^error|^warning\" | head -30\n+```\n+\n+Both must pass. If `cargo test` fails after your changes:\n+1. Identify which test now fails.\n+2. If it is a test you edited, reconsider the edit — you may have broken a valid assertion.\n+3. If it is an unrelated test, revert your changes and emit `report-incomplete` describing what you found and why you could not safely fix it.\n+\n+---\n+\n+## Step 8 — Save State\n+\n+Write the updated state to cache-memory. Use a filesystem-safe timestamp format:\n+\n+```json\n+{\n+  \"last_run\": \"YYYY-MM-DD\",\n+  \"modules_completed\": [\"<previously completed>\", \"<module you just analysed>\"],\n+  \"next_module\": \"<next module in the rotation>\",\n+  \"open_pr\": null,\n+  \"history\": [\n+    {\n+      \"date\": \"YYYY-MM-DD\",\n+      \"module\": \"<module analysed>\",\n+      \"outcome\": \"fixed|no-action|deferred|incomplete\",\n+      \"changes\": [\"brief description of each change\"],\n+      \"tests_removed\": N,\n+      \"tests_rewritten\": N\n+    }\n+  ]\n+}\n+```\n+\n+Truncate `history` to the last 10 entries. Write to `/tmp/gh-aw/cache-memory/test-reducer-state.json`.\n+\n+---\n+\n+## Step 9 — Open a PR or Report\n+\n+### If you made changes and all checks pass\n+\n+Open a pull request via the `create-pull-request` safe output:\n+\n+- **Title** (conventional-commits format):\n+  - `test: remove N duplicate tests in <module>` — for duplicate removal\n+  - `test: fix vacuous assertions in <module>` — for vacuous test fixes\n+  - `test: correct N mislabelled tests in <module>` — for incorrect test fixes\n+  - `test: reduce and improve tests in <module>` — when multiple categories apply\n+\n+- **Body**:\n+  1. **What was wrong** — for each changed test, one sentence explaining the problem.\n+  2. **What was changed** — list the test names and the type of fix applied.\n+  3. **Verification** — confirm `cargo test` and `cargo clippy` both pass.\n+\n+  Example body:\n+  ```markdown\n+  ## Test Suite Reduction: src/sanitize.rs\n+\n+  ### What was wrong\n+\n+  - `test_sanitize_empty`: duplicate of `test_sanitize_value_empty_string` (identical body).\n+  - `test_url_passthrough`: asserted `assert!(true)` — completely vacuous.\n+  - `test_name_invalid_prefix`: the assertion expected `\"_foo\"` but the function now returns `\"foo\"` — stale expected value that would hide a regression.\n+\n+  ### Changes\n+\n+  | Test | Action | Reason |\n+  |------|--------|--------|\n+  | `test_sanitize_empty` | Removed | Duplicate |\n+  | `test_url_passthrough` | Rewritten | Vacuous assertion |\n+  | `test_name_invalid_prefix` | Corrected | Stale expected value |\n+\n+  ### Verification\n+\n+  - `cargo test`: all N tests pass ✅\n+  - `cargo clippy --all-targets --all-features`: no warnings ✅\n+  ```\n+\n+Record the PR number in the state file (`open_pr` field) so the next run waits for it.\n+\n+### If you found problems but could not safely fix them\n+\n+Create an issue via `create-issue` with:\n+\n+- **Title**: `🧹 Test reducer findings — [N] issues in <module> require manual review`\n+- **Body**: list every problem found, grouped by category, with file and test name references.\n+\n+### If no problems were found\n+\n+Emit `noop` with message: \"No duplicate, vacuous, or incorrect tests found in `<module>`. Moving to `<next_module>` next run.\"",
+          "snapshot_ref": "4733c7604c705bcece84e3e9f6f4770aaa591e5c",
+          "snapshot_blob_sha": "cbd3011c26159b5086907d9b2b20b80a67c30261",
+          "snapshot_file": "snapshots/ado-aw__githubnext__4733c7604c705bcece84e3e9f6f4770aaa591e5c__test-reducer.md",
+          "snapshot_bytes": 10439,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/test-reducer.lock.yml\",\"generated_workflow_file\":\"test-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/test-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/test-reducer.md",
+      "commit_sha": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+      "authored_at": "2026-05-24T17:50:34Z",
+      "committed_at": "2026-05-24T17:50:34Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): add dev.azure.com and learn.microsoft.com to all network.allowed lists (#736)",
+      "parent_shas": [
+        "a1a98db75240f3dae6f2edf2eb4a8bbab720680a"
+      ],
+      "tree_sha": "6aba8911a30a93c9b59c41d7bb45a9b4a705e21d",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/8b10d174d0769f5e61962f3d2e37938ac9d86374",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/test-reducer.md",
+          "commit_sha": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+          "committed_at": "2026-05-24T17:50:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -12,7 +12,7 @@ tools:\n   bash: [\"*\"]\n   cache-memory: true\n network:\n-  allowed: [defaults, rust]\n+  allowed: [defaults, rust, dev.azure.com, learn.microsoft.com]\n timeout-minutes: 60\n safe-outputs:\n   create-pull-request:",
+          "snapshot_ref": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+          "snapshot_blob_sha": "32a652270ceafc571676232c4cb5659b700883c5",
+          "snapshot_file": "snapshots/ado-aw__githubnext__8b10d174d0769f5e61962f3d2e37938ac9d86374__test-reducer.md",
+          "snapshot_bytes": 10475,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/test-reducer.lock.yml\",\"generated_workflow_file\":\"test-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/test-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/test-reducer.md",
+      "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "authored_at": "2026-06-14T17:57:37Z",
+      "committed_at": "2026-06-14T17:57:37Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): disable AI-credit limits and use copilot-requests permission (#1010)\n\nSet max-ai-credits: -1 and max-daily-ai-credits: -1 on every agentic workflow to remove the per-run and rolling-24h AIC guardrails. Add copilot-requests: write to each permissions block so Copilot inference uses the run's GITHUB_TOKEN instead of the COPILOT_GITHUB_TOKEN PAT, eliminating periodic token refreshes.\n\nLock files regenerated with gh aw compile (v0.79.6); also includes the actions-lock.json refresh, copilot-setup-steps.yml SHA bump, the generated agentics-maintenance.yml, and the gh-aw v0.79.6 agents/skills artifacts emitted by the same compile run.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e"
+      ],
+      "tree_sha": "9ddb4d6d49e0ee57f481587c53366bbbc8b6fc44",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/test-reducer.md",
+          "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "committed_at": "2026-06-14T17:57:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "",
+          "snapshot_ref": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "snapshot_blob_sha": "9ccd3a917d4433e2dd504d99c29403f742a941af",
+          "snapshot_file": "snapshots/ado-aw__githubnext__1e567a9a63b77d670b547544df5d7b2bf37b8985__test-reducer.md",
+          "snapshot_bytes": 10545,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/test-reducer.lock.yml\",\"generated_workflow_file\":\"test-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/test-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/test-reducer.md",
+      "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "authored_at": "2026-07-02T09:30:40Z",
+      "committed_at": "2026-07-02T09:30:40Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): remove AI credit budget caps on agentic workflows (#1298)\n\nSet safe-outputs.threat-detection.max-ai-credits to -1 on all 19\ngh-aw workflows and recompile their lock files so both the agent and\nthreat-detection stages run with unlimited AI credit budgets.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "105e11b195b79286266bef2fe1347a90a414531f"
+      ],
+      "tree_sha": "802695ed1f750dceae8470c21cadf1030203215f",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/test-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/test-reducer.md",
+          "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "committed_at": "2026-07-02T09:30:40Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -16,6 +16,8 @@ network:\n   allowed: [defaults, rust, dev.azure.com, learn.microsoft.com]\n timeout-minutes: 60\n safe-outputs:\n+  threat-detection:\n+    max-ai-credits: -1\n   create-pull-request:\n     max: 1\n     protected-files: fallback-to-issue",
+          "snapshot_ref": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "snapshot_blob_sha": "b432ad1c32a584b03c4a9ee651a43d18e17a688e",
+          "snapshot_file": "snapshots/ado-aw__githubnext__e06f17da0e8020a36fdff4b6033adc32f6b09ce1__test-reducer.md",
+          "snapshot_bytes": 10588,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/test-reducer.lock.yml\",\"generated_workflow_file\":\"test-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/test-reducer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+    "source_full_name": "dorlugasigal/TermBeam",
+    "source_owner": "dorlugasigal",
+    "source_repo": "TermBeam",
+    "md_path": ".github/workflows/scorecard-monitor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dorlugasigal/TermBeam/blob/HEAD/.github/workflows/scorecard-monitor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dorlugasigal/TermBeam",
+      "generated_owner": "dorlugasigal",
+      "generated_repo": "TermBeam",
+      "generated_workflow_path": ".github/workflows/scorecard-monitor.lock.yml",
+      "generated_workflow_file": "scorecard-monitor.lock.yml",
+      "generated_html_url": "https://github.com/dorlugasigal/TermBeam/blob/030fe2329912d589c9a7e016f8672e274be90325/.github/workflows/scorecard-monitor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+      "source_full_name": "dorlugasigal/TermBeam",
+      "md_path": ".github/workflows/scorecard-monitor.md",
+      "commit_sha": "7f4175316040ac27729322cad9a1d28b008d500f",
+      "authored_at": "2026-03-27T09:13:19Z",
+      "committed_at": "2026-03-27T09:13:19Z",
+      "author_name": "Dor Lugasi-Gal",
+      "author_email": "dorlugasigal@gmail.com",
+      "author_login": "dorlugasigal",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(security): improve OpenSSF scorecard score (#163)\n\nImprove the OpenSSF Scorecard score from 6.4/10 by addressing several\nchecks:\n\n- Add ClusterFuzzLite fuzzing integration with two fuzz targets\n(WebSocket message parsing, auth validation)\n- Fix known vulnerabilities by upgrading picomatch, requests, and\nlanding/demo-video deps\n- Harden branch protection: enforce_admins, strict status checks,\ndismiss_stale_reviews, require_last_push_approval\n- Add a gh-aw agentic workflow that monitors the scorecard weekly and\ncreates issues for low-scoring checks\n- Recompile docs/requirements.txt to pick up latest pip dependency\nversions\n\nCloses #162\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "9a1b165fde4f845773d6dc39b78237947fa6d216"
+      ],
+      "tree_sha": "35680805b928a1d76c4333bcbe42cf21f03ff67a",
+      "html_url": "https://github.com/dorlugasigal/TermBeam/commit/7f4175316040ac27729322cad9a1d28b008d500f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+          "source_full_name": "dorlugasigal/TermBeam",
+          "md_path": ".github/workflows/scorecard-monitor.md",
+          "commit_sha": "7f4175316040ac27729322cad9a1d28b008d500f",
+          "committed_at": "2026-03-27T09:13:19Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 63,
+          "file_deletions": 0,
+          "file_changes": 63,
+          "file_patch": "@@ -0,0 +1,63 @@\n+---\n+on:\n+  schedule: weekly on monday\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+engine: copilot\n+\n+network:\n+  allowed:\n+    - api.securityscorecards.dev\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[scorecard] '\n+    labels: [security, scorecard]\n+    max: 3\n+    close-older-issues: true\n+  close-issue:\n+  add-labels:\n+  update-issue:\n+---\n+\n+# OpenSSF Scorecard Monitor\n+\n+Monitor the OpenSSF Scorecard for this repository and create actionable improvement issues.\n+\n+## Instructions\n+\n+1. Fetch the latest OpenSSF Scorecard results from:\n+   `https://api.securityscorecards.dev/projects/github.com/dorlugasigal/TermBeam`\n+\n+2. Parse the JSON response and analyze each check's score (0-10 scale).\n+\n+3. Identify checks scoring below 7 that have **actionable** improvements (skip these non-actionable checks):\n+   - `Maintained` — depends on project age, not fixable\n+   - `Contributors` — depends on external contributors, not fixable\n+   - `CII-Best-Practices` — requires external badge program enrollment\n+   - `Signed-Releases` — only relevant if releases exist\n+\n+4. For each actionable low-scoring check, create a GitHub issue with:\n+   - **Title**: `[scorecard] Improve <CheckName> (currently <score>/10)`\n+   - **Body** that includes:\n+     - Current score and reason from the scorecard\n+     - Specific details/warnings from the `details` array\n+     - Concrete steps the maintainer can take to improve the score\n+     - Link to the scorecard docs for that check\n+   - **Labels**: `security`, `scorecard`\n+\n+5. If a check has improved to >= 7 since the last run, close its existing issue with a celebratory comment noting the improvement.\n+\n+6. If the overall score is >= 8, create a summary issue celebrating the achievement instead.\n+\n+## Context\n+\n+- The repository is a Node.js CLI tool (TermBeam) published on npm\n+- Workflows live in `.github/workflows/`\n+- Dependencies: npm (root + src/frontend/ + packages/), pip (docs/requirements.txt), Docker, GitHub Actions\n+- Branch protection, code review, and fuzzing are common improvement areas\n+- The scorecard runs weekly via `.github/workflows/scorecard.yml`",
+          "snapshot_ref": "7f4175316040ac27729322cad9a1d28b008d500f",
+          "snapshot_blob_sha": "f6a52206f7b12fd9fa3d6d2b0c578d2c6b8900e7",
+          "snapshot_file": "snapshots/TermBeam__dorlugasigal__7f4175316040ac27729322cad9a1d28b008d500f__scorecard-monitor.md",
+          "snapshot_bytes": 2114,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dorlugasigal/TermBeam\",\"generated_owner\":\"dorlugasigal\",\"generated_repo\":\"TermBeam\",\"generated_workflow_path\":\".github/workflows/scorecard-monitor.lock.yml\",\"generated_workflow_file\":\"scorecard-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/dorlugasigal/TermBeam/blob/030fe2329912d589c9a7e016f8672e274be90325/.github/workflows/scorecard-monitor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+      "source_full_name": "dorlugasigal/TermBeam",
+      "md_path": ".github/workflows/scorecard-monitor.md",
+      "commit_sha": "8fe0fa66571ea22c2ef74440c9f50a215a859fe7",
+      "authored_at": "2026-03-27T10:06:46Z",
+      "committed_at": "2026-03-27T10:06:46Z",
+      "author_name": "Dor Lugasi-Gal",
+      "author_email": "dorlugasigal@gmail.com",
+      "author_login": "dorlugasigal",
+      "author_account_type": "User",
+      "committer_name": "Dor Lugasi-Gal",
+      "committer_email": "dorlugasigal@gmail.com",
+      "committer_login": "dorlugasigal",
+      "committer_account_type": "User",
+      "message": "fix(ci): exclude solo-dev checks from scorecard monitor\n\nCode-Review and Branch-Protection checks are not actionable for a\nsolo developer project. Skip them to avoid noisy issues.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "82a560ffa1a6dd91c87485900f5d623f8765146a"
+      ],
+      "tree_sha": "66f596bb3f1f6fd1d13051900cc3e9105e1cf324",
+      "html_url": "https://github.com/dorlugasigal/TermBeam/commit/8fe0fa66571ea22c2ef74440c9f50a215a859fe7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+          "source_full_name": "dorlugasigal/TermBeam",
+          "md_path": ".github/workflows/scorecard-monitor.md",
+          "commit_sha": "8fe0fa66571ea22c2ef74440c9f50a215a859fe7",
+          "committed_at": "2026-03-27T10:06:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 1,
+          "file_changes": 4,
+          "file_patch": "@@ -40,6 +40,8 @@ Monitor the OpenSSF Scorecard for this repository and create actionable improvem\n    - `Contributors` — depends on external contributors, not fixable\n    - `CII-Best-Practices` — requires external badge program enrollment\n    - `Signed-Releases` — only relevant if releases exist\n+   - `Code-Review` — solo developer project, no external reviewers\n+   - `Branch-Protection` — settings are already maximized for a solo maintainer\n \n 4. For each actionable low-scoring check, create a GitHub issue with:\n    - **Title**: `[scorecard] Improve <CheckName> (currently <score>/10)`\n@@ -59,5 +61,5 @@ Monitor the OpenSSF Scorecard for this repository and create actionable improvem\n - The repository is a Node.js CLI tool (TermBeam) published on npm\n - Workflows live in `.github/workflows/`\n - Dependencies: npm (root + src/frontend/ + packages/), pip (docs/requirements.txt), Docker, GitHub Actions\n-- Branch protection, code review, and fuzzing are common improvement areas\n+- This is a solo-developer project — Code-Review and Branch-Protection checks requiring multiple reviewers are not actionable\n - The scorecard runs weekly via `.github/workflows/scorecard.yml`",
+          "snapshot_ref": "8fe0fa66571ea22c2ef74440c9f50a215a859fe7",
+          "snapshot_blob_sha": "d5feaf5672ae971edfb00f08aefbfbcd5d1b1bcf",
+          "snapshot_file": "snapshots/TermBeam__dorlugasigal__8fe0fa66571ea22c2ef74440c9f50a215a859fe7__scorecard-monitor.md",
+          "snapshot_bytes": 2318,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dorlugasigal/TermBeam\",\"generated_owner\":\"dorlugasigal\",\"generated_repo\":\"TermBeam\",\"generated_workflow_path\":\".github/workflows/scorecard-monitor.lock.yml\",\"generated_workflow_file\":\"scorecard-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/dorlugasigal/TermBeam/blob/030fe2329912d589c9a7e016f8672e274be90325/.github/workflows/scorecard-monitor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+      "source_full_name": "dorlugasigal/TermBeam",
+      "md_path": ".github/workflows/scorecard-monitor.md",
+      "commit_sha": "e45c2995b85fdece4ac16be853574033500bcb94",
+      "authored_at": "2026-07-23T03:59:42Z",
+      "committed_at": "2026-07-23T03:59:54Z",
+      "author_name": "Dor Lugasigal",
+      "author_email": "dorlugasigal@gmail.com",
+      "author_login": "dorlugasigal",
+      "author_account_type": "User",
+      "committer_name": "Dor Lugasigal",
+      "committer_email": "dorlugasigal@gmail.com",
+      "committer_login": "dorlugasigal",
+      "committer_account_type": "User",
+      "message": "chore(ci): stop agentic workflows from filing no-op and failure issues\n\nDisable gh-aw noop.report-as-issue and report-failure-as-issue across all three agentic workflows. Every no-op run was opening an [aw] No-Op Runs issue and every transient failure an [aw] ... failed issue; the run is already visible in the Actions tab.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 2e044186-b7f4-4228-b0c9-89ffe9e2922c",
+      "parent_shas": [
+        "80dda981dea94bdb997dc9e714b1f9b8423b975b"
+      ],
+      "tree_sha": "b5b9cf0c82d65693731d4eca0439f3b055dc92c5",
+      "html_url": "https://github.com/dorlugasigal/TermBeam/commit/e45c2995b85fdece4ac16be853574033500bcb94",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+          "source_full_name": "dorlugasigal/TermBeam",
+          "md_path": ".github/workflows/scorecard-monitor.md",
+          "commit_sha": "e45c2995b85fdece4ac16be853574033500bcb94",
+          "committed_at": "2026-07-23T03:59:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 0,
+          "file_changes": 6,
+          "file_patch": "@@ -22,6 +22,12 @@ safe-outputs:\n   close-issue:\n   add-labels:\n   update-issue:\n+  # The intentional output of this monitor is the scorecard issue above. Everything\n+  # else is noise: don't open an \"[aw] No-Op Runs\" issue when the score is unchanged,\n+  # and don't open an \"[aw] … failed\" issue on a transient scan failure.\n+  noop:\n+    report-as-issue: false\n+  report-failure-as-issue: false\n ---\n \n # OpenSSF Scorecard Monitor",
+          "snapshot_ref": "e45c2995b85fdece4ac16be853574033500bcb94",
+          "snapshot_blob_sha": "2e100ac93d0db00833c2b94a8b08aa5b346aab9d",
+          "snapshot_file": "snapshots/TermBeam__dorlugasigal__e45c2995b85fdece4ac16be853574033500bcb94__scorecard-monitor.md",
+          "snapshot_bytes": 2631,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dorlugasigal/TermBeam\",\"generated_owner\":\"dorlugasigal\",\"generated_repo\":\"TermBeam\",\"generated_workflow_path\":\".github/workflows/scorecard-monitor.lock.yml\",\"generated_workflow_file\":\"scorecard-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/dorlugasigal/TermBeam/blob/030fe2329912d589c9a7e016f8672e274be90325/.github/workflows/scorecard-monitor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+      "source_full_name": "dorlugasigal/TermBeam",
+      "md_path": ".github/workflows/scorecard-monitor.md",
+      "commit_sha": "8f1b60cf7cb301fc3702fc97040a6edc6f7b5091",
+      "authored_at": "2026-08-04T08:15:55Z",
+      "committed_at": "2026-08-04T08:15:55Z",
+      "author_name": "Dor Lugasi-Gal",
+      "author_email": "dorlugasigal@gmail.com",
+      "author_login": "dorlugasigal",
+      "author_account_type": "User",
+      "committer_name": "Dor Lugasi-Gal",
+      "committer_email": "dorlugasigal@gmail.com",
+      "committer_login": "dorlugasigal",
+      "committer_account_type": "User",
+      "message": "fix(security): remediate scorecard vulnerabilities\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: bc1484c4-eb38-476e-86eb-172374083b1f",
+      "parent_shas": [
+        "030fe2329912d589c9a7e016f8672e274be90325"
+      ],
+      "tree_sha": "3e0234528dc186a0d2c6ebc3cb13c44721251f13",
+      "html_url": "https://github.com/dorlugasigal/TermBeam/commit/8f1b60cf7cb301fc3702fc97040a6edc6f7b5091",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+          "source_full_name": "dorlugasigal/TermBeam",
+          "md_path": ".github/workflows/scorecard-monitor.md",
+          "commit_sha": "8f1b60cf7cb301fc3702fc97040a6edc6f7b5091",
+          "committed_at": "2026-08-04T08:15:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -14,6 +14,7 @@ network:\n     - api.securityscorecards.dev\n \n safe-outputs:\n+  github-token: ${{ secrets.GITHUB_TOKEN }}\n   create-issue:\n     title-prefix: '[scorecard] '\n     labels: [security, scorecard]",
+          "snapshot_ref": "8f1b60cf7cb301fc3702fc97040a6edc6f7b5091",
+          "snapshot_blob_sha": "22f1922853e27c0c57d523d55b7916646ee03f2b",
+          "snapshot_file": "snapshots/TermBeam__dorlugasigal__8f1b60cf7cb301fc3702fc97040a6edc6f7b5091__scorecard-monitor.md",
+          "snapshot_bytes": 2675,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dorlugasigal/TermBeam\",\"generated_owner\":\"dorlugasigal\",\"generated_repo\":\"TermBeam\",\"generated_workflow_path\":\".github/workflows/scorecard-monitor.lock.yml\",\"generated_workflow_file\":\"scorecard-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/dorlugasigal/TermBeam/blob/030fe2329912d589c9a7e016f8672e274be90325/.github/workflows/scorecard-monitor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+      "source_full_name": "dorlugasigal/TermBeam",
+      "md_path": ".github/workflows/scorecard-monitor.md",
+      "commit_sha": "e0d45c4b452284757f871e696c57a6385a695ccc",
+      "authored_at": "2026-08-04T08:22:54Z",
+      "committed_at": "2026-08-04T08:22:54Z",
+      "author_name": "Dor Lugasi-Gal",
+      "author_email": "dorlugasigal@gmail.com",
+      "author_login": "dorlugasigal",
+      "author_account_type": "User",
+      "committer_name": "Dor Lugasi-Gal",
+      "committer_email": "dorlugasigal@gmail.com",
+      "committer_login": "dorlugasigal",
+      "committer_account_type": "User",
+      "message": "fix(ci): stop scorecard issue churn\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: bc1484c4-eb38-476e-86eb-172374083b1f",
+      "parent_shas": [
+        "8f1b60cf7cb301fc3702fc97040a6edc6f7b5091"
+      ],
+      "tree_sha": "e25cf32270e32c054e18800590daa516c5442e5d",
+      "html_url": "https://github.com/dorlugasigal/TermBeam/commit/e0d45c4b452284757f871e696c57a6385a695ccc",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dorlugasigal/TermBeam:.github/workflows/scorecard-monitor.md",
+          "source_full_name": "dorlugasigal/TermBeam",
+          "md_path": ".github/workflows/scorecard-monitor.md",
+          "commit_sha": "e0d45c4b452284757f871e696c57a6385a695ccc",
+          "committed_at": "2026-08-04T08:22:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -61,7 +61,8 @@ Monitor the OpenSSF Scorecard for this repository and create actionable improvem\n \n 5. If a check has improved to >= 7 since the last run, close its existing issue with a celebratory comment noting the improvement.\n \n-6. If the overall score is >= 8, create a summary issue celebrating the achievement instead.\n+6. If the overall score is >= 8 and no actionable checks remain below 7, close the existing\n+   scorecard issue and emit a no-op. Do not create celebration or summary issues.\n \n ## Context\n ",
+          "snapshot_ref": "e0d45c4b452284757f871e696c57a6385a695ccc",
+          "snapshot_blob_sha": "64e25e5002cfe55e768fac8c772721d2e9901ad8",
+          "snapshot_file": "snapshots/TermBeam__dorlugasigal__e0d45c4b452284757f871e696c57a6385a695ccc__scorecard-monitor.md",
+          "snapshot_bytes": 2756,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dorlugasigal/TermBeam\",\"generated_owner\":\"dorlugasigal\",\"generated_repo\":\"TermBeam\",\"generated_workflow_path\":\".github/workflows/scorecard-monitor.lock.yml\",\"generated_workflow_file\":\"scorecard-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/dorlugasigal/TermBeam/blob/030fe2329912d589c9a7e016f8672e274be90325/.github/workflows/scorecard-monitor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

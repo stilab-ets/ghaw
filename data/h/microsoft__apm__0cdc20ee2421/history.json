@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/apm:.github/workflows/perf-scan.md",
+    "source_full_name": "microsoft/apm",
+    "source_owner": "microsoft",
+    "source_repo": "apm",
+    "md_path": ".github/workflows/perf-scan.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/apm/blob/HEAD/.github/workflows/perf-scan.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/apm",
+      "generated_owner": "microsoft",
+      "generated_repo": "apm",
+      "generated_workflow_path": ".github/workflows/perf-scan.lock.yml",
+      "generated_workflow_file": "perf-scan.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/apm/blob/d7a409d71a987ef4abfe3d0a2773164f1d862bb8/.github/workflows/perf-scan.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:20+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/apm:.github/workflows/perf-scan.md",
+      "source_full_name": "microsoft/apm",
+      "md_path": ".github/workflows/perf-scan.md",
+      "commit_sha": "ee1f586b5f7f82e56d54fe47d4e5110ab162dc1a",
+      "authored_at": "2026-07-17T12:47:09Z",
+      "committed_at": "2026-07-17T12:47:09Z",
+      "author_name": "Sergio Sisternes",
+      "author_email": "sergio_sisternes@epam.com",
+      "author_login": "sergio-sisternes-epam",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(agentics): add daily performance-scan agentic workflow (#2125)\n\nAdd perf-scan.md agentic workflow that runs daily at 01:00 UTC and scans\nsrc/apm_cli/ for six algorithmic performance anti-patterns:\n\n  A. Quadratic or worse loop nesting\n  B. Linear scan inside a loop (set/dict opportunity)\n  C. Unconditional expensive operations on hot paths\n  D. Redundant env-var / config parsing in sequence\n  E. Heavy top-level imports on CLI command modules\n  F. Sequential I/O with no data dependency (parallelism opportunity)\n\nEach run creates a GitHub Issue titled:\n  [perf-scan] YYYY-MM-DD -- performance opportunities found\n  [perf-scan] YYYY-MM-DD -- no issues found  (when clean)\n\nIssues are labelled 'type/performance' and 'type/automation'. Output is\nASCII-only per the repository encoding rule.\n\nThe companion instructions file at .github/agents/workflows/perf-scan.md\ndocuments the agent prompt, scan scope, and output contract for reference.\n\nThe .lock.yml was generated with gh aw compile (v0.81.6).\n\nCo-authored-by: Sergio Sisternes <sergio.sisternes@epam.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "673c7afa9cfe88067fc89874b1932f07a3e2a14d"
+      ],
+      "tree_sha": "fceac2aea300a4c8fd3268eaf5602fd541e13492",
+      "html_url": "https://github.com/microsoft/apm/commit/ee1f586b5f7f82e56d54fe47d4e5110ab162dc1a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/apm:.github/workflows/perf-scan.md",
+          "source_full_name": "microsoft/apm",
+          "md_path": ".github/workflows/perf-scan.md",
+          "commit_sha": "ee1f586b5f7f82e56d54fe47d4e5110ab162dc1a",
+          "committed_at": "2026-07-17T12:47:09Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 250,
+          "file_deletions": 0,
+          "file_changes": 250,
+          "file_patch": "@@ -0,0 +1,250 @@\n+---\n+name: Daily Performance Scanner\n+description: Scans src/apm_cli/ daily for algorithmic performance anti-patterns and opens a GitHub Issue with findings\n+on:\n+  schedule:\n+    - cron: \"0 1 * * *\"\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+safe-outputs:\n+  create-issue:\n+    expires: 7d\n+    title-prefix: \"[perf-scan] \"\n+    labels: [type/performance, type/automation]\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash: true\n+\n+network:\n+  allowed:\n+    - defaults\n+    - python\n+\n+timeout-minutes: 20\n+---\n+\n+# Daily Performance Scanner\n+\n+You are a performance engineering specialist scanning the APM CLI source tree for\n+algorithmic performance anti-patterns. Your job is to identify concrete opportunities\n+to improve code efficiency, quantify their impact, and create a GitHub Issue with\n+actionable findings.\n+\n+Read `.github/agents/performance-expert.agent.md` for your full persona and mental\n+model. When scanning non-transport code, also load\n+`.github/agents/algorithmic-patterns.agent.md` for the pattern catalogue.\n+\n+## Context\n+\n+- Source tree to scan: `src/apm_cli/`\n+- Benchmark examples: `tests/benchmarks/test_perf_benchmarks.py`\n+\n+## Step 1: Establish the scan date\n+\n+```bash\n+SCAN_DATE=$(date -u +%Y-%m-%d)\n+echo \"Scan date: $SCAN_DATE\"\n+```\n+\n+## Step 2: Read the pattern reference\n+\n+Before scanning, read the algorithmic patterns reference so you know exactly what\n+to look for:\n+\n+```bash\n+cat .github/agents/algorithmic-patterns.agent.md 2>/dev/null || \\\n+  echo \"[!] algorithmic-patterns.agent.md not found -- using inline patterns\"\n+```\n+\n+Then read a sample of the source tree structure:\n+\n+```bash\n+find src/apm_cli -name \"*.py\" | sort | head -60\n+```\n+\n+## Step 3: Scan for anti-patterns\n+\n+For each pattern below, run the bash commands, then read the flagged files to confirm\n+whether the match is a genuine performance concern. Record only confirmed findings.\n+Skip matches inside test files, generated files, or one-off startup paths.\n+\n+All output must be ASCII-only (no emojis, no Unicode box-drawing characters).\n+\n+### Pattern A: Quadratic or worse loop nesting\n+\n+Nested loops that iterate over the same or overlapping collections grow as O(n^2)\n+in the number of packages or files.\n+\n+```bash\n+# Find functions with multiple for-loops as candidates for manual review\n+grep -rn --include=\"*.py\" -E \"^\\s+for .+ in .+:\" src/apm_cli/ | \\\n+  awk -F: '{print $1}' | sort | uniq -c | sort -rn | head -20\n+```\n+\n+For each high-count file, read the function bodies to check if any outer loop\n+contains an inner loop over the same collection.\n+\n+### Pattern B: Linear scan inside a loop (set/dict opportunity)\n+\n+Any `if x in list` or `list.index(x)` inside a loop body is O(n) per iteration.\n+This includes membership tests against named list variables, not just inline literals.\n+\n+```bash\n+grep -rn --include=\"*.py\" -E \"if .+ in [a-z_]+|\\.count\\(|\\.index\\(\" src/apm_cli/ | \\\n+  grep -v \"test_\\|#\\|isinstance\\|in self\\|in range\\|in enumerate\\|in zip\\|in map\\|in filter\\|in reversed\" | head -80\n+```\n+\n+If the list is static within the loop's scope, it is a candidate for a `set` or\n+`dict` pre-built once before the loop (O(n) pre-compute, O(1) lookup per iteration).\n+\n+### Pattern C: Unconditional expensive operations on hot paths\n+\n+Directory scans, full serialisation, or config re-reads that execute unconditionally\n+on every call to a function that may be called per-package or per-dependency.\n+\n+```bash\n+grep -rn --include=\"*.py\" \\\n+  -E \"os\\.listdir\\(|os\\.walk\\(|glob\\.glob\\(|json\\.dumps\\(|yaml\\.dump\\(\" \\\n+  src/apm_cli/ | grep -v \"test_\\|#\" | head -60\n+```\n+\n+Check whether the call is inside a method invoked in a loop at a call site. If so,\n+assess whether the result can be computed once and cached.\n+\n+### Pattern D: Redundant env-var / config parsing in sequence\n+\n+Functions that call `os.getenv` or `load_config` / `read_config` multiple times, or\n+functions called in sequence where each independently re-parses the same config.\n+\n+```bash\n+grep -rn --include=\"*.py\" \\\n+  -E \"os\\.environ\\[|os\\.getenv\\(|load_config\\(|read_config\\(\" \\\n+  src/apm_cli/ | grep -v \"test_\\|#\" | head -80\n+```\n+\n+For files with multiple matches, read the function bodies to check if the same key\n+is fetched more than once without caching the result.\n+\n+### Pattern E: Heavy top-level imports on CLI command modules\n+\n+Every top-level import in `src/apm_cli/commands/` adds to CLI startup latency\n+regardless of which sub-command is invoked.\n+\n+```bash\n+grep -rn --include=\"*.py\" -E \"^import |^from \" src/apm_cli/commands/ | \\\n+  grep -v \"# noqa\\|type: ignore\" | head -80\n+```\n+\n+Flag any import that is only used inside a single command function body (not at\n+module level). Those are candidates to move to a local import inside the function.\n+\n+### Pattern F: Sequential I/O with no data dependency (parallelism opportunity)\n+\n+Loops that make network calls or subprocess invocations in each iteration where no\n+iteration depends on the result of a previous one.\n+\n+```bash\n+grep -rn --include=\"*.py\" \\\n+  -E \"subprocess\\.(run|check_output|call)\\(|requests\\.(get|post)\\(\" \\\n+  src/apm_cli/ | grep -v \"test_\\|#\" | head -60\n+```\n+\n+For each match, check if it is inside a `for` loop and whether the iterations are\n+independent. Independent subprocess loops are candidates for\n+`concurrent.futures.ThreadPoolExecutor`.\n+\n+## Step 4: Compile confirmed findings\n+\n+Review every candidate match from Step 3. For each one:\n+\n+1. Read the surrounding function (at least 20 lines of context).\n+2. Confirm it is a genuine pattern -- not already cached, not guarded by a\n+   short-circuit, not inside a test or generated file.\n+3. Record:\n+   - Pattern name (A-F above)\n+   - File path and line range\n+   - Current Big-O or cost description\n+   - Proposed Big-O or approach\n+   - One-sentence concrete fix\n+\n+Discard false positives silently. Only confirmed findings go into the issue.\n+\n+## Step 5: Create the GitHub Issue\n+\n+Get today's date:\n+\n+```bash\n+SCAN_DATE=$(date -u +%Y-%m-%d)\n+```\n+\n+Determine the issue title:\n+- If findings >= 1: `{SCAN_DATE} -- performance opportunities found`\n+- If findings == 0: `{SCAN_DATE} -- no issues found`\n+\n+(The `[perf-scan] ` prefix is added automatically by the safe-output.)\n+\n+Create the issue using the `create-issue` safe-output tool with the body below.\n+All text must be ASCII-only.\n+\n+### Issue body format (findings present)\n+\n+```\n+## Performance Scan - {SCAN_DATE}\n+\n+Automated scan of src/apm_cli/ for algorithmic performance anti-patterns.\n+{N} finding(s) identified.\n+\n+### Findings\n+\n+#### [{pattern_letter}] {Pattern Name} -- {file}:{start_line}-{end_line}\n+\n+- Current: {e.g., O(n^2) -- linear scan inside package-count loop}\n+- Proposed: {e.g., O(n) with pre-built set}\n+- Fix: {one concrete sentence, e.g., \"Build a set of locked SHAs before the\n+  loop and replace `if sha in locked_list` with `if sha in locked_set`.\"}\n+\n+(repeat block for each finding)\n+\n+### Scan coverage\n+\n+- src/apm_cli/ ({total .py files} files scanned)\n+- Patterns checked: A (quadratic loops), B (linear scan in loop),\n+  C (unconditional expensive ops), D (redundant config parsing),\n+  E (heavy top-level imports), F (sequential independent I/O)\n+```\n+\n+### Issue body format (no findings)\n+\n+```\n+## Performance Scan - {SCAN_DATE}\n+\n+Automated scan of src/apm_cli/ for algorithmic performance anti-patterns.\n+No confirmed findings.\n+\n+### Scan coverage\n+\n+- src/apm_cli/ ({total .py files} files scanned)\n+- Patterns checked: A (quadratic loops), B (linear scan in loop),\n+  C (unconditional expensive ops), D (redundant config parsing),\n+  E (heavy top-level imports), F (sequential independent I/O)\n+\n+All hot-path code reviewed uses appropriate data structures and caching.\n+```\n+\n+## Guidelines\n+\n+- Every finding must reference a real line of code. Do NOT fabricate findings.\n+- Keep the issue body concise and actionable (no wall of text).\n+- Skip findings in `tests/`, vendored code, or auto-generated files.\n+- If a finding is borderline (runs at most once at startup), note it as\n+  low-priority rather than omitting it.\n+- ASCII-only throughout: no emojis, no Unicode. Status indicators: `[+]` ok,\n+  `[!]` warning, `[x]` error.\n+- The run is always visible: create an issue even when there are no findings.",
+          "snapshot_ref": "ee1f586b5f7f82e56d54fe47d4e5110ab162dc1a",
+          "snapshot_blob_sha": "adc3c164ea16bd79c6faf2b2e26bb11619b4b998",
+          "snapshot_file": "snapshots/apm__microsoft__ee1f586b5f7f82e56d54fe47d4e5110ab162dc1a__perf-scan.md",
+          "snapshot_bytes": 8098,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/apm\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"apm\",\"generated_workflow_path\":\".github/workflows/perf-scan.lock.yml\",\"generated_workflow_file\":\"perf-scan.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/apm/blob/d7a409d71a987ef4abfe3d0a2773164f1d862bb8/.github/workflows/perf-scan.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

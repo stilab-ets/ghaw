@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+    "source_full_name": "microsoft/skills",
+    "source_owner": "microsoft",
+    "source_repo": "skills",
+    "md_path": ".github/workflows/update-llms-txt.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/skills/blob/HEAD/.github/workflows/update-llms-txt.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/skills",
+      "generated_owner": "microsoft",
+      "generated_repo": "skills",
+      "generated_workflow_path": ".github/workflows/update-llms-txt.lock.yml",
+      "generated_workflow_file": "update-llms-txt.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/skills/blob/4a2873faffc1b101a33a0b59c24713d4ed78142f/.github/workflows/update-llms-txt.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:58:47+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+      "source_full_name": "microsoft/skills",
+      "md_path": ".github/workflows/update-llms-txt.md",
+      "commit_sha": "5d0053512f616b9be054c90716fc9a12f2fd2afd",
+      "authored_at": "2026-01-19T18:07:27Z",
+      "committed_at": "2026-01-19T18:07:27Z",
+      "author_name": "Govind Kamtamneni",
+      "author_email": "gok@microsoft.com",
+      "author_login": "thegovind",
+      "author_account_type": "User",
+      "committer_name": "Govind Kamtamneni",
+      "committer_email": "gok@microsoft.com",
+      "committer_login": "thegovind",
+      "committer_account_type": "User",
+      "message": "Add Foundry docs llms.txt with Context7 config and weekly update workflow\n\n- Add scraper to generate llms.txt from Microsoft Learn TOC API (261 pages)\n- Add context7.json for Context7 library submission\n- Add gh-aw workflow for weekly automated updates via PR\n- Include llms-full.txt with expanded content",
+      "parent_shas": [
+        "e276ccbf281534abec4431a319e04d31dcd6909b"
+      ],
+      "tree_sha": "35a2e535d3900dc2f2ba2b7be5deca7af7735077",
+      "html_url": "https://github.com/microsoft/skills/commit/5d0053512f616b9be054c90716fc9a12f2fd2afd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+          "source_full_name": "microsoft/skills",
+          "md_path": ".github/workflows/update-llms-txt.md",
+          "commit_sha": "5d0053512f616b9be054c90716fc9a12f2fd2afd",
+          "committed_at": "2026-01-19T18:07:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 51,
+          "file_deletions": 0,
+          "file_changes": 51,
+          "file_patch": "@@ -0,0 +1,51 @@\n+---\n+on:\n+  schedule: weekly\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+network: defaults\n+tools:\n+  github:\n+  bash: [\"python3\", \"pip\", \"git\", \"diff\"]\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[docs-update] \"\n+    labels: [automated, documentation]\n+---\n+\n+# Update Foundry llms.txt Documentation\n+\n+Regenerate the llms.txt and llms-full.txt files from the latest Microsoft Foundry documentation.\n+\n+## Purpose\n+\n+This workflow keeps our Foundry documentation index up-to-date by:\n+1. Fetching the latest Table of Contents from Microsoft Learn\n+2. Regenerating llms.txt with current documentation links\n+3. Creating a PR if there are changes\n+\n+## Steps\n+\n+1. **Setup Python environment**\n+   - Install required packages: `pip install aiohttp`\n+\n+2. **Run the scraper**\n+   - Execute `python scripts/scrape_foundry_docs.py` to regenerate llms.txt\n+   - Execute `python scripts/generate_llms_full.py` to regenerate llms-full.txt\n+\n+3. **Check for changes**\n+   - Compare the generated files with the existing ones\n+   - If there are changes, create a pull request with the updates\n+\n+4. **Create PR if needed**\n+   - Title: \"Update Foundry llms.txt documentation\"\n+   - Include summary of what changed (new pages, removed pages, section changes)\n+\n+## Notes\n+\n+- The scraper respects rate limits when fetching from Microsoft Learn\n+- Only creates a PR if there are actual content changes\n+- The llms.txt follows the llms.txt specification for LLM-friendly documentation",
+          "snapshot_ref": "5d0053512f616b9be054c90716fc9a12f2fd2afd",
+          "snapshot_blob_sha": "177da0200eae43430ac5868e066d27ec038fa82e",
+          "snapshot_file": "snapshots/skills__microsoft__5d0053512f616b9be054c90716fc9a12f2fd2afd__update-llms-txt.md",
+          "snapshot_bytes": 1488,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/skills\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/update-llms-txt.lock.yml\",\"generated_workflow_file\":\"update-llms-txt.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/skills/blob/4a2873faffc1b101a33a0b59c24713d4ed78142f/.github/workflows/update-llms-txt.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+      "source_full_name": "microsoft/skills",
+      "md_path": ".github/workflows/update-llms-txt.md",
+      "commit_sha": "2b8c2909ea30f7cb877661ca741f394975dcc4a5",
+      "authored_at": "2026-01-27T02:50:25Z",
+      "committed_at": "2026-01-27T02:50:25Z",
+      "author_name": "Govind Kamtamneni",
+      "author_email": "gok@microsoft.com",
+      "author_login": "thegovind",
+      "author_account_type": "User",
+      "committer_name": "Govind Kamtamneni",
+      "committer_email": "gok@microsoft.com",
+      "committer_login": "thegovind",
+      "committer_account_type": "User",
+      "message": "fix: change llms.txt workflow from weekly to daily at 7 PM PST",
+      "parent_shas": [
+        "0d53c4bc07b53ede8880b633fc24982025a33424"
+      ],
+      "tree_sha": "5cb0aa6d611328441e0b3f1263a025cda6f29500",
+      "html_url": "https://github.com/microsoft/skills/commit/2b8c2909ea30f7cb877661ca741f394975dcc4a5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+          "source_full_name": "microsoft/skills",
+          "md_path": ".github/workflows/update-llms-txt.md",
+          "commit_sha": "2b8c2909ea30f7cb877661ca741f394975dcc4a5",
+          "committed_at": "2026-01-27T02:50:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n on:\n-  schedule: weekly\n+  schedule: \"0 3 * * *\"  # 7 PM PST (3 AM UTC) daily\n   workflow_dispatch:\n permissions:\n   contents: read",
+          "snapshot_ref": "2b8c2909ea30f7cb877661ca741f394975dcc4a5",
+          "snapshot_blob_sha": "6a91d2cfff6e808997fda69bd05829fa7233a7d2",
+          "snapshot_file": "snapshots/skills__microsoft__2b8c2909ea30f7cb877661ca741f394975dcc4a5__update-llms-txt.md",
+          "snapshot_bytes": 1522,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/skills\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/update-llms-txt.lock.yml\",\"generated_workflow_file\":\"update-llms-txt.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/skills/blob/4a2873faffc1b101a33a0b59c24713d4ed78142f/.github/workflows/update-llms-txt.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+      "source_full_name": "microsoft/skills",
+      "md_path": ".github/workflows/update-llms-txt.md",
+      "commit_sha": "92a6c7d9c9dbd77c691207e92b5367f8979e967b",
+      "authored_at": "2026-01-27T02:53:46Z",
+      "committed_at": "2026-01-27T02:53:46Z",
+      "author_name": "Govind Kamtamneni",
+      "author_email": "gok@microsoft.com",
+      "author_login": "thegovind",
+      "author_account_type": "User",
+      "committer_name": "Govind Kamtamneni",
+      "committer_email": "gok@microsoft.com",
+      "committer_login": "thegovind",
+      "committer_account_type": "User",
+      "message": "fix: add learn.microsoft.com to allowed network domains",
+      "parent_shas": [
+        "2b8c2909ea30f7cb877661ca741f394975dcc4a5"
+      ],
+      "tree_sha": "386651a696cbc59c6a4a0af27ec830d520d4a97c",
+      "html_url": "https://github.com/microsoft/skills/commit/92a6c7d9c9dbd77c691207e92b5367f8979e967b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+          "source_full_name": "microsoft/skills",
+          "md_path": ".github/workflows/update-llms-txt.md",
+          "commit_sha": "92a6c7d9c9dbd77c691207e92b5367f8979e967b",
+          "committed_at": "2026-01-27T02:53:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 1,
+          "file_changes": 5,
+          "file_patch": "@@ -6,7 +6,10 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n-network: defaults\n+network:\n+  allowed:\n+    - defaults\n+    - learn.microsoft.com\n tools:\n   github:\n   bash: [\"python3\", \"pip\", \"git\", \"diff\"]",
+          "snapshot_ref": "92a6c7d9c9dbd77c691207e92b5367f8979e967b",
+          "snapshot_blob_sha": "4f80425f0a1e77095eda94ed17d67e467bf9c49d",
+          "snapshot_file": "snapshots/skills__microsoft__92a6c7d9c9dbd77c691207e92b5367f8979e967b__update-llms-txt.md",
+          "snapshot_bytes": 1565,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/skills\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/update-llms-txt.lock.yml\",\"generated_workflow_file\":\"update-llms-txt.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/skills/blob/4a2873faffc1b101a33a0b59c24713d4ed78142f/.github/workflows/update-llms-txt.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+      "source_full_name": "microsoft/skills",
+      "md_path": ".github/workflows/update-llms-txt.md",
+      "commit_sha": "5984c85b3e4d9153776b91ac8b6004903bcabb44",
+      "authored_at": "2026-01-27T02:55:04Z",
+      "committed_at": "2026-01-27T02:55:04Z",
+      "author_name": "Govind Kamtamneni",
+      "author_email": "gok@microsoft.com",
+      "author_login": "thegovind",
+      "author_account_type": "User",
+      "committer_name": "Govind Kamtamneni",
+      "committer_email": "gok@microsoft.com",
+      "committer_login": "thegovind",
+      "committer_account_type": "User",
+      "message": "fix: add pypi.org and files.pythonhosted.org to allowed domains",
+      "parent_shas": [
+        "92a6c7d9c9dbd77c691207e92b5367f8979e967b"
+      ],
+      "tree_sha": "ee5dcedb10f190b97e820e14898d069817bbb02e",
+      "html_url": "https://github.com/microsoft/skills/commit/5984c85b3e4d9153776b91ac8b6004903bcabb44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+          "source_full_name": "microsoft/skills",
+          "md_path": ".github/workflows/update-llms-txt.md",
+          "commit_sha": "5984c85b3e4d9153776b91ac8b6004903bcabb44",
+          "committed_at": "2026-01-27T02:55:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -10,6 +10,8 @@ network:\n   allowed:\n     - defaults\n     - learn.microsoft.com\n+    - pypi.org\n+    - files.pythonhosted.org\n tools:\n   github:\n   bash: [\"python3\", \"pip\", \"git\", \"diff\"]",
+          "snapshot_ref": "5984c85b3e4d9153776b91ac8b6004903bcabb44",
+          "snapshot_blob_sha": "6fda186cc0e5a0d5e8ba4cf2e93676668f8cfce6",
+          "snapshot_file": "snapshots/skills__microsoft__5984c85b3e4d9153776b91ac8b6004903bcabb44__update-llms-txt.md",
+          "snapshot_bytes": 1609,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/skills\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/update-llms-txt.lock.yml\",\"generated_workflow_file\":\"update-llms-txt.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/skills/blob/4a2873faffc1b101a33a0b59c24713d4ed78142f/.github/workflows/update-llms-txt.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+      "source_full_name": "microsoft/skills",
+      "md_path": ".github/workflows/update-llms-txt.md",
+      "commit_sha": "dde39f0229574e01b8d6e48153f77329727daa24",
+      "authored_at": "2026-01-29T05:06:40Z",
+      "committed_at": "2026-01-29T05:06:40Z",
+      "author_name": "Govind Kamtamneni",
+      "author_email": "gok@microsoft.com",
+      "author_login": "thegovind",
+      "author_account_type": "User",
+      "committer_name": "Govind Kamtamneni",
+      "committer_email": "gok@microsoft.com",
+      "committer_login": "thegovind",
+      "committer_account_type": "User",
+      "message": "fix: update script paths in workflow source file",
+      "parent_shas": [
+        "113db05f7fc5309de907085cedb88b2a5abb67be"
+      ],
+      "tree_sha": "d2904c090f2c26050993835656e28e3975ff0807",
+      "html_url": "https://github.com/microsoft/skills/commit/dde39f0229574e01b8d6e48153f77329727daa24",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/skills:.github/workflows/update-llms-txt.md",
+          "source_full_name": "microsoft/skills",
+          "md_path": ".github/workflows/update-llms-txt.md",
+          "commit_sha": "dde39f0229574e01b8d6e48153f77329727daa24",
+          "committed_at": "2026-01-29T05:06:40Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -38,8 +38,8 @@ This workflow keeps our Foundry documentation index up-to-date by:\n    - Install required packages: `pip install aiohttp`\n \n 2. **Run the scraper**\n-   - Execute `python scripts/scrape_foundry_docs.py` to regenerate llms.txt\n-   - Execute `python scripts/generate_llms_full.py` to regenerate llms-full.txt\n+   - Execute `python .github/scripts/scrape_foundry_docs.py` to regenerate llms.txt\n+   - Execute `python .github/scripts/generate_llms_full.py` to regenerate llms-full.txt\n \n 3. **Check for changes**\n    - Compare the generated files with the existing ones",
+          "snapshot_ref": "dde39f0229574e01b8d6e48153f77329727daa24",
+          "snapshot_blob_sha": "1dd641fea2994b076e247153d2c2f3fada51363c",
+          "snapshot_file": "snapshots/skills__microsoft__dde39f0229574e01b8d6e48153f77329727daa24__update-llms-txt.md",
+          "snapshot_bytes": 1625,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/skills\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"skills\",\"generated_workflow_path\":\".github/workflows/update-llms-txt.lock.yml\",\"generated_workflow_file\":\"update-llms-txt.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/skills/blob/4a2873faffc1b101a33a0b59c24713d4ed78142f/.github/workflows/update-llms-txt.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

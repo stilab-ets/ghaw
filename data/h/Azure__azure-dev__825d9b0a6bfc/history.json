@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+    "source_full_name": "Azure/azure-dev",
+    "source_owner": "Azure",
+    "source_repo": "azure-dev",
+    "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/azure-dev/blob/HEAD/.github/workflows/update-instructions-from-pr-reviews.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/azure-dev",
+      "generated_owner": "Azure",
+      "generated_repo": "azure-dev",
+      "generated_workflow_path": ".github/workflows/update-instructions-from-pr-reviews.lock.yml",
+      "generated_workflow_file": "update-instructions-from-pr-reviews.lock.yml",
+      "generated_html_url": "https://github.com/Azure/azure-dev/blob/20e887dc49559da10c31da1032369a62b01852bb/.github/workflows/update-instructions-from-pr-reviews.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:24:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+      "source_full_name": "Azure/azure-dev",
+      "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+      "commit_sha": "fad27e20af8049ae4ddaebd14e6e8a141e81d4e4",
+      "authored_at": "2026-06-17T20:00:51Z",
+      "committed_at": "2026-06-17T20:00:51Z",
+      "author_name": "Richard Park",
+      "author_email": "51494936+richardpark-msft@users.noreply.github.com",
+      "author_login": "richardpark-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Adding in several bits to make copilot code reviewers more effective (#8693)\n\nMaking copilot code reviews more effective boils down to a few things:\n- Having better instructions. I've added in a new GitHub agentic workflow that will mine PR comments and look for items that could be in our copilot-instructions or code reviewer skill. This should give us a nice low-effort way to keep our instructions current, based on things reviewers are already finding.\n- Adding in Ted's (modified) code reviewer skill into azd-code-reviewer. CCR can use this skill to be more picky and look for more azd specific things more throughly. These review items get added as inline comments, just like normal CCR feedback, which is a nice UX improvements for anyone contributing to azd. You can see an example of how that looks here: https://github.com/Azure/azure-dev/pull/8694#discussion_r3429920017. \n- There are some instructions updates as well, those were from the first pass of running the agentic workflow in a separate repo, but against azd.\n\n(Also, I had to 'gh aw compile', which added in two more workflows that didn't have proper lock files.)\n\nFixes #8695",
+      "parent_shas": [
+        "26a899606b2f89a28af5823c100be1c47ced5fda"
+      ],
+      "tree_sha": "8bc67df060d2871c04b413338a617b482e2b79f7",
+      "html_url": "https://github.com/Azure/azure-dev/commit/fad27e20af8049ae4ddaebd14e6e8a141e81d4e4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+          "source_full_name": "Azure/azure-dev",
+          "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+          "commit_sha": "fad27e20af8049ae4ddaebd14e6e8a141e81d4e4",
+          "committed_at": "2026-06-17T20:00:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 293,
+          "file_deletions": 0,
+          "file_changes": 293,
+          "file_patch": "@@ -0,0 +1,293 @@\n+---\n+name: Update Instructions From PR Reviews\n+on:\n+  schedule:\n+    # NOTE: Using the fuzzy form for scheduling lets gh-aw jitter the exact minute\n+    # across repos so scheduled runs don't all spike at the same time.\n+    - cron: \"weekly on monday\"\n+  workflow_dispatch:\n+    inputs:\n+      since:\n+        description: >-\n+          Mine PRs merged on/after this date (YYYY-MM-DD). Default: last\n+          successful run date, or PRs merged within the last 6 months on the\n+          first run.\n+        required: false\n+        type: string\n+      max_prs:\n+        description: \"Max merged PRs to examine. Default: 50.\"\n+        required: false\n+        default: \"50\"\n+        type: string\n+      repository:\n+        description: >-\n+          Repo to mine PRs from, as `owner/repo`. Default: this repo. A private\n+          source repo needs read access via COPILOT_GITHUB_TOKEN.\n+        required: false\n+        type: string\n+      min_pr_count:\n+        description: >-\n+          Promote a theme only if it spans at least this many distinct PRs\n+          (with min_reviewer_count). Default: 2.\n+        required: false\n+        default: \"2\"\n+        type: string\n+      min_reviewer_count:\n+        description: >-\n+          Promote a theme only if at least this many distinct reviewers raised\n+          it (with min_pr_count). Default: 2.\n+        required: false\n+        default: \"2\"\n+        type: string\n+      min_single_reviewer_count:\n+        description: >-\n+          Also promote a theme if one reviewer flags it at least this many\n+          times. Default: 3.\n+        required: false\n+        default: \"3\"\n+        type: string\n+\n+# The agent only needs to read the repo and its PR history. All writes happen\n+# through the create-pull-request safe output in a separate, permission-scoped job.\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+\n+engine: copilot\n+\n+tools:\n+  # Native GitHub MCP toolsets — no gh/jq/git needed. These let the agent list\n+  # merged PRs and read their reviews, inline comments, and conversation comments.\n+  github:\n+    toolsets: [pull_requests, issues, repos]\n+  # Lets the agent read and edit the local .github/ customization files.\n+  edit:\n+  # Remembers the last successful run date so \"since last run\" works with no\n+  # external state. The agent reads/writes a small marker here each run.\n+  cache-memory:\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[auto] \"\n+    labels: [automation, copilot-instructions]\n+    draft: false\n+    # Open a fresh PR only when there isn't already an open one; otherwise reuse\n+    # the same branch so the existing (unmerged) PR is updated in place.\n+    preserve-branch-name: true\n+    recreate-ref: true\n+    # If there were no new themes worth promoting, do nothing quietly.\n+    if-no-changes: \"ignore\"\n+    # Some orgs block \"GitHub Actions creating/approving PRs\" (Settings → Actions\n+    # → General → Workflow permissions). When that policy is off, the safe-output\n+    # job can't open the PR directly. Rather than fail (or require a PAT), fall\n+    # back to opening an ISSUE with a link to the pushed branch — and assign it to\n+    # `copilot` so the coding agent picks it up and opens the PR for us. This is\n+    # the simplest no-secret path; gh-aw grants the job `issues: write` for the\n+    # fallback automatically. See: https://github.github.com/gh-aw/reference/faq/\n+    fallback-as-issue: true\n+    assignees: [copilot]\n+    #\n+    # ── Prefer real PRs? Pick ONE of these and remove the fallback above ──────\n+    # The issue fallback above needs no secrets, but if you'd rather the workflow\n+    # always open a proper pull request, give the safe-output job an identity that\n+    # ISN'T subject to the \"Actions can't create PRs\" policy:\n+    #\n+    #   A) Flip the org/repo policy (no config needed): Settings → Actions →\n+    #      General → Workflow permissions → \"Allow GitHub Actions to create and\n+    #      approve pull requests\". Then you can drop the fallback entirely.\n+    #\n+    #   B) Author the PR with a PAT (contents:write + pull-requests:write),\n+    #      stored as a secret — the policy only applies to the default token:\n+    # github-token: ${{ secrets.AW_PR_TOKEN }}\n+    #\n+    #   C) Author the PR via a GitHub App install token (cleanest for orgs —\n+    #      no personal seat, scoped install):\n+    # github-app:\n+    #   app-id: ${{ vars.AW_APP_ID }}\n+    #   private-key: ${{ secrets.AW_APP_PRIVATE_KEY }}\n+    #\n+    # This workflow is explicitly designed to manage instruction files under\n+    # .github/ (normally protected). Restrict it to ONLY those files and allow\n+    # them through protection. Any patch touching anything else is refused.\n+    allowed-files:\n+      - .github/copilot-instructions.md\n+      - .github/instructions/**\n+      - .github/prompts/**\n+      - .github/agents/**\n+      - AGENTS.md\n+    protected-files: allowed\n+---\n+\n+# Update Instructions From PR Reviews\n+\n+You mine this repository's recently-merged pull request review feedback and turn\n+recurring reviewer asks into additive edits to the repo's Copilot/agent\n+customization files under `.github/`, then open (or update) a single pull request\n+with the proposed changes. The goal: future PRs get the same feedback\n+automatically, both from developers using Copilot locally and from Copilot Code\n+Review acting as a backstop.\n+\n+Work entirely with the **GitHub tools** (to read PRs and comments) and the\n+**edit tool** (to read and write the local `.github/` files). Do not shell out to\n+`gh`, `jq`, or `git` — the GitHub tools provide everything you need to read, and\n+the create-pull-request safe output handles all writing.\n+\n+## Run parameters\n+\n+These are the **resolved values from this run's trigger**. Treat them as the\n+source of truth — do not re-derive them from the prose defaults below. If\n+**Since** reads `not set`, no explicit date was supplied; resolve it using the\n+fallback chain in step 1 below.\n+\n+- Source repository: `${{ github.event.inputs.repository || github.repository }}`\n+- Since: `${{ github.event.inputs.since || 'not set' }}`\n+- Max PRs: `${{ github.event.inputs.max_prs || '50' }}`\n+- Min PR count: `${{ github.event.inputs.min_pr_count || '2' }}`\n+- Min reviewer count: `${{ github.event.inputs.min_reviewer_count || '2' }}`\n+- Min single-reviewer count: `${{ github.event.inputs.min_single_reviewer_count || '3' }}`\n+\n+## 1. Determine the PR range\n+\n+Decide which merged PRs to examine, in this order of preference:\n+\n+1. If the **Since** run parameter above is a real date (not `not set`), mine\n+   PRs merged on/after that date.\n+2. Otherwise, read the **cache memory** for a marker file named\n+   `last-run.txt`. If it exists, mine PRs merged after that timestamp (\"since\n+   last run\").\n+3. Otherwise (first ever run, no marker), mine PRs merged within the last 6\n+   months, capped at the **Max PRs** run parameter.\n+\n+The **Source repository** run parameter above already resolves to the repository\n+this workflow runs in when no override was supplied, so mine PRs from whatever\n+`owner/repo` it shows.\n+\n+Note that the source repo (where PRs are mined) and the target repo (whose\n+`.github/` files you edit and open a PR against) are independent. You always\n+edit and open the PR against the **repository this workflow runs in**, even when\n+mining a different source. Report both the resolved source repo and the\n+effective range before fetching.\n+\n+## 2. Fetch PR review feedback\n+\n+Using the GitHub tools, list the in-scope **merged** PRs and, for each, collect\n+all three review signals:\n+\n+- **Inline review comments** — line-level comments on the diff.\n+- **Review summary bodies** — the top-level body of each submitted review.\n+- **PR conversation comments** — issue-style comments on the PR thread.\n+\n+Report the PR count and a sample of titles.\n+\n+## 3. Filter low-signal noise\n+\n+Keep only genuine **reviewer asks**. Drop:\n+\n+- Bot/automation accounts (logins ending in `[bot]`, plus known automation like\n+  `copilot-pull-request-reviewer`, `copilot-swe-agent`, `azure-sdk`).\n+- `LGTM` / `+1` / emoji-only / very short (< ~30 char) comments.\n+- Quoted-only replies that add no new feedback.\n+- **Author replies and status updates** — \"Fixed in abc123\", \"Intentional\",\n+  \"Not taken\", \"Agreed\", \"Good catch, done\". These are acknowledgements, not\n+  asks; do not count them toward the promotion threshold. If such a reply\n+  clarifies a real reviewer concern, trace the rule back to the original ask.\n+\n+Report the kept-vs-dropped ratio.\n+\n+## 4. Cluster into themes\n+\n+Group the surviving reviewer asks by recurring topic. Useful axes: file/path\n+patterns (e.g. `*_test.go`, `bicep/**`), recurring phrases (\"error wrap\", \"nil\n+check\", \"context cancellation\", \"secret\", \"logging\", \"accessibility\"), and\n+reviewer (does someone flag the same class of issue repeatedly?).\n+\n+Produce a themes table with, for each theme: a representative example, the source\n+PR numbers, the count, and a suggested home file.\n+\n+**Promotion threshold** — only promote a theme to a rule when it appears in **≥\n+Min PR count PRs from ≥ Min reviewer count distinct reviewers**, or when a\n+single reviewer flags it **≥ Min single-reviewer count times**. Use the values\n+from the **Run parameters** section above; when one is empty, default to **2**,\n+**2**, and **3** respectively. Discard everything below the threshold.\n+\n+## 5. Inventory existing customizations\n+\n+Look at the `.github/` folder on the main branch of the **repository this\n+workflow runs in** (the target repo, not the source repo you mined PRs from) to\n+figure out where and how to update the Copilot/agent instructions. That target\n+repo's main branch is the base for your subsequent pull request.\n+\n+## 6. Propose and apply edits\n+\n+For each promoted theme:\n+\n+1. **Already covered?** Strengthen the existing wording rather than duplicating.\n+2. **Has an obvious scoped home?** (e.g. Go-only → `.github/instructions/go.instructions.md`\n+   with `applyTo: '**/*.go'`) Edit that file.\n+3. **Otherwise** add it to `.github/copilot-instructions.md` under a clearly\n+   labeled section.\n+\n+Rules for the edits:\n+\n+- Prefer **minimal, additive** changes. Never rewrite existing instructions\n+  wholesale.\n+- **Cite source PRs** in a trailing italic line on every rule you add, so future\n+  maintainers can audit *why* it exists (e.g. `_Source: #7012, #7034_`).\n+- Keep language-specific rules in scoped `*.instructions.md` files, not in the\n+  always-on `copilot-instructions.md`.\n+- If a theme contradicts an existing instruction, do **not** silently overwrite —\n+  describe the conflict in the PR body and leave the existing text in place.\n+- Only modify files under `.github/` (and `AGENTS.md`). Do not touch source code,\n+  manifests, or anything else.\n+\n+If the repo has no `.github/` customization files at all, bootstrap a starter\n+`.github/copilot-instructions.md` from the top themes.\n+\n+## 7. Open or update the pull request\n+\n+Use the **create-pull-request** safe output to propose the changes on a stable\n+branch named `automated/update-instructions-from-pr-reviews`. Because the branch\n+name is preserved across runs, an existing unmerged PR on that branch is updated\n+in place; if the previous PR was already merged, a fresh one is opened.\n+\n+Keep the PR body short and scannable. Lead with a one-line link back to this\n+workflow so a reader knows where the proposed edits came from, then use compact\n+bulleted sections — no big tables, no per-file summaries. Structure it as:\n+\n+- A leading line linking to the source of these changes (this workflow), e.g.\n+  `Proposed by the [Update Instructions From PR Reviews](.github/workflows/update-instructions-from-pr-reviews.md) workflow.`\n+- **Settings** — a short bullet list:\n+  - Repo: the source `owner/repo` that was mined.\n+  - Range: the effective PR range (e.g. `since 2026-01-01` or `last 6 months`).\n+  - A link to the branch we've pushed our updates to. The text should include the short commit ID.\n+- **Stats** — a short bullet list:\n+  - Signal ratio: kept-vs-dropped comments.\n+  - Resolved PRs: the number of merged PRs examined.\n+- **PR comment themes** — one short bullet per promoted theme, each citing its\n+  source PRs (e.g. `Wrap errors with context — _#7012, #7034_`), with links to each PR.\n+- **Troubleshooting** — only when relevant (the issue-fallback case below), a\n+  short bullet list pointing the maintainer at how to enable real PRs:\n+  - https://github.github.com/gh-aw/reference/faq/#why-is-my-create-pull-request-workflow-failing-with-github-actions-is-not-permitted-to-create-or-approve-pull-requests\n+\n+Keep each theme bullet to a single line, but always preserve its source-PR\n+citations so the maintainer can audit why each rule was added.\n+\n+If the org blocks Actions from creating pull requests, the safe-output job\n+automatically falls back to opening an **issue** (assigned to `copilot`) with a\n+link to the pushed branch, so the proposed edits are never lost and Copilot can\n+open the PR from there. You don't need to do anything special — write the body\n+the same way; it's reused for the fallback issue.\n+\n+## 8. Record the run\n+\n+Write the current date (the high-water mark of mined PRs) to `last-run.txt` in\n+**cache memory** so the next scheduled run only processes newer PRs.\n+\n+## Guardrails\n+\n+- Never commit or push directly — all changes flow through the safe output.\n+- Cluster first; never write one rule per individual comment.\n+- Never cite zero source PRs on a promoted rule.\n+- Do not declare success from raw comment counts alone — judge signal quality.\n+- If there is no qualifying signal, make no edits and open no PR.",
+          "snapshot_ref": "fad27e20af8049ae4ddaebd14e6e8a141e81d4e4",
+          "snapshot_blob_sha": "779329f9ee9e5799e7b281148e905c067a41c129",
+          "snapshot_file": "snapshots/azure-dev__Azure__fad27e20af8049ae4ddaebd14e6e8a141e81d4e4__update-instructions-from-pr-reviews.md",
+          "snapshot_bytes": 13505,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-dev\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-dev\",\"generated_workflow_path\":\".github/workflows/update-instructions-from-pr-reviews.lock.yml\",\"generated_workflow_file\":\"update-instructions-from-pr-reviews.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-dev/blob/20e887dc49559da10c31da1032369a62b01852bb/.github/workflows/update-instructions-from-pr-reviews.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+      "source_full_name": "Azure/azure-dev",
+      "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+      "commit_sha": "b7994778e5cd2f994344052b04ad8ecbf76d8603",
+      "authored_at": "2026-06-19T21:35:52Z",
+      "committed_at": "2026-06-19T21:35:52Z",
+      "author_name": "JeffreyCA",
+      "author_email": "jeffreychen@microsoft.com",
+      "author_login": "JeffreyCA",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Use `copilot-requests: write` permission instead of PAT for agentic workflows (#8717)\n\n* Use `copilot-requests: write` permission instead of PAT for agentic workflows\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "5005eb6ef26c4281b3ac5de0b2cf08ecf836c390"
+      ],
+      "tree_sha": "4bc80dd5748c0083fe976134ef971b478b9eaef5",
+      "html_url": "https://github.com/Azure/azure-dev/commit/b7994778e5cd2f994344052b04ad8ecbf76d8603",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+          "source_full_name": "Azure/azure-dev",
+          "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+          "commit_sha": "b7994778e5cd2f994344052b04ad8ecbf76d8603",
+          "committed_at": "2026-06-19T21:35:52Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -22,7 +22,7 @@ on:\n       repository:\n         description: >-\n           Repo to mine PRs from, as `owner/repo`. Default: this repo. A private\n-          source repo needs read access via COPILOT_GITHUB_TOKEN.\n+          source repo needs `GH_AW_GITHUB_MCP_SERVER_TOKEN` with read access.\n         required: false\n         type: string\n       min_pr_count:\n@@ -51,6 +51,7 @@ on:\n # through the create-pull-request safe output in a separate, permission-scoped job.\n permissions:\n   contents: read\n+  copilot-requests: write\n   pull-requests: read\n   issues: read\n ",
+          "snapshot_ref": "b7994778e5cd2f994344052b04ad8ecbf76d8603",
+          "snapshot_blob_sha": "0fd36fd2f27354930ef1a5576a6d50bdcf5fe724",
+          "snapshot_file": "snapshots/azure-dev__Azure__b7994778e5cd2f994344052b04ad8ecbf76d8603__update-instructions-from-pr-reviews.md",
+          "snapshot_bytes": 13543,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-dev\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-dev\",\"generated_workflow_path\":\".github/workflows/update-instructions-from-pr-reviews.lock.yml\",\"generated_workflow_file\":\"update-instructions-from-pr-reviews.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-dev/blob/20e887dc49559da10c31da1032369a62b01852bb/.github/workflows/update-instructions-from-pr-reviews.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+      "source_full_name": "Azure/azure-dev",
+      "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+      "commit_sha": "830da92a150b2415883b18d598dd138d29868f01",
+      "authored_at": "2026-07-09T20:49:33Z",
+      "committed_at": "2026-07-09T20:49:33Z",
+      "author_name": "Victor Vazquez",
+      "author_email": "vhvb1989@gmail.com",
+      "author_login": "vhvb1989",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: eliminate cache-memory dependency in update-instructions workflow (#8739)\n\n* fix: eliminate cache-memory dependency in update-instructions workflow\n\nReplace the cache-memory tool (used to store last-run.txt) with a GitHub\nAPI query for the last successful workflow run. This fixes the false-positive\ncache-miss failure on first run, where the agent correctly reported\nmissing_data/cache_memory_miss but gh-aw's detection layer interpreted it\nas a prompt misconfiguration.\n\nThe workflow run history is the natural, always-available source of truth\nfor \"when did this last succeed\" — no external state to seed, evict, or\nmisread. This also avoids the 7-day cache eviction risk that could cause\nrepeated first-run behavior on a weekly schedule.\n\nFixes #8702\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: add actions toolset so agent can list workflow runs\n\nThe github MCP toolsets only had [pull_requests, issues, repos] but Step 1\nrequires listing workflow runs to find the last successful run date. Without\nthe actions toolset, the agent would always fall through to the 6-month scan.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* chore: regenerate lock file with gh-aw v0.81.6\n\nRecompile the lock file to reflect the cache-memory removal and actions\ntoolset addition. Also upgrades gh-aw infrastructure from v0.79.8 to\nv0.81.6 with updated container images and SHA-pinned digests.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "a0b482860f176a16a60eedde016b17717e119e82"
+      ],
+      "tree_sha": "fa573af21f289bf28e2c07ae32a6dac598c18fa0",
+      "html_url": "https://github.com/Azure/azure-dev/commit/830da92a150b2415883b18d598dd138d29868f01",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-dev:.github/workflows/update-instructions-from-pr-reviews.md",
+          "source_full_name": "Azure/azure-dev",
+          "md_path": ".github/workflows/update-instructions-from-pr-reviews.md",
+          "commit_sha": "830da92a150b2415883b18d598dd138d29868f01",
+          "committed_at": "2026-07-09T20:49:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 15,
+          "file_changes": 25,
+          "file_patch": "@@ -54,19 +54,17 @@ permissions:\n   copilot-requests: write\n   pull-requests: read\n   issues: read\n+  actions: read\n \n engine: copilot\n \n tools:\n   # Native GitHub MCP toolsets — no gh/jq/git needed. These let the agent list\n-  # merged PRs and read their reviews, inline comments, and conversation comments.\n+  # merged PRs, read their reviews/comments, and query workflow run history.\n   github:\n-    toolsets: [pull_requests, issues, repos]\n+    toolsets: [pull_requests, issues, repos, actions]\n   # Lets the agent read and edit the local .github/ customization files.\n   edit:\n-  # Remembers the last successful run date so \"since last run\" works with no\n-  # external state. The agent reads/writes a small marker here each run.\n-  cache-memory:\n \n safe-outputs:\n   create-pull-request:\n@@ -154,11 +152,13 @@ Decide which merged PRs to examine, in this order of preference:\n \n 1. If the **Since** run parameter above is a real date (not `not set`), mine\n    PRs merged on/after that date.\n-2. Otherwise, read the **cache memory** for a marker file named\n-   `last-run.txt`. If it exists, mine PRs merged after that timestamp (\"since\n-   last run\").\n-3. Otherwise (first ever run, no marker), mine PRs merged within the last 6\n-   months, capped at the **Max PRs** run parameter.\n+2. Otherwise, use the GitHub tools to list recent workflow runs for **this\n+   workflow** (`Update Instructions From PR Reviews`) in the repository this\n+   workflow runs in. Find the most recent **successful** (completed with\n+   `conclusion: success`) run and use its `run_started_at` timestamp as the\n+   starting point — mine PRs merged after that date.\n+3. Otherwise (no previous successful run found), mine PRs merged within the\n+   last 6 months, capped at the **Max PRs** run parameter.\n \n The **Source repository** run parameter above already resolves to the repository\n this workflow runs in when no override was supplied, so mine PRs from whatever\n@@ -280,11 +280,6 @@ link to the pushed branch, so the proposed edits are never lost and Copilot can\n open the PR from there. You don't need to do anything special — write the body\n the same way; it's reused for the fallback issue.\n \n-## 8. Record the run\n-\n-Write the current date (the high-water mark of mined PRs) to `last-run.txt` in\n-**cache memory** so the next scheduled run only processes newer PRs.\n-\n ## Guardrails\n \n - Never commit or push directly — all changes flow through the safe output.",
+          "snapshot_ref": "830da92a150b2415883b18d598dd138d29868f01",
+          "snapshot_blob_sha": "c00747308df1c4bab2fad8ebece33630de43f492",
+          "snapshot_file": "snapshots/azure-dev__Azure__830da92a150b2415883b18d598dd138d29868f01__update-instructions-from-pr-reviews.md",
+          "snapshot_bytes": 13431,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-dev\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-dev\",\"generated_workflow_path\":\".github/workflows/update-instructions-from-pr-reviews.lock.yml\",\"generated_workflow_file\":\"update-instructions-from-pr-reviews.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-dev/blob/20e887dc49559da10c31da1032369a62b01852bb/.github/workflows/update-instructions-from-pr-reviews.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

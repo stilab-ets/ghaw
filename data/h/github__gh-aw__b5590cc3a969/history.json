@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/uk-ai-operational-resilience.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/uk-ai-operational-resilience.lock.yml",
+      "generated_workflow_file": "uk-ai-operational-resilience.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/uk-ai-operational-resilience.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 5
+    },
+    "collected_at_utc": "2026-08-04T11:47:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+      "commit_sha": "16e873bcaa6baa46a3ecc570699e15aea6d9a9ae",
+      "authored_at": "2026-05-17T21:19:04Z",
+      "committed_at": "2026-05-17T21:19:04Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add UK AI operational resilience workflow with recent-change triage and sub-agent risk governance (#32904)\n\n* Add UK AI operational resilience workflow spec\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Refine UK AI resilience workflow and compile lockfile\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\nCo-authored-by: Peli de Halleux <pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "95dca684f0da83a26d68e7ba16da7e36599165e6"
+      ],
+      "tree_sha": "fe16c26694261d6f2502cf79c6c39bace161364e",
+      "html_url": "https://github.com/github/gh-aw/commit/16e873bcaa6baa46a3ecc570699e15aea6d9a9ae",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+          "commit_sha": "16e873bcaa6baa46a3ecc570699e15aea6d9a9ae",
+          "committed_at": "2026-05-17T21:19:04Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 286,
+          "file_deletions": 0,
+          "file_changes": 286,
+          "file_patch": "@@ -0,0 +1,286 @@\n+---\n+name: UK AI Operational Resilience\n+description: Applies UK public-sector AI open-code and vulnerability-risk guidance using recent-change governance, risk scoring, and remediation orchestration\n+on:\n+  schedule:\n+    - cron: daily on weekdays\n+  workflow_dispatch:\n+    inputs:\n+      lookback_days:\n+        description: \"How many days of recent changes to analyze (1-30)\"\n+        required: false\n+        default: \"7\"\n+      force_full_scan:\n+        description: \"Ignore recent-change focus and run wider analysis\"\n+        required: false\n+        default: false\n+        type: boolean\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+  security-events: read\n+tracker-id: uk-ai-operational-resilience\n+engine: copilot\n+strict: true\n+timeout-minutes: 30\n+tools:\n+  cli-proxy: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, actions, repos, code_security]\n+  bash:\n+    - \"git *\"\n+    - \"cat *\"\n+    - \"jq *\"\n+    - \"ls *\"\n+    - \"find *\"\n+    - \"wc *\"\n+    - \"grep *\"\n+  edit:\n+pre-agent-steps:\n+  - name: Pre-compute recent changes governance context\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+      LOOKBACK_DAYS: ${{ github.event.inputs.lookback_days || '7' }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent\n+\n+      REPO=\"${GITHUB_REPOSITORY}\"\n+      DAYS=\"${LOOKBACK_DAYS}\"\n+      if ! [[ \"$DAYS\" =~ ^[0-9]+$ ]]; then DAYS=7; fi\n+      if [ \"$DAYS\" -lt 1 ]; then DAYS=1; fi\n+      if [ \"$DAYS\" -gt 30 ]; then DAYS=30; fi\n+\n+      SINCE=\"$(date -u -d \"-${DAYS} days\" +%Y-%m-%dT%H:%M:%SZ)\"\n+      echo \"$SINCE\" >/tmp/gh-aw/agent/since.txt\n+\n+      gh api --paginate \"repos/${REPO}/commits?since=${SINCE}&per_page=100\" | jq -s 'add // []' > /tmp/gh-aw/agent/recent-commits.json\n+      gh api --paginate \"repos/${REPO}/issues?state=open&labels=security&per_page=100\" | jq -s 'add // []' > /tmp/gh-aw/agent/open-security-issues.json\n+      gh api --paginate \"repos/${REPO}/code-scanning/alerts?state=open&per_page=100\" | jq -s 'add // []' > /tmp/gh-aw/agent/open-code-scanning-alerts.json || echo \"[]\" >/tmp/gh-aw/agent/open-code-scanning-alerts.json\n+      gh api --paginate \"repos/${REPO}/secret-scanning/alerts?state=open&per_page=100\" | jq -s 'add // []' > /tmp/gh-aw/agent/open-secret-scanning-alerts.json || echo \"[]\" >/tmp/gh-aw/agent/open-secret-scanning-alerts.json\n+\n+      jq -r '\n+        [.[].commit.message]\n+        | map(select(type==\"string\"))\n+        | map(\n+            if test(\"security|vuln|cve|patch|auth|secret|token|permissions|hardening\"; \"i\")\n+            then .\n+            else empty\n+            end\n+          )' /tmp/gh-aw/agent/recent-commits.json > /tmp/gh-aw/agent/security-signal-commits.json\n+\n+      {\n+        echo \"## UK AI Governance Pre-compute\"\n+        echo \"- Repository: ${REPO}\"\n+        echo \"- Lookback days: ${DAYS}\"\n+        echo \"- Since: ${SINCE}\"\n+        echo \"- Commits in window: $(jq 'length' /tmp/gh-aw/agent/recent-commits.json)\"\n+        echo \"- Security-signal commits: $(jq 'length' /tmp/gh-aw/agent/security-signal-commits.json)\"\n+        echo \"- Open security issues: $(jq 'length' /tmp/gh-aw/agent/open-security-issues.json)\"\n+        echo \"- Open code scanning alerts: $(jq 'length' /tmp/gh-aw/agent/open-code-scanning-alerts.json)\"\n+        echo \"- Open secret scanning alerts: $(jq 'length' /tmp/gh-aw/agent/open-secret-scanning-alerts.json)\"\n+      } > /tmp/gh-aw/agent/uk-ai-governance-context.md\n+imports:\n+  - uses: shared/daily-audit-base.md\n+    with:\n+      title-prefix: \"[uk ai resilience] \"\n+      expires: 3d\n+  - shared/observability-otlp.md\n+---\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# UK AI Open Code Risk & Resilience Governance\n+\n+Apply the UK public-sector guidance:\n+https://www.gov.uk/guidance/ai-open-code-and-vulnerability-risk-in-the-public-sector\n+\n+Use a **recent-changes focus strategy** to prioritize repository areas that changed within the selected lookback window, then evaluate operational resilience instead of relying on concealment.\n+\n+## Inputs (pre-computed)\n+\n+Read these files first:\n+\n+- `/tmp/gh-aw/agent/uk-ai-governance-context.md`\n+- `/tmp/gh-aw/agent/recent-commits.json`\n+- `/tmp/gh-aw/agent/security-signal-commits.json`\n+- `/tmp/gh-aw/agent/open-security-issues.json`\n+- `/tmp/gh-aw/agent/open-code-scanning-alerts.json`\n+- `/tmp/gh-aw/agent/open-secret-scanning-alerts.json`\n+\n+If all of these are empty/zero and this is not a forced full scan, call `noop` with a brief summary.\n+\n+## Strategy\n+\n+1. **Recent-changes first**\n+   - Focus on components, files, workflows, and dependencies touched in the lookback window.\n+   - Expand scope only if risk signals indicate systemic gaps.\n+2. **Resilience over secrecy**\n+   - Evaluate recoverability and remediation velocity.\n+   - Do not recommend repository hiding as a default control.\n+3. **Operational governance loop**\n+   - Classification → control verification → AI-aware risk scoring → decision → remediation tasks.\n+\n+## Required Workflow\n+\n+### Phase 1 — Build a lightweight asset graph\n+\n+From recent commits and open alerts, identify:\n+\n+- repository segments and changed surfaces\n+- likely services/runtime areas\n+- dependencies implicated by alerts or updates\n+- ownership signals (maintainers/reviewers/escalation clues)\n+\n+Use the `asset-tier-classifier` sub-agent for concise structured output.\n+\n+### Phase 2 — Verify control domains\n+\n+Verify and summarize evidence for:\n+\n+- ownership controls\n+- SDLC controls\n+- dependency controls\n+- secret exposure controls\n+- runtime observability controls\n+- recovery controls (patch/rollback readiness)\n+\n+Use the `control-verifier` sub-agent.\n+\n+### Phase 3 — AI-aware risk scoring\n+\n+Use the `ai-risk-scorer` sub-agent to score each high-priority changed area with these dimensions:\n+\n+- exposure amplification\n+- patchability\n+- detectability\n+- operational fragility\n+- ownership confidence\n+\n+Assign each area to one tier:\n+\n+- Tier A — Open Safe\n+- Tier B — Open With Conditions\n+- Tier C — Restricted Pending Review\n+- Tier D — Decommission Candidate\n+\n+### Phase 4 — Decisioning and remediation\n+\n+For each Tier B/C/D area:\n+\n+- define explicit remediation actions\n+- assign SLA urgency (critical/high/medium/low)\n+- define human-review triggers where confidence is low or risk is severe\n+- define exception governance fields where applicable:\n+  - threat hypothesis\n+  - exploit acceleration claim\n+  - operational weakness\n+  - expiry date\n+  - mitigation plan\n+\n+### Phase 5 — Continuous reassessment outputs\n+\n+Create one discussion report with:\n+\n+1. Executive summary\n+2. Asset graph summary (recent-change scoped)\n+3. Tier classification table\n+4. Control verification gaps\n+5. Risk-scoring table and rationale\n+6. Remediation queue with SLAs\n+7. Exception register (if any)\n+8. Operational metrics baseline:\n+   - MTTR proxy\n+   - ownership coverage\n+   - unsupported dependency ratio\n+   - exception aging\n+   - exposure without recovery capability\n+\n+## Sub-agent orchestration rules\n+\n+- Prefer dispatching all three sub-agents in one parallel tool-use block before synthesis. If your engine/runtime cannot do true parallel dispatch, run them sequentially in this order: `asset-tier-classifier` → `control-verifier` → `ai-risk-scorer`.\n+- Treat sub-agent outputs as structured evidence and cite them in final conclusions.\n+- If a sub-agent fails once, retry once; if it fails again, proceed with partial confidence and record that limitation.\n+\n+## Guardrails\n+\n+- Keep permissions read-only and use safe outputs only.\n+- Prefer concrete, verifiable findings over speculative claims.\n+- Never recommend permanent hidden-repo exceptions; all exceptions must be temporary and auditable.\n+- Prioritize actions that improve remediation velocity and operational resilience.\n+\n+{{#runtime-import shared/noop-reminder.md}}\n+\n+## agent: `asset-tier-classifier`\n+---\n+description: Builds recent-change-scoped asset graph candidates and proposes initial A/B/C/D tier hypotheses\n+model: small\n+---\n+You are a governance classification specialist.\n+\n+Given recent commits and open security signals, produce compact JSON with:\n+- `assets`: array of changed areas with `name`, `surface`, `owner_signal`, `dependency_signal`\n+- `initial_tier`: one of A/B/C/D\n+- `confidence`: low|medium|high\n+- `notes`: short rationale\n+\n+Output contract:\n+- Return a single JSON object with keys exactly: `assets`, `summary`, `errors`.\n+- `summary` must include `total_assets` and `high_concern_assets`.\n+- `errors` must be an array (empty when none).\n+\n+Focus on changed surfaces first; avoid broad full-repo expansion unless evidence requires it.\n+\n+## agent: `control-verifier`\n+---\n+description: Verifies ownership, SDLC, dependency, secret, runtime, and recovery controls for changed areas\n+model: small\n+---\n+You are a control verification specialist.\n+\n+For each changed area, output JSON with:\n+- `ownership_controls`\n+- `sdlc_controls`\n+- `dependency_controls`\n+- `secret_controls`\n+- `runtime_controls`\n+- `recovery_controls`\n+\n+Each control section must include:\n+- `status`: pass|partial|fail\n+- `evidence`: concise bullets\n+- `gap`: single most important missing control\n+\n+Output contract:\n+- Return a single JSON object with keys exactly: `areas`, `summary`, `errors`.\n+- `areas` must be an array where each item has `asset_name` and the six control sections above.\n+- `summary` must include `pass_count`, `partial_count`, and `fail_count`.\n+- `errors` must be an array (empty when none).\n+\n+## agent: `ai-risk-scorer`\n+---\n+description: Produces AI-aware risk scoring and action tiering for recently changed areas\n+model: small\n+---\n+You are an AI-era operational risk scorer.\n+\n+For each candidate area, provide JSON fields:\n+- `exposure_amplification`: 1-5\n+- `patchability`: 1-5\n+- `detectability`: 1-5\n+- `operational_fragility`: 1-5\n+- `ownership_confidence`: 1-5\n+- `tier`: A|B|C|D\n+- `decision`: maintain-open|open-with-conditions|restrict-pending-review|decommission-candidate\n+- `remediation_priority`: critical|high|medium|low\n+- `reason`\n+\n+Scoring philosophy: higher exposure+fragility and lower patchability+detectability+ownership implies higher operational risk.\n+\n+Output contract:\n+- Return a single JSON object with keys exactly: `scores`, `summary`, `errors`.\n+- `scores` must be an array of scored areas using the fields above.\n+- `summary` must include `tier_counts` and `highest_priority_assets`.\n+- `errors` must be an array (empty when none).",
+          "snapshot_ref": "16e873bcaa6baa46a3ecc570699e15aea6d9a9ae",
+          "snapshot_blob_sha": "b52c1ff201aefdf4b2fc589830d9449ed0c07cab",
+          "snapshot_file": "snapshots/gh-aw__github__16e873bcaa6baa46a3ecc570699e15aea6d9a9ae__uk-ai-operational-resilience.md",
+          "snapshot_bytes": 10258,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/uk-ai-operational-resilience.lock.yml\",\"generated_workflow_file\":\"uk-ai-operational-resilience.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/uk-ai-operational-resilience.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+      "commit_sha": "80fcaca759dbeacc431e8ea54b4917aa3de63eab",
+      "authored_at": "2026-05-18T13:23:27Z",
+      "committed_at": "2026-05-18T13:23:27Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix broken OTLP shared import in UK AI operational resilience workflow (#33036)",
+      "parent_shas": [
+        "21ebd8983c19403aa9af4466dfb189ad11fe7577"
+      ],
+      "tree_sha": "fc7dc9e3bda185126663ff049178faaf6c139106",
+      "html_url": "https://github.com/github/gh-aw/commit/80fcaca759dbeacc431e8ea54b4917aa3de63eab",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+          "commit_sha": "80fcaca759dbeacc431e8ea54b4917aa3de63eab",
+          "committed_at": "2026-05-18T13:23:27Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -88,7 +88,7 @@ imports:\n     with:\n       title-prefix: \"[uk ai resilience] \"\n       expires: 3d\n-  - shared/observability-otlp.md\n+  - shared/otlp.md\n ---\n {{#runtime-import? .github/shared-instructions.md}}\n ",
+          "snapshot_ref": "80fcaca759dbeacc431e8ea54b4917aa3de63eab",
+          "snapshot_blob_sha": "f5d0bf6f137ceb4215d1c8d292b8726b019401a2",
+          "snapshot_file": "snapshots/gh-aw__github__80fcaca759dbeacc431e8ea54b4917aa3de63eab__uk-ai-operational-resilience.md",
+          "snapshot_bytes": 10244,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/uk-ai-operational-resilience.lock.yml\",\"generated_workflow_file\":\"uk-ai-operational-resilience.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/uk-ai-operational-resilience.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+      "commit_sha": "3950e7aff64d982c972810d83fc4369019f009af",
+      "authored_at": "2026-07-01T04:44:48Z",
+      "committed_at": "2026-07-01T04:44:48Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(uk-ai-resilience): create up to 2 labeled issues for top-priority findings (#42636)",
+      "parent_shas": [
+        "2c9ad2eb705bfb889af2f2b422f66e8fd85250c6"
+      ],
+      "tree_sha": "40b647dfcdcf0b473d5e2f1b7b9f8c46875f65c1",
+      "html_url": "https://github.com/github/gh-aw/commit/3950e7aff64d982c972810d83fc4369019f009af",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+          "commit_sha": "3950e7aff64d982c972810d83fc4369019f009af",
+          "committed_at": "2026-07-01T04:44:48Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 18,
+          "file_deletions": 1,
+          "file_changes": 19,
+          "file_patch": "@@ -30,7 +30,7 @@ tools:\n   cli-proxy: true\n   github:\n     mode: gh-proxy\n-    toolsets: [default, actions, repos, code_security]\n+    toolsets: [default, actions, repos, code_security, issues]\n   bash:\n     - \"git *\"\n     - \"cat *\"\n@@ -40,6 +40,11 @@ tools:\n     - \"wc *\"\n     - \"grep *\"\n   edit:\n+safe-outputs:\n+  create-issue:\n+    max: 2\n+    labels: [security, high-priority, ai-generated]\n+    title-prefix: \"[uk-ai-resilience] \"\n pre-agent-steps:\n   - name: Pre-compute recent changes governance context\n     env:\n@@ -199,6 +204,18 @@ Create one discussion report with:\n    - exception aging\n    - exposure without recovery capability\n \n+### Phase 6 — Create issues for high-priority items\n+\n+Create at most **2** GitHub issues per run for the highest-priority Tier B/C/D findings:\n+\n+- Prioritize Tier C/D findings first, then highest `remediation_priority` (`critical`, then `high`).\n+- Before creating an issue, check for duplicate open issues and skip duplicates.\n+- Each issue body must include:\n+  - tier and risk-scoring breakdown\n+  - remediation action and SLA urgency\n+  - discussion report link\n+- Do not exceed 2 issues in total for the run.\n+\n ## Sub-agent orchestration rules\n \n - Prefer dispatching all three sub-agents in one parallel tool-use block before synthesis. If your engine/runtime cannot do true parallel dispatch, run them sequentially in this order: `asset-tier-classifier` → `control-verifier` → `ai-risk-scorer`.",
+          "snapshot_ref": "3950e7aff64d982c972810d83fc4369019f009af",
+          "snapshot_blob_sha": "810482e95ed85ec420ff02f157dbe98098c66133",
+          "snapshot_file": "snapshots/gh-aw__github__3950e7aff64d982c972810d83fc4369019f009af__uk-ai-operational-resilience.md",
+          "snapshot_bytes": 10908,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/uk-ai-operational-resilience.lock.yml\",\"generated_workflow_file\":\"uk-ai-operational-resilience.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/uk-ai-operational-resilience.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+      "commit_sha": "3e487cf76bcf32f46a7ca3382d56398a8d2c18ff",
+      "authored_at": "2026-07-28T11:54:57Z",
+      "committed_at": "2026-07-28T11:54:57Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add cookie label to create-issue safe output in high-value security/analysis workflows (#48597)\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "f73c76188a8476b3ad3b3325c9aef975d95b6cbf"
+      ],
+      "tree_sha": "545015be73b1f80a1261934f79c1ffb1250e2655",
+      "html_url": "https://github.com/github/gh-aw/commit/3e487cf76bcf32f46a7ca3382d56398a8d2c18ff",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+          "commit_sha": "3e487cf76bcf32f46a7ca3382d56398a8d2c18ff",
+          "committed_at": "2026-07-28T11:54:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -43,7 +43,7 @@ tools:\n safe-outputs:\n   create-issue:\n     max: 2\n-    labels: [security, high-priority, ai-generated]\n+    labels: [security, high-priority, ai-generated, cookie]\n     title-prefix: \"[uk-ai-resilience] \"\n pre-agent-steps:\n   - name: Pre-compute recent changes governance context",
+          "snapshot_ref": "3e487cf76bcf32f46a7ca3382d56398a8d2c18ff",
+          "snapshot_blob_sha": "31618a4277b7cfe96d259dfdb7e9b5fd316d2c3e",
+          "snapshot_file": "snapshots/gh-aw__github__3e487cf76bcf32f46a7ca3382d56398a8d2c18ff__uk-ai-operational-resilience.md",
+          "snapshot_bytes": 10870,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/uk-ai-operational-resilience.lock.yml\",\"generated_workflow_file\":\"uk-ai-operational-resilience.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/uk-ai-operational-resilience.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+      "commit_sha": "9a9a67ff1b759de97722da8333824856fecaf039",
+      "authored_at": "2026-07-30T06:32:15Z",
+      "committed_at": "2026-07-30T06:32:15Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "refactor: consolidate MCP pagination guidance via shared/mcp-pagination.md (#49051)",
+      "parent_shas": [
+        "625f00a0800a97bfe7668b7921ad27388e86e99b"
+      ],
+      "tree_sha": "675227e132501a7e66e06a487bafd0ec947d4eb7",
+      "html_url": "https://github.com/github/gh-aw/commit/9a9a67ff1b759de97722da8333824856fecaf039",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/uk-ai-operational-resilience.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/uk-ai-operational-resilience.md",
+          "commit_sha": "9a9a67ff1b759de97722da8333824856fecaf039",
+          "committed_at": "2026-07-30T06:32:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -90,6 +90,7 @@ pre-agent-steps:\n         echo \"- Open secret scanning alerts: $(jq 'length' /tmp/gh-aw/agent/open-secret-scanning-alerts.json)\"\n       } > /tmp/gh-aw/agent/uk-ai-governance-context.md\n imports:\n+  - shared/mcp-pagination.md\n   - uses: shared/daily-audit-base.md\n     with:\n       title-prefix: \"[uk ai resilience] \"",
+          "snapshot_ref": "9a9a67ff1b759de97722da8333824856fecaf039",
+          "snapshot_blob_sha": "a711609aecb53054b98027985982417f89c38359",
+          "snapshot_file": "snapshots/gh-aw__github__9a9a67ff1b759de97722da8333824856fecaf039__uk-ai-operational-resilience.md",
+          "snapshot_bytes": 10899,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/uk-ai-operational-resilience.lock.yml\",\"generated_workflow_file\":\"uk-ai-operational-resilience.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/uk-ai-operational-resilience.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

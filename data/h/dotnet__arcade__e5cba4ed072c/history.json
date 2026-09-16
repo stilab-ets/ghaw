@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/arcade:.github/workflows/update-default-versions.md",
+    "source_full_name": "dotnet/arcade",
+    "source_owner": "dotnet",
+    "source_repo": "arcade",
+    "md_path": ".github/workflows/update-default-versions.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/arcade/blob/HEAD/.github/workflows/update-default-versions.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/arcade",
+      "generated_owner": "dotnet",
+      "generated_repo": "arcade",
+      "generated_workflow_path": ".github/workflows/update-default-versions.lock.yml",
+      "generated_workflow_file": "update-default-versions.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/arcade/blob/b50c0ce837bc015c94eda7e2c16ef5937ca2d0e4/.github/workflows/update-default-versions.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:25:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/arcade:.github/workflows/update-default-versions.md",
+      "source_full_name": "dotnet/arcade",
+      "md_path": ".github/workflows/update-default-versions.md",
+      "commit_sha": "822bb86a625c7b59d6f2ff003b2de196f6a58777",
+      "authored_at": "2026-06-12T07:41:40Z",
+      "committed_at": "2026-06-12T07:41:40Z",
+      "author_name": "Viktor Hofer",
+      "author_email": "7412651+ViktorHofer@users.noreply.github.com",
+      "author_login": "ViktorHofer",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflow to update DefaultVersions.props (#16993)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "d1ef17b417cdb2612c010e5d3f5f3d7dc1c86f0a"
+      ],
+      "tree_sha": "0086bf1821024f34714140ae90544a7e76f7a15c",
+      "html_url": "https://github.com/dotnet/arcade/commit/822bb86a625c7b59d6f2ff003b2de196f6a58777",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/arcade:.github/workflows/update-default-versions.md",
+          "source_full_name": "dotnet/arcade",
+          "md_path": ".github/workflows/update-default-versions.md",
+          "commit_sha": "822bb86a625c7b59d6f2ff003b2de196f6a58777",
+          "committed_at": "2026-06-12T07:41:40Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 184,
+          "file_deletions": 0,
+          "file_changes": 184,
+          "file_patch": "@@ -0,0 +1,184 @@\n+---\n+emoji: 📦\n+name: Update DefaultVersions.props\n+description: >-\n+  Dependabot-style agentic workflow that keeps the toolset version properties in\n+  the Arcade SDK's DefaultVersions.props (and any matching versions elsewhere in\n+  the repo) up to date by checking nuget.org and the configured NuGet feeds.\n+on:\n+  schedule: weekly\n+permissions:\n+  contents: read\n+strict: true\n+network:\n+  allowed:\n+    - defaults\n+    - dotnet\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[infra] \"\n+    draft: false\n+    if-no-changes: \"ignore\"\n+---\n+\n+# Update DefaultVersions.props\n+\n+You are an automated dependency updater, similar to dependabot, but for the\n+MSBuild version properties defined in the Arcade SDK that regular dependabot\n+cannot handle. Your job is to find newer versions of the packages referenced by\n+these properties and open a single consolidated pull request with the updates.\n+\n+## Source of truth\n+\n+The primary file is:\n+\n+```\n+src/Microsoft.DotNet.Arcade.Sdk/tools/DefaultVersions.props\n+```\n+\n+Only consider the `<PropertyGroup>` under the `Default versions` comment (the\n+block that defines properties such as `MicrosoftNETTestSdkVersion`,\n+`XUnitVersion`, etc.). Ignore the feature-flag properties (`UsingTool*`).\n+\n+## Step 1 — Determine the package ID for each version property\n+\n+These properties follow a deterministic naming convention:\n+\n+> **property name = the package ID with every `.` removed, plus the suffix `Version`**\n+\n+Examples:\n+\n+| Package ID | Version property |\n+|---|---|\n+| `Microsoft.NET.Test.Sdk` | `MicrosoftNETTestSdkVersion` |\n+| `Microsoft.TestPlatform` | `MicrosoftTestPlatformVersion` |\n+| `Microsoft.Signed.Wix` | `MicrosoftSignedWixVersion` |\n+| `Microsoft.WixToolset.Sdk` | `MicrosoftWixToolsetSdkVersion` |\n+| `Microsoft.ManifestTool.CrossPlatform` | `MicrosoftManifestToolCrossPlatformVersion` |\n+| `Microsoft.VisualStudioEng.MicroBuild.Core` | `MicrosoftVisualStudioEngMicroBuildCoreVersion` |\n+| `xunit` | `XUnitVersion` |\n+| `MSTest` | `MSTestVersion` |\n+| `vswhere` | `VSWhereVersion` |\n+\n+Because removing the dots is lossy, reverse it by **generating candidate package\n+IDs** (inserting dots at plausible PascalCase boundaries) and **validating** each\n+candidate against the feeds (Step 2). A candidate is correct only if the package\n+exists AND `candidateId.Replace(\".\", \"\")` equals the property name minus the\n+trailing `Version`, compared case-insensitively. Several dot placements can map\n+to the same property name, so the feed lookup is what disambiguates — e.g.\n+`MicrosoftVisualStudioEngMicroBuildCoreVersion` could be split as\n+`Microsoft.VisualStudio.Eng.MicroBuild.Core` or\n+`Microsoft.VisualStudioEng.MicroBuild.Core`, and only the latter actually exists\n+on the feeds. **Never invent a package ID that you have not confirmed exists.**\n+\n+Skip a property when:\n+- You cannot confidently determine and validate a package ID — **skip it**, do\n+  not guess.\n+- Its value is an MSBuild property reference such as `$(ArcadeSdkVersion)` — these\n+  are produced in-repo or flow via Maestro / `Version.Details.xml` and must not\n+  be touched.\n+- The property is marked as **opt-out** by a comment on the line directly above\n+  it that contains the marker `no-auto-update` (e.g.\n+  `<!-- no-auto-update: <reason> -->`). Some packages require coordinated manual\n+  changes (for example a major Wix upgrade) and must not be bumped automatically.\n+  Leave such properties unchanged.\n+\n+Known exceptions to the naming convention (read the inline comments in the file):\n+- `MicrosoftVSSDKBuildToolsDefaultVersion` maps to the package\n+  `Microsoft.VSSDK.BuildTools` (the property is intentionally renamed; see the\n+  comment above it).\n+\n+## Step 2 — Find newer versions\n+\n+For every property with a resolved package ID, look for a newer version on **all**\n+of the following:\n+\n+1. **nuget.org** — always check this explicitly. Many of these packages are only\n+   mirrored to the dotnet-public feed on demand, so nuget.org frequently has a\n+   newer version first. Query the flat-container API:\n+   `https://api.nuget.org/v3-flatcontainer/<id-lowercase>/index.json`\n+2. **Every feed configured in `NuGet.config`** at the repo root (the\n+   `dotnet-public`, `dotnet-tools`, `dotnet-eng`, `dotnet9/10/11`, etc. feeds on\n+   `pkgs.dev.azure.com`). Use each feed's flat-container API, e.g.\n+   `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/flat2/<id-lowercase>/index.json`\n+\n+Use `curl` from bash for these requests.\n+\n+Version selection rules:\n+- **Prereleases / previews are allowed.** Many of these properties already point\n+  at preview or build-stamped versions, so do not restrict to stable releases.\n+  Pick the highest version available across the feeds using NuGet version\n+  ordering semantics.\n+- Only ever move a property **forward** to a higher version than its current\n+  value. Never downgrade.\n+- **Major version bumps are allowed by default** — pick the highest version\n+  available across the feeds, even when that crosses a major version boundary.\n+  **Exception:** if the line directly above the property carries a comment\n+  containing the marker `minor-patch-only` (e.g.\n+  `<!-- minor-patch-only: <reason> -->`), restrict the update to versions that\n+  share the **same major version** as the current value (i.e. only minor/patch\n+  bumps). Such packages need coordinated manual work to cross a major, so leave a\n+  higher major for a human. If the only newer versions are in a higher major,\n+  leave the property unchanged.\n+- If the highest eligible version equals the current value, leave the property\n+  unchanged.\n+\n+## Step 3 — Apply the updates\n+\n+For each property that has a newer version:\n+\n+1. Update the value in `DefaultVersions.props`.\n+2. **Update the same version anywhere else it appears in the repository** so the\n+   build and documentation stay coherent — notably `Directory.Packages.props`\n+   (which intentionally mirrors several of these properties; see its comment) and\n+   docs such as `Documentation/AzureDevOps/SendingJobsToHelix.md`. Search the\n+   repo for the property name and for the literal old version string.\n+\n+## Step 4 — Handle packages not yet on dotnet-public\n+\n+If a newer version exists on **nuget.org** but is **not** available on the\n+`dotnet-public` feed, still make the change. The PR build will fail until the\n+package is mirrored — that is expected and acceptable. Add a row for it to a\n+\"Packages needing mirroring\" table in the PR description (see below). A human\n+must mirror these following `Documentation/MirroringPackages.md`.\n+\n+## Step 5 — Honor section comments / special instructions\n+\n+Some sections carry comments with special handling that you must follow:\n+\n+- **xunit block**: the comment links to `Documentation/update-xunit.md`. When\n+  updating any of `XUnitVersion`, `XUnitAnalyzersVersion`,\n+  `XUnitRunnerVisualStudioVersion`, `XUnitV3Version` or\n+  `MicrosoftTestingPlatformVersion`:\n+  - Keep the xunit versions **coherent** with each other (use a matching\n+    `xunit.analyzers` version).\n+  - Ensure `MicrosoftTestingPlatformVersion` remains **compatible** with\n+    `XUnitV3Version` (`xunit.v3.mtp-v1` depends on a minimum\n+    `Microsoft.Testing.Platform` version).\n+  - These xunit packages must be mirrored manually, so include them in the\n+    mirroring table when they are newer than what dotnet-public has.\n+\n+Always read and respect any future special-instruction comments you find in the\n+relevant property groups.\n+\n+## Pull request\n+\n+Open one pull request containing all of the version bumps with:\n+\n+- A clear title, e.g. `Update DefaultVersions.props package versions`.\n+- A body that contains:\n+  - A **summary table** of every property changed: property name, package ID, old\n+    version, new version, and the feed the new version was found on.\n+  - A **\"Packages needing mirroring\"** table (only if any apply) listing the\n+    package ID and version that a human must mirror, with a link to\n+    `Documentation/MirroringPackages.md`. Note in the PR that the build is\n+    expected to fail until these are mirrored.\n+\n+Use GitHub-flavored markdown and start any nested headings at `###`.\n+\n+## No-op guidance\n+\n+If, after checking every property, no newer versions are found, **do not open a\n+pull request** — call `noop` with a short explanation (e.g. \"All toolset\n+versions are already up to date.\"). The `if-no-changes: ignore` setting makes a\n+clean no-op run succeed silently.",
+          "snapshot_ref": "822bb86a625c7b59d6f2ff003b2de196f6a58777",
+          "snapshot_blob_sha": "4df42666e3bd2c11bd4bd4e4aa968c5112a47809",
+          "snapshot_file": "snapshots/arcade__dotnet__822bb86a625c7b59d6f2ff003b2de196f6a58777__update-default-versions.md",
+          "snapshot_bytes": 8341,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/arcade\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"arcade\",\"generated_workflow_path\":\".github/workflows/update-default-versions.lock.yml\",\"generated_workflow_file\":\"update-default-versions.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/arcade/blob/b50c0ce837bc015c94eda7e2c16ef5937ca2d0e4/.github/workflows/update-default-versions.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

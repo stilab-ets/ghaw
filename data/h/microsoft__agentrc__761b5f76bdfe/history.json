@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+    "source_full_name": "microsoft/agentrc",
+    "source_owner": "microsoft",
+    "source_repo": "agentrc",
+    "md_path": ".github/workflows/daily-doc-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/agentrc/blob/HEAD/.github/workflows/daily-doc-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/agentrc",
+      "generated_owner": "microsoft",
+      "generated_repo": "agentrc",
+      "generated_workflow_path": ".github/workflows/daily-doc-updater.lock.yml",
+      "generated_workflow_file": "daily-doc-updater.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/agentrc/blob/8d0c05c96dcfe674019359bcebd9ab6b251d2203/.github/workflows/daily-doc-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:58:19+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+      "source_full_name": "microsoft/agentrc",
+      "md_path": ".github/workflows/daily-doc-updater.md",
+      "commit_sha": "455c7ab25c3c1f69d048c04da37f3e8ebc9ed6aa",
+      "authored_at": "2026-02-27T23:58:53Z",
+      "committed_at": "2026-02-27T23:58:53Z",
+      "author_name": "Harald Kirschner",
+      "author_email": "hkirschner@microsoft.com",
+      "author_login": "digitarald",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add agentic workflows for CI doctor, doc updater, and code simplifier (#18)\n\n* feat: add agentic workflows for CI doctor, doc updater, and code simplifier\n\nAdd three GitHub Agentic Workflows (gh-aw):\n\n- ci-doctor: Investigates CI failures, creates diagnostic issues\n- daily-doc-updater: Scans merged PRs daily, updates documentation\n- code-simplifier: Analyzes recently modified code, proposes simplifications\n\nAll workflows use strict mode, scoped safe-outputs, tightened bash\nallowlists, and skip-if-match to prevent stacking open PRs.\n\n* fix: exclude auto-generated gh-aw files from prettier\n\n* fix: address review feedback on agentic workflows\n\n- Include 'cancelled' in ci-doctor if-condition to match protocol text\n- Remove cat-on-directory entries (cat docs/, cat src/, cat vscode-extension/src/)\n- Fix incomplete grep allowlists with explicit pattern and path args\n- Recompile all lock files\n\n* fix: remove npm scope from vscode extension name for vsce compatibility\n\n---------\n\nCo-authored-by: Harald Kirschner <digitarald@gmail.com>",
+      "parent_shas": [
+        "11e0eaa58700f9bb88902e9d0dee572f2145afa0"
+      ],
+      "tree_sha": "e052f9509de574c99c55c8e8b8eee4c9d6b044f0",
+      "html_url": "https://github.com/microsoft/agentrc/commit/455c7ab25c3c1f69d048c04da37f3e8ebc9ed6aa",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+          "source_full_name": "microsoft/agentrc",
+          "md_path": ".github/workflows/daily-doc-updater.md",
+          "commit_sha": "455c7ab25c3c1f69d048c04da37f3e8ebc9ed6aa",
+          "committed_at": "2026-02-27T23:58:53Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 222,
+          "file_deletions": 0,
+          "file_changes": 222,
+          "file_patch": "@@ -0,0 +1,222 @@\n+---\n+name: Daily Documentation Updater\n+description: Automatically reviews and updates documentation to ensure accuracy\n+  and completeness with recent code changes\n+on:\n+  schedule: daily\n+  skip-if-match: 'is:pr is:open in:title \"[docs]\"'\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tracker-id: daily-doc-updater\n+engine: copilot\n+strict: true\n+\n+network: defaults\n+\n+safe-outputs:\n+  create-pull-request:\n+    expires: 1d\n+    title-prefix: \"[docs] \"\n+    labels: [documentation, automation]\n+    reviewers: [copilot]\n+    draft: false\n+\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [default]\n+  edit:\n+  bash:\n+    - \"find docs -name '*.md'\"\n+    - \"find . -maxdepth 1 -name '*.md'\"\n+    - \"find .github -name '*.md' -o -name '*.instructions.md'\"\n+    - \"find vscode-extension -name '*.md'\"\n+    - \"cat README.md\"\n+    - \"cat CONTRIBUTING.md\"\n+    - \"cat CHANGELOG.md\"\n+    - \"cat .github/copilot-instructions.md\"\n+    - \"cat vscode-extension/README.md\"\n+    - \"grep -rn --include='*.md' '.' .\"\n+    - \"git log\"\n+    - \"git diff\"\n+    - \"git show\"\n+\n+timeout-minutes: 30\n+---\n+\n+# Daily Documentation Updater\n+\n+You are an AI documentation agent that automatically updates the project documentation based on recent code changes and merged pull requests.\n+\n+## Repository Context\n+\n+This is **@microsoft/agentrc** — a TypeScript CLI + VS Code extension for priming repositories for AI-assisted development.\n+\n+**Documentation locations:**\n+\n+- `README.md` — Main product overview, Quick Start, prerequisites, command reference\n+- `CONTRIBUTING.md` — Contribution workflow, code style, release process\n+- `CHANGELOG.md` — Version history\n+- `docs/product.md` — Product brief, maturity model, architecture decisions\n+- `docs/plugins.md` — Plugin system documentation, architecture, plugin contract\n+- `.github/copilot-instructions.md` — Copilot coding instructions for the repo\n+- `.github/instructions/*.instructions.md` — Scoped instructions for specific areas\n+- `vscode-extension/README.md` — VS Code extension readme\n+- `vscode-extension/resources/walkthrough/*.md` — Extension walkthrough content\n+\n+**Architecture:**\n+\n+- CLI entrypoint: `src/index.ts` → `src/cli.ts`\n+- Commands: `src/commands/` (thin orchestrators)\n+- Services: `src/services/` (business logic)\n+- Utils: `src/utils/` (output, fs, logger, repo, pr)\n+- VS Code Extension: `vscode-extension/src/`\n+\n+## Your Mission\n+\n+Scan the repository for merged pull requests and code changes from the last 24 hours, identify new features or changes that should be documented, and update the documentation accordingly.\n+\n+## Task Steps\n+\n+### 1. Scan Recent Activity (Last 24 Hours)\n+\n+Use the GitHub tools to:\n+\n+- Search for pull requests merged in the last 24 hours using `search_pull_requests` with a query like: `repo:${{ github.repository }} is:pr is:merged merged:>=YYYY-MM-DD` (replace YYYY-MM-DD with yesterday's date)\n+- Get details of each merged PR using `pull_request_read`\n+- Review commits from the last 24 hours using `list_commits`\n+- Get detailed commit information using `get_commit` for significant changes\n+\n+### 2. Analyze Changes\n+\n+For each merged PR and commit, analyze:\n+\n+- **Features Added**: New commands, CLI options, services, or capabilities\n+- **Features Removed**: Deprecated or removed functionality\n+- **Features Modified**: Changed behavior, updated APIs, or modified interfaces\n+- **Breaking Changes**: Any changes that affect existing users\n+- **Extension Changes**: New VS Code commands, views, or settings\n+\n+Create a summary of changes that should be documented.\n+\n+### 3. Review Existing Documentation\n+\n+Before making changes, read the project's documentation guidelines:\n+\n+```bash\n+cat .github/copilot-instructions.md\n+```\n+\n+Key conventions to follow:\n+\n+- `stdout` is for JSON only (with `--json`); all human-readable output goes to `stderr`\n+- All commands support `--json` and `--quiet` flags\n+- Commands return `CommandResult<T>` with `{ ok, status, data?, errors? }`\n+- ESM syntax everywhere, TypeScript strict mode\n+\n+### 4. Identify Documentation Gaps\n+\n+Review documentation files for:\n+\n+- New CLI commands or options not yet in README.md\n+- New services or APIs not reflected in architecture docs\n+- Changed behavior in existing commands\n+- New VS Code extension features not in the extension README\n+- Stale copilot-instructions that no longer match the codebase\n+\n+```bash\n+find docs -name '*.md'\n+find .github -name '*.md' -o -name '*.instructions.md'\n+find vscode-extension -name '*.md'\n+```\n+\n+### 5. Update Documentation\n+\n+For each missing or incomplete documentation:\n+\n+1. **Determine the correct file** based on the change type:\n+   - CLI commands/options → `README.md`\n+   - Architecture changes → `docs/product.md` or `docs/plugins.md`\n+   - Development workflow → `CONTRIBUTING.md`\n+   - Copilot coding context → `.github/copilot-instructions.md`\n+   - Area-specific instructions → `.github/instructions/*.instructions.md`\n+   - Extension features → `vscode-extension/README.md`\n+   - Extension walkthroughs → `vscode-extension/resources/walkthrough/`\n+\n+2. **Update the appropriate file(s)** using the edit tool:\n+   - Add new sections for new features\n+   - Update existing sections for modified features\n+   - Add deprecation notices for removed features\n+   - Include code examples where helpful\n+\n+3. **Maintain consistency** with existing documentation style:\n+   - Use the same tone and structure\n+   - Match the level of detail\n+   - Keep markdown formatting consistent\n+\n+### 6. Create Pull Request\n+\n+If you made any documentation changes:\n+\n+1. **Summarize your changes** in a clear commit message\n+2. **Call the `create_pull_request` MCP tool** from the safe-outputs MCP server\n+3. **Include in the PR description**:\n+   - List of features documented\n+   - Summary of changes made\n+   - Links to relevant merged PRs that triggered the updates\n+\n+**PR Title Format**: `[docs] Update documentation for features from [date]`\n+\n+**PR Description Template**:\n+\n+```markdown\n+## Documentation Updates - [Date]\n+\n+This PR updates the documentation based on features merged in the last 24 hours.\n+\n+### Features Documented\n+\n+- Feature 1 (from #PR_NUMBER)\n+- Feature 2 (from #PR_NUMBER)\n+\n+### Changes Made\n+\n+- Updated `path/to/file.md` to document Feature 1\n+- Added new section in `path/to/file.md` for Feature 2\n+\n+### Merged PRs Referenced\n+\n+- #PR_NUMBER - Brief description\n+\n+### Notes\n+\n+[Any additional notes or features that need manual review]\n+```\n+\n+### 7. Handle Edge Cases\n+\n+- **No recent changes**: If there are no merged PRs in the last 24 hours, exit gracefully without creating a PR\n+- **Already documented**: If all features are already documented, exit gracefully\n+- **Unclear features**: If a feature is complex and needs human review, note it in the PR description\n+\n+## Guidelines\n+\n+- **Be Thorough**: Review all merged PRs and significant commits\n+- **Be Accurate**: Ensure documentation accurately reflects the code changes\n+- **Be Selective**: Only document features that affect users (skip internal refactoring unless significant)\n+- **Be Clear**: Write clear, concise documentation that helps users\n+- **Link References**: Include links to relevant PRs and issues where appropriate\n+- **Follow Conventions**: Match the existing documentation style and tone\n+\n+## Important Notes\n+\n+- You have access to the edit tool to modify documentation files\n+- You have access to GitHub tools to search and review code changes\n+- You have access to bash commands to explore the documentation structure\n+- The safe-outputs create-pull-request will automatically create a PR with your changes\n+- Focus on user-facing features and changes that affect the developer experience",
+          "snapshot_ref": "455c7ab25c3c1f69d048c04da37f3e8ebc9ed6aa",
+          "snapshot_blob_sha": "9518038fca112291817b4ad25fe3f3e05df146ab",
+          "snapshot_file": "snapshots/agentrc__microsoft__455c7ab25c3c1f69d048c04da37f3e8ebc9ed6aa__daily-doc-updater.md",
+          "snapshot_bytes": 7611,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agentrc\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agentrc\",\"generated_workflow_path\":\".github/workflows/daily-doc-updater.lock.yml\",\"generated_workflow_file\":\"daily-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agentrc/blob/8d0c05c96dcfe674019359bcebd9ab6b251d2203/.github/workflows/daily-doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+      "source_full_name": "microsoft/agentrc",
+      "md_path": ".github/workflows/daily-doc-updater.md",
+      "commit_sha": "d0e78ac4c3465ca3e24a0036752d6849533d8f8f",
+      "authored_at": "2026-03-17T04:45:08Z",
+      "committed_at": "2026-03-17T04:45:08Z",
+      "author_name": "Harald Kirschner",
+      "author_email": "hkirschner@microsoft.com",
+      "author_login": "digitarald",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs: rewrite README as landing page, add 8 user-facing doc pages (#62)\n\n* docs: rewrite README as landing page, add 8 user-facing doc pages\n\n- README: concise pitch with Measure/Generate/Maintain sections\n- New: getting-started, concepts, commands, configuration, policies,\n  at-scale, ci-integration, extension\n- Moved developer docs to docs/dev/\n- Updated daily-doc-updater workflow paths\n\n* docs: address Copilot review comments\n\n- concepts.md: align pillar descriptions with actual checks\n- configuration.md: fix policy path resolution (cwd, not config-relative)\n- policies.md: clarify criteria.add requires TS/JS module policy\n- ci-integration.md: add Copilot CLI note for eval in CI\n- getting-started.md: add GH_TOKEN as auth alternative\n- daily-doc-updater.md: CLI changes map to docs/commands.md\n\n* docs: address PR review — fix doc updater refs, add Azure eval auth note\n\n* docs: fix fabricated @anthropic-ai package name in CI examples\n\n* docs: fix policy examples (add name field, remove criteria.add), add GH_TOKEN to README\n\n* docs: fix pr --provider azure, --policy wording, exit code, .ts policy note\n\n---------\n\nCo-authored-by: Harald Kirschner <digitarald@gmail.com>",
+      "parent_shas": [
+        "3144da7cbdfdafff6d73976b8e0458e0b3e6f9e9"
+      ],
+      "tree_sha": "e36f073d12b398baca1dcb347bf2c0b239b7db41",
+      "html_url": "https://github.com/microsoft/agentrc/commit/d0e78ac4c3465ca3e24a0036752d6849533d8f8f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+          "source_full_name": "microsoft/agentrc",
+          "md_path": ".github/workflows/daily-doc-updater.md",
+          "commit_sha": "d0e78ac4c3465ca3e24a0036752d6849533d8f8f",
+          "committed_at": "2026-03-17T04:45:08Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 11,
+          "file_deletions": 6,
+          "file_changes": 17,
+          "file_patch": "@@ -59,11 +59,14 @@ This is **@microsoft/agentrc** — a TypeScript CLI + VS Code extension for prim\n \n **Documentation locations:**\n \n-- `README.md` — Main product overview, Quick Start, prerequisites, command reference\n+- `README.md` — Main product overview, Quick Start, prerequisites\n+- `docs/commands.md` — CLI command reference and options\n - `CONTRIBUTING.md` — Contribution workflow, code style, release process\n - `CHANGELOG.md` — Version history\n-- `docs/product.md` — Product brief, maturity model, architecture decisions\n-- `docs/plugins.md` — Plugin system documentation, architecture, plugin contract\n+- `docs/getting-started.md` — Installation, prerequisites, first run walkthrough\n+- `docs/concepts.md` — Maturity model, readiness pillars, instructions, evaluation\n+- `docs/dev/product.md` — Product brief, maturity model, architecture decisions\n+- `docs/dev/plugins.md` — Plugin system documentation, architecture, plugin contract\n - `.github/copilot-instructions.md` — Copilot coding instructions for the repo\n - `.github/instructions/*.instructions.md` — Scoped instructions for specific areas\n - `vscode-extension/README.md` — VS Code extension readme\n@@ -123,7 +126,7 @@ Key conventions to follow:\n \n Review documentation files for:\n \n-- New CLI commands or options not yet in README.md\n+- New CLI commands or options not yet in `docs/commands.md`\n - New services or APIs not reflected in architecture docs\n - Changed behavior in existing commands\n - New VS Code extension features not in the extension README\n@@ -140,8 +143,10 @@ find vscode-extension -name '*.md'\n For each missing or incomplete documentation:\n \n 1. **Determine the correct file** based on the change type:\n-   - CLI commands/options → `README.md`\n-   - Architecture changes → `docs/product.md` or `docs/plugins.md`\n+   - CLI commands/options → `docs/commands.md`\n+   - Architecture changes → `docs/dev/product.md` or `docs/dev/plugins.md`\n+   - User-facing concepts → `docs/concepts.md`\n+   - Getting started content → `docs/getting-started.md`\n    - Development workflow → `CONTRIBUTING.md`\n    - Copilot coding context → `.github/copilot-instructions.md`\n    - Area-specific instructions → `.github/instructions/*.instructions.md`",
+          "snapshot_ref": "d0e78ac4c3465ca3e24a0036752d6849533d8f8f",
+          "snapshot_blob_sha": "9932257864c400c96945babee7e73c31df7050e0",
+          "snapshot_file": "snapshots/agentrc__microsoft__d0e78ac4c3465ca3e24a0036752d6849533d8f8f__daily-doc-updater.md",
+          "snapshot_bytes": 7959,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agentrc\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agentrc\",\"generated_workflow_path\":\".github/workflows/daily-doc-updater.lock.yml\",\"generated_workflow_file\":\"daily-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agentrc/blob/8d0c05c96dcfe674019359bcebd9ab6b251d2203/.github/workflows/daily-doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+      "source_full_name": "microsoft/agentrc",
+      "md_path": ".github/workflows/daily-doc-updater.md",
+      "commit_sha": "a9a15ad42ab2e7896971fea09a8de2a34d5ca710",
+      "authored_at": "2026-05-13T23:28:00Z",
+      "committed_at": "2026-05-13T23:28:10Z",
+      "author_name": "hkirschner_microsoft",
+      "author_email": "hkirschner_microsoft@github.com",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "hkirschner_microsoft",
+      "committer_email": "hkirschner_microsoft@github.com",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "chore(workflows): extend expires to 3d, add auto-merge for doc updater\n\n- Increase safe-output expiration from 1d to 3d across all gh-aw workflows\n- Add auto-merge: true to daily-doc-updater safe-output PR config\n- Maintenance schedule auto-adjusted from every 2h to every 12h\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "aa6ea2f67cc9536d19cbbbe5bf66556931160f77"
+      ],
+      "tree_sha": "f8f813d643b133b5c18e03c416d7181fc9cab389",
+      "html_url": "https://github.com/microsoft/agentrc/commit/a9a15ad42ab2e7896971fea09a8de2a34d5ca710",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agentrc:.github/workflows/daily-doc-updater.md",
+          "source_full_name": "microsoft/agentrc",
+          "md_path": ".github/workflows/daily-doc-updater.md",
+          "commit_sha": "a9a15ad42ab2e7896971fea09a8de2a34d5ca710",
+          "committed_at": "2026-05-13T23:28:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -20,10 +20,11 @@ network: defaults\n \n safe-outputs:\n   create-pull-request:\n-    expires: 1d\n+    expires: 3d\n     title-prefix: \"[docs] \"\n     labels: [documentation, automation]\n     reviewers: [copilot]\n+    auto-merge: true\n     draft: false\n \n tools:",
+          "snapshot_ref": "a9a15ad42ab2e7896971fea09a8de2a34d5ca710",
+          "snapshot_blob_sha": "84581c039f67cc95db8f66709b3765c04c232c35",
+          "snapshot_file": "snapshots/agentrc__microsoft__a9a15ad42ab2e7896971fea09a8de2a34d5ca710__daily-doc-updater.md",
+          "snapshot_bytes": 7980,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agentrc\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agentrc\",\"generated_workflow_path\":\".github/workflows/daily-doc-updater.lock.yml\",\"generated_workflow_file\":\"daily-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agentrc/blob/8d0c05c96dcfe674019359bcebd9ab6b251d2203/.github/workflows/daily-doc-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

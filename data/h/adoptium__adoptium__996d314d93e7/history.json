@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+    "source_full_name": "adoptium/adoptium",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium",
+    "md_path": ".github/workflows/release-blog-draft.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium/blob/HEAD/.github/workflows/release-blog-draft.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium",
+      "generated_workflow_path": ".github/workflows/release-blog-draft.lock.yml",
+      "generated_workflow_file": "release-blog-draft.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/release-blog-draft.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:24:33+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/release-blog-draft.md",
+      "commit_sha": "9af8501aded8bab57a6019194b8cd703f91cba4f",
+      "authored_at": "2026-07-23T12:55:38Z",
+      "committed_at": "2026-07-23T12:55:38Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Add Release Blog Draft agentic workflow\n\nDrafts an Adoptium release blog post near the end of a release period.\nRelease content, temurin release-status issues, releasePlan.cfg, and\ndelivery-repo activity are gathered deterministically; the agent only\nassesses the material and writes a review-ready draft matching the\npublished post format, filed as an issue for a human to review.",
+      "parent_shas": [
+        "2d9bbe162d551733f2031f1ea89e87cb6c84dfe7"
+      ],
+      "tree_sha": "a3feb8c04dba3fc7f43fe3e5a742e8d8dc8afec0",
+      "html_url": "https://github.com/adoptium/adoptium/commit/9af8501aded8bab57a6019194b8cd703f91cba4f",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/release-blog-draft.md",
+          "commit_sha": "9af8501aded8bab57a6019194b8cd703f91cba4f",
+          "committed_at": "2026-07-23T12:55:38Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 239,
+          "file_deletions": 0,
+          "file_changes": 239,
+          "file_patch": "@@ -0,0 +1,239 @@\n+---\n+name: Release Blog Draft\n+description: Drafts an Adoptium release blog post near the end of a release period. Release content, temurin release-summary issues, delivery-repo activity, and recent example posts are gathered deterministically; the agent only assesses and writes the draft, filing it as an issue for a human to review.\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      release_type:\n+        description: \"Release type: cpu (quarterly Critical Patch Update) or feature (new JDK version).\"\n+        required: true\n+        type: choice\n+        options:\n+          - cpu\n+          - feature\n+      jdk_versions:\n+        description: \"JDK versions in this release, comma-separated. Example: 8, 11, 17, 21, 25\"\n+        required: true\n+        type: string\n+      content_issue:\n+        description: \"Issue number in adoptium/adoptium.net holding the human-collected release content (e.g. 1053). Optional.\"\n+        required: false\n+        type: string\n+      since:\n+        description: \"Start of the release window (YYYY-MM-DD) for scanning delivery-repo activity. Defaults to 90 days ago.\"\n+        required: false\n+        type: string\n+\n+engine:\n+  id: copilot\n+\n+timeout-minutes: 20\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+# All GitHub data is fetched deterministically before the agent runs. This keeps\n+# the run cheap and reproducible: the agent reads files and writes prose, it does\n+# not go spelunking through the API itself. Every fetch targets public adoptium\n+# repositories and tolerates empty results rather than failing the run.\n+steps:\n+  - name: Gather release inputs\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+      INPUT_RELEASE_TYPE: ${{ inputs.release_type }}\n+      INPUT_JDK_VERSIONS: ${{ inputs.jdk_versions }}\n+      INPUT_CONTENT_ISSUE: ${{ inputs.content_issue }}\n+      INPUT_SINCE: ${{ inputs.since }}\n+    run: |\n+      set -euo pipefail\n+      AGENT_DIR=/tmp/gh-aw/agent\n+      mkdir -p \"$AGENT_DIR/example-posts\"\n+\n+      SINCE=\"${INPUT_SINCE:-}\"\n+      [ -n \"$SINCE\" ] || SINCE=$(date -u -d '90 days ago' '+%Y-%m-%d')\n+      echo \"$SINCE\" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' \\\n+        || { echo \"::error::Invalid since date '$SINCE' (expected YYYY-MM-DD)\"; exit 1; }\n+      echo \"Release type: ${INPUT_RELEASE_TYPE}\"\n+      echo \"JDK versions: ${INPUT_JDK_VERSIONS}\"\n+      echo \"Scanning delivery-repo activity since: $SINCE\"\n+\n+      # A tiny retry wrapper: GitHub search occasionally returns an empty 200.\n+      gh_retry() { # $@ = gh api args; prints stdout, empty string on repeated failure\n+        local attempt\n+        for attempt in 1 2 3; do\n+          if OUT=$(gh api \"$@\" 2>/dev/null); then printf '%s' \"$OUT\"; return 0; fi\n+          sleep 5\n+        done\n+        printf ''\n+        return 0\n+      }\n+\n+      # 1. Human-collected content issue (optional).\n+      if [ -n \"${INPUT_CONTENT_ISSUE:-}\" ]; then\n+        echo \"Fetching adoptium/adoptium.net#${INPUT_CONTENT_ISSUE}\"\n+        {\n+          gh_retry \"repos/adoptium/adoptium.net/issues/${INPUT_CONTENT_ISSUE}\" \\\n+            --jq '\"# \" + .title + \"\\n\\n\" + (.body // \"\")'\n+          echo\n+          echo \"## Comments\"\n+          echo\n+          gh_retry \"repos/adoptium/adoptium.net/issues/${INPUT_CONTENT_ISSUE}/comments\" \\\n+            --jq '.[] | \"### @\" + .user.login + \"\\n\\n\" + (.body // \"\") + \"\\n\"'\n+        } > \"$AGENT_DIR/content-issue.md\" || true\n+      else\n+        echo \"No content_issue provided.\" > \"$AGENT_DIR/content-issue.md\"\n+      fi\n+\n+      # 2. Release-tracking issues in adoptium/temurin, updated within the window.\n+      #    The team does not use a \"release summary\" title; the useful trackers are\n+      #    the release checklist, the per-platform release status matrix, and the\n+      #    release retrospective. Match those title conventions.\n+      gh_retry -X GET search/issues \\\n+        -f q=\"repo:adoptium/temurin in:title (\\\"Release Status\\\" OR \\\"Checklist for Temurin Release\\\" OR \\\"Retrospective\\\") updated:>=$SINCE\" \\\n+        -f per_page=30 \\\n+        --jq '[.items[] | {number, title, state, url: .html_url, updated: .updated_at, body: (.body // \"\" | .[0:12000])}]' \\\n+        > \"$AGENT_DIR/release-summaries.json\"\n+      [ -s \"$AGENT_DIR/release-summaries.json\" ] || echo '[]' > \"$AGENT_DIR/release-summaries.json\"\n+\n+      # 2b. The release plan from adoptium/mirror-scripts: its GA tags (e.g.\n+      #     jdk-26.0.2-ga) pin the exact upstream tags/SHAs for each version in\n+      #     the release, letting the agent derive full version+build strings.\n+      gh_retry \"repos/adoptium/mirror-scripts/contents/releasePlan.cfg\" \\\n+        --jq '.content' | base64 -d > \"$AGENT_DIR/releasePlan.cfg\" 2>/dev/null || true\n+      [ -s \"$AGENT_DIR/releasePlan.cfg\" ] || echo \"unavailable\" > \"$AGENT_DIR/releasePlan.cfg\"\n+\n+      # 3. Notable delivery changes: merged PRs since the window in the delivery repos.\n+      : > \"$AGENT_DIR/repo-activity.json\"\n+      echo '{}' > \"$AGENT_DIR/repo-activity.json\"\n+      TMP_ACT=$(mktemp)\n+      echo '{}' > \"$TMP_ACT\"\n+      for repo in temurin-build installer containers; do\n+        PRS=$(gh_retry -X GET search/issues \\\n+          -f q=\"repo:adoptium/$repo is:pr is:merged merged:>=$SINCE\" \\\n+          -f per_page=50 \\\n+          --jq '[.items[] | {number, title, url: .html_url, merged: .pull_request.merged_at}]')\n+        [ -n \"$PRS\" ] || PRS='[]'\n+        jq --arg r \"$repo\" --argjson prs \"$PRS\" '. + {($r): $prs}' \"$TMP_ACT\" > \"$TMP_ACT.next\" \\\n+          && mv \"$TMP_ACT.next\" \"$TMP_ACT\"\n+      done\n+      mv \"$TMP_ACT\" \"$AGENT_DIR/repo-activity.json\"\n+\n+      # 4. Recent published release posts, as house-style references. The site\n+      #    keeps posts at content/blog/<slug>/index.md; release announcements use\n+      #    slugs ending in \"-available\". Grab the latest CPU-update post (the\n+      #    \"eclipse-temurin-8u...\" series sorts chronologically by name) and the\n+      #    latest feature-release post (\"eclipse-temurin-NN-available\").\n+      DIRS=$(gh_retry \"repos/adoptium/adoptium.net/contents/content/blog\" \\\n+        --jq '[.[] | select(.type == \"dir\") | .name]')\n+      [ -n \"$DIRS\" ] || DIRS='[]'\n+      CPU_POST=$(echo \"$DIRS\" | jq -r '.[]' | grep -E '^eclipse-temurin-8u.*-available$' | sort | tail -1 || true)\n+      FEATURE_POST=$(echo \"$DIRS\" | jq -r '.[]' | grep -E '^eclipse-temurin-[0-9]+-available$' | sort -V | tail -1 || true)\n+      for slug in $CPU_POST $FEATURE_POST; do\n+        echo \"Fetching example post: $slug\"\n+        gh_retry \"repos/adoptium/adoptium.net/contents/content/blog/${slug}/index.md\" \\\n+          --jq '.content' | base64 -d > \"$AGENT_DIR/example-posts/${slug}.md\" 2>/dev/null || true\n+      done\n+      ls -la \"$AGENT_DIR/example-posts\" || true\n+\n+      echo \"=== Gathered files ===\"\n+      ls -la \"$AGENT_DIR\"\n+\n+safe-outputs:\n+  allowed-domains:\n+    - adoptium.net\n+    - hub.docker.com\n+    - github.com\n+  noop:\n+    report-as-issue: false\n+  create-issue:\n+    title-prefix: \"[release-blog] \"\n+    labels: [release, blog, draft, automation]\n+---\n+\n+# Release Blog Draft\n+\n+All the source material for this release has already been gathered for you before this step ran. Do NOT call GitHub tools or shell commands to fetch more data — everything you need is on disk under `/tmp/gh-aw/agent/`. Your job is to assess what is notable and write a single, review-ready draft of the release blog post, then file it as an issue.\n+\n+## What this release is\n+\n+The person who started this run provided:\n+\n+- **Release type**: read it from the workflow inputs echoed in the setup step. `cpu` means a quarterly Critical Patch Update that ships across all supported JDK versions (January, April, July, October). `feature` means a new JDK feature version (around March and April). The framing, headline, and emphasis differ between the two: a CPU post leads with security and the set of updated versions, while a feature post leads with what is new in the new JDK version.\n+- **JDK versions**: the comma-separated list of versions in this release.\n+\n+## Pre-gathered material\n+\n+- `/tmp/gh-aw/agent/content-issue.md` — the human-collected content from the `adoptium/adoptium.net` issue for this release, if a `content_issue` was provided. This is the **primary source of truth** for the narrative when present. If it says \"No content_issue provided\", rely on the other files and clearly flag where human input is still needed.\n+- `/tmp/gh-aw/agent/release-summaries.json` — release-tracking issues from `adoptium/temurin` updated during the release window: the release checklist, the per-platform release status matrix, and the release retrospective. Use these to confirm which versions and platforms are being delivered and to catch any release-specific notes.\n+- `/tmp/gh-aw/agent/releasePlan.cfg` — the release plan from `adoptium/mirror-scripts`. Its GA tags name the exact upstream version for each JDK in the release (e.g. `jdk-26.0.2-ga` corresponds to the `jdk-26.0.2+10` build tag; the two tags share a SHA in the version's mirror repo such as `adoptium/jdk26u`).\n+- `/tmp/gh-aw/agent/repo-activity.json` — merged pull requests since the window start in the delivery repositories (`temurin-build`, `installer`, `containers`), keyed by repository. Use these to identify notable changes in how binaries, installers, and containers are built and delivered. Summarize themes; do not list every PR.\n+- `/tmp/gh-aw/agent/example-posts/` — the most recent published CPU-update and feature-release posts from `adoptium.net`. **These are the format authority.** If they differ from the template below, follow the examples.\n+\n+## Output structure and format\n+\n+Adoptium release posts live at `content/blog/<slug>/index.md` in `adoptium/adoptium.net`, where the slug ends in `-available` (e.g. `eclipse-temurin-8u492-11031-17019-21011-2503-2601-available`, `eclipse-temurin-26-available`). Every post has this shape:\n+\n+```markdown\n+---\n+title: Eclipse Temurin <versions> Available\n+date: \"YYYY-MM-DD\"\n+author: pmc\n+description: Adoptium is happy to announce the immediate availability of Eclipse Temurin <versions>. As always, all binaries are thoroughly tested and available free of charge without usage restrictions on a wide range of platforms.\n+tags:\n+  - temurin\n+  - announcement\n+  - release-notes\n+---\n+\n+<Opening paragraph: the description sentence again, but with full version strings\n+including build numbers (e.g. 8u492-b09, 21.0.11+10), followed by the standard\n+links to the Temurin download page, DockerHub container images, and installable\n+packages.>\n+\n+## Fixes and Updates\n+\n+This release contains the following fixes and updates.\n+\n+- [Temurin <version> release notes](https://adoptium.net/temurin/release-notes/?version=<tag>)\n+<one bullet per JDK version in the release>\n+\n+## New and Noteworthy\n+\n+### <Change headline in title case>\n+\n+<Prose explaining the change from a user's perspective: what changed, why, and\n+what action (if any) they must take. Use bold for calls to action, code spans\n+for tags/package names, and bullet lists for platform/architecture coverage.>\n+\n+<repeat one ### subsection per notable change>\n+```\n+\n+- **Title**: CPU posts list every version, comma-separated with a final \"and\" (`Eclipse Temurin 8u492, 11.0.31, 17.0.19, 21.0.11, 25.0.3 and 26.0.1 Available`); feature posts are just `Eclipse Temurin <NN> Available`.\n+- **Author** is the literal string `pmc` (the site maps it to \"Adoptium PMC\") unless the content issue names someone else.\n+- Feature posts typically close with the standing **Contributing To Eclipse Temurin** and **Become An Eclipse Temurin Sustainer** sections — copy those from the feature example post verbatim.\n+- Full version strings with build numbers only appear in the body, not the title or description. Derive them from the gathered material: the `Release status per Platform, Version & Binary Type` issue in `release-summaries.json` lists the exact version+build strings (e.g. `21.0.11+10`, `8u492-b09`), and `releasePlan.cfg` cross-confirms them via the GA tags. Only flag a build number as a needs-human-input gap if neither source has it.\n+- **Release-notes links** use the exact form `https://adoptium.net/temurin/release-notes?version=jdk-25.0.3+9` (JDK 8 uses `jdk8u492-b09` style). These pages go live after publication, so keep the links even though they may 404 while drafting.\n+\n+## Your task\n+\n+1. Read the example posts first and confirm the structure above still matches. Read the content issue next, then the release summaries and repo activity.\n+\n+2. Write a complete release blog post draft in that exact format:\n+   - The `New and Noteworthy` subsections are where the release-specific value lives. Source them from the content issue first, then from themes in the repo activity (new platforms, installer or container improvements, build changes) — plain language a user would care about, not a raw PR list.\n+   - State clearly which JDK versions and platforms are delivered.\n+\n+3. Do not invent facts. Where the gathered material is silent on something a post would normally state (exact CVE list, release date, specific version strings), insert a short blockquote marker `> [!NOTE] Needs human input: <what is missing>` rather than guessing. It is better to hand a reviewer an honest gap than a confident error.\n+\n+4. File the draft by calling the `create_issue` safe-output tool exactly once. The issue title should name the release, for example `Draft: July 2026 CPU release blog post (JDK 8, 11, 17, 21)`. The issue body is the full draft, including its frontmatter, inside a fenced code block so a reviewer can copy it verbatim. Above the code block, state the suggested file path (`content/blog/<slug>/index.md` with a slug following the `-available` convention), a one-paragraph summary of what you based the draft on, and a bullet list of every `Needs human input` gap you flagged.\n+\n+## When there is nothing to write\n+\n+If every gathered file is empty — no content issue, no release summaries, and no repo activity — there is not enough material to draft a post. In that case call `noop` with a short explanation of what was missing instead of creating an issue. Your chat response is not the deliverable; the draft only exists if you call `create_issue` (or `noop`).",
+          "snapshot_ref": "9af8501aded8bab57a6019194b8cd703f91cba4f",
+          "snapshot_blob_sha": "15e7fe25e7b1704b8e422e5e15b2382cec23d599",
+          "snapshot_file": "snapshots/adoptium__adoptium__9af8501aded8bab57a6019194b8cd703f91cba4f__release-blog-draft.md",
+          "snapshot_bytes": 14163,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/release-blog-draft.lock.yml\",\"generated_workflow_file\":\"release-blog-draft.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/release-blog-draft.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/release-blog-draft.md",
+      "commit_sha": "3daa7a6a3c4007c5ef8e998e16e4335c84e550e2",
+      "authored_at": "2026-07-23T16:54:02Z",
+      "committed_at": "2026-07-23T16:54:02Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Add cspu (Critical Security Patch Update) release type",
+      "parent_shas": [
+        "9af8501aded8bab57a6019194b8cd703f91cba4f"
+      ],
+      "tree_sha": "d02b8fe4016010c3ad37d17585459d35728ebe66",
+      "html_url": "https://github.com/adoptium/adoptium/commit/3daa7a6a3c4007c5ef8e998e16e4335c84e550e2",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/release-blog-draft.md",
+          "commit_sha": "3daa7a6a3c4007c5ef8e998e16e4335c84e550e2",
+          "committed_at": "2026-07-23T16:54:02Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -5,11 +5,12 @@ on:\n   workflow_dispatch:\n     inputs:\n       release_type:\n-        description: \"Release type: cpu (quarterly Critical Patch Update) or feature (new JDK version).\"\n+        description: \"Release type: cpu (quarterly Critical Patch Update), cspu (Critical Security Patch Update), or feature (new JDK version).\"\n         required: true\n         type: choice\n         options:\n           - cpu\n+          - cspu\n           - feature\n       jdk_versions:\n         description: \"JDK versions in this release, comma-separated. Example: 8, 11, 17, 21, 25\"\n@@ -166,7 +167,7 @@ All the source material for this release has already been gathered for you befor\n \n The person who started this run provided:\n \n-- **Release type**: read it from the workflow inputs echoed in the setup step. `cpu` means a quarterly Critical Patch Update that ships across all supported JDK versions (January, April, July, October). `feature` means a new JDK feature version (around March and April). The framing, headline, and emphasis differ between the two: a CPU post leads with security and the set of updated versions, while a feature post leads with what is new in the new JDK version.\n+- **Release type**: read it from the workflow inputs echoed in the setup step. `cpu` means a quarterly Critical Patch Update that ships across all supported JDK versions (January, April, July, October). `cspu` means a Critical Security Patch Update, an out-of-band release containing only security patches; it may cover one or more versions depending on the patches delivered, and its versions use an extra dotted component (e.g. `26.0.2.1`). `feature` means a new JDK feature version (around March and April). The framing, headline, and emphasis differ: a CPU post leads with security and the set of updated versions; a CSPU post leads with the security fixes being delivered and states plainly that it is a security-only update to the affected version(s) — still scan the repo activity for other notable changes, but expect few; a feature post leads with what is new in the new JDK version.\n - **JDK versions**: the comma-separated list of versions in this release.\n \n ## Pre-gathered material",
+          "snapshot_ref": "3daa7a6a3c4007c5ef8e998e16e4335c84e550e2",
+          "snapshot_blob_sha": "5918ac08b4954bd56638c9c42cf89d1549cb6c6d",
+          "snapshot_file": "snapshots/adoptium__adoptium__3daa7a6a3c4007c5ef8e998e16e4335c84e550e2__release-blog-draft.md",
+          "snapshot_bytes": 14652,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/release-blog-draft.lock.yml\",\"generated_workflow_file\":\"release-blog-draft.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/release-blog-draft.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/release-blog-draft.md",
+      "commit_sha": "87ec6215d36e66aebd3023b9e91211d9298977f8",
+      "authored_at": "2026-07-23T17:32:28Z",
+      "committed_at": "2026-07-23T17:32:28Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Default since to the previous GA tag date of the first listed version",
+      "parent_shas": [
+        "3daa7a6a3c4007c5ef8e998e16e4335c84e550e2"
+      ],
+      "tree_sha": "adb30b1ac83ed1bdf513d09f9683b7b219293297",
+      "html_url": "https://github.com/adoptium/adoptium/commit/87ec6215d36e66aebd3023b9e91211d9298977f8",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/release-blog-draft.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/release-blog-draft.md",
+          "commit_sha": "87ec6215d36e66aebd3023b9e91211d9298977f8",
+          "committed_at": "2026-07-23T17:32:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 31,
+          "file_deletions": 9,
+          "file_changes": 40,
+          "file_patch": "@@ -21,7 +21,7 @@ on:\n         required: false\n         type: string\n       since:\n-        description: \"Start of the release window (YYYY-MM-DD) for scanning delivery-repo activity. Defaults to 90 days ago.\"\n+        description: \"Start of the release window (YYYY-MM-DD) for scanning delivery-repo activity. Defaults to the date of the last GA tag of the first listed JDK version (i.e. since that version last released), falling back to 90 days ago.\"\n         required: false\n         type: string\n \n@@ -58,14 +58,6 @@ steps:\n       AGENT_DIR=/tmp/gh-aw/agent\n       mkdir -p \"$AGENT_DIR/example-posts\"\n \n-      SINCE=\"${INPUT_SINCE:-}\"\n-      [ -n \"$SINCE\" ] || SINCE=$(date -u -d '90 days ago' '+%Y-%m-%d')\n-      echo \"$SINCE\" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' \\\n-        || { echo \"::error::Invalid since date '$SINCE' (expected YYYY-MM-DD)\"; exit 1; }\n-      echo \"Release type: ${INPUT_RELEASE_TYPE}\"\n-      echo \"JDK versions: ${INPUT_JDK_VERSIONS}\"\n-      echo \"Scanning delivery-repo activity since: $SINCE\"\n-\n       # A tiny retry wrapper: GitHub search occasionally returns an empty 200.\n       gh_retry() { # $@ = gh api args; prints stdout, empty string on repeated failure\n         local attempt\n@@ -77,6 +69,36 @@ steps:\n         return 0\n       }\n \n+      # Default the release window to \"since this version last released\": the\n+      # date of the most recent GA tag (e.g. jdk-21.0.11-ga, jdk8u492-ga) in the\n+      # mirror repo of the first listed JDK version. Fall back to 90 days.\n+      SINCE=\"${INPUT_SINCE:-}\"\n+      if [ -z \"$SINCE\" ]; then\n+        FIRST_V=$(echo \"$INPUT_JDK_VERSIONS\" | cut -d, -f1 | tr -d '[:space:]')\n+        MIRROR=\"jdk${FIRST_V}u\"\n+        # Walk GA tags newest-first and take the first one older than 21 days:\n+        # right around a release the newest GA tag is the release being drafted,\n+        # and the window should reach back to the *previous* one.\n+        CUTOFF=$(date -u -d '21 days ago' '+%Y-%m-%d')\n+        for GA_TAG in $(gh_retry \"repos/adoptium/$MIRROR/tags?per_page=100\" \\\n+            --jq '.[].name' | grep -- '-ga$' | grep -v dryrun | sort -rV | head -4); do\n+          TAG_DATE=$(gh_retry \"repos/adoptium/$MIRROR/commits/$GA_TAG\" \\\n+            --jq '.commit.committer.date' | cut -dT -f1)\n+          [ -n \"$TAG_DATE\" ] || continue\n+          if [ \"$TAG_DATE\" \\< \"$CUTOFF\" ]; then\n+            SINCE=$TAG_DATE\n+            echo \"Last released GA tag of JDK $FIRST_V: $GA_TAG ($SINCE)\"\n+            break\n+          fi\n+        done\n+      fi\n+      [ -n \"$SINCE\" ] || SINCE=$(date -u -d '90 days ago' '+%Y-%m-%d')\n+      echo \"$SINCE\" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' \\\n+        || { echo \"::error::Invalid since date '$SINCE' (expected YYYY-MM-DD)\"; exit 1; }\n+      echo \"Release type: ${INPUT_RELEASE_TYPE}\"\n+      echo \"JDK versions: ${INPUT_JDK_VERSIONS}\"\n+      echo \"Scanning delivery-repo activity since: $SINCE\"\n+\n       # 1. Human-collected content issue (optional).\n       if [ -n \"${INPUT_CONTENT_ISSUE:-}\" ]; then\n         echo \"Fetching adoptium/adoptium.net#${INPUT_CONTENT_ISSUE}\"",
+          "snapshot_ref": "87ec6215d36e66aebd3023b9e91211d9298977f8",
+          "snapshot_blob_sha": "d4a365ef33d7370cc223f868f38624edaa1f8d02",
+          "snapshot_file": "snapshots/adoptium__adoptium__87ec6215d36e66aebd3023b9e91211d9298977f8__release-blog-draft.md",
+          "snapshot_bytes": 15967,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/release-blog-draft.lock.yml\",\"generated_workflow_file\":\"release-blog-draft.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/release-blog-draft.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

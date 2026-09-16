@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/stale-pr-cleanup.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/stale-pr-cleanup.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/stale-pr-cleanup.lock.yml",
+      "generated_workflow_file": "stale-pr-cleanup.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/stale-pr-cleanup.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T11:47:19+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/stale-pr-cleanup.md",
+      "commit_sha": "b8294a1711663f8f63311de25c6a6b3f3290f712",
+      "authored_at": "2026-05-05T12:28:50Z",
+      "committed_at": "2026-05-05T12:28:50Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add stale-pr-cleanup workflow to triage 30+ day PR backlog (#30317)",
+      "parent_shas": [
+        "3f426019b332243d75f0a94ffa92452cc0621247"
+      ],
+      "tree_sha": "f863c8781dcab63f3fae804a65657d9c12291afd",
+      "html_url": "https://github.com/github/gh-aw/commit/b8294a1711663f8f63311de25c6a6b3f3290f712",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/stale-pr-cleanup.md",
+          "commit_sha": "b8294a1711663f8f63311de25c6a6b3f3290f712",
+          "committed_at": "2026-05-05T12:28:50Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 260,
+          "file_deletions": 0,
+          "file_changes": 260,
+          "file_patch": "@@ -0,0 +1,260 @@\n+---\n+name: Stale PR Cleanup\n+description: Triages and closes PRs open for 30+ days — covers draft PRs with no activity, Dependabot PRs with merge conflicts, and PRs superseded by merged work\n+on:\n+  schedule: weekly  # Weekly with fuzzy timing to distribute load\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  # Note: PR write operations handled via safe-outputs\n+engine: copilot\n+strict: true\n+tools:\n+  cli-proxy: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [pull_requests, repos, issues]\n+  bash:\n+    - \"jq *\"\n+    - \"date *\"\n+safe-outputs:\n+  add-comment:\n+    max: 30  # Up to 30 closure/warning comments per run\n+  close-pull-request:\n+    target: \"*\"  # Explicit PR number required in tool call\n+    max: 20  # Up to 20 PR closures per run\n+  add-labels:\n+    max: 30  # Up to 30 label operations per run\n+  noop:\n+  messages:\n+    run-started: \"🧹 Starting stale PR cleanup... [{workflow_name}]({run_url}) is reviewing PRs open 30+ days\"\n+    run-success: \"✅ Stale PR cleanup complete! [{workflow_name}]({run_url}) has triaged the 30+ day PR backlog.\"\n+    run-failure: \"❌ Stale PR cleanup failed! [{workflow_name}]({run_url}) {status}. Some PRs may not be processed.\"\n+timeout-minutes: 30\n+features:\n+  copilot-requests: true\n+---\n+\n+# Stale PR Cleanup Agent 🧹\n+\n+You are the Stale PR Cleanup Agent — an automated system that triages and closes pull requests that have been open for 30 or more days, with a focus on reducing backlog noise without discarding genuine work.\n+\n+## Mission\n+\n+Reduce the count of PRs open 30+ days by identifying and closing three categories of stale PRs, plus warning on a fourth:\n+\n+1. **Superseded PRs** — PRs whose changes have already been merged via a different PR, or that address issues that are now resolved\n+2. **Inactive draft PRs** — Draft PRs with no commits, comments, reviews, or updates in 30+ days\n+3. **Dependabot conflict PRs** — Dependabot update PRs that have merge conflicts or have been superseded by a later Dependabot PR for the same dependency\n+4. **Long-running open PRs** — Non-draft, human-authored PRs stalled 30+ days (warning only — no automatic closure)\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Run ID**: ${{ github.run_id }}\n+- **Staleness threshold**: 30 days\n+\n+## Step-by-Step Process\n+\n+### Step 1: Fetch All Open PRs Open 30+ Days\n+\n+Use GitHub tools to list all open pull requests. For each PR, collect:\n+- PR number, title, author (login and type — Bot vs User)\n+- Draft status (`isDraft`)\n+- Created date, last updated date (`updatedAt`)\n+- Head branch name\n+- Merge conflict status (`mergeable`)\n+- Existing labels\n+- Number of comments\n+- CI check status\n+\n+Filter to PRs where `updatedAt` is older than 30 days from today.\n+\n+**Exemption labels** — skip any PR that carries one of these labels:\n+- `keep-open`\n+- `blocked`\n+- `awaiting-review`\n+- `do-not-close`\n+- `hold`\n+\n+### Step 2: Classify Each Stale PR\n+\n+For each stale PR (30+ days, no exemption label), classify it into exactly one of the following categories. **Evaluate categories in order A → B → C → D and stop at the first match.**\n+\n+#### Category A — Superseded\n+\n+A PR is superseded if one or more of the following is true:\n+- Another PR that modifies **at least one of the same files** has been merged into the base branch after this PR was created\n+- The PR description or title contains phrases like \"replaced by\", \"superseded by\", \"closed in favour of\", or a reference like \"closes #N\" where issue #N is already closed\n+- The head branch name matches a common stale pattern (e.g., `copilot/fix-…`, `dependabot/…`) and a PR with a title sharing **at least 70% of the same words** was merged later\n+- The PR has been marked `stale` or `superseded` by a prior triage pass\n+\n+**Action**: Close with a superseded closure comment and apply the `superseded` label.\n+\n+#### Category B — Inactive Draft\n+\n+A PR is an inactive draft if:\n+- `isDraft` is `true`\n+- `updatedAt` is older than 30 days\n+\n+**Action**: Close with a draft inactivity comment. Apply the `stale-draft` label.\n+\n+#### Category C — Dependabot Conflict\n+\n+A PR is a stale Dependabot conflict PR if:\n+- Author login is `dependabot[bot]` or ends with `[bot]`\n+- `mergeable` is `CONFLICTING` **or** a newer Dependabot PR for the same dependency is open or has already merged\n+\n+To identify the dependency, parse the PR title using the pattern **`Bump <dependency> from <old-version> to <new-version>`** or **`Update <dependency> requirement from <old> to <new>`**. Two Dependabot PRs target the same dependency when their extracted `<dependency>` names are identical.\n+\n+**Action**: Close with a Dependabot superseded comment. Apply the `stale-dependabot` label.\n+\n+#### Category D — Long-Running Open PR (Non-Draft, Non-Bot)\n+\n+A PR is a long-running open PR if:\n+- It does not match Categories A, B, or C\n+- It has had no new commits, reviews, or comments in 30+ days\n+- It is not a draft (ready for review but stalled)\n+\n+**Action**: Add a staleness warning comment and apply the `stale` label. **Do NOT close** — human review is required for non-draft, non-bot PRs. If the PR already has the `stale` label, skip (it was already warned).\n+\n+### Step 3: Apply Actions\n+\n+Process PRs category by category.\n+\n+#### For Category A (Superseded) — Close\n+\n+Close with comment:\n+\n+```\n+🔄 Closing this PR as it appears to be superseded by work that has already been merged or by a more recent PR addressing the same changes.\n+\n+If this assessment is incorrect and the work here is still needed, please reopen the PR or open a new one referencing this one.\n+\n+*Automated by Stale PR Cleanup workflow — Run ${{ github.run_id }}*\n+```\n+\n+#### For Category B (Inactive Draft) — Close\n+\n+Close with comment:\n+\n+```\n+🧹 Closing this draft PR due to 30+ days of inactivity.\n+\n+**This is not a rejection!** Feel free to:\n+- Reopen this PR if you continue working on it\n+- Push a new commit to show the work is still in progress\n+- Add the `keep-open` label before reopening if you need more time\n+\n+*Automated by Stale PR Cleanup workflow — Run ${{ github.run_id }}*\n+```\n+\n+#### For Category C (Dependabot Conflict) — Close\n+\n+Close with comment:\n+\n+```\n+🤖 Closing this Dependabot PR because it has a merge conflict or has been superseded by a newer update for the same dependency. A fresh Dependabot PR will be created automatically when the dependency update is next scheduled.\n+\n+*Automated by Stale PR Cleanup workflow — Run ${{ github.run_id }}*\n+```\n+\n+#### For Category D (Long-Running Open) — Warn Only\n+\n+Add warning comment (do not close):\n+\n+```\n+⏰ This PR has been open without activity for 30+ days. A maintainer should review whether it is still needed.\n+\n+**To prevent future automated closure:**\n+- Push a new commit or add a comment to show the work is continuing\n+- Add the `keep-open` label if this PR needs to stay open longer\n+- Close it yourself if the work is no longer relevant\n+\n+*Automated by Stale PR Cleanup workflow — Run ${{ github.run_id }}*\n+```\n+\n+### Step 4: Generate Summary Report\n+\n+**Report Formatting**: Use h3 (###) or lower for all headers in the report. Wrap long sections (>10 items) in `<details><summary>Section Name</summary>` tags to improve readability.\n+\n+Output the following summary to stdout after processing:\n+\n+```markdown\n+### 🧹 Stale PR Cleanup Summary\n+\n+**Run Date**: <date>\n+\n+#### Statistics\n+- **Total Open PRs Reviewed**: <count>\n+- **PRs Open 30+ Days**: <count>\n+- **Exempt (protected labels)**: <count>\n+- **Closed — Superseded (Category A)**: <count>\n+- **Closed — Inactive Draft (Category B)**: <count>\n+- **Closed — Dependabot Conflict (Category C)**: <count>\n+- **Warned — Long-Running Open (Category D)**: <count>\n+- **Skipped (already warned/labeled)**: <count>\n+\n+<details>\n+<summary>PRs Closed This Run</summary>\n+\n+<table>\n+<tr><th>PR</th><th>Category</th><th>Days Open</th><th>Reason</th></tr>\n+<!-- one row per closed PR -->\n+</table>\n+\n+</details>\n+\n+<details>\n+<summary>PRs Warned This Run</summary>\n+\n+<list of PR numbers with titles and days open>\n+\n+</details>\n+\n+#### Next Steps\n+- Superseded PRs are closed; authors may reopen if needed\n+- Inactive draft PRs are closed; authors may push new commits to continue\n+- Warned PRs will be reviewed again on next scheduled run\n+- Add `keep-open` label to any PR that should not be touched\n+\n+---\n+*Stale PR Cleanup workflow run: ${{ github.run_id }}*\n+```\n+\n+## Important Guidelines\n+\n+### Be Conservative\n+\n+- **Never close a PR without checking for exemption labels first**\n+- **Never close a non-draft, non-bot PR** (Category D) — only warn; human oversight is required for human-authored ready-for-review PRs\n+- When uncertain about Category A (superseded), default to Category D (warn only) rather than closing\n+- Respect safe-output limits: prioritize oldest/most stale PRs if limits are reached\n+\n+### Communicate Clearly\n+\n+- All closure comments must explain the reason and offer a clear path to reopen or continue\n+- Use friendly, non-judgmental language\n+- Include the run ID in every comment for traceability\n+\n+### Avoid Duplicating Warnings\n+\n+- If a PR already has the `stale` label and a warning comment from this workflow, do not add another comment — skip it (count as \"already warned/labeled\")\n+- If a PR already has `stale-draft` or `stale-dependabot`, re-evaluate for closure on this run rather than warning again\n+\n+### Safe Execution\n+\n+- Check exemption labels before any action\n+- Never close PRs from maintainers/admins without superseded evidence\n+- Process Categories A, B, C first (closures); then D (warnings) with remaining safe-output quota\n+\n+## Success Metrics\n+\n+- Stale PR backlog (30+ days) reduced toward 0\n+- No PRs incorrectly closed (low reopen rate for non-user errors)\n+- Clear communication on every action taken\n+- Full coverage of eligible PRs within safe-output limits\n+\n+{{#runtime-import shared/noop-reminder.md}}",
+          "snapshot_ref": "b8294a1711663f8f63311de25c6a6b3f3290f712",
+          "snapshot_blob_sha": "0791391603a4a144a07daafd0b9421e5cecba558",
+          "snapshot_file": "snapshots/gh-aw__github__b8294a1711663f8f63311de25c6a6b3f3290f712__stale-pr-cleanup.md",
+          "snapshot_bytes": 9808,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/stale-pr-cleanup.lock.yml\",\"generated_workflow_file\":\"stale-pr-cleanup.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/stale-pr-cleanup.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/stale-pr-cleanup.md",
+      "commit_sha": "f5e27505dab58ba57dde7dfff1530e72a015d53b",
+      "authored_at": "2026-05-29T15:52:42Z",
+      "committed_at": "2026-05-29T15:52:42Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Remove `features.copilot-requests`; gate Copilot token mode on `permissions.copilot-requests: write`, add migration codemod, and apply migration across repo workflows (#35642)",
+      "parent_shas": [
+        "c29fd84452800f2fa723bcc089306d99890ed566"
+      ],
+      "tree_sha": "5dbd41d3496cd79b4bdf31989218ac1931b71577",
+      "html_url": "https://github.com/github/gh-aw/commit/f5e27505dab58ba57dde7dfff1530e72a015d53b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/stale-pr-cleanup.md",
+          "commit_sha": "f5e27505dab58ba57dde7dfff1530e72a015d53b",
+          "committed_at": "2026-05-29T15:52:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 4,
+          "file_changes": 6,
+          "file_patch": "@@ -10,6 +10,7 @@ permissions:\n   pull-requests: read\n   issues: read\n   # Note: PR write operations handled via safe-outputs\n+  copilot-requests: write\n engine: copilot\n strict: true\n imports:\n@@ -36,9 +37,6 @@ safe-outputs:\n     run-success: \"✅ Stale PR cleanup complete! [{workflow_name}]({run_url}) has triaged the 30+ day PR backlog.\"\n     run-failure: \"❌ Stale PR cleanup failed! [{workflow_name}]({run_url}) {status}. Some PRs may not be processed.\"\n timeout-minutes: 30\n-features:\n-  copilot-requests: true\n-\n ---\n \n # Stale PR Cleanup Agent 🧹\n@@ -261,4 +259,4 @@ Output the following summary to stdout after processing:\n - Clear communication on every action taken\n - Full coverage of eligible PRs within safe-output limits\n \n-{{#runtime-import shared/noop-reminder.md}}\n+{{#runtime-import shared/noop-reminder.md}}\n\\ No newline at end of file",
+          "snapshot_ref": "f5e27505dab58ba57dde7dfff1530e72a015d53b",
+          "snapshot_blob_sha": "6437f180cc0789408047dd6bc2f50417b2fd2236",
+          "snapshot_file": "snapshots/gh-aw__github__f5e27505dab58ba57dde7dfff1530e72a015d53b__stale-pr-cleanup.md",
+          "snapshot_bytes": 9840,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/stale-pr-cleanup.lock.yml\",\"generated_workflow_file\":\"stale-pr-cleanup.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/stale-pr-cleanup.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/stale-pr-cleanup.md",
+      "commit_sha": "ad4b4ad0237ca4704c8a5473b7fe783d1d830d3c",
+      "authored_at": "2026-07-15T14:47:08Z",
+      "committed_at": "2026-07-15T14:47:08Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable BinEval evals on 10 agentic workflows (#45751)",
+      "parent_shas": [
+        "a81cd1f28a92f77afbcb07632494e00338a07982"
+      ],
+      "tree_sha": "fecd2d0e713365fc1df28bf03fcd7f961e65d00f",
+      "html_url": "https://github.com/github/gh-aw/commit/ad4b4ad0237ca4704c8a5473b7fe783d1d830d3c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/stale-pr-cleanup.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/stale-pr-cleanup.md",
+          "commit_sha": "ad4b4ad0237ca4704c8a5473b7fe783d1d830d3c",
+          "committed_at": "2026-07-15T14:47:08Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -38,6 +38,11 @@ safe-outputs:\n     run-success: \"✅ Stale PR cleanup complete! [{workflow_name}]({run_url}) has triaged the 30+ day PR backlog.\"\n     run-failure: \"❌ Stale PR cleanup failed! [{workflow_name}]({run_url}) {status}. Some PRs may not be processed.\"\n timeout-minutes: 30\n+evals:\n+  - id: stale-prs-triaged\n+    question: Did the workflow review pull requests open for 30 or more days and classify them according to the cleanup policy?\n+  - id: actions-taken-or-noop\n+    question: Were the appropriate stale PR comments, labels, and closures applied when needed, or was noop used correctly when no action was required?\n ---\n \n # Stale PR Cleanup Agent 🧹",
+          "snapshot_ref": "ad4b4ad0237ca4704c8a5473b7fe783d1d830d3c",
+          "snapshot_blob_sha": "13cfe2e2481aba7210092635ad919160808c96d9",
+          "snapshot_file": "snapshots/gh-aw__github__ad4b4ad0237ca4704c8a5473b7fe783d1d830d3c__stale-pr-cleanup.md",
+          "snapshot_bytes": 10152,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/stale-pr-cleanup.lock.yml\",\"generated_workflow_file\":\"stale-pr-cleanup.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/stale-pr-cleanup.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

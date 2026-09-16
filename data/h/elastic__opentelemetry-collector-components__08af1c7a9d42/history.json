@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "elastic/opentelemetry-collector-components:.github/workflows/pr-review.md",
+    "source_full_name": "elastic/opentelemetry-collector-components",
+    "source_owner": "elastic",
+    "source_repo": "opentelemetry-collector-components",
+    "md_path": ".github/workflows/pr-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/elastic/opentelemetry-collector-components/blob/HEAD/.github/workflows/pr-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "elastic/opentelemetry-collector-components",
+      "generated_owner": "elastic",
+      "generated_repo": "opentelemetry-collector-components",
+      "generated_workflow_path": ".github/workflows/pr-review.lock.yml",
+      "generated_workflow_file": "pr-review.lock.yml",
+      "generated_html_url": "https://github.com/elastic/opentelemetry-collector-components/blob/aaeb978eb2a7895c0a6cb0613522b844bb54b9f1/.github/workflows/pr-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:26:46+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "elastic/opentelemetry-collector-components:.github/workflows/pr-review.md",
+      "source_full_name": "elastic/opentelemetry-collector-components",
+      "md_path": ".github/workflows/pr-review.md",
+      "commit_sha": "b9840884d1d5a7217a6e58e68d892b34b5baf5fc",
+      "authored_at": "2026-02-14T02:16:17Z",
+      "committed_at": "2026-02-14T02:16:17Z",
+      "author_name": "Bill Easton",
+      "author_email": "williamseaston@gmail.com",
+      "author_login": "strawgate",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add automatic PR Review workflow (#1009)\n\n* Add automatic PR Review workflow leveraging copilot\n\n* add workflow lock\n\n* Update workflow to remove mage make",
+      "parent_shas": [
+        "8f4af125ac299363dd98caac85e223854fced822"
+      ],
+      "tree_sha": "29abe7cf4e01ab462277fc1b9cbf14c49babbeea",
+      "html_url": "https://github.com/elastic/opentelemetry-collector-components/commit/b9840884d1d5a7217a6e58e68d892b34b5baf5fc",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/opentelemetry-collector-components:.github/workflows/pr-review.md",
+          "source_full_name": "elastic/opentelemetry-collector-components",
+          "md_path": ".github/workflows/pr-review.md",
+          "commit_sha": "b9840884d1d5a7217a6e58e68d892b34b5baf5fc",
+          "committed_at": "2026-02-14T02:16:17Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 148,
+          "file_deletions": 0,
+          "file_changes": 148,
+          "file_patch": "@@ -0,0 +1,148 @@\n+---\n+engine:\n+  id: copilot\n+  model: claude-opus-4.6\n+on:\n+  pull_request:\n+    types: [opened, synchronize, reopened]\n+roles: [admin, maintainer, write]\n+concurrency:\n+  group: pr-review-${{ github.event.pull_request.number }}\n+  cancel-in-progress: true\n+permissions:\n+  contents: read\n+  pull-requests: read\n+runtimes:\n+  go:\n+    version: \"1.24.11\"\n+steps:\n+  - name: Install system dependencies\n+    run: sudo apt-get update && sudo apt-get install -y libpcap-dev librpm-dev\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests]\n+  bash: true\n+  web-fetch:\n+mcp-servers:\n+  agents-md-generator:\n+    url: \"https://agents-md-generator.fastmcp.app/mcp\"\n+    allowed: [\"generate_agents_md\"]\n+  public-code-search:\n+    url: \"https://public-code-search.fastmcp.app/mcp\"\n+    allowed: [\"search_code\"]\n+strict: false\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - \"agents-md-generator.fastmcp.app\"\n+    - \"public-code-search.fastmcp.app\"\n+safe-outputs:\n+  create-pull-request-review-comment:\n+    max: 30\n+  submit-pull-request-review:\n+    max: 1\n+---\n+\n+# PR Review Agent\n+\n+Review pull requests in ${{ github.repository }} and provide actionable feedback via inline review comments on specific code lines.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **PR**: #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }}\n+\n+## Review Process\n+\n+Follow these steps in order.\n+\n+### Step 1: Gather Context\n+\n+1. Call `generate_agents_md` to get the repository's coding guidelines and conventions. Use these as additional review criteria throughout the review. If this fails, continue without it.\n+2. Call `pull_request_read` with method `get` on PR #${{ github.event.pull_request.number }} to get the full PR details (author, description, branches).\n+3. Call `pull_request_read` with method `get_review_comments` to check existing review threads. Note which files already have threads and whether threads are resolved, unresolved, or outdated.\n+4. Call `pull_request_read` with method `get_reviews` to see prior review submissions from this bot. Do not repeat points already made in prior reviews.\n+\n+### Step 2: Review Files in Small Batches\n+\n+Call `pull_request_read` with method `get_files` using `per_page: 5, page: 1` to get the first batch of changed files with their patches.\n+\n+For each file in the batch:\n+\n+1. Read the per-file patch to understand what changed.\n+2. Read the full file from the workspace. The PR branch is checked out locally, so open the file directly to get the complete contents with line numbers. This lets you:\n+   - Understand the broader context around the changes\n+   - Verify that issues aren't already handled elsewhere in the file\n+   - Determine the **exact line number** for any comment you want to leave\n+3. Identify issues matching the review criteria below.\n+4. **Immediately leave inline comments** for any issues found in this file (see Step 3 below) before moving to the next file.\n+\n+After finishing all files in the batch, call `get_files` with `page: 2` for the next batch, and so on until all changed files have been reviewed.\n+\n+**Do NOT flag:**\n+- Issues in unchanged code (only review the diff)\n+- Style preferences handled by linters or formatters\n+- Pre-existing issues not introduced by this PR\n+- Issues already covered by existing review threads (resolved or unresolved)\n+\n+**Before flagging any issue, verify it against the actual code:**\n+- Trace the code path to confirm the problem would actually occur at runtime.\n+- If you claim something is missing or broken, find the evidence in the code.\n+- If the issue depends on assumptions you haven't confirmed, do not flag it.\n+- Use `grep` in the workspace to find callers, related implementations, or usage patterns across the codebase.\n+- Use `search_code` to search public GitHub repositories for upstream library usage, API examples, or reference implementations.\n+- Use `web-fetch` to look up library/API documentation when verifying correct usage.\n+\n+### Step 3: Leave Inline Review Comments\n+\n+For each genuine issue found, call **`create_pull_request_review_comment`** with:\n+- The file path and the **exact line number from reading the file** (not estimated from the patch)\n+- The line must be within the diff (an added or context line in the patch)\n+- A comment body formatted as shown below\n+\n+**Comment format:**\n+\n+> **[SEVERITY] Brief title**\n+>\n+> Description of the issue and why it matters.\n+>\n+> ````suggestion\n+> corrected code here\n+> ````\n+\n+Only include a `suggestion` block when you can provide a concrete code fix that **actually changes** the code. If the fix requires structural changes that don't fit in a suggestion, describe the fix in prose instead — never include a suggestion that is identical to the original line.\n+\n+Leave comments as you go — after reviewing each file, not all at the end. Track what you've already commented on to avoid duplicates within this run.\n+\n+Only flag issues you are confident are real problems — false positives erode trust.\n+\n+### Step 4: Submit the review\n+\n+Call **`submit_pull_request_review`** with:\n+- The review type (REQUEST_CHANGES, COMMENT, or APPROVE)\n+- A review body that is **only the verdict and only if the verdict is not APPROVE**. If you have very important feedback that cannot be covered in inline comments, you must include it here. Otherwise, prefer to leave the review body empty and focus on the inline comments.\n+\n+**Do NOT** describe what the PR does, list the files you reviewed, summarize inline comments, or restate prior review feedback. The PR author already knows what their PR does. Your inline comments already contain all the detail. The review body exists solely to communicate the approve/request-changes decision and important/critical feedback that cannot be covered in inline comments.\n+\n+If you have no issues, or you have only provided NITPICK and LOW issues, submit an APPROVE review. Otherwise, submit a REQUEST_CHANGES review.\n+\n+## Severity Classification\n+\n+- 🔴 **CRITICAL** — Must fix before merge (security vulnerabilities, data corruption, production-breaking bugs)\n+- 🟠 **HIGH** — Should fix before merge (logic errors, missing validation, significant performance issues)\n+- 🟡 **MEDIUM** — Address soon, non-blocking (error handling gaps, suboptimal patterns, missing edge cases)\n+- ⚪ **LOW** — Author discretion (minor improvements, documentation gaps)\n+- 💬 **NITPICK** — Truly optional (stylistic preferences, alternative approaches)\n+\n+## Review Criteria\n+\n+Focus on these categories in priority order:\n+\n+1. Security vulnerabilities (injection, XSS, auth bypass, secrets exposure)\n+2. Logic bugs that could cause runtime failures or incorrect behavior\n+3. Data integrity issues (race conditions, missing transactions, corruption risk)\n+4. Performance bottlenecks (N+1 queries, memory leaks, blocking operations)\n+5. Error handling gaps (unhandled exceptions, missing validation)\n+6. Breaking changes to public APIs without migration path\n+7. Missing or incorrect test coverage for critical paths",
+          "snapshot_ref": "b9840884d1d5a7217a6e58e68d892b34b5baf5fc",
+          "snapshot_blob_sha": "546c7e5cf0b09942c50d7f63b03c853923540f41",
+          "snapshot_file": "snapshots/opentelemetry-collector-components__elastic__b9840884d1d5a7217a6e58e68d892b34b5baf5fc__pr-review.md",
+          "snapshot_bytes": 6961,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/opentelemetry-collector-components\",\"generated_owner\":\"elastic\",\"generated_repo\":\"opentelemetry-collector-components\",\"generated_workflow_path\":\".github/workflows/pr-review.lock.yml\",\"generated_workflow_file\":\"pr-review.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/opentelemetry-collector-components/blob/aaeb978eb2a7895c0a6cb0613522b844bb54b9f1/.github/workflows/pr-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+    "source_full_name": "elastic/terraform-provider-elasticstack",
+    "source_owner": "elastic",
+    "source_repo": "terraform-provider-elasticstack",
+    "md_path": ".github/workflows/security-role-docs-drift.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/elastic/terraform-provider-elasticstack/blob/HEAD/.github/workflows/security-role-docs-drift.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "elastic/terraform-provider-elasticstack",
+      "generated_owner": "elastic",
+      "generated_repo": "terraform-provider-elasticstack",
+      "generated_workflow_path": ".github/workflows/security-role-docs-drift.lock.yml",
+      "generated_workflow_file": "security-role-docs-drift.lock.yml",
+      "generated_html_url": "https://github.com/elastic/terraform-provider-elasticstack/blob/b475e460d410b67c3458d4560e3692a3289b2ebf/.github/workflows/security-role-docs-drift.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:26:55+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+      "source_full_name": "elastic/terraform-provider-elasticstack",
+      "md_path": ".github/workflows/security-role-docs-drift.md",
+      "commit_sha": "a66e792c97757dfb3d26556013fab7405072ce57",
+      "authored_at": "2026-05-27T10:51:51Z",
+      "committed_at": "2026-05-27T10:51:51Z",
+      "author_name": "Toby Brain",
+      "author_email": "toby.brain@elastic.co",
+      "author_login": "tobio",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Improve security role docs and drift detection (#3339)\n\n* docs: remove generic security role examples\n\n* docs: add kibana security role scenario examples\n\n* Add Elasticsearch security role scenario examples\n\n* docs: add security roles guide template\n\n* docs: update security role resource docs\n\n* docs: align Kibana feature reference with 9.4 IDs\n\n* Add security role docs drift pre-activation script\n\n* Add security role docs drift workflow\n\n* docs: add canonical security role openspec specs\n\n* docs: regenerate security roles guide\n\n* docs: checkpoint generated docs state before rebase\n\n* docs: complete security role docs verification tasks\n\n* docs: align guide table, specs, examples, and JSON with canonical feature IDs; fix Close() error handling; move inline API key example to tffile\n\n* Regenerate docs and kbapi after merge\n\n* Revert accidental kbapi license header change\n\n* fix: move pre-activation step into agent steps (needs running stack from shared/setup-dev.md)\n\n* chore(openspec): archive improve-security-role-docs via verify-openspec\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: trigger checks\n\n---------\n\nCo-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+      "parent_shas": [
+        "0c0e964f26591ebeabb95acec4a213afc77f9ea5"
+      ],
+      "tree_sha": "da10f0668ffcd91bf931b0ddb998d37e68b363e0",
+      "html_url": "https://github.com/elastic/terraform-provider-elasticstack/commit/a66e792c97757dfb3d26556013fab7405072ce57",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+          "source_full_name": "elastic/terraform-provider-elasticstack",
+          "md_path": ".github/workflows/security-role-docs-drift.md",
+          "commit_sha": "a66e792c97757dfb3d26556013fab7405072ce57",
+          "committed_at": "2026-05-27T10:51:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 90,
+          "file_deletions": 0,
+          "file_changes": 90,
+          "file_patch": "@@ -0,0 +1,90 @@\n+---\n+imports: [shared/setup-dev.md]\n+name: Security role docs drift\n+description: >-\n+  Detects drift between documented Kibana feature privileges and the live Kibana\n+  features API, then opens a self-healing PR with guide and JSON updates when needed.\n+on:\n+  workflow_dispatch:\n+  schedule:\n+    - cron: weekly on monday\n+  push:\n+    branches:\n+      - main\n+    paths:\n+      - 'generated/kbapi/**'\n+engine:\n+  id: claude\n+  model: \"llm-gateway/gpt-5.5\"\n+  version: 2.1.98\n+  env:\n+    ANTHROPIC_BASE_URL: \"https://elastic.litellm-prod.ai/\"\n+    ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_LITELLM_PROXY_API_KEY }}\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+tools:\n+  cli-proxy: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [repos, pull_requests]\n+  timeout: 300\n+safe-outputs:\n+  create-pull-request:\n+    labels: [automated-analysis, documentation]\n+    max: 1\n+    patch-format: am\n+  noop:\n+    max: 1\n+    report-as-issue: false\n+network:\n+  allowed: [defaults, node, go, terraform, elastic.litellm-prod.ai]\n+checkout:\n+  fetch-depth: 0\n+steps:\n+  - name: Checkout repository\n+    uses: actions/checkout@v4\n+    with:\n+      fetch-depth: 0\n+      persist-credentials: false\n+  - name: Setup Go\n+    uses: actions/setup-go@v6\n+    with:\n+      go-version-file: go.mod\n+      cache: false\n+  - name: Run security role docs pre-activation\n+    id: pre_activation\n+    run: |\n+      mkdir -p /tmp/gh-aw/agent\n+      go run ./scripts/security-role-docs pre-activation \\\n+        --features-path scripts/security-role-docs/kibana-features.json \\\n+        --report-path /tmp/gh-aw/agent/drift-report.json\n+---\n+\n+# Security role docs drift worker\n+\n+Pre-activation has computed drift against the live Kibana features API. Read the drift report at `/tmp/gh-aw/agent/drift-report.json` and open exactly one pull request when drift exists.\n+\n+## Pre-activation context\n+\n+- **Report path**: `/tmp/gh-aw/agent/drift-report.json`\n+\n+## Task\n+\n+1. Read `/tmp/gh-aw/agent/drift-report.json`.\n+2. Update `scripts/security-role-docs/kibana-features.json` so it reflects the live Kibana feature set from the report:\n+   - add unknown features to `documented` when they should appear in the guide\n+   - remove features from `documented` when they appear in `removed_features`\n+   - if a feature should stay undocumented, reviewers can move it from `documented` to `skip`\n+3. Update the Kibana feature privilege reference in `templates/guides/security-roles.md.tmpl` to match the feature changes.\n+4. Run `make docs-generate` so `docs/guides/security-roles.md` matches the updated template.\n+5. Create exactly one pull request with the resulting changes.\n+\n+## Pull request requirements\n+\n+- Explain the drift found using `unknown_features` and `removed_features` from the report.\n+- State that reviewers may move newly added features from `documented` to `skip` when the feature should remain excluded from the guide.\n+- Do not create issues.\n+- If the report contains no actionable drift after inspection, call `noop` instead of opening a pull request.",
+          "snapshot_ref": "a66e792c97757dfb3d26556013fab7405072ce57",
+          "snapshot_blob_sha": "84acdc3e9cd54731780b2ea8b497743d01a37f34",
+          "snapshot_file": "snapshots/terraform-provider-elasticstack__elastic__a66e792c97757dfb3d26556013fab7405072ce57__security-role-docs-drift.md",
+          "snapshot_bytes": 3003,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/terraform-provider-elasticstack\",\"generated_owner\":\"elastic\",\"generated_repo\":\"terraform-provider-elasticstack\",\"generated_workflow_path\":\".github/workflows/security-role-docs-drift.lock.yml\",\"generated_workflow_file\":\"security-role-docs-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/terraform-provider-elasticstack/blob/b475e460d410b67c3458d4560e3692a3289b2ebf/.github/workflows/security-role-docs-drift.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+      "source_full_name": "elastic/terraform-provider-elasticstack",
+      "md_path": ".github/workflows/security-role-docs-drift.md",
+      "commit_sha": "ec8b88e1626a1ba96f2a25755bd2eb0e63e21ef9",
+      "authored_at": "2026-06-02T11:35:44Z",
+      "committed_at": "2026-06-02T11:35:44Z",
+      "author_name": "Toby Brain",
+      "author_email": "toby.brain@elastic.co",
+      "author_login": "tobio",
+      "author_account_type": "User",
+      "committer_name": "Toby Brain",
+      "committer_email": "toby.brain@elastic.co",
+      "committer_login": "tobio",
+      "committer_account_type": "User",
+      "message": "Bump gh-aw",
+      "parent_shas": [
+        "07995d2351b3c17ffe3ac208f66fcb7ceadda7e7"
+      ],
+      "tree_sha": "1a280d39504526342d1683a9874887b52bdfd701",
+      "html_url": "https://github.com/elastic/terraform-provider-elasticstack/commit/ec8b88e1626a1ba96f2a25755bd2eb0e63e21ef9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+          "source_full_name": "elastic/terraform-provider-elasticstack",
+          "md_path": ".github/workflows/security-role-docs-drift.md",
+          "commit_sha": "ec8b88e1626a1ba96f2a25755bd2eb0e63e21ef9",
+          "committed_at": "2026-06-02T11:35:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -45,12 +45,12 @@ checkout:\n   fetch-depth: 0\n steps:\n   - name: Checkout repository\n-    uses: actions/checkout@v4\n+    uses: actions/checkout@v6.0.2\n     with:\n       fetch-depth: 0\n       persist-credentials: false\n   - name: Setup Go\n-    uses: actions/setup-go@v6\n+    uses: actions/setup-go@v6.4.0\n     with:\n       go-version-file: go.mod\n       cache: false",
+          "snapshot_ref": "ec8b88e1626a1ba96f2a25755bd2eb0e63e21ef9",
+          "snapshot_blob_sha": "8ae7e9989b8194d50f67ee319ae448c60bc06745",
+          "snapshot_file": "snapshots/terraform-provider-elasticstack__elastic__ec8b88e1626a1ba96f2a25755bd2eb0e63e21ef9__security-role-docs-drift.md",
+          "snapshot_bytes": 3011,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/terraform-provider-elasticstack\",\"generated_owner\":\"elastic\",\"generated_repo\":\"terraform-provider-elasticstack\",\"generated_workflow_path\":\".github/workflows/security-role-docs-drift.lock.yml\",\"generated_workflow_file\":\"security-role-docs-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/terraform-provider-elasticstack/blob/b475e460d410b67c3458d4560e3692a3289b2ebf/.github/workflows/security-role-docs-drift.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+      "source_full_name": "elastic/terraform-provider-elasticstack",
+      "md_path": ".github/workflows/security-role-docs-drift.md",
+      "commit_sha": "775d1f5eb80666d8e119b66c9596ccf9b35b1cb5",
+      "authored_at": "2026-07-01T13:09:15Z",
+      "committed_at": "2026-07-01T13:09:15Z",
+      "author_name": "Toby Brain",
+      "author_email": "toby.brain@elastic.co",
+      "author_login": "tobio",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bump GH AW (#4024)",
+      "parent_shas": [
+        "35f53e260bb751f87b9803d47345a0e978209bed"
+      ],
+      "tree_sha": "d84c71c6e051c9a1327125bbe4af23348cfa0e63",
+      "html_url": "https://github.com/elastic/terraform-provider-elasticstack/commit/775d1f5eb80666d8e119b66c9596ccf9b35b1cb5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+          "source_full_name": "elastic/terraform-provider-elasticstack",
+          "md_path": ".github/workflows/security-role-docs-drift.md",
+          "commit_sha": "775d1f5eb80666d8e119b66c9596ccf9b35b1cb5",
+          "committed_at": "2026-07-01T13:09:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -45,12 +45,12 @@ checkout:\n   fetch-depth: 0\n steps:\n   - name: Checkout repository\n-    uses: actions/checkout@v6.0.2\n+    uses: actions/checkout@v7.0.0\n     with:\n       fetch-depth: 0\n       persist-credentials: false\n   - name: Setup Go\n-    uses: actions/setup-go@v6.4.0\n+    uses: actions/setup-go@v6.5.0\n     with:\n       go-version-file: go.mod\n       cache: false",
+          "snapshot_ref": "775d1f5eb80666d8e119b66c9596ccf9b35b1cb5",
+          "snapshot_blob_sha": "7bc59c4e5f4431f15d7bc44e28e5b3ccd407a3d0",
+          "snapshot_file": "snapshots/terraform-provider-elasticstack__elastic__775d1f5eb80666d8e119b66c9596ccf9b35b1cb5__security-role-docs-drift.md",
+          "snapshot_bytes": 3011,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/terraform-provider-elasticstack\",\"generated_owner\":\"elastic\",\"generated_repo\":\"terraform-provider-elasticstack\",\"generated_workflow_path\":\".github/workflows/security-role-docs-drift.lock.yml\",\"generated_workflow_file\":\"security-role-docs-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/terraform-provider-elasticstack/blob/b475e460d410b67c3458d4560e3692a3289b2ebf/.github/workflows/security-role-docs-drift.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+      "source_full_name": "elastic/terraform-provider-elasticstack",
+      "md_path": ".github/workflows/security-role-docs-drift.md",
+      "commit_sha": "6425763b17d16088584c5d403cdb730ecdac4371",
+      "authored_at": "2026-07-24T12:19:39Z",
+      "committed_at": "2026-07-24T12:19:39Z",
+      "author_name": "Toby Brain",
+      "author_email": "toby.brain@elastic.co",
+      "author_login": "tobio",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bump gh-aw (#4306)",
+      "parent_shas": [
+        "328236d9e9d427ed48d0ad232440de94d72ba211"
+      ],
+      "tree_sha": "7689c61c057ab4aaebc66b2d6fcde6b10b03a9e8",
+      "html_url": "https://github.com/elastic/terraform-provider-elasticstack/commit/6425763b17d16088584c5d403cdb730ecdac4371",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+          "source_full_name": "elastic/terraform-provider-elasticstack",
+          "md_path": ".github/workflows/security-role-docs-drift.md",
+          "commit_sha": "6425763b17d16088584c5d403cdb730ecdac4371",
+          "committed_at": "2026-07-24T12:19:39Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "@@ -13,9 +13,9 @@ on:\n       - main\n     paths:\n       - 'generated/kbapi/**'\n+model: \"llm-gateway/gpt-5.5\"\n engine:\n   id: claude\n-  model: \"llm-gateway/gpt-5.5\"\n   version: 2.1.98\n   env:\n     ANTHROPIC_BASE_URL: \"https://elastic.litellm-prod.ai/\"\n@@ -45,12 +45,12 @@ checkout:\n   fetch-depth: 0\n steps:\n   - name: Checkout repository\n-    uses: actions/checkout@v7.0.0\n+    uses: actions/checkout@v7.0.1\n     with:\n       fetch-depth: 0\n       persist-credentials: false\n   - name: Setup Go\n-    uses: actions/setup-go@v6.5.0\n+    uses: actions/setup-go@v7.0.0\n     with:\n       go-version-file: go.mod\n       cache: false\n@@ -87,4 +87,4 @@ Pre-activation has computed drift against the live Kibana features API. Read the\n - Explain the drift found using `unknown_features` and `removed_features` from the report.\n - State that reviewers may move newly added features from `documented` to `skip` when the feature should remain excluded from the guide.\n - Do not create issues.\n-- If the report contains no actionable drift after inspection, call `noop` instead of opening a pull request.\n+- If the report contains no actionable drift after inspection, call `noop` instead of opening a pull request.\n\\ No newline at end of file",
+          "snapshot_ref": "6425763b17d16088584c5d403cdb730ecdac4371",
+          "snapshot_blob_sha": "9d2d96bd5afb1291fefdef7f464daa648a40c05e",
+          "snapshot_file": "snapshots/terraform-provider-elasticstack__elastic__6425763b17d16088584c5d403cdb730ecdac4371__security-role-docs-drift.md",
+          "snapshot_bytes": 3008,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/terraform-provider-elasticstack\",\"generated_owner\":\"elastic\",\"generated_repo\":\"terraform-provider-elasticstack\",\"generated_workflow_path\":\".github/workflows/security-role-docs-drift.lock.yml\",\"generated_workflow_file\":\"security-role-docs-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/terraform-provider-elasticstack/blob/b475e460d410b67c3458d4560e3692a3289b2ebf/.github/workflows/security-role-docs-drift.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+      "source_full_name": "elastic/terraform-provider-elasticstack",
+      "md_path": ".github/workflows/security-role-docs-drift.md",
+      "commit_sha": "ba05136296ce7608973400a36554ebae6b0fe0df",
+      "authored_at": "2026-07-30T01:27:55Z",
+      "committed_at": "2026-07-30T01:27:55Z",
+      "author_name": "Toby Brain",
+      "author_email": "toby.brain@elastic.co",
+      "author_login": "tobio",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Switch to openrouter (#4339)\n\n* Switch to openrouter\n\n* Apply suggestions from code review\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "7038f91b08d2e6f70debf8bc2b1ed20b17e3f07b"
+      ],
+      "tree_sha": "d4b7a4e9092ac5ac086d407c8eb0f1aef4a48a15",
+      "html_url": "https://github.com/elastic/terraform-provider-elasticstack/commit/ba05136296ce7608973400a36554ebae6b0fe0df",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "elastic/terraform-provider-elasticstack:.github/workflows/security-role-docs-drift.md",
+          "source_full_name": "elastic/terraform-provider-elasticstack",
+          "md_path": ".github/workflows/security-role-docs-drift.md",
+          "commit_sha": "ba05136296ce7608973400a36554ebae6b0fe0df",
+          "committed_at": "2026-07-30T01:27:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 5,
+          "file_changes": 10,
+          "file_patch": "@@ -13,13 +13,13 @@ on:\n       - main\n     paths:\n       - 'generated/kbapi/**'\n-model: \"llm-gateway/gpt-5.5\"\n+model: \"openai/gpt-5.5\"\n engine:\n   id: claude\n   version: 2.1.98\n   env:\n-    ANTHROPIC_BASE_URL: \"https://elastic.litellm-prod.ai/\"\n-    ANTHROPIC_API_KEY: ${{ secrets.CLAUDE_LITELLM_PROXY_API_KEY }}\n+    ANTHROPIC_BASE_URL: \"https://openrouter.ai/api\"\n+    ANTHROPIC_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}\n permissions:\n   contents: read\n   issues: read\n@@ -40,7 +40,7 @@ safe-outputs:\n     max: 1\n     report-as-issue: false\n network:\n-  allowed: [defaults, node, go, terraform, elastic.litellm-prod.ai]\n+  allowed: [defaults, node, go, terraform, openrouter.ai]\n checkout:\n   fetch-depth: 0\n steps:\n@@ -87,4 +87,4 @@ Pre-activation has computed drift against the live Kibana features API. Read the\n - Explain the drift found using `unknown_features` and `removed_features` from the report.\n - State that reviewers may move newly added features from `documented` to `skip` when the feature should remain excluded from the guide.\n - Do not create issues.\n-- If the report contains no actionable drift after inspection, call `noop` instead of opening a pull request.\n\\ No newline at end of file\n+- If the report contains no actionable drift after inspection, call `noop` instead of opening a pull request.",
+          "snapshot_ref": "ba05136296ce7608973400a36554ebae6b0fe0df",
+          "snapshot_blob_sha": "0f6519868e6a93a219b4d19ae5292e6866357cc6",
+          "snapshot_file": "snapshots/terraform-provider-elasticstack__elastic__ba05136296ce7608973400a36554ebae6b0fe0df__security-role-docs-drift.md",
+          "snapshot_bytes": 2977,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"elastic/terraform-provider-elasticstack\",\"generated_owner\":\"elastic\",\"generated_repo\":\"terraform-provider-elasticstack\",\"generated_workflow_path\":\".github/workflows/security-role-docs-drift.lock.yml\",\"generated_workflow_file\":\"security-role-docs-drift.lock.yml\",\"generated_html_url\":\"https://github.com/elastic/terraform-provider-elasticstack/blob/b475e460d410b67c3458d4560e3692a3289b2ebf/.github/workflows/security-role-docs-drift.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

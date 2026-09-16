@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+    "source_full_name": "Azure/azure-sdk-for-go",
+    "source_owner": "Azure",
+    "source_repo": "azure-sdk-for-go",
+    "md_path": ".github/workflows/mgmt-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/azure-sdk-for-go/blob/HEAD/.github/workflows/mgmt-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/azure-sdk-for-go",
+      "generated_owner": "Azure",
+      "generated_repo": "azure-sdk-for-go",
+      "generated_workflow_path": ".github/workflows/mgmt-review.lock.yml",
+      "generated_workflow_file": "mgmt-review.lock.yml",
+      "generated_html_url": "https://github.com/Azure/azure-sdk-for-go/blob/62c45ed2c508a1d9b5c4dedaf4a6d86794d81e32/.github/workflows/mgmt-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+      "source_full_name": "Azure/azure-sdk-for-go",
+      "md_path": ".github/workflows/mgmt-review.md",
+      "commit_sha": "6280b33c44442c55015a9302f19cfa0e4c4b38c9",
+      "authored_at": "2026-04-20T21:02:57Z",
+      "committed_at": "2026-04-20T21:02:57Z",
+      "author_name": "Chenjie Shi",
+      "author_email": "tadelesh.shi@live.cn",
+      "author_login": "tadelesh",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add management PR review agentic workflow (#26553)\n\n* Add mgmt review aw\n\n* update\n\n* refine mgmt-review: simplify to go-pullrequest only, add concurrency, tighten perms\n\n* add checkenforcer override when all CI passes but PR blocked\n\n* update\n\n* fix\n\n* remove auto-fix, provide fix commands in comment instead\n\n* revert omit lock file change\n\n* remove check enforcer override\n\n* upgrade to 0.68.1\n\n* update ignore link\n\n* fix ignore-links: use URL-encoded form for {run_url} placeholder\n\n---------\n\nCo-authored-by: tadelesh <chenjieshi@microsoft.com>",
+      "parent_shas": [
+        "90c6a9dca1c819f571714ffd9f018438edfaacc0"
+      ],
+      "tree_sha": "ef2048a7fbc8d7efa4ba7d8d75797ca443fb5618",
+      "html_url": "https://github.com/Azure/azure-sdk-for-go/commit/6280b33c44442c55015a9302f19cfa0e4c4b38c9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+          "source_full_name": "Azure/azure-sdk-for-go",
+          "md_path": ".github/workflows/mgmt-review.md",
+          "commit_sha": "6280b33c44442c55015a9302f19cfa0e4c4b38c9",
+          "committed_at": "2026-04-20T21:02:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 145,
+          "file_deletions": 0,
+          "file_changes": 145,
+          "file_patch": "@@ -0,0 +1,145 @@\n+---\n+on:\n+  pull_request_target:\n+    types: [labeled]\n+labels: [mgmt-review-needed]\n+if: github.event.label.name == 'mgmt-review-needed'\n+description: \"Analyze a management-plane Go SDK pull request and provide next-step merge guidance\"\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  actions: read\n+  checks: read\n+strict: false\n+tools:\n+  github:\n+    toolsets: [context, repos, pull_requests, actions]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+    target: \"${{ github.event.pull_request.number }}\"\n+    hide-older-comments: true\n+    issues: false\n+    discussions: false\n+    footer: false\n+  mark-pull-request-as-ready-for-review:\n+    max: 1\n+  messages:\n+    footer: \"> ⚡ *Analyzed by [{workflow_name}]({run_url})*\"\n+    run-started: \"⚡ [{workflow_name}]({run_url}) is analyzing this PR for merge guidance...\"\n+    run-success: \"⚡ [{workflow_name}]({run_url}) completed the management Go SDK PR analysis. ✅\"\n+    run-failure: \"⚡ [{workflow_name}]({run_url}) {status}. ❌\"\n+concurrency: mgmt-review-${{ github.event.pull_request.number }}\n+timeout-minutes: 35\n+---\n+\n+# Management Release Assistant\n+\n+You are an SDK release assistant for Azure SDK for Go management-plane pull requests. Most management PRs contain **auto-generated code** produced from TypeSpec API specifications — your job is not to review the generated code, but to analyze CI status and post a concise \"next steps\" comment so the service owner knows exactly what to do.\n+\n+---\n+\n+### Step 0 — Convert draft PR to ready for review\n+\n+Fetch the PR details. If the PR is in **draft** state, mark it as ready for review using `mark_pull_request_as_ready_for_review` before proceeding. This ensures CI checks are triggered and the PR can eventually be merged.\n+\n+### Step 1 — Gather information\n+\n+1. Fetch PR details and changed files using GitHub MCP tools.\n+2. Fetch **check runs** for the PR head commit. Find the `go - pullrequest` parent check and its child jobs (`go - pullrequest (Build <job_name>)`). These are **Azure DevOps pipeline** results — do NOT call `get_job_logs` (returns 404). Read success/failure from the `conclusion` field and extract the `target_url` for ADO log links. NEVER fabricate ADO URLs.\n+3. Identify the module path from the changed files (e.g., `sdk/resourcemanager/<service>/arm<package>/`).\n+\n+### Step 2 — Check for manual edits to auto-generated files\n+\n+Auto-generated Go files contain the comment `// Code generated by Microsoft (R) Go Code Generator. DO NOT EDIT.` (or a similar `DO NOT EDIT` marker) near the top of the file.\n+\n+1. From the PR's changed files (collected in Step 1), identify every file whose contents include a `DO NOT EDIT` comment.\n+2. Fetch the **commit list** for the PR.\n+3. For each commit **not** authored by `azure-sdk` (the automation bot), check whether it touches any of the `DO NOT EDIT` files identified above.\n+4. Ignore commits that only change whitespace, blank lines, or the copyright header — focus on **real logic changes** (function signatures, method bodies, type definitions, constants, etc.).\n+5. If any non-automation commit introduces real logic changes to a `DO NOT EDIT` file, record the file path, short commit SHA, and author. This is a **blocking issue** — it will be included in the Step 4 comment.\n+\n+### Step 3 — Identify gaps to merge\n+\n+If the PR is mergeable (`Squash and merge` enabled), skip to Step 4 and comment `## PR is ready to merge`.\n+\n+Otherwise, classify every blocking check using the reference table below. Also inspect the PR's changed files directly when useful (e.g., reading code for compile errors) and note any `Merging is blocked` messages.\n+\n+#### CI Check → Failure → Fix Reference\n+\n+The main CI pipeline for PR validation is an Azure DevOps pipeline. It appears as multiple check runs under one parent:\n+\n+- **Parent**: `go - pullrequest` — the overall pipeline result (aggregates child jobs)\n+- **Children**: `go - pullrequest (Build <job_name>)` — individual jobs\n+\n+The child job names follow the pattern `go - pullrequest (Build <job_name>)`. Map them as follows:\n+\n+| Child Job Name Pattern | What It Validates | Failure Signal | Fix Action |\n+|---|---|---|---|\n+| `Build/Test on <os>_go_<ver>` (×4: ubuntu/windows × 2 Go versions) | `go build`, `go vet`, `go test` in playback mode | `output.title` contains `failed` | Read `output.summary` for error/warning counts. Compile errors → fix code. Test failures → check assertions, re-record per [test guide](https://github.com/Azure/azure-sdk-for-go/blob/main/documentation/development/testing.md) |\n+| `Analyze` | Lint, format check, copyright headers, license check, go mod tidy, go.mod validation, link verification, changelog validation, dependency check | `output.title` contains `failed` | See Analyze sub-check table below |\n+| `generate_job_matrix` | Determines which modules to test | `output.title` contains `failed` | Usually an infra issue — retry the pipeline |\n+\n+##### Analyze sub-checks (run inside the `Analyze` job)\n+\n+These are scripts inside the Analyze job. They do NOT appear as separate check runs — their failures show up in the Analyze job logs.\n+\n+| Sub-check | What It Validates | Fix Action |\n+|---|---|---|\n+| Format Check | `gofmt -s` formatting | Run `gofmt -s -w .` in the module directory |\n+| Copyright Header Check | Copyright header in every `.go` file | Add header: `// Copyright (c) Microsoft Corporation. All rights reserved.` + `// Licensed under the MIT License. See License.txt in the project root for license information.` |\n+| License Check | Valid LICENSE.txt | Ensure MIT license file is present |\n+| go mod tidy | Clean deps after `go mod tidy` | Run `go mod tidy` in the module directory |\n+| go.mod Validation | No `replace` directives | Remove all `replace` directives from `go.mod` |\n+| Lint | golangci-lint (errcheck, deadcode, ineffassign) | errcheck → handle the error; deadcode → remove unused code; ineffassign → use or remove |\n+| Link Verification | Markdown links valid | Fix broken URLs or append to `eng/ignore-links.txt` |\n+| Verify Changelogs | CHANGELOG.md valid | Add changelog entries for unreleased changes |\n+| Dependency Check | Module dependency rules | Review dependency errors |\n+\n+For failures not covered above, reference the [troubleshooting guide](https://github.com/Azure/azure-sdk-for-go/blob/main/documentation/development/TROUBLESHOOTING.md).\n+\n+### Step 4 — Post a comment\n+\n+Post **exactly one** PR comment via `add_comment`. Include the marker `<!-- gh-aw-workflow-id: mgmt-review -->` in the body.\n+\n+**If nothing blocks** → post only:\n+\n+```\n+## PR is ready to merge\n+```\n+\n+**If there are failures** → use this template:\n+\n+```markdown\n+## Next Steps to Merge\n+\n+Only failed checks and required actions are listed below.\n+\n+- ❌ `go - pullrequest (Build Build/Test on ubuntu_go_1261)`: <short reason>. [ADO logs](<real target_url>)\n+  - Fix: `<specific command or step>`\n+- ❌ `go - pullrequest (Build Analyze)`: <sub-check>: <short reason>. [ADO logs](<real target_url>)\n+  - Fix: `<specific command, e.g. gofmt -s -w .>`\n+```\n+\n+**If auto-generated files were manually edited** (detected in Step 2), always include this block at the top of the comment, **before** any CI failures:\n+\n+```markdown\n+## ⛔ Manual Edits to Auto-Generated Files Detected\n+\n+The following generated files (`DO NOT EDIT`) were modified by non-automation commits:\n+\n+- `<file path>` — changed in commit `<short sha>` by @<author>\n+\n+The Go management SDK is **auto-generated** from API specifications. Manual edits to these files will be lost on the next regeneration and **must be reverted** before this PR can merge.\n+\n+- If the generated code is wrong, please report an issue at [autorest.go](https://github.com/Azure/autorest.go/issues).\n+- If the API shape needs to change, update the spec in [azure-rest-api-specs](https://github.com/Azure/azure-rest-api-specs) and regenerate.\n+\n+**Action required:** revert the manual changes to the generated files listed above.\n+```\n+\n+Rules:\n+- Only list failing/blocking checks — omit passed checks entirely.\n+- For every failure, include a concrete **Fix** line with the exact command or step the PR author should run locally.\n+- For ADO checks, always link the real `target_url` from the check API. Never fabricate URLs.\n+- Be direct and actionable.",
+          "snapshot_ref": "6280b33c44442c55015a9302f19cfa0e4c4b38c9",
+          "snapshot_blob_sha": "2c032992998fd5c6b460d539c706f1ae033b620b",
+          "snapshot_file": "snapshots/azure-sdk-for-go__Azure__6280b33c44442c55015a9302f19cfa0e4c4b38c9__mgmt-review.md",
+          "snapshot_bytes": 8239,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-go\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-go\",\"generated_workflow_path\":\".github/workflows/mgmt-review.lock.yml\",\"generated_workflow_file\":\"mgmt-review.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-go/blob/62c45ed2c508a1d9b5c4dedaf4a6d86794d81e32/.github/workflows/mgmt-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+      "source_full_name": "Azure/azure-sdk-for-go",
+      "md_path": ".github/workflows/mgmt-review.md",
+      "commit_sha": "b8b4be6e4437394231753d8338ba493c9487e46b",
+      "authored_at": "2026-05-16T00:36:55Z",
+      "committed_at": "2026-05-16T00:36:55Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add prepare-pipelines guidance for first on-board services in mgmt-review workflow (#26678)\n\n* Initial plan\n\n* Add prepare-pipelines step for first on-board services and ensure pipeline checks complete before analysis\n\n- Add Step 2: Detect first on-board services and trigger /azp run prepare-pipelines\n- Add Step 3: Wait for all pipeline checks to complete before analyzing results\n- Update step numbering and cross-references throughout the workflow\n- Increase add-comment max to 2 to allow the prepare-pipelines trigger comment\n- Add prepare-pipelines failure template to the comment section\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/80d6a861-848d-4239-b13e-79671e104b76\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Address code review feedback: add timeout guidance for polling steps\n\n- Add 10-minute timeout for prepare-pipelines check polling\n- Add 20-minute timeout for pipeline check completion polling\n- Remove misleading statement about comment not counting toward limit\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/80d6a861-848d-4239-b13e-79671e104b76\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Update timeouts: prepare-pipelines to 20min, pipeline checks to 30min\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/102e3bd0-c783-428c-a89b-4b453dad2ed5\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Change prepare-pipelines from auto-trigger to Step 6 instruction for service team\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/c37a28ab-4f66-4475-9244-e1cb699c8b7d\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Apply suggestion from @tadelesh\n\n* Apply suggestion from @tadelesh\n\n* Apply suggestion from @tadelesh\n\n* Remove Step 3 (pipeline polling) and renumber steps\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/54897a12-074d-4935-badb-bd43d8e60db5\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Revert last change; remove Step 2 (Note first on-board) instead of polling step\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/7fe3e166-c9ef-48ba-8748-bac9b3044f62\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Clarify Step 5 precedence: first on-board block appended even when PR is ready\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/963816ef-da87-4372-9c14-b330c4b37178\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Replace polling LRO with one-shot pipeline status check\n\nAgent-Logs-Url: https://github.com/Azure/azure-sdk-for-go/sessions/239ed98f-9e96-4620-b92e-e3c49f111bb1\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* fix wrong tool usage\n\n* update\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\nCo-authored-by: Chenjie Shi <tadelesh.shi@live.cn>\nCo-authored-by: tadelesh <chenjieshi@microsoft.com>",
+      "parent_shas": [
+        "f064647751215411057500d9942f8775c1a64d1a"
+      ],
+      "tree_sha": "361c9189e742c9c5bdbd338faa8023ed28836bf8",
+      "html_url": "https://github.com/Azure/azure-sdk-for-go/commit/b8b4be6e4437394231753d8338ba493c9487e46b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+          "source_full_name": "Azure/azure-sdk-for-go",
+          "md_path": ".github/workflows/mgmt-review.md",
+          "commit_sha": "b8b4be6e4437394231753d8338ba493c9487e46b",
+          "committed_at": "2026-05-16T00:36:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 42,
+          "file_deletions": 15,
+          "file_changes": 57,
+          "file_patch": "@@ -22,8 +22,6 @@ safe-outputs:\n     issues: false\n     discussions: false\n     footer: false\n-  mark-pull-request-as-ready-for-review:\n-    max: 1\n   messages:\n     footer: \"> ⚡ *Analyzed by [{workflow_name}]({run_url})*\"\n     run-started: \"⚡ [{workflow_name}]({run_url}) is analyzing this PR for merge guidance...\"\n@@ -41,27 +39,34 @@ You are an SDK release assistant for Azure SDK for Go management-plane pull requ\n \n ### Step 0 — Convert draft PR to ready for review\n \n-Fetch the PR details. If the PR is in **draft** state, mark it as ready for review using `mark_pull_request_as_ready_for_review` before proceeding. This ensures CI checks are triggered and the PR can eventually be merged.\n+Fetch the PR details. If the PR is in **draft** state, use the `update_pull_request` tool to set `draft` to `false` before proceeding. This ensures CI checks are triggered and the PR can eventually be merged.\n \n ### Step 1 — Gather information\n \n 1. Fetch PR details and changed files using GitHub MCP tools.\n-2. Fetch **check runs** for the PR head commit. Find the `go - pullrequest` parent check and its child jobs (`go - pullrequest (Build <job_name>)`). These are **Azure DevOps pipeline** results — do NOT call `get_job_logs` (returns 404). Read success/failure from the `conclusion` field and extract the `target_url` for ADO log links. NEVER fabricate ADO URLs.\n-3. Identify the module path from the changed files (e.g., `sdk/resourcemanager/<service>/arm<package>/`).\n+2. Identify the module path from the changed files (e.g., `sdk/resourcemanager/<service>/arm<package>/`).\n+3. Determine if this is a **first on-board service** (first beta version): check whether the PR adds a new `ci.yml` file under the module path (i.e., `ci.yml` appears in the changed files with status `added`). If so, record this for the Step 5 comment.\n+\n+### Step 2 — Check pipeline status\n+\n+Fetch **check runs** for the PR head commit. Find the `go - pullrequest` parent check and its child jobs (`go - pullrequest (Build <job_name>)`). These are **Azure DevOps pipeline** results — do NOT call `get_job_logs` (returns 404).\n \n-### Step 2 — Check for manual edits to auto-generated files\n+- If the `go - pullrequest` parent check is **not present**, or any checks still have a `status` of `queued` or `in_progress`, **do not wait**. Skip to Step 5 and post a comment telling the user that pipeline checks have not completed yet and to re-trigger this workflow (by removing and re-adding the `mgmt-review-needed` label) after the pipelines finish.\n+- If **all** pipeline checks have reached `completed` status, read success/failure from the `conclusion` field and extract the `target_url` for ADO log links. NEVER fabricate ADO URLs. Proceed to Step 3.\n+\n+### Step 3 — Check for manual edits to auto-generated files\n \n Auto-generated Go files contain the comment `// Code generated by Microsoft (R) Go Code Generator. DO NOT EDIT.` (or a similar `DO NOT EDIT` marker) near the top of the file.\n \n 1. From the PR's changed files (collected in Step 1), identify every file whose contents include a `DO NOT EDIT` comment.\n 2. Fetch the **commit list** for the PR.\n 3. For each commit **not** authored by `azure-sdk` (the automation bot), check whether it touches any of the `DO NOT EDIT` files identified above.\n 4. Ignore commits that only change whitespace, blank lines, or the copyright header — focus on **real logic changes** (function signatures, method bodies, type definitions, constants, etc.).\n-5. If any non-automation commit introduces real logic changes to a `DO NOT EDIT` file, record the file path, short commit SHA, and author. This is a **blocking issue** — it will be included in the Step 4 comment.\n+5. If any non-automation commit introduces real logic changes to a `DO NOT EDIT` file, record the file path, short commit SHA, and author. This is a **blocking issue** — it will be included in the Step 5 comment.\n \n-### Step 3 — Identify gaps to merge\n+### Step 4 — Identify gaps to merge\n \n-If the PR is mergeable (`Squash and merge` enabled), skip to Step 4 and comment `## PR is ready to merge`.\n+If the PR is mergeable (`Squash and merge` enabled), skip to Step 5 and comment `## PR is ready to merge`.\n \n Otherwise, classify every blocking check using the reference table below. Also inspect the PR's changed files directly when useful (e.g., reading code for compile errors) and note any `Merging is blocked` messages.\n \n@@ -76,7 +81,7 @@ The child job names follow the pattern `go - pullrequest (Build <job_name>)`. Ma\n \n | Child Job Name Pattern | What It Validates | Failure Signal | Fix Action |\n |---|---|---|---|\n-| `Build/Test on <os>_go_<ver>` (×4: ubuntu/windows × 2 Go versions) | `go build`, `go vet`, `go test` in playback mode | `output.title` contains `failed` | Read `output.summary` for error/warning counts. Compile errors → fix code. Test failures → check assertions, re-record per [test guide](https://github.com/Azure/azure-sdk-for-go/blob/main/documentation/development/testing.md) |\n+| `Build/Test on <os>_go_<ver>` (×4: ubuntu/windows × 2 Go versions) | `go build`, `go vet`, `go test` in playback mode | `output.title` contains `failed` | Read `output.summary` for error details. Include the guidance in the Step 5 comment. |\n | `Analyze` | Lint, format check, copyright headers, license check, go mod tidy, go.mod validation, link verification, changelog validation, dependency check | `output.title` contains `failed` | See Analyze sub-check table below |\n | `generate_job_matrix` | Determines which modules to test | `output.title` contains `failed` | Usually an infra issue — retry the pipeline |\n \n@@ -98,30 +103,52 @@ These are scripts inside the Analyze job. They do NOT appear as separate check r\n \n For failures not covered above, reference the [troubleshooting guide](https://github.com/Azure/azure-sdk-for-go/blob/main/documentation/development/TROUBLESHOOTING.md).\n \n-### Step 4 — Post a comment\n+### Step 5 — Post a comment\n \n Post **exactly one** PR comment via `add_comment`. Include the marker `<!-- gh-aw-workflow-id: mgmt-review -->` in the body.\n \n-**If nothing blocks** → post only:\n+**If pipeline checks have not completed** (detected in Step 2) → post only:\n+\n+```markdown\n+## ⏳ Pipeline Checks Still Running\n+\n+The `go - pullrequest` pipeline checks have not completed yet. Analysis cannot proceed until all checks finish.\n+\n+**Action required:** Re-trigger this workflow by removing and re-adding the `mgmt-review-needed` label after the pipeline checks have completed.\n+```\n+\n+**If all checks completed, nothing blocks, and this is NOT a first on-board service** → post only:\n \n ```\n ## PR is ready to merge\n ```\n \n-**If there are failures** → use this template:\n+**If nothing blocks but this IS a first on-board service** (detected in Step 1) → post:\n+\n+```markdown\n+## PR is ready to merge\n+\n+## ⚠️ First On-Board Service — Pipeline Setup Required\n+\n+This PR adds a new service. Release pipelines have not been created yet.\n+\n+**Action required:** Comment `/azp run prepare-pipelines` on this PR to create the release pipelines.\n+```\n+\n+**If there are failures** → use this template (append the first on-board block above after the failure list if this is also a first on-board service):\n \n ```markdown\n ## Next Steps to Merge\n \n Only failed checks and required actions are listed below.\n \n - ❌ `go - pullrequest (Build Build/Test on ubuntu_go_1261)`: <short reason>. [ADO logs](<real target_url>)\n-  - Fix: `<specific command or step>`\n+  - Fix: Confirm whether the removals/changes were intended in the source spec or example at [azure-rest-api-specs](https://github.com/Azure/azure-rest-api-specs). If intended, report the issue with the PR link in the **Azure SDK Language - Go** Teams channel. If not intended, fix the spec or example metadata and retrigger the SDK generation pipeline.\n - ❌ `go - pullrequest (Build Analyze)`: <sub-check>: <short reason>. [ADO logs](<real target_url>)\n   - Fix: `<specific command, e.g. gofmt -s -w .>`\n ```\n \n-**If auto-generated files were manually edited** (detected in Step 2), always include this block at the top of the comment, **before** any CI failures:\n+**If auto-generated files were manually edited** (detected in Step 3), always include this block at the top of the comment, **before** any CI failures:\n \n ```markdown\n ## ⛔ Manual Edits to Auto-Generated Files Detected",
+          "snapshot_ref": "b8b4be6e4437394231753d8338ba493c9487e46b",
+          "snapshot_blob_sha": "0262db4d1c593e096b6d9b2859e68d59703c0783",
+          "snapshot_file": "snapshots/azure-sdk-for-go__Azure__b8b4be6e4437394231753d8338ba493c9487e46b__mgmt-review.md",
+          "snapshot_bytes": 10005,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-go\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-go\",\"generated_workflow_path\":\".github/workflows/mgmt-review.lock.yml\",\"generated_workflow_file\":\"mgmt-review.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-go/blob/62c45ed2c508a1d9b5c4dedaf4a6d86794d81e32/.github/workflows/mgmt-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+      "source_full_name": "Azure/azure-sdk-for-go",
+      "md_path": ".github/workflows/mgmt-review.md",
+      "commit_sha": "91d7a1df2d4488c22f50ecb19135ae8db4c41fc8",
+      "authored_at": "2026-06-30T05:08:04Z",
+      "committed_at": "2026-06-30T05:08:04Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bump gh-aw to v0.80.9, use the Actions token for Copilot inference, and harden mgmt-review onboarding checks (#27094)\n\n* Bump gh-aw to v0.80.9 and use Actions token via copilot-requests: write\n\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\n\n* Apply suggestions from code review\n\nCo-authored-by: Chenjie Shi <tadelesh.shi@live.cn>\n\n* update\n\n* update\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: tadelesh <1726438+tadelesh@users.noreply.github.com>\nCo-authored-by: Chenjie Shi <tadelesh.shi@live.cn>\nCo-authored-by: tadelesh <chenjieshi@microsoft.com>",
+      "parent_shas": [
+        "f0fe155bed776393045ffebeb91be6660b52eaf9"
+      ],
+      "tree_sha": "5287539c0cf07412c51e90a397cdaef001f32e32",
+      "html_url": "https://github.com/Azure/azure-sdk-for-go/commit/91d7a1df2d4488c22f50ecb19135ae8db4c41fc8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-go:.github/workflows/mgmt-review.md",
+          "source_full_name": "Azure/azure-sdk-for-go",
+          "md_path": ".github/workflows/mgmt-review.md",
+          "commit_sha": "91d7a1df2d4488c22f50ecb19135ae8db4c41fc8",
+          "committed_at": "2026-06-30T05:08:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 17,
+          "file_deletions": 12,
+          "file_changes": 29,
+          "file_patch": "@@ -10,6 +10,7 @@ permissions:\n   pull-requests: read\n   actions: read\n   checks: read\n+  copilot-requests: write\n strict: false\n tools:\n   github:\n@@ -45,7 +46,9 @@ Fetch the PR details. If the PR is in **draft** state, use the `update_pull_requ\n \n 1. Fetch PR details and changed files using GitHub MCP tools.\n 2. Identify the module path from the changed files (e.g., `sdk/resourcemanager/<service>/arm<package>/`).\n-3. Determine if this is a **first on-board service** (first beta version): check whether the PR adds a new `ci.yml` file under the module path (i.e., `ci.yml` appears in the changed files with status `added`). If so, record this for the Step 5 comment.\n+3. Determine if this is a **first on-board service** (first beta version): check whether the PR adds a new `ci.yml` file under the module path (i.e., `ci.yml` appears in the changed files with status `added`). If so, this PR has two extra onboarding requirements to verify (record the results for the Step 5 checklist):\n+   - **Release pipelines** — created via `/azp run prepare-pipelines`.\n+   - **Namespace review link** — fetch PR comments and confirm the PR author posted a comment that includes a GitHub issue URL (`https://github.com/.../issues/<number>`) and references `namespace review`. Treat the link as missing if no such comment exists.\n \n ### Step 2 — Check pipeline status\n \n@@ -117,25 +120,26 @@ The `go - pullrequest` pipeline checks have not completed yet. Analysis cannot p\n **Action required:** Re-trigger this workflow by removing and re-adding the `mgmt-review-needed` label after the pipeline checks have completed.\n ```\n \n-**If all checks completed, nothing blocks, and this is NOT a first on-board service** → post only:\n+**If all checks completed and nothing blocks:**\n \n-```\n-## PR is ready to merge\n-```\n+- If this is **not** a first on-board service → post only `## PR is ready to merge`.\n+- If this **is** a first on-board service and **both** onboarding requirements are satisfied (release pipelines created **and** namespace review link present) → post only `## PR is ready to merge`.\n+- If this **is** a first on-board service and **either** onboarding requirement is outstanding → do **not** post `## PR is ready to merge`. Instead post only the **First On-Board Service Checklist** below with the outstanding items.\n \n-**If nothing blocks but this IS a first on-board service** (detected in Step 1) → post:\n+#### First On-Board Service Checklist\n \n-```markdown\n-## PR is ready to merge\n+List only the items that are still outstanding. Omit an item once its requirement is satisfied.\n \n-## ⚠️ First On-Board Service — Pipeline Setup Required\n+```markdown\n+## ⚠️ First On-Board Service — Action Required\n \n-This PR adds a new service. Release pipelines have not been created yet.\n+This PR cannot be merged until the following onboarding requirements are completed:\n \n-**Action required:** Comment `/azp run prepare-pipelines` on this PR to create the release pipelines.\n+- **Pipeline setup** (release pipelines not created yet): comment `/azp run prepare-pipelines` on this PR to create the release pipelines.\n+- **Namespace review link** (not found in PR comments): comment the namespace review issue link, for example `Namespace review issue: https://github.com/Azure/azure-sdk/issues/12345`.\n ```\n \n-**If there are failures** → use this template (append the first on-board block above after the failure list if this is also a first on-board service):\n+**If there are failures** → use this template, then append the **First On-Board Service Checklist** above (with only the outstanding items) when this is a first on-board service:\n \n ```markdown\n ## Next Steps to Merge\n@@ -169,4 +173,5 @@ Rules:\n - Only list failing/blocking checks — omit passed checks entirely.\n - For every failure, include a concrete **Fix** line with the exact command or step the PR author should run locally.\n - For ADO checks, always link the real `target_url` from the check API. Never fabricate URLs.\n+- For first on-board services, append the **First On-Board Service Checklist** with only the outstanding items (pipeline setup and/or namespace review link).\n - Be direct and actionable.",
+          "snapshot_ref": "91d7a1df2d4488c22f50ecb19135ae8db4c41fc8",
+          "snapshot_blob_sha": "f123547e5a0c022fda70ca2eb9d4291a2425430b",
+          "snapshot_file": "snapshots/azure-sdk-for-go__Azure__91d7a1df2d4488c22f50ecb19135ae8db4c41fc8__mgmt-review.md",
+          "snapshot_bytes": 11298,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-go\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-go\",\"generated_workflow_path\":\".github/workflows/mgmt-review.lock.yml\",\"generated_workflow_file\":\"mgmt-review.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-go/blob/62c45ed2c508a1d9b5c4dedaf4a6d86794d81e32/.github/workflows/mgmt-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

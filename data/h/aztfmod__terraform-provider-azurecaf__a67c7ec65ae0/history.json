@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+    "source_full_name": "aztfmod/terraform-provider-azurecaf",
+    "source_owner": "aztfmod",
+    "source_repo": "terraform-provider-azurecaf",
+    "md_path": ".github/workflows/pr-review-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/HEAD/.github/workflows/pr-review-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "aztfmod/terraform-provider-azurecaf",
+      "generated_owner": "aztfmod",
+      "generated_repo": "terraform-provider-azurecaf",
+      "generated_workflow_path": ".github/workflows/pr-review-agent.lock.yml",
+      "generated_workflow_file": "pr-review-agent.lock.yml",
+      "generated_html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/pr-review-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:24:38+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/pr-review-agent.md",
+      "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+      "authored_at": "2026-03-23T08:48:57Z",
+      "committed_at": "2026-03-23T08:48:57Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Add new skills and workflows for resource management and testing\n\n- Create e2e-test-runner skill for end-to-end testing procedures.\n- Add example-generator skill to generate Terraform example configurations.\n- Implement issue-to-resource-spec skill for parsing resource requests from GitHub issues.\n- Introduce naming-rules-drift-check skill to verify Azure naming rules against current definitions.\n- Develop pr-compliance-check skill to validate pull request compliance with project standards.\n- Establish pre-release-validation skill for comprehensive checks before release tagging.\n- Create readme-resource-table skill to update resource status in README.md.\n- Add regression-test-runner skill for running full CI test suite and reporting results.\n- Implement release-notes-generator skill for generating release notes from CHANGELOG.md.\n- Create resource-bulk-import skill for batch importing Azure resources into resourceDefinition.json.\n- Develop resource-completeness-check skill to compare resource definitions against existing resources.\n- Introduce resource-diff-report skill for comparing different versions of resourceDefinition.json.\n- Add semver-assessment skill to analyze changes and determine semantic version bumps.\n- Implement test-failure-diagnosis skill for diagnosing test failures and suggesting fixes.\n- Create workflows for contributor welcome, issue-to-PR automation, nightly regression testing, PR review, release validation, and weekly Azure sync.",
+      "parent_shas": [
+        "98993a22009e05fd03064fe6cd256f734dda1cc7"
+      ],
+      "tree_sha": "5e4a5255a5439a57cb125630c194b32024091487",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/575609f79f8432185b89444d13113fa40d7e9553",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/pr-review-agent.md",
+          "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+          "committed_at": "2026-03-23T08:48:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 82,
+          "file_deletions": 0,
+          "file_changes": 82,
+          "file_patch": "@@ -0,0 +1,82 @@\n+---\n+description: |\n+  PR review agent that validates pull request compliance. Checks that\n+  resourceDefinition.json changes include regenerated models, CHANGELOG\n+  is updated, and tests pass. Runs on PR open and update.\n+\n+on:\n+  pull_request:\n+    types: [opened, synchronize]\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    lockdown: true\n+    toolsets: [pull_requests]\n+  bash:\n+    - \"git *\"\n+    - \"go *\"\n+    - \"make *\"\n+    - \"grep *\"\n+    - \"diff *\"\n+    - \"cat *\"\n+    - \"wc *\"\n+\n+safe-outputs:\n+  add-comment: {}\n+\n+source: local\n+engine: copilot\n+---\n+\n+# PR Review Agent\n+\n+Review the pull request for compliance with project conventions.\n+\n+## Checks\n+\n+### 1. Generated code freshness\n+If `resourceDefinition.json` is modified in this PR:\n+- Run `go generate` and check if `azurecaf/models_generated.go` has uncommitted changes\n+- If stale, comment with: \"Generated code is stale. Please run `go generate` and commit the result.\"\n+\n+### 2. CHANGELOG updated\n+If any `.go` or `.json` file is modified:\n+- Check that `CHANGELOG.md` is also in the diff\n+- If missing, comment with: \"Please update CHANGELOG.md with a description of your changes.\"\n+\n+### 3. Resource diff summary\n+If `resourceDefinition.json` is modified:\n+- Compare the PR version against main\n+- Count added, removed, and modified resources\n+- Comment with a summary table of changes\n+\n+### 4. Build verification\n+- Run `make build` to verify the PR compiles and tests pass\n+- If failures, comment with the error output\n+\n+## Comment format\n+\n+Post a single review comment combining all results:\n+\n+```markdown\n+### 🤖 PR Compliance Review\n+\n+| Check | Status |\n+|-------|--------|\n+| Generated code fresh | ✅ / ❌ |\n+| CHANGELOG updated | ✅ / ❌ |\n+| Build passes | ✅ / ❌ |\n+\n+<details if resource changes>\n+#### Resource Changes\n+| Resource | Change | Details |\n+|----------|--------|---------|\n+| ... | Added/Modified/Removed | ... |\n+</details>\n+```",
+          "snapshot_ref": "575609f79f8432185b89444d13113fa40d7e9553",
+          "snapshot_blob_sha": "7c998b53f11a7b866eb1b889e4a93600045cc0b4",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__575609f79f8432185b89444d13113fa40d7e9553__pr-review-agent.md",
+          "snapshot_bytes": 1923,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/pr-review-agent.lock.yml\",\"generated_workflow_file\":\"pr-review-agent.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/pr-review-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/pr-review-agent.md",
+      "commit_sha": "71b397d181f47c88115451365c781f271d714661",
+      "authored_at": "2026-05-14T02:02:07Z",
+      "committed_at": "2026-05-14T02:02:07Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "ci: align Go toolchain across env + SHA-pin hand-authored workflows\n\n- devcontainer: bump Go feature 1.24.4 -> 1.25.0 to match go.mod (build would have failed in the dev container otherwise)\n- CONTRIBUTING: update prerequisite to Go 1.25.0+\n- workflows (hand-authored: codeql, copilot-setup-steps, e2e, go, security): SHA-pin actions/checkout@v6.0.2 (de0fac2e) and actions/setup-go@v6.4.0 (4a3601121d), matching the SHA-pinning posture of the gh-aw-managed agentic lock files. Mitigates CWE-829 tag-mutability risk.\n- pr-review-agent: add pre-agent 'Set up Go' + 'Build provider' steps so the agent can verify 'make build' against go.mod 1.25.0. Previously reported 'Build passes Unverified -- Go toolchain unavailable in sandbox' because the gh-aw firewall agent container has no Go. Build now runs on host runner; agent reads BUILD_RESULT from /tmp/pr-review-results.env. Recompiled lock file with gh-aw v0.72.1.\n- actions-lock.json: auto-updated by gh-aw to include actions/setup-go@v6.\n- CHANGELOG: document all of the above.",
+      "parent_shas": [
+        "76763b42c2a7a3489689f9f3ba318908329c2432"
+      ],
+      "tree_sha": "603f8d1941b56329b8852cffd7673e94c3051bf5",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/71b397d181f47c88115451365c781f271d714661",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/pr-review-agent.md",
+          "commit_sha": "71b397d181f47c88115451365c781f271d714661",
+          "committed_at": "2026-05-14T02:02:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 29,
+          "file_deletions": 2,
+          "file_changes": 31,
+          "file_patch": "@@ -30,6 +30,26 @@ tools:\n safe-outputs:\n   add-comment: {}\n \n+steps:\n+  - name: Set up Go\n+    uses: actions/setup-go@v6\n+    with:\n+      go-version-file: './go.mod'\n+      cache: true\n+\n+  - name: Build provider\n+    id: build\n+    continue-on-error: true\n+    run: |\n+      set -o pipefail\n+      if make build 2>&1 | tee /tmp/pr-build.log; then\n+        echo \"BUILD_RESULT=pass\" > /tmp/pr-review-results.env\n+      else\n+        echo \"BUILD_RESULT=fail\" > /tmp/pr-review-results.env\n+      fi\n+      # Keep a short tail for the agent prompt\n+      tail -n 80 /tmp/pr-build.log > /tmp/pr-build-tail.log || true\n+\n source: local\n engine: copilot\n ---\n@@ -57,8 +77,15 @@ If `resourceDefinition.json` is modified:\n - Comment with a summary table of changes\n \n ### 4. Build verification\n-- Run `make build` to verify the PR compiles and tests pass\n-- If failures, comment with the error output\n+- The `Build provider` pre-agent step has already run `make build` on the runner\n+  (where Go from `go.mod` is installed). Read the result from\n+  `/tmp/pr-review-results.env` — it contains `BUILD_RESULT=pass` or\n+  `BUILD_RESULT=fail`.\n+- If `BUILD_RESULT=fail`, include the tail of `/tmp/pr-build-tail.log` (last\n+  80 lines) in the comment as a fenced code block.\n+- Do NOT attempt to run `make build` or `go build` from inside the agent\n+  sandbox — the agent container does not have the Go toolchain. The pre-agent\n+  step is the source of truth.\n \n ## Comment format\n ",
+          "snapshot_ref": "71b397d181f47c88115451365c781f271d714661",
+          "snapshot_blob_sha": "e34ae62b296397e8767b023fba39a364534f4ea0",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__71b397d181f47c88115451365c781f271d714661__pr-review-agent.md",
+          "snapshot_bytes": 2901,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/pr-review-agent.lock.yml\",\"generated_workflow_file\":\"pr-review-agent.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/pr-review-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/pr-review-agent.md",
+      "commit_sha": "565acfd136f10c018900183d9f29364487dd06e3",
+      "authored_at": "2026-05-19T03:20:59Z",
+      "committed_at": "2026-05-19T03:20:59Z",
+      "author_name": "Copilot",
+      "author_email": "223556219+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "Copilot",
+      "committer_email": "223556219+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "fix(workflow): move pr-review-agent build artifacts from /tmp to workspace\n\nThe PR Review Agent's pre-agent step writes build results to /tmp/, which\nis blocked by the agent sandbox security policy. The agent cannot read\n/tmp/pr-review-results.env or /tmp/pr-build-tail.log, causing it to fail\nwith 'missing tools' errors.\n\nMove all build artifacts to .pr-review/ in the workspace directory, which\nis accessible from both the pre-agent step and the agent sandbox.\n\nFixes #460\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "cd853838d705da3c0b22fe9f17e27c86f9791692"
+      ],
+      "tree_sha": "9d164d77a5bb274cc93e89db5ff12de21cd4d94c",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/565acfd136f10c018900183d9f29364487dd06e3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/pr-review-agent.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/pr-review-agent.md",
+          "commit_sha": "565acfd136f10c018900183d9f29364487dd06e3",
+          "committed_at": "2026-05-19T03:20:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 6,
+          "file_changes": 13,
+          "file_patch": "@@ -42,13 +42,14 @@ steps:\n     continue-on-error: true\n     run: |\n       set -o pipefail\n-      if make build 2>&1 | tee /tmp/pr-build.log; then\n-        echo \"BUILD_RESULT=pass\" > /tmp/pr-review-results.env\n+      mkdir -p .pr-review\n+      if make build 2>&1 | tee .pr-review/build.log; then\n+        echo \"BUILD_RESULT=pass\" > .pr-review/results.env\n       else\n-        echo \"BUILD_RESULT=fail\" > /tmp/pr-review-results.env\n+        echo \"BUILD_RESULT=fail\" > .pr-review/results.env\n       fi\n       # Keep a short tail for the agent prompt\n-      tail -n 80 /tmp/pr-build.log > /tmp/pr-build-tail.log || true\n+      tail -n 80 .pr-review/build.log > .pr-review/build-tail.log || true\n \n source: local\n engine: copilot\n@@ -79,9 +80,9 @@ If `resourceDefinition.json` is modified:\n ### 4. Build verification\n - The `Build provider` pre-agent step has already run `make build` on the runner\n   (where Go from `go.mod` is installed). Read the result from\n-  `/tmp/pr-review-results.env` — it contains `BUILD_RESULT=pass` or\n+  `.pr-review/results.env` — it contains `BUILD_RESULT=pass` or\n   `BUILD_RESULT=fail`.\n-- If `BUILD_RESULT=fail`, include the tail of `/tmp/pr-build-tail.log` (last\n+- If `BUILD_RESULT=fail`, include the tail of `.pr-review/build-tail.log` (last\n   80 lines) in the comment as a fenced code block.\n - Do NOT attempt to run `make build` or `go build` from inside the agent\n   sandbox — the agent container does not have the Go toolchain. The pre-agent",
+          "snapshot_ref": "565acfd136f10c018900183d9f29364487dd06e3",
+          "snapshot_blob_sha": "e4173db868fed6d3fa95e7b2dad41f3327bc1961",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__565acfd136f10c018900183d9f29364487dd06e3__pr-review-agent.md",
+          "snapshot_bytes": 2927,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/pr-review-agent.lock.yml\",\"generated_workflow_file\":\"pr-review-agent.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/pr-review-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

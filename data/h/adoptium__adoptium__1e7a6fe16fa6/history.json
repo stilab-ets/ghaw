@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium:.github/workflows/translation-2.md",
+    "source_full_name": "adoptium/adoptium",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium",
+    "md_path": ".github/workflows/translation-2.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium/blob/HEAD/.github/workflows/translation-2.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium",
+      "generated_workflow_path": ".github/workflows/translation-2.lock.yml",
+      "generated_workflow_file": "translation-2.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/translation-2.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:33+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/translation-2.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/translation-2.md",
+      "commit_sha": "fe4380ea7714b3c2ac94846d28e2bc28079ddd7b",
+      "authored_at": "2026-07-23T07:49:44Z",
+      "committed_at": "2026-07-23T07:49:44Z",
+      "author_name": "Jood Jumah",
+      "author_email": "jjumah@andrew.cmu.edu",
+      "author_login": "jjumah-tech",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "translation-workflow",
+      "parent_shas": [
+        "1080291ec0d532f5ab36277973d7c0a0504732d0"
+      ],
+      "tree_sha": "6a8c29ef25602120b9b614714853f332c20bab40",
+      "html_url": "https://github.com/adoptium/adoptium/commit/fe4380ea7714b3c2ac94846d28e2bc28079ddd7b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/translation-2.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/translation-2.md",
+          "commit_sha": "fe4380ea7714b3c2ac94846d28e2bc28079ddd7b",
+          "committed_at": "2026-07-23T07:49:44Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 413,
+          "file_deletions": 0,
+          "file_changes": 413,
+          "file_patch": "@@ -0,0 +1,413 @@\n+---\n+description: Translates updated Adoptium documentation files into a chosen language and creates GitHub issues with translated content for review.\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      language:\n+        description: \"Target language for translation.\"\n+        required: true\n+        type: choice\n+        options:\n+          - French\n+          - Spanish\n+          - German\n+          - Chinese\n+          - Japanese\n+          - Arabic\n+      file_path:\n+        description: \"Specific file to translate (relative path, e.g. content/asciidoc-pages/docs/faq/index.adoc). Leave empty to translate all docs changed in the last 7 days.\"\n+        required: false\n+        type: string\n+\n+engine:\n+  id: copilot\n+\n+timeout-minutes: 45\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+\n+network:\n+  allowed:\n+    - defaults\n+\n+steps:\n+  - name: Fetch documentation files to translate\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+      INPUT_LANGUAGE: ${{ inputs.language }}\n+      INPUT_FILE_PATH: ${{ inputs.file_path }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent\n+\n+      LANGUAGE=\"${INPUT_LANGUAGE}\"\n+      FILE_PATH=\"${INPUT_FILE_PATH:-}\"\n+\n+      echo \"Target language: $LANGUAGE\"\n+      echo \"Specific file: ${FILE_PATH:-none - will scan recently changed files}\"\n+\n+      gh repo clone adoptium/adoptium.net /tmp/gh-aw/adoptium-net -- --depth=50\n+\n+      cd /tmp/gh-aw/adoptium-net\n+\n+      if [ -n \"$FILE_PATH\" ]; then\n+        if [ ! -f \"$FILE_PATH\" ]; then\n+          echo \"::error::File not found in adoptium/adoptium.net: $FILE_PATH\"\n+          exit 1\n+        fi\n+\n+        content=$(cat \"$FILE_PATH\")\n+        printf '%s' \"$content\" | jq -Rs --arg p \"$FILE_PATH\" '[{path: $p, content: .}]' \\\n+          > /tmp/gh-aw/agent/docs-to-translate.json\n+      else\n+        git log --since=\"7 days ago\" --name-only --pretty=format: \\\n+          -- 'content/asciidoc-pages/**' 'content/blog/**' \\\n+          | grep -E '\\.(md|adoc)$' | sort -u \\\n+          > /tmp/gh-aw/agent/changed-files.txt || true\n+\n+        if [ ! -s /tmp/gh-aw/agent/changed-files.txt ]; then\n+          echo \"No documentation files changed in the last 7 days.\"\n+          echo \"[]\" > /tmp/gh-aw/agent/docs-to-translate.json\n+        else\n+          echo \"Files to translate:\"\n+          cat /tmp/gh-aw/agent/changed-files.txt\n+\n+          echo \"[]\" > /tmp/gh-aw/agent/docs-to-translate.json\n+\n+          while IFS= read -r filepath; do\n+            if [ -f \"$filepath\" ]; then\n+              content=$(cat \"$filepath\")\n+              jq --arg p \"$filepath\" --arg c \"$content\" \\\n+                '. += [{path: $p, content: $c}]' \\\n+                /tmp/gh-aw/agent/docs-to-translate.json \\\n+                > /tmp/gh-aw/agent/docs-tmp.json\n+              mv /tmp/gh-aw/agent/docs-tmp.json /tmp/gh-aw/agent/docs-to-translate.json\n+            fi\n+          done < /tmp/gh-aw/agent/changed-files.txt\n+        fi\n+      fi\n+\n+      case \"$LANGUAGE\" in\n+        French)   CODE=\"fr\" ;;\n+        Spanish)  CODE=\"es\" ;;\n+        German)   CODE=\"de\" ;;\n+        Chinese)  CODE=\"zh\" ;;\n+        Japanese) CODE=\"ja\" ;;\n+        Arabic)   CODE=\"ar\" ;;\n+        *)        CODE=\"xx\" ;;\n+      esac\n+\n+      jq -n --arg lang \"$LANGUAGE\" --arg code \"$CODE\" \\\n+        '{target_language: $lang, language_code: $code}' \\\n+        > /tmp/gh-aw/agent/translation-config.json\n+\n+      echo \"=== Files queued for translation ===\"\n+      jq '[.[] | {path, chars: (.content | length)}]' /tmp/gh-aw/agent/docs-to-translate.json\n+\n+      echo \"=== Translation config ===\"\n+      cat /tmp/gh-aw/agent/translation-config.json\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[translation] \"\n+    labels: [translation, documentation]\n+    max: 10\n+  add-comment:\n+    max: 50\n+    target: \"*\"\n+---\n+\n+# Documentation Translation\n+\n+Translate Adoptium documentation into the requested language and publish the translated content as GitHub issues for review.\n+\n+## Pre-fetched data\n+\n+The documentation files and config have already been fetched.\n+\n+Read these files from disk:\n+\n+- `/tmp/gh-aw/agent/docs-to-translate.json`\n+- `/tmp/gh-aw/agent/translation-config.json`\n+\n+Each item in `docs-to-translate.json` has:\n+\n+- `path`\n+- `content`\n+\n+`translation-config.json` has:\n+\n+- `target_language`\n+- `language_code`\n+\n+Do not call shell commands or GitHub read tools to clone repositories or read source files. The source content is already available in the JSON files above.\n+\n+Use only the safe-output tools when publishing results:\n+\n+- `create_issue`\n+- `add_comment`\n+- `missing_data`\n+- `noop`\n+\n+## Main task\n+\n+1. Read `docs-to-translate.json`.\n+2. Read `translation-config.json`.\n+3. Translate each source file into the target language.\n+4. Create exactly one GitHub issue per translated source file.\n+5. Put Part 1 of the translation in the issue body using `create_issue`.\n+6. Put Part 2 and later in comments on the same issue using `add_comment`.\n+7. Do not create separate issues for Part 2, Part 3, etc.\n+8. Do not modify the original English source files.\n+9. Do not create commits or pull requests.\n+10. **IMPORTANT: Add a 2-3 second delay between each `add_comment` call to ensure proper ordering.**\n+\n+## If there are no files to translate\n+\n+If `docs-to-translate.json` is empty, create one issue explaining:\n+\n+- no documentation files changed in the last 7 days\n+- the user can rerun the workflow with a specific `file_path`\n+- example: `content/asciidoc-pages/docs/faq/index.adoc`\n+\n+Use a short title like:\n+\n+```text\n+No documentation files to translate\n+```\n+\n+## Translation rules\n+\n+Preserve the source structure exactly.\n+\n+- The translated file must mirror the original line by line.\n+- Every original line must have a corresponding translated line.\n+- Preserve blank lines.\n+- Preserve indentation.\n+- Preserve AsciiDoc and Markdown syntax.\n+- Preserve headings, list markers, tables, block delimiters, anchors, attributes, links, and frontmatter keys.\n+- Translate only human-readable prose.\n+- Do not translate code snippets.\n+- Do not translate variable names.\n+- Do not translate file paths.\n+- Do not translate URLs.\n+- Do not translate HTML tags.\n+- Do not translate AsciiDoc attribute names.\n+- Do not translate product names such as Eclipse Temurin, Adoptium, AQAvit, OpenJDK, JDK, JRE, JVM, GitHub, API, or Gradle unless the target language normally transliterates them.\n+\n+## Output filename rule\n+\n+Use the language code as a suffix before the file extension.\n+\n+Examples:\n+\n+```text\n+content/asciidoc-pages/docs/faq/index.adoc -> content/asciidoc-pages/docs/faq/index.ar.adoc\n+content/blog/example/index.md -> content/blog/example/index.fr.md\n+```\n+\n+## Part sizing rule\n+\n+Safe-output bodies must stay small.\n+\n+For every issue body and every comment body:\n+\n+- Keep the total body under 8,000 characters.\n+- Prefer chunks of at most 4,000 translated-content characters.\n+- Count headers, fenced-code markers, notes, and footer text in the total size.\n+- Split only at line boundaries.\n+- If unsure, split into smaller parts.\n+\n+After splitting, calculate `N` as the total number of parts.\n+\n+Use labels like (where N is the total number of parts):\n+\n+```text\n+Part 1 of 3\n+Part 2 of 3\n+Part 3 of 3\n+```\n+\n+Do not use `N = ceil(total characters / 60000)`. That is too large.\n+\n+## Temporary ID rule\n+\n+Use temporary IDs to connect comments to the issue created earlier.\n+\n+For each source file, choose a short temporary ID:\n+\n+```text\n+aw_file1\n+aw_file2\n+aw_faq1\n+aw_doc1\n+```\n+\n+Temporary IDs must:\n+\n+- start with `aw_`\n+- use only letters, numbers, and underscores\n+- be short: 3 to 12 characters after `aw_`\n+- not contain hyphens\n+- not contain long names such as `aw_issue_file1_part1`\n+\n+Correct examples:\n+\n+```text\n+aw_file1\n+aw_faq1\n+aw_doc2\n+```\n+\n+Wrong examples:\n+\n+```text\n+aw_issue_file1_part1\n+aw-file-1\n+file1\n+```\n+\n+## Safe-output process for each translated file\n+\n+### Step 1: Create the issue for Part 1\n+\n+Call `create_issue` once for the file.\n+\n+Use:\n+\n+- `temporary_id`\n+- `title`\n+- `body`\n+\n+The title should not include the `[translation]` prefix manually because the workflow adds it automatically.\n+\n+Example:\n+\n+```json\n+create_issue({\n+  \"temporary_id\": \"aw_file1\",\n+  \"title\": \"content/asciidoc-pages/docs/faq/index.adoc -> Arabic (Part 1 of 3)\",\n+  \"body\": \"ISSUE BODY HERE\"\n+})\n+```\n+\n+### Step 2: Add later parts as comments\n+\n+For Part 2 and later, call `add_comment`.\n+\n+Set `item_number` to the same temporary ID used in `create_issue`.\n+\n+**CRITICAL: After each `add_comment` call, wait 2-3 seconds before posting the next comment. This ensures GitHub processes comments in the correct order.**\n+\n+Example flow:\n+\n+```json\n+add_comment({\n+  \"item_number\": \"aw_file1\",\n+  \"body\": \"**Part:** Part 2 of 4\\n\\n...(COMMENT BODY HERE)...\"\n+})\n+// WAIT 2-3 SECONDS\n+\n+add_comment({\n+  \"item_number\": \"aw_file1\",\n+  \"body\": \"**Part:** Part 3 of 4\\n\\n...(COMMENT BODY HERE)...\"\n+})\n+// WAIT 2-3 SECONDS\n+\n+add_comment({\n+  \"item_number\": \"aw_file1\",\n+  \"body\": \"**Part:** Part 4 of 4\\n\\n...(COMMENT BODY HERE)...\"\n+})\n+```\n+\n+Do not guess issue numbers.\n+\n+Do not use issue numbers like `1`, `17`, or `18`.\n+\n+Do not use bash to extract issue numbers.\n+\n+Do not parse response text from `create_issue`.\n+\n+The safe-output system resolves the temporary ID automatically.\n+\n+## Issue body template\n+\n+Use this structure for Part 1:\n+\n+````markdown\n+**File:** `SOURCE_PATH`\n+**Target language:** TARGET_LANGUAGE\n+**Part:** Part 1 of N\n+**Suggested output filename:** `OUTPUT_PATH`\n+\n+```adoc\n+TRANSLATED_CONTENT_CHUNK_1\n+```\n+\n+**Notes for human review:**\n+\n+- Review technical terminology and idioms.\n+- Confirm formatting still renders correctly.\n+\n+This translation was AI-generated and should be reviewed by a native speaker before being committed.\n+````\n+\n+For Markdown files, use:\n+\n+````markdown\n+```markdown\n+TRANSLATED_CONTENT_CHUNK\n+```\n+````\n+\n+For AsciiDoc files, use:\n+\n+````markdown\n+```adoc\n+TRANSLATED_CONTENT_CHUNK\n+```\n+````\n+\n+## Comment body template\n+\n+Use this structure for Part 2 and later:\n+\n+````markdown\n+**Part:** Part X of N\n+\n+```adoc\n+TRANSLATED_CONTENT_CHUNK_X\n+```\n+\n+**Notes for human review:**\n+\n+- Review technical terminology and idioms.\n+- Confirm formatting still renders correctly.\n+````\n+\n+For the final part, also include:\n+\n+```text\n+This translation was AI-generated and should be reviewed by a native speaker before being committed.\n+```\n+\n+## Critical constraints\n+\n+- Exactly one issue per source file.\n+- Part 1 goes in the issue body.\n+- Part 2 and later go in comments on that same issue.\n+- Use `temporary_id` on `create_issue`.\n+- Use that same temporary ID as `item_number` on `add_comment`.\n+- Never create separate issues for later parts.\n+- Never call `missing_tool` because the translation is too large.\n+- If the output is too large, split it into smaller parts.\n+- Keep every issue body and comment body under 8,000 characters.\n+- Preserve source structure line by line.\n+- Do not fetch additional documentation.\n+- Do not create pull requests.\n+- Do not commit files.\n+- **Add a 2-3 second delay between each `add_comment` call to ensure proper comment ordering on GitHub.**",
+          "snapshot_ref": "fe4380ea7714b3c2ac94846d28e2bc28079ddd7b",
+          "snapshot_blob_sha": "16ba3ae7f5f713cf35b750897a50ed81aff248e5",
+          "snapshot_file": "snapshots/adoptium__adoptium__fe4380ea7714b3c2ac94846d28e2bc28079ddd7b__translation-2.md",
+          "snapshot_bytes": 10849,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/translation-2.lock.yml\",\"generated_workflow_file\":\"translation-2.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/translation-2.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "vaadin/flow:.github/workflows/doc-bot.md",
+    "source_full_name": "vaadin/flow",
+    "source_owner": "vaadin",
+    "source_repo": "flow",
+    "md_path": ".github/workflows/doc-bot.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/vaadin/flow/blob/HEAD/.github/workflows/doc-bot.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "vaadin/flow",
+      "generated_owner": "vaadin",
+      "generated_repo": "flow",
+      "generated_workflow_path": ".github/workflows/doc-bot.lock.yml",
+      "generated_workflow_file": "doc-bot.lock.yml",
+      "generated_html_url": "https://github.com/vaadin/flow/blob/ab5898570da39ff24e91a4662cb3e22ff33e2885/.github/workflows/doc-bot.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "vaadin/flow:.github/workflows/doc-bot.md",
+      "source_full_name": "vaadin/flow",
+      "md_path": ".github/workflows/doc-bot.md",
+      "commit_sha": "1d548c82546797d88dcedf50c30d30494f410af9",
+      "authored_at": "2026-06-04T08:47:29Z",
+      "committed_at": "2026-06-04T08:47:29Z",
+      "author_name": "Petter Holmström",
+      "author_email": "petter@vaadin.com",
+      "author_login": "peholmst",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Documentation bot (#23607)\n\n# Documentation Bot\n\nAn agentic GitHub workflow that automatically creates documentation PRs\nin [`vaadin/docs`](https://github.com/vaadin/docs) when code changes\naffect user-facing features, APIs, or behavior.\n\nPowered by [GitHub Agentic Workflows](https://github.com/github/gh-aw)\n(`gh-aw`) and Claude.\n\n## How It Works\n\n1. A developer opens or updates a PR in a source repository.\n2. The bot analyzes the PR diff and classifies changes (new features,\nAPI changes, deprecations, etc.).\n3. If documentation updates are needed, the bot creates a **draft PR**\nin `vaadin/docs` with the relevant changes.\n4. The draft PR is assigned to the original PR author for review.\n5. A comment is posted on the source PR linking to the docs PR.\n\nIf no documentation changes are needed (internal/test/build-only\nchanges), the bot comments accordingly and takes no further action.\n\n## Prerequisites\n\n- [GitHub CLI](https://cli.github.com/) (`gh`) installed and\nauthenticated\n- The `gh-aw` extension: `gh extension install github/gh-aw`\n\n## Installation\n\n### 1. Copy the workflow file\n\nCopy `.github/workflows/doc-bot.md` from this repository into the target\nrepository:\n\n```bash\n# From the target repository root\nmkdir -p .github/workflows\ncp /path/to/github-doc-bot/.github/workflows/doc-bot.md .github/workflows/\n```\n\n### 2. Compile the workflow\n\n```bash\ngh aw compile\n```\n\nThis produces `.github/workflows/doc-bot.lock.yml` — the compiled GitHub\nActions workflow.\n\n### 3. Set secrets\n\nThe workflow requires two secrets:\n\n| Secret | Purpose | How to obtain |\n|--------|---------|---------------|\n| `ANTHROPIC_API_KEY` | Claude AI engine for the agentic workflow |\nCreate at [console.anthropic.com](https://console.anthropic.com/) |\n| `DOCS_REPO_TOKEN` | Read/write access to `vaadin/docs` | GitHub\nFine-grained PAT (see below) |\n\n```bash\ngh aw secrets set ANTHROPIC_API_KEY\ngh aw secrets set DOCS_REPO_TOKEN\n```\n\n#### Creating the `DOCS_REPO_TOKEN`\n\nCreate a [Fine-grained Personal Access\nToken](https://github.com/settings/personal-access-tokens) with:\n\n- **Repository access:** `vaadin/docs` only\n- **Permissions:**\n  - Contents: Read and write\n  - Pull requests: Read and write\n  - Issues: Read and write\n  - Metadata: Read-only\n\n### 4. Commit and push\n\n```bash\ngit add .github/workflows/doc-bot.md .github/workflows/doc-bot.lock.yml\ngit commit -m \"Add documentation bot workflow\"\ngit push\n```\n\n### 5. Test\n\nOpen a PR with a user-facing change (e.g., adding a new public API\nmethod) and check the Actions tab. You should see:\n\n- The workflow triggers on the PR\n- A draft PR appears in `vaadin/docs` assigned to the PR author\n- A comment on the source PR links to the docs PR\n\nAlso test with an internal-only change to verify the bot correctly skips\ndocumentation.\n\n## Organization-Wide Deployment\n\nTo deploy across multiple Vaadin repositories:\n\n1. Set `ANTHROPIC_API_KEY` and `DOCS_REPO_TOKEN` as **organization\nsecrets** scoped to the relevant repositories.\n2. Copy `doc-bot.md` and run `gh aw compile` in each repository, then\ncommit both files.\n\n## Configuration\n\nThe workflow is configured in the frontmatter of `doc-bot.md`. Key\nsettings:\n\n| Setting | Default | Description |\n|---------|---------|-------------|\n| `timeout-minutes` | `30` | Maximum runtime for the workflow |\n| `draft` | `true` | Docs PRs are created as drafts |\n| `expires` | `14` | Auto-close stale docs PRs after 14 days |\n| `fallback-as-issue` | `true` | If PR creation fails, create an issue\ninstead |\n| `base-branch` | `main` | Target branch in `vaadin/docs` |\n\n## Troubleshooting\n\n### Workflow doesn't trigger\n- Ensure the compiled `.lock.yml` file is committed alongside the `.md`\nfile.\n- Check that both secrets are set: `gh aw secrets list`.\n\n### PR creation fails\n- Verify the `DOCS_REPO_TOKEN` has write access to `vaadin/docs`.\n- Check the Actions log for detailed error messages.\n- If PR creation fails, the bot falls back to creating an issue in\n`vaadin/docs`.\n\n### Duplicate docs PRs\n- On `synchronize` events (PR updates), the bot searches for existing\ndocs PRs before creating new ones. If duplicates appear, check that the\nbranch naming pattern (`doc-bot/<repo>/<pr-number>`) is consistent.\n\n---------\n\nCo-authored-by: Mikhail Shabarov <61410877+mshabarov@users.noreply.github.com>\nCo-authored-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>\nCo-authored-by: mikhail <mikhail@vaadin.com>",
+      "parent_shas": [
+        "d64a668204d8f07bbcca2905bb2b26bfa8ff93b6"
+      ],
+      "tree_sha": "6b79898fb5b5ab4f5e5c7c62ef38ed1bfe20edae",
+      "html_url": "https://github.com/vaadin/flow/commit/1d548c82546797d88dcedf50c30d30494f410af9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "vaadin/flow:.github/workflows/doc-bot.md",
+          "source_full_name": "vaadin/flow",
+          "md_path": ".github/workflows/doc-bot.md",
+          "commit_sha": "1d548c82546797d88dcedf50c30d30494f410af9",
+          "committed_at": "2026-06-04T08:47:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 260,
+          "file_deletions": 0,
+          "file_changes": 260,
+          "file_patch": "@@ -0,0 +1,260 @@\n+---\n+name: Documentation Bot\n+description: >\n+  Analyzes PR changes and creates documentation updates in vaadin/docs\n+  when code changes affect user-facing features, APIs, or behavior.\n+\n+on:\n+  pull_request:\n+    types: [assigned]\n+\n+# Opt-in trigger: only run when vaadin-bot is assigned to a merged PR.\n+if: >\n+  github.event.assignee.login == 'vaadin-bot' &&\n+  github.event.pull_request.merged == true\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+engine: codex\n+\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests, search]\n+    github-token: ${{ secrets.VAADIN_BOT_TOKEN }}\n+  edit:\n+  bash: true\n+\n+timeout-minutes: 30\n+\n+env:\n+  SOURCE_REPO: ${{ github.repository }}\n+  PR_NUMBER: ${{ github.event.pull_request.number }}\n+  PR_AUTHOR: ${{ github.event.pull_request.user.login }}\n+  PR_TITLE: ${{ github.event.pull_request.title }}\n+  PR_BRANCH: ${{ github.event.pull_request.head.ref }}\n+\n+safe-outputs:\n+  create-pull-request:\n+    target-repo: \"vaadin/docs\"\n+    base-branch: \"main\"\n+    title-prefix: \"[docs] \"\n+    labels: [documentation, automated]\n+    draft: true\n+    expires: 14\n+    fallback-as-issue: true\n+    github-token: ${{ secrets.VAADIN_BOT_TOKEN }}\n+  assign-to-user:\n+    target-repo: \"vaadin/docs\"\n+    target: \"*\"\n+    github-token: ${{ secrets.VAADIN_BOT_TOKEN }}\n+  add-comment:\n+---\n+\n+# Documentation Bot\n+\n+You are a documentation bot for the Vaadin project. Your job is to analyze pull requests in source code repositories and, when the changes affect user-facing behavior, create a corresponding documentation update PR in the `vaadin/docs` repository.\n+\n+This workflow is **opt-in**: it runs only when a maintainer assigns `vaadin-bot` to a merged pull request. By the time you run, the source PR has already been merged.\n+\n+## Environment\n+\n+- **Source repository:** `${{ env.SOURCE_REPO }}`\n+- **PR number:** `${{ env.PR_NUMBER }}`\n+- **PR author:** `${{ env.PR_AUTHOR }}`\n+- **PR title:** `${{ env.PR_TITLE }}`\n+- **PR branch:** `${{ env.PR_BRANCH }}`\n+\n+## Phase 1: Analyze the Pull Request\n+\n+Retrieve and read the pull request for `${{ env.SOURCE_REPO }}#${{ env.PR_NUMBER }}` according to these rules:\n+\n+1. **Never review drafts** - If the PR is a draft, stop processing. Do not proceed to further phases. \n+\n+2. **Quick filter** - Get the list of changed files first. If ALL files match these patterns, skip to Phase 2 with `INTERNAL_ONLY`:\n+   - `**/test/**`, `**/*Test.java`, `**/*IT.java`, `**/tests/**`\n+   - `**/pom.xml`, `**/*.gradle*`, `**/package*.json`\n+   - `.github/workflows/**`, `**/Dockerfile`\n+\n+3. **Selective diff analysis** - Only fetch diffs for user-facing files (max 20 files):\n+   - Skip: Files with >500 lines changed (note in PR body)\n+   - Skip: Test files, build files, generated files\n+\n+4. **Read PR metadata** - Title, description, and top-level comments only\n+\n+Classify each meaningful change into one or more of these categories:\n+\n+| Category | Description |\n+|---|---|\n+| `NEW_FEATURE` | A new user-facing feature, component, or API |\n+| `API_CHANGE` | Modification to an existing public API (signature, return type, parameters) |\n+| `BEHAVIOR_CHANGE` | Change in existing behavior visible to end-users or developers |\n+| `DEPRECATION` | A public API or feature is deprecated |\n+| `BREAKING_CHANGE` | A change that breaks backward compatibility |\n+| `INTERNAL_ONLY` | Refactoring, internal implementation changes with no user-facing impact |\n+| `TEST_ONLY` | Changes only to test files |\n+| `BUILD_ONLY` | Changes only to build configuration, CI, dependencies |\n+\n+## Phase 2: Early Exit Check\n+\n+If **all** changes are classified as `INTERNAL_ONLY`, `TEST_ONLY`, or `BUILD_ONLY`, then:\n+\n+1. Add a comment on the source PR using `add-comment`:\n+\n+   > **Documentation Bot:** Analyzed this PR and determined no documentation updates are needed. All changes are internal/test/build-only.\n+\n+2. Stop processing. Do not proceed to further phases.\n+\n+## Phase 3: Explore the Documentation Repository\n+\n+Explore the `vaadin/docs` repository (branch: `main`) to understand the documentation structure. Use the GitHub tools to browse the repository tree.\n+\n+Key directories under `articles/`:\n+\n+| Directory | Content |\n+|---|---|\n+| `articles/flow/` | Vaadin Flow (Java) framework documentation |\n+| `articles/hilla/` | Hilla framework documentation |\n+| `articles/components/` | UI component documentation |\n+| `articles/building-apps/` | Application building guides |\n+| `articles/styling/` | Theming and styling guides |\n+| `articles/tools/` | Developer tooling documentation |\n+| `articles/getting-started/` | Getting started tutorials |\n+| `articles/upgrading/` | Migration and upgrade guides |\n+\n+Documentation files are **AsciiDoc** (`.adoc`) with YAML front matter blocks. Pay attention to the existing conventions:\n+\n+- Front matter format and required fields\n+- Section heading levels and naming patterns\n+- Cross-reference syntax\n+- Code example formatting\n+- Admonition blocks (NOTE, TIP, WARNING, IMPORTANT, CAUTION)\n+\n+## Phase 4: Plan Documentation Changes\n+\n+For each user-facing change identified in Phase 1:\n+\n+1. **Search for existing references** — Use `search_code` to find mentions of the affected APIs, components, or features in `vaadin/docs`. Look for class names, method names, configuration property names, and feature names. To keep token usage low, follow these limits:\n+   - **Maximum 3 `search_code` calls** — only search for the most significant API changes.\n+   - **Search by class name only** — do not search for every method name.\n+   - **Use file path filters** — limit searches to `articles/flow/**` for Flow changes.\n+   - **Cache lookups** — if multiple changes affect the same class, search for it once and reuse the result.\n+\n+2. **Identify target files** — Determine which documentation file(s) need updating. Prefer updating existing files over creating new ones.\n+\n+3. **Define the change** — For each file, describe what needs to be added, modified, or removed.\n+\n+Scope guidelines:\n+- Limit changes to **5-8 files maximum** to keep the PR reviewable.\n+- For large source PRs, focus on the most impactful API surface changes.\n+- If you are unsure whether a change needs documentation, include it but mark the section with a comment: `// TODO: Verify this documentation change — auto-generated by doc-bot`.\n+\n+## Phase 5: Implement Documentation Changes\n+\n+**Style guide** (don't read files to learn style, use these rules):\n+- AsciiDoc format with YAML frontmatter\n+- Code blocks: `[source,java]` with `----` delimiters\n+- Cross-refs: `<<filename#anchor,text>>`\n+- Admonitions: `[NOTE]`, `[TIP]`, `[WARNING]`\n+\n+1. **Clone** the `vaadin/docs` repository.\n+2. **Create a branch** named: `doc-bot/${{ env.SOURCE_REPO }}/${{ env.PR_NUMBER }}` (replace `/` in the repo name with `-`).\n+3. **Edit files** — Apply the planned changes, matching the existing AsciiDoc style and conventions found in the repository. Follow these rules:\n+   - Preserve existing formatting, heading levels, and structure.\n+   - Use the same code example style (language annotations, callouts).\n+   - Follow the existing cross-reference patterns.\n+   - Write in the same tone and voice as the surrounding documentation.\n+   - Never fabricate information — only document what the source PR actually changes.\n+   - Never remove existing documentation without clear justification from the source PR.\n+4. **Commit** all changes with a descriptive message:\n+   ```\n+   docs: update documentation for <SOURCE_REPO>#<PR_NUMBER>\n+\n+   Source PR: <PR_TITLE>\n+   Categories: <comma-separated list of change categories>\n+   ```\n+\n+## Phase 6: Create Documentation PR\n+\n+Use the `create-pull-request` safe-output to create a draft PR in `vaadin/docs`.\n+\n+**PR title:** `[docs] Update docs for ${{ env.SOURCE_REPO }}#${{ env.PR_NUMBER }}: ${{ env.PR_TITLE }}`\n+\n+**PR body** (use this template):\n+\n+```markdown\n+## Source\n+\n+- **Repository:** ${{ env.SOURCE_REPO }}\n+- **PR:** ${{ env.SOURCE_REPO }}#${{ env.PR_NUMBER }}\n+- **Author:** @${{ env.PR_AUTHOR }}\n+\n+## Change Categories\n+\n+<!-- List the categories from Phase 1 as a bulleted list -->\n+\n+## Documentation Changes\n+\n+<!-- For each changed file, briefly describe what was changed and why -->\n+\n+| File | Change |\n+|------|--------|\n+| ... | ... |\n+\n+## Review Notes\n+\n+- This PR was auto-generated by the Documentation Bot.\n+- Please review all changes carefully before merging.\n+- Items marked with `TODO: Verify` need special attention.\n+\n+---\n+*Auto-generated by Documentation Bot from ${{ env.SOURCE_REPO }}#${{ env.PR_NUMBER }}*\n+```\n+\n+## Phase 7: Assign to PR Author\n+\n+Use the `assign-to-user` safe-output to assign the created documentation PR to `${{ env.PR_AUTHOR }}`.\n+\n+If the user cannot be assigned (e.g., they don't have access to vaadin/docs), note this in the PR description but do not fail.\n+\n+## Phase 8: Comment on Source PR\n+\n+Use the `add-comment` safe-output to add a comment on the original PR (`${{ env.SOURCE_REPO }}#${{ env.PR_NUMBER }}`):\n+\n+> **Documentation Bot:** I've created a draft documentation PR to reflect the changes in this PR:\n+>\n+> **Docs PR:** vaadin/docs#<NUMBER>\n+>\n+> The following documentation files were updated:\n+> - `<file1>`\n+> - `<file2>`\n+> - ...\n+>\n+> Please review the docs PR and mark it as ready for review when satisfied.\n+\n+## Edge Cases\n+\n+### Duplicate Detection\n+\n+The workflow can be triggered more than once for the same source PR (for example, if `vaadin-bot` is unassigned and reassigned). Before creating a new documentation PR, search for existing open PRs in `vaadin/docs` with the branch pattern `doc-bot/${{ env.SOURCE_REPO }}/${{ env.PR_NUMBER }}`. If one exists:\n+\n+1. Update the existing branch with new changes instead of creating a new PR.\n+2. Add a comment on the existing docs PR noting it was updated.\n+3. Do not create a duplicate PR.\n+\n+### Large PRs\n+\n+If the source PR has more than 50 changed files or an extremely large diff:\n+\n+1. Focus on the most significant user-facing changes (public API additions/modifications, new features).\n+2. Note in the docs PR description that the source PR was large and only the most impactful changes were documented.\n+3. Add a checklist of other potentially doc-worthy changes for the reviewer.\n+\n+### Uncertain Changes\n+\n+If you cannot confidently determine whether a change needs documentation or what the correct documentation should be:\n+\n+1. Include the change but clearly mark it with: `// TODO: Verify this documentation change — auto-generated by doc-bot`\n+2. In the docs PR description, list these uncertain items under a \"Needs Human Review\" section.\n+3. Do not guess or fabricate documentation content.",
+          "snapshot_ref": "1d548c82546797d88dcedf50c30d30494f410af9",
+          "snapshot_blob_sha": "506bf2017ec6e76612bfff8cf6d8ff0fc416a692",
+          "snapshot_file": "snapshots/flow__vaadin__1d548c82546797d88dcedf50c30d30494f410af9__doc-bot.md",
+          "snapshot_bytes": 10456,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"vaadin/flow\",\"generated_owner\":\"vaadin\",\"generated_repo\":\"flow\",\"generated_workflow_path\":\".github/workflows/doc-bot.lock.yml\",\"generated_workflow_file\":\"doc-bot.lock.yml\",\"generated_html_url\":\"https://github.com/vaadin/flow/blob/ab5898570da39ff24e91a4662cb3e22ff33e2885/.github/workflows/doc-bot.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "vaadin/flow:.github/workflows/doc-bot.md",
+      "source_full_name": "vaadin/flow",
+      "md_path": ".github/workflows/doc-bot.md",
+      "commit_sha": "94e71c12717440292609c11ce849a5430e5abb35",
+      "authored_at": "2026-06-04T11:15:04Z",
+      "committed_at": "2026-06-04T11:15:04Z",
+      "author_name": "Mikhail Shabarov",
+      "author_email": "61410877+mshabarov@users.noreply.github.com",
+      "author_login": "mshabarov",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: route doc-bot GitHub access through gh-proxy (#24524)\n\nUse tools.github.mode: gh-proxy so GitHub API access goes through the\npre-authenticated gh CLI instead of api.github.com, and allow the github\nnetwork ecosystem so the agent can read and update vaadin/docs. Fixes\nthe firewall blocking api.github.com and github.com during doc-bot runs.\n\nCo-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+      "parent_shas": [
+        "6e7a4ec97c70a342069c99a47aebe779961e176f"
+      ],
+      "tree_sha": "9bc15806e095bbf5bef92d02e1160facaff2fdf5",
+      "html_url": "https://github.com/vaadin/flow/commit/94e71c12717440292609c11ce849a5430e5abb35",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "vaadin/flow:.github/workflows/doc-bot.md",
+          "source_full_name": "vaadin/flow",
+          "md_path": ".github/workflows/doc-bot.md",
+          "commit_sha": "94e71c12717440292609c11ce849a5430e5abb35",
+          "committed_at": "2026-06-04T11:15:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 0,
+          "file_changes": 10,
+          "file_patch": "@@ -21,11 +21,21 @@ engine: codex\n \n tools:\n   github:\n+    # gh-proxy routes GitHub API access through the pre-authenticated gh CLI,\n+    # so api.github.com does not need to be in the network allowlist.\n+    mode: gh-proxy\n     toolsets: [repos, pull_requests, search]\n     github-token: ${{ secrets.VAADIN_BOT_TOKEN }}\n   edit:\n   bash: true\n \n+# Allow GitHub domains (github.com, *.githubusercontent.com, ...) so the agent\n+# can read and update the vaadin/docs repository.\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n timeout-minutes: 30\n \n env:",
+          "snapshot_ref": "94e71c12717440292609c11ce849a5430e5abb35",
+          "snapshot_blob_sha": "5896ee1c13719dfa4a24006c374082e28dba345f",
+          "snapshot_file": "snapshots/flow__vaadin__94e71c12717440292609c11ce849a5430e5abb35__doc-bot.md",
+          "snapshot_bytes": 10801,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"vaadin/flow\",\"generated_owner\":\"vaadin\",\"generated_repo\":\"flow\",\"generated_workflow_path\":\".github/workflows/doc-bot.lock.yml\",\"generated_workflow_file\":\"doc-bot.lock.yml\",\"generated_html_url\":\"https://github.com/vaadin/flow/blob/ab5898570da39ff24e91a4662cb3e22ff33e2885/.github/workflows/doc-bot.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

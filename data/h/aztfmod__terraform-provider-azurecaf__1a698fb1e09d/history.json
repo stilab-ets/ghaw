@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+    "source_full_name": "aztfmod/terraform-provider-azurecaf",
+    "source_owner": "aztfmod",
+    "source_repo": "terraform-provider-azurecaf",
+    "md_path": ".github/workflows/release-labeler.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/HEAD/.github/workflows/release-labeler.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "aztfmod/terraform-provider-azurecaf",
+      "generated_owner": "aztfmod",
+      "generated_repo": "terraform-provider-azurecaf",
+      "generated_workflow_path": ".github/workflows/release-labeler.lock.yml",
+      "generated_workflow_file": "release-labeler.lock.yml",
+      "generated_html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-labeler.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:24:38+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-labeler.md",
+      "commit_sha": "121499197df5841d1175da3c94f38a8fa00932ec",
+      "authored_at": "2026-03-23T09:55:10Z",
+      "committed_at": "2026-03-23T09:55:10Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "feat: add release-labeler agentic workflow\n\nLabels closed issues and merged PRs with the release version tag\nthey were included in. Runs on tag push (new releases) or manually\nfor backfilling historical labels.",
+      "parent_shas": [
+        "c1689b5c2f65f0dc1ae6e5de856ebab2fdc647d6"
+      ],
+      "tree_sha": "a0b31e4ea6d482c625546cde946be19c2a8b0bf2",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/121499197df5841d1175da3c94f38a8fa00932ec",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-labeler.md",
+          "commit_sha": "121499197df5841d1175da3c94f38a8fa00932ec",
+          "committed_at": "2026-03-23T09:55:10Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 123,
+          "file_deletions": 0,
+          "file_changes": 123,
+          "file_patch": "@@ -0,0 +1,123 @@\n+---\n+description: |\n+  Labels closed issues and merged PRs with the release version they were\n+  included in. Cross-references git tags, merge commits, and CHANGELOG\n+  entries to determine which release shipped each item.\n+\n+on:\n+  push:\n+    tags: [\"v*\"]\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    lockdown: false\n+    min-integrity: none\n+    repos: all\n+  bash:\n+    - \"git *\"\n+    - \"grep *\"\n+    - \"cat *\"\n+    - \"jq *\"\n+    - \"sed *\"\n+    - \"sort *\"\n+    - \"comm *\"\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+\n+source: local\n+engine: copilot\n+timeout-minutes: 15\n+---\n+\n+# Release Labeler\n+\n+Label closed issues and merged pull requests with the release version tag they were included in.\n+\n+## Goal\n+\n+After a release is tagged (or on manual trigger for backfilling), determine which issues and PRs were resolved in each release and add a version label (e.g., `v1.2.32`) to them.\n+\n+## Process\n+\n+### 1. Determine releases to process\n+\n+**On tag push (`v*`):**\n+- Process only the newly pushed tag.\n+- Find the previous tag to establish the commit range.\n+\n+**On manual trigger (`workflow_dispatch`):**\n+- List all release tags (`git tag --sort=v:refname | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$'`).\n+- Process all tags to backfill labels.\n+\n+### 2. For each release tag\n+\n+Find the commit range between consecutive tags:\n+\n+```bash\n+# Get ordered list of release tags (exclude previews, test tags)\n+git tag --sort=v:refname | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$'\n+\n+# For each consecutive pair (prev_tag, curr_tag):\n+git log $prev_tag..$curr_tag --oneline\n+```\n+\n+### 3. Extract issue and PR references\n+\n+From the commits in each release range, extract:\n+\n+1. **Merged PR numbers** from merge commit messages (e.g., `Merge pull request #399`)\n+2. **Referenced issue numbers** from commit messages (e.g., `fixes #379`, `resolves #291`, `#89`)\n+3. **PR numbers** from branch-based commits that were squash-merged\n+\n+Use the GitHub API to also check:\n+- Each merged PR's linked/closing issues\n+- Issue cross-references in PR bodies\n+\n+### 4. Create version labels\n+\n+For each version tag being processed:\n+- Ensure a label named after the tag exists (e.g., `v1.2.32`). If not, create it with a consistent color.\n+- Use color `#7B61FF` for version labels.\n+\n+### 5. Apply labels\n+\n+For each issue and PR identified in a release:\n+- Check if it already has the version label.\n+- If not, add the version label.\n+- Skip open issues/PRs — only label closed issues and merged PRs.\n+\n+### 6. Report\n+\n+After processing, create a summary:\n+\n+```markdown\n+## Release Labeler Report\n+\n+### vX.Y.Z\n+- Labeled N issues: #1, #2, #3\n+- Labeled N PRs: #10, #20, #30\n+- Skipped N (already labeled)\n+\n+### vX.Y.Z-1\n+...\n+```\n+\n+Post the report as a comment on the latest release (for tag push) or as a new issue (for backfill runs).\n+\n+## Important rules\n+\n+- Never label open issues or unmerged PRs.\n+- If a PR or issue appears in multiple release ranges (e.g., referenced in a backport), label it with the earliest release.\n+- Do not remove existing version labels — only add missing ones.\n+- Skip pre-release tags (e.g., `v1.2.24-preview`, `v2.0.0-preview-1`).\n+- Skip test tags (e.g., `v1.2.31-test`).",
+          "snapshot_ref": "121499197df5841d1175da3c94f38a8fa00932ec",
+          "snapshot_blob_sha": "320fb480740e4e938af74ee3218ae4cbbe7e3dce",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__121499197df5841d1175da3c94f38a8fa00932ec__release-labeler.md",
+          "snapshot_bytes": 3199,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-labeler.lock.yml\",\"generated_workflow_file\":\"release-labeler.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-labeler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-labeler.md",
+      "commit_sha": "dd56179289e396b531070630ef027d436aeb710f",
+      "authored_at": "2026-03-23T10:17:36Z",
+      "committed_at": "2026-03-23T10:17:36Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Enable write access for release-labeler via safe-outputs\n\nAdd add-labels and create-issue safe-outputs so the workflow can\ncreate version labels and assign them to issues/PRs.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "3c1914f31c3f333001a03bff74f6b8a44afc5636"
+      ],
+      "tree_sha": "4cd06ff19bf40de4fc1939cf47028a1ed9c69495",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/dd56179289e396b531070630ef027d436aeb710f",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-labeler.md",
+          "commit_sha": "dd56179289e396b531070630ef027d436aeb710f",
+          "committed_at": "2026-03-23T10:17:36Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -33,6 +33,10 @@ tools:\n safe-outputs:\n   mentions: false\n   allowed-github-references: []\n+  add-labels: {}\n+  create-issue:\n+    title-prefix: \"[Release Labeler] \"\n+    max: 1\n \n source: local\n engine: copilot",
+          "snapshot_ref": "dd56179289e396b531070630ef027d436aeb710f",
+          "snapshot_blob_sha": "e8fa42861f03c5693231b1b8f37bb10aeda816c4",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__dd56179289e396b531070630ef027d436aeb710f__release-labeler.md",
+          "snapshot_bytes": 3282,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-labeler.lock.yml\",\"generated_workflow_file\":\"release-labeler.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-labeler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-labeler.md",
+      "commit_sha": "0c58624562f163db331145d314b1643a5d57baa2",
+      "authored_at": "2026-03-23T11:13:02Z",
+      "committed_at": "2026-03-23T11:13:02Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Fix release-labeler workflow timeout and missing label creation\n\nRoot causes of failure in run #23432326181:\n1. Timeout too short (15min) for backfilling 46 release tags\n2. Agent had no way to create version labels (only add-labels\n   safe-output which requires pre-existing labels)\n3. No efficiency guidance for bulk operations\n\nFixes:\n- Increase timeout from 15 to 45 minutes\n- Add gh label/api to allowed bash commands for label creation\n- Change issues permission to write (needed for label creation)\n- Add explicit gh label create instructions with --force flag\n- Add efficiency guidelines for bulk extraction and batching\n- Optimize backfill instructions to use git log + grep over API calls\n\nCloses #428\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "dd56179289e396b531070630ef027d436aeb710f"
+      ],
+      "tree_sha": "3888bd931cd795e4407d05715166a59e7c0cd051",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/0c58624562f163db331145d314b1643a5d57baa2",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-labeler.md",
+          "commit_sha": "0c58624562f163db331145d314b1643a5d57baa2",
+          "committed_at": "2026-03-23T11:13:02Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 23,
+          "file_deletions": 5,
+          "file_changes": 28,
+          "file_patch": "@@ -11,7 +11,7 @@ on:\n \n permissions:\n   contents: read\n-  issues: read\n+  issues: write\n   pull-requests: read\n \n network: defaults\n@@ -29,6 +29,8 @@ tools:\n     - \"sed *\"\n     - \"sort *\"\n     - \"comm *\"\n+    - \"gh label *\"\n+    - \"gh api *\"\n \n safe-outputs:\n   mentions: false\n@@ -40,7 +42,7 @@ safe-outputs:\n \n source: local\n engine: copilot\n-timeout-minutes: 15\n+timeout-minutes: 45\n ---\n \n # Release Labeler\n@@ -61,7 +63,8 @@ After a release is tagged (or on manual trigger for backfilling), determine whic\n \n **On manual trigger (`workflow_dispatch`):**\n - List all release tags (`git tag --sort=v:refname | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$'`).\n-- Process all tags to backfill labels.\n+- Process tags in batches, starting from the most recent. Focus on efficiency — extract all references with a single `git log` per tag pair using `--format` flags.\n+- Use bash to do bulk extraction of PR/issue numbers from commit messages rather than making individual API calls per commit.\n \n ### 2. For each release tag\n \n@@ -90,8 +93,8 @@ Use the GitHub API to also check:\n ### 4. Create version labels\n \n For each version tag being processed:\n-- Ensure a label named after the tag exists (e.g., `v1.2.32`). If not, create it with a consistent color.\n-- Use color `#7B61FF` for version labels.\n+- Use `gh label create \"<tag>\" --color \"7B61FF\" --force` to ensure the label exists. The `--force` flag updates the label if it already exists, avoiding errors.\n+- This requires bash access to the `gh` CLI.\n \n ### 5. Apply labels\n \n@@ -125,3 +128,18 @@ Post the report as a comment on the latest release (for tag push) or as a new is\n - Do not remove existing version labels — only add missing ones.\n - Skip pre-release tags (e.g., `v1.2.24-preview`, `v2.0.0-preview-1`).\n - Skip test tags (e.g., `v1.2.31-test`).\n+\n+## Efficiency guidelines\n+\n+- Use bash to extract all PR/issue references in bulk:\n+  ```bash\n+  git log $prev_tag..$curr_tag --oneline | grep -oE '#[0-9]+' | sort -u\n+  ```\n+- Create all version labels in a single bash loop before applying them:\n+  ```bash\n+  for tag in $(git tag --sort=v:refname | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$'); do\n+    gh label create \"$tag\" --color \"7B61FF\" --force 2>/dev/null\n+  done\n+  ```\n+- Minimize GitHub API calls — prefer `search_issues` with batch queries over individual issue lookups.\n+- When checking if a label is already applied, use `search_issues` with `label:vX.Y.Z` to find already-labeled items and skip them.",
+          "snapshot_ref": "0c58624562f163db331145d314b1643a5d57baa2",
+          "snapshot_blob_sha": "7d208a5db46802ed3a6c08843f14f4a589d0764f",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__0c58624562f163db331145d314b1643a5d57baa2__release-labeler.md",
+          "snapshot_bytes": 4279,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-labeler.lock.yml\",\"generated_workflow_file\":\"release-labeler.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-labeler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-labeler.md",
+      "commit_sha": "cdabf484bda108ceaab0ff7776618b0c694a6899",
+      "authored_at": "2026-03-23T11:22:06Z",
+      "committed_at": "2026-03-23T11:22:06Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Fix release-labeler: revert write perms, recompile lock file\n\ngh-aw strict mode disallows issues: write permission directly.\nRevert to issues: read and rely on add_labels safe-output for\nwrite operations. Remove gh CLI bash commands. Recompile lock file.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "0c58624562f163db331145d314b1643a5d57baa2"
+      ],
+      "tree_sha": "f9c839856fe65ef1a5f17df8075ebe8592fbe914",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/cdabf484bda108ceaab0ff7776618b0c694a6899",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-labeler.md",
+          "commit_sha": "cdabf484bda108ceaab0ff7776618b0c694a6899",
+          "committed_at": "2026-03-23T11:22:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 11,
+          "file_changes": 14,
+          "file_patch": "@@ -11,7 +11,7 @@ on:\n \n permissions:\n   contents: read\n-  issues: write\n+  issues: read\n   pull-requests: read\n \n network: defaults\n@@ -29,8 +29,6 @@ tools:\n     - \"sed *\"\n     - \"sort *\"\n     - \"comm *\"\n-    - \"gh label *\"\n-    - \"gh api *\"\n \n safe-outputs:\n   mentions: false\n@@ -93,8 +91,8 @@ Use the GitHub API to also check:\n ### 4. Create version labels\n \n For each version tag being processed:\n-- Use `gh label create \"<tag>\" --color \"7B61FF\" --force` to ensure the label exists. The `--force` flag updates the label if it already exists, avoiding errors.\n-- This requires bash access to the `gh` CLI.\n+- Use the `add_labels` tool to apply the version label (e.g., `v1.2.32`) to issues and PRs. The tool will handle label creation if needed.\n+- If `add_labels` fails because the label doesn't exist, skip that item and note it in the report.\n \n ### 5. Apply labels\n \n@@ -135,11 +133,5 @@ Post the report as a comment on the latest release (for tag push) or as a new is\n   ```bash\n   git log $prev_tag..$curr_tag --oneline | grep -oE '#[0-9]+' | sort -u\n   ```\n-- Create all version labels in a single bash loop before applying them:\n-  ```bash\n-  for tag in $(git tag --sort=v:refname | grep -E '^v[0-9]+\\.[0-9]+\\.[0-9]+$'); do\n-    gh label create \"$tag\" --color \"7B61FF\" --force 2>/dev/null\n-  done\n-  ```\n - Minimize GitHub API calls — prefer `search_issues` with batch queries over individual issue lookups.\n - When checking if a label is already applied, use `search_issues` with `label:vX.Y.Z` to find already-labeled items and skip them.",
+          "snapshot_ref": "cdabf484bda108ceaab0ff7776618b0c694a6899",
+          "snapshot_blob_sha": "424e5f09214eb646886158e56a212a7c43fcea13",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__cdabf484bda108ceaab0ff7776618b0c694a6899__release-labeler.md",
+          "snapshot_bytes": 4032,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-labeler.lock.yml\",\"generated_workflow_file\":\"release-labeler.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-labeler.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-labeler.md",
+      "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+      "authored_at": "2026-05-14T01:19:22Z",
+      "committed_at": "2026-05-14T01:36:04Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "chore(workflows): recompile agentic workflows with gh-aw v0.72.1\n\n- regenerate all 10 .lock.yml files (was v0.61.0); add 6 missing lock files\n- migrate strict-mode permissions to safe-outputs in 3 workflows\n- replace deprecated tools.github.repos with allowed-repos\n- adopt fuzzy schedules and terraform ecosystem identifier\n\n🤖 - Generated by Copilot",
+      "parent_shas": [
+        "5345a4f1c60e9112d20ae7c7b6e9399318ce2d7a"
+      ],
+      "tree_sha": "8de1b8c85449891565dbd801ce496a93893c1eb1",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/76763b42c2a7a3489689f9f3ba318908329c2432",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-labeler.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-labeler.md",
+          "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "committed_at": "2026-05-14T01:36:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -20,7 +20,7 @@ tools:\n   github:\n     lockdown: false\n     min-integrity: none\n-    repos: all\n+    allowed-repos: all\n   bash:\n     - \"git *\"\n     - \"grep *\"",
+          "snapshot_ref": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "snapshot_blob_sha": "69cb0d7d90a1074910a8ab1a191a7a2e800a6d98",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__76763b42c2a7a3489689f9f3ba318908329c2432__release-labeler.md",
+          "snapshot_bytes": 4040,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-labeler.lock.yml\",\"generated_workflow_file\":\"release-labeler.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-labeler.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

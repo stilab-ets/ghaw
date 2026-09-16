@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+    "source_full_name": "unipept/unipept",
+    "source_owner": "unipept",
+    "source_repo": "unipept",
+    "md_path": ".github/workflows/dependency-update.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/unipept/unipept/blob/HEAD/.github/workflows/dependency-update.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "unipept/unipept",
+      "generated_owner": "unipept",
+      "generated_repo": "unipept",
+      "generated_workflow_path": ".github/workflows/dependency-update.lock.yml",
+      "generated_workflow_file": "dependency-update.lock.yml",
+      "generated_html_url": "https://github.com/unipept/unipept/blob/7b6b99bbce8546937ecf8372cb04c1f2628de966/.github/workflows/dependency-update.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+      "source_full_name": "unipept/unipept",
+      "md_path": ".github/workflows/dependency-update.md",
+      "commit_sha": "04006d68f785c74359af5a2c8f9c8a2f0519246d",
+      "authored_at": "2026-06-01T12:38:37Z",
+      "committed_at": "2026-06-01T12:38:37Z",
+      "author_name": "Pieter Verschaffelt",
+      "author_email": "pieter.verschaffelt@ugent.be",
+      "author_login": "pverscha",
+      "author_account_type": "User",
+      "committer_name": "Pieter Verschaffelt",
+      "committer_email": "pieter.verschaffelt@ugent.be",
+      "committer_login": "pverscha",
+      "committer_account_type": "User",
+      "message": "Implement new agentic workflow for automatic dependency updates",
+      "parent_shas": [
+        "6337d8c4750c904b13e014efeb05b60b281e22a0"
+      ],
+      "tree_sha": "262c05182359c8465c38e29cbed103437bdfbfa1",
+      "html_url": "https://github.com/unipept/unipept/commit/04006d68f785c74359af5a2c8f9c8a2f0519246d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+          "source_full_name": "unipept/unipept",
+          "md_path": ".github/workflows/dependency-update.md",
+          "commit_sha": "04006d68f785c74359af5a2c8f9c8a2f0519246d",
+          "committed_at": "2026-06-01T12:38:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 59,
+          "file_deletions": 0,
+          "file_changes": 59,
+          "file_patch": "@@ -0,0 +1,59 @@\n+---\n+description: \"Update all npm dependencies to their latest stable versions published at least 7 days ago, validate the full test suite, and open a pull request with the successful updates.\"\n+emoji: \"📦\"\n+labels: [dependencies, automation]\n+\n+on:\n+  schedule:\n+    - cron: 'weekly on friday'\n+  workflow_dispatch:\n+\n+engine: copilot\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+tools:\n+  bash: [\":*\"]\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"chore: \"\n+    labels: [dependencies]\n+\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+\n+runtimes:\n+  node:\n+    version: \"26\"\n+\n+timeout-minutes: 60\n+---\n+\n+Update all dependencies in `package.json` to their latest stable versions, following the rules below.\n+\n+## Eligibility rules\n+\n+- **7-day cooldown**: Only upgrade to versions published at least 7 days ago. Use `npx --yes npm-check-updates --cooldown 7` to identify eligible upgrades. This is a security measure: it ensures the community has had time to detect compromised packages before we adopt them.\n+- **Stable releases only**: Skip any update where the newest available version is a pre-release (alpha/beta/rc). Exception: if a dependency is currently pinned to a pre-release and a newer stable version exists, upgrade to the stable version.\n+- **Skip local references**: Do not modify the `peptonizer` dependency — it is a local file reference (`file:./peptonizer-v0.0.31.tgz`).\n+\n+## Steps\n+\n+1. Install current dependencies: `yarn install`.\n+2. Run `npx --yes npm-check-updates --cooldown 7 -u` to apply eligible upgrades to `package.json`.\n+3. Run `yarn install` to update `yarn.lock`.\n+4. Install Playwright browsers: `npx playwright install --with-deps`.\n+5. Validate the full suite in this order:\n+   - `yarn run types:check`\n+   - `yarn lint`\n+   - `yarn test`\n+   - `yarn test:e2e`\n+6. If validation fails, use binary search to isolate the offending dependency or dependencies. Revert those entries in `package.json`, run `yarn install`, and repeat validation until the suite passes cleanly.\n+7. Create a single pull request targeting the `develop` branch that bundles all successful updates, using:\n+   - **Title**: `chore: weekly dependency updates YYYY-MM-DD` (today's date)\n+   - **Body**: a Markdown table with columns `Package | Old version | New version` for every updated dependency; if any were excluded due to validation failures, add a second table with columns `Package | Attempted version | Failure summary`.",
+          "snapshot_ref": "04006d68f785c74359af5a2c8f9c8a2f0519246d",
+          "snapshot_blob_sha": "5d7dfe55b217ecb81297bc5246233bf8ed70b631",
+          "snapshot_file": "snapshots/unipept__unipept__04006d68f785c74359af5a2c8f9c8a2f0519246d__dependency-update.md",
+          "snapshot_bytes": 2424,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"unipept/unipept\",\"generated_owner\":\"unipept\",\"generated_repo\":\"unipept\",\"generated_workflow_path\":\".github/workflows/dependency-update.lock.yml\",\"generated_workflow_file\":\"dependency-update.lock.yml\",\"generated_html_url\":\"https://github.com/unipept/unipept/blob/7b6b99bbce8546937ecf8372cb04c1f2628de966/.github/workflows/dependency-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+      "source_full_name": "unipept/unipept",
+      "md_path": ".github/workflows/dependency-update.md",
+      "commit_sha": "67ca9c9149e4d0c81ed50313e4eb3b64e1a710a5",
+      "authored_at": "2026-06-01T13:25:25Z",
+      "committed_at": "2026-06-01T13:25:25Z",
+      "author_name": "Pieter Verschaffelt",
+      "author_email": "pieter.verschaffelt@ugent.be",
+      "author_login": "pverscha",
+      "author_account_type": "User",
+      "committer_name": "Pieter Verschaffelt",
+      "committer_email": "pieter.verschaffelt@ugent.be",
+      "committer_login": "pverscha",
+      "committer_account_type": "User",
+      "message": "Update agentic workflow for dependency updates",
+      "parent_shas": [
+        "ae57e23ac91430e442a038622b85596d53bb022d"
+      ],
+      "tree_sha": "56008b4de02244bd616043e019b87d316c034d53",
+      "html_url": "https://github.com/unipept/unipept/commit/67ca9c9149e4d0c81ed50313e4eb3b64e1a710a5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+          "source_full_name": "unipept/unipept",
+          "md_path": ".github/workflows/dependency-update.md",
+          "commit_sha": "67ca9c9149e4d0c81ed50313e4eb3b64e1a710a5",
+          "committed_at": "2026-06-01T13:25:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -26,6 +26,7 @@ network:\n   allowed:\n     - defaults\n     - node\n+    - \"cdn.playwright.dev\"\n \n runtimes:\n   node:\n@@ -54,6 +55,6 @@ Update all dependencies in `package.json` to their latest stable versions, follo\n    - `yarn test`\n    - `yarn test:e2e`\n 6. If validation fails, use binary search to isolate the offending dependency or dependencies. Revert those entries in `package.json`, run `yarn install`, and repeat validation until the suite passes cleanly.\n-7. Create a single pull request targeting the `develop` branch that bundles all successful updates, using:\n+7. Create a single **non-draft** pull request targeting the `develop` branch that bundles all successful updates, using:\n    - **Title**: `chore: weekly dependency updates YYYY-MM-DD` (today's date)\n    - **Body**: a Markdown table with columns `Package | Old version | New version` for every updated dependency; if any were excluded due to validation failures, add a second table with columns `Package | Attempted version | Failure summary`.",
+          "snapshot_ref": "67ca9c9149e4d0c81ed50313e4eb3b64e1a710a5",
+          "snapshot_blob_sha": "74586018a0f8af4f57b8dd6e9e1f6525ceedd9be",
+          "snapshot_file": "snapshots/unipept__unipept__67ca9c9149e4d0c81ed50313e4eb3b64e1a710a5__dependency-update.md",
+          "snapshot_bytes": 2465,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"unipept/unipept\",\"generated_owner\":\"unipept\",\"generated_repo\":\"unipept\",\"generated_workflow_path\":\".github/workflows/dependency-update.lock.yml\",\"generated_workflow_file\":\"dependency-update.lock.yml\",\"generated_html_url\":\"https://github.com/unipept/unipept/blob/7b6b99bbce8546937ecf8372cb04c1f2628de966/.github/workflows/dependency-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+      "source_full_name": "unipept/unipept",
+      "md_path": ".github/workflows/dependency-update.md",
+      "commit_sha": "615bf5d4b38d0a48f9619b3ee4657a51fd52cf71",
+      "authored_at": "2026-06-01T13:58:09Z",
+      "committed_at": "2026-06-01T13:58:09Z",
+      "author_name": "Pieter Verschaffelt",
+      "author_email": "pieter.verschaffelt@ugent.be",
+      "author_login": "pverscha",
+      "author_account_type": "User",
+      "committer_name": "Pieter Verschaffelt",
+      "committer_email": "pieter.verschaffelt@ugent.be",
+      "committer_login": "pverscha",
+      "committer_account_type": "User",
+      "message": "Added more domains to allowed network calls of update action",
+      "parent_shas": [
+        "67ca9c9149e4d0c81ed50313e4eb3b64e1a710a5"
+      ],
+      "tree_sha": "a18eecafda958ee0923636c5dae7ada0e507f467",
+      "html_url": "https://github.com/unipept/unipept/commit/615bf5d4b38d0a48f9619b3ee4657a51fd52cf71",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "unipept/unipept:.github/workflows/dependency-update.md",
+          "source_full_name": "unipept/unipept",
+          "md_path": ".github/workflows/dependency-update.md",
+          "commit_sha": "615bf5d4b38d0a48f9619b3ee4657a51fd52cf71",
+          "committed_at": "2026-06-01T13:58:09Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -27,6 +27,10 @@ network:\n     - defaults\n     - node\n     - \"cdn.playwright.dev\"\n+    - \"api.unipept.ugent.be\"\n+    - \"fonts.googleapis.com\"\n+    - \"playwright.download.prss.microsoft.com\"\n+\n \n runtimes:\n   node:",
+          "snapshot_ref": "615bf5d4b38d0a48f9619b3ee4657a51fd52cf71",
+          "snapshot_blob_sha": "3c891f94761185a96b17e5b05a4675be6533b12f",
+          "snapshot_file": "snapshots/unipept__unipept__615bf5d4b38d0a48f9619b3ee4657a51fd52cf71__dependency-update.md",
+          "snapshot_bytes": 2571,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"unipept/unipept\",\"generated_owner\":\"unipept\",\"generated_repo\":\"unipept\",\"generated_workflow_path\":\".github/workflows/dependency-update.lock.yml\",\"generated_workflow_file\":\"dependency-update.lock.yml\",\"generated_html_url\":\"https://github.com/unipept/unipept/blob/7b6b99bbce8546937ecf8372cb04c1f2628de966/.github/workflows/dependency-update.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/ruflo-backed-task.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/ruflo-backed-task.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/ruflo-backed-task.lock.yml",
+      "generated_workflow_file": "ruflo-backed-task.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/ruflo-backed-task.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:46:08+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/ruflo-backed-task.md",
+      "commit_sha": "8104b66c3e9940d0df8a6ccdbdb1eb2c1dc37e85",
+      "authored_at": "2026-05-31T05:43:50Z",
+      "committed_at": "2026-05-31T05:43:50Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Ruflo-backed agentic task workflow (#36046)",
+      "parent_shas": [
+        "7bb05c4d6d62cbe1e5af02402cd8664cb3c8bfce"
+      ],
+      "tree_sha": "3d45a2c5c8b427a2a2ff5782797c540e65f18d2c",
+      "html_url": "https://github.com/github/gh-aw/commit/8104b66c3e9940d0df8a6ccdbdb1eb2c1dc37e85",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/ruflo-backed-task.md",
+          "commit_sha": "8104b66c3e9940d0df8a6ccdbdb1eb2c1dc37e85",
+          "committed_at": "2026-05-31T05:43:50Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 249,
+          "file_deletions": 0,
+          "file_changes": 249,
+          "file_patch": "@@ -0,0 +1,249 @@\n+---\n+name: Ruflo-backed Task\n+description: Runs a repository task inside GitHub Agentic Workflows while delegating inner planning and coordination to Ruflo\n+on:\n+  slash_command:\n+    strategy: centralized\n+    name: ruflo\n+    events: [issue_comment]\n+\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+\n+engine: claude\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - node\n+\n+imports:\n+  - shared/mcp/ruflo.md\n+\n+tools:\n+  startup-timeout: 300\n+  cli-proxy: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, actions]\n+  web-fetch:\n+  edit:\n+  bash: true\n+\n+safe-outputs:\n+  create-pull-request:\n+    expires: 2d\n+    title-prefix: \"[ruflo] \"\n+    labels: [automation]\n+    reviewers: [copilot]\n+    draft: false\n+    if-no-changes: ignore\n+  create-issue:\n+    labels: [automation]\n+    max: 1\n+  add-comment:\n+    max: 2\n+  messages:\n+    footer: \"> 🌊 *Ruflo-backed run by [{workflow_name}]({run_url})*{effective_tokens_suffix}{history_link}\"\n+    run-started: \"🌊 [{workflow_name}]({run_url}) is coordinating this task with Ruflo...\"\n+    run-success: \"✅ [{workflow_name}]({run_url}) completed the Ruflo-backed task.\"\n+    run-failure: \"⚠️ [{workflow_name}]({run_url}) {status} while coordinating the Ruflo-backed task.\"\n+\n+timeout-minutes: 30\n+strict: true\n+---\n+\n+# Ruflo-backed GitHub Agentic Workflow\n+\n+You are running inside GitHub Agentic Workflows. Use Ruflo as the inner multi-agent orchestration layer, while GitHub Agentic Workflows remains the outer execution, security, and write-control substrate.\n+\n+## Mission\n+\n+Complete the requested repository task using Ruflo for planning, memory, task routing, and multi-agent coordination.\n+\n+Triggering context:\n+\n+- Repository: ${{ github.repository }}\n+- Issue: #${{ github.event.issue.number }}\n+- Slash command content: \"${{ steps.sanitized.outputs.text }}\"\n+\n+Treat the triggering issue plus the sanitized `/ruflo` comment as the task definition. If the comment contains no additional instruction beyond invoking `/ruflo`, infer the task from the issue title and body.\n+\n+## Operating model\n+\n+Use this architecture:\n+\n+```text\n+GitHub Agentic Workflow\n+  → controlled sandbox, network, permissions, safe outputs\n+  → Ruflo MCP server\n+  → Ruflo memory/search/routing/swarm tools\n+  → local repository analysis and edits\n+  → validation\n+  → safe output: PR, issue, or comment\n+```\n+\n+Do not bypass GitHub Agentic Workflow controls. Ruflo may coordinate the work, but all GitHub writes must go through safe outputs.\n+\n+## Required process\n+\n+### 1. Establish context\n+\n+Inspect the repository state first:\n+\n+- current branch\n+- relevant files\n+- package manager / build system\n+- test commands\n+- existing workflow or automation conventions\n+- open issue or PR context, if the task references one\n+\n+Use read-only GitHub tools where available. Use shell only for local inspection.\n+\n+### 2. Query Ruflo memory before planning\n+\n+Before making a plan, query Ruflo memory for related prior patterns.\n+\n+Search for:\n+\n+- the repository name\n+- the task type\n+- relevant file paths\n+- related error messages\n+- similar implementation patterns\n+\n+Use `memory_search` for this step. Treat memory as advisory context only. Prefer current repository evidence over stale memory.\n+\n+### 3. Initialize a bounded Ruflo swarm\n+\n+For non-trivial work, initialize a Ruflo swarm with these defaults:\n+\n+```json\n+{\n+  \"topology\": \"hierarchical\",\n+  \"maxAgents\": 6,\n+  \"strategy\": \"specialized\"\n+}\n+```\n+\n+Use fewer agents for small tasks. Do not spawn agents that are not needed.\n+\n+Recommended roles:\n+\n+- `coordinator`: owns plan, scope control, and final synthesis\n+- `researcher`: inspects existing code and conventions\n+- `architect`: proposes implementation approach for structural changes\n+- `coder`: makes local edits\n+- `tester`: identifies and runs validation\n+- `reviewer`: checks correctness, risk, and diff quality\n+- `security`: only for auth, secrets, permissions, sandboxing, injection, or dependency-risk work\n+- `docs`: only for documentation or user-facing behavior changes\n+\n+Use `swarm_init`, `agent_spawn`, `task_orchestrate`, `task_status`, and `swarm_status` as needed to coordinate the work.\n+\n+### 4. Produce a concise execution plan\n+\n+Before editing, produce a short internal plan with:\n+\n+- goal\n+- relevant files\n+- agents involved\n+- implementation steps\n+- validation steps\n+- expected safe output\n+\n+Keep the plan specific and executable. Avoid speculative architecture.\n+\n+### 5. Execute locally\n+\n+Make repository edits locally only.\n+\n+Rules:\n+\n+- preserve existing project style\n+- prefer minimal, targeted diffs\n+- do not reformat unrelated files\n+- do not introduce new dependencies unless clearly justified\n+- do not change lockfiles unless dependency changes require it\n+- do not alter CI, auth, permissions, or deployment behavior unless the task explicitly requires it\n+- do not commit directly\n+- do not push directly\n+- do not create GitHub writes directly from shell or MCP\n+\n+### 6. Validate\n+\n+Run the narrowest reliable validation first, then broader validation if available.\n+\n+Examples:\n+\n+```bash\n+npm test\n+npm run test\n+npm run lint\n+npm run build\n+pnpm test\n+pnpm lint\n+pnpm build\n+pytest\n+cargo test\n+go test ./...\n+```\n+\n+If tests cannot run, explain exactly why and perform static validation instead.\n+\n+### 7. Store useful Ruflo memory\n+\n+After successful completion, store a concise memory entry containing:\n+\n+- task type\n+- repository area\n+- implementation pattern\n+- validation result\n+- any reusable caveat\n+\n+Use `memory_store`. Do not store secrets, tokens, private user data, or large code dumps.\n+\n+### 8. Emit safe output\n+\n+Use the appropriate safe output:\n+\n+- `create_pull_request` when code or docs changed\n+- `add_comment` when only analysis is needed\n+- `create_issue` when follow-up work is discovered but should not be done now\n+\n+The final safe output must include:\n+\n+- summary\n+- files changed\n+- validation run and result\n+- Ruflo agents used\n+- risks or limitations\n+- follow-up recommendations, if any\n+\n+## Hard constraints\n+\n+- Do not perform GitHub write actions except through safe outputs.\n+- Do not expose secrets or environment values.\n+- Do not run destructive commands.\n+- Do not use broad shell commands unless needed.\n+- Do not exceed the task scope.\n+- Do not let the swarm continue if the coordinator determines the task is complete.\n+- Prefer deterministic repository evidence over Ruflo memory.\n+- If Ruflo tools are unavailable, continue with a single-agent fallback and clearly note that Ruflo MCP was unavailable.\n+\n+## Completion criteria\n+\n+You are done only when one of these is true:\n+\n+1. A PR safe output has been prepared with validated changes.\n+2. A comment safe output has been prepared with a complete analysis.\n+3. An issue safe output has been prepared for a clearly scoped follow-up.\n+4. The task cannot be completed, and the safe output explains the blocker, evidence, and next step.\n+\n+Do not end with only an internal summary. Emit the appropriate safe output.\n+\n+{{#runtime-import shared/noop-reminder.md}}",
+          "snapshot_ref": "8104b66c3e9940d0df8a6ccdbdb1eb2c1dc37e85",
+          "snapshot_blob_sha": "af6d1380c55c8906a0d365de825dcfe6bc5ae00e",
+          "snapshot_file": "snapshots/gh-aw__github__8104b66c3e9940d0df8a6ccdbdb1eb2c1dc37e85__ruflo-backed-task.md",
+          "snapshot_bytes": 6914,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/ruflo-backed-task.lock.yml\",\"generated_workflow_file\":\"ruflo-backed-task.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/ruflo-backed-task.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/ruflo-backed-task.md",
+      "commit_sha": "64a66de2e17a1d19a25b08a999d9e18cf84ebde2",
+      "authored_at": "2026-06-08T00:29:41Z",
+      "committed_at": "2026-06-08T00:29:41Z",
+      "author_name": "Peli de Halleux",
+      "author_email": "pelikhan@users.noreply.github.com",
+      "author_login": "pelikhan",
+      "author_account_type": "User",
+      "committer_name": "Peli de Halleux",
+      "committer_email": "pelikhan@users.noreply.github.com",
+      "committer_login": "pelikhan",
+      "committer_account_type": "User",
+      "message": "fixing messages",
+      "parent_shas": [
+        "410eeda4b31b2caf45fae484208e42e980b73a2d"
+      ],
+      "tree_sha": "aa1d5af383a6fade6d704a3166ef57ae1fb2ea15",
+      "html_url": "https://github.com/github/gh-aw/commit/64a66de2e17a1d19a25b08a999d9e18cf84ebde2",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/ruflo-backed-task.md",
+          "commit_sha": "64a66de2e17a1d19a25b08a999d9e18cf84ebde2",
+          "committed_at": "2026-06-08T00:29:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -48,7 +48,7 @@ safe-outputs:\n   add-comment:\n     max: 2\n   messages:\n-    footer: \"> 🌊 *Ruflo-backed run by [{workflow_name}]({run_url})*{effective_tokens_suffix}{history_link}\"\n+    footer: \"> 🌊 *Ruflo-backed run by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"\n     run-started: \"🌊 [{workflow_name}]({run_url}) is coordinating this task with Ruflo...\"\n     run-success: \"✅ [{workflow_name}]({run_url}) completed the Ruflo-backed task.\"\n     run-failure: \"⚠️ [{workflow_name}]({run_url}) {status} while coordinating the Ruflo-backed task.\"\n@@ -246,4 +246,4 @@ You are done only when one of these is true:\n \n Do not end with only an internal summary. Emit the appropriate safe output.\n \n-{{#runtime-import shared/noop-reminder.md}}\n+{{#runtime-import shared/noop-reminder.md}}\n\\ No newline at end of file",
+          "snapshot_ref": "64a66de2e17a1d19a25b08a999d9e18cf84ebde2",
+          "snapshot_blob_sha": "472650ef2266e31a8f670fa3ed863b1a8341b632",
+          "snapshot_file": "snapshots/gh-aw__github__64a66de2e17a1d19a25b08a999d9e18cf84ebde2__ruflo-backed-task.md",
+          "snapshot_bytes": 6907,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/ruflo-backed-task.lock.yml\",\"generated_workflow_file\":\"ruflo-backed-task.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/ruflo-backed-task.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/ruflo-backed-task.md",
+      "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "authored_at": "2026-06-28T18:46:18Z",
+      "committed_at": "2026-06-28T18:46:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Apply remaining changes (#42119)",
+      "parent_shas": [
+        "f0cf4df7343e548bebb36985a895314e136469ef"
+      ],
+      "tree_sha": "30b81bf66f1fefd910376450ca0b8d58890ef22c",
+      "html_url": "https://github.com/github/gh-aw/commit/a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/ruflo-backed-task.md",
+          "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "committed_at": "2026-06-28T18:46:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -14,6 +14,10 @@ permissions:\n   issues: read\n   pull-requests: read\n \n+sandbox:\n+  agent:\n+    sudo: false\n+\n engine: claude\n \n network:",
+          "snapshot_ref": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "snapshot_blob_sha": "d4a5d086e229b5a2d3da7b98b24bd578b2b8cd2f",
+          "snapshot_file": "snapshots/gh-aw__github__a2c8ef53839b08f76646833fd1859f4d1cf7079d__ruflo-backed-task.md",
+          "snapshot_bytes": 6956,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/ruflo-backed-task.lock.yml\",\"generated_workflow_file\":\"ruflo-backed-task.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/ruflo-backed-task.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/ruflo-backed-task.md",
+      "commit_sha": "1170fc484978ff65b6e026755866aea0af490710",
+      "authored_at": "2026-07-07T06:08:34Z",
+      "committed_at": "2026-07-07T06:08:34Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ambient-context: remove noop-reminder imports, trim workflow prompts (~3,600 chars/run saved) (#43910)",
+      "parent_shas": [
+        "22a0f5933fa05ef6444ab7c4b90aad065ce5592a"
+      ],
+      "tree_sha": "c1e1453b083cd21c07c5afb1bcd880168be3ebb3",
+      "html_url": "https://github.com/github/gh-aw/commit/1170fc484978ff65b6e026755866aea0af490710",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/ruflo-backed-task.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/ruflo-backed-task.md",
+          "commit_sha": "1170fc484978ff65b6e026755866aea0af490710",
+          "committed_at": "2026-07-07T06:08:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 3,
+          "file_changes": 4,
+          "file_patch": "@@ -249,6 +249,4 @@ You are done only when one of these is true:\n 3. An issue safe output has been prepared for a clearly scoped follow-up.\n 4. The task cannot be completed, and the safe output explains the blocker, evidence, and next step.\n \n-Do not end with only an internal summary. Emit the appropriate safe output.\n-\n-{{#runtime-import shared/noop-reminder.md}}\n\\ No newline at end of file\n+Do not end with only an internal summary. Emit the appropriate safe output.\n\\ No newline at end of file",
+          "snapshot_ref": "1170fc484978ff65b6e026755866aea0af490710",
+          "snapshot_blob_sha": "0549aba96b91873d92c3de18bd299ca06628e2e8",
+          "snapshot_file": "snapshots/gh-aw__github__1170fc484978ff65b6e026755866aea0af490710__ruflo-backed-task.md",
+          "snapshot_bytes": 6911,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/ruflo-backed-task.lock.yml\",\"generated_workflow_file\":\"ruflo-backed-task.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/ruflo-backed-task.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

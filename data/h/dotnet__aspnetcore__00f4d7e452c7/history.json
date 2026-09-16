@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+    "source_full_name": "dotnet/aspnetcore",
+    "source_owner": "dotnet",
+    "source_repo": "aspnetcore",
+    "md_path": ".github/workflows/triage-comment-reviewer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/aspnetcore/blob/HEAD/.github/workflows/triage-comment-reviewer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/aspnetcore",
+      "generated_owner": "dotnet",
+      "generated_repo": "aspnetcore",
+      "generated_workflow_path": ".github/workflows/triage-comment-reviewer.lock.yml",
+      "generated_workflow_file": "triage-comment-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/triage-comment-reviewer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:25:14+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/triage-comment-reviewer.md",
+      "commit_sha": "8019b4743f387ed6c6cfb734062245a525f90130",
+      "authored_at": "2026-06-02T12:02:24Z",
+      "committed_at": "2026-06-02T12:02:24Z",
+      "author_name": "Korolev Dmitry",
+      "author_email": "dmkorolev@microsoft.com",
+      "author_login": "DeagleGross",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Split issue triage agent into orchestrator + reviewer (#66873)",
+      "parent_shas": [
+        "3d3e43a1f4bccaa9947da2cf17170315e5ee572f"
+      ],
+      "tree_sha": "ffd759ff9ba26e6253b6b88ed70fd3c6636cb160",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/8019b4743f387ed6c6cfb734062245a525f90130",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/triage-comment-reviewer.md",
+          "commit_sha": "8019b4743f387ed6c6cfb734062245a525f90130",
+          "committed_at": "2026-06-02T12:02:24Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 357,
+          "file_deletions": 0,
+          "file_changes": 357,
+          "file_patch": "@@ -0,0 +1,357 @@\n+---\n+on:\n+  workflow_call:\n+    inputs:\n+      payload:\n+        description: \"Reserved for the orchestrator; not used by this worker.\"\n+        type: string\n+        required: false\n+      issue_number:\n+        description: \"The issue number the triage comment should be posted on.\"\n+        type: string\n+        required: true\n+      proposed_comment:\n+        description: \"The full markdown comment drafted by the triage orchestrator.\"\n+        type: string\n+        required: true\n+      dry_run:\n+        description: \"If true, prefix the posted comment with [DRY RUN].\"\n+        type: boolean\n+        required: false\n+        default: false\n+\n+description: >\n+  Reviewer worker for the issue-triage orchestrator. Validates a proposed\n+  triage comment. Issue-level FAIL trigger: the issue itself is a\n+  vulnerability report (CVE / explicit exploit / explicit security-fix\n+  request). Otherwise REWRITEs minor violations (constructed security\n+  framing, third-party hardening comparisons, label recommendations,\n+  .NET version-status claims, stray Notes section, unrelated duplicate\n+  citations) and posts the cleaned comment. Has no label permissions.\n+\n+# Per-issue concurrency.\n+concurrency:\n+  group: gh-aw-triage-comment-reviewer-${{ inputs.issue_number || github.run_id }}\n+  cancel-in-progress: false\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tools:\n+  github:\n+    toolsets: [issues]\n+    min-integrity: none\n+\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  add-comment:\n+    max: 1\n+    target: \"*\"\n+    hide-older-comments: true\n+---\n+\n+# Triage Comment Reviewer for dotnet/aspnetcore\n+\n+You are the **second-pass reviewer** for the issue-triage agent. The\n+orchestrator workflow (`issue-triage-agent`) has already classified an\n+issue, applied labels, and drafted a triage comment. Your only job is to\n+decide whether that drafted comment is safe to post on a public,\n+high-visibility `dotnet/aspnetcore` issue, and to either post it\n+(possibly with minor sanitization) or skip it.\n+\n+You do **not** add labels, change the issue type, or modify metadata. You\n+post **at most one** comment, on the issue identified by\n+`${{ inputs.issue_number }}`.\n+\n+## Inputs\n+\n+- `issue_number` — the issue the comment will be posted on.\n+- `proposed_comment` — the full markdown comment drafted by the orchestrator.\n+- `dry_run` — if `true`, you must prefix the posted comment's first heading\n+  with `[DRY RUN]` (see \"Dry Run\" below).\n+\n+## Step 1: Fetch Issue Context\n+\n+Call the GitHub MCP server's `get_issue` tool with the repository owner,\n+repository name, and `${{ inputs.issue_number }}`. You need the title and\n+body for two purposes:\n+\n+1. To run the **issue-level security check** in Step 2a (the most important\n+   single decision you make).\n+2. To judge whether the orchestrator's draft is broadly consistent with the\n+   actual issue (catches wholly hallucinated comments).\n+\n+## Step 2a: Issue-Level Security Check (the only `FAIL`-by-default trigger)\n+\n+Read the issue title and body you fetched in Step 1. Decide whether the\n+issue is a **vulnerability report**.\n+\n+**An issue is a vulnerability report if** it explicitly contains one or\n+more of these indicators:\n+\n+- A **CVE identifier** matching the pattern `CVE-\\d{4}-\\d{4,}` — a 4-digit\n+  year followed by a 4-or-more-digit sequence number (e.g. `CVE-2020-0601`,\n+  `CVE-2021-44228`). The sequence number is **not** fixed-width — short\n+  IDs like `CVE-2020-0601` (4 digits) and long ones like `CVE-2021-44228`\n+  (5 digits) and `CVE-2014-0160` are all valid.\n+- A **specific exploit, attack vector, or proof-of-concept**: a payload\n+  the reporter says triggers a vulnerability (\"send `${jndi:ldap://…}`\",\n+  \"I can bypass auth by setting header X to Y\", \"this allows arbitrary\n+  code execution\"), step-by-step reproduction of an exploit, or magic\n+  strings used to demonstrate one.\n+- **Vulnerability-class language**: \"vulnerability\", \"exploit\",\n+  \"remote code execution\"/\"RCE\", \"request smuggling\", \"header\n+  injection\", \"auth bypass\", \"privilege escalation\", \"deserialization\n+  attack\", \"SSRF\", \"XXE\", \"XSS\", \"CSRF\" *used in the context of\n+  describing an attack the issue reports*. (Mere terminology in a\n+  feature/hardening request does NOT count — see \"NOT a vulnerability\n+  report\" below.)\n+- An **explicit security-fix request framed as such** — \"please issue a\n+  security advisory\", \"please ship a patched release\", \"treat this as a\n+  vulnerability\", \"this needs to go through MSRC\", \"coordinated\n+  disclosure\".\n+\n+**The Step 2a check is independent of whether the vulnerability is\n+actually in aspnetcore.** Even if the orchestrator classified the\n+issue as `external`, out-of-area, \"Not applicable\", or marked it as\n+mis-filed, a vulnerability report in the issue body **still triggers\n+`FAIL`**. The reason is operational: triage commentary on vulnerability\n+content is unsafe regardless of repo applicability. We do not want any\n+public comment on a thread that reads like a security advisory.\n+\n+Concrete examples that **must** `FAIL` even if mis-filed:\n+- A CVE in Apache Log4j (Java) filed against `dotnet/aspnetcore` →\n+  `FAIL`. The orchestrator may correctly label it `external`; the\n+  reviewer **still** must `noop`. Do not post even a polite\n+  \"this isn't aspnetcore\" explanation.\n+- A coordinated-disclosure request about a Linux kernel bug filed here\n+  → `FAIL` + `noop`.\n+- An \"I found a vulnerability in [framework X]\" report → `FAIL` + `noop`.\n+\n+**An issue is NOT a vulnerability report just because** it:\n+\n+- Asks for stricter parsing, hardening, RFC-compliance enforcement, or\n+  validation improvements without claiming an active vulnerability or\n+  describing an exploit.\n+- Touches a security-adjacent area (auth, cookies, HTTP parsing,\n+  antiforgery, data protection). Most issues in those areas are\n+  ordinary bugs and feature requests.\n+- Mentions security-adjacent terminology (`CR/LF`, `header`,\n+  `validation`, `RFC NNNN`, `harden`, `strict`, `reject`, `bypass`\n+  used colloquially) without describing an actual exploit.\n+- Compares behavior to other HTTP infrastructure (`\"Squid does this\"`,\n+  `\"HaProxy added this check\"`) as a feature-request rationale, as\n+  long as the reporter is not claiming an exploit.\n+\n+If the issue **is** a vulnerability report → your verdict is `FAIL`. Skip\n+the rest of Step 2 and go to Step 3.\n+\n+If the issue **is not** a vulnerability report → continue to Step 2b.\n+\n+## Step 2b: Comment-Level Ban-List (everything below is `REWRITE`, never `FAIL`)\n+\n+Read `${{ inputs.proposed_comment }}` carefully. For each match below,\n+strip the offending content during `REWRITE`. None of these alone is a\n+`FAIL` trigger.\n+\n+### Stripping mechanics (how to apply the content rules below cleanly)\n+\n+A strip is not just a delete — it is a delete followed by a cleanup pass\n+so the surviving markdown reads as if the offending text was never there.\n+Apply these mechanics every time you `REWRITE`:\n+\n+- **(A) Whole-line stripping is the default.** For sentences in their own\n+  paragraph, or bullets in their own list item: delete the entire line\n+  (including its newline). If that leaves two or more consecutive blank\n+  lines, collapse to exactly one.\n+\n+- **(B) If you strip the only remaining content under a heading, strip the\n+  heading too.** A bare `#### Notes` heading with nothing under it is\n+  uglier than no section at all. Same for `#### Regression Info` if it\n+  ever becomes empty. **Exception:** `#### Potential Duplicates` is\n+  handled differently by content rule 7 below — keep the heading and\n+  write `- _None found_` instead of stripping it.\n+\n+- **(C) Mid-sentence or mid-clause phrases — prefer stripping the whole\n+  sentence over leaving a grammatical hole.** Example: a Type line of\n+  `_Type:_ Bug (HTTP parsing hardening, request smuggling vector)` —\n+  strip the `, request smuggling vector` clause *together with its\n+  leading comma* so the result reads\n+  `_Type:_ Bug (HTTP parsing hardening)`. If removing the offending\n+  phrase would leave a sentence that no longer parses (e.g.\n+  `_Type:_ Bug (, request smuggling vector)`), strip the whole\n+  parenthetical or the whole sentence instead — never leave dangling\n+  punctuation or fragments.\n+\n+- **(D) Trailing-punctuation cleanup.** After any strip, scan the line\n+  immediately before and after the deletion: if the previous line now\n+  ends with a dangling comma, semicolon, or \"and\"/\"but\"/\"because\",\n+  remove that connector. If a bullet list now ends with a continuation\n+  marker (e.g. *\"…such as:\"*), drop that connector or rewrite to a\n+  period — but if rewriting would change meaning, prefer to strip the\n+  whole introducing bullet too.\n+\n+- **(E) If you cannot strip cleanly without rewriting — `FAIL`, do not\n+  `REWRITE`.** You are allowed to *remove* content from the\n+  orchestrator's draft; you are not allowed to *invent* replacement\n+  wording. If the only way to leave a clean comment is to add or\n+  paraphrase new text, prefer `FAIL`. This rule is intentionally blunt:\n+  it is the operational consequence of \"when in doubt, `FAIL`\"\n+  (see Step 3).\n+\n+### Things to strip\n+\n+1. **Constructed security analysis** — sentences the orchestrator added\n+   that are not present in the issue body and that argue the issue is a\n+   security problem, e.g. *\"this could lead to request smuggling\"*,\n+   *\"recommend treating as a security fix\"*, *\"aligns with security best\n+   practices\"*. Strip them. Note that factually restating the issue's own\n+   framing (e.g. echoing the title \"Harden CR/LF handling…\" in a Type\n+   parenthetical) is **allowed** — that's not construction, it's\n+   reporting.\n+\n+2. **Third-party comparisons used as a hardening argument** — *\"Squid does\n+   this strict validation\"*, *\"HaProxy recently added this check\"*,\n+   *\"NGINX rejects these requests with 400\"*. Strip them, even if the\n+   issue body mentions them — they don't belong in a triage classification.\n+\n+3. **Label recommendations inside the comment body** — anything of the\n+   form *\"Recommend also labeling with `security`/`area-xyz`/…\"* or any\n+   list of applied labels. Labels are visible in the issue's label\n+   sidebar (the source of truth) and the orchestrator's prompt forbids\n+   restating them in the comment body. If you see a label list or\n+   suggestion, strip it.\n+\n+4. **.NET version-status claims** — words like *\"preview\"*, *\"RC\"*,\n+   *\"stable\"*, *\"released\"*, or *\"unreleased\"* applied to a .NET version.\n+   Strip these qualifiers (keep the version number itself).\n+\n+5. **Editorializing about validity** — anything that argues whether the\n+   issue is *\"valid\"*, *\"actionable\"*, *\"worth fixing\"*, or assigns blame\n+   to the reporter. Strip these sentences.\n+\n+6. **`#### Notes` section content violations** — the orchestrator IS now\n+   allowed to include a `#### Notes` section, but its content is tightly\n+   constrained. Inspect every bullet in the Notes section. Strip any\n+   bullet that matches one of:\n+   - **Rephrases the issue body.** Fetch the issue body in Step 1 and\n+     compare. If a Notes bullet just restates a fact already in the\n+     reporter's description, strip it. Notes is for additive content\n+     only.\n+   - **Speculative language** — *\"may be related to,\"* *\"the error\n+     suggests,\"* *\"likely caused by,\"* *\"appears to be,\"* *\"this\n+     suggests\"*. Notes must contain verifiable claims, not guesses.\n+     Strip speculation bullets.\n+   - **Editorial fluff** — *\"reasonable request,\"* *\"well-documented\n+     proposal,\"* *\"author correctly identifies.\"* Strip these.\n+   - **Anything caught by Step 2b rules 1–5 above** (security framing,\n+     third-party comparisons, label suggestions, version-status words,\n+     validity editorializing) applies in Notes too — strip per the\n+     relevant rule.\n+\n+   If after stripping bullets the Notes section is empty, **also strip\n+   the `#### Notes` heading itself** (leave nothing — an empty section\n+   is uglier than no section).\n+\n+7. **Unverifiable duplicate citations** — for each `#NNN` in the\n+   `#### Potential Duplicates` section, optionally call `get_issue` on the\n+   cited number and verify it's plausibly related. If a citation is\n+   clearly unrelated (different area, different problem) → remove that\n+   bullet. If every citation is bad → replace the entire bullet list\n+   with a single `- _None found_` bullet (keep the section heading\n+   itself; the orchestrator's template always includes this section).\n+   Do **not** `FAIL` over duplicate citations — just clean them up.\n+   Trust the orchestrator's other regression / area / type findings;\n+   do not second-guess them.\n+\n+## Step 3: Decision Gate\n+\n+Internally decide one of the following. Include your internal verdict in\n+your reasoning for log-debuggability, but do **not** put the verdict line\n+itself into the posted comment:\n+\n+- **`FAIL: <one sentence reason>`** — reserved for these cases:\n+  - Step 2a flagged the issue as a vulnerability report. (Most common.)\n+  - The comment is wholly fabricated (every structured field disagrees\n+    with the issue body — wrong area, hallucinated type, every duplicate\n+    citation clearly unrelated).\n+  - You are uncertain whether something in the comment is a violation —\n+    when in doubt, `FAIL`. Posting nothing is always safer than posting\n+    a problematic comment on a customer-visible thread.\n+\n+- **`REWRITE: <one sentence summary of what you changed and why>`** —\n+  one or more Step 2b matches exist AND you are confident the strip\n+  cleanly resolves them AND the structured fields (Area / Type) remain\n+  coherent after stripping. Apply the strips and post the cleaned\n+  comment.\n+\n+- **`PASS`** — no Step 2b matches; post the comment unchanged.\n+\n+**When in doubt between `REWRITE` and `FAIL`, prefer `FAIL`.** Triage\n+is a low-stakes-when-skipped, high-stakes-when-wrong operation: a\n+missing triage comment costs at most a few minutes of a maintainer's\n+time, but a triage comment that editorializes about a security issue\n+or contradicts the reporter is a public-facing mistake. Labels applied\n+by the orchestrator stay in place either way, so the issue is still\n+discoverable.\n+\n+Specifically, `FAIL` (don't `REWRITE`) if any of the following are true:\n+\n+- The Notes-section heuristic in 2b.6 triggered AND you are unsure\n+  what the orchestrator's intent was.\n+- Stripping mechanic (E) triggered — i.e. you cannot apply a strip\n+  without inventing replacement wording.\n+- More than ~30% of the comment is Step 2b content you need to strip\n+  (the surviving structured fields may still be coherent, but the\n+  comment is now noticeably shorter than the orchestrator intended,\n+  and that itself signals the orchestrator drafted poorly).\n+- The orchestrator's Area or Type contradicts the issue body and the\n+  rest of the comment is built on that incorrect framing.\n+- The orchestrator added security framing to an issue you cannot\n+  cleanly determine is safe — even if Step 2a didn't trigger.\n+\n+## Step 4: Take Action (exactly one)\n+\n+- **On `PASS`** — call `add-comment` with `body` set to the value of\n+  `${{ inputs.proposed_comment }}`, unchanged.\n+\n+- **On `REWRITE`** — call `add-comment` with `body` set to the sanitized\n+  comment. Do **not** announce that the comment was rewritten, do\n+  **not** add a footer like *\"(sanitized by reviewer)\"*, and do **not**\n+  add new content the orchestrator didn't draft. Just strip the\n+  offending sentences/sections and post the result.\n+\n+- **On `FAIL`** — call `noop` with a message of the form:\n+  ```json\n+  {\"noop\": {\"message\": \"Triage comment rejected: <one sentence reason>\"}}\n+  ```\n+  Do not post any comment in this case. Labels applied by the\n+  orchestrator remain in place; only the comment is suppressed.\n+\n+You must call exactly one of `add-comment` or `noop`. Never both.\n+\n+## Dry Run\n+\n+If `${{ inputs.dry_run }}` is `true`, and your verdict is `PASS` or\n+`REWRITE`, replace the first heading of the posted comment\n+(`### Triage Summary`) with `### [DRY RUN] Triage Summary` so it is\n+clear no labels were applied by the orchestrator. All other rules apply\n+unchanged. On `FAIL`, dry-run still results in a `noop`.\n+\n+## Hard Rules\n+\n+- Never invent new factual claims about the issue. You may **only**\n+  remove content from the orchestrator's draft; you may not add. The one\n+  exception is the `[DRY RUN]` prefix in the first heading.\n+- Never add labels, suggest labels, or call `add-labels` — you do not\n+  have that safe output.\n+- Never call `add-comment` more than once.\n+- Never call `add-comment` if your verdict is `FAIL`.\n+- **Be conservative. When in doubt, `FAIL`.** The `#### Potential\n+  Duplicates` section is useful, but not so useful that it's worth\n+  posting a problematic comment to preserve it. A skipped comment costs\n+  a maintainer a few minutes; a bad comment costs the project's\n+  credibility on a public thread.",
+          "snapshot_ref": "8019b4743f387ed6c6cfb734062245a525f90130",
+          "snapshot_blob_sha": "74c184e99ac5a42ff2522b9874c7ca8ef10744c6",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__8019b4743f387ed6c6cfb734062245a525f90130__triage-comment-reviewer.md",
+          "snapshot_bytes": 16722,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/triage-comment-reviewer.lock.yml\",\"generated_workflow_file\":\"triage-comment-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/triage-comment-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/triage-comment-reviewer.md",
+      "commit_sha": "91c4ab906afec412d85325a6101314e1e79f1530",
+      "authored_at": "2026-06-29T16:07:42Z",
+      "committed_at": "2026-06-29T16:07:42Z",
+      "author_name": "Korolev Dmitry",
+      "author_email": "dmkorolev@microsoft.com",
+      "author_login": "DeagleGross",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "report-failure-as-issue: false for workflows (#67466)",
+      "parent_shas": [
+        "573e93f228c71e400cb0e30b5061f6e2dffd60f1"
+      ],
+      "tree_sha": "4bea91dba86e3f25e3465f1513c6d4dcf0b8ea59",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/91c4ab906afec412d85325a6101314e1e79f1530",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/triage-comment-reviewer.md",
+          "commit_sha": "91c4ab906afec412d85325a6101314e1e79f1530",
+          "committed_at": "2026-06-29T16:07:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -45,6 +45,7 @@ tools:\n     min-integrity: none\n \n safe-outputs:\n+  report-failure-as-issue: false\n   noop:\n     report-as-issue: false\n   add-comment:",
+          "snapshot_ref": "91c4ab906afec412d85325a6101314e1e79f1530",
+          "snapshot_blob_sha": "4e7ec2248026bf6768318f5863f5f915a74f82fe",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__91c4ab906afec412d85325a6101314e1e79f1530__triage-comment-reviewer.md",
+          "snapshot_bytes": 16755,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/triage-comment-reviewer.lock.yml\",\"generated_workflow_file\":\"triage-comment-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/triage-comment-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/triage-comment-reviewer.md",
+      "commit_sha": "6ce13b9c49929192589382dcc4dae610259696f2",
+      "authored_at": "2026-07-07T19:34:56Z",
+      "committed_at": "2026-07-07T19:34:56Z",
+      "author_name": "Jeff Handley",
+      "author_email": "jeffhandley@users.noreply.github.com",
+      "author_login": "jeffhandley",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Adopt the PAT pool for agentic workflows (#67411)\n\n* Move the labeler README out of the workflows folder\n\nRename .github/workflows/labeler.md to .github/labeler.README.md so that 'gh aw compile' does not treat the labeler documentation as an agentic workflow.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add the shared pat_pool agentic workflow component\n\nAdd .github/workflows/shared/pat_pool.md, a reusable import that selects a Copilot PAT number from the COPILOT_PAT_0 through COPILOT_PAT_9 pool and exposes it as the pat_pool job output, along with .github/workflows/shared/pat_pool.README.md documenting the pool.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Skip agentic workflows on forks unless manually dispatched\n\nAdd a top-level 'if' fork guard to browsertesting-deps-update, cswin32-update, issue-triage-agent, and test-quarantine (which still run on workflow_dispatch) and to community-pr-issue-check (guarded on !fork). Add 'permissions: {}' under 'on' for browsertesting-deps-update, community-pr-issue-check, and cswin32-update. Recompile the affected .lock.yml files.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Adopt the PAT pool in the agentic workflows\n\nImport shared/pat_pool.md into browsertesting-deps-update, community-pr-issue-check, cswin32-update, issue-triage-agent, test-quarantine, and triage-comment-reviewer, run their agent jobs in the copilot-pat-pool environment, and override COPILOT_GITHUB_TOKEN with the selected pool secret (COPILOT_PAT_0 through COPILOT_PAT_9). Add skip-if-no-match to issue-triage-agent so a pre_activation job exists for pat_pool to depend on. Recompile the affected .lock.yml files with the COPILOT_PAT secrets approved.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add the validate-pat-pool workflow\n\nAdd .github/workflows/validate-pat-pool.yml, a scheduled and manually dispatchable workflow that exercises each COPILOT_PAT_0 through COPILOT_PAT_9 secret with a Copilot CLI request and reports pool health (valid, empty, invalid, or unknown) in the run summary.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Stop Dependabot from updating gh-aw-managed actions\n\nAdd actions/cache/restore, actions/cache/save, actions/checkout, actions/download-artifact, actions/github-script, actions/setup-node, and actions/upload-artifact to the github-actions Dependabot ignore list. These actions are pinned in the generated agentic .lock.yml files by gh aw compile, so Dependabot bumps to those files are reverted on the next compile.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b126e4ffb9b8d5895e95cc1264163dee3a6a3517"
+      ],
+      "tree_sha": "1c3de6c9f6fcc70dcbb59517208de18e6f255623",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/6ce13b9c49929192589382dcc4dae610259696f2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/triage-comment-reviewer.md",
+          "commit_sha": "6ce13b9c49929192589382dcc4dae610259696f2",
+          "committed_at": "2026-07-07T19:34:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 32,
+          "file_deletions": 0,
+          "file_changes": 32,
+          "file_patch": "@@ -52,6 +52,38 @@ safe-outputs:\n     max: 1\n     target: \"*\"\n     hide-older-comments: true\n+\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in an isolated `copilot-pat-pool` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n+\n+environment: copilot-pat-pool\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n ---\n \n # Triage Comment Reviewer for dotnet/aspnetcore",
+          "snapshot_ref": "6ce13b9c49929192589382dcc4dae610259696f2",
+          "snapshot_blob_sha": "917c7d83faa996eff43baa7235d8d4d6be086df9",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__6ce13b9c49929192589382dcc4dae610259696f2__triage-comment-reviewer.md",
+          "snapshot_bytes": 18101,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/triage-comment-reviewer.lock.yml\",\"generated_workflow_file\":\"triage-comment-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/triage-comment-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+      "source_full_name": "dotnet/aspnetcore",
+      "md_path": ".github/workflows/triage-comment-reviewer.md",
+      "commit_sha": "5a09c126653d5bd295262f2ca96c9388b854cb24",
+      "authored_at": "2026-07-20T12:02:22Z",
+      "committed_at": "2026-07-20T12:02:22Z",
+      "author_name": "Korolev Dmitry",
+      "author_email": "dmkorolev@microsoft.com",
+      "author_login": "DeagleGross",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update agentic workflows for gh aw v0.82.13 (#67901)\n\nBump gh-aw generated files to gh aw v0.82.13:\n- Update .github/aw/actions-lock.json: pin github/gh-aw-actions/setup and\n  new setup-cli to v0.82.13, add container digest pin for\n  mcr.microsoft.com/dotnet/sdk:10.0, and normalize actions/github-script@v9.0.0\n  to its commit SHA (3a2844b).\n- Migrate dispatcher agent to .github/skills/agentic-workflows/SKILL.md and\n  regenerate .github/workflows/agentics-maintenance.yml.\n- Collapse the PAT-pool COPILOT_GITHUB_TOKEN case() expression onto a single\n  line in the six agentic workflows so the v0.82.13 compiler emits valid YAML\n  (the multiline block-scalar form now compiles to invalid YAML).\n- Recompile all workflows with 'gh aw compile --schedule-seed dotnet/aspnetcore'.\n\n\nCopilot-Session: d7b601c9-af9b-4c8c-9561-8de5696176b9\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "58c56325e2e407f7c4d63c377ba63dcacdfa52de"
+      ],
+      "tree_sha": "558797c0ed85914f3299cc2e26183bf0b911d13f",
+      "html_url": "https://github.com/dotnet/aspnetcore/commit/5a09c126653d5bd295262f2ca96c9388b854cb24",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/aspnetcore:.github/workflows/triage-comment-reviewer.md",
+          "source_full_name": "dotnet/aspnetcore",
+          "md_path": ".github/workflows/triage-comment-reviewer.md",
+          "commit_sha": "5a09c126653d5bd295262f2ca96c9388b854cb24",
+          "committed_at": "2026-07-20T12:02:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 14,
+          "file_changes": 15,
+          "file_patch": "@@ -70,20 +70,7 @@ environment: copilot-pat-pool\n engine:\n   id: copilot\n   env:\n-    COPILOT_GITHUB_TOKEN: |\n-      ${{ case(\n-        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n-        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n-        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n-        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n-        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n-        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n-        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n-        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n-        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n-        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        'NO COPILOT PAT AVAILABLE')\n-      }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, 'NO COPILOT PAT AVAILABLE') }}\n ---\n \n # Triage Comment Reviewer for dotnet/aspnetcore",
+          "snapshot_ref": "5a09c126653d5bd295262f2ca96c9388b854cb24",
+          "snapshot_blob_sha": "962cff4cfbaf59f001abb5d26ea2d9fd6ce81d99",
+          "snapshot_file": "snapshots/aspnetcore__dotnet__5a09c126653d5bd295262f2ca96c9388b854cb24__triage-comment-reviewer.md",
+          "snapshot_bytes": 17998,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/aspnetcore\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"aspnetcore\",\"generated_workflow_path\":\".github/workflows/triage-comment-reviewer.lock.yml\",\"generated_workflow_file\":\"triage-comment-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/aspnetcore/blob/51e6c945be9871d2a7dbd999928d4ede586b6cc7/.github/workflows/triage-comment-reviewer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

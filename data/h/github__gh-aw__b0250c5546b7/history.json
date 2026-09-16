@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/daily-arxiv-researcher.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/daily-arxiv-researcher.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/daily-arxiv-researcher.lock.yml",
+      "generated_workflow_file": "daily-arxiv-researcher.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-arxiv-researcher.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:30:49+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-arxiv-researcher.md",
+      "commit_sha": "10e21b7a0a94a99df8fcfbf4d694989ff124bb60",
+      "authored_at": "2026-08-01T19:44:51Z",
+      "committed_at": "2026-08-01T19:44:51Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: daily arXiv researcher — scan papers for gh-aw improvement opportunities (#49609)",
+      "parent_shas": [
+        "81f056d0446bd08fdd6ac0c3403c951930c86eeb"
+      ],
+      "tree_sha": "2abbb22304a278aa2dec368e12d99760af59b63c",
+      "html_url": "https://github.com/github/gh-aw/commit/10e21b7a0a94a99df8fcfbf4d694989ff124bb60",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-arxiv-researcher.md",
+          "commit_sha": "10e21b7a0a94a99df8fcfbf4d694989ff124bb60",
+          "committed_at": "2026-08-01T19:44:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 303,
+          "file_deletions": 0,
+          "file_changes": 303,
+          "file_patch": "@@ -0,0 +1,303 @@\n+---\n+emoji: \"🔬\"\n+description: Daily scan of latest arXiv papers for actionable improvements to GitHub Agentic Workflows\n+on:\n+  schedule:\n+    - cron: \"daily around 8:00\"\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+\n+engine: claude\n+\n+timeout-minutes: 20\n+max-ai-credits: 250\n+\n+tools:\n+  cache-memory:\n+    key: arxiv-paper-dedup\n+    retention-days: 90\n+    allowed-extensions: [\".json\"]\n+  repo-memory:\n+    branch-name: memory/arxiv-paper-ledger\n+    allowed-extensions: [\".json\", \".md\"]\n+    format-json: true\n+  bash:\n+    - \"cat *\"\n+    - \"ls *\"\n+\n+network: defaults\n+\n+safe-outputs:\n+  create-discussion:\n+    category: \"research\"\n+    expires: 14d\n+    max: 1\n+\n+steps:\n+  - name: Fetch and parse arXiv papers\n+    uses: actions/github-script@v9.0.0\n+    with:\n+      script: |\n+        const fs = require('fs');\n+        const https = require('https');\n+\n+        const BASE_DIR = '/tmp/gh-aw/agent/arxiv';\n+        const PAPERS_JSON = `${BASE_DIR}/papers.json`;\n+        const NEW_PAPERS_JSON = `${BASE_DIR}/new-papers.json`;\n+        const SEEN_IDS_JSON = '/tmp/gh-aw/cache-memory/seen-paper-ids.json';\n+\n+        fs.mkdirSync(BASE_DIR, { recursive: true });\n+\n+        const ARXIV_URL = 'https://export.arxiv.org/api/query?search_query=(cat:cs.AI+OR+cat:cs.SE+OR+cat:cs.LG)+AND+(agentic+OR+%22multi-agent%22+OR+%22llm+agent%22+OR+%22workflow+automation%22+OR+%22code+generation%22+OR+%22ai+agent%22)&max_results=40&sortBy=submittedDate&sortOrder=descending';\n+\n+        let xml = '';\n+        try {\n+          xml = await new Promise((resolve, reject) => {\n+            const req = https.get(ARXIV_URL, { timeout: 30000 }, res => {\n+              const chunks = [];\n+              res.on('data', c => chunks.push(c));\n+              res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));\n+            });\n+            req.on('error', reject);\n+            req.on('timeout', () => { req.destroy(); reject(new Error('request timed out')); });\n+          });\n+        } catch (e) {\n+          core.warning(`arXiv fetch failed: ${e.message}`);\n+        }\n+\n+        const decodeEntities = s => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '\"');\n+        const getText = (tag, s) => {\n+          const m = s.match(new RegExp(`<${tag}[^>]*>([\\\\s\\\\S]*?)</${tag}>`));\n+          return m ? decodeEntities(m[1].replace(/\\s+/g, ' ').trim()) : '';\n+        };\n+        const getAllText = (tag, s) => {\n+          const re = new RegExp(`<${tag}[^>]*>([\\\\s\\\\S]*?)</${tag}>`, 'g');\n+          const out = []; let m;\n+          while ((m = re.exec(s)) !== null) out.push(decodeEntities(m[1].replace(/\\s+/g, ' ').trim()));\n+          return out;\n+        };\n+        const getAllAttr = (tag, attr, s) => {\n+          const re = new RegExp(`<${tag}[^>]*${attr}=\"([^\"]*)\"`, 'g');\n+          const out = []; let m;\n+          while ((m = re.exec(s)) !== null) out.push(m[1]);\n+          return out;\n+        };\n+\n+        const papers = [];\n+        const entryRe = /<entry>([\\s\\S]*?)<\\/entry>/g;\n+        let em;\n+        while ((em = entryRe.exec(xml)) !== null) {\n+          const entry = em[1];\n+          const idUrl = getText('id', entry);\n+          const arxivId = idUrl.replace(/.*abs\\//, '').trim();\n+          if (!arxivId) continue;\n+          papers.push({\n+            id: arxivId,\n+            title: getText('title', entry),\n+            abstract: getText('summary', entry).slice(0, 1200),\n+            authors: getAllText('name', entry).slice(0, 3),\n+            published: getText('published', entry).slice(0, 10),\n+            categories: getAllAttr('category', 'term', entry).slice(0, 3),\n+            url: `https://arxiv.org/abs/${arxivId}`\n+          });\n+        }\n+\n+        const fetchedAt = new Date().toISOString().slice(0, 10);\n+        fs.writeFileSync(PAPERS_JSON, JSON.stringify({ fetched_at: fetchedAt, count: papers.length, papers }, null, 2));\n+\n+        const seenIds = new Set();\n+        if (fs.existsSync(SEEN_IDS_JSON)) {\n+          try {\n+            const d = JSON.parse(fs.readFileSync(SEEN_IDS_JSON, 'utf8'));\n+            for (const id of (d.ids || [])) seenIds.add(id);\n+          } catch (_) {}\n+        }\n+\n+        const newPapers = papers.filter(p => !seenIds.has(p.id));\n+        fs.writeFileSync(NEW_PAPERS_JSON, JSON.stringify({\n+          total_fetched: papers.length,\n+          already_seen: papers.length - newPapers.length,\n+          new_count: newPapers.length,\n+          fetched_at: fetchedAt,\n+          papers: newPapers\n+        }, null, 2));\n+\n+        core.info(`Parsed ${papers.length} papers, ${newPapers.length} new`);\n+\n+---\n+\n+# arXiv Paper Researcher: GitHub Agentic Workflows\n+\n+You are a research agent scanning the latest arXiv papers for actionable improvements to GitHub Agentic Workflows (gh-aw) — a system that compiles markdown workflows into GitHub Actions with pluggable AI engines (Claude, Copilot, Gemini, Codex).\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Run Date**: $(date +%Y-%m-%d)\n+- **gh-aw features**: workflow compiler (Go), safe-outputs (typed write operations), network firewall (AWF), token optimization, sub-agents, cache-memory, repo-memory, agentic engine integration, inline prompts, shared imports\n+\n+## Step 1: Load Pre-Fetched Data\n+\n+Read `/tmp/gh-aw/agent/arxiv/new-papers.json`.\n+\n+If `new_count` is 0, call `noop` with message:\n+\"No new arXiv papers today — all N previously processed.\"\n+Then stop immediately.\n+\n+## Step 2: Screen Papers for Relevance\n+\n+For each paper in `papers`, invoke the `paper-screener` sub-agent with input:\n+```json\n+{\"title\": \"...\", \"abstract\": \"...\"}\n+```\n+\n+Collect only papers where the screener returns `{\"relevant\": true, ...}`.\n+\n+If no papers are relevant, proceed to Step 4 to update the ledger, then call `noop`:\n+\"N papers screened, none relevant to gh-aw today.\"\n+Stop after the ledger update.\n+\n+## Step 3: Extract Improvement Opportunities\n+\n+For each relevant paper (max 8), invoke the `opportunity-extractor` sub-agent with the full paper object.\n+\n+Collect the returned opportunity objects.\n+\n+## Step 4: Update the Paper Ledger\n+\n+Load `/tmp/gh-aw/repo-memory/default/paper-ledger.md` if it exists; otherwise start with:\n+```markdown\n+# arXiv Paper Ledger\n+\n+Papers investigated for GitHub Agentic Workflows improvement opportunities.\n+```\n+\n+Load `/tmp/gh-aw/repo-memory/default/paper-index.json` if it exists; otherwise use `{\"papers\": []}`.\n+\n+For every paper processed in Step 2 (all new papers regardless of relevance), append to the ledger:\n+\n+```markdown\n+### [TITLE](URL)\n+- **ID**: arxiv_id\n+- **Published**: YYYY-MM-DD\n+- **Categories**: cat1, cat2\n+- **Relevant**: Yes / No\n+- **Opportunity**: (if relevant) concise opportunity text; omit line if not relevant\n+- **Area**: (if relevant) area; omit line if not relevant\n+```\n+\n+Append to the index JSON array:\n+`{\"id\": \"...\", \"title\": \"...\", \"published\": \"...\", \"relevant\": true/false, \"analyzed_at\": \"YYYY-MM-DD-HH-MM-SS\"}`\n+\n+Write the updated ledger to `/tmp/gh-aw/repo-memory/default/paper-ledger.md`.\n+Write the updated index to `/tmp/gh-aw/repo-memory/default/paper-index.json`.\n+\n+Update the dedup cache at `/tmp/gh-aw/cache-memory/seen-paper-ids.json`:\n+Load existing `{\"ids\": [...]}` or start with `{\"ids\": []}`.\n+Append all paper IDs from `new-papers.json` (whether relevant or not).\n+Write back — no colons in filenames.\n+\n+## Step 5: Create Discussion or Noop\n+\n+**If actionable opportunities were found**: create a discussion titled:\n+`[arXiv Research] Agentic Workflow Improvements — YYYY-MM-DD`\n+\n+Use `###` or lower for all headers inside the discussion body. Never use `#` or `##`.\n+\n+Discussion body structure:\n+\n+```\n+### Summary\n+\n+N papers screened, M relevant, K opportunities identified.\n+\n+---\n+\n+### Actionable Opportunities\n+\n+(one section per opportunity, grouped by area when there are multiple in the same area)\n+\n+#### [AREA] — Short Opportunity Title\n+\n+**Paper**: [Title](URL)\n+**Authors**: Author A, Author B\n+**Published**: YYYY-MM-DD\n+**Effort**: low / medium / high\n+**Rationale**: 2-3 sentences mapping the paper's mechanism to a specific gh-aw component.\n+\n+---\n+\n+### Papers Analyzed\n+\n+| Paper | Published | Relevant | Area |\n+|---|---|---|---|\n+| [Title](URL) | YYYY-MM-DD | Yes / No | area or — |\n+\n+---\n+\n+### Next Steps\n+\n+- [ ] Investigate: opportunity 1 (effort: low)\n+- [ ] Investigate: opportunity 2 (effort: medium)\n+```\n+\n+**If no actionable opportunities were found** (but papers were processed and ledger updated):\n+call `noop` with message: \"Processed N papers (M relevant), no actionable gh-aw improvements identified today.\"\n+\n+---\n+\n+## agent: `paper-screener`\n+---\n+description: Fast relevance screening of arXiv paper abstracts for GitHub Agentic Workflows\n+model: small\n+---\n+\n+Screen an arXiv paper abstract for relevance to GitHub Agentic Workflows (gh-aw).\n+\n+gh-aw compiles markdown workflow files into GitHub Actions YAML, uses AI agents as workflow engines, manages tool access, enforces network firewalls, routes writes through typed safe-outputs, optimizes tokens, and supports multi-agent orchestration.\n+\n+**Relevant** (any of):\n+- Agentic AI systems, multi-agent coordination, LLM agent workflows\n+- Prompt engineering, context management, or caching for LLM agents\n+- Token efficiency, structured output generation from LLMs\n+- AI-driven CI/CD, automated code review, workflow automation\n+- Security in agentic systems: sandboxing, tool access control, policy enforcement\n+- Orchestration patterns for decomposing tasks across AI agents\n+\n+**Not relevant**:\n+- Pure mathematical theory with no LLM/agent application\n+- Hardware, systems, or networking research unrelated to AI\n+- Computer vision, speech, or domain-specific scientific tasks\n+- Medical, biological, or physical science applications\n+\n+Input: `{\"title\": \"...\", \"abstract\": \"...\"}` as a JSON string.\n+\n+Output: exactly one line of valid JSON — no other text:\n+`{\"relevant\": true, \"reason\": \"one sentence\"}` or `{\"relevant\": false, \"reason\": \"one sentence\"}`\n+\n+## agent: `opportunity-extractor`\n+---\n+description: Extracts a specific actionable improvement for gh-aw from a relevant arXiv paper\n+model: large\n+---\n+\n+Extract one specific actionable improvement for GitHub Agentic Workflows (gh-aw) from an arXiv paper.\n+\n+gh-aw components (Go compiler + TypeScript runtime):\n+- **Workflow compiler**: parses markdown frontmatter + body into GitHub Actions YAML\n+- **Safe-outputs**: typed write operations (create-issue, create-discussion, add-comment, create-pull-request, upload-artifact)\n+- **Network firewall (AWF)**: blocks outbound domains not in `network.allowed`\n+- **Token optimization**: DataOps pre-steps, gh-proxy, cache-memory, sub-agent fan-out, prompt caching\n+- **Sub-agents**: inline agents invoked by the orchestrator, with model aliases (small/large)\n+- **Memory**: cache-memory (ephemeral, up to 90 days), repo-memory (Git branch, indefinite), comment-memory (issue/PR comment)\n+- **Engines**: Claude, Copilot, Gemini, Codex — pluggable via `engine:` field\n+- **Imports**: shared workflow components, skill files, MCP server configs\n+\n+Input: full paper JSON object.\n+\n+Identify the single most actionable improvement the paper suggests for gh-aw — a new feature, optimization, design pattern, or new workflow type.\n+\n+Output: exactly one line of valid JSON — no other text:\n+`{\"opportunity\": \"concise one-sentence action\", \"area\": \"token-optimization|safe-outputs|workflow-compilation|multi-agent|prompt-engineering|network|security|other\", \"effort\": \"low|medium|high\", \"rationale\": \"2-3 sentences naming the paper mechanism and the specific gh-aw component it improves\"}`",
+          "snapshot_ref": "10e21b7a0a94a99df8fcfbf4d694989ff124bb60",
+          "snapshot_blob_sha": "ca18df3683dfeab4358418e3f1c6f33d61347bf2",
+          "snapshot_file": "snapshots/gh-aw__github__10e21b7a0a94a99df8fcfbf4d694989ff124bb60__daily-arxiv-researcher.md",
+          "snapshot_bytes": 11448,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-arxiv-researcher.lock.yml\",\"generated_workflow_file\":\"daily-arxiv-researcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-arxiv-researcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-arxiv-researcher.md",
+      "commit_sha": "ac395ca78c33795f94561500d316f7655bd97eca",
+      "authored_at": "2026-08-02T10:47:41Z",
+      "committed_at": "2026-08-02T10:47:41Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[aw] Enforce safe-output emission in daily arXiv researcher workflow (#49749)",
+      "parent_shas": [
+        "1e2eeb3c7559cedab2d9765d2b076e0784ef4b34"
+      ],
+      "tree_sha": "c5ed34ea8ab73d7be1534cbe438133e4210042dc",
+      "html_url": "https://github.com/github/gh-aw/commit/ac395ca78c33795f94561500d316f7655bd97eca",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-arxiv-researcher.md",
+          "commit_sha": "ac395ca78c33795f94561500d316f7655bd97eca",
+          "committed_at": "2026-08-02T10:47:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 0,
+          "file_changes": 8,
+          "file_patch": "@@ -246,6 +246,14 @@ N papers screened, M relevant, K opportunities identified.\n **If no actionable opportunities were found** (but papers were processed and ledger updated):\n call `noop` with message: \"Processed N papers (M relevant), no actionable gh-aw improvements identified today.\"\n \n+## Completion Requirement\n+\n+You MUST call exactly one safe-output tool before finishing:\n+- `create_discussion` when actionable opportunities are found.\n+- `noop` when no actionable opportunities are found, when `new_count` is 0, or when analysis cannot produce actionable output.\n+\n+Do not end with a plain-text summary only. The final action in the run must be one safe-output call.\n+\n ---\n \n ## agent: `paper-screener`",
+          "snapshot_ref": "ac395ca78c33795f94561500d316f7655bd97eca",
+          "snapshot_blob_sha": "9af14115f51ce287a3d49f3a713f9dca979e5771",
+          "snapshot_file": "snapshots/gh-aw__github__ac395ca78c33795f94561500d316f7655bd97eca__daily-arxiv-researcher.md",
+          "snapshot_bytes": 11829,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-arxiv-researcher.lock.yml\",\"generated_workflow_file\":\"daily-arxiv-researcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-arxiv-researcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-arxiv-researcher.md",
+      "commit_sha": "f21b0f701e55a77c738f2e295acfde0e9e423989",
+      "authored_at": "2026-08-03T00:33:36Z",
+      "committed_at": "2026-08-03T00:33:36Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: prevent spurious merge conflicts when source field position differs from canonical end-of-frontmatter (#49859)",
+      "parent_shas": [
+        "3d2272c1d8dbbb6c42c139b9f2a1d2f7f5e16d03"
+      ],
+      "tree_sha": "555c885d527659237b46eb0581e3f065d288eee9",
+      "html_url": "https://github.com/github/gh-aw/commit/f21b0f701e55a77c738f2e295acfde0e9e423989",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-arxiv-researcher.md",
+          "commit_sha": "f21b0f701e55a77c738f2e295acfde0e9e423989",
+          "committed_at": "2026-08-03T00:33:36Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "",
+          "snapshot_ref": "f21b0f701e55a77c738f2e295acfde0e9e423989",
+          "snapshot_blob_sha": "4cf8c4ae27422d7c2babe49339e04bc9645ba0fc",
+          "snapshot_file": "snapshots/gh-aw__github__f21b0f701e55a77c738f2e295acfde0e9e423989__daily-arxiv-researcher.md",
+          "snapshot_bytes": 11825,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-arxiv-researcher.lock.yml\",\"generated_workflow_file\":\"daily-arxiv-researcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-arxiv-researcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-arxiv-researcher.md",
+      "commit_sha": "9c4703514b8f99867ae28dd8cb234faa5da91138",
+      "authored_at": "2026-08-03T00:59:12Z",
+      "committed_at": "2026-08-03T00:59:12Z",
+      "author_name": "Peli de Halleux",
+      "author_email": "pelikhan@users.noreply.github.com",
+      "author_login": "pelikhan",
+      "author_account_type": "User",
+      "committer_name": "Peli de Halleux",
+      "committer_email": "pelikhan@users.noreply.github.com",
+      "committer_login": "pelikhan",
+      "committer_account_type": "User",
+      "message": "running update operation",
+      "parent_shas": [
+        "da4c9589867d15f4bdb2e0b76b0b07c55ad6252f"
+      ],
+      "tree_sha": "0d42ef53b88205d4b065a398e1bb8918d23fcb9d",
+      "html_url": "https://github.com/github/gh-aw/commit/9c4703514b8f99867ae28dd8cb234faa5da91138",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-arxiv-researcher.md",
+          "commit_sha": "9c4703514b8f99867ae28dd8cb234faa5da91138",
+          "committed_at": "2026-08-03T00:59:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -37,7 +37,7 @@ safe-outputs:\n \n steps:\n   - name: Fetch and parse arXiv papers\n-    uses: actions/github-script@v9\n+    uses: actions/github-script@v9.0.0\n     with:\n       script: |\n         const fs = require('fs');",
+          "snapshot_ref": "9c4703514b8f99867ae28dd8cb234faa5da91138",
+          "snapshot_blob_sha": "9af14115f51ce287a3d49f3a713f9dca979e5771",
+          "snapshot_file": "snapshots/gh-aw__github__9c4703514b8f99867ae28dd8cb234faa5da91138__daily-arxiv-researcher.md",
+          "snapshot_bytes": 11829,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-arxiv-researcher.lock.yml\",\"generated_workflow_file\":\"daily-arxiv-researcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-arxiv-researcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-arxiv-researcher.md",
+      "commit_sha": "0b509469ac61448a2fcb10b66bd0857436c177ba",
+      "authored_at": "2026-08-03T12:43:55Z",
+      "committed_at": "2026-08-03T12:43:55Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(arxiv-researcher): optimize token usage and raise max-ai-credits (#49965)",
+      "parent_shas": [
+        "f25181066dbe6183f0e04c89ccd66dfd5bf37a86"
+      ],
+      "tree_sha": "314e4bbb6e9d119308ce85126740344641273b17",
+      "html_url": "https://github.com/github/gh-aw/commit/0b509469ac61448a2fcb10b66bd0857436c177ba",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-arxiv-researcher.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-arxiv-researcher.md",
+          "commit_sha": "0b509469ac61448a2fcb10b66bd0857436c177ba",
+          "committed_at": "2026-08-03T12:43:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 80,
+          "file_deletions": 42,
+          "file_changes": 122,
+          "file_patch": "@@ -12,7 +12,7 @@ permissions:\n engine: claude\n \n timeout-minutes: 20\n-max-ai-credits: 250\n+max-ai-credits: 300\n \n tools:\n   cache-memory:\n@@ -50,7 +50,7 @@ steps:\n \n         fs.mkdirSync(BASE_DIR, { recursive: true });\n \n-        const ARXIV_URL = 'https://export.arxiv.org/api/query?search_query=(cat:cs.AI+OR+cat:cs.SE+OR+cat:cs.LG)+AND+(agentic+OR+%22multi-agent%22+OR+%22llm+agent%22+OR+%22workflow+automation%22+OR+%22code+generation%22+OR+%22ai+agent%22)&max_results=40&sortBy=submittedDate&sortOrder=descending';\n+        const ARXIV_URL = 'https://export.arxiv.org/api/query?search_query=(cat:cs.AI+OR+cat:cs.SE+OR+cat:cs.LG)+AND+(agentic+OR+%22multi-agent%22+OR+%22llm+agent%22+OR+%22workflow+automation%22+OR+%22code+generation%22+OR+%22ai+agent%22)&max_results=25&sortBy=submittedDate&sortOrder=descending';\n \n         let xml = '';\n         try {\n@@ -96,7 +96,7 @@ steps:\n           papers.push({\n             id: arxivId,\n             title: getText('title', entry),\n-            abstract: getText('summary', entry).slice(0, 1200),\n+            abstract: getText('summary', entry).slice(0, 800),\n             authors: getAllText('name', entry).slice(0, 3),\n             published: getText('published', entry).slice(0, 10),\n             categories: getAllAttr('category', 'term', entry).slice(0, 3),\n@@ -159,9 +159,18 @@ If no papers are relevant, proceed to Step 4 to update the ledger, then call `no\n \"N papers screened, none relevant to gh-aw today.\"\n Stop after the ledger update.\n \n+## Step 2b: Rank Relevant Papers\n+\n+For each relevant paper, invoke the `relevance-ranker` sub-agent with:\n+```json\n+{\"title\": \"...\", \"abstract\": \"...\"}\n+```\n+\n+Sort ranked papers by `score` descending. Keep only the top 3.\n+\n ## Step 3: Extract Improvement Opportunities\n \n-For each relevant paper (max 8), invoke the `opportunity-extractor` sub-agent with the full paper object.\n+For each top-ranked paper (max 3), invoke the `opportunity-extractor` sub-agent with the full paper object.\n \n Collect the returned opportunity objects.\n \n@@ -204,44 +213,7 @@ Write back — no colons in filenames.\n **If actionable opportunities were found**: create a discussion titled:\n `[arXiv Research] Agentic Workflow Improvements — YYYY-MM-DD`\n \n-Use `###` or lower for all headers inside the discussion body. Never use `#` or `##`.\n-\n-Discussion body structure:\n-\n-```\n-### Summary\n-\n-N papers screened, M relevant, K opportunities identified.\n-\n----\n-\n-### Actionable Opportunities\n-\n-(one section per opportunity, grouped by area when there are multiple in the same area)\n-\n-#### [AREA] — Short Opportunity Title\n-\n-**Paper**: [Title](URL)\n-**Authors**: Author A, Author B\n-**Published**: YYYY-MM-DD\n-**Effort**: low / medium / high\n-**Rationale**: 2-3 sentences mapping the paper's mechanism to a specific gh-aw component.\n-\n----\n-\n-### Papers Analyzed\n-\n-| Paper | Published | Relevant | Area |\n-|---|---|---|---|\n-| [Title](URL) | YYYY-MM-DD | Yes / No | area or — |\n-\n----\n-\n-### Next Steps\n-\n-- [ ] Investigate: opportunity 1 (effort: low)\n-- [ ] Investigate: opportunity 2 (effort: medium)\n-```\n+Use the `discussion-template` skill to format the discussion body.\n \n **If no actionable opportunities were found** (but papers were processed and ledger updated):\n call `noop` with message: \"Processed N papers (M relevant), no actionable gh-aw improvements identified today.\"\n@@ -285,6 +257,28 @@ Input: `{\"title\": \"...\", \"abstract\": \"...\"}` as a JSON string.\n Output: exactly one line of valid JSON — no other text:\n `{\"relevant\": true, \"reason\": \"one sentence\"}` or `{\"relevant\": false, \"reason\": \"one sentence\"}`\n \n+## agent: `relevance-ranker`\n+---\n+description: Scores a relevant arXiv paper by actionability for GitHub Agentic Workflows\n+model: small\n+---\n+\n+Score a relevant arXiv paper by how actionable it is for GitHub Agentic Workflows (gh-aw).\n+\n+gh-aw compiles markdown workflows into GitHub Actions YAML with pluggable AI engines, safe-outputs typed writes, network firewall, token optimization, sub-agents, cache-memory, repo-memory, and multi-agent orchestration.\n+\n+Score 1–5:\n+- 5: describes a new technique, pattern, or mechanism directly applicable to a specific gh-aw component\n+- 4: strong connection to gh-aw but requires adaptation\n+- 3: loosely related; possible indirect improvement\n+- 2: tangential; only marginally relevant to gh-aw\n+- 1: relevant to AI/agents generally but no clear gh-aw application\n+\n+Input: `{\"title\": \"...\", \"abstract\": \"...\"}` as a JSON string.\n+\n+Output: exactly one line of valid JSON — no other text:\n+`{\"score\": <1-5>, \"reason\": \"one sentence\"}`\n+\n ## agent: `opportunity-extractor`\n ---\n description: Extracts a specific actionable improvement for gh-aw from a relevant arXiv paper\n@@ -309,3 +303,47 @@ Identify the single most actionable improvement the paper suggests for gh-aw —\n \n Output: exactly one line of valid JSON — no other text:\n `{\"opportunity\": \"concise one-sentence action\", \"area\": \"token-optimization|safe-outputs|workflow-compilation|multi-agent|prompt-engineering|network|security|other\", \"effort\": \"low|medium|high\", \"rationale\": \"2-3 sentences naming the paper mechanism and the specific gh-aw component it improves\"}`\n+\n+## skill: `discussion-template`\n+---\n+description: Discussion body structure and formatting rules for the arXiv research output\n+---\n+\n+Use `###` or lower for all headers inside the discussion body. Never use `#` or `##`.\n+\n+Discussion body structure:\n+\n+```\n+### Summary\n+\n+N papers screened, M relevant, K opportunities identified.\n+\n+---\n+\n+### Actionable Opportunities\n+\n+(one section per opportunity, grouped by area when there are multiple in the same area)\n+\n+#### [AREA] — Short Opportunity Title\n+\n+**Paper**: [Title](URL)\n+**Authors**: Author A, Author B\n+**Published**: YYYY-MM-DD\n+**Effort**: low / medium / high\n+**Rationale**: 2-3 sentences mapping the paper's mechanism to a specific gh-aw component.\n+\n+---\n+\n+### Papers Analyzed\n+\n+| Paper | Published | Relevant | Area |\n+|---|---|---|---|\n+| [Title](URL) | YYYY-MM-DD | Yes / No | area or — |\n+\n+---\n+\n+### Next Steps\n+\n+- [ ] Investigate: opportunity 1 (effort: low)\n+- [ ] Investigate: opportunity 2 (effort: medium)\n+```",
+          "snapshot_ref": "0b509469ac61448a2fcb10b66bd0857436c177ba",
+          "snapshot_blob_sha": "f07ba9f00789b7220c569fa8e920d234ef2efd60",
+          "snapshot_file": "snapshots/gh-aw__github__0b509469ac61448a2fcb10b66bd0857436c177ba__daily-arxiv-researcher.md",
+          "snapshot_bytes": 13214,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-arxiv-researcher.lock.yml\",\"generated_workflow_file\":\"daily-arxiv-researcher.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-arxiv-researcher.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

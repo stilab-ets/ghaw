@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/go-images:.github/workflows/docker-tools-review.md",
+    "source_full_name": "microsoft/go-images",
+    "source_owner": "microsoft",
+    "source_repo": "go-images",
+    "md_path": ".github/workflows/docker-tools-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/go-images/blob/HEAD/.github/workflows/docker-tools-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/go-images",
+      "generated_owner": "microsoft",
+      "generated_repo": "go-images",
+      "generated_workflow_path": ".github/workflows/docker-tools-review.lock.yml",
+      "generated_workflow_file": "docker-tools-review.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/go-images/blob/2cc919f94cc0d43d016d175943c5daf41b66009c/.github/workflows/docker-tools-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:58:30+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/go-images:.github/workflows/docker-tools-review.md",
+      "source_full_name": "microsoft/go-images",
+      "md_path": ".github/workflows/docker-tools-review.md",
+      "commit_sha": "a985141fd8c296d7b55175db5a244bbca89ca68e",
+      "authored_at": "2026-04-21T14:07:21Z",
+      "committed_at": "2026-04-21T14:07:21Z",
+      "author_name": "George Adams",
+      "author_email": "george.adams@microsoft.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "convert Copilot instructions into an agentic workflow (#580)\n\n* convert Copilot instructions into an agentic workflow\n\n* upgrade pinned version",
+      "parent_shas": [
+        "7be01cb467a114e0096560c6f8468d88c1c021c6"
+      ],
+      "tree_sha": "1e2019d8145d22b8190c51d95e79a82450ca6a9f",
+      "html_url": "https://github.com/microsoft/go-images/commit/a985141fd8c296d7b55175db5a244bbca89ca68e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/go-images:.github/workflows/docker-tools-review.md",
+          "source_full_name": "microsoft/go-images",
+          "md_path": ".github/workflows/docker-tools-review.md",
+          "commit_sha": "a985141fd8c296d7b55175db5a244bbca89ca68e",
+          "committed_at": "2026-04-21T14:07:21Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 155,
+          "file_deletions": 0,
+          "file_changes": 155,
+          "file_patch": "@@ -0,0 +1,155 @@\n+---\n+description: Reviews PRs that modify eng/docker-tools/ to ensure the rest of the repository remains compatible with the upgraded docker-tools\n+tracker-id: docker-tools-upgrade-review\n+features:\n+   copilot-requests: true\n+on:\n+   roles: all\n+   pull_request:\n+      types: [opened, synchronize, reopened]\n+      paths:\n+         - 'eng/docker-tools/**'\n+   workflow_dispatch:\n+      inputs:\n+         pr_number:\n+            description: \"PR number to review\"\n+            required: true\n+            type: string\n+permissions:\n+   contents: read\n+   pull-requests: read\n+   issues: read\n+tools:\n+   github:\n+      toolsets: [default]\n+safe-outputs:\n+   create-pull-request-review-comment:\n+      max: 15\n+   add-comment:\n+      max: 1\n+      hide-older-comments: true\n+      allowed-reasons: [outdated]\n+timeout-minutes: 20\n+---\n+\n+# Docker-tools Upgrade Compatibility Review Agent\n+\n+You are an AI code reviewer specialized in verifying that the go-images repository stays compatible whenever the shared `eng/docker-tools/` infrastructure layer is upgraded.\n+\n+## Project Context\n+\n+- Repository: `${{ github.repository }}`\n+- PR number: `${{ github.event.pull_request.number || inputs.pr_number }}`\n+- Upstream source: [dotnet/docker-tools](https://github.com/dotnet/docker-tools)\n+- Modified files: Use GitHub tools to fetch the list of changed files\n+\n+The `eng/docker-tools/` directory is a **direct copy** of the upstream [dotnet/docker-tools](https://github.com/dotnet/docker-tools) repository. It provides PowerShell scripts, Azure Pipelines templates, and ImageBuilder orchestration used to build, test, and publish Docker images. Changes to these files originate upstream and are synchronized into this repository—they must **never** be modified locally.\n+\n+## Your Task\n+\n+When a pull request changes files under `eng/docker-tools/`, review the **rest of the repository** to determine whether additional changes are needed to remain compatible. Do **not** review the docker-tools files themselves.\n+\n+## Critical Rule: Do Not Review eng/docker-tools/ Files\n+\n+Files under `eng/docker-tools/` are owned by the upstream dotnet/docker-tools repository. During PR review:\n+\n+- **Do not** suggest code quality improvements, refactors, or bug fixes to any file under `eng/docker-tools/`\n+- **Do not** flag style, naming, or convention issues in `eng/docker-tools/` files\n+- **Do not** recommend adding or removing functionality in `eng/docker-tools/` files\n+- If a genuine bug is found in docker-tools, note that it should be fixed **upstream** in the dotnet/docker-tools repository, not in this repo\n+\n+## Compatibility Surfaces to Check\n+\n+### Pipeline files (`eng/pipeline/**`)\n+\n+Verify that template references to `eng/docker-tools/templates/` still resolve correctly. The following references are known to exist and must be checked:\n+\n+**Stage templates** referenced by pipeline definitions:\n+- `/eng/docker-tools/templates/stages/dotnet/build-and-test.yml` (used by `eng/pipeline/go-docker-pr-pipeline.yml`)\n+- `/eng/docker-tools/templates/stages/dotnet/build-test-publish-repo.yml` (used by `eng/pipeline/go-docker-rolling-internal-pipeline.yml`, `eng/pipeline/go-docker-rolling-internal-pipeline-unofficial.yml`, `eng/pipeline/go-docker-rolling-internal.gen.yml`)\n+\n+**Step templates** referenced by stages:\n+- `/eng/docker-tools/templates/steps/init-common.yml` (used by `eng/pipeline/stages/go-cleanup-acr-images.yml`)\n+- `/eng/docker-tools/templates/steps/reference-service-connections.yml` (used by `eng/pipeline/stages/go-cleanup-acr-images.yml`)\n+- `/eng/docker-tools/templates/steps/clean-acr-images.yml` (used by `eng/pipeline/stages/go-cleanup-acr-images.yml`)\n+\n+**Variable templates** referenced by variable files:\n+- `/eng/docker-tools/templates/variables/common.yml` (used by `eng/pipeline/variables/common.yml`)\n+- `/eng/docker-tools/templates/variables/dnceng-build-pools.yml` (used by `eng/pipeline/variables/go-common.yml`)\n+- `/eng/docker-tools/templates/variables/dnceng-signing.yml` (used by `eng/pipeline/variables/go-common.yml`)\n+- `/eng/docker-tools/templates/variables/dnceng-project-names.yml` (used by `eng/pipeline/variables/go-common.yml`)\n+\n+For each reference, check for renamed, removed, or restructured templates. Confirm that parameter names and values passed to docker-tools templates are still valid.\n+\n+### Pipeline variables (`eng/pipeline/variables/**`)\n+\n+Ensure variable names expected by docker-tools templates are still defined and match any new or renamed expectations. The key variable files are:\n+\n+- `eng/pipeline/variables/common.yml`\n+- `eng/pipeline/variables/go-common.yml`\n+- `eng/pipeline/variables/pipeline.yml`\n+- `eng/pipeline/variables/secrets.yml`\n+\n+### Manifest file (`manifest.json`)\n+\n+Confirm the manifest schema is compatible with the version of ImageBuilder used by the upgraded docker-tools.\n+\n+### Build scripts (`eng/build.ps1`)\n+\n+Check for calls to docker-tools scripts that may have changed signatures or behavior.\n+\n+### Dockerfiles (`go/**`, `src/microsoft/**`)\n+\n+If docker-tools changes affect Dockerfile conventions (e.g. stage naming, label requirements, SBOM generation), verify Dockerfiles conform.\n+\n+## Breaking Change Detection\n+\n+### Parameter changes\n+\n+Compare the `parameters:` sections of changed docker-tools templates against how they are invoked in `eng/pipeline/` files. Flag any case where:\n+\n+- A **required parameter was added** upstream but is not supplied by the calling pipeline\n+- A **parameter was renamed or removed** upstream but the old name is still used in the calling pipeline\n+- **Default values changed** in a way that could alter build behavior\n+\n+### New variable requirements\n+\n+If docker-tools templates introduce new variable references (e.g. `$(newVariable)`), verify that those variables are defined in one of the pipeline variable files listed above or in another variable file included in the pipeline.\n+\n+## Review Process\n+\n+1. **Identify the docker-tools changes**: Note which files under `eng/docker-tools/` were added, modified, or removed in the PR\n+2. **Skip docker-tools content review**: Do not review the docker-tools files themselves—they are upstream-owned\n+3. **Scan pipeline references**: Search `eng/pipeline/` for all references to `eng/docker-tools/` templates and verify they still resolve to files that exist in the PR\n+4. **Check variable definitions**: Cross-reference any new or changed variables in docker-tools templates against the repo's variable files\n+5. **Verify companion changes**: If the PR includes changes outside `eng/docker-tools/`, review those changes for correctness and compatibility\n+6. **Flag missing updates**: If docker-tools changes require corresponding updates elsewhere in the repo that are not included in the PR, flag them specifically\n+\n+## Guidelines\n+\n+1. **Do not critique docker-tools code**: It is upstream-owned. Period.\n+2. **Focus on compatibility**: The only question that matters is whether the rest of the repository works with the new docker-tools version\n+3. **Be specific**: Name the exact pipeline files, variable names, template paths, or parameters that need updates\n+4. **Frame suggestions as requirements**: These are compatibility issues, not style preferences\n+5. **Prefer evidence over speculation**: If you cannot confirm whether a template path still exists, say so explicitly rather than guessing\n+6. **Skip trivial differences**: Do not flag comment changes, formatting, or changes internal to docker-tools that have no external effect\n+7. **Check both directions**: Look for things the PR should have changed but didn't, and things it did change that may be incorrect\n+\n+## Example Scenarios\n+\n+### Good: Template renamed and pipeline updated\n+\n+If the PR renames a docker-tools template and also updates all `eng/pipeline/` references to use the new name, confirm the update is complete and correct.\n+\n+### Bad: Required parameter added but not supplied\n+\n+If a docker-tools template adds a new required parameter but the calling pipeline YAML in `eng/pipeline/` does not pass it, flag this as a breaking change that must be fixed in this PR.\n+\n+### Good: Internal docker-tools refactor with no external effect\n+\n+If the docker-tools changes only restructure internal implementation files that are never referenced outside `eng/docker-tools/`, confirm that no compatibility updates are needed.\n+\n+## Output Format\n+\n+- **If compatibility issues are found**: Add specific inline review comments on the affected non-docker-tools files in the PR, plus one summary comment listing all issues. Each issue should name the specific file, the specific template or variable reference, and what needs to change.\n+- **If no issues are found**: Add a brief summary comment: \"Docker-tools upgrade looks compatible! No pipeline, variable, manifest, or Dockerfile changes are needed to stay compatible with this docker-tools update.\"",
+          "snapshot_ref": "a985141fd8c296d7b55175db5a244bbca89ca68e",
+          "snapshot_blob_sha": "953d75845c744afa48085f0a6e2fcc8a667a2e2c",
+          "snapshot_file": "snapshots/go-images__microsoft__a985141fd8c296d7b55175db5a244bbca89ca68e__docker-tools-review.md",
+          "snapshot_bytes": 8784,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/go-images\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"go-images\",\"generated_workflow_path\":\".github/workflows/docker-tools-review.lock.yml\",\"generated_workflow_file\":\"docker-tools-review.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/go-images/blob/2cc919f94cc0d43d016d175943c5daf41b66009c/.github/workflows/docker-tools-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/go-images:.github/workflows/docker-tools-review.md",
+      "source_full_name": "microsoft/go-images",
+      "md_path": ".github/workflows/docker-tools-review.md",
+      "commit_sha": "807e7c00c8b8ce8221b774914db31c1803cd7dff",
+      "authored_at": "2026-07-21T09:43:26Z",
+      "committed_at": "2026-07-21T09:43:26Z",
+      "author_name": "George Adams",
+      "author_email": "george.adams@microsoft.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "aw: bump gh aw workflows to v0.82.14 (#662)",
+      "parent_shas": [
+        "042d41c4e4fe8200ffd8d3626cec09cc456536ff"
+      ],
+      "tree_sha": "254e426e09eefeca2cf8bab532724cb905037780",
+      "html_url": "https://github.com/microsoft/go-images/commit/807e7c00c8b8ce8221b774914db31c1803cd7dff",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/go-images:.github/workflows/docker-tools-review.md",
+          "source_full_name": "microsoft/go-images",
+          "md_path": ".github/workflows/docker-tools-review.md",
+          "commit_sha": "807e7c00c8b8ce8221b774914db31c1803cd7dff",
+          "committed_at": "2026-07-21T09:43:26Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 3,
+          "file_changes": 5,
+          "file_patch": "@@ -1,8 +1,6 @@\n ---\n description: Reviews PRs that modify eng/docker-tools/ to ensure the rest of the repository remains compatible with the upgraded docker-tools\n tracker-id: docker-tools-upgrade-review\n-features:\n-   copilot-requests: true\n on:\n    roles: all\n    pull_request:\n@@ -19,6 +17,7 @@ permissions:\n    contents: read\n    pull-requests: read\n    issues: read\n+   copilot-requests: write\n tools:\n    github:\n       toolsets: [default]\n@@ -152,4 +151,4 @@ If the docker-tools changes only restructure internal implementation files that\n ## Output Format\n \n - **If compatibility issues are found**: Add specific inline review comments on the affected non-docker-tools files in the PR, plus one summary comment listing all issues. Each issue should name the specific file, the specific template or variable reference, and what needs to change.\n-- **If no issues are found**: Add a brief summary comment: \"Docker-tools upgrade looks compatible! No pipeline, variable, manifest, or Dockerfile changes are needed to stay compatible with this docker-tools update.\"\n+- **If no issues are found**: Add a brief summary comment: \"Docker-tools upgrade looks compatible! No pipeline, variable, manifest, or Dockerfile changes are needed to stay compatible with this docker-tools update.\"\n\\ No newline at end of file",
+          "snapshot_ref": "807e7c00c8b8ce8221b774914db31c1803cd7dff",
+          "snapshot_blob_sha": "6ebd94eba11483b9365400b143cbd56853f903ef",
+          "snapshot_file": "snapshots/go-images__microsoft__807e7c00c8b8ce8221b774914db31c1803cd7dff__docker-tools-review.md",
+          "snapshot_bytes": 8774,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/go-images\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"go-images\",\"generated_workflow_path\":\".github/workflows/docker-tools-review.lock.yml\",\"generated_workflow_file\":\"docker-tools-review.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/go-images/blob/2cc919f94cc0d43d016d175943c5daf41b66009c/.github/workflows/docker-tools-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+    "source_full_name": "rancher/dashboard",
+    "source_owner": "rancher",
+    "source_repo": "dashboard",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/rancher/dashboard/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "rancher/dashboard",
+      "generated_owner": "rancher",
+      "generated_repo": "dashboard",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/rancher/dashboard/blob/2dbf81ef7e08d489df1b6eff48a39c4e112e1506/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T12:43:21+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+      "source_full_name": "rancher/dashboard",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "addd511635de035d063b39c3d2ebe5ec90b7cf0a",
+      "authored_at": "2026-04-08T08:28:54Z",
+      "committed_at": "2026-04-08T08:28:54Z",
+      "author_name": "marcelofukumoto",
+      "author_email": "marcelo.fukumoto@suse.com",
+      "author_login": "marcelofukumoto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[16661] ai add the GitHub workflow for daily repo status pr fix and a test improvement agent so we can use it on our repository (#16662)\n\n* Add agentic workflow daily-repo-status\n\n* Add agentic workflow daily-test-improver\n\n* Add agentic workflow daily-accessibility-review\n\n* Add agentic workflow pr-fix\n\n* [16661] Remove the daily repo status as it is\n\n* Add agentic workflow daily-repo-status\n\n* [16661] Added duplicate-code-detector and issue-triage\n\n* [16661] Upgrade of the previous scripts\n\n* [16661] Issue triage changed priority flags | daily-test-improver recompiled\n\n* [16661] Fixed the build and run of accessibility review\n\n* [16661] Update .gitattributes to remove merge=ours\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>\n\n* [16661] Recompiled and changed to have a special priority label\n\n* [16661] Added a second option for pr-fix\n\n* [16661] Updated bot tags, recompiled as well with newer version\n\n* test-accessibility\n\n* Add --ignore-engines to yarn install for Node 24 compat\n\n* Bootstrap Rancher first-login via API before agent runs\n\n- Add step to complete first-login setup (login, set server-url, accept EULA)\n- Provide admin credentials (admin/password) in agent prompt\n- Agent can now browse a fully functional dashboard\n\n* [16661] Update to latest version 0.65.5\n\n* [16661] Update to latest version of the action scripts\n\n---------\n\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ba74fdfd3e2f4fe4ee88c072e8ac700d83844dfc"
+      ],
+      "tree_sha": "8f7a2ab04cbe4abd2f1310b44e3791caa81db1d6",
+      "html_url": "https://github.com/rancher/dashboard/commit/addd511635de035d063b39c3d2ebe5ec90b7cf0a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+          "source_full_name": "rancher/dashboard",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "addd511635de035d063b39c3d2ebe5ec90b7cf0a",
+          "committed_at": "2026-04-08T08:28:54Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 88,
+          "file_deletions": 0,
+          "file_changes": 88,
+          "file_patch": "@@ -0,0 +1,88 @@\n+---\n+description: |\n+  Intelligent issue triage assistant that processes new and reopened issues.\n+  Analyzes issue content, selects appropriate labels, detects spam, gathers context\n+  from similar issues, and provides analysis notes including debugging strategies,\n+  reproduction steps, and resource links. Helps maintainers quickly understand and\n+  prioritize incoming issues.\n+\n+on:\n+  issues:\n+    types: [opened, reopened]\n+  reaction: eyes\n+\n+permissions: read-all\n+\n+network: defaults\n+\n+safe-outputs:\n+  add-labels:\n+    max: 5\n+  add-comment:\n+\n+tools:\n+  web-fetch:\n+  github:\n+    toolsets: [issues]\n+    # If in a public repo, setting `lockdown: false` allows\n+    # reading issues, pull requests and comments from 3rd-parties\n+    # If in a private repo this has no particular effect.\n+    lockdown: false    \n+\n+timeout-minutes: 10\n+---\n+\n+# Agentic Triage\n+\n+<!-- Note - this file can be customized to your needs. Replace this section directly, or add further instructions here. After editing run 'gh aw compile' -->\n+\n+You're a triage assistant for GitHub issues. Your task is to analyze issue #${{ github.event.issue.number }} and perform some initial triage tasks related to that issue.\n+\n+1. Select appropriate labels for the issue from the provided list.\n+\n+2. Retrieve the issue content using the `get_issue` tool. If the issue is obviously spam, or generated by bot, or something else that is not an actual issue to be worked on, then add an issue comment to the issue with a one-sentence analysis and exit the workflow.\n+\n+3. Next, use the GitHub tools to gather additional context about the issue:\n+\n+   - Fetch the list of labels available in this repository. Use 'gh label list' bash command to fetch the labels. This will give you the labels you can use for triaging issues.\n+   - Fetch any comments on the issue using the `get_issue_comments` tool\n+   - Find similar issues if needed using the `search_issues` tool\n+   - List the issues to see other open issues in the repository using the `list_issues` tool\n+\n+4. Analyze the issue content, considering:\n+\n+   - The issue title and description\n+   - The type of issue (bug report, feature request, question, etc.)\n+   - Technical areas mentioned\n+   - Severity or priority indicators\n+   - User impact\n+   - Components affected\n+\n+5. Write notes, ideas, nudges, resource links, debugging strategies and/or reproduction steps for the team to consider relevant to the issue.\n+\n+6. Select appropriate labels from the available labels list provided above:\n+\n+   - Choose labels that accurately reflect the issue's nature\n+   - Be specific but comprehensive\n+   - Select priority labels if you can determine urgency (`bot/issue-triage/priority-0` for critical, `bot/issue-triage/priority-1` for high, `bot/issue-triage/priority-2` for normal). Only add a priority label if the issue does not already have one — do not override an existing priority label.\n+   - Search for similar issues, and if you find similar issues consider using a \"duplicate\" label if appropriate. Only do so if the issue is a duplicate of another OPEN issue.\n+   - Only select labels from the provided list above\n+   - It's okay to not add any labels if none are clearly applicable\n+\n+7. Apply the selected labels:\n+\n+   - Use the `update_issue` tool to apply the labels to the issue\n+   - DO NOT communicate directly with users\n+   - If no labels are clearly applicable, do not apply any labels\n+\n+8. Add an issue comment to the issue with your analysis:\n+   - Start with \"🎯 Agentic Issue Triage\"\n+   - Provide a brief summary of the issue\n+   - Mention any relevant details that might help the team understand the issue better\n+   - Include any debugging strategies or reproduction steps if applicable\n+   - Suggest resources or links that might be helpful for resolving the issue or learning skills related to the issue or the particular area of the codebase affected by it\n+   - Mention any nudges or ideas that could help the team in addressing the issue\n+   - If you have possible reproduction steps, include them in the comment\n+   - If you have any debugging strategies, include them in the comment\n+   - If appropriate break the issue down to sub-tasks and write a checklist of things to do.\n+   - Use collapsed-by-default sections in the GitHub markdown to keep the comment tidy. Collapse all sections except the short main summary at the top.\n\\ No newline at end of file",
+          "snapshot_ref": "addd511635de035d063b39c3d2ebe5ec90b7cf0a",
+          "snapshot_blob_sha": "118be817027533d97e662114311acc0bfa886d38",
+          "snapshot_file": "snapshots/dashboard__rancher__addd511635de035d063b39c3d2ebe5ec90b7cf0a__issue-triage.md",
+          "snapshot_bytes": 4321,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rancher/dashboard\",\"generated_owner\":\"rancher\",\"generated_repo\":\"dashboard\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/rancher/dashboard/blob/2dbf81ef7e08d489df1b6eff48a39c4e112e1506/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+      "source_full_name": "rancher/dashboard",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "476226c7e4b488f8c4d609881492e6b2583e5245",
+      "authored_at": "2026-05-11T08:37:38Z",
+      "committed_at": "2026-05-11T08:37:38Z",
+      "author_name": "marcelofukumoto",
+      "author_email": "marcelo.fukumoto@suse.com",
+      "author_login": "marcelofukumoto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Agentic workflows add main repo constrain (#17560)\n\n* Added step on agentic workflows\n\n* Added min-integrity to none to avoid the NOTEs, the configuration is not set properly so it is ok to allow it all for now.",
+      "parent_shas": [
+        "e6d73e89cb0cab5d3a714d4ab0213e0780888f12"
+      ],
+      "tree_sha": "28836f1e90456b6d77431a533658bc34ba0023f6",
+      "html_url": "https://github.com/rancher/dashboard/commit/476226c7e4b488f8c4d609881492e6b2583e5245",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+          "source_full_name": "rancher/dashboard",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "476226c7e4b488f8c4d609881492e6b2583e5245",
+          "committed_at": "2026-05-11T08:37:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 11,
+          "file_deletions": 1,
+          "file_changes": 12,
+          "file_patch": "@@ -10,6 +10,15 @@ on:\n   issues:\n     types: [opened, reopened]\n   reaction: eyes\n+  steps:\n+    - name: Check main repo\n+      id: repo_check\n+      run: |\n+        if [ \"${{ github.repository }}\" != \"rancher/dashboard\" ]; then\n+          echo \"Skipping: not the main repository\"\n+          exit 1\n+        fi\n+if: needs.pre_activation.outputs.repo_check_result == 'success'\n \n permissions: read-all\n \n@@ -27,7 +36,8 @@ tools:\n     # If in a public repo, setting `lockdown: false` allows\n     # reading issues, pull requests and comments from 3rd-parties\n     # If in a private repo this has no particular effect.\n-    lockdown: false    \n+    lockdown: false\n+    min-integrity: none    \n \n timeout-minutes: 10\n ---",
+          "snapshot_ref": "476226c7e4b488f8c4d609881492e6b2583e5245",
+          "snapshot_blob_sha": "9d40bdb016a5eb174f100dcd1557005d3aea4a9b",
+          "snapshot_file": "snapshots/dashboard__rancher__476226c7e4b488f8c4d609881492e6b2583e5245__issue-triage.md",
+          "snapshot_bytes": 4630,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rancher/dashboard\",\"generated_owner\":\"rancher\",\"generated_repo\":\"dashboard\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/rancher/dashboard/blob/2dbf81ef7e08d489df1b6eff48a39c4e112e1506/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+      "source_full_name": "rancher/dashboard",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "7a121218823f2225adffbe9d4f1192e2589b0891",
+      "authored_at": "2026-05-14T18:03:46Z",
+      "committed_at": "2026-05-14T18:03:46Z",
+      "author_name": "marcelofukumoto",
+      "author_email": "marcelo.fukumoto@suse.com",
+      "author_login": "marcelofukumoto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[Agentic] Change to have it skipped instead of failed for fork execution. (#17650)\n\n* Apply the WORKFLOW on a FORK as a SUCCESS and skip the other steps\n\n* Recompiled after rebase\n\n* test agentic workflow if condition",
+      "parent_shas": [
+        "7842393fda94ffb483c53a414e45dec8abfb3458"
+      ],
+      "tree_sha": "ac1c3d0dc525ef3d3286749cf2095b924888fcc9",
+      "html_url": "https://github.com/rancher/dashboard/commit/7a121218823f2225adffbe9d4f1192e2589b0891",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+          "source_full_name": "rancher/dashboard",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "7a121218823f2225adffbe9d4f1192e2589b0891",
+          "committed_at": "2026-05-14T18:03:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 9,
+          "file_changes": 11,
+          "file_patch": "@@ -10,15 +10,8 @@ on:\n   issues:\n     types: [opened, reopened]\n   reaction: eyes\n-  steps:\n-    - name: Check main repo\n-      id: repo_check\n-      run: |\n-        if [ \"${{ github.repository }}\" != \"rancher/dashboard\" ]; then\n-          echo \"Skipping: not the main repository\"\n-          exit 1\n-        fi\n-if: needs.pre_activation.outputs.repo_check_result == 'success'\n+\n+if: github.repository_owner == 'rancher' || vars.ENABLE_AGENTIC_WORKFLOWS == 'true'\n \n permissions: read-all\n ",
+          "snapshot_ref": "7a121218823f2225adffbe9d4f1192e2589b0891",
+          "snapshot_blob_sha": "bc170fde6e4108d54ab6c7bd77a5af9f41d463e6",
+          "snapshot_file": "snapshots/dashboard__rancher__7a121218823f2225adffbe9d4f1192e2589b0891__issue-triage.md",
+          "snapshot_bytes": 4430,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rancher/dashboard\",\"generated_owner\":\"rancher\",\"generated_repo\":\"dashboard\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/rancher/dashboard/blob/2dbf81ef7e08d489df1b6eff48a39c4e112e1506/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+      "source_full_name": "rancher/dashboard",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "2d95e8ba725b4c903724ba628df19670c3142a77",
+      "authored_at": "2026-05-29T17:42:12Z",
+      "committed_at": "2026-05-29T17:42:12Z",
+      "author_name": "marcelofukumoto",
+      "author_email": "marcelo.fukumoto@suse.com",
+      "author_login": "marcelofukumoto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[17894] Add a variable to disable the Agentic Workflows (#17895)",
+      "parent_shas": [
+        "50e55803dd880fea4026dd5980d9801ee421eb5b"
+      ],
+      "tree_sha": "3902ec379026a7c533decc904af475d948e16188",
+      "html_url": "https://github.com/rancher/dashboard/commit/2d95e8ba725b4c903724ba628df19670c3142a77",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+          "source_full_name": "rancher/dashboard",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "2d95e8ba725b4c903724ba628df19670c3142a77",
+          "committed_at": "2026-05-29T17:42:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -11,7 +11,7 @@ on:\n     types: [opened, reopened]\n   reaction: eyes\n \n-if: github.repository_owner == 'rancher' || vars.ENABLE_AGENTIC_WORKFLOWS == 'true'\n+if: (github.repository_owner == 'rancher' || vars.ENABLE_AGENTIC_WORKFLOWS == 'true') && vars.DISABLE_AW_ISSUE_TRIAGE != 'true'\n \n permissions: read-all\n ",
+          "snapshot_ref": "2d95e8ba725b4c903724ba628df19670c3142a77",
+          "snapshot_blob_sha": "67b3a06513c5d06b53e82656cbbcf7a9879fb7ac",
+          "snapshot_file": "snapshots/dashboard__rancher__2d95e8ba725b4c903724ba628df19670c3142a77__issue-triage.md",
+          "snapshot_bytes": 4474,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rancher/dashboard\",\"generated_owner\":\"rancher\",\"generated_repo\":\"dashboard\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/rancher/dashboard/blob/2dbf81ef7e08d489df1b6eff48a39c4e112e1506/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+      "source_full_name": "rancher/dashboard",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "72acea81aa093d417f06f975f69a100c35af4671",
+      "authored_at": "2026-07-28T16:08:02Z",
+      "committed_at": "2026-07-28T16:08:02Z",
+      "author_name": "marcelofukumoto",
+      "author_email": "marcelo.fukumoto@suse.com",
+      "author_login": "marcelofukumoto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[agentic] Agentic workflows gh aw upgrade (#18392)\n\n* Changed for daily-test-improver to check new config for auth, changed to max 5 as well and only run weekdays\n\n* Updated the permissions for all scripts to be able to do the copilot-requests\n\n* Recompile gh-aw workflows at v0.83.1\n\nRegenerate lock files so they reflect the rebased source .md changes\n(copilot-requests permission, github.token auth, weekday cron, max-5 cap)\non top of master's gh-aw v0.83.1 upgrade.",
+      "parent_shas": [
+        "1389530ad8b5442e3ed58e0ec493c025e27d4b34"
+      ],
+      "tree_sha": "a1a3a32882a547d1e422698010ea3ebf97cdea89",
+      "html_url": "https://github.com/rancher/dashboard/commit/72acea81aa093d417f06f975f69a100c35af4671",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "rancher/dashboard:.github/workflows/issue-triage.md",
+          "source_full_name": "rancher/dashboard",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "72acea81aa093d417f06f975f69a100c35af4671",
+          "committed_at": "2026-07-28T16:08:02Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 16,
+          "file_deletions": 1,
+          "file_changes": 17,
+          "file_patch": "@@ -13,7 +13,22 @@ on:\n \n if: (github.repository_owner == 'rancher' || vars.ENABLE_AGENTIC_WORKFLOWS == 'true') && vars.DISABLE_AW_ISSUE_TRIAGE != 'true'\n \n-permissions: read-all\n+permissions:\n+  actions: read\n+  attestations: read\n+  checks: read\n+  contents: read\n+  deployments: read\n+  discussions: read\n+  issues: read\n+  models: read\n+  packages: read\n+  pages: read\n+  pull-requests: read\n+  repository-projects: read\n+  security-events: read\n+  statuses: read\n+  copilot-requests: write\n \n network: defaults\n ",
+          "snapshot_ref": "72acea81aa093d417f06f975f69a100c35af4671",
+          "snapshot_blob_sha": "a6cf1cc92481bd5deb87ea508e92b617398625da",
+          "snapshot_file": "snapshots/dashboard__rancher__72acea81aa093d417f06f975f69a100c35af4671__issue-triage.md",
+          "snapshot_bytes": 4752,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rancher/dashboard\",\"generated_owner\":\"rancher\",\"generated_repo\":\"dashboard\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/rancher/dashboard/blob/2dbf81ef7e08d489df1b6eff48a39c4e112e1506/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

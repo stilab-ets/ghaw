@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+    "source_full_name": "pulumi-labs/gh-aw-internal",
+    "source_owner": "pulumi-labs",
+    "source_repo": "gh-aw-internal",
+    "md_path": ".github/workflows/gh-aw-pr-review.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/pulumi-labs/gh-aw-internal/blob/HEAD/.github/workflows/gh-aw-pr-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "pulumi/pulumi-azure-native",
+      "generated_owner": "pulumi",
+      "generated_repo": "pulumi-azure-native",
+      "generated_workflow_path": ".github/workflows/azure-native-pr-review.lock.yml",
+      "generated_workflow_file": "azure-native-pr-review.lock.yml",
+      "generated_html_url": "https://github.com/pulumi/pulumi-azure-native/blob/e599a5f5cfd44e6fb2b045553cb0743b5343ff14/.github/workflows/azure-native-pr-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T12:43:16+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+      "source_full_name": "pulumi-labs/gh-aw-internal",
+      "md_path": ".github/workflows/gh-aw-pr-review.md",
+      "commit_sha": "41c36433320e2e0bc933ed57d08eae0805faf546",
+      "authored_at": "2026-03-04T19:02:43Z",
+      "committed_at": "2026-03-04T19:02:43Z",
+      "author_name": "Cory Hall",
+      "author_email": "43035978+corymhall@users.noreply.github.com",
+      "author_login": "corymhall",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bootstrap shared gh-aw PR review templates and mise pinning (#1)\n\n## Summary\n- add shared PR review templates (`gh-aw-pr-review`, `gh-aw-pr-rereview`) with shared review rubric imports\n- add reusable review guidance in `.github/snippets/code-review.md` and `.github/agents/code-review.md`\n- add `mise.toml`-based `gh-aw` pinning (`GH_AW_VERSION`) plus convenience tasks (`aw-version`, `aw-validate`, `aw-compile`)\n- document install/update/version-sync workflow in `README.md`\n\n## Notes\n- templates currently import `pulumi-labs/gh-aw-internal/.github/snippets/code-review.md@main` for consumer repos\n- this PR includes compiled lockfiles and `.gitattributes`",
+      "parent_shas": [
+        "11a960a18a2d09601c38517b67bfb8952fa53bb4"
+      ],
+      "tree_sha": "8194d3adffc6bf48fdf92603189cf110d054bd38",
+      "html_url": "https://github.com/pulumi-labs/gh-aw-internal/commit/41c36433320e2e0bc933ed57d08eae0805faf546",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+          "source_full_name": "pulumi-labs/gh-aw-internal",
+          "md_path": ".github/workflows/gh-aw-pr-review.md",
+          "commit_sha": "41c36433320e2e0bc933ed57d08eae0805faf546",
+          "committed_at": "2026-03-04T19:02:43Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 89,
+          "file_deletions": 0,
+          "file_changes": 89,
+          "file_patch": "@@ -0,0 +1,89 @@\n+---\n+description: Automated PR review for trusted internal contributors.\n+timeout-minutes: 15\n+strict: true\n+on:\n+  pull_request:\n+    types: [opened]\n+  workflow_dispatch:\n+    inputs:\n+      pr_number:\n+        description: \"Pull request number to review\"\n+        required: true\n+        type: string\n+imports:\n+  - pulumi-labs/gh-aw-internal/.github/snippets/code-review.md@main\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  id-token: write\n+engine:\n+  id: claude\n+  env:\n+    ANTHROPIC_API_KEY: ${{ steps.esc-secrets.outputs.ANTHROPIC_API_KEY || '__GH_AW_ACTIVATION_PLACEHOLDER__' }}\n+steps:\n+  - env:\n+      ESC_ACTION_ENVIRONMENT: imports/github-secrets\n+      ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: \"false\"\n+      ESC_ACTION_OIDC_AUTH: \"true\"\n+      ESC_ACTION_OIDC_ORGANIZATION: pulumi\n+      ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization\n+    id: esc-secrets\n+    name: Fetch secrets from ESC\n+    uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b\n+  - name: Validate ESC secret output\n+    env:\n+      ANTHROPIC_API_KEY_FROM_ESC: ${{ steps.esc-secrets.outputs.ANTHROPIC_API_KEY }}\n+    run: |\n+      test -n \"$ANTHROPIC_API_KEY_FROM_ESC\" || {\n+        echo \"ESC did not return ANTHROPIC_API_KEY\";\n+        exit 1;\n+      }\n+tools:\n+  github:\n+    lockdown: false\n+    toolsets: [pull_requests, repos]\n+safe-outputs:\n+  create-pull-request-review-comment:\n+    max: 12\n+    side: \"RIGHT\"\n+    target: \"${{ github.event.pull_request.number || github.event.inputs.pr_number }}\"\n+    target-repo: \"${{ github.repository }}\"\n+  submit-pull-request-review:\n+    max: 1\n+    target: \"${{ github.event.pull_request.number || github.event.inputs.pr_number }}\"\n+  noop:\n+    max: 1\n+  messages:\n+    footer: \"> Reviewed by [{workflow_name}]({run_url})\"\n+    run-started: \"Started automated PR review for #${{ github.event.pull_request.number || github.event.inputs.pr_number }}.\"\n+    run-success: \"Finished automated PR review for #${{ github.event.pull_request.number || github.event.inputs.pr_number }}.\"\n+    run-failure: \"Automated PR review failed for #${{ github.event.pull_request.number || github.event.inputs.pr_number }} ({status}).\"\n+---\n+\n+# Internal Trusted PR Reviewer\n+\n+Review pull request #${{ github.event.pull_request.number || github.event.inputs.pr_number }} in repository `${{ github.repository }}`.\n+This workflow imports `pulumi-labs/gh-aw-internal/.github/snippets/code-review.md@main` for the baseline review rubric.\n+\n+## Trust Model\n+\n+This workflow supports both `pull_request` and manual `workflow_dispatch` triggers.\n+For `pull_request`, it uses gh-aw default fork filtering (same-repository PRs only unless `forks` is explicitly configured).\n+`tools.github.lockdown: false` is set to avoid requiring a custom GitHub MCP token.\n+If required PR context cannot be read in this trust model, call `noop` with a brief reason and stop.\n+\n+## Workflow-Specific Rules\n+\n+- Use `${{ github.event.pull_request.number || github.event.inputs.pr_number }}` as the authoritative PR target.\n+- Ignore discovery steps intended for runs without PR context.\n+- Use `create-pull-request-review-comment` for actionable inline findings on changed lines.\n+- Submit exactly one final review with `submit-pull-request-review`:\n+  - `REQUEST_CHANGES` for blocking issues.\n+  - `COMMENT` for non-blocking observations.\n+  - `APPROVE` when no actionable issues remain.\n+- If there is nothing to do because trust/context checks fail, call `noop`.\n+\n+Constraints:\n+- Post no more than 12 inline comments.\n+- Do not post free-form issue comments outside review safe outputs.",
+          "snapshot_ref": "41c36433320e2e0bc933ed57d08eae0805faf546",
+          "snapshot_blob_sha": "d2e0077c49922f8ad80784e4ca1f0d1b14aa7504",
+          "snapshot_file": "snapshots/gh-aw-internal__pulumi-labs__41c36433320e2e0bc933ed57d08eae0805faf546__gh-aw-pr-review.md",
+          "snapshot_bytes": 3559,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"pulumi/pulumi-azure-native\",\"generated_owner\":\"pulumi\",\"generated_repo\":\"pulumi-azure-native\",\"generated_workflow_path\":\".github/workflows/azure-native-pr-review.lock.yml\",\"generated_workflow_file\":\"azure-native-pr-review.lock.yml\",\"generated_html_url\":\"https://github.com/pulumi/pulumi-azure-native/blob/e599a5f5cfd44e6fb2b045553cb0743b5343ff14/.github/workflows/azure-native-pr-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+      "source_full_name": "pulumi-labs/gh-aw-internal",
+      "md_path": ".github/workflows/gh-aw-pr-review.md",
+      "commit_sha": "ae997a8103ec0b750d04141c3cdd4c31102b7f41",
+      "authored_at": "2026-03-05T13:07:39Z",
+      "committed_at": "2026-03-05T13:07:39Z",
+      "author_name": "Cory Hall",
+      "author_email": "43035978+corymhall@users.noreply.github.com",
+      "author_login": "corymhall",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enforce binary final PR review states (#2)\n\n## Summary\n- Update shared review policy to use binary final states only: `REQUEST_CHANGES` when blocking issues exist, otherwise `APPROVE`\n- Explicitly forbid submitting `COMMENT` as the final review state\n- Apply the same wording in both workflow and shared snippet to prevent policy drift\n- Include `.gitignore` with local runtime/command/log directories\n- Commit regenerated `gh-aw` import cache and lockfiles produced by compile\n\n## Validation\n- `mise run aw-validate`\n- `mise run aw-compile`",
+      "parent_shas": [
+        "41c36433320e2e0bc933ed57d08eae0805faf546"
+      ],
+      "tree_sha": "6c36873be63a22fa39de8f30775b67141b0b311b",
+      "html_url": "https://github.com/pulumi-labs/gh-aw-internal/commit/ae997a8103ec0b750d04141c3cdd4c31102b7f41",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+          "source_full_name": "pulumi-labs/gh-aw-internal",
+          "md_path": ".github/workflows/gh-aw-pr-review.md",
+          "commit_sha": "ae997a8103ec0b750d04141c3cdd4c31102b7f41",
+          "committed_at": "2026-03-05T13:07:39Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -79,9 +79,9 @@ If required PR context cannot be read in this trust model, call `noop` with a br\n - Ignore discovery steps intended for runs without PR context.\n - Use `create-pull-request-review-comment` for actionable inline findings on changed lines.\n - Submit exactly one final review with `submit-pull-request-review`:\n-  - `REQUEST_CHANGES` for blocking issues.\n-  - `COMMENT` for non-blocking observations.\n-  - `APPROVE` when no actionable issues remain.\n+  - `REQUEST_CHANGES` when at least one blocking issue exists.\n+  - `APPROVE` otherwise, including when only non-blocking observations exist.\n+  - Do not submit `COMMENT` as the final review state.\n - If there is nothing to do because trust/context checks fail, call `noop`.\n \n Constraints:",
+          "snapshot_ref": "ae997a8103ec0b750d04141c3cdd4c31102b7f41",
+          "snapshot_blob_sha": "56128d7e37ba6bb5fb354669a165a2c668914874",
+          "snapshot_file": "snapshots/gh-aw-internal__pulumi-labs__ae997a8103ec0b750d04141c3cdd4c31102b7f41__gh-aw-pr-review.md",
+          "snapshot_bytes": 3619,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"pulumi/pulumi-azure-native\",\"generated_owner\":\"pulumi\",\"generated_repo\":\"pulumi-azure-native\",\"generated_workflow_path\":\".github/workflows/azure-native-pr-review.lock.yml\",\"generated_workflow_file\":\"azure-native-pr-review.lock.yml\",\"generated_html_url\":\"https://github.com/pulumi/pulumi-azure-native/blob/e599a5f5cfd44e6fb2b045553cb0743b5343ff14/.github/workflows/azure-native-pr-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+      "source_full_name": "pulumi-labs/gh-aw-internal",
+      "md_path": ".github/workflows/gh-aw-pr-review.md",
+      "commit_sha": "fcc1c7863be902c1ec6165ec1ac9b029a98043a3",
+      "authored_at": "2026-03-12T14:26:27Z",
+      "committed_at": "2026-03-12T14:26:27Z",
+      "author_name": "Cory Hall",
+      "author_email": "43035978+corymhall@users.noreply.github.com",
+      "author_login": "corymhall",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Refactor shared PR review workflows (#3)\n\n## Summary\n- refactor the PR review workflows to import a shared review contract\nand local reviewer prompt\n- move the detailed review procedure into\n`.github/workflows/shared/plugins/code-review/code-review.md` and enable\ncache-memory-backed review continuity\n- update the README to document the new shared review layout and\nmaintenance flow\n\n## Verification\n- gh aw compile gh-aw-pr-review\n- gh aw compile gh-aw-pr-rereview",
+      "parent_shas": [
+        "8de4b3f656bdb14547a92cbddd38ba7e849b7727"
+      ],
+      "tree_sha": "04d9dbe8f139e334d918a3edc0c8359bce825217",
+      "html_url": "https://github.com/pulumi-labs/gh-aw-internal/commit/fcc1c7863be902c1ec6165ec1ac9b029a98043a3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+          "source_full_name": "pulumi-labs/gh-aw-internal",
+          "md_path": ".github/workflows/gh-aw-pr-review.md",
+          "commit_sha": "fcc1c7863be902c1ec6165ec1ac9b029a98043a3",
+          "committed_at": "2026-03-12T14:26:27Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 72,
+          "file_changes": 78,
+          "file_patch": "@@ -2,6 +2,10 @@\n description: Automated PR review for trusted internal contributors.\n timeout-minutes: 15\n strict: true\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  id-token: write\n on:\n   pull_request:\n     types: [opened]\n@@ -12,78 +16,8 @@ on:\n         required: true\n         type: string\n imports:\n-  - pulumi-labs/gh-aw-internal/.github/snippets/code-review.md@main\n-permissions:\n-  contents: read\n-  pull-requests: read\n-  id-token: write\n-engine:\n-  id: claude\n-  env:\n-    ANTHROPIC_API_KEY: ${{ steps.esc-secrets.outputs.ANTHROPIC_API_KEY || '__GH_AW_ACTIVATION_PLACEHOLDER__' }}\n-steps:\n-  - env:\n-      ESC_ACTION_ENVIRONMENT: imports/github-secrets\n-      ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: \"false\"\n-      ESC_ACTION_OIDC_AUTH: \"true\"\n-      ESC_ACTION_OIDC_ORGANIZATION: pulumi\n-      ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization\n-    id: esc-secrets\n-    name: Fetch secrets from ESC\n-    uses: pulumi/esc-action@9eb774255b1a4afb7855678ae8d4a77359da0d9b\n-  - name: Validate ESC secret output\n-    env:\n-      ANTHROPIC_API_KEY_FROM_ESC: ${{ steps.esc-secrets.outputs.ANTHROPIC_API_KEY }}\n-    run: |\n-      test -n \"$ANTHROPIC_API_KEY_FROM_ESC\" || {\n-        echo \"ESC did not return ANTHROPIC_API_KEY\";\n-        exit 1;\n-      }\n-tools:\n-  github:\n-    lockdown: false\n-    toolsets: [pull_requests, repos]\n-safe-outputs:\n-  create-pull-request-review-comment:\n-    max: 12\n-    side: \"RIGHT\"\n-    target: \"${{ github.event.pull_request.number || github.event.inputs.pr_number }}\"\n-    target-repo: \"${{ github.repository }}\"\n-  submit-pull-request-review:\n-    max: 1\n-    target: \"${{ github.event.pull_request.number || github.event.inputs.pr_number }}\"\n-  noop:\n-    max: 1\n-  messages:\n-    footer: \"> Reviewed by [{workflow_name}]({run_url})\"\n-    run-started: \"Started automated PR review for #${{ github.event.pull_request.number || github.event.inputs.pr_number }}.\"\n-    run-success: \"Finished automated PR review for #${{ github.event.pull_request.number || github.event.inputs.pr_number }}.\"\n-    run-failure: \"Automated PR review failed for #${{ github.event.pull_request.number || github.event.inputs.pr_number }} ({status}).\"\n+  - shared/review.md\n+  - shared/plugins/code-review/code-review.md\n ---\n \n # Internal Trusted PR Reviewer\n-\n-Review pull request #${{ github.event.pull_request.number || github.event.inputs.pr_number }} in repository `${{ github.repository }}`.\n-This workflow imports `pulumi-labs/gh-aw-internal/.github/snippets/code-review.md@main` for the baseline review rubric.\n-\n-## Trust Model\n-\n-This workflow supports both `pull_request` and manual `workflow_dispatch` triggers.\n-For `pull_request`, it uses gh-aw default fork filtering (same-repository PRs only unless `forks` is explicitly configured).\n-`tools.github.lockdown: false` is set to avoid requiring a custom GitHub MCP token.\n-If required PR context cannot be read in this trust model, call `noop` with a brief reason and stop.\n-\n-## Workflow-Specific Rules\n-\n-- Use `${{ github.event.pull_request.number || github.event.inputs.pr_number }}` as the authoritative PR target.\n-- Ignore discovery steps intended for runs without PR context.\n-- Use `create-pull-request-review-comment` for actionable inline findings on changed lines.\n-- Submit exactly one final review with `submit-pull-request-review`:\n-  - `REQUEST_CHANGES` when at least one blocking issue exists.\n-  - `APPROVE` otherwise, including when only non-blocking observations exist.\n-  - Do not submit `COMMENT` as the final review state.\n-- If there is nothing to do because trust/context checks fail, call `noop`.\n-\n-Constraints:\n-- Post no more than 12 inline comments.\n-- Do not post free-form issue comments outside review safe outputs.",
+          "snapshot_ref": "fcc1c7863be902c1ec6165ec1ac9b029a98043a3",
+          "snapshot_blob_sha": "0ca0291ce095ddf4e678f77e49a49da7b0f22c5e",
+          "snapshot_file": "snapshots/gh-aw-internal__pulumi-labs__fcc1c7863be902c1ec6165ec1ac9b029a98043a3__gh-aw-pr-review.md",
+          "snapshot_bytes": 474,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"pulumi/pulumi-azure-native\",\"generated_owner\":\"pulumi\",\"generated_repo\":\"pulumi-azure-native\",\"generated_workflow_path\":\".github/workflows/azure-native-pr-review.lock.yml\",\"generated_workflow_file\":\"azure-native-pr-review.lock.yml\",\"generated_html_url\":\"https://github.com/pulumi/pulumi-azure-native/blob/e599a5f5cfd44e6fb2b045553cb0743b5343ff14/.github/workflows/azure-native-pr-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+      "source_full_name": "pulumi-labs/gh-aw-internal",
+      "md_path": ".github/workflows/gh-aw-pr-review.md",
+      "commit_sha": "9a981e07d7134a447fac35073f0857f8512f16c4",
+      "authored_at": "2026-04-03T17:36:23Z",
+      "committed_at": "2026-04-03T17:36:23Z",
+      "author_name": "Cory Hall",
+      "author_email": "43035978+corymhall@users.noreply.github.com",
+      "author_login": "corymhall",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade gh-aw and improve review workflow behavior (#4)\n\n## Summary\n- upgrade the pinned `gh-aw` version to `v0.65.6` and regenerate the\ncompiled lockfiles\n- trigger the main PR review workflow on both `opened` and\n`ready_for_review`\n- tighten the shared code-review prompt to prefer terse, issue-only\nreviews and avoid repeating inline comments in the final review\n- add `resolve-pull-request-review-thread` support so rereviews can\nresolve stale bot-authored threads that are fixed or clearly\nacknowledged\n\n## Verification\n- `mise run aw-version`\n- `mise run aw-validate`\n- `mise run aw-compile`",
+      "parent_shas": [
+        "734ef41746387a6818fd8ac3e619c9fd81ac6957"
+      ],
+      "tree_sha": "fab290aa0d7113f878562d277088a0fd5a946192",
+      "html_url": "https://github.com/pulumi-labs/gh-aw-internal/commit/9a981e07d7134a447fac35073f0857f8512f16c4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+          "source_full_name": "pulumi-labs/gh-aw-internal",
+          "md_path": ".github/workflows/gh-aw-pr-review.md",
+          "commit_sha": "9a981e07d7134a447fac35073f0857f8512f16c4",
+          "committed_at": "2026-04-03T17:36:23Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -8,7 +8,7 @@ permissions:\n   id-token: write\n on:\n   pull_request:\n-    types: [opened]\n+    types: [opened, ready_for_review]\n   workflow_dispatch:\n     inputs:\n       pr_number:",
+          "snapshot_ref": "9a981e07d7134a447fac35073f0857f8512f16c4",
+          "snapshot_blob_sha": "540fea99c416c20b8d4795783165a490b928da5d",
+          "snapshot_file": "snapshots/gh-aw-internal__pulumi-labs__9a981e07d7134a447fac35073f0857f8512f16c4__gh-aw-pr-review.md",
+          "snapshot_bytes": 492,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"pulumi/pulumi-azure-native\",\"generated_owner\":\"pulumi\",\"generated_repo\":\"pulumi-azure-native\",\"generated_workflow_path\":\".github/workflows/azure-native-pr-review.lock.yml\",\"generated_workflow_file\":\"azure-native-pr-review.lock.yml\",\"generated_html_url\":\"https://github.com/pulumi/pulumi-azure-native/blob/e599a5f5cfd44e6fb2b045553cb0743b5343ff14/.github/workflows/azure-native-pr-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+      "source_full_name": "pulumi-labs/gh-aw-internal",
+      "md_path": ".github/workflows/gh-aw-pr-review.md",
+      "commit_sha": "242988150273951aad5f67b008256266bdff6112",
+      "authored_at": "2026-05-28T15:56:48Z",
+      "committed_at": "2026-05-28T15:56:48Z",
+      "author_name": "Cory Hall",
+      "author_email": "43035978+corymhall@users.noreply.github.com",
+      "author_login": "corymhall",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade gh-aw review workflows (#9)\n\n## Summary\n- Upgrade gh-aw to v0.76.1 and regenerate review workflow lockfiles.\n- Consolidate review prompt behavior into the shared code-review prompt\nand remove legacy duplicate prompt files.\n- Allow manual draft PR reviews and support both `/review-again` and\n`/review` slash commands.\n\n## Notes\n- Final review guidance now uses `APPROVE` or `COMMENT`, never\n`REQUEST_CHANGES`.\n- The upgrade adds the generated gh-aw agent helper and Copilot setup\nworkflow from upstream gh-aw.\n\n## Validation\n- `mise run aw-validate && mise run aw-compile && git diff --check`\n\nCo-authored-by: Codex <codex@openai.com>",
+      "parent_shas": [
+        "8a92f53fac170563f7727cacab2dbedb5d5b9e29"
+      ],
+      "tree_sha": "afd2a5f827994ffa24333073dee7bcb7084a597f",
+      "html_url": "https://github.com/pulumi-labs/gh-aw-internal/commit/242988150273951aad5f67b008256266bdff6112",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "pulumi-labs/gh-aw-internal:.github/workflows/gh-aw-pr-review.md",
+          "source_full_name": "pulumi-labs/gh-aw-internal",
+          "md_path": ".github/workflows/gh-aw-pr-review.md",
+          "commit_sha": "242988150273951aad5f67b008256266bdff6112",
+          "committed_at": "2026-05-28T15:56:48Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -21,3 +21,5 @@ imports:\n ---\n \n # Internal Trusted PR Reviewer\n+\n+Draft review policy: This workflow may review draft PRs only when manually dispatched with `workflow_dispatch`. For automatic `pull_request` runs, call `noop` if the pull request is a draft.",
+          "snapshot_ref": "242988150273951aad5f67b008256266bdff6112",
+          "snapshot_blob_sha": "38537c0d685c38dffba32af3a6098e0ecdc8a30d",
+          "snapshot_file": "snapshots/gh-aw-internal__pulumi-labs__242988150273951aad5f67b008256266bdff6112__gh-aw-pr-review.md",
+          "snapshot_bytes": 684,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"pulumi/pulumi-azure-native\",\"generated_owner\":\"pulumi\",\"generated_repo\":\"pulumi-azure-native\",\"generated_workflow_path\":\".github/workflows/azure-native-pr-review.lock.yml\",\"generated_workflow_file\":\"azure-native-pr-review.lock.yml\",\"generated_html_url\":\"https://github.com/pulumi/pulumi-azure-native/blob/e599a5f5cfd44e6fb2b045553cb0743b5343ff14/.github/workflows/azure-native-pr-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

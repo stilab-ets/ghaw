@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/smoke-checkout-pr-dispatch.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/smoke-checkout-pr-dispatch.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/smoke-checkout-pr-dispatch.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/smoke-checkout-pr-dispatch.lock.yml",
+      "generated_workflow_file": "smoke-checkout-pr-dispatch.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-checkout-pr-dispatch.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:46:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-checkout-pr-dispatch.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-checkout-pr-dispatch.md",
+      "commit_sha": "81f056d0446bd08fdd6ac0c3403c951930c86eeb",
+      "authored_at": "2026-08-01T19:43:53Z",
+      "committed_at": "2026-08-01T19:43:53Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: honour workflow_dispatch + aw_context in checkout_pr_branch.cjs (#49451)",
+      "parent_shas": [
+        "be1047fe3ecd6bc1fe07b8b03dd1816514874f85"
+      ],
+      "tree_sha": "bb642da08fa4dea4cc995675759d08d30d5a7de6",
+      "html_url": "https://github.com/github/gh-aw/commit/81f056d0446bd08fdd6ac0c3403c951930c86eeb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-checkout-pr-dispatch.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-checkout-pr-dispatch.md",
+          "commit_sha": "81f056d0446bd08fdd6ac0c3403c951930c86eeb",
+          "committed_at": "2026-08-01T19:43:53Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 83,
+          "file_deletions": 0,
+          "file_changes": 83,
+          "file_patch": "@@ -0,0 +1,83 @@\n+---\n+private: true\n+emoji: \"🧪\"\n+name: Smoke Checkout PR Dispatch\n+description: Integration test validating that workflow_dispatch events with aw_context.item_type == 'pull_request' correctly check out the PR branch\n+on:\n+  slash_command:\n+    name: smoke-checkout-pr-dispatch\n+    strategy: centralized\n+    events: [issues, issue_comment, pull_request, pull_request_comment]\n+  workflow_dispatch:\n+  pull_request:\n+    types: [labeled]\n+    names: [\"smoke-checkout-pr-dispatch\"]\n+  status-comment: true\n+permissions:\n+  contents: read\n+  pull-requests: read\n+engine: copilot\n+strict: true\n+network:\n+  allowed:\n+    - defaults\n+imports:\n+  - shared/otlp.md\n+tools:\n+  bash:\n+    - \"git status\"\n+    - \"git log *\"\n+    - \"git branch *\"\n+    - \"git remote *\"\n+    - \"echo *\"\n+safe-outputs:\n+  allowed-domains: [default-safe-outputs]\n+  add-comment:\n+    hide-older-comments: true\n+    max: 1\n+  messages:\n+    footer: \"> 🧪 *checkout_pr_branch dispatch smoke test by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"\n+    run-started: \"🧪 [{workflow_name}]({run_url}) is validating workflow_dispatch PR branch checkout...\"\n+    run-success: \"✅ [{workflow_name}]({run_url}) successfully validated workflow_dispatch PR branch checkout.\"\n+    run-failure: \"[{workflow_name}]({run_url}) failed to validate workflow_dispatch PR branch checkout: {status}\"\n+timeout-minutes: 10\n+features:\n+  gh-aw-detection: false\n+---\n+\n+# Smoke Test: workflow_dispatch + aw_context PR Branch Checkout\n+\n+This workflow validates the `checkout_pr_branch.cjs` behaviour when triggered via `workflow_dispatch`\n+with an `aw_context` input whose `item_type` is `\"pull_request\"`. The setup step should detect the\n+context, fetch `refs/pull/<N>/head`, and check out the PR branch before the agent runs.\n+\n+It also exercises the same checkout path when triggered directly by a pull-request event or\n+`slash_command`, ensuring both code paths are exercised.\n+\n+## Context\n+\n+- Event: `${{ github.event_name }}`\n+- `aw_context` input (if present): `${{ github.event.inputs.aw_context }}`\n+\n+## Test Requirements\n+\n+Run each check and mark as ✅ pass or ❌ fail:\n+\n+1. **Git status**: Run `git status` and confirm the workspace is in a clean, initialised state.\n+2. **Branch check**: Run `git branch --show-current` and record the checked-out branch name.\n+3. **Remote check**: Run `git remote -v` and confirm a remote named `origin` is present.\n+4. **Log check**: Run `git log --oneline -3` and confirm at least one commit is visible.\n+5. **Not default branch**: When triggered via `workflow_dispatch` with a PR `aw_context`, or via\n+   a PR event, the current branch **must not** be `main` — a different branch name confirms the\n+   PR checkout ran successfully.\n+\n+## Output\n+\n+Add a comment summarising the checkout validation results:\n+\n+- Event name and, if `${{ github.event_name }}` is `workflow_dispatch`, the `item_number` extracted\n+  from `aw_context` (parse `${{ github.event.inputs.aw_context }}` to find it)\n+- Current branch name (from `git branch --show-current`)\n+- Last 3 commits (from `git log --oneline -3`)\n+- Whether the workspace is on a branch other than `main`\n+- Overall status: PASS or FAIL with a brief explanation",
+          "snapshot_ref": "81f056d0446bd08fdd6ac0c3403c951930c86eeb",
+          "snapshot_blob_sha": "a3c773922ec615f84fcbb4e72aaecad12dcd012b",
+          "snapshot_file": "snapshots/gh-aw__github__81f056d0446bd08fdd6ac0c3403c951930c86eeb__smoke-checkout-pr-dispatch.md",
+          "snapshot_bytes": 3155,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-checkout-pr-dispatch.lock.yml\",\"generated_workflow_file\":\"smoke-checkout-pr-dispatch.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-checkout-pr-dispatch.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

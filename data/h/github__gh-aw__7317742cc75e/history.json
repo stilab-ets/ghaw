@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/smoke-goose.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/smoke-goose.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/smoke-goose.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/smoke-goose.lock.yml",
+      "generated_workflow_file": "smoke-goose.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-goose.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:46:46+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-goose.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-goose.md",
+      "commit_sha": "57b002417b2f0be0cd5b86325af2d6121c53d314",
+      "authored_at": "2026-08-04T05:10:51Z",
+      "committed_at": "2026-08-04T05:10:51Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Goose engine smoke workflow (#50181)",
+      "parent_shas": [
+        "cd85bff63f8535f58de6887345dec11fd0e70ec5"
+      ],
+      "tree_sha": "43cb9b59c3c932e0e50ec5dc535f14ad07a77116",
+      "html_url": "https://github.com/github/gh-aw/commit/57b002417b2f0be0cd5b86325af2d6121c53d314",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-goose.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-goose.md",
+          "commit_sha": "57b002417b2f0be0cd5b86325af2d6121c53d314",
+          "committed_at": "2026-08-04T05:10:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 94,
+          "file_deletions": 0,
+          "file_changes": 94,
+          "file_patch": "@@ -0,0 +1,94 @@\n+---\n+private: true\n+emoji: \"🪿\"\n+description: Smoke test workflow that validates Goose engine functionality\n+on:\n+  slash_command:\n+    name: smoke-goose\n+    strategy: centralized\n+    events: [issues, issue_comment, pull_request, pull_request_comment]\n+  workflow_dispatch:\n+  pull_request:\n+    types: [labeled]\n+    names: [\"water\"]\n+  reaction: \"rocket\"\n+  status-comment: true\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+name: Smoke Goose\n+model: copilot/claude-sonnet-4.5\n+engine:\n+  id: goose\n+strict: true\n+imports:\n+  - shared/goose.md\n+  - shared/gh.md\n+  - shared/reporting-otlp.md\n+  - shared/otlp.md\n+  - shared/token-telemetry-check.md\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [repos, pull_requests]\n+  edit:\n+  bash:\n+    - \"*\"\n+  web-fetch:\n+safe-outputs:\n+  allowed-domains: [default-safe-outputs]\n+  add-comment:\n+    hide-older-comments: true\n+    max: 2\n+  create-issue:\n+    expires: 2h\n+    close-older-issues: true\n+    close-older-key: \"smoke-goose\"\n+    labels: [automation, testing]\n+  add-labels:\n+    allowed: [smoke-goose]\n+  messages:\n+    footer: \"> 🪿 *[{workflow_name}]({run_url}) — Powered by Goose*{ai_credits_suffix}{history_link}\"\n+    run-started: \"🪿 Goose initializing... [{workflow_name}]({run_url}) begins on this {event_type}...\"\n+    run-success: \"🪿 [{workflow_name}]({run_url}) Goose delivered.\"\n+    run-failure: \"⚠️ [{workflow_name}]({run_url}) {status}. Goose encountered unexpected challenges...\"\n+timeout-minutes: 10\n+features:\n+  gh-aw-detection: false\n+---\n+\n+# Smoke Test: Goose Engine Validation\n+\n+**CRITICAL EFFICIENCY REQUIREMENTS:**\n+- Keep ALL outputs extremely short and concise. Use single-line responses.\n+- NO verbose explanations or unnecessary context.\n+- Minimize file reading - only read what is absolutely necessary for the task.\n+\n+## Test Requirements\n+\n+1. **GitHub MCP Testing**: Use GitHub MCP tools to fetch details of exactly 2 merged pull requests from ${{ github.repository }} (title and number only)\n+2. **Web Fetch Testing**: Use the web-fetch MCP tool to fetch https://github.com and verify the response contains \"GitHub\" (do NOT use bash or playwright for this test - use the web-fetch MCP tool directly)\n+3. **File Writing Testing**: Create a test file `/tmp/gh-aw/agent/smoke-test-goose-${{ github.run_id }}.txt` with content \"Smoke test passed for Goose at $(date)\" (create the directory if it doesn't exist)\n+4. **Bash Tool Testing**: Execute bash commands to verify file creation was successful (use `cat` to read the file back)\n+5. **Build gh-aw**: Run `GOCACHE=/tmp/gh-aw/agent/go-cache GOMODCACHE=/tmp/gh-aw/agent/go-mod make build` to verify the agent can successfully build the gh-aw project. If the command fails, mark this test as ❌ and report the failure.\n+\n+## Output\n+\n+**ALWAYS create an issue** with a summary of the smoke test run:\n+- Title: \"Smoke Test: Goose - ${{ github.run_id }}\"\n+- Body should include:\n+  - Test results (✅ or ❌ for each test)\n+  - Overall status: PASS or FAIL\n+  - Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n+  - Timestamp\n+\n+**Only if this workflow was triggered by a pull_request event**: Use the `add_comment` tool to add a **very brief** comment (max 5-10 lines) to the triggering pull request (omit the `item_number` parameter to auto-target the triggering PR) with:\n+- ✅ or ❌ for each test result\n+- Overall status: PASS or FAIL\n+\n+If all tests pass and this workflow was triggered by a pull_request event, use the `add_labels` safe-output tool to add the label `smoke-goose` to the pull request (omit the `item_number` parameter to auto-target the triggering PR).",
+          "snapshot_ref": "57b002417b2f0be0cd5b86325af2d6121c53d314",
+          "snapshot_blob_sha": "7c492970bcec2a7350c63ebd231191fd73508365",
+          "snapshot_file": "snapshots/gh-aw__github__57b002417b2f0be0cd5b86325af2d6121c53d314__smoke-goose.md",
+          "snapshot_bytes": 3672,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-goose.lock.yml\",\"generated_workflow_file\":\"smoke-goose.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-goose.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

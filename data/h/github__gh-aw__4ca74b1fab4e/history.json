@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/copilot-centralization-drilldown.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/copilot-centralization-drilldown.lock.yml",
+      "generated_workflow_file": "copilot-centralization-drilldown.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/copilot-centralization-drilldown.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T11:29:35+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+      "commit_sha": "e6f1181698dbc9e80403bb3fd084ce6f8492a3f0",
+      "authored_at": "2026-06-15T17:25:47Z",
+      "committed_at": "2026-06-15T17:25:47Z",
+      "author_name": "Mara Nikola Kiefer",
+      "author_email": "8320933+mnkiefer@users.noreply.github.com",
+      "author_login": "mnkiefer",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Copilot Centralization Optimizer workflows (#39394)",
+      "parent_shas": [
+        "cb89a18cc061f65dcc0e8781f39d6b8a78f687ad"
+      ],
+      "tree_sha": "719459fe1ed723c3c78a290cfcc138fe10aa8131",
+      "html_url": "https://github.com/github/gh-aw/commit/e6f1181698dbc9e80403bb3fd084ce6f8492a3f0",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+          "commit_sha": "e6f1181698dbc9e80403bb3fd084ce6f8492a3f0",
+          "committed_at": "2026-06-15T17:25:47Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 205,
+          "file_deletions": 0,
+          "file_changes": 205,
+          "file_patch": "@@ -0,0 +1,205 @@\n+---\n+name: Copilot Centralization Drilldown\n+description: Expands one mined centralization candidate into a concrete draft workflow or reusable prompt template.\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      candidate_title:\n+        description: Short name for the candidate skill or repeated task\n+        required: true\n+      target_kind:\n+        description: workflow, shared_prompt, playbook, or auto\n+        required: false\n+        default: auto\n+      recommendation_kind:\n+        description: Recommendation from the optimizer\n+        required: false\n+        default: shared_prompt_or_chatops\n+      sample_prompt:\n+        description: Representative prompt text\n+        required: false\n+      evidence_summary:\n+        description: Compact summary of repeated behavior and expected value\n+        required: false\n+      candidate_json:\n+        description: Optional compact JSON object from the optimizer output\n+        required: false\n+permissions:\n+  contents: read\n+  copilot-requests: write\n+strict: true\n+max-ai-credits: 120\n+max-daily-ai-credits: 500\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  max-bot-mentions: 1\n+  create-issue:\n+    title-prefix: \"[copilot-centralization-draft] \"\n+    labels: [report, ai-optimization, workflow-design]\n+    expires: 30\n+steps:\n+  - name: Normalize candidate input\n+    env:\n+      CANDIDATE_TITLE: ${{ inputs.candidate_title }}\n+      TARGET_KIND: ${{ inputs.target_kind }}\n+      RECOMMENDATION_KIND: ${{ inputs.recommendation_kind }}\n+      SAMPLE_PROMPT: ${{ inputs.sample_prompt }}\n+      EVIDENCE_SUMMARY: ${{ inputs.evidence_summary }}\n+      CANDIDATE_JSON: ${{ inputs.candidate_json }}\n+    run: |\n+      set -euo pipefail\n+      GH_AW_SAFE_OUTPUTS=\"${GH_AW_SAFE_OUTPUTS:-${RUNNER_TEMP:-/tmp}/gh-aw/safeoutputs/outputs.jsonl}\"\n+      mkdir -p /tmp/gh-aw/data\n+\n+      if [ -n \"${CANDIDATE_JSON}\" ]; then\n+        printf '%s' \"$CANDIDATE_JSON\" | jq '.' > /tmp/gh-aw/data/candidate-raw.json\n+      else\n+        jq -n \\\n+          --arg title \"$CANDIDATE_TITLE\" \\\n+          --arg recommendation_kind \"$RECOMMENDATION_KIND\" \\\n+          --arg sample_prompt \"$SAMPLE_PROMPT\" \\\n+          --arg evidence_summary \"$EVIDENCE_SUMMARY\" \\\n+          '{\n+            title: $title,\n+            recommendation_kind: $recommendation_kind,\n+            sample_prompt: (if $sample_prompt == \"\" then null else $sample_prompt end),\n+            evidence_summary: (if $evidence_summary == \"\" then null else $evidence_summary end)\n+          }' > /tmp/gh-aw/data/candidate-raw.json\n+      fi\n+\n+      candidate_title=\"$(jq -r '.title // empty' /tmp/gh-aw/data/candidate-raw.json)\"\n+      sample_prompt=\"$(jq -r '.sample_prompt // empty' /tmp/gh-aw/data/candidate-raw.json)\"\n+      evidence_summary=\"$(jq -r '.evidence_summary // empty' /tmp/gh-aw/data/candidate-raw.json)\"\n+\n+      if [ -z \"$candidate_title\" ]; then\n+        printf '%s\\n' '{\"type\":\"noop\",\"message\":\"No candidate title was provided for drilldown.\"}' >> \"$GH_AW_SAFE_OUTPUTS\"\n+        exit 0\n+      fi\n+\n+      slug=\"$(printf '%s' \"$candidate_title\" \\\n+        | tr '[:upper:]' '[:lower:]' \\\n+        | sed 's/[^a-z0-9]/-/g' \\\n+        | sed 's/-\\{2,\\}/-/g' \\\n+        | sed 's/^-//' \\\n+        | sed 's/-$//' \\\n+        | cut -c1-48)\"\n+\n+      if [ -z \"$slug\" ]; then\n+        slug=\"candidate\"\n+      fi\n+\n+      resolved_target_kind=\"$TARGET_KIND\"\n+      if [ \"$resolved_target_kind\" = \"\" ] || [ \"$resolved_target_kind\" = \"auto\" ]; then\n+        case \"$RECOMMENDATION_KIND\" in\n+          continuous_workflow)\n+            resolved_target_kind=\"workflow\"\n+            ;;\n+          shared_prompt_or_chatops)\n+            resolved_target_kind=\"shared_prompt\"\n+            ;;\n+          keep_ad_hoc_but_standardize)\n+            resolved_target_kind=\"playbook\"\n+            ;;\n+          *)\n+            resolved_target_kind=\"workflow\"\n+            ;;\n+        esac\n+      fi\n+\n+      sample_len=${#sample_prompt}\n+      evidence_len=${#evidence_summary}\n+      candidate_strength=\"weak\"\n+      if [ \"$sample_len\" -ge 24 ] || [ \"$evidence_len\" -ge 40 ] || [ -n \"$CANDIDATE_JSON\" ]; then\n+        candidate_strength=\"strong\"\n+      fi\n+\n+      jq -n \\\n+        --arg title \"$candidate_title\" \\\n+        --arg slug \"$slug\" \\\n+        --arg recommendation_kind \"$RECOMMENDATION_KIND\" \\\n+        --arg resolved_target_kind \"$resolved_target_kind\" \\\n+        --arg sample_prompt \"$sample_prompt\" \\\n+        --arg evidence_summary \"$evidence_summary\" \\\n+        --arg candidate_strength \"$candidate_strength\" \\\n+        --slurpfile raw /tmp/gh-aw/data/candidate-raw.json '\n+          {\n+            title: $title,\n+            slug: $slug,\n+            recommendation_kind: $recommendation_kind,\n+            resolved_target_kind: $resolved_target_kind,\n+            candidate_strength: $candidate_strength,\n+            sample_prompt: (if $sample_prompt == \"\" then null else $sample_prompt end),\n+            evidence_summary: (if $evidence_summary == \"\" then null else $evidence_summary end),\n+            raw_candidate: $raw[0]\n+          }\n+        ' > /tmp/gh-aw/data/candidate.json\n+\n+      jq -n \\\n+        --arg resolved_target_kind \"$resolved_target_kind\" \\\n+        --arg slug \"$slug\" '\n+          {\n+            target_path: (\n+              if $resolved_target_kind == \"workflow\" then \".github/workflows/\" + $slug + \".md\"\n+              elif $resolved_target_kind == \"shared_prompt\" then \".github/workflows/shared/\" + $slug + \".md\"\n+              else \".github/workflows/shared/\" + $slug + \"-playbook.md\"\n+              end\n+            ),\n+            trigger_hint: (\n+              if $resolved_target_kind == \"workflow\" then \"Prefer workflow_dispatch first; choose schedule or event triggers only when repeated evidence justifies automation.\"\n+              elif $resolved_target_kind == \"shared_prompt\" then \"Prefer a reusable prompt or shared workflow component before full automation.\"\n+              else \"Keep this human-in-the-loop and produce a reusable playbook or prompt template.\"\n+              end\n+            ),\n+            implementation_bias: \"Prefer the smallest durable artifact that reduces repeated prompting without widening scope.\",\n+            report_style: \"Use issue sections with visible summary and one fenced draft block.\"\n+          }\n+        ' > /tmp/gh-aw/data/derived-plan.json\n+---\n+\n+# Copilot Centralization Drilldown\n+\n+Turn one mined centralization candidate into a concrete, reviewable draft.\n+\n+Read these prepared files first:\n+- `/tmp/gh-aw/data/candidate.json`\n+- `/tmp/gh-aw/data/derived-plan.json`\n+\n+Stay narrow. Do not perform broad repo exploration. Use the current repository's existing workflow style as the default convention.\n+\n+If `candidate_strength` is `weak`, or the provided evidence is too vague to justify a concrete draft, call `noop` with a short explanation.\n+\n+## Task\n+\n+1. Decide the smallest useful deliverable:\n+   - a new gh-aw workflow draft\n+   - a reusable shared prompt/template draft\n+   - a reusable human playbook when automation is premature\n+2. Produce exactly one primary draft aligned with `resolved_target_kind` unless the evidence clearly supports a better smaller artifact.\n+3. Optimize for AI-credit savings by reducing repeated prompt construction, ambiguous setup work, or repeated context rebuilding.\n+4. Keep the draft implementation-ready and short. Do not design a platform.\n+\n+## Output\n+\n+Use `create-issue`.\n+\n+Structure the issue with these `###` sections:\n+- `### Summary`\n+- `### Pattern Fit`\n+- `### Proposed Draft`\n+- `### AI Credit Savings Rationale`\n+- `### Inputs Still Needed`\n+- `### References`\n+\n+In `### Proposed Draft`:\n+- include `Path: <target path>` on its own line before the draft\n+- include exactly one fenced `md` code block containing the full proposed file content\n+- if the best artifact is a workflow, produce a full gh-aw workflow markdown file with frontmatter and prompt body\n+- if the best artifact is a shared prompt or playbook, produce the full markdown file content for that path\n+\n+## Constraints\n+\n+- Prefer `workflow_dispatch` for a first workflow draft unless the evidence strongly supports a scheduled or event-driven trigger.\n+- Keep permissions read-only and route visible writes through safe outputs.\n+- Reuse deterministic preprocessing or explicit `noop` guidance when that materially lowers token use.\n+- Do not create more than one draft artifact in the issue.\n\\ No newline at end of file",
+          "snapshot_ref": "e6f1181698dbc9e80403bb3fd084ce6f8492a3f0",
+          "snapshot_blob_sha": "4f2ea5f9baf1c8f64a4bab342cdf3f81ebb451de",
+          "snapshot_file": "snapshots/gh-aw__github__e6f1181698dbc9e80403bb3fd084ce6f8492a3f0__copilot-centralization-drilldown.md",
+          "snapshot_bytes": 8252,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/copilot-centralization-drilldown.lock.yml\",\"generated_workflow_file\":\"copilot-centralization-drilldown.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/copilot-centralization-drilldown.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+      "commit_sha": "186641cc9f63af3e79960e3d62bcbd37fc277e5d",
+      "authored_at": "2026-06-16T17:21:38Z",
+      "committed_at": "2026-06-16T17:21:38Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bump AWF Firewall to v0.27.4 and MCP Gateway to v0.3.26 (#39486)\n\n* Initial plan\n\n* chore: bump DefaultFirewallVersion to v0.27.4 and DefaultMCPGatewayVersion to v0.3.26\n\n- Update DefaultFirewallVersion from v0.27.2 to v0.27.4\n- Update DefaultMCPGatewayVersion from v0.3.25 to v0.3.26\n- Run make build && make recompile && make recompile to update lock files\n- Resolve and pin container SHA for ghcr.io/github/gh-aw-mcpg:v0.3.26\n- Update wasm golden test fixtures to reflect new AWF version\n\nCo-authored-by: lpcox <15877973+lpcox@users.noreply.github.com>\n\n* chore: merge main and recompile workflows\n\nCo-authored-by: lpcox <15877973+lpcox@users.noreply.github.com>\n\n* chore: merge main, fix conflicts, and recompile workflows\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: lpcox <15877973+lpcox@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "6f1c7c7116dfef9a21025e841bf7a7532aacf4d5"
+      ],
+      "tree_sha": "b1bf1c03dd13a9892ccb87205519de52364b9459",
+      "html_url": "https://github.com/github/gh-aw/commit/186641cc9f63af3e79960e3d62bcbd37fc277e5d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+          "commit_sha": "186641cc9f63af3e79960e3d62bcbd37fc277e5d",
+          "committed_at": "2026-06-16T17:21:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "",
+          "snapshot_ref": "186641cc9f63af3e79960e3d62bcbd37fc277e5d",
+          "snapshot_blob_sha": "dc124f42912b20a0bc9b95c028d75368c300151f",
+          "snapshot_file": "snapshots/gh-aw__github__186641cc9f63af3e79960e3d62bcbd37fc277e5d__copilot-centralization-drilldown.md",
+          "snapshot_bytes": 8253,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/copilot-centralization-drilldown.lock.yml\",\"generated_workflow_file\":\"copilot-centralization-drilldown.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/copilot-centralization-drilldown.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+      "commit_sha": "e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+      "authored_at": "2026-06-18T12:58:44Z",
+      "committed_at": "2026-06-18T12:58:44Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add private: true to all non-upstream agentic workflows (#40048)",
+      "parent_shas": [
+        "bb2f7a91a1c14b4a8ca3939ae8e4ec95bc56aa24"
+      ],
+      "tree_sha": "fcd9661b8682d94a6d8620bcaa73705bc4558c23",
+      "html_url": "https://github.com/github/gh-aw/commit/e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+          "commit_sha": "e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+          "committed_at": "2026-06-18T12:58:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -1,4 +1,5 @@\n ---\n+private: true\n name: Copilot Centralization Drilldown\n description: Expands one mined centralization candidate into a concrete draft workflow or reusable prompt template.\n on:",
+          "snapshot_ref": "e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5",
+          "snapshot_blob_sha": "a87d653f12d700903d7f2e909bb3b02b28951f3f",
+          "snapshot_file": "snapshots/gh-aw__github__e8ca23ae1dcde800d1b19e7c73bf5dfe30b6efb5__copilot-centralization-drilldown.md",
+          "snapshot_bytes": 8267,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/copilot-centralization-drilldown.lock.yml\",\"generated_workflow_file\":\"copilot-centralization-drilldown.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/copilot-centralization-drilldown.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+      "commit_sha": "44942c03a394e645e71a9f1c46b6a0720bfbb199",
+      "authored_at": "2026-06-27T00:02:15Z",
+      "committed_at": "2026-06-27T00:02:15Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): set sandbox agent sudo false on 50% of workflows (#41786)",
+      "parent_shas": [
+        "a7d6e7a3c5ec9f7f64507f833ee6e796240581b5"
+      ],
+      "tree_sha": "61075be529d66670b548a0684a00814b23d8d831",
+      "html_url": "https://github.com/github/gh-aw/commit/44942c03a394e645e71a9f1c46b6a0720bfbb199",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+          "commit_sha": "44942c03a394e645e71a9f1c46b6a0720bfbb199",
+          "committed_at": "2026-06-27T00:02:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -156,6 +156,9 @@ steps:\n             report_style: \"Use issue sections with visible summary and one fenced draft block.\"\n           }\n         ' > /tmp/gh-aw/data/derived-plan.json\n+sandbox:\n+  agent:\n+    sudo: false\n ---\n \n # Copilot Centralization Drilldown",
+          "snapshot_ref": "44942c03a394e645e71a9f1c46b6a0720bfbb199",
+          "snapshot_blob_sha": "b974c2c1f208df377dd98aaff66f6a2562810ffb",
+          "snapshot_file": "snapshots/gh-aw__github__44942c03a394e645e71a9f1c46b6a0720bfbb199__copilot-centralization-drilldown.md",
+          "snapshot_bytes": 8301,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/copilot-centralization-drilldown.lock.yml\",\"generated_workflow_file\":\"copilot-centralization-drilldown.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/copilot-centralization-drilldown.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+      "commit_sha": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+      "authored_at": "2026-07-20T08:57:28Z",
+      "committed_at": "2026-07-20T08:57:28Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: enable evals in 64 agentic workflows (#46774)",
+      "parent_shas": [
+        "e1781d5df4cfe3027452bb4b5d206db82b035a71"
+      ],
+      "tree_sha": "d0e212d2340ccfd9923388017178ac3c18fcb1f9",
+      "html_url": "https://github.com/github/gh-aw/commit/b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/copilot-centralization-drilldown.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/copilot-centralization-drilldown.md",
+          "commit_sha": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+          "committed_at": "2026-07-20T08:57:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -159,6 +159,11 @@ steps:\n sandbox:\n   agent:\n     sudo: false\n+evals:\n+  - id: candidate_expanded\n+    question: Did the agent expand a centralization candidate into a concrete draft workflow or reusable prompt template?\n+  - id: artifact_created\n+    question: Was a draft workflow, issue, or template artifact created for the centralization opportunity?\n ---\n \n # Copilot Centralization Drilldown",
+          "snapshot_ref": "b124884b3e2d09c0b3a0c948f7b27c8d863e2a39",
+          "snapshot_blob_sha": "9935d9182d058c8b2a583ea6d81496271d2e6469",
+          "snapshot_file": "snapshots/gh-aw__github__b124884b3e2d09c0b3a0c948f7b27c8d863e2a39__copilot-centralization-drilldown.md",
+          "snapshot_bytes": 8590,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/copilot-centralization-drilldown.lock.yml\",\"generated_workflow_file\":\"copilot-centralization-drilldown.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/copilot-centralization-drilldown.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

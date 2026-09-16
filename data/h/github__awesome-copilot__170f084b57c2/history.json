@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+    "source_full_name": "github/awesome-copilot",
+    "source_owner": "github",
+    "source_repo": "awesome-copilot",
+    "md_path": ".github/workflows/cli-for-beginners-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/awesome-copilot/blob/HEAD/.github/workflows/cli-for-beginners-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/awesome-copilot",
+      "generated_owner": "github",
+      "generated_repo": "awesome-copilot",
+      "generated_workflow_path": ".github/workflows/cli-for-beginners-sync.lock.yml",
+      "generated_workflow_file": "cli-for-beginners-sync.lock.yml",
+      "generated_html_url": "https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/cli-for-beginners-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:08+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/cli-for-beginners-sync.md",
+      "commit_sha": "90b4bf385338df6ff5e92b509dc5c37b2554e70c",
+      "authored_at": "2026-03-25T22:03:21Z",
+      "committed_at": "2026-03-25T22:03:21Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Copilot CLI for Beginners website experience (#1078)\n\n* Initial pass at bringing a website experience to copilot cli for beginners\n\n* dropped the number from the heading\n\n* Adding codeowner\n\n* agentic workflow to keep the docs in sync\n\n* Making it more aligned with the source material\n\n* Removing the badges and TOC since we get some of that from astro\n\n* updating the agentic workflow\n\n* Adding learning hub to llms.txt\n\n* Removing nav that comes from the source markdown files",
+      "parent_shas": [
+        "3e01810473588d12830bb93983a52764aaa1788b"
+      ],
+      "tree_sha": "fa2a234cdfc40250967848609902f9c6756bf1c1",
+      "html_url": "https://github.com/github/awesome-copilot/commit/90b4bf385338df6ff5e92b509dc5c37b2554e70c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/cli-for-beginners-sync.md",
+          "commit_sha": "90b4bf385338df6ff5e92b509dc5c37b2554e70c",
+          "committed_at": "2026-03-25T22:03:21Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 135,
+          "file_deletions": 0,
+          "file_changes": 135,
+          "file_patch": "@@ -0,0 +1,135 @@\n+---\n+name: \"CLI for Beginners Content Sync\"\n+description: \"Weekly check for updates to github/copilot-cli-for-beginners. Opens a PR to keep the Learning Hub mirror aligned when substantive upstream course changes are detected.\"\n+on:\n+  schedule: weekly\n+permissions:\n+  contents: read\n+tools:\n+  github:\n+    toolsets: [repos]\n+  cache-memory: true\n+safe-outputs:\n+  create-pull-request:\n+    labels: [automated-update, learning-hub, cli-for-beginners]\n+    title-prefix: \"[bot] \"\n+---\n+\n+# CLI for Beginners Content Sync\n+\n+You are a documentation sync agent for the **awesome-copilot** Learning Hub. Your job is to check whether the upstream source repository [`github/copilot-cli-for-beginners`](https://github.com/github/copilot-cli-for-beginners) has received any meaningful updates since your last run, and — if it has — update the Learning Hub mirror so it stays aligned with the upstream course.\n+\n+## Step 1 — Determine what's new in the upstream repo\n+\n+1. Read `cache-memory` and look for a file named `cli-for-beginners-sync-state.json`. It may contain:\n+   - `last_synced_sha` — the most recent commit SHA you processed on your previous run\n+   - `last_synced_at` — a filesystem-safe timestamp in the format `YYYY-MM-DD-HH-MM-SS`\n+\n+2. Use GitHub tools to fetch recent commits from `github/copilot-cli-for-beginners` (default branch):\n+   - If `last_synced_sha` exists, list commits **since that SHA** (stop once you reach it).\n+   - If no cached state exists, list commits from the **past 7 days**.\n+\n+3. Identify which files changed across those commits. Focus on:\n+    - Markdown files (`*.md`) — course content, README, module descriptions\n+    - Supporting assets referenced by the course material, especially screenshots and GIFs\n+    - Any configuration or metadata files that materially affect the course content or navigation\n+\n+4. If **no commits** were found since the last sync, stop here and call the `noop` safe output with a message like: \"No new commits found in `github/copilot-cli-for-beginners` since last sync (`<last_synced_sha>`). No action needed.\" Then update the cache with the latest SHA.\n+\n+## Step 2 — Read the changed upstream content\n+\n+For each file that changed in the upstream repo, use GitHub tools to fetch the **current file contents** from `github/copilot-cli-for-beginners`. Pay close attention to:\n+\n+- New sections, commands, flags, or concepts introduced\n+- Renamed or restructured sections\n+- Deprecated commands or workflows that have been removed\n+- Updated screenshots, GIFs, image references, or code examples\n+- Links to new official documentation or resources\n+\n+## Step 3 — Compare against the local Learning Hub content\n+\n+Read the local files in the canonical Learning Hub course folder `website/src/content/docs/learning-hub/cli-for-beginners/`:\n+\n+```\n+website/src/content/docs/learning-hub/cli-for-beginners/\n+├── index.md\n+├── 00-quick-start.md\n+├── 01-setup-and-first-steps.md\n+├── 02-context-and-conversations.md\n+├── 03-development-workflows.md\n+├── 04-agents-and-custom-instructions.md\n+├── 05-skills.md\n+├── 06-mcp-servers.md\n+└── 07-putting-it-all-together.md\n+```\n+\n+Also inspect local course assets in `website/public/images/learning-hub/copilot-cli-for-beginners/` when upstream changes touch screenshots, banners, or GIFs.\n+\n+If the upstream changes alter course structure or navigation, you may also need to inspect:\n+\n+- `website/astro.config.mjs`\n+- `website/src/content/docs/learning-hub/index.md`\n+\n+Map the upstream changes to the relevant local file(s). Ask yourself:\n+\n+- Is the local mirror missing any upstream content, structure, assignments, examples, or visuals?\n+- Is any existing Learning Hub content now outdated or incorrect based on upstream changes?\n+- Do local route rewrites, repo-link rewrites, or asset paths need updating so the mirrored pages still work on the website?\n+- Do the Astro frontmatter fields (especially `lastUpdated`) need updating because the mirrored page changed?\n+\n+If the local content is already fully consistent with the upstream changes — or the upstream changes are non-substantive (e.g., only CI config, typo fixes, or internal tooling changes) — stop here and call the `noop` safe output with a brief explanation. Still update the cache with the latest commit SHA.\n+\n+## Step 4 — Update the Learning Hub files\n+\n+For each local file that needs updating:\n+\n+1. Edit the relevant local docs, assets, and supporting navigation files so the website remains a **source-faithful mirror** of the upstream course:\n+   - Add or update missing concepts, commands, flags, steps, assignments, demos, and visuals\n+   - Correct or remove outdated information\n+   - Localize newly added screenshots or GIFs into `website/public/images/learning-hub/copilot-cli-for-beginners/`\n+   - Bump the `lastUpdated` frontmatter field to today's date (`YYYY-MM-DD`) for any page whose mirrored content changed\n+\n+2. Keep a **mirror-first** approach:\n+   - Preserve upstream wording, headings, section order, assignments, and overall chapter flow as closely as practical\n+   - Do not summarize, reinterpret, or \"website-optimize\" the course into a different learning experience\n+   - Only adapt what the website requires: Astro frontmatter, route-safe internal links, GitHub repo links, local asset paths, and minor HTML/CSS hooks needed for presentation\n+\n+3. If upstream adds, removes, or renames major sections or chapters:\n+   - Create, delete, or rename the corresponding markdown files in `website/src/content/docs/learning-hub/cli-for-beginners/`\n+   - Update `website/astro.config.mjs` if the sidebar chapter list must change\n+   - Update `website/src/content/docs/learning-hub/index.md` only if the landing page's course entry must change\n+\n+## Step 5 — Update the sync state cache\n+\n+Before opening the PR, write an updated `cli-for-beginners-sync-state.json` to `cache-memory` with:\n+\n+```json\n+{\n+  \"last_synced_sha\": \"<latest commit SHA from github/copilot-cli-for-beginners>\",\n+  \"last_synced_at\": \"<YYYY-MM-DD-HH-MM-SS>\",\n+  \"files_reviewed\": [\"<list of upstream files you compared>\"],\n+  \"files_updated\": [\"<list of local Learning Hub files you edited>\"]\n+}\n+```\n+\n+## Step 6 — Open a pull request\n+\n+Create a pull request with your changes using the `create-pull-request` safe output. The PR body must include:\n+\n+1. **What changed upstream** — a concise summary of the commits and file changes found in `github/copilot-cli-for-beginners`\n+2. **What was updated locally** — list each mirrored Learning Hub file or asset you edited and what changed\n+3. **Source links** — links to the relevant upstream commits or files\n+4. A note that the markdown body of this workflow can be edited directly on GitHub.com without recompilation\n+\n+If there is nothing to change after your analysis, do **not** open a PR. Instead, call the `noop` safe output.\n+\n+## Guidelines\n+\n+- The canonical course content lives in `website/src/content/docs/learning-hub/cli-for-beginners/`; do not recreate legacy duplicates elsewhere\n+- Prefer changes within the course docs and `website/public/images/learning-hub/copilot-cli-for-beginners/`\n+- Only edit `website/astro.config.mjs` or `website/src/content/docs/learning-hub/index.md` when upstream course structure or navigation truly requires it\n+- Preserve existing frontmatter fields; only update `lastUpdated` and `description` if genuinely warranted\n+- Keep the course source-faithful; avoid summaries or interpretive rewrites\n+- Do not auto-merge; the PR is for human review\n+- If you are uncertain whether an upstream change warrants a Learning Hub update, err on the side of creating the PR — a human reviewer can always decline\n+- Always call either `create-pull-request` or `noop` at the end of your run so the workflow clearly signals its outcome",
+          "snapshot_ref": "90b4bf385338df6ff5e92b509dc5c37b2554e70c",
+          "snapshot_blob_sha": "79406a7a165ce9d6e28381a2fcbdb28ef6dfd1bd",
+          "snapshot_file": "snapshots/awesome-copilot__github__90b4bf385338df6ff5e92b509dc5c37b2554e70c__cli-for-beginners-sync.md",
+          "snapshot_bytes": 7753,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/cli-for-beginners-sync.lock.yml\",\"generated_workflow_file\":\"cli-for-beginners-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/cli-for-beginners-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/cli-for-beginners-sync.md",
+      "commit_sha": "68bd143e37a407435f7aca5e2c89c9d17cb3174e",
+      "authored_at": "2026-04-09T00:22:38Z",
+      "committed_at": "2026-04-09T00:22:38Z",
+      "author_name": "Renee Noble",
+      "author_email": "renee.noble@hotmail.com",
+      "author_login": "reneenoble",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix broken links beginners cli course sync (#1263)\n\n* chore: publish from staged\n\n* Update instructions for converting links from original repo\n\n* Correct existing broken links\n\n* chore: retrigger ci\n\n* cleaning up marerialzed plugins\n\n* Fixing clean script to sort out plugin.json file too\n\n* Fixing readme\n\n* Fixing plugin.json drift\n\n* Fixing readme\n\n---------\n\nCo-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Aaron Powell <me@aaron-powell.com>",
+      "parent_shas": [
+        "112678359ffc82de6bbd47dc3b612e6154a86ffa"
+      ],
+      "tree_sha": "7cf0a0f74085de58e61156e68261c194a73240a8",
+      "html_url": "https://github.com/github/awesome-copilot/commit/68bd143e37a407435f7aca5e2c89c9d17cb3174e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/cli-for-beginners-sync.md",
+          "commit_sha": "68bd143e37a407435f7aca5e2c89c9d17cb3174e",
+          "committed_at": "2026-04-09T00:22:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -93,6 +93,7 @@ For each local file that needs updating:\n    - Preserve upstream wording, headings, section order, assignments, and overall chapter flow as closely as practical\n    - Do not summarize, reinterpret, or \"website-optimize\" the course into a different learning experience\n    - Only adapt what the website requires: Astro frontmatter, route-safe internal links, GitHub repo links, local asset paths, and minor HTML/CSS hooks needed for presentation\n+    - Convert repo-root relative links that are invalid on the published website (for example `../.github/agents/`, `./.github/...`, or `.github/...`) into absolute links to `https://github.com/github/copilot-cli-for-beginners` (use `/tree/main/...` for directories and `/blob/main/...` for files)\n \n 3. If upstream adds, removes, or renames major sections or chapters:\n    - Create, delete, or rename the corresponding markdown files in `website/src/content/docs/learning-hub/cli-for-beginners/`",
+          "snapshot_ref": "68bd143e37a407435f7aca5e2c89c9d17cb3174e",
+          "snapshot_blob_sha": "285b567464f79e64581a1310b5edfb08ed183a39",
+          "snapshot_file": "snapshots/awesome-copilot__github__68bd143e37a407435f7aca5e2c89c9d17cb3174e__cli-for-beginners-sync.md",
+          "snapshot_bytes": 8051,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/cli-for-beginners-sync.lock.yml\",\"generated_workflow_file\":\"cli-for-beginners-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/cli-for-beginners-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/cli-for-beginners-sync.md",
+      "commit_sha": "0d9792baf160a6c2717a34f2789ed1a2e4b33e4d",
+      "authored_at": "2026-05-11T01:29:18Z",
+      "committed_at": "2026-05-11T01:29:18Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "updating agentic workflows (#1666)",
+      "parent_shas": [
+        "e67c66c441492c715291c6684c0c1c4c2d31cba4"
+      ],
+      "tree_sha": "e5de0d23c553b2f79ed1d7f54b7614b5d84e62e1",
+      "html_url": "https://github.com/github/awesome-copilot/commit/0d9792baf160a6c2717a34f2789ed1a2e4b33e4d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/cli-for-beginners-sync.md",
+          "commit_sha": "0d9792baf160a6c2717a34f2789ed1a2e4b33e4d",
+          "committed_at": "2026-05-11T01:29:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 1,
+          "file_changes": 4,
+          "file_patch": "@@ -13,6 +13,7 @@ safe-outputs:\n   create-pull-request:\n     labels: [automated-update, learning-hub, cli-for-beginners]\n     title-prefix: \"[bot] \"\n+    base-branch: staged\n ---\n \n # CLI for Beginners Content Sync\n@@ -115,7 +116,7 @@ Before opening the PR, write an updated `cli-for-beginners-sync-state.json` to `\n \n ## Step 6 — Open a pull request\n \n-Create a pull request with your changes using the `create-pull-request` safe output. The PR body must include:\n+Create a pull request with your changes using the `create-pull-request` safe output. Use `staged` as the base branch for all work related to this workflow, and never branch from `main`. The PR body must include:\n \n 1. **What changed upstream** — a concise summary of the commits and file changes found in `github/copilot-cli-for-beginners`\n 2. **What was updated locally** — list each mirrored Learning Hub file or asset you edited and what changed\n@@ -131,6 +132,7 @@ If there is nothing to change after your analysis, do **not** open a PR. Instead\n - Only edit `website/astro.config.mjs` or `website/src/content/docs/learning-hub/index.md` when upstream course structure or navigation truly requires it\n - Preserve existing frontmatter fields; only update `lastUpdated` and `description` if genuinely warranted\n - Keep the course source-faithful; avoid summaries or interpretive rewrites\n+- Use `staged` as the base branch for any branch or PR created by this workflow; never branch from `main`\n - Do not auto-merge; the PR is for human review\n - If you are uncertain whether an upstream change warrants a Learning Hub update, err on the side of creating the PR — a human reviewer can always decline\n - Always call either `create-pull-request` or `noop` at the end of your run so the workflow clearly signals its outcome",
+          "snapshot_ref": "0d9792baf160a6c2717a34f2789ed1a2e4b33e4d",
+          "snapshot_blob_sha": "c08fe3a6fd539e4ea90e26399ab3f22bd948a2be",
+          "snapshot_file": "snapshots/awesome-copilot__github__0d9792baf160a6c2717a34f2789ed1a2e4b33e4d__cli-for-beginners-sync.md",
+          "snapshot_bytes": 8282,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/cli-for-beginners-sync.lock.yml\",\"generated_workflow_file\":\"cli-for-beginners-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/cli-for-beginners-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/cli-for-beginners-sync.md",
+      "commit_sha": "0eb6062f94f92cd389f8d080500ccf25c33d9cfa",
+      "authored_at": "2026-06-25T04:36:53Z",
+      "committed_at": "2026-06-25T04:36:53Z",
+      "author_name": "Aaron Powell",
+      "author_email": "me@aaron-powell.com",
+      "author_login": "aaronpowell",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(phase2): retarget all automation and contributor guidance from staged to main (#2122)\n\n* chore(phase2): retarget all automation from staged to main\n\n- publish.yml: trigger on main, publish only to marketplace\n- check-pr-target.yml: invert — now blocks PRs targeting staged, welcomes main\n- 10 PR validation workflows: branches [staged] → [main]\n- external-plugin-command-router.yml: --base staged → main (3×), message text\n- external-plugin-rereview-command.yml: --base staged → main (2×), message text\n- external-plugin-rereview.yml: staged reference in review comment text\n- external-plugin-intake.yml: ref: staged checkout → main\n- external-plugin-pr-quality-gates.yml: ref: staged checkout → main\n- external-plugin-quality-gates.yml: ref: staged checkout → main\n- check-plugin-structure.yml: error messages updated for new branch model\n- contributors.yml: ref and base target → main\n- setup-labels.yml: targets-main label description updated\n- cli-for-beginners-sync.md + .lock.yml: base-branch staged → main\n- codeowner-update.md + .lock.yml: base-branch staged → main\n- learning-hub-updater.md + .lock.yml: base-branch staged → main\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* docs(phase2): update contributor guidance from staged to main\n\n- CONTRIBUTING.md: branch from main, PR targets main; remove Phase 2 gate note\n- AGENTS.md: PR target + external plugin PR automation references\n- .github/pull_request_template.md: PR checklist targets main\n- website/src/content/docs/learning-hub/agentic-workflows.md: PR target\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* aw updates\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "87c6d5f25819746d15260d465c2c29d60a03f958"
+      ],
+      "tree_sha": "41a06dfd2e6646f544641cbf767b591c6c6e249c",
+      "html_url": "https://github.com/github/awesome-copilot/commit/0eb6062f94f92cd389f8d080500ccf25c33d9cfa",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/cli-for-beginners-sync.md",
+          "commit_sha": "0eb6062f94f92cd389f8d080500ccf25c33d9cfa",
+          "committed_at": "2026-06-25T04:36:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -13,7 +13,7 @@ safe-outputs:\n   create-pull-request:\n     labels: [automated-update, learning-hub, cli-for-beginners]\n     title-prefix: \"[bot] \"\n-    base-branch: staged\n+    base-branch: main\n ---\n \n # CLI for Beginners Content Sync\n@@ -116,7 +116,7 @@ Before opening the PR, write an updated `cli-for-beginners-sync-state.json` to `\n \n ## Step 6 — Open a pull request\n \n-Create a pull request with your changes using the `create-pull-request` safe output. Use `staged` as the base branch for all work related to this workflow, and never branch from `main`. The PR body must include:\n+Create a pull request with your changes using the `create-pull-request` safe output. Use `main` as the base branch for all work related to this workflow. The PR body must include:\n \n 1. **What changed upstream** — a concise summary of the commits and file changes found in `github/copilot-cli-for-beginners`\n 2. **What was updated locally** — list each mirrored Learning Hub file or asset you edited and what changed\n@@ -132,7 +132,7 @@ If there is nothing to change after your analysis, do **not** open a PR. Instead\n - Only edit `website/astro.config.mjs` or `website/src/content/docs/learning-hub/index.md` when upstream course structure or navigation truly requires it\n - Preserve existing frontmatter fields; only update `lastUpdated` and `description` if genuinely warranted\n - Keep the course source-faithful; avoid summaries or interpretive rewrites\n-- Use `staged` as the base branch for any branch or PR created by this workflow; never branch from `main`\n+- Use `main` as the base branch for any branch or PR created by this workflow\n - Do not auto-merge; the PR is for human review\n - If you are uncertain whether an upstream change warrants a Learning Hub update, err on the side of creating the PR — a human reviewer can always decline\n - Always call either `create-pull-request` or `noop` at the end of your run so the workflow clearly signals its outcome",
+          "snapshot_ref": "0eb6062f94f92cd389f8d080500ccf25c33d9cfa",
+          "snapshot_blob_sha": "803622c13a61bc7c86da64d6c391eaf679daa578",
+          "snapshot_file": "snapshots/awesome-copilot__github__0eb6062f94f92cd389f8d080500ccf25c33d9cfa__cli-for-beginners-sync.md",
+          "snapshot_bytes": 8220,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/cli-for-beginners-sync.lock.yml\",\"generated_workflow_file\":\"cli-for-beginners-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/cli-for-beginners-sync.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+      "source_full_name": "github/awesome-copilot",
+      "md_path": ".github/workflows/cli-for-beginners-sync.md",
+      "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "authored_at": "2026-07-03T00:08:42Z",
+      "committed_at": "2026-07-03T00:08:42Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix PR duplicate check not running on external contributor submissions (#2188)\n\n* Initial plan\n\n* Fix PR duplicate check not running on external contributor submissions\n\nAdd forks: [\\\"*\\\"] and roles: all to pr-duplicate-check.md so the\nagentic workflow runs for all PR authors, including external contributors\nsubmitting from forks. Previously, the generated lock.yml contained:\n- A fork repository check blocking all fork PRs from running\n- A team membership check (admin/maintainer/write) blocking external contributors\n\nRecompiled with gh aw compile to regenerate pr-duplicate-check.lock.yml.\nThe pre_activation job (which held the membership gate) is now removed,\nand the activation job runs unconditionally for all pull_request events.\n\nCloses #2121\n\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* fixing a bunch of warnings on all the agentic workflows\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: aaronpowell <434140+aaronpowell@users.noreply.github.com>\nCo-authored-by: Aaron Powell <me@aaron-powell.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8c68eba69048c2f87389ab9fa99d28f694a11846"
+      ],
+      "tree_sha": "ca59b4fcc7e2b196a97fdc5e923e9571a0db4091",
+      "html_url": "https://github.com/github/awesome-copilot/commit/3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/awesome-copilot:.github/workflows/cli-for-beginners-sync.md",
+          "source_full_name": "github/awesome-copilot",
+          "md_path": ".github/workflows/cli-for-beginners-sync.md",
+          "commit_sha": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "committed_at": "2026-07-03T00:08:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -5,6 +5,7 @@ on:\n   schedule: weekly\n permissions:\n   contents: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [repos]",
+          "snapshot_ref": "3bd22bc0f4bc4e54f3a288de7d485a48e78718c3",
+          "snapshot_blob_sha": "e41768fcb22cd268c817e406c75c21e0b646383e",
+          "snapshot_file": "snapshots/awesome-copilot__github__3bd22bc0f4bc4e54f3a288de7d485a48e78718c3__cli-for-beginners-sync.md",
+          "snapshot_bytes": 8246,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/awesome-copilot\",\"generated_owner\":\"github\",\"generated_repo\":\"awesome-copilot\",\"generated_workflow_path\":\".github/workflows/cli-for-beginners-sync.lock.yml\",\"generated_workflow_file\":\"cli-for-beginners-sync.lock.yml\",\"generated_html_url\":\"https://github.com/github/awesome-copilot/blob/4b6430ee3ed78c4029bbb7360ba117b5ce53a78d/.github/workflows/cli-for-beginners-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

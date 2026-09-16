@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/source-build:.github/workflows/triage.md",
+    "source_full_name": "dotnet/source-build",
+    "source_owner": "dotnet",
+    "source_repo": "source-build",
+    "md_path": ".github/workflows/triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/source-build/blob/HEAD/.github/workflows/triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/source-build",
+      "generated_owner": "dotnet",
+      "generated_repo": "source-build",
+      "generated_workflow_path": ".github/workflows/triage.lock.yml",
+      "generated_workflow_file": "triage.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/source-build/blob/a176dcd6f4a4231cfe8b173eb260b89bc7a56c19/.github/workflows/triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:25:31+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/source-build:.github/workflows/triage.md",
+      "source_full_name": "dotnet/source-build",
+      "md_path": ".github/workflows/triage.md",
+      "commit_sha": "5dd18d4723aba3814d659057ff769c401edeb721",
+      "authored_at": "2026-06-02T15:56:34Z",
+      "committed_at": "2026-06-02T15:56:34Z",
+      "author_name": "Ella Hathaway",
+      "author_email": "67609881+ellahathaway@users.noreply.github.com",
+      "author_login": "ellahathaway",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add workflow for triage skill (#5566)\n\n* Triage agentic workflow\n\n* Init repo for agentic workflow\n\n* Exclude .github/agents/ from super-linter\n\nAgent markdown files use non-standard frontmatter that triggers\nfalse lint failures.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Exclude pat_pool.README.md from linter checks\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Exclude triage.md skill prompt from linter checks\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Update gh-aw to v0.74.4\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Generated lock file\n\n* Add workflow_dispatch trigger with issue_number input to triage workflow\n\nEnables manual testing of the triage workflow by providing an issue number\nas input, without needing to wait for a new issue to be filed.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add lock file for triage aw\n\n* Fix: pass issue number and repo context into agent prompt\n\nThe agent wasn't receiving the workflow_dispatch input value because\nit wasn't interpolated into the prompt. Also explicitly tells the\nagent to target dotnet/source-build (not the fork).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Use github.repository for fork-compatible testing\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Update agent.md version refs to v0.74.4 and use github.repository in triage prompt\n\n- Update all gh-aw blob references from v0.72.1 to v0.74.4\n- Use github.repository context variable instead of hardcoded repo name\n- Add workflow_dispatch trigger for manual re-triage\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Refactor triage workflow to scheduled batch with guard policy\n\nSwitch from issue-opened trigger to cron schedule for security\n(prevents prompt injection from community issues). Add shared\ngithub-guard-policy.md with community approval label. Add\ndiscussions: false to safe-outputs.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Align gh-aw-actions/setup version to v0.74.4\n\nDowngrade from v0.74.8 to v0.74.4 to match the version referenced\nin copilot-setup-steps.yml.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add pat_pool.md to lint exclusion regex\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add min-integrity to guard policy and regenerate lock files\n\nThe 'approval-labels' guard policy requires 'min-integrity' to be set\nfor gh-aw compilation to succeed.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Reduce triage schedule to 4x/day during working hours\n\nRun at 12:00, 16:00, 19:00, 23:00 UTC (5am, 9am, 12pm, 4pm PT)\non weekdays only, evenly spaced across the team's working window.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Only triage issues with the 'untriaged' label\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* Set add-comment max to 20 for multi-issue triage runs\n\nWithout an explicit max, safe-outputs defaults to 1 comment per run,\nblocking batch triage of multiple issues.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Align copilot-setup-steps to gh-aw v0.74.8\n\nMatch the version used to generate the lock file so developers get\nconsistent behavior when using the setup workflow to compile/debug.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Exclude generated *.lock.yml from linting\n\nThese files are auto-generated by gh-aw compile and should not be\nlinted.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Remove github-actions from skip-bots in lock file\n\nThe schedule trigger runs as github-actions[bot], so including it in\nskip-bots would block all scheduled triage runs. Recompile to sync\nthe lock file with the source which already has only [copilot].\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Update agent doc version refs to v0.74.8\n\nAlign documentation URLs with the version used in actions-lock.json\nand copilot-setup-steps.yml.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "18e974d1216b1a0f6383da9a00b509e948a3818d"
+      ],
+      "tree_sha": "b0a33b30a20a279d5f16cad5c2e648648e8b5ed4",
+      "html_url": "https://github.com/dotnet/source-build/commit/5dd18d4723aba3814d659057ff769c401edeb721",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/source-build:.github/workflows/triage.md",
+          "source_full_name": "dotnet/source-build",
+          "md_path": ".github/workflows/triage.md",
+          "commit_sha": "5dd18d4723aba3814d659057ff769c401edeb721",
+          "committed_at": "2026-06-02T15:56:34Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 80,
+          "file_deletions": 0,
+          "file_changes": 80,
+          "file_patch": "@@ -0,0 +1,80 @@\n+---\n+description: >\n+  On a schedule, find untriaged issues and post a structured\n+  triage comment using the triage skill. Community issues require\n+  the 'community' label (added by a maintainer) before processing.\n+\n+on:\n+  schedule:\n+    - cron: '0 12,16,19,23 * * 1-5'\n+  workflow_dispatch:\n+    inputs:\n+      issue_number:\n+        description: 'Issue number to triage'\n+        required: true\n+        type: number\n+  skip-bots: [copilot]\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+safe-outputs:\n+  add-comment:\n+    discussions: false\n+    max: 20\n+\n+imports:\n+  - shared/pat_pool.md\n+  - shared/github-guard-policy.md\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        secrets.COPILOT_GITHUB_TOKEN)\n+      }}\n+---\n+\n+You are an automated triage agent for the **${{ github.repository }}** repository.\n+\n+## Context\n+\n+- **Repository:** ${{ github.repository }}\n+- **Issue number:** ${{ inputs.issue_number || '' }}\n+\n+## Your Task\n+\n+{% if inputs.issue_number %}\n+Triage issue #${{ inputs.issue_number }} in the **${{ github.repository }}** repository using the `triage` skill.\n+{% else %}\n+Find issues in **${{ github.repository }}** that have not yet been triaged (no triage comment from this workflow). For each untriaged issue, use the `triage` skill to analyze it and post a triage comment.\n+\n+Only process issues that:\n+- Are open\n+- Have the `untriaged` label\n+- Do not already have a triage comment from this agent\n+- Are authored by users with write access, OR have the `community` label (indicating a maintainer has reviewed them for safety)\n+{% endif %}\n+\n+## Important Overrides for Automated Mode\n+\n+Since you are running as an automated workflow (not interactively with a human):\n+\n+- **Always post the triage comment.** Do not ask for confirmation — this is an\n+  automated workflow and there is no human to confirm. Use the `add-comment`\n+  safe output to post the comment.\n+- **Never apply labels or milestones.** Only post the triage comment. A human\n+  will decide whether to apply the recommended labels and milestone.\n+- **Never close, lock, or assign the issue.**",
+          "snapshot_ref": "5dd18d4723aba3814d659057ff769c401edeb721",
+          "snapshot_blob_sha": "05fd09525cbf98db20fedff97f7bf46d2a329dc4",
+          "snapshot_file": "snapshots/source-build__dotnet__5dd18d4723aba3814d659057ff769c401edeb721__triage.md",
+          "snapshot_bytes": 2806,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/source-build\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"source-build\",\"generated_workflow_path\":\".github/workflows/triage.lock.yml\",\"generated_workflow_file\":\"triage.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/source-build/blob/a176dcd6f4a4231cfe8b173eb260b89bc7a56c19/.github/workflows/triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/source-build:.github/workflows/triage.md",
+      "source_full_name": "dotnet/source-build",
+      "md_path": ".github/workflows/triage.md",
+      "commit_sha": "6b5ebd25ac23fd05f45661162ac012cdcf3e9c7c",
+      "authored_at": "2026-06-04T13:19:22Z",
+      "committed_at": "2026-06-04T13:19:22Z",
+      "author_name": "Ella Hathaway",
+      "author_email": "67609881+ellahathaway@users.noreply.github.com",
+      "author_login": "ellahathaway",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Stop reporting noop aw runs as issues (#5582)",
+      "parent_shas": [
+        "5dd18d4723aba3814d659057ff769c401edeb721"
+      ],
+      "tree_sha": "43b05936275e0d30b920e94b9defbbeef4b62451",
+      "html_url": "https://github.com/dotnet/source-build/commit/6b5ebd25ac23fd05f45661162ac012cdcf3e9c7c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/source-build:.github/workflows/triage.md",
+          "source_full_name": "dotnet/source-build",
+          "md_path": ".github/workflows/triage.md",
+          "commit_sha": "6b5ebd25ac23fd05f45661162ac012cdcf3e9c7c",
+          "committed_at": "2026-06-04T13:19:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -20,6 +20,8 @@ permissions:\n   issues: read\n \n safe-outputs:\n+  noop:\n+    report-as-issue: false\n   add-comment:\n     discussions: false\n     max: 20",
+          "snapshot_ref": "6b5ebd25ac23fd05f45661162ac012cdcf3e9c7c",
+          "snapshot_blob_sha": "35d945e373ad81334814eb012b550169d9b7b551",
+          "snapshot_file": "snapshots/source-build__dotnet__6b5ebd25ac23fd05f45661162ac012cdcf3e9c7c__triage.md",
+          "snapshot_bytes": 2841,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/source-build\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"source-build\",\"generated_workflow_path\":\".github/workflows/triage.lock.yml\",\"generated_workflow_file\":\"triage.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/source-build/blob/a176dcd6f4a4231cfe8b173eb260b89bc7a56c19/.github/workflows/triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/source-build:.github/workflows/triage.md",
+      "source_full_name": "dotnet/source-build",
+      "md_path": ".github/workflows/triage.md",
+      "commit_sha": "93ac3915801dc1dd6f90ffc19f6781c84506c4b2",
+      "authored_at": "2026-06-25T21:36:02Z",
+      "committed_at": "2026-06-25T21:36:02Z",
+      "author_name": "Jeff Handley",
+      "author_email": "jeffhandley@users.noreply.github.com",
+      "author_login": "jeffhandley",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade gh-aw to v0.79.8 and run agentic workflow in isolated environment (#5604)\n\n* Upgrade gh-aw to v0.79.8 and run agentic workflow in isolated environment\n\n- Add a validate-pat-pool workflow to monitor health of PAT pool\n\n* Fix indentation",
+      "parent_shas": [
+        "2993f3576ae695cf10380cc5d6348be3c09af69f"
+      ],
+      "tree_sha": "702b3191a9b95bdd38dfcee9d4f6bcd4653f2300",
+      "html_url": "https://github.com/dotnet/source-build/commit/93ac3915801dc1dd6f90ffc19f6781c84506c4b2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/source-build:.github/workflows/triage.md",
+          "source_full_name": "dotnet/source-build",
+          "md_path": ".github/workflows/triage.md",
+          "commit_sha": "93ac3915801dc1dd6f90ffc19f6781c84506c4b2",
+          "committed_at": "2026-06-25T21:36:02Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 2,
+          "file_changes": 8,
+          "file_patch": "@@ -27,8 +27,12 @@ safe-outputs:\n     max: 20\n \n imports:\n-  - shared/pat_pool.md\n   - shared/github-guard-policy.md\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n+\n+environment: copilot-pat-pool\n \n engine:\n   id: copilot\n@@ -45,7 +49,7 @@ engine:\n         needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n         needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n         needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        secrets.COPILOT_GITHUB_TOKEN)\n+        'NO COPILOT PAT AVAILABLE')\n       }}\n ---\n ",
+          "snapshot_ref": "93ac3915801dc1dd6f90ffc19f6781c84506c4b2",
+          "snapshot_blob_sha": "b63f1922829ce6ce416b121345e36ca59d4e508d",
+          "snapshot_file": "snapshots/source-build__dotnet__93ac3915801dc1dd6f90ffc19f6781c84506c4b2__triage.md",
+          "snapshot_bytes": 2922,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/source-build\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"source-build\",\"generated_workflow_path\":\".github/workflows/triage.lock.yml\",\"generated_workflow_file\":\"triage.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/source-build/blob/a176dcd6f4a4231cfe8b173eb260b89bc7a56c19/.github/workflows/triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

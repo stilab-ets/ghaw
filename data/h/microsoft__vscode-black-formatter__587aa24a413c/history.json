@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+    "source_full_name": "microsoft/vscode-black-formatter",
+    "source_owner": "microsoft",
+    "source_repo": "vscode-black-formatter",
+    "md_path": ".github/workflows/check-python-versions.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/vscode-black-formatter/blob/HEAD/.github/workflows/check-python-versions.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/vscode-black-formatter",
+      "generated_owner": "microsoft",
+      "generated_repo": "vscode-black-formatter",
+      "generated_workflow_path": ".github/workflows/check-python-versions.lock.yml",
+      "generated_workflow_file": "check-python-versions.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/vscode-black-formatter/blob/d23444a7c60aed538c905a2bf3db6363df8f1cf3/.github/workflows/check-python-versions.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:42:43+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+      "source_full_name": "microsoft/vscode-black-formatter",
+      "md_path": ".github/workflows/check-python-versions.md",
+      "commit_sha": "22ff97ba1289986ae461239c496d091a43b35a71",
+      "authored_at": "2026-02-20T22:33:27Z",
+      "committed_at": "2026-02-20T22:33:27Z",
+      "author_name": "Eduardo Villalpando Mello",
+      "author_email": "eduardo.villalpando.mello@gmail.com",
+      "author_login": "edvilme",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bump to Python 3.10 (and Pygls 2.0) Automatically (#608)",
+      "parent_shas": [
+        "231884d89776987b11996225fb03a8c5da68f760"
+      ],
+      "tree_sha": "c60c6fbf7b7427e4ab81ff4a5e9cd8897aeea0dd",
+      "html_url": "https://github.com/microsoft/vscode-black-formatter/commit/22ff97ba1289986ae461239c496d091a43b35a71",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+          "source_full_name": "microsoft/vscode-black-formatter",
+          "md_path": ".github/workflows/check-python-versions.md",
+          "commit_sha": "22ff97ba1289986ae461239c496d091a43b35a71",
+          "committed_at": "2026-02-20T22:33:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 112,
+          "file_deletions": 0,
+          "file_changes": 112,
+          "file_patch": "@@ -0,0 +1,112 @@\n+---\n+description: >\n+  Annual check of the latest supported Python versions from peps.python.org.\n+  Creates a PR to add newly released versions and remove end-of-life versions\n+  from CI workflows, actions, Azure Pipelines, and source code.\n+strict: false\n+engine:\n+  id: copilot\n+on:\n+  schedule:\n+    - cron: \"0 12 15 10 *\"\n+  workflow_dispatch:\n+permissions:\n+  pull-requests: read\n+tools:\n+  web-fetch:\n+  github:\n+    toolsets: [default]\n+network:\n+  allowed:\n+    - defaults\n+    - python\n+    - \"peps.python.org\"\n+safe-outputs:\n+  create-pull-request:\n+    draft: true\n+  noop:\n+    max: 1\n+---\n+\n+# Annual Python Version Update\n+\n+You are an AI agent that checks the latest supported Python versions and updates this repository's CI configuration to stay current.\n+\n+## Context\n+\n+This repository is a VS Code extension that supports all actively maintained Python versions. Python releases a new minor version every October (PEP 602). This workflow runs annually after the October release cycle to incorporate new versions and drop end-of-life ones.\n+\n+## Your Task\n+\n+### Step 1: Fetch current supported Python versions\n+\n+Fetch `https://peps.python.org/api/release-cycle.json` and parse the JSON response.\n+\n+Each key in the JSON object is a Python version (e.g., `\"3.13\"`), and its value contains a `\"status\"` field. Extract all versions where the status is **`security`**, **`bugfix`**, or **`feature`**. Ignore versions with status **`end-of-life`** (or any other status).\n+\n+Build a sorted list of supported versions (e.g., `['3.10', '3.11', '3.12', '3.13', '3.14']`). The lowest is the minimum supported version, the highest is the newest.\n+\n+If fetching fails, call the `noop` safe output with the error and stop.\n+\n+### Step 2: Update all files\n+\n+Compare the supported versions against what the repo currently has (see the `matrix.python` list and `PYTHON_VERSION` env var in `.github/workflows/pr-check.yml`). If everything is already up to date, call the `noop` safe output and stop.\n+\n+Update the following files with the new version information. For each file, the specific changes are described below.\n+\n+#### 2a. GitHub Actions workflows\n+\n+**`.github/workflows/pr-check.yml`** and **`.github/workflows/push-check.yml`**:\n+\n+- Update the `PYTHON_VERSION` env variable if the minimum version changed\n+- Update the `matrix.python` list to match `supported_versions`\n+  - The list format is: `['3.X', '3.Y', '3.Z']` (single-quoted, comma-separated)\n+\n+#### 2b. Azure Pipelines\n+\n+**`build/azure-pipeline.stable.yml`**, **`build/azure-pipeline.pre-release.yml`**, **`build/azure-devdiv-pipeline.stable.yml`**, and **`build/azure-devdiv-pipeline.pre-release.yml`**:\n+\n+- Update the `PythonVersion` variable value if the minimum version changed\n+  - Look for the YAML block: `- name: PythonVersion` / `value: '3.X'`\n+\n+#### 2c. Source code\n+\n+**`src/common/constants.ts`**:\n+\n+- Update `PYTHON_MAJOR` and `PYTHON_MINOR` constants if the minimum version changed\n+  - `export const PYTHON_MAJOR = 3;`\n+  - `export const PYTHON_MINOR = <new_minor>;`\n+\n+#### 2d. Nox sessions\n+\n+**`noxfile.py`**:\n+\n+- Update the `python=` parameter in `@nox.session(python=\"3.X\")` decorators if the minimum version changed\n+  - There are two sessions with explicit Python versions: `install_bundled_libs` and `setup`\n+\n+#### 2e. Runtime file\n+\n+**`runtime.txt`**:\n+\n+- Update the Python version if the minimum version changed\n+  - Format: `python-3.X.0` (use `.0` as the patch version placeholder since the exact patch version is not critical here; if the current file has a specific patch version, keep the format but update the minor version)\n+\n+### Step 3: Create a pull request\n+\n+Create a pull request with all the changes using the `create-pull-request` safe output.\n+\n+- **Branch name**: `update-python-versions-<year>` (e.g., `update-python-versions-2026`)\n+- **Title**: `Update supported Python versions`\n+- **Body**: Include:\n+  - A summary of what changed (versions added/removed, minimum version update if applicable)\n+  - A link to https://peps.python.org/api/release-cycle.json as the source of truth\n+  - The list of files modified\n+  - A note to verify CI passes before merging\n+\n+## Guidelines\n+\n+- Only modify version numbers; do not change the structure or formatting of any file\n+- Preserve the quoting style in YAML files (single quotes around version strings)\n+- Keep the matrix list sorted in ascending version order\n+- The `PYTHON_VERSION` / `PythonVersion` / `PYTHON_MINOR` values represent the **minimum** supported version and should only be updated if that version has gone end-of-life\n+- Do not include pre-release Python versions (status `prerelease`) in any updates\n\\ No newline at end of file",
+          "snapshot_ref": "22ff97ba1289986ae461239c496d091a43b35a71",
+          "snapshot_blob_sha": "ad87310517711b407afd2d5312b8d09efbc4c2e4",
+          "snapshot_file": "snapshots/vscode-black-formatter__microsoft__22ff97ba1289986ae461239c496d091a43b35a71__check-python-versions.md",
+          "snapshot_bytes": 4585,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vscode-black-formatter\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vscode-black-formatter\",\"generated_workflow_path\":\".github/workflows/check-python-versions.lock.yml\",\"generated_workflow_file\":\"check-python-versions.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vscode-black-formatter/blob/d23444a7c60aed538c905a2bf3db6363df8f1cf3/.github/workflows/check-python-versions.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+      "source_full_name": "microsoft/vscode-black-formatter",
+      "md_path": ".github/workflows/check-python-versions.md",
+      "commit_sha": "558c1f42c01196f15511772c65be62811427c7f9",
+      "authored_at": "2026-06-09T17:33:25Z",
+      "committed_at": "2026-06-09T17:33:25Z",
+      "author_name": "Eduardo Villalpando Mello",
+      "author_email": "eduardovil@microsoft.com",
+      "author_login": "edvilme",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Repo refactoring: shared package triage + fork guards (#753)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "978e440e080ef9a955448bfae15b58d1f36a9de6"
+      ],
+      "tree_sha": "c8908d7908d8b2ceac4a1e12b3c7258a8489fa30",
+      "html_url": "https://github.com/microsoft/vscode-black-formatter/commit/558c1f42c01196f15511772c65be62811427c7f9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+          "source_full_name": "microsoft/vscode-black-formatter",
+          "md_path": ".github/workflows/check-python-versions.md",
+          "commit_sha": "558c1f42c01196f15511772c65be62811427c7f9",
+          "committed_at": "2026-06-09T17:33:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -6,6 +6,7 @@ description: >\n strict: false\n engine:\n   id: copilot\n+if: github.repository_owner == 'microsoft'\n on:\n   schedule:\n     - cron: \"0 12 15 10 *\"",
+          "snapshot_ref": "558c1f42c01196f15511772c65be62811427c7f9",
+          "snapshot_blob_sha": "79c96298853f4259590fe3fb589dd747d1e9317e",
+          "snapshot_file": "snapshots/vscode-black-formatter__microsoft__558c1f42c01196f15511772c65be62811427c7f9__check-python-versions.md",
+          "snapshot_bytes": 4628,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vscode-black-formatter\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vscode-black-formatter\",\"generated_workflow_path\":\".github/workflows/check-python-versions.lock.yml\",\"generated_workflow_file\":\"check-python-versions.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vscode-black-formatter/blob/d23444a7c60aed538c905a2bf3db6363df8f1cf3/.github/workflows/check-python-versions.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+      "source_full_name": "microsoft/vscode-black-formatter",
+      "md_path": ".github/workflows/check-python-versions.md",
+      "commit_sha": "c3b61fab53100b20e953f201091c2435ee6d7de1",
+      "authored_at": "2026-06-23T19:17:50Z",
+      "committed_at": "2026-06-23T19:17:50Z",
+      "author_name": "Eduardo Villalpando Mello",
+      "author_email": "eduardovil@microsoft.com",
+      "author_login": "edvilme",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Don't open issues on agentic workflow no-op runs (#768)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "471cee5f7c7d8715085a0e24f48f176dfcba76c8"
+      ],
+      "tree_sha": "42f69570a5c5ff62073a3c6dd67ca2e8e258d0a8",
+      "html_url": "https://github.com/microsoft/vscode-black-formatter/commit/c3b61fab53100b20e953f201091c2435ee6d7de1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vscode-black-formatter:.github/workflows/check-python-versions.md",
+          "source_full_name": "microsoft/vscode-black-formatter",
+          "md_path": ".github/workflows/check-python-versions.md",
+          "commit_sha": "c3b61fab53100b20e953f201091c2435ee6d7de1",
+          "committed_at": "2026-06-23T19:17:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -27,6 +27,7 @@ safe-outputs:\n     draft: true\n   noop:\n     max: 1\n+    report-as-issue: false\n ---\n \n # Annual Python Version Update",
+          "snapshot_ref": "c3b61fab53100b20e953f201091c2435ee6d7de1",
+          "snapshot_blob_sha": "f168b8d4872654a75cc37df01d331bc3be8ff431",
+          "snapshot_file": "snapshots/vscode-black-formatter__microsoft__c3b61fab53100b20e953f201091c2435ee6d7de1__check-python-versions.md",
+          "snapshot_bytes": 4655,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vscode-black-formatter\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vscode-black-formatter\",\"generated_workflow_path\":\".github/workflows/check-python-versions.lock.yml\",\"generated_workflow_file\":\"check-python-versions.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vscode-black-formatter/blob/d23444a7c60aed538c905a2bf3db6363df8f1cf3/.github/workflows/check-python-versions.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

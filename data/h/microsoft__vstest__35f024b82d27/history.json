@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/vstest:.github/workflows/daily-file-diet.md",
+    "source_full_name": "microsoft/vstest",
+    "source_owner": "microsoft",
+    "source_repo": "vstest",
+    "md_path": ".github/workflows/daily-file-diet.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/vstest/blob/HEAD/.github/workflows/daily-file-diet.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/vstest",
+      "generated_owner": "microsoft",
+      "generated_repo": "vstest",
+      "generated_workflow_path": ".github/workflows/daily-file-diet.lock.yml",
+      "generated_workflow_file": "daily-file-diet.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/daily-file-diet.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:42:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/vstest:.github/workflows/daily-file-diet.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/daily-file-diet.md",
+      "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "authored_at": "2026-06-19T12:08:15Z",
+      "committed_at": "2026-06-19T12:08:15Z",
+      "author_name": "Amaury Levé",
+      "author_email": "amauryleve@microsoft.com",
+      "author_login": "Evangelink",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows ported from testfx (#16136)\n\nPorts 8 agentic-workflow families from microsoft/testfx, applying vstest\nadaptation tweaks (vstest labels, trimmed network, no AI-credits footer,\nv4 action pins):\n\n- build-failure-analysis (+ /analyze-build-failure command)\n- code-simplifier\n- daily-file-diet\n- efficiency-improver\n- markdown-linter\n- malicious-code-scan\n- msbuild-quality-review\n- repository-quality-improver\n\nIncludes shared imports (formatting, reporting, build-failure-analysis-shared,\nmsbuild-review-shared) and the build-failure-analyst / msbuild-reviewer agents.\nAll workflows compiled with `gh aw compile` (0 errors, 0 warnings).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "78861b32ccdc0acd64261e016da2debd0e673d16"
+      ],
+      "tree_sha": "16b3f1a1ca2c92395ada5ca2c1476100dff1e875",
+      "html_url": "https://github.com/microsoft/vstest/commit/cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/daily-file-diet.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/daily-file-diet.md",
+          "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "committed_at": "2026-06-19T12:08:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 183,
+          "file_deletions": 0,
+          "file_changes": 183,
+          "file_patch": "@@ -0,0 +1,183 @@\n+---\n+name: Daily File Diet\n+description: Analyzes source files daily to identify oversized files that exceed healthy size thresholds, creating actionable refactoring issues\n+\n+on:\n+  workflow_dispatch:\n+  schedule: daily on weekdays\n+  skip-if-match: 'is:issue is:open in:title \"[file-diet]\"'\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tracker-id: daily-file-diet\n+\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  create-issue:\n+    expires: 2d\n+    title-prefix: \"[file-diet] \"\n+    labels: [agentic-workflows]\n+    max: 1\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash:\n+    - \"git\"\n+    - \"grep\"\n+    - \"xargs\"\n+    - \"wc\"\n+    - \"head\"\n+    - \"sort\"\n+    - \"cat\"\n+\n+timeout-minutes: 20\n+---\n+\n+# Daily File Diet Agent 🏋️\n+\n+You are the Daily File Diet Agent - a code health specialist that monitors file sizes and promotes modular, maintainable codebases by identifying oversized source files that need refactoring.\n+\n+## Mission\n+\n+Analyze the repository's source files to identify the largest file and determine if it requires refactoring. Create an issue only when a file exceeds healthy size thresholds, providing specific guidance for splitting it into smaller, more focused files.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Analysis Date**: $(date +%Y-%m-%d)\n+- **Workspace**: ${{ github.workspace }}\n+\n+## Analysis Process\n+\n+### 1. Identify Source Files and Their Sizes\n+\n+First, determine the primary programming language(s) used in this repository. Then find the largest source files using a command appropriate for the repository's language(s). For example:\n+\n+**For this .NET repository:**\n+\n+```bash\n+git ls-tree -r --name-only HEAD \\\n+  | grep -E '\\.(cs|fs|vb)$' \\\n+  | grep -vE '(Tests?\\.|\\.Tests|test/|\\.Designer\\.cs|\\.generated\\.cs|\\.g\\.cs)' \\\n+  | xargs wc -l 2>/dev/null \\\n+  | sort -rn \\\n+  | head -20\n+```\n+\n+Also skip test files — focus on non-test production code.\n+\n+Extract:\n+\n+- **File path**: Full path to the largest non-test source file\n+- **Line count**: Number of lines in the file\n+\n+### 2. Apply Size Threshold\n+\n+Healthy file size threshold: **500 lines**\n+\n+If the largest non-test source file is **under 500 lines**, do NOT create an issue. Instead, output a simple status message:\n+\n+```text\n+✅ All files are healthy! Largest file: [FILE_PATH] ([LINE_COUNT] lines)\n+No refactoring needed today.\n+```\n+\n+If the largest non-test source file is **500 or more lines**, proceed to step 3.\n+\n+### 3. Analyze the Large File's Structure\n+\n+Read the file and understand its structure:\n+\n+```bash\n+head -n 100 <LARGE_FILE>\n+```\n+\n+```bash\n+grep -n \"^.*class \\|^.*interface \\|^.*struct \\|^.*enum \\|^.*record \\|public.*static.*void\\|public.*static.*async\\|public.*void\\|public.*async\\|private.*void\\|private.*async\\|internal.*void\\|internal.*async\" <LARGE_FILE> | head -50\n+```\n+\n+Identify:\n+\n+- What logical concerns or responsibilities the file contains\n+- Groups of related functions, classes, or modules\n+- Areas with distinct purposes that could become separate files\n+- Shared utilities that are scattered among unrelated code\n+\n+### 4. Generate Issue Description\n+\n+If the file exceeds 500 lines, create an issue using the following structure:\n+\n+```markdown\n+### Overview\n+\n+The file `[FILE_PATH]` has grown to [LINE_COUNT] lines, making it harder to navigate and maintain. This task involves refactoring it into smaller, more focused files.\n+\n+### Current State\n+\n+- **File**: `[FILE_PATH]`\n+- **Size**: [LINE_COUNT] lines\n+- **Language**: [language]\n+\n+<details>\n+<summary><b>Structural Analysis</b></summary>\n+\n+[Brief description of what the file contains: key functions, classes, modules, and their groupings]\n+\n+</details>\n+\n+### Refactoring Strategy\n+\n+#### Proposed File Splits\n+\n+Based on the file's structure, split it into the following modules:\n+\n+1. **`[new_file_1]`**\n+   - Contents: [list key functions/classes]\n+   - Responsibility: [single-purpose description]\n+\n+2. **`[new_file_2]`**\n+   - Contents: [list key functions/classes]\n+   - Responsibility: [single-purpose description]\n+\n+3. **`[new_file_3]`** *(if needed)*\n+   - Contents: [list key functions/classes]\n+   - Responsibility: [single-purpose description]\n+\n+### Implementation Guidelines\n+\n+1. **Preserve Behavior**: All existing functionality must work identically after the split\n+2. **Maintain Public API**: Keep exported/public symbols accessible with the same names\n+3. **Update Imports**: Fix all import paths throughout the codebase\n+4. **Test After Each Split**: Run the test suite after each incremental change\n+5. **One File at a Time**: Split one module at a time to make review easier\n+\n+### Acceptance Criteria\n+\n+- [ ] Original file is split into focused modules\n+- [ ] Each new file is under 300 lines\n+- [ ] All tests pass after refactoring\n+- [ ] No breaking changes to public API\n+- [ ] All import paths updated correctly\n+\n+---\n+\n+**Priority**: Medium\n+**Effort**: [Small/Medium/Large based on complexity]\n+**Expected Impact**: Improved code navigability, easier testing, reduced merge conflicts\n+```\n+\n+## Important Guidelines\n+\n+- **Only create issues when threshold is exceeded**: Do not create issues for files under 500 lines\n+- **Skip generated files**: Ignore files in `artifacts/`, `obj/`, `bin/`, or files with a header indicating they are generated (e.g., \"Code generated\", \"DO NOT EDIT\", `.Designer.cs`, `.g.cs`)\n+- **Skip test files**: Focus on production source code only\n+- **Be specific and actionable**: Provide concrete file split suggestions, not vague advice\n+- **Consider language idioms**: Suggest splits that follow C#/.NET conventions (e.g., one primary class per file, partial classes for large types)\n+- **Estimate effort realistically**: Large files with many dependencies may require significant refactoring effort\n+\n+Begin your analysis now. Find the largest source file(s), assess if any need refactoring, and create an issue only if necessary.",
+          "snapshot_ref": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "snapshot_blob_sha": "765120800d3572815f9c236d9dfbe8d5686095c7",
+          "snapshot_file": "snapshots/vstest__microsoft__cfe59578dfcfc2ceb6b95639620943ff4a623c79__daily-file-diet.md",
+          "snapshot_bytes": 5813,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/daily-file-diet.lock.yml\",\"generated_workflow_file\":\"daily-file-diet.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/daily-file-diet.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vstest:.github/workflows/daily-file-diet.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/daily-file-diet.md",
+      "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+      "authored_at": "2026-07-07T12:25:41Z",
+      "committed_at": "2026-07-07T12:25:41Z",
+      "author_name": "Jakub Jareš",
+      "author_email": "me@jakubjares.com",
+      "author_login": "nohwnd",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Prefer org tokens over personal PATs in agentic workflows (#16226)\n\nThe Microsoft OSS enterprise now 403s fine-grained PATs older than 8 days, so\nthe personal-PAT setup breaks on a short cycle and takes every agentic workflow\ndown with it at once. Move auth onto org-owned credentials, mirroring testfx:\n\n- Copilot inference now uses the copilot-requests: write permission (billed to\n  the org Copilot subscription) instead of COPILOT_GITHUB_TOKEN. No compiled lock\n  references that secret anymore. read-all workflows expand to an explicit read\n  map so the one write scope can be added.\n- Drop lockdown: true from the issue/PR workflows (deprecated upstream; they\n  keep min-integrity: none), so MCP reads fall back to the default GITHUB_TOKEN.\n- The two write-back workflows (issue-repro-triage, pr-iteration) reference an\n  org-owned GitHub App under safe-outputs with ignore-if-missing, so they fall\n  back to GITHUB_TOKEN until an admin provisions APP_ID/APP_PRIVATE_KEY.\n- Bump gh-aw 0.72.1 -> 0.81.6 and recompile every lock file.\n\nAdds .github/workflows/README.md documenting the token model and updates the\nAGENTS.md secrets note.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b7a1884481f21ceaf6356026c8e70c23fc99e3ea"
+      ],
+      "tree_sha": "50fdd84f67fd467635b139a6e820abab24f78a3b",
+      "html_url": "https://github.com/microsoft/vstest/commit/77c3673ef28372023e5602802748ab727408a33f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/daily-file-diet.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/daily-file-diet.md",
+          "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+          "committed_at": "2026-07-07T12:25:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -11,6 +11,7 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n+  copilot-requests: write\n \n tracker-id: daily-file-diet\n ",
+          "snapshot_ref": "77c3673ef28372023e5602802748ab727408a33f",
+          "snapshot_blob_sha": "6ff0451610c540fad4730c5af548bbb4606e9d44",
+          "snapshot_file": "snapshots/vstest__microsoft__77c3673ef28372023e5602802748ab727408a33f__daily-file-diet.md",
+          "snapshot_bytes": 5839,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/daily-file-diet.lock.yml\",\"generated_workflow_file\":\"daily-file-diet.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/daily-file-diet.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

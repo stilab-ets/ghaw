@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+    "source_full_name": "iamnbutler/sol-ui",
+    "source_owner": "iamnbutler",
+    "source_repo": "sol-ui",
+    "md_path": ".github/workflows/daily-perf-improver.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/iamnbutler/sol-ui/blob/HEAD/.github/workflows/daily-perf-improver.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "iamnbutler/sol-ui",
+      "generated_owner": "iamnbutler",
+      "generated_repo": "sol-ui",
+      "generated_workflow_path": ".github/workflows/daily-perf-improver.lock.yml",
+      "generated_workflow_file": "daily-perf-improver.lock.yml",
+      "generated_html_url": "https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-perf-improver.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:57:10+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+      "source_full_name": "iamnbutler/sol-ui",
+      "md_path": ".github/workflows/daily-perf-improver.md",
+      "commit_sha": "9289ca8c7b4dba09854d2d47d167afe265fda62e",
+      "authored_at": "2025-08-26T16:22:26Z",
+      "committed_at": "2025-08-26T16:22:26Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "improvers",
+      "parent_shas": [
+        "870b868d86934766a6bbf6d50e35183d549da41a"
+      ],
+      "tree_sha": "b3ca0a839f066aa96de8c95abbe3c35a269db7af",
+      "html_url": "https://github.com/iamnbutler/sol-ui/commit/9289ca8c7b4dba09854d2d47d167afe265fda62e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+          "source_full_name": "iamnbutler/sol-ui",
+          "md_path": ".github/workflows/daily-perf-improver.md",
+          "commit_sha": "9289ca8c7b4dba09854d2d47d167afe265fda62e",
+          "committed_at": "2025-08-26T16:22:26Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 210,
+          "file_deletions": 0,
+          "file_changes": 210,
+          "file_patch": "@@ -0,0 +1,210 @@\n+---\n+on:\n+    workflow_dispatch:\n+    schedule:\n+        # Run daily at 2am UTC, all days except Saturday and Sunday\n+        - cron: \"0 2 * * 1-5\"\n+    stop-after: +48h # workflow will no longer trigger after 48 hours\n+\n+timeout_minutes: 30\n+\n+permissions:\n+  contents: write # needed to create branches, files, and pull requests in this repo without a fork\n+  issues: write # needed to create report issue\n+  pull-requests: write # needed to create results pull request\n+  actions: read\n+  checks: read\n+  statuses: read\n+\n+tools:\n+  github:\n+    allowed:\n+      [\n+        create_issue,\n+        update_issue,\n+        add_issue_comment,\n+        create_or_update_file,\n+        create_branch,\n+        delete_file,\n+        push_files,\n+        update_pull_request,\n+      ]\n+  claude:\n+    allowed:\n+      Edit:\n+      MultiEdit:\n+      Write:\n+      NotebookEdit:\n+      WebFetch:\n+      WebSearch:\n+      # Configure bash build commands here, or enabled the agentics/shared/build-tools.md file at the end of this file and edit there\n+      #Bash: [\":*\"]\n+      Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n+\n+steps:\n+  - name: Checkout repository\n+    uses: actions/checkout@v3\n+\n+  - name: Check if action.yml exists\n+    id: check_build_steps_file\n+    run: |\n+      if [ -f \".github/actions/daily-perf-improver/build-steps/action.yml\" ]; then\n+        echo \"exists=true\" >> $GITHUB_OUTPUT\n+      else\n+        echo \"exists=false\" >> $GITHUB_OUTPUT\n+      fi\n+    shell: bash\n+  - name: Build the project ready for performance testing\n+    if: steps.check_build_steps_file.outputs.exists == 'true'\n+    uses: ./.github/actions/daily-perf-improver/build-steps\n+    id: build-steps\n+\n+---\n+\n+# Daily Perf Improver\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for the GitHub repository `${{ github.repository }}`. You're really good at all kinds of tasks. You're excellent at everything.\n+\n+1. Performance research (if not done before).\n+\n+   1a. Check if an open issue with title \"${{ github.workflow }}: Research and Plan\" exists. If it does, read the issue and its comments, paying particular attention to comment from repository maintainers, then continue to step 2. If not, follow the steps below to create it:\n+\n+   1b. Do some deep research into performance matters in this repo.\n+     - How is performance testing is done in the repo?\n+     - How to do micro benchmarks in the repo?\n+     - What are typical workloads for the software in this repo?\n+     - Where are performance bottlenecks?\n+     - Is perf I/O, CPU or Storage bound?\n+     - What do the repo maintainers care about most w.r.t. perf.?\n+     - What are realistic goals for Round 1, 2, 3 of perf improvement?\n+     - What actual commands are used to build, test, profile and micro-benchmark the code in this repo?\n+     - What concrete steps are needed to set up the environment for performance testing and micro-benchmarking?\n+     - What existing documentation is there about performance in this repo?\n+     - What exact steps need to be followed to benchmark and profile a typical part of the code in this repo?\n+\n+     Research:\n+     - Functions or methods that are slow\n+     - Algorithms that can be optimized\n+     - Data structures that can be made more efficient\n+     - Code that can be refactored for better performance\n+     - Important routines that dominate performance\n+     - Code that can be vectorized or other standard techniques to improve performance\n+     - Any other areas that you identify as potential performance bottlenecks\n+     - CPU, memory, I/O or other bottlenecks\n+\n+     Consider perf engineering fundamentals:\n+     - You want to get to a zone where the engineers can run commands to get numbers towards some performance goal - with commands running reliably within 1min or so - and it can \"see\" the code paths associated with that. If you can achieve that, your engineers will be very good at finding low-hanging fruit to work towards the performance goals.\n+\n+     1b. Use this research to write an issue with title \"${{ github.workflow }}: Research and Plan\", then exit this entire workflow.\n+\n+2. Generate build steps configuration (if not done before). \n+\n+   2a. Check if `.github/actions/daily-perf-improver/build-steps/action.yml` exists in this repo. Note this path is relative to the current directory (the root of the repo). If this file exists, it will have been run already as part of the GitHub Action you are executing in, so read the file to understand what has already been run and continue to step 3. Otherwise continue to step 2b.\n+\n+   2b. Check if an open pull request with title \"${{ github.workflow }}: Updates to complete configuration\" exists in this repo. If it does, add a comment to the pull request saying configuration needs to be completed, then exit the workflow. Otherwise continue to step 2c.\n+\n+   2c. Have a careful think about the CI commands needed to build the project and set up the environment for individual performance development work, assuming one set of build assumptions and one architecture (the one running). Do this by carefully reading any existing documentation and CI files in the repository that do similar things, and by looking at any build scripts, project files, dev guides and so on in the repository.\n+\n+   2d. Create the file `.github/actions/daily-perf-improver/build-steps/action.yml` as a GitHub Action containing these steps, ensuring that the action.yml file is valid and carefully cross-checking with other CI files and devcontainer configurations in the repo to ensure accuracy and correctness.\n+\n+   2e. Make a pull request for the addition of this file, with title \"${{ github.workflow }}: Updates to complete configuration\". Explain that adding these files to the repo will make this workflow more reliable and effective. Encourage the maintainer to review the files carefully to ensure they are appropriate for the project. Exit the entire workflow.\n+\n+3. Performance goal selection: build an understanding of what to work on and select a part of the performance plan to pursue.\n+\n+   3a. You can now assume the repository is in a state where the steps in `.github/actions/daily-perf-improver/build-steps/action.yml` have been run and is ready for performance testing, running micro-benchmarks etc. Read this file to understand what has been done.\n+\n+   3b. Read the plan in the issue mentioned earlier, along with comments.\n+\n+   3c. Check any existing open pull requests that are related to performance improvements especially any opened by you starting with title \"${{ github.workflow }}\".\n+   \n+   3d. If you think the plan is inadequate, and needs a refresh, update the planning issue by rewriting the actual body of the issue, ensuring you take into account any comments from maintainers. Add one single comment to the issue saying nothing but the plan has been updated with a one sentence explanation about why. Do not add comments to the issue, just update the body. Then continue to step 3e.\n+  \n+   3e. Select a performance improvement goal to pursue from the plan. Ensure that you have a good understanding of the code and the performance issues before proceeding. Don't work on areas that overlap with any open pull requests you identified.\n+\n+4. Work towards your selected goal.. For the performance improvement goal you selected, do the following:\n+\n+   4a. Create a new branch.\n+   \n+   4b. Make the changes to work towards the performance improvement goal you selected. This may involve:\n+     - Refactoring code\n+     - Optimizing algorithms\n+     - Changing data structures\n+     - Adding caching\n+     - Parallelizing code\n+     - Improving memory access patterns\n+     - Using more efficient libraries or frameworks\n+     - Reducing I/O operations\n+     - Reducing network calls\n+     - Improving concurrency\n+     - Using profiling tools to identify bottlenecks\n+     - Improving engineering practices\n+     - Other techniques to improve performance \n+\n+   4c. Ensure the code still works as expected and that any existing relevant tests pass. \n+\n+   4d. After making the changes, if appropriate measure their impact on performance.\n+   \n+     - Get actual performance numbers\n+     - If you can't successfully measure the performance impact, then continue but make a note of what you tried.\n+     - Run individual benchmarks and comparing results.\n+     - Benchmarking should be done in a way that is reliable and reproducible, though beware that because you're running in a virtualised environment wall-clock-time measurements may not be 100% accurate.\n+     - If the changes do not improve performance, then iterate or consider reverting them or trying a different approach.\n+\n+   4e. Apply any automatic code formatting used in the repo\n+   \n+   4f. Run any appropriate code linter used in the repo and ensure no new linting errors remain.\n+\n+5. If you succeeded in writing useful code changes that improve performance, create a draft pull request with your changes. \n+\n+   - Use Bash `git add ...`, `git commit ...`, `git push ...` etc. to push the changes to your branch.\n+\n+   - Use Bash `gh pr create --repo ${{ github.repository }} ...` to create a pull request with the changes.\n+\n+   5a. Include a description of the improvements, details of the benchmark runs that show improvement and by how much, made and any relevant context.\n+   \n+   5b. Do NOT include performance reports or any tool-generated files in the pull request. Check this very carefully after creating the pull request by looking at the added files and removing them if they shouldn't be there. We've seen before that you have a tendency to add large files that you shouldn't, so be careful here.\n+\n+   5c. In the description, explain:\n+   \n+   - the performance improvement goal you decided to pursue and why\n+   - the approach you took to your work, including your todo list\n+   - the actions you took\n+   - the build, test, benchmarking and other steps you used\n+   - the performance measurements you made \n+   - the measured improvements achieved\n+   - the problems you found\n+   - the changes made\n+   - what did and didn't work\n+   - possible other areas for future improvement\n+   - include links to any issues you created or commented on, and any pull requests you created.\n+   - list any bash commands you used, any web searches you performed, and any web pages you visited that were relevant to your work. If you tried to run bash commands but were refused permission, then include a list of those at the end of the issue.\n+\n+   5d. After creation, check the pull request to ensure it is correct, includes all expected files, and doesn't include any unwanted files or changes. Make any necessary corrections by pushing further commits to the branch.\n+\n+   5e. Add a very brief comment to the issue from step 1a if it exists, saying you have worked on the particular performance goal and linking to the pull request you created.\n+\n+6. If you didn't succeed in improving performance, create an issue with title starting with \"${{ github.workflow }}\", summarizing similar information to above.\n+\n+7. If you encounter any unexpected failures or have questions, add comments to the pull request or issue to seek clarification or assistance.\n+\n+8. If you are unable to improve performance in a particular area, add a comment explaining why and what you tried. If you have any relevant links or resources, include those as well.\n+\n+9. Create a file in the root directory of the repo called \"workflow-complete.txt\" with the text \"Workflow completed successfully\".\n+\n+@include agentics/shared/no-push-to-main.md\n+\n+@include agentics/shared/tool-refused.md\n+\n+@include agentics/shared/include-link.md\n+\n+@include agentics/shared/job-summary.md\n+\n+@include agentics/shared/xpia.md\n+\n+@include agentics/shared/gh-extra-tools.md\n+\n+<!-- You can whitelist tools in the agentics/shared/build-tools.md file, and include it here. -->\n+<!-- This should be done with care, as tools may  -->\n+<!-- include agentics/shared/build-tools.md -->",
+          "snapshot_ref": "9289ca8c7b4dba09854d2d47d167afe265fda62e",
+          "snapshot_blob_sha": "8f8b867fbf218cfc021008bb9c2e706fa0f4f769",
+          "snapshot_file": "snapshots/sol-ui__iamnbutler__9289ca8c7b4dba09854d2d47d167afe265fda62e__daily-perf-improver.md",
+          "snapshot_bytes": 12059,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/sol-ui\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"sol-ui\",\"generated_workflow_path\":\".github/workflows/daily-perf-improver.lock.yml\",\"generated_workflow_file\":\"daily-perf-improver.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-perf-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+      "source_full_name": "iamnbutler/sol-ui",
+      "md_path": ".github/workflows/daily-perf-improver.md",
+      "commit_sha": "32277bafd8afac906b9e675ad49fb62fc0056275",
+      "authored_at": "2025-08-26T16:49:34Z",
+      "committed_at": "2025-08-26T16:49:34Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "improvers",
+      "parent_shas": [
+        "9289ca8c7b4dba09854d2d47d167afe265fda62e"
+      ],
+      "tree_sha": "1c7887e800fdf3c1f3b3f891296b57d6ef88768c",
+      "html_url": "https://github.com/iamnbutler/sol-ui/commit/32277bafd8afac906b9e675ad49fb62fc0056275",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+          "source_full_name": "iamnbutler/sol-ui",
+          "md_path": ".github/workflows/daily-perf-improver.md",
+          "commit_sha": "32277bafd8afac906b9e675ad49fb62fc0056275",
+          "committed_at": "2025-08-26T16:49:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -38,8 +38,8 @@ tools:\n       WebFetch:\n       WebSearch:\n       # Configure bash build commands here, or enabled the agentics/shared/build-tools.md file at the end of this file and edit there\n-      #Bash: [\":*\"]\n-      Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n+      Bash: [\":*\"]\n+      #Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n \n steps:\n   - name: Checkout repository",
+          "snapshot_ref": "32277bafd8afac906b9e675ad49fb62fc0056275",
+          "snapshot_blob_sha": "eacd063302ce68b08e7cf2a677e8560d32745a36",
+          "snapshot_file": "snapshots/sol-ui__iamnbutler__32277bafd8afac906b9e675ad49fb62fc0056275__daily-perf-improver.md",
+          "snapshot_bytes": 12059,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/sol-ui\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"sol-ui\",\"generated_workflow_path\":\".github/workflows/daily-perf-improver.lock.yml\",\"generated_workflow_file\":\"daily-perf-improver.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-perf-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+      "source_full_name": "iamnbutler/sol-ui",
+      "md_path": ".github/workflows/daily-perf-improver.md",
+      "commit_sha": "92e31de790512448d050c8c1817d6e69f85b0262",
+      "authored_at": "2025-08-26T19:41:50Z",
+      "committed_at": "2025-08-26T19:41:50Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update improvers",
+      "parent_shas": [
+        "96795e72c7b2cf2a38eb4c8704a036efccfd1bdb"
+      ],
+      "tree_sha": "a8cacffb09a6d9d64be4fbeddad3b6249be9bec6",
+      "html_url": "https://github.com/iamnbutler/sol-ui/commit/92e31de790512448d050c8c1817d6e69f85b0262",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/sol-ui:.github/workflows/daily-perf-improver.md",
+          "source_full_name": "iamnbutler/sol-ui",
+          "md_path": ".github/workflows/daily-perf-improver.md",
+          "commit_sha": "92e31de790512448d050c8c1817d6e69f85b0262",
+          "committed_at": "2025-08-26T19:41:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 9,
+          "file_deletions": 7,
+          "file_changes": 16,
+          "file_patch": "@@ -37,9 +37,9 @@ tools:\n       NotebookEdit:\n       WebFetch:\n       WebSearch:\n-      # Configure bash build commands here, or enabled the agentics/shared/build-tools.md file at the end of this file and edit there\n-      Bash: [\":*\"]\n-      #Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh pr view:*\", \"gh pr list:*\", \"gh issue list:*\", \"gh issue view:*\", \"gh issue comment:*\", \"gh api *\"]\n+      # Configure bash build commands here, or in .github/workflows/agentics/daily-perf-improver.config.md\n+      #Bash: [\":*\"]\n+      Bash: [\"gh pr create:*\", \"git commit:*\", \"git push:*\", \"git checkout:*\", \"git branch:*\", \"git add:*\", \"gh auth status\", \"gh repo view\", \"gh issue comment:*\"]\n \n steps:\n   - name: Checkout repository\n@@ -69,7 +69,7 @@ Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for\n \n 1. Performance research (if not done before).\n \n-   1a. Check if an open issue with title \"${{ github.workflow }}: Research and Plan\" exists. If it does, read the issue and its comments, paying particular attention to comment from repository maintainers, then continue to step 2. If not, follow the steps below to create it:\n+   1a. Check if an open issue with title \"${{ github.workflow }}: Research and Plan\" exists. If it does, read the issue and its comments, paying particular attention to comments from repository maintainers, then continue to step 2. If not, follow the steps below to create it:\n \n    1b. Do some deep research into performance matters in this repo.\n      - How is performance testing is done in the repo?\n@@ -205,6 +205,8 @@ Your name is ${{ github.workflow }}. Your job is to act as an agentic coder for\n \n @include agentics/shared/gh-extra-tools.md\n \n-<!-- You can whitelist tools in the agentics/shared/build-tools.md file, and include it here. -->\n-<!-- This should be done with care, as tools may  -->\n-<!-- include agentics/shared/build-tools.md -->\n+<!-- You can whitelist tools in .github/workflows/build-tools.md file -->\n+@include? agentics/build-tools.md\n+\n+<!-- You can customize prompting and tools in .github/workflows/agentics/daily-perf-improver.config -->\n+@include? agentics/daily-perf-improver.config.md",
+          "snapshot_ref": "92e31de790512448d050c8c1817d6e69f85b0262",
+          "snapshot_blob_sha": "ff220b1926c3247f4563ce16e298d3e96cf558e7",
+          "snapshot_file": "snapshots/sol-ui__iamnbutler__92e31de790512448d050c8c1817d6e69f85b0262__daily-perf-improver.md",
+          "snapshot_bytes": 12013,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/sol-ui\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"sol-ui\",\"generated_workflow_path\":\".github/workflows/daily-perf-improver.lock.yml\",\"generated_workflow_file\":\"daily-perf-improver.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/sol-ui/blob/36f4c40b825c0b1a2ee633884d676003469fa059/.github/workflows/daily-perf-improver.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

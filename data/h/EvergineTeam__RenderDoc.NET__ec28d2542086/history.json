@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+    "source_full_name": "EvergineTeam/RenderDoc.NET",
+    "source_owner": "EvergineTeam",
+    "source_repo": "RenderDoc.NET",
+    "md_path": ".github/workflows/ci-doctor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/EvergineTeam/RenderDoc.NET/blob/HEAD/.github/workflows/ci-doctor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "EvergineTeam/RenderDoc.NET",
+      "generated_owner": "EvergineTeam",
+      "generated_repo": "RenderDoc.NET",
+      "generated_workflow_path": ".github/workflows/ci-doctor.lock.yml",
+      "generated_workflow_file": "ci-doctor.lock.yml",
+      "generated_html_url": "https://github.com/EvergineTeam/RenderDoc.NET/blob/8c6ab674ae455e7fa01e776820335aff6740136d/.github/workflows/ci-doctor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "excluded_bot": 2
+    },
+    "collected_at_utc": "2026-08-04T11:27:02+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/RenderDoc.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "86fe6922671efe58934f9e14b77a15fdda9fbc84",
+      "authored_at": "2026-08-02T18:01:56Z",
+      "committed_at": "2026-08-02T18:01:56Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: run the ci-doctor and binding-updater agents (#12)\n\nCompletes RenderDoc.NET: it now tracks its header, regenerates when it\nmoves, and has the two agents watching.\n\nThe updater matters more here than in the XML bindings. renderdoc_app.h\nis parsed with CppAst rather than a bespoke XML reader, so a construct\nthe parser does not understand shows up as a build failure rather than\nas quietly missing symbols. That is the failure this agent is for, and\nthe same generator shape is shared by Cesium, JoltPhysics and KTX -- so\nwhatever it learns here transfers.",
+      "parent_shas": [
+        "6fa0c38279f78bcbf27274a163f7ed1345291e04"
+      ],
+      "tree_sha": "0d7df2b58e0aaf98107d4dfa4c61a6beafbbc5ab",
+      "html_url": "https://github.com/EvergineTeam/RenderDoc.NET/commit/86fe6922671efe58934f9e14b77a15fdda9fbc84",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/RenderDoc.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "86fe6922671efe58934f9e14b77a15fdda9fbc84",
+          "committed_at": "2026-08-02T18:01:56Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 101,
+          "file_deletions": 0,
+          "file_changes": 101,
+          "file_patch": "@@ -0,0 +1,101 @@\n+---\n+emoji: 🩺\n+name: CI Doctor\n+description: Triages failed CI/CD runs in a binding repository and fixes workflow configuration problems.\n+labels: [bindings, maintenance, reactive]\n+on:\n+  workflow_run:\n+    workflows: [\"CI\", \"CD\", \"Sync standards\"]\n+    types: [completed]\n+    branches: [main]\n+  workflow_dispatch:\n+if: contains(fromJson('[\"failure\",\"timed_out\"]'), github.event.workflow_run.conclusion)\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+model: claude-sonnet-5\n+max-turns: 25\n+max-ai-credits: 150\n+network:\n+  allowed: [defaults, github]\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"fix(ci): \"\n+    labels: [agent:ci-fix]\n+    allowed-files:\n+      - \".github/workflows/**\"\n+    draft: false\n+    if-no-changes: \"ignore\"\n+  create-issue:\n+    title-prefix: \"CI failure: \"\n+    labels: [agent:needs-human]\n+    allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n+    deduplicate-by-title: true\n+    max: 1\n+source: EvergineTeam/Evergine.Bindings@caf2c567e1107d9590a03229906e331fad46db4c\n+---\n+\n+# CI Doctor\n+\n+A workflow in this binding repository has failed. Diagnose it, and either fix it or hand it to whoever — human or agent — can.\n+\n+You are the **infrastructure** half of this repository's automation. The dividing line is sharp and you must not cross it:\n+\n+- **Yours**: anything under `.github/`. Workflow configuration, branch names, action refs, missing inputs, expired or absent secrets, runner problems, transient network failures.\n+- **Not yours**: anything under the generator directory or the generated output. If the fix belongs in C# code, you hand it off — you never edit it.\n+\n+Read `binding.yml` at the repository root first. It tells you which paths are generator source and which are generated output, so you can tell which side of that line a failure falls on.\n+\n+## What to do\n+\n+**1. Get the facts.** Fetch the failed run's logs and identify the job and step that failed, and the first error that is a cause rather than a consequence. A cascade of downstream errors usually has one real origin near the top.\n+\n+**2. Derive a failure key** of the form `<workflow>:<job>:<step>:<error-signature>`. The signature must be stable across runs: strip run numbers, timestamps, temporary paths and SHAs. `git fetch origin +refs/heads/main*` and `git fetch origin +refs/heads/feature-x*` are the same signature.\n+\n+**3. Check for an existing open issue with that key before writing anything.** If one exists, call `noop`. Thirteen repositories sharing one recurring fault must not produce thirteen issues per run.\n+\n+**4. Classify and act.** Exactly one of:\n+\n+### Workflow configuration → open a pull request\n+\n+A wrong branch name, a reusable workflow pointing at a ref that no longer resolves, a malformed or missing input, a typo. These are yours to fix. Keep the diff minimal — change what is broken and nothing else. In the pull request body, state what failed, why, and what the change does.\n+\n+Do not \"improve\" the workflow while you are in there. A pull request that fixes one line gets merged in a minute; one that also reorganises the file waits for a review that may never come.\n+\n+### Transient infrastructure → re-run once, then escalate\n+\n+Network timeouts, runner allocation failures, 5xx from nuget.org, rate limits. Re-run the failed workflow once. If the re-run succeeds, call `noop`: a flake that self-recovered is not worth a human's attention. If it fails again the same way, it is not a flake — open an issue with `agent:needs-human`.\n+\n+Never open a pull request for a transient failure. There is nothing to fix.\n+\n+### The generator or the specification → hand off\n+\n+The build failed because the generator cannot handle something new in the upstream specification, or because the generated code no longer compiles. Open an issue labelled **`agent:needs-regen`**.\n+\n+That label is not documentation, it is a trigger: it wakes the binding updater, which owns the generator. Say precisely what you found — the failing construct, the file, the compiler error — because the next agent starts from your issue and nothing else.\n+\n+### Upstream broke compatibility → stop\n+\n+The upstream specification changed in a way that cannot be absorbed by regenerating. Open an issue labelled **`agent:upstream-break`** and stop.\n+\n+This is a terminal state for automation, deliberately. Whether to adapt, pin to the previous version, or raise it upstream is a product decision. Lay out what changed and what the options are; do not choose.\n+\n+### Anything else → say so plainly\n+\n+If you cannot determine the cause with confidence, open an issue labelled `agent:needs-human` containing the failing job and step, the relevant log excerpt, your best hypothesis marked clearly as a hypothesis, and the exact commands to reproduce locally. A truthful \"I do not know, here is what I found\" is far more useful than a confident wrong diagnosis that sends someone down the wrong path for an afternoon.\n+\n+## Rules\n+\n+- **Never touch the default branch.** Every change goes through a pull request.\n+- **Never edit generator source or generated output.** That is the updater's job, and the boundary is what keeps both agents predictable.\n+- **Do not react to your own work.** If the failed run was triggered by an agent branch (`agent/*`) or by a bot actor, call `noop`. An agent that triages its own output loops, and loops cost money.\n+- **One intervention per failure.** Either a pull request, or a re-run, or an issue. Never several.\n+- **Report what you did not do.** If you fixed one problem but noticed another outside your remit, say so in the pull request body rather than silently widening the change.",
+          "snapshot_ref": "86fe6922671efe58934f9e14b77a15fdda9fbc84",
+          "snapshot_blob_sha": "c8e4aaa0704960b294dc4921bc88e858cc3ba1e0",
+          "snapshot_file": "snapshots/RenderDoc.NET__EvergineTeam__86fe6922671efe58934f9e14b77a15fdda9fbc84__ci-doctor.md",
+          "snapshot_bytes": 5756,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/RenderDoc.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"RenderDoc.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/RenderDoc.NET/blob/8c6ab674ae455e7fa01e776820335aff6740136d/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/RenderDoc.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "7f01a306455766c614651018c5be5cd2fea17d9f",
+      "authored_at": "2026-08-02T19:54:54Z",
+      "committed_at": "2026-08-02T19:54:54Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to toolbox v1.7.0 (#13)\n\nBrings the GitHub App configuration, which lets ci-doctor open the pull\nrequests it exists to open. GITHUB_TOKEN may not write under\n.github/workflows/ -- that permission is App-only -- so until now the\ndoctor would diagnose a broken workflow and then fail to propose the\nfix, falling back to an issue with a manual link.\n\nAlso catches this repository up on everything since its pin: the\nportable upstream fetch, the line-ending fixes, and change detection\nthat reads the index rather than the working tree.",
+      "parent_shas": [
+        "86fe6922671efe58934f9e14b77a15fdda9fbc84"
+      ],
+      "tree_sha": "4b7057dda22998121074f46388831f02d3bba273",
+      "html_url": "https://github.com/EvergineTeam/RenderDoc.NET/commit/7f01a306455766c614651018c5be5cd2fea17d9f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/RenderDoc.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "7f01a306455766c614651018c5be5cd2fea17d9f",
+          "committed_at": "2026-08-02T19:54:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 1,
+          "file_changes": 9,
+          "file_patch": "@@ -27,9 +27,16 @@ tools:\n     mode: gh-proxy\n     toolsets: [default]\n safe-outputs:\n+  # The doctor's whole job is editing workflow configuration, and GITHUB_TOKEN\n+  # may not write under .github/workflows/ -- that permission is App-only. Without\n+  # this the pull request fails and degrades to an issue carrying a manual link.\n+  github-app:\n+    client-id: ${{ vars.APP_CLIENT_ID }}\n+    private-key: ${{ secrets.APP_PRIVATE_KEY }}\n   create-pull-request:\n     title-prefix: \"fix(ci): \"\n     labels: [agent:ci-fix]\n+    allow-workflows: true\n     allowed-files:\n       - \".github/workflows/**\"\n     draft: false\n@@ -40,7 +47,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@caf2c567e1107d9590a03229906e331fad46db4c\n+source: EvergineTeam/Evergine.Bindings@19dd071f1863ac632c22c023bbcc45008c49dc1e\n ---\n \n # CI Doctor",
+          "snapshot_ref": "7f01a306455766c614651018c5be5cd2fea17d9f",
+          "snapshot_blob_sha": "6bba967503f31d243604dd115da60e6a01a82fa0",
+          "snapshot_file": "snapshots/RenderDoc.NET__EvergineTeam__7f01a306455766c614651018c5be5cd2fea17d9f__ci-doctor.md",
+          "snapshot_bytes": 6128,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/RenderDoc.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"RenderDoc.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/RenderDoc.NET/blob/8c6ab674ae455e7fa01e776820335aff6740136d/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/RenderDoc.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "de87d65e89e47f2f750dd8d0a561876a36e4db00",
+      "authored_at": "2026-08-02T20:49:44Z",
+      "committed_at": "2026-08-02T20:49:44Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to toolbox v1.7.1 (#14)",
+      "parent_shas": [
+        "7f01a306455766c614651018c5be5cd2fea17d9f"
+      ],
+      "tree_sha": "c7e35f9b743fcffaeee7e0a99e7c600ee5daab47",
+      "html_url": "https://github.com/EvergineTeam/RenderDoc.NET/commit/de87d65e89e47f2f750dd8d0a561876a36e4db00",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/RenderDoc.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "de87d65e89e47f2f750dd8d0a561876a36e4db00",
+          "committed_at": "2026-08-02T20:49:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 15,
+          "file_deletions": 1,
+          "file_changes": 16,
+          "file_patch": "@@ -37,6 +37,20 @@ safe-outputs:\n     title-prefix: \"fix(ci): \"\n     labels: [agent:ci-fix]\n     allow-workflows: true\n+    # Two independent gates guard the patch, and both must pass. `allowed-files`\n+    # is an exclusive allowlist: nothing outside these globs can ever be written,\n+    # not even ordinary source. `protected-files` is a separate policy covering\n+    # manifests, instruction files and everything under a top-level dot folder --\n+    # which is all of `.github/`, so it applies to every fix this agent exists to\n+    # make. Its default (`request_review`) cannot be honoured on this path: with a\n+    # GitHub App the push goes through the signed-commit API, which has no way to\n+    # open a pull request and then ask for changes, so it refuses outright and the\n+    # run degrades to an issue carrying a patch bundle.\n+    #\n+    # `allowed` lifts the second gate only. The first still confines the agent to\n+    # workflow files, and the pull request is reviewed by a human before merge --\n+    # which is where that judgement belongs, rather than blocking the proposal.\n+    protected-files: allowed\n     allowed-files:\n       - \".github/workflows/**\"\n     draft: false\n@@ -47,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@19dd071f1863ac632c22c023bbcc45008c49dc1e\n+source: EvergineTeam/Evergine.Bindings@34c1fd0511086f987615f62836ef84040c193321\n ---\n \n # CI Doctor",
+          "snapshot_ref": "de87d65e89e47f2f750dd8d0a561876a36e4db00",
+          "snapshot_blob_sha": "ffdbab5a1c4659f0378b18a7a3ccaaded37fa890",
+          "snapshot_file": "snapshots/RenderDoc.NET__EvergineTeam__de87d65e89e47f2f750dd8d0a561876a36e4db00__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/RenderDoc.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"RenderDoc.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/RenderDoc.NET/blob/8c6ab674ae455e7fa01e776820335aff6740136d/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/RenderDoc.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "b34bc8978b86954280aff3c68e50210288e1b112",
+      "authored_at": "2026-08-03T08:39:57Z",
+      "committed_at": "2026-08-03T08:39:57Z",
+      "author_name": "evergine-bindings-automation[bot]",
+      "author_email": "312213894+evergine-bindings-automation[bot]@users.noreply.github.com",
+      "author_login": "evergine-bindings-automation[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to the current toolbox release (#16)\n\nRepins the installed agentic workflows from\n34c1fd0511086f987615f62836ef84040c193321 to\nc6cb3217e05c978d287831bef05895075c263dfa and recompiles.\n\nCo-authored-by: jcant0n <1783366+jcant0n@users.noreply.github.com>",
+      "parent_shas": [
+        "5f88fcdb527f061883208dc65d76dd9c9fd7d986"
+      ],
+      "tree_sha": "9bbc33deafcfec15f168ccdada45fcfca7f45811",
+      "html_url": "https://github.com/EvergineTeam/RenderDoc.NET/commit/b34bc8978b86954280aff3c68e50210288e1b112",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:evergine-bindings-automation[bot];312213894+evergine-bindings-automation[bot]@users.noreply.github.com;evergine-bindings-automation[bot]",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/RenderDoc.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "b34bc8978b86954280aff3c68e50210288e1b112",
+          "committed_at": "2026-08-03T08:39:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -61,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@34c1fd0511086f987615f62836ef84040c193321\n+source: EvergineTeam/Evergine.Bindings@c6cb3217e05c978d287831bef05895075c263dfa\n ---\n \n # CI Doctor",
+          "snapshot_ref": "b34bc8978b86954280aff3c68e50210288e1b112",
+          "snapshot_blob_sha": "0cdf3f4af4b4b2493cfed26e34be51f04e099e72",
+          "snapshot_file": "snapshots/RenderDoc.NET__EvergineTeam__b34bc8978b86954280aff3c68e50210288e1b112__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/RenderDoc.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"RenderDoc.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/RenderDoc.NET/blob/8c6ab674ae455e7fa01e776820335aff6740136d/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/RenderDoc.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "8c6ab674ae455e7fa01e776820335aff6740136d",
+      "authored_at": "2026-08-03T16:41:53Z",
+      "committed_at": "2026-08-03T16:41:53Z",
+      "author_name": "evergine-bindings-automation[bot]",
+      "author_email": "312213894+evergine-bindings-automation[bot]@users.noreply.github.com",
+      "author_login": "evergine-bindings-automation[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to the current toolbox release (#18)\n\nRepins the installed agentic workflows from\nc6cb3217e05c978d287831bef05895075c263dfa to\nd70d06b5525a011b293f81d5de14fd329eb36832 and recompiles.\n\nCo-authored-by: jcant0n <1783366+jcant0n@users.noreply.github.com>",
+      "parent_shas": [
+        "bceb864a0717a248c4ff7647017f3799c87fa5c5"
+      ],
+      "tree_sha": "3683323578f7002434be3af0cc5fffe2ea53613e",
+      "html_url": "https://github.com/EvergineTeam/RenderDoc.NET/commit/8c6ab674ae455e7fa01e776820335aff6740136d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:evergine-bindings-automation[bot];312213894+evergine-bindings-automation[bot]@users.noreply.github.com;evergine-bindings-automation[bot]",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/RenderDoc.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/RenderDoc.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "8c6ab674ae455e7fa01e776820335aff6740136d",
+          "committed_at": "2026-08-03T16:41:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -61,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@c6cb3217e05c978d287831bef05895075c263dfa\n+source: EvergineTeam/Evergine.Bindings@d70d06b5525a011b293f81d5de14fd329eb36832\n ---\n \n # CI Doctor",
+          "snapshot_ref": "8c6ab674ae455e7fa01e776820335aff6740136d",
+          "snapshot_blob_sha": "6db3a244042e2362d5e7add32ca91b92d8a382a7",
+          "snapshot_file": "snapshots/RenderDoc.NET__EvergineTeam__8c6ab674ae455e7fa01e776820335aff6740136d__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/RenderDoc.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"RenderDoc.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/RenderDoc.NET/blob/8c6ab674ae455e7fa01e776820335aff6740136d/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/agentics:workflows/doc-updater.md",
+    "source_full_name": "githubnext/agentics",
+    "source_owner": "githubnext",
+    "source_repo": "agentics",
+    "md_path": "workflows/doc-updater.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/githubnext/agentics/blob/HEAD/workflows/doc-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "baizhiheizi/mixin_bot",
+      "generated_owner": "baizhiheizi",
+      "generated_repo": "mixin_bot",
+      "generated_workflow_path": ".github/workflows/doc-updater.lock.yml",
+      "generated_workflow_file": "doc-updater.lock.yml",
+      "generated_html_url": "https://github.com/baizhiheizi/mixin_bot/blob/58b5f65e957b0c5f4d2b50aa8a78f4d37ab7756c/.github/workflows/doc-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:49:01+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/agentics:workflows/doc-updater.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/doc-updater.md",
+      "commit_sha": "497230d3867fe453aae74b15d06178d45a39fcce",
+      "authored_at": "2026-05-08T20:56:58Z",
+      "committed_at": "2026-05-08T20:56:58Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@users.noreply.github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Revamp and rename some of the agentics (#329)\n\n* rename to rmove daily- prefixes and add cutoffs\n\n* rename to rmove daily- prefixes and add cutoffs\n\n* update workflows",
+      "parent_shas": [
+        "14a596a48c351ab5db8576c698ced7fcaf71078c"
+      ],
+      "tree_sha": "cc9b2270135fce6d6b51f55ae41616e8482e2b3b",
+      "html_url": "https://github.com/githubnext/agentics/commit/497230d3867fe453aae74b15d06178d45a39fcce",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/doc-updater.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/doc-updater.md",
+          "commit_sha": "497230d3867fe453aae74b15d06178d45a39fcce",
+          "committed_at": "2026-05-08T20:56:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 197,
+          "file_deletions": 0,
+          "file_changes": 197,
+          "file_patch": "@@ -0,0 +1,197 @@\n+---\n+name: Documentation Updater\n+description: Automatically reviews and updates documentation based on recent code changes\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+  permissions:\n+    pull-requests: read\n+  steps:\n+    - id: check\n+      run: |\n+        MAX_OPEN_PRS=8\n+        if [[ \"${{ github.event_name }}\" != \"schedule\" ]]; then exit 0; fi\n+        COUNT=$(gh pr list --repo ${{ github.repository }} --state open --search 'in:title \"[docs]\"' --json number --jq 'length')\n+        [[ \"$COUNT\" -lt \"$MAX_OPEN_PRS\" ]]\n+      # exits 0 if not scheduled or <MAX_OPEN_PRS open PRs, 1 if ≥MAX_OPEN_PRS\n+\n+if: needs.pre_activation.outputs.check_result == 'success'\n+\n+network:\n+  allowed:\n+  - defaults\n+  - dotnet\n+  - node\n+  - python\n+  - rust\n+  - java\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  edit:\n+  bash: true\n+\n+timeout-minutes: 30\n+\n+safe-outputs:\n+  create-pull-request:\n+    expires: 2d\n+    title-prefix: \"[docs] \"\n+    labels: [documentation, automation]\n+    draft: false\n+    protected-files: fallback-to-issue\n+\n+---\n+\n+# Documentation Updater\n+\n+You are an AI documentation agent that automatically updates project documentation based on recent code changes and merged pull requests.\n+\n+## Your Mission\n+\n+Scan the repository for merged pull requests and code changes from the last 24 hours, identify new features or changes that should be documented, and update the documentation accordingly.\n+\n+## Task Steps\n+\n+### 1. Scan Recent Activity (Last 24 Hours)\n+\n+First, search for merged pull requests from the last 24 hours.\n+\n+Use the GitHub tools to:\n+- Calculate yesterday's date: `date -u -d \"1 day ago\" +%Y-%m-%d`\n+- Search for pull requests merged in the last 24 hours using `search_pull_requests` with a query like: `repo:${{ github.repository }} is:pr is:merged merged:>=YYYY-MM-DD` (replace YYYY-MM-DD with yesterday's date)\n+- Get details of each merged PR using `pull_request_read`\n+- Review commits from the last 24 hours using `list_commits`\n+- Get detailed commit information using `get_commit` for significant changes\n+\n+### 2. Analyze Changes\n+\n+For each merged PR and commit, analyze:\n+\n+- **Features Added**: New functionality, commands, options, tools, or capabilities\n+- **Features Removed**: Deprecated or removed functionality\n+- **Features Modified**: Changed behavior, updated APIs, or modified interfaces\n+- **Breaking Changes**: Any changes that affect existing users\n+\n+Create a summary of changes that should be documented.\n+\n+### 3. Identify Documentation Location\n+\n+Determine where documentation is located in this repository:\n+- Check for `docs/` directory\n+- Check for `README.md` files\n+- Check for `*.md` files in root or subdirectories\n+- Look for documentation conventions in the repository\n+\n+Use bash commands to explore documentation structure:\n+\n+```bash\n+# Find all markdown files\n+find . -name \"*.md\" -type f | head -20\n+\n+# Check for docs directory\n+ls -la docs/ 2>/dev/null || echo \"No docs directory found\"\n+```\n+\n+### 4. Identify Documentation Gaps\n+\n+Review the existing documentation:\n+\n+- Check if new features are already documented\n+- Identify which documentation files need updates\n+- Determine the appropriate location for new content\n+- Find the best section or file for each feature\n+\n+### 5. Update Documentation\n+\n+For each missing or incomplete feature documentation:\n+\n+1. **Determine the correct file** based on the feature type and repository structure\n+2. **Follow existing documentation style**:\n+   - Match the tone and voice of existing docs\n+   - Use similar heading structure\n+   - Follow the same formatting conventions\n+   - Use similar examples\n+   - Match the level of detail\n+\n+3. **Update the appropriate file(s)** using the edit tool:\n+   - Add new sections for new features\n+   - Update existing sections for modified features\n+   - Add deprecation notices for removed features\n+   - Include code examples where helpful\n+   - Add links to related features or documentation\n+\n+4. **Maintain consistency** with existing documentation\n+\n+### 6. Create Pull Request\n+\n+If you made any documentation changes:\n+\n+1. **Call the safe-outputs create-pull-request tool** to create a PR\n+2. **Include in the PR description**:\n+   - List of features documented\n+   - Summary of changes made\n+   - Links to relevant merged PRs that triggered the updates\n+   - Any notes about features that need further review\n+\n+**PR Title Format**: `[docs] Update documentation for features from [date]`\n+\n+**PR Description Template**:\n+```markdown\n+## Documentation Updates - [Date]\n+\n+This PR updates the documentation based on features merged in the last 24 hours.\n+\n+### Features Documented\n+\n+- Feature 1 (from #PR_NUMBER)\n+- Feature 2 (from #PR_NUMBER)\n+\n+### Changes Made\n+\n+- Updated `path/to/file.md` to document Feature 1\n+- Added new section in `path/to/file.md` for Feature 2\n+\n+### Merged PRs Referenced\n+\n+- #PR_NUMBER - Brief description\n+- #PR_NUMBER - Brief description\n+\n+### Notes\n+\n+[Any additional notes or features that need manual review]\n+```\n+\n+### 7. Handle Edge Cases\n+\n+- **No recent changes**: If there are no merged PRs in the last 24 hours, exit gracefully without creating a PR\n+- **Already documented**: If all features are already documented, exit gracefully\n+- **Unclear features**: If a feature is complex and needs human review, note it in the PR description but include basic documentation\n+- **No documentation directory**: If there's no obvious documentation location, document in README.md or suggest creating a docs directory\n+\n+## Guidelines\n+\n+- **Be Thorough**: Review all merged PRs and significant commits\n+- **Be Accurate**: Ensure documentation accurately reflects the code changes\n+- **Follow Existing Style**: Match the repository's documentation conventions\n+- **Be Selective**: Only document features that affect users (skip internal refactoring unless it's significant)\n+- **Be Clear**: Write clear, concise documentation that helps users\n+- **Link References**: Include links to relevant PRs and issues where appropriate\n+- **Test Understanding**: If unsure about a feature, review the code changes in detail\n+\n+## Important Notes\n+\n+- You have access to the edit tool to modify documentation files\n+- You have access to GitHub tools to search and review code changes\n+- You have access to bash commands to explore the documentation structure\n+- The safe-outputs create-pull-request will automatically create a PR with your changes\n+- Focus on user-facing features and changes that affect the developer experience\n+- Respect the repository's existing documentation structure and style\n+\n+Good luck! Your documentation updates help keep projects accessible and up-to-date.",
+          "snapshot_ref": "497230d3867fe453aae74b15d06178d45a39fcce",
+          "snapshot_blob_sha": "3ac7fc6a9a3c9ae36ecb426dae3c511a5c30de93",
+          "snapshot_file": "snapshots/agentics__githubnext__497230d3867fe453aae74b15d06178d45a39fcce__doc-updater.md",
+          "snapshot_bytes": 6583,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/mixin_bot\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"mixin_bot\",\"generated_workflow_path\":\".github/workflows/doc-updater.lock.yml\",\"generated_workflow_file\":\"doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/mixin_bot/blob/58b5f65e957b0c5f4d2b50aa8a78f4d37ab7756c/.github/workflows/doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/doc-updater.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/doc-updater.md",
+      "commit_sha": "904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+      "authored_at": "2026-05-19T16:27:35Z",
+      "committed_at": "2026-05-19T16:27:35Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "fix workflows",
+      "parent_shas": [
+        "94ec5db57374c5b04a4b8eef8b4413f9af44d63f"
+      ],
+      "tree_sha": "a2c3d3424c13f3cc4a9f170ab7d5ccd8118fab28",
+      "html_url": "https://github.com/githubnext/agentics/commit/904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/doc-updater.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/doc-updater.md",
+          "commit_sha": "904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+          "committed_at": "2026-05-19T16:27:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -10,8 +10,8 @@ on:\n     - id: check\n       run: |\n         MAX_OPEN_PRS=8\n-        if [[ \"${{ github.event_name }}\" != \"schedule\" ]]; then exit 0; fi\n-        COUNT=$(gh pr list --repo ${{ github.repository }} --state open --search 'in:title \"[docs]\"' --json number --jq 'length')\n+        if [[ \"$GITHUB_EVENT_NAME\" != \"schedule\" ]]; then exit 0; fi\n+        COUNT=$(gh pr list --repo \"$GITHUB_REPOSITORY\" --state open --search 'in:title \"[docs]\"' --json number --jq 'length')\n         [[ \"$COUNT\" -lt \"$MAX_OPEN_PRS\" ]]\n       # exits 0 if not scheduled or <MAX_OPEN_PRS open PRs, 1 if ≥MAX_OPEN_PRS\n ",
+          "snapshot_ref": "904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+          "snapshot_blob_sha": "933f89e40f335c6eebed4b3fbac977b01f0af3c0",
+          "snapshot_file": "snapshots/agentics__githubnext__904a5ee3f8bc2ca527b8019fc9a0b77a3825c399__doc-updater.md",
+          "snapshot_bytes": 6573,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/mixin_bot\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"mixin_bot\",\"generated_workflow_path\":\".github/workflows/doc-updater.lock.yml\",\"generated_workflow_file\":\"doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/mixin_bot/blob/58b5f65e957b0c5f4d2b50aa8a78f4d37ab7756c/.github/workflows/doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/doc-updater.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/doc-updater.md",
+      "commit_sha": "5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+      "authored_at": "2026-07-29T14:02:29Z",
+      "committed_at": "2026-07-29T14:02:29Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update workflows",
+      "parent_shas": [
+        "1c6668b751c51af8571f01204ceffb19362e0f66"
+      ],
+      "tree_sha": "0553f96fb70291e2073b771fca79db49dd31d1e8",
+      "html_url": "https://github.com/githubnext/agentics/commit/5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/doc-updater.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/doc-updater.md",
+          "commit_sha": "5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+          "committed_at": "2026-07-29T14:02:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -8,6 +8,8 @@ on:\n     pull-requests: read\n   steps:\n     - id: check\n+      env: \n+        GH_TOKEN: ${{ github.token }}\n       run: |\n         MAX_OPEN_PRS=8\n         if [[ \"$GITHUB_EVENT_NAME\" != \"schedule\" ]]; then exit 0; fi",
+          "snapshot_ref": "5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+          "snapshot_blob_sha": "b5f2e8f0866c99bd3a250ba13dc1da9ea382ac76",
+          "snapshot_file": "snapshots/agentics__githubnext__5e9180a13d27ede1ba730b4bbb674eaabb57b404__doc-updater.md",
+          "snapshot_bytes": 6623,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/mixin_bot\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"mixin_bot\",\"generated_workflow_path\":\".github/workflows/doc-updater.lock.yml\",\"generated_workflow_file\":\"doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/mixin_bot/blob/58b5f65e957b0c5f4d2b50aa8a78f4d37ab7756c/.github/workflows/doc-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+    "source_full_name": "adoptium/adoptium",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium",
+    "md_path": ".github/workflows/quarterly-report-deterministic.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium/blob/HEAD/.github/workflows/quarterly-report-deterministic.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium",
+      "generated_workflow_path": ".github/workflows/quarterly-report-deterministic.lock.yml",
+      "generated_workflow_file": "quarterly-report-deterministic.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/quarterly-report-deterministic.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:24:33+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/quarterly-report-deterministic.md",
+      "commit_sha": "bba66f588444693d4137fb7a3c2343e27084873d",
+      "authored_at": "2026-06-30T13:04:48Z",
+      "committed_at": "2026-06-30T13:04:48Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Add deterministic alternative to quarterly-report workflow",
+      "parent_shas": [
+        "c911587414f5c2eb5b4dc4bf8eac9b03223eafde"
+      ],
+      "tree_sha": "f30b43baa7906744a6fa4d58049b451944abe618",
+      "html_url": "https://github.com/adoptium/adoptium/commit/bba66f588444693d4137fb7a3c2343e27084873d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/quarterly-report-deterministic.md",
+          "commit_sha": "bba66f588444693d4137fb7a3c2343e27084873d",
+          "committed_at": "2026-06-30T13:04:48Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 86,
+          "file_deletions": 0,
+          "file_changes": 86,
+          "file_patch": "@@ -0,0 +1,86 @@\n+---\n+description: Quarterly contribution impact report for the adoptium org. Data is fetched and aggregated deterministically; the agent only ranks and writes.\n+on:\n+  schedule:\n+    - cron: \"0 9 * * 1\"\n+  workflow_dispatch:\n+engine:\n+  id: copilot\n+  model: gpt-4o\n+timeout-minutes: 30\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+network:\n+  allowed:\n+    - defaults\n+steps:\n+  - name: Fetch and aggregate quarterly contribution data\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent\n+      SINCE=$(date -u -d '90 days ago' '+%Y-%m-%d')\n+      echo \"Window start: $SINCE\"\n+\n+      gh api -X GET search/issues \\\n+        -f q=\"org:adoptium is:pr is:merged merged:>=$SINCE\" \\\n+        -f per_page=100 --paginate \\\n+        --jq '.items[] | {number, title, user: .user.login, repo: (.repository_url | sub(\"https://api.github.com/repos/\"; \"\")), merged: .pull_request.merged_at}' \\\n+        | jq -s '.' > /tmp/gh-aw/agent/merged-prs.json\n+\n+      gh api -X GET search/issues \\\n+        -f q=\"org:adoptium is:issue is:closed closed:>=$SINCE\" \\\n+        -f per_page=100 --paginate \\\n+        --jq '.items[] | {number, title, user: .user.login, repo: (.repository_url | sub(\"https://api.github.com/repos/\"; \"\"))}' \\\n+        | jq -s '.' > /tmp/gh-aw/agent/closed-issues.json\n+\n+      jq -n \\\n+        --slurpfile prs /tmp/gh-aw/agent/merged-prs.json \\\n+        --slurpfile iss /tmp/gh-aw/agent/closed-issues.json \\\n+        '{\n+          window_start: \"'\"$SINCE\"'\",\n+          total_merged_prs: ($prs[0] | length),\n+          total_closed_issues: ($iss[0] | length),\n+          repos_touched: ([$prs[0][].repo] | unique | length),\n+          prs_by_repo: ([$prs[0][].repo] | group_by(.) | map({repo: .[0], count: length}) | sort_by(-.count)),\n+          contributors: ([$prs[0][].user] | group_by(.) | map({user: .[0], merged_prs: length}) | sort_by(-.merged_prs))\n+        }' > /tmp/gh-aw/agent/summary.json\n+\n+      echo \"=== summary.json ===\"\n+      cat /tmp/gh-aw/agent/summary.json\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[quarterly-impact] \"\n+    labels: [report, quarterly-impact]\n+---\n+\n+# Quarterly Contribution Impact Report\n+\n+All GitHub data has already been fetched and aggregated for you before this step. Do NOT call any GitHub tools or shell commands to fetch data — everything you need is on disk.\n+\n+## Pre-fetched data\n+- `/tmp/gh-aw/agent/summary.json` — pre-computed aggregates: totals, PRs grouped by repository, and contributors ranked by merged-PR count. Read this first.\n+- `/tmp/gh-aw/agent/merged-prs.json` — the full list of merged PRs (number, title, author, repo) for detail in the highlights.\n+- `/tmp/gh-aw/agent/closed-issues.json` — closed issues over the window.\n+\n+## Your task\n+Using only the files above, write a concise quarterly contribution impact report and create exactly one GitHub issue in this repository.\n+\n+The contributors in `summary.json` are already ranked by merged-PR count. Treat that count as the base signal, but you may adjust the narrative ranking using PR titles in `merged-prs.json` where a contributor's work is clearly higher-impact. State your reasoning briefly.\n+\n+## The issue must contain\n+- A header summary: window covered, total merged PRs, total closed issues, and number of distinct repositories touched.\n+- A ranked list of the top contributors by estimated impact, each with their merged-PR count and a one-line justification.\n+- A \"Top 10 contributions\" highlight section drawn from `merged-prs.json`, chosen for apparent impact based on titles.\n+- An \"Activity by repository\" section from `prs_by_repo`, listing the most active repositories.\n+- Suggested next steps or items needing maintainer attention for the next quarter.\n+\n+## Constraints\n+- Create exactly one issue.\n+- Do not fetch any additional data; rank and summarize only what is on disk.\n+- Impact scoring is heuristic; flag anything that may warrant human review.\n+- Keep it concise and skimmable.\n\\ No newline at end of file",
+          "snapshot_ref": "bba66f588444693d4137fb7a3c2343e27084873d",
+          "snapshot_blob_sha": "401120a8f8dada03434aa92344714d38231e1ed1",
+          "snapshot_file": "snapshots/adoptium__adoptium__bba66f588444693d4137fb7a3c2343e27084873d__quarterly-report-deterministic.md",
+          "snapshot_bytes": 3995,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/quarterly-report-deterministic.lock.yml\",\"generated_workflow_file\":\"quarterly-report-deterministic.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/quarterly-report-deterministic.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/quarterly-report-deterministic.md",
+      "commit_sha": "98f5768b2373ad14b552acd701342aed29eeadb1",
+      "authored_at": "2026-07-02T07:42:24Z",
+      "committed_at": "2026-07-02T07:42:24Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Remove unsupported gpt-4o model pin from quarterly report workflows\n\nThe Copilot API classifies gpt-4o as a utility model with a restrictive\nrate limit, and it is not in the supported agent model catalog, so runs\nfail with 429 errors once the quota is consumed. Drop the explicit pin\nand let the engine use its default supported model (overridable via the\nGH_AW_MODEL_AGENT_COPILOT / GH_AW_DEFAULT_MODEL_COPILOT repo variables).\n\nLock files recompiled with gh aw compile.",
+      "parent_shas": [
+        "3e31b09ceff63e9a7298f0ca3b070318d4969ebf"
+      ],
+      "tree_sha": "b4b55134cca22b50a838894c5e97f07d7b24ba89",
+      "html_url": "https://github.com/adoptium/adoptium/commit/98f5768b2373ad14b552acd701342aed29eeadb1",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/quarterly-report-deterministic.md",
+          "commit_sha": "98f5768b2373ad14b552acd701342aed29eeadb1",
+          "committed_at": "2026-07-02T07:42:24Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -6,7 +6,6 @@ on:\n   workflow_dispatch:\n engine:\n   id: copilot\n-  model: gpt-4o\n timeout-minutes: 30\n permissions:\n   contents: read",
+          "snapshot_ref": "98f5768b2373ad14b552acd701342aed29eeadb1",
+          "snapshot_blob_sha": "546f13b43282af80602125aa7fc17ab5b071505c",
+          "snapshot_file": "snapshots/adoptium__adoptium__98f5768b2373ad14b552acd701342aed29eeadb1__quarterly-report-deterministic.md",
+          "snapshot_bytes": 3979,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/quarterly-report-deterministic.lock.yml\",\"generated_workflow_file\":\"quarterly-report-deterministic.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/quarterly-report-deterministic.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/quarterly-report-deterministic.md",
+      "commit_sha": "f87bff02ca49909e92996bf6f67d8b18e0569995",
+      "authored_at": "2026-07-12T18:29:37Z",
+      "committed_at": "2026-07-12T18:54:50Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Remove duplicate quarterly workflows and harden the deterministic report\n\nDelete quarterly-report, which duplicates quarterly-report-deterministic\nwith a non-deterministic data path, and quarterly-issue-burn-down, which\nduplicates issue-burn-down.\n\nUpdate quarterly-report-deterministic:\n- Run on a quarterly schedule instead of weekly\n- Accept optional start_date/end_date inputs on manual dispatch, with\n  validation\n- Report exact totals from the search API and flag truncation when\n  pagination caps detail at 1000 results\n- Retry searches that return an empty page to avoid zero-count reports\n- Attribute Copilot-authored PRs to the human who guided them",
+      "parent_shas": [
+        "67749afd8e8e05221bf7b50f09baa5b31686bbcd"
+      ],
+      "tree_sha": "55bfee5a944879e153b15e44ba12ea4bc1c354f9",
+      "html_url": "https://github.com/adoptium/adoptium/commit/f87bff02ca49909e92996bf6f67d8b18e0569995",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/quarterly-report-deterministic.md",
+          "commit_sha": "f87bff02ca49909e92996bf6f67d8b18e0569995",
+          "committed_at": "2026-07-12T18:54:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 83,
+          "file_deletions": 19,
+          "file_changes": 102,
+          "file_patch": "@@ -2,8 +2,17 @@\n description: Quarterly contribution impact report for the adoptium org. Data is fetched and aggregated deterministically; the agent only ranks and writes.\n on:\n   schedule:\n-    - cron: \"0 9 * * 1\"\n+    - cron: \"0 9 1 */3 *\"\n   workflow_dispatch:\n+    inputs:\n+      start_date:\n+        description: \"Report window start date (YYYY-MM-DD). Defaults to 90 days ago.\"\n+        required: false\n+        type: string\n+      end_date:\n+        description: \"Report window end date (YYYY-MM-DD). Defaults to today (UTC).\"\n+        required: false\n+        type: string\n engine:\n   id: copilot\n timeout-minutes: 30\n@@ -19,34 +28,87 @@ steps:\n   - name: Fetch and aggregate quarterly contribution data\n     env:\n       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+      INPUT_START_DATE: ${{ inputs.start_date }}\n+      INPUT_END_DATE: ${{ inputs.end_date }}\n     run: |\n       set -euo pipefail\n       mkdir -p /tmp/gh-aw/agent\n-      SINCE=$(date -u -d '90 days ago' '+%Y-%m-%d')\n-      echo \"Window start: $SINCE\"\n \n-      gh api -X GET search/issues \\\n-        -f q=\"org:adoptium is:pr is:merged merged:>=$SINCE\" \\\n-        -f per_page=100 --paginate \\\n-        --jq '.items[] | {number, title, user: .user.login, repo: (.repository_url | sub(\"https://api.github.com/repos/\"; \"\")), merged: .pull_request.merged_at}' \\\n-        | jq -s '.' > /tmp/gh-aw/agent/merged-prs.json\n+      SINCE=\"${INPUT_START_DATE:-}\"\n+      UNTIL=\"${INPUT_END_DATE:-}\"\n+      [ -n \"$SINCE\" ] || SINCE=$(date -u -d '90 days ago' '+%Y-%m-%d')\n+      [ -n \"$UNTIL\" ] || UNTIL=$(date -u '+%Y-%m-%d')\n+      for d in \"$SINCE\" \"$UNTIL\"; do\n+        echo \"$d\" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' \\\n+          || { echo \"::error::Invalid date '$d' (expected YYYY-MM-DD)\"; exit 1; }\n+      done\n+      [ \"$SINCE\" \\< \"$UNTIL\" ] || [ \"$SINCE\" = \"$UNTIL\" ] \\\n+        || { echo \"::error::start_date ($SINCE) is after end_date ($UNTIL)\"; exit 1; }\n+      echo \"Window: $SINCE..$UNTIL\"\n \n-      gh api -X GET search/issues \\\n-        -f q=\"org:adoptium is:issue is:closed closed:>=$SINCE\" \\\n-        -f per_page=100 --paginate \\\n-        --jq '.items[] | {number, title, user: .user.login, repo: (.repository_url | sub(\"https://api.github.com/repos/\"; \"\"))}' \\\n-        | jq -s '.' > /tmp/gh-aw/agent/closed-issues.json\n+      MERGED_Q=\"org:adoptium is:pr is:merged merged:$SINCE..$UNTIL\"\n+      ISSUES_Q=\"org:adoptium is:issue is:closed closed:$SINCE..$UNTIL\"\n+      MERGED_TOTAL=$(gh api -X GET search/issues -f q=\"$MERGED_Q\" -f per_page=1 --jq .total_count)\n+      ISSUES_TOTAL=$(gh api -X GET search/issues -f q=\"$ISSUES_Q\" -f per_page=1 --jq .total_count)\n+      echo \"Expected: $MERGED_TOTAL merged PRs, $ISSUES_TOTAL closed issues\"\n+\n+      # GitHub search occasionally returns an empty page with HTTP 200; retry rather\n+      # than silently producing a zero-count report. Pagination caps at 1000 results.\n+      fetch_search() { # $1=query $2=jq projection $3=outfile $4=expected total\n+        local attempt n\n+        for attempt in 1 2 3; do\n+          gh api -X GET search/issues -f q=\"$1\" -f per_page=100 --paginate --jq \"$2\" \\\n+            | jq -s '.' > \"$3\"\n+          n=$(jq length \"$3\")\n+          if [ \"$n\" -gt 0 ] || [ \"$4\" -eq 0 ]; then return 0; fi\n+          echo \"attempt $attempt: got 0 of $4 results for '$1'; retrying in 10s\"\n+          sleep 10\n+        done\n+        echo \"::error::search returned no results for '$1' (expected $4)\"\n+        return 1\n+      }\n+\n+      fetch_search \"$MERGED_Q\" \\\n+        '.items[] | {number, title, user: .user.login, repo: (.repository_url | sub(\"https://api.github.com/repos/\"; \"\")), merged: .pull_request.merged_at}' \\\n+        /tmp/gh-aw/agent/merged-prs.json \"$MERGED_TOTAL\"\n+\n+      fetch_search \"$ISSUES_Q\" \\\n+        '.items[] | {number, title, user: .user.login, repo: (.repository_url | sub(\"https://api.github.com/repos/\"; \"\"))}' \\\n+        /tmp/gh-aw/agent/closed-issues.json \"$ISSUES_TOTAL\"\n+\n+      # Attribute Copilot-authored PRs to the guiding human (first non-Copilot assignee)\n+      jq -c '.[] | select(.user | test(\"^(Copilot|copilot-swe-agent(\\\\[bot\\\\])?)$\"))' /tmp/gh-aw/agent/merged-prs.json \\\n+        | while IFS= read -r pr; do\n+            repo=$(echo \"$pr\" | jq -r .repo)\n+            num=$(echo \"$pr\" | jq -r .number)\n+            guide=$(gh api \"repos/$repo/issues/$num\" \\\n+              --jq '[.assignees[].login | select(test(\"copilot\"; \"i\") | not)] | first // \"unknown\"' \\\n+              2>/dev/null || echo \"unknown\")\n+            echo \"$pr\" | jq --arg g \"$guide\" '. + {on_behalf_of: $g}'\n+          done | jq -s '.' > /tmp/gh-aw/agent/copilot-prs.json\n \n       jq -n \\\n+        --arg since \"$SINCE\" \\\n+        --arg until \"$UNTIL\" \\\n+        --argjson merged_total \"$MERGED_TOTAL\" \\\n+        --argjson issues_total \"$ISSUES_TOTAL\" \\\n         --slurpfile prs /tmp/gh-aw/agent/merged-prs.json \\\n         --slurpfile iss /tmp/gh-aw/agent/closed-issues.json \\\n+        --slurpfile cp /tmp/gh-aw/agent/copilot-prs.json \\\n         '{\n-          window_start: \"'\"$SINCE\"'\",\n-          total_merged_prs: ($prs[0] | length),\n-          total_closed_issues: ($iss[0] | length),\n+          window_start: $since,\n+          window_end: $until,\n+          total_merged_prs: $merged_total,\n+          total_closed_issues: $issues_total,\n+          fetched_merged_prs: ($prs[0] | length),\n+          truncated: (($prs[0] | length) < $merged_total or ($iss[0] | length) < $issues_total),\n           repos_touched: ([$prs[0][].repo] | unique | length),\n           prs_by_repo: ([$prs[0][].repo] | group_by(.) | map({repo: .[0], count: length}) | sort_by(-.count)),\n-          contributors: ([$prs[0][].user] | group_by(.) | map({user: .[0], merged_prs: length}) | sort_by(-.merged_prs))\n+          contributors: ([$prs[0][].user] | group_by(.) | map({user: .[0], merged_prs: length}) | sort_by(-.merged_prs)),\n+          copilot: {\n+            total_copilot_prs: ($cp[0] | length),\n+            by_guide: ([$cp[0][].on_behalf_of] | group_by(.) | map({guide: .[0], copilot_prs: length}) | sort_by(-.copilot_prs))\n+          }\n         }' > /tmp/gh-aw/agent/summary.json\n \n       echo \"=== summary.json ===\"\n@@ -62,17 +124,19 @@ safe-outputs:\n All GitHub data has already been fetched and aggregated for you before this step. Do NOT call any GitHub tools or shell commands to fetch data — everything you need is on disk.\n \n ## Pre-fetched data\n-- `/tmp/gh-aw/agent/summary.json` — pre-computed aggregates: totals, PRs grouped by repository, and contributors ranked by merged-PR count. Read this first.\n+- `/tmp/gh-aw/agent/summary.json` — pre-computed aggregates: the report window (`window_start`/`window_end`), totals, PRs grouped by repository, contributors ranked by merged-PR count, and Copilot PR counts grouped by the human who guided them. Read this first.\n - `/tmp/gh-aw/agent/merged-prs.json` — the full list of merged PRs (number, title, author, repo) for detail in the highlights.\n - `/tmp/gh-aw/agent/closed-issues.json` — closed issues over the window.\n+- `/tmp/gh-aw/agent/copilot-prs.json` — merged PRs authored by Copilot, each with `on_behalf_of`: the human who guided that work (`\"unknown\"` if no human assignee was found).\n \n ## Your task\n Using only the files above, write a concise quarterly contribution impact report and create exactly one GitHub issue in this repository.\n \n The contributors in `summary.json` are already ranked by merged-PR count. Treat that count as the base signal, but you may adjust the narrative ranking using PR titles in `merged-prs.json` where a contributor's work is clearly higher-impact. State your reasoning briefly.\n \n ## The issue must contain\n-- A header summary: window covered, total merged PRs, total closed issues, and number of distinct repositories touched.\n+- A header summary: the exact window covered (`window_start` to `window_end`), total merged PRs, total closed issues, and number of distinct repositories touched. If `truncated` is true in `summary.json`, note that the totals are exact but per-contributor and per-repo detail covers only the first `fetched_merged_prs` results (a GitHub search API limit).\n+- A \"Copilot-assisted contributions\" section from `summary.json`'s `copilot.by_guide`: how many Copilot-authored PRs were merged and who guided them, with a line for any attributed to \"unknown\". Omit the section only if there were no Copilot PRs.\n - A ranked list of the top contributors by estimated impact, each with their merged-PR count and a one-line justification.\n - A \"Top 10 contributions\" highlight section drawn from `merged-prs.json`, chosen for apparent impact based on titles.\n - An \"Activity by repository\" section from `prs_by_repo`, listing the most active repositories.",
+          "snapshot_ref": "f87bff02ca49909e92996bf6f67d8b18e0569995",
+          "snapshot_blob_sha": "847aff1c4d40f068b68ef10111854430c1c30513",
+          "snapshot_file": "snapshots/adoptium__adoptium__f87bff02ca49909e92996bf6f67d8b18e0569995__quarterly-report-deterministic.md",
+          "snapshot_bytes": 7835,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/quarterly-report-deterministic.lock.yml\",\"generated_workflow_file\":\"quarterly-report-deterministic.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/quarterly-report-deterministic.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/quarterly-report-deterministic.md",
+      "commit_sha": "fcc9c2d0ee55f5dd8d7f49849c271c917264360e",
+      "authored_at": "2026-07-12T19:50:34Z",
+      "committed_at": "2026-07-12T19:50:34Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Require the report to be delivered via the create_issue safe output\n\nA test run produced the report as plain chat text without calling the\ncreate_issue safe-output tool, so the run ended with no issue created\nand the workflow was flagged as producing no safe outputs. Make the\nprompt explicit that chat output is discarded and the report must be\nsubmitted by calling create_issue.",
+      "parent_shas": [
+        "f87bff02ca49909e92996bf6f67d8b18e0569995"
+      ],
+      "tree_sha": "b674ab23a962e95260ebef6fbf00d1ac80d119ec",
+      "html_url": "https://github.com/adoptium/adoptium/commit/fcc9c2d0ee55f5dd8d7f49849c271c917264360e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/quarterly-report-deterministic.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/quarterly-report-deterministic.md",
+          "commit_sha": "fcc9c2d0ee55f5dd8d7f49849c271c917264360e",
+          "committed_at": "2026-07-12T19:50:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 2,
+          "file_changes": 6,
+          "file_patch": "@@ -130,7 +130,9 @@ All GitHub data has already been fetched and aggregated for you before this step\n - `/tmp/gh-aw/agent/copilot-prs.json` — merged PRs authored by Copilot, each with `on_behalf_of`: the human who guided that work (`\"unknown\"` if no human assignee was found).\n \n ## Your task\n-Using only the files above, write a concise quarterly contribution impact report and create exactly one GitHub issue in this repository.\n+Using only the files above, write a concise quarterly contribution impact report and create exactly one GitHub issue in this repository by calling the `create_issue` safe-output tool with the full report as the issue body.\n+\n+Your chat response is NOT the deliverable and is discarded — the report only exists if you call `create_issue`. Do not print the report as plain text output; do not finish without having called `create_issue`.\n \n The contributors in `summary.json` are already ranked by merged-PR count. Treat that count as the base signal, but you may adjust the narrative ranking using PR titles in `merged-prs.json` where a contributor's work is clearly higher-impact. State your reasoning briefly.\n \n@@ -143,7 +145,7 @@ The contributors in `summary.json` are already ranked by merged-PR count. Treat\n - Suggested next steps or items needing maintainer attention for the next quarter.\n \n ## Constraints\n-- Create exactly one issue.\n+- Create exactly one issue, via the `create_issue` safe-output tool.\n - Do not fetch any additional data; rank and summarize only what is on disk.\n - Impact scoring is heuristic; flag anything that may warrant human review.\n - Keep it concise and skimmable.\n\\ No newline at end of file",
+          "snapshot_ref": "fcc9c2d0ee55f5dd8d7f49849c271c917264360e",
+          "snapshot_blob_sha": "fd22325bef4f969286d2e7057ddeea20fcb1e7f1",
+          "snapshot_file": "snapshots/adoptium__adoptium__fcc9c2d0ee55f5dd8d7f49849c271c917264360e__quarterly-report-deterministic.md",
+          "snapshot_bytes": 8175,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/quarterly-report-deterministic.lock.yml\",\"generated_workflow_file\":\"quarterly-report-deterministic.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/quarterly-report-deterministic.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/specbot-crash-analyzer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/specbot-crash-analyzer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/specbot-crash-analyzer.lock.yml",
+      "generated_workflow_file": "specbot-crash-analyzer.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/specbot-crash-analyzer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:45+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/specbot-crash-analyzer.md",
+      "commit_sha": "eef00e2023d2cb3b20be79f55ac486e47d88c280",
+      "authored_at": "2026-04-02T08:10:56Z",
+      "committed_at": "2026-04-02T08:10:56Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add specbot-crash-analyzer agentic workflow (.md + .lock.yml) (#9198)\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/efdf69c9-8aca-4acc-b780-f3a7769ba116\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "3879e2190a76bbe87bc4dddaba6049ee887d2b60"
+      ],
+      "tree_sha": "0578dc72637d4315cba68b898684e6c9d8da9651",
+      "html_url": "https://github.com/Z3Prover/z3/commit/eef00e2023d2cb3b20be79f55ac486e47d88c280",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/specbot-crash-analyzer.md",
+          "commit_sha": "eef00e2023d2cb3b20be79f55ac486e47d88c280",
+          "committed_at": "2026-04-02T08:10:56Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 236,
+          "file_deletions": 0,
+          "file_changes": 236,
+          "file_patch": "@@ -0,0 +1,236 @@\n+---\n+description: >\n+  Build Z3 in debug mode from the c3 branch, compile and run the specbot tests,\n+  identify root causes for any crashes, and post findings as a GitHub Discussion.\n+\n+on:\n+  workflow_dispatch:\n+\n+timeout-minutes: 120\n+\n+permissions: read-all\n+\n+network: defaults\n+\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [default, discussions]\n+  bash: [\":*\"]\n+  glob: {}\n+  view: {}\n+  edit: {}\n+\n+safe-outputs:\n+  create-discussion:\n+    title-prefix: \"[Specbot] \"\n+    category: \"Agentic Workflows\"\n+    close-older-discussions: true\n+  missing-tool:\n+    create-issue: true\n+  noop:\n+    report-as-issue: false\n+\n+steps:\n+  - name: Checkout c3 branch\n+    uses: actions/checkout@v6.0.2\n+    with:\n+      ref: c3\n+      persist-credentials: false\n+\n+---\n+\n+# Specbot Crash Analyzer\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. You are an expert C/C++ and SMT solver analyst for the Z3 theorem prover\n+repository `${{ github.repository }}`. Your task is to build Z3 in debug mode from the `c3` branch, compile and run\n+the specbot test suite, capture any crashes or assertion failures, diagnose their root causes by reading the\n+relevant source files, and publish a structured findings report as a GitHub Discussion.\n+\n+The repository has already been checked out at the `c3` branch in the pre-step above.\n+\n+## Your Task\n+\n+### 1. Install Build Dependencies\n+\n+Install the tools needed to build Z3 and compile the C test programs:\n+\n+```bash\n+sudo apt-get update -y\n+sudo apt-get install -y cmake ninja-build python3 gcc g++ 2>&1 | tail -5\n+```\n+\n+### 2. Build Z3 in Debug Mode\n+\n+Configure and build Z3 in debug mode. Store the build output in `build/debug`:\n+\n+```bash\n+mkdir -p build/debug\n+cd build/debug\n+cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug ../.. 2>&1 | tail -10\n+ninja 2>&1 | tail -20\n+cd ../..\n+```\n+\n+Verify the build succeeded by checking that `build/debug/libz3.so` (or `build/debug/libz3.a`) exists:\n+\n+```bash\n+ls build/debug/libz3* 2>/dev/null || ls build/debug/*.so* 2>/dev/null || echo \"Library not found\"\n+```\n+\n+If the build fails, capture the last 50 lines of ninja output and include them in the report under a\n+\"Build Failure\" section, then stop.\n+\n+### 3. Compile the Specbot Tests\n+\n+The `specbot/` directory at the root of the repository contains two C test programs:\n+\n+- `specbot/test_specbot_seq.c` — basic specbot invariant tests for the Z3 seq/Nielsen solver\n+- `specbot/test_deeptest_seq.c` — deep-coverage tests targeting under-exercised code paths\n+\n+Compile each test, linking against the debug build of Z3. Use the Z3 public C API header from `src/api/z3.h`:\n+\n+```bash\n+# Compile test_specbot_seq\n+gcc -g -O0 \\\n+    -I src/api \\\n+    specbot/test_specbot_seq.c \\\n+    -L build/debug \\\n+    -lz3 \\\n+    -Wl,-rpath,build/debug \\\n+    -o /tmp/test_specbot_seq \\\n+    2>&1\n+echo \"test_specbot_seq compile exit: $?\"\n+\n+# Compile test_deeptest_seq\n+gcc -g -O0 \\\n+    -I src/api \\\n+    specbot/test_deeptest_seq.c \\\n+    -L build/debug \\\n+    -lz3 \\\n+    -Wl,-rpath,build/debug \\\n+    -o /tmp/test_deeptest_seq \\\n+    2>&1\n+echo \"test_deeptest_seq compile exit: $?\"\n+```\n+\n+If a test fails to compile, include the compiler error in the report and skip running that test.\n+\n+### 4. Run the Tests and Capture Output\n+\n+Run each compiled test binary. Capture stdout and stderr. The test harness prints lines like:\n+\n+- `[TEST] Running <name>` — test started\n+- `[TEST] PASS <name>` — test passed\n+- `[TEST] CRASH <name> (exception 0x...)` — SEH exception caught (Windows only; on Linux the process aborts)\n+- `[TEST] ABORT <name> (caught SIGABRT)` — assertion failure caught via SIGABRT + longjmp\n+\n+On Linux, wrap each run with a timeout and capture the exit code and any signal:\n+\n+```bash\n+LD_LIBRARY_PATH=build/debug timeout 120 /tmp/test_specbot_seq > /tmp/specbot_out.txt 2>&1\n+echo \"specbot exit: $?\"\n+cat /tmp/specbot_out.txt\n+\n+LD_LIBRARY_PATH=build/debug timeout 120 /tmp/test_deeptest_seq > /tmp/deeptest_out.txt 2>&1\n+echo \"deeptest exit: $?\"\n+cat /tmp/deeptest_out.txt\n+```\n+\n+Collect every line that contains `CRASH` or `ABORT` from both output files — these are the crashes to analyze.\n+\n+### 5. Diagnose Each Crash\n+\n+For each crashed test function, perform the following analysis:\n+\n+1. **Identify the test body**: read `specbot/test_specbot_seq.c` or `specbot/test_deeptest_seq.c`\n+   to understand what Z3 API calls the test makes and what invariants it exercises.\n+\n+2. **Find the likely crash site**: the test exercises the Z3 Nielsen/nseq string solver. Relevant source files are:\n+   - `src/smt/seq_solver.h` and `src/smt/seq_solver.cpp` (or nearby files)\n+   - `src/smt/seq_axioms.cpp`, `src/smt/seq_eq_solver.cpp`, `src/smt/seq_regex.cpp`\n+   - `src/math/lp/` for length-arithmetic paths\n+   - `src/api/z3_api.h` for the public API entry points\n+\n+   Use `grep` and `view` to locate assertion macros, `UNREACHABLE()`, `SASSERT`, or `throw` statements\n+   in the code paths exercised by the failing test. Example:\n+   ```bash\n+   grep -rn \"SASSERT\\|UNREACHABLE\\|Z3_CATCH\" src/smt/seq_solver.cpp 2>/dev/null | head -30\n+   ```\n+\n+3. **Hypothesize root cause**: based on the Z3 API calls in the test and the assertion/throw sites in\n+   the solver source, state the most likely root cause. Common categories include:\n+   - Violated invariant (SASSERT/UNREACHABLE hit due to unexpected solver state)\n+   - Use-after-free or dangling reference during push/pop\n+   - Unhandled edge case in Nielsen graph construction\n+   - Missing theory-combination lemma between string length and integer arithmetic\n+\n+4. **Suggest a fix**: propose a minimal, concrete fix — e.g., a guard condition, an additional lemma,\n+   a missing reference-count increment, or a missing case in a switch/match.\n+\n+### 6. Generate the Report\n+\n+After analyzing all crashes, produce a structured GitHub Discussion in the \"Agentic Workflows\" category\n+using `create-discussion`.\n+\n+The discussion body must follow this structure (use `###` and lower for headers):\n+\n+```\n+### Summary\n+\n+- Build: Debug (CMake + Ninja, c3 branch)\n+- Tests compiled: N\n+- Tests run: N  \n+- Tests passed: N\n+- Tests crashed: N\n+- Tests timed out: N\n+\n+### Crash Findings\n+\n+For each crash, one subsection:\n+\n+#### <test function name>\n+\n+**Test file**: `specbot/test_specbot_seq.c` or `specbot/test_deeptest_seq.c`\n+\n+**Observed failure**: ABORT/CRASH — one-line description of what was caught\n+\n+**Root cause hypothesis**: explanation of which assertion or code path was hit and why\n+\n+**Suggested fix**: concrete proposed change (file, function, what to add/change)\n+\n+---\n+\n+### Tests Passed\n+\n+List of test names that passed.\n+\n+<details>\n+<summary><b>Full Test Output</b></summary>\n+\n+Raw stdout/stderr from both test binaries.\n+\n+</details>\n+\n+<details>\n+<summary><b>Build Log</b></summary>\n+\n+Last 30 lines of the ninja build output.\n+\n+</details>\n+```\n+\n+If there are no crashes at all, write a \"No Crashes Found\" summary celebrating that all tests passed,\n+and include the full test output in a collapsible section.\n+\n+Use `mentions: false` behavior — do not mention any GitHub usernames in the report.\n+\n+Format workflow run references as: `[§${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`.\n+\n+## Usage\n+\n+Trigger via **Actions → Specbot Crash Analyzer → Run workflow** on any branch; the pre-step\n+always checks out the `c3` branch where `specbot/test_specbot_seq.c` and\n+`specbot/test_deeptest_seq.c` live. The discussion is posted to the \"Agentic Workflows\" category.",
+          "snapshot_ref": "eef00e2023d2cb3b20be79f55ac486e47d88c280",
+          "snapshot_blob_sha": "af589684d34c4ace9c9dfb4cd1fc293851ecf3ff",
+          "snapshot_file": "snapshots/z3__Z3Prover__eef00e2023d2cb3b20be79f55ac486e47d88c280__specbot-crash-analyzer.md",
+          "snapshot_bytes": 7363,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/specbot-crash-analyzer.lock.yml\",\"generated_workflow_file\":\"specbot-crash-analyzer.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/specbot-crash-analyzer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/specbot-crash-analyzer.md",
+      "commit_sha": "8d7ed66ebfa96bcbfdfc6161765c2ae621225b9f",
+      "authored_at": "2026-04-02T15:48:25Z",
+      "committed_at": "2026-04-02T15:48:25Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Specbot Crash Analyzer: move Z3 build to pre-steps to avoid MCP session timeout (#9200)\n\n* Initial plan\n\n* Fix specbot-crash-analyzer: move build to pre-steps to avoid MCP session timeout\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/add5e714-bc98-44cf-ad6b-5adfbe4668c3\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "eef00e2023d2cb3b20be79f55ac486e47d88c280"
+      ],
+      "tree_sha": "93eb6e37d7a59d195b8d085c8335763671c9a3d8",
+      "html_url": "https://github.com/Z3Prover/z3/commit/8d7ed66ebfa96bcbfdfc6161765c2ae621225b9f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/specbot-crash-analyzer.md",
+          "commit_sha": "8d7ed66ebfa96bcbfdfc6161765c2ae621225b9f",
+          "committed_at": "2026-04-02T15:48:25Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 97,
+          "file_deletions": 84,
+          "file_changes": 181,
+          "file_patch": "@@ -38,110 +38,122 @@ steps:\n       ref: c3\n       persist-credentials: false\n \n+  - name: Install build dependencies\n+    run: |\n+      sudo apt-get update -y\n+      sudo apt-get install -y cmake ninja-build python3 gcc g++ 2>&1 | tail -5\n+\n+  - name: Build Z3 in debug mode\n+    id: build-z3\n+    continue-on-error: true\n+    run: |\n+      mkdir -p build/debug specbot-results\n+      cd build/debug\n+      cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug ../.. 2>&1 | tee ../../specbot-results/cmake.log\n+      ninja 2>&1 | tee ../../specbot-results/build.log\n+      BUILD_EXIT=$?\n+      cd ../..\n+      echo \"build_exit=${BUILD_EXIT}\" >> specbot-results/build-status.txt\n+      ls -la build/debug/libz3* build/debug/*.so* 2>/dev/null >> specbot-results/build-status.txt || echo \"Library not found\" >> specbot-results/build-status.txt\n+      exit $BUILD_EXIT\n+\n+  - name: Compile specbot tests\n+    continue-on-error: true\n+    run: |\n+      mkdir -p specbot-results\n+      gcc -g -O0 \\\n+          -I src/api \\\n+          specbot/test_specbot_seq.c \\\n+          -L build/debug \\\n+          -lz3 \\\n+          -Wl,-rpath,\"${GITHUB_WORKSPACE}/build/debug\" \\\n+          -o specbot-results/test_specbot_seq \\\n+          2>&1 | tee specbot-results/compile_specbot_seq.log\n+      echo \"compile_specbot_seq_exit=$?\" >> specbot-results/compile-status.txt\n+\n+      gcc -g -O0 \\\n+          -I src/api \\\n+          specbot/test_deeptest_seq.c \\\n+          -L build/debug \\\n+          -lz3 \\\n+          -Wl,-rpath,\"${GITHUB_WORKSPACE}/build/debug\" \\\n+          -o specbot-results/test_deeptest_seq \\\n+          2>&1 | tee specbot-results/compile_deeptest_seq.log\n+      echo \"compile_deeptest_seq_exit=$?\" >> specbot-results/compile-status.txt\n+\n+  - name: Run specbot tests\n+    continue-on-error: true\n+    run: |\n+      mkdir -p specbot-results\n+      if [ -f specbot-results/test_specbot_seq ]; then\n+        LD_LIBRARY_PATH=\"${GITHUB_WORKSPACE}/build/debug\" timeout 120 specbot-results/test_specbot_seq > specbot-results/test_specbot_seq.log 2>&1\n+        SPECBOT_EXIT=$?\n+        echo \"specbot_seq_exit=${SPECBOT_EXIT}\" >> specbot-results/test-status.txt\n+      else\n+        echo \"Binary not compiled\" > specbot-results/test_specbot_seq.log\n+        echo \"specbot_seq_exit=127\" >> specbot-results/test-status.txt\n+      fi\n+\n+      if [ -f specbot-results/test_deeptest_seq ]; then\n+        LD_LIBRARY_PATH=\"${GITHUB_WORKSPACE}/build/debug\" timeout 120 specbot-results/test_deeptest_seq > specbot-results/test_deeptest_seq.log 2>&1\n+        DEEPTEST_EXIT=$?\n+        echo \"deeptest_seq_exit=${DEEPTEST_EXIT}\" >> specbot-results/test-status.txt\n+      else\n+        echo \"Binary not compiled\" > specbot-results/test_deeptest_seq.log\n+        echo \"deeptest_seq_exit=127\" >> specbot-results/test-status.txt\n+      fi\n+\n ---\n \n # Specbot Crash Analyzer\n \n ## Job Description\n \n Your name is ${{ github.workflow }}. You are an expert C/C++ and SMT solver analyst for the Z3 theorem prover\n-repository `${{ github.repository }}`. Your task is to build Z3 in debug mode from the `c3` branch, compile and run\n-the specbot test suite, capture any crashes or assertion failures, diagnose their root causes by reading the\n-relevant source files, and publish a structured findings report as a GitHub Discussion.\n+repository `${{ github.repository }}`. The pre-steps above have already built Z3 in debug mode from the `c3`\n+branch, compiled and run the specbot test suite, and saved all output to the `specbot-results/` directory in\n+the workspace (`${{ github.workspace }}/specbot-results/`). Your task is to analyze those results, diagnose\n+any crash root causes by reading the relevant source files, and publish a structured findings report as a\n+GitHub Discussion.\n \n-The repository has already been checked out at the `c3` branch in the pre-step above.\n+**Do not try to build Z3 or run tests yourself.** All build and test output is already in `specbot-results/`.\n \n ## Your Task\n \n-### 1. Install Build Dependencies\n-\n-Install the tools needed to build Z3 and compile the C test programs:\n-\n-```bash\n-sudo apt-get update -y\n-sudo apt-get install -y cmake ninja-build python3 gcc g++ 2>&1 | tail -5\n-```\n-\n-### 2. Build Z3 in Debug Mode\n-\n-Configure and build Z3 in debug mode. Store the build output in `build/debug`:\n-\n-```bash\n-mkdir -p build/debug\n-cd build/debug\n-cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug ../.. 2>&1 | tail -10\n-ninja 2>&1 | tail -20\n-cd ../..\n-```\n+### 1. Read the Pre-Generated Results\n \n-Verify the build succeeded by checking that `build/debug/libz3.so` (or `build/debug/libz3.a`) exists:\n+All build and test outputs are in `specbot-results/` (relative to the workspace root). Read each file:\n \n ```bash\n-ls build/debug/libz3* 2>/dev/null || ls build/debug/*.so* 2>/dev/null || echo \"Library not found\"\n-```\n-\n-If the build fails, capture the last 50 lines of ninja output and include them in the report under a\n-\"Build Failure\" section, then stop.\n+# Build status\n+cat specbot-results/build-status.txt 2>/dev/null || echo \"No build status\"\n \n-### 3. Compile the Specbot Tests\n+# Compile status\n+cat specbot-results/compile-status.txt 2>/dev/null || echo \"No compile status\"\n \n-The `specbot/` directory at the root of the repository contains two C test programs:\n+# Test status\n+cat specbot-results/test-status.txt 2>/dev/null || echo \"No test status\"\n \n-- `specbot/test_specbot_seq.c` — basic specbot invariant tests for the Z3 seq/Nielsen solver\n-- `specbot/test_deeptest_seq.c` — deep-coverage tests targeting under-exercised code paths\n+# Test output from test_specbot_seq\n+cat specbot-results/test_specbot_seq.log 2>/dev/null || echo \"No test_specbot_seq output\"\n \n-Compile each test, linking against the debug build of Z3. Use the Z3 public C API header from `src/api/z3.h`:\n+# Test output from test_deeptest_seq\n+cat specbot-results/test_deeptest_seq.log 2>/dev/null || echo \"No test_deeptest_seq output\"\n \n-```bash\n-# Compile test_specbot_seq\n-gcc -g -O0 \\\n-    -I src/api \\\n-    specbot/test_specbot_seq.c \\\n-    -L build/debug \\\n-    -lz3 \\\n-    -Wl,-rpath,build/debug \\\n-    -o /tmp/test_specbot_seq \\\n-    2>&1\n-echo \"test_specbot_seq compile exit: $?\"\n-\n-# Compile test_deeptest_seq\n-gcc -g -O0 \\\n-    -I src/api \\\n-    specbot/test_deeptest_seq.c \\\n-    -L build/debug \\\n-    -lz3 \\\n-    -Wl,-rpath,build/debug \\\n-    -o /tmp/test_deeptest_seq \\\n-    2>&1\n-echo \"test_deeptest_seq compile exit: $?\"\n+# Last 30 lines of the build log\n+tail -30 specbot-results/build.log 2>/dev/null || echo \"No build log\"\n ```\n \n-If a test fails to compile, include the compiler error in the report and skip running that test.\n-\n-### 4. Run the Tests and Capture Output\n-\n-Run each compiled test binary. Capture stdout and stderr. The test harness prints lines like:\n+If `specbot-results/build-status.txt` shows `build_exit=0`, the build succeeded.\n+If it shows a non-zero exit, include the last 50 lines of `specbot-results/build.log` in the report\n+under a \"Build Failure\" section.\n \n-- `[TEST] Running <name>` — test started\n-- `[TEST] PASS <name>` — test passed\n-- `[TEST] CRASH <name> (exception 0x...)` — SEH exception caught (Windows only; on Linux the process aborts)\n-- `[TEST] ABORT <name> (caught SIGABRT)` — assertion failure caught via SIGABRT + longjmp\n-\n-On Linux, wrap each run with a timeout and capture the exit code and any signal:\n-\n-```bash\n-LD_LIBRARY_PATH=build/debug timeout 120 /tmp/test_specbot_seq > /tmp/specbot_out.txt 2>&1\n-echo \"specbot exit: $?\"\n-cat /tmp/specbot_out.txt\n-\n-LD_LIBRARY_PATH=build/debug timeout 120 /tmp/test_deeptest_seq > /tmp/deeptest_out.txt 2>&1\n-echo \"deeptest exit: $?\"\n-cat /tmp/deeptest_out.txt\n-```\n+If `specbot-results/compile-status.txt` shows a non-zero exit for a test, include the compile error\n+from `specbot-results/compile_specbot_seq.log` or `specbot-results/compile_deeptest_seq.log`.\n \n-Collect every line that contains `CRASH` or `ABORT` from both output files — these are the crashes to analyze.\n+Collect every line containing `CRASH` or `ABORT` from the test log files — these are the crashes to analyze.\n \n-### 5. Diagnose Each Crash\n+### 2. Diagnose Each Crash\n \n For each crashed test function, perform the following analysis:\n \n@@ -170,7 +182,7 @@ For each crashed test function, perform the following analysis:\n 4. **Suggest a fix**: propose a minimal, concrete fix — e.g., a guard condition, an additional lemma,\n    a missing reference-count increment, or a missing case in a switch/match.\n \n-### 6. Generate the Report\n+### 3. Generate the Report\n \n After analyzing all crashes, produce a structured GitHub Discussion in the \"Agentic Workflows\" category\n using `create-discussion`.\n@@ -231,6 +243,7 @@ Format workflow run references as: `[§${{ github.run_id }}](https://github.com/\n \n ## Usage\n \n-Trigger via **Actions → Specbot Crash Analyzer → Run workflow** on any branch; the pre-step\n-always checks out the `c3` branch where `specbot/test_specbot_seq.c` and\n-`specbot/test_deeptest_seq.c` live. The discussion is posted to the \"Agentic Workflows\" category.\n+Trigger via **Actions → Specbot Crash Analyzer → Run workflow** on any branch. The pre-steps\n+always check out the `c3` branch where `specbot/test_specbot_seq.c` and\n+`specbot/test_deeptest_seq.c` live, build Z3, run the tests, and save results to `specbot-results/`.\n+The agent then analyzes the results and posts a discussion to the \"Agentic Workflows\" category.",
+          "snapshot_ref": "8d7ed66ebfa96bcbfdfc6161765c2ae621225b9f",
+          "snapshot_blob_sha": "19b45b70dd1e29fdfd84b0b8bddc6ee0ef96d5be",
+          "snapshot_file": "snapshots/z3__Z3Prover__8d7ed66ebfa96bcbfdfc6161765c2ae621225b9f__specbot-crash-analyzer.md",
+          "snapshot_bytes": 8863,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/specbot-crash-analyzer.lock.yml\",\"generated_workflow_file\":\"specbot-crash-analyzer.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/specbot-crash-analyzer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/specbot-crash-analyzer.md",
+      "commit_sha": "4a1f448a06119befd416413fc5493e00b9611b6d",
+      "authored_at": "2026-04-11T17:19:45Z",
+      "committed_at": "2026-04-11T17:19:45Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow compilation errors (gh-aw v0.68 compat) (#9275)\n\n* Start: recompile agentic workflows, fix errors and security issues\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/88b80d94-e7d6-4e8f-a106-baa2e7e212d6\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n* Fix agentic workflow compilation errors: remove glob/view tools, resolve merge conflict, fix serena tool and missing imports\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/88b80d94-e7d6-4e8f-a106-baa2e7e212d6\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "3c7e5c8197d6ca62bf8ebae1fd31599c83f161b1"
+      ],
+      "tree_sha": "e135a08ad18a1800325a1c6b26193231afce3cb9",
+      "html_url": "https://github.com/Z3Prover/z3/commit/4a1f448a06119befd416413fc5493e00b9611b6d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/specbot-crash-analyzer.md",
+          "commit_sha": "4a1f448a06119befd416413fc5493e00b9611b6d",
+          "committed_at": "2026-04-11T17:19:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -17,8 +17,6 @@ tools:\n   github:\n     toolsets: [default, discussions]\n   bash: [\":*\"]\n-  glob: {}\n-  view: {}\n   edit: {}\n \n safe-outputs:",
+          "snapshot_ref": "4a1f448a06119befd416413fc5493e00b9611b6d",
+          "snapshot_blob_sha": "38d9af7ad57d1c6c0fc41b4acb912cafb22236e9",
+          "snapshot_file": "snapshots/z3__Z3Prover__4a1f448a06119befd416413fc5493e00b9611b6d__specbot-crash-analyzer.md",
+          "snapshot_bytes": 8841,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/specbot-crash-analyzer.lock.yml\",\"generated_workflow_file\":\"specbot-crash-analyzer.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/specbot-crash-analyzer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/specbot-crash-analyzer.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/specbot-crash-analyzer.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -20,6 +20,7 @@ tools:\n   edit: {}\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-discussion:\n     title-prefix: \"[Specbot] \"\n     category: \"Agentic Workflows\"",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "104dc5b3a663d87f0e6070536739b663a403261e",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__specbot-crash-analyzer.md",
+          "snapshot_bytes": 8874,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/specbot-crash-analyzer.lock.yml\",\"generated_workflow_file\":\"specbot-crash-analyzer.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/specbot-crash-analyzer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/specbot-crash-analyzer.md",
+      "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "authored_at": "2026-07-28T09:22:11Z",
+      "committed_at": "2026-07-28T09:22:11Z",
+      "author_name": "Nikolaj Bjorner",
+      "author_email": "nbjorner@microsoft.com",
+      "author_login": "NikolajBjorner",
+      "author_account_type": "User",
+      "committer_name": "Nikolaj Bjorner",
+      "committer_email": "nbjorner@microsoft.com",
+      "committer_login": "NikolajBjorner",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow auth by using Actions token-based Copilot inference\n\nThe COPILOT_GITHUB_TOKEN PAT secret expired, causing HTTP 401 auth\nfailures in all agentic workflows that referenced it. Switch these\nworkflows to GitHub Actions token-based Copilot inference by adding\n'copilot-requests: write' to their permissions (matching the already-\nworking code-simplifier and release-notes-updater workflows), so the\nengine uses the ephemeral github.token instead of the expired PAT.\n\nRecompiled with gh-aw v0.81.6 (repo's pinned version) to keep the diff\nminimal. Affected: api-coherence-checker, issue-backlog-processor,\nmemory-safety-report, academic-citation-tracker, smtlib-benchmark-finder,\nworkflow-suggestion-agent, specbot-crash-analyzer, tptp-benchmark.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 57b9b87e-950a-49ea-bbb3-ed585646a5a9",
+      "parent_shas": [
+        "18d8d7a7bd437cc25a532e3903a560f7c9a4b787"
+      ],
+      "tree_sha": "281bc4545bd45a13a519164dfb8873e3dd7f3e15",
+      "html_url": "https://github.com/Z3Prover/z3/commit/b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/specbot-crash-analyzer.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/specbot-crash-analyzer.md",
+          "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "committed_at": "2026-07-28T09:22:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 1,
+          "file_changes": 7,
+          "file_patch": "@@ -8,7 +8,12 @@ on:\n \n timeout-minutes: 120\n \n-permissions: read-all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  discussions: read\n+  copilot-requests: write\n \n network: defaults\n ",
+          "snapshot_ref": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "snapshot_blob_sha": "5e63d31d5ca3b0714d7579cc5a0a019d180556ad",
+          "snapshot_file": "snapshots/z3__Z3Prover__b1168b48680a7b35d639f0243cf5b8c8a3ff0277__specbot-crash-analyzer.md",
+          "snapshot_bytes": 8965,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/specbot-crash-analyzer.lock.yml\",\"generated_workflow_file\":\"specbot-crash-analyzer.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/specbot-crash-analyzer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

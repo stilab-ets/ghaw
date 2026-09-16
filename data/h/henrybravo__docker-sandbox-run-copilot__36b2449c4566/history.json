@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "henrybravo/docker-sandbox-run-copilot:.github/workflows/check-copilot-version.md",
+    "source_full_name": "henrybravo/docker-sandbox-run-copilot",
+    "source_owner": "henrybravo",
+    "source_repo": "docker-sandbox-run-copilot",
+    "md_path": ".github/workflows/check-copilot-version.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/henrybravo/docker-sandbox-run-copilot/blob/HEAD/.github/workflows/check-copilot-version.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "henrybravo/docker-sandbox-run-copilot",
+      "generated_owner": "henrybravo",
+      "generated_repo": "docker-sandbox-run-copilot",
+      "generated_workflow_path": ".github/workflows/check-copilot-version.lock.yml",
+      "generated_workflow_file": "check-copilot-version.lock.yml",
+      "generated_html_url": "https://github.com/henrybravo/docker-sandbox-run-copilot/blob/a5fe1be14608e08b99c23d2e3a23a7bfc34a45d2/.github/workflows/check-copilot-version.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:57:00+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "henrybravo/docker-sandbox-run-copilot:.github/workflows/check-copilot-version.md",
+      "source_full_name": "henrybravo/docker-sandbox-run-copilot",
+      "md_path": ".github/workflows/check-copilot-version.md",
+      "commit_sha": "9e7719026ed4a6f29dde03dc1acb3845243e6ded",
+      "authored_at": "2026-03-12T14:04:34Z",
+      "committed_at": "2026-03-12T14:04:34Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add agentic workflow for Copilot CLI version checking and auto-release workflow\n\nCo-authored-by: henrybravo <10105833+henrybravo@users.noreply.github.com>",
+      "parent_shas": [
+        "e561546fd72cd5c9f59a412910bce5eae3ffe537"
+      ],
+      "tree_sha": "2baacdcab20e9b1a3ae368441c8c25f86e5ff5cd",
+      "html_url": "https://github.com/henrybravo/docker-sandbox-run-copilot/commit/9e7719026ed4a6f29dde03dc1acb3845243e6ded",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "henrybravo/docker-sandbox-run-copilot:.github/workflows/check-copilot-version.md",
+          "source_full_name": "henrybravo/docker-sandbox-run-copilot",
+          "md_path": ".github/workflows/check-copilot-version.md",
+          "commit_sha": "9e7719026ed4a6f29dde03dc1acb3845243e6ded",
+          "committed_at": "2026-03-12T14:04:34Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 80,
+          "file_deletions": 0,
+          "file_changes": 80,
+          "file_patch": "@@ -0,0 +1,80 @@\n+---\n+on:\n+  schedule: daily on weekdays\n+  workflow_dispatch:\n+  skip-if-match: \"is:pr is:open label:version-update\"\n+name: Check Copilot CLI Version\n+description: Check for new GitHub Copilot CLI releases and create a PR to update version references in this repository\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    mode: remote\n+    toolsets: [default]\n+  edit:\n+  bash: true\n+safe-outputs:\n+  create-pull-request:\n+    labels: [version-update, automated]\n+    draft: false\n+    if-no-changes: ignore\n+---\n+\n+# Check Copilot CLI Version and Update\n+\n+Your task is to check if there is a newer version of the GitHub Copilot CLI available. If a newer version exists, update the version references in this repository and create a pull request.\n+\n+## Instructions\n+\n+### Step 1: Get the Latest Copilot CLI Release\n+\n+Use the GitHub tools to get the **latest release** from the `github/copilot-cli` repository. Look for the most recent release tag (e.g., `v1.0.5`). Extract the version number by stripping the leading `v` prefix (e.g., `1.0.5`).\n+\n+### Step 2: Read the Current Version\n+\n+Read the current tracked version from the `.copilot-version` file using bash:\n+\n+```bash\n+cat .copilot-version\n+```\n+\n+This file contains only the version number (e.g., `1.0.4`), without a `v` prefix.\n+\n+### Step 3: Compare Versions\n+\n+Compare the latest release version with the current version using semantic versioning rules (major.minor.patch). If the latest version is **greater than** the current version, proceed to Step 4. Otherwise, print \"Copilot CLI is already at the latest version (X.X.X). No update needed.\" and stop — do **not** create a pull request.\n+\n+### Step 4: Update the Version Files\n+\n+If a newer version is available, update the following two files:\n+\n+1. **`.copilot-version`** — Replace the entire content with the new version number followed by a newline (e.g., `1.0.5\\n`). No `v` prefix.\n+\n+2. **`README.md`** — Find the line containing `img.shields.io/badge/Copilot_CLI-` and update the version number in the badge URL. The line looks like:\n+   ```\n+   [![Copilot CLI](https://img.shields.io/badge/Copilot_CLI-{CURRENT_VERSION}-blue?logo=githubcopilot&logoColor=white)](https://github.com/github/copilot-cli)\n+   ```\n+   Replace the old version number (e.g., `1.0.4`) with the new version number (e.g., `1.0.5`).\n+\n+### Step 5: Create a Pull Request\n+\n+After updating the files, create a pull request with these changes. Use the following format:\n+\n+- **Title**: `chore: bump Copilot CLI to v{NEW_VERSION}`\n+- **Body**:\n+  ```\n+  ## Version Update: Copilot CLI v{NEW_VERSION}\n+\n+  This PR updates the tracked GitHub Copilot CLI version from `v{CURRENT_VERSION}` to `v{NEW_VERSION}`.\n+\n+  ### Changes\n+  - `.copilot-version`: Updated from `{CURRENT_VERSION}` to `{NEW_VERSION}`\n+  - `README.md`: Updated badge version from `{CURRENT_VERSION}` to `{NEW_VERSION}`\n+\n+  ### Upstream Release\n+  See the upstream release notes at: https://github.com/github/copilot-cli/releases/tag/v{NEW_VERSION}\n+\n+  When this PR is merged, a new GitHub release and tag `v{NEW_VERSION}` will be created automatically, which will trigger a new Docker image build and publish.\n+  ```",
+          "snapshot_ref": "9e7719026ed4a6f29dde03dc1acb3845243e6ded",
+          "snapshot_blob_sha": "544e0109411f41dbaa30db4b4a2da55d864a5d85",
+          "snapshot_file": "snapshots/docker-sandbox-run-copilot__henrybravo__9e7719026ed4a6f29dde03dc1acb3845243e6ded__check-copilot-version.md",
+          "snapshot_bytes": 3152,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"henrybravo/docker-sandbox-run-copilot\",\"generated_owner\":\"henrybravo\",\"generated_repo\":\"docker-sandbox-run-copilot\",\"generated_workflow_path\":\".github/workflows/check-copilot-version.lock.yml\",\"generated_workflow_file\":\"check-copilot-version.lock.yml\",\"generated_html_url\":\"https://github.com/henrybravo/docker-sandbox-run-copilot/blob/a5fe1be14608e08b99c23d2e3a23a7bfc34a45d2/.github/workflows/check-copilot-version.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "henrybravo/docker-sandbox-run-copilot:.github/workflows/check-copilot-version.md",
+      "source_full_name": "henrybravo/docker-sandbox-run-copilot",
+      "md_path": ".github/workflows/check-copilot-version.md",
+      "commit_sha": "9723ff8fb033c9d8dcb3299f41b817f67910d6cd",
+      "authored_at": "2026-04-11T07:14:58Z",
+      "committed_at": "2026-04-11T07:14:58Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: call noop tool when Copilot CLI is already at latest version\n\nAgent-Logs-Url: https://github.com/henrybravo/docker-sandbox-run-copilot/sessions/56e64212-eeba-44f0-8027-09305d134290\n\nCo-authored-by: henrybravo <10105833+henrybravo@users.noreply.github.com>",
+      "parent_shas": [
+        "749a979bcf66eb3210fe8f09f1130f5b879ad27c"
+      ],
+      "tree_sha": "28fc98713d38e4566fa5cae26abb65d3c4437d6e",
+      "html_url": "https://github.com/henrybravo/docker-sandbox-run-copilot/commit/9723ff8fb033c9d8dcb3299f41b817f67910d6cd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "henrybravo/docker-sandbox-run-copilot:.github/workflows/check-copilot-version.md",
+          "source_full_name": "henrybravo/docker-sandbox-run-copilot",
+          "md_path": ".github/workflows/check-copilot-version.md",
+          "commit_sha": "9723ff8fb033c9d8dcb3299f41b817f67910d6cd",
+          "committed_at": "2026-04-11T07:14:58Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -44,7 +44,7 @@ This file contains only the version number (e.g., `1.0.4`), without a `v` prefix\n \n ### Step 3: Compare Versions\n \n-Compare the latest release version with the current version using semantic versioning rules (major.minor.patch). If the latest version is **greater than** the current version, proceed to Step 4. Otherwise, print \"Copilot CLI is already at the latest version (X.X.X). No update needed.\" and stop — do **not** create a pull request.\n+Compare the latest release version with the current version using semantic versioning rules (major.minor.patch). If the latest version is **greater than** the current version, proceed to Step 4. Otherwise, call the `noop` tool with the message \"Copilot CLI is already at the latest version (X.X.X). No update needed.\" and stop — do **not** create a pull request.\n \n ### Step 4: Update the Version Files\n ",
+          "snapshot_ref": "9723ff8fb033c9d8dcb3299f41b817f67910d6cd",
+          "snapshot_blob_sha": "9d19057b936b7c5c3365bca78d9a9c4a16e4782b",
+          "snapshot_file": "snapshots/docker-sandbox-run-copilot__henrybravo__9723ff8fb033c9d8dcb3299f41b817f67910d6cd__check-copilot-version.md",
+          "snapshot_bytes": 3184,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"henrybravo/docker-sandbox-run-copilot\",\"generated_owner\":\"henrybravo\",\"generated_repo\":\"docker-sandbox-run-copilot\",\"generated_workflow_path\":\".github/workflows/check-copilot-version.lock.yml\",\"generated_workflow_file\":\"check-copilot-version.lock.yml\",\"generated_html_url\":\"https://github.com/henrybravo/docker-sandbox-run-copilot/blob/a5fe1be14608e08b99c23d2e3a23a7bfc34a45d2/.github/workflows/check-copilot-version.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

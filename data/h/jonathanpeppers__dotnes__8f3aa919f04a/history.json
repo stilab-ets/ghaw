@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "jonathanpeppers/dotnes:.github/workflows/dotnes-reviewer.md",
+    "source_full_name": "jonathanpeppers/dotnes",
+    "source_owner": "jonathanpeppers",
+    "source_repo": "dotnes",
+    "md_path": ".github/workflows/dotnes-reviewer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/jonathanpeppers/dotnes/blob/HEAD/.github/workflows/dotnes-reviewer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "jonathanpeppers/dotnes",
+      "generated_owner": "jonathanpeppers",
+      "generated_repo": "dotnes",
+      "generated_workflow_path": ".github/workflows/dotnes-reviewer.lock.yml",
+      "generated_workflow_file": "dotnes-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/jonathanpeppers/dotnes/blob/b59d9890d4cc4ed8506d82e3b336398a21d241e0/.github/workflows/dotnes-reviewer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:57:22+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "jonathanpeppers/dotnes:.github/workflows/dotnes-reviewer.md",
+      "source_full_name": "jonathanpeppers/dotnes",
+      "md_path": ".github/workflows/dotnes-reviewer.md",
+      "commit_sha": "6b381e23a1d969989c06cb6113086a022ac2820f",
+      "authored_at": "2026-05-01T22:07:10Z",
+      "committed_at": "2026-05-01T22:07:10Z",
+      "author_name": "Jonathan Peppers",
+      "author_email": "jonathan.peppers@gmail.com",
+      "author_login": "jonathanpeppers",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `/review` agentic workflow for PR code reviews (#483)\n\n* Add /review agentic workflow for PR code reviews\n\nAdds a GitHub Copilot agentic workflow that triggers on /review slash\ncommands on pull requests. It uses the existing code-reviewer skill\nrules to perform thorough, automated code reviews with inline comments.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Initialize gh-aw and compile reviewer lock file\n\n- Add gh-aw setup step to copilot-setup-steps.yml\n- Generate dotnes-reviewer.lock.yml from the .md workflow\n- Add .github/agents/ and .github/aw/ config from gh aw init\n- Update .gitattributes for lock file merge strategy\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "6f2612df5ce71980631dd397ee6fe2daabb2d415"
+      ],
+      "tree_sha": "e31e15597613e4be38405b0f1a130da9683687e8",
+      "html_url": "https://github.com/jonathanpeppers/dotnes/commit/6b381e23a1d969989c06cb6113086a022ac2820f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jonathanpeppers/dotnes:.github/workflows/dotnes-reviewer.md",
+          "source_full_name": "jonathanpeppers/dotnes",
+          "md_path": ".github/workflows/dotnes-reviewer.md",
+          "commit_sha": "6b381e23a1d969989c06cb6113086a022ac2820f",
+          "committed_at": "2026-05-01T22:07:10Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 67,
+          "file_deletions": 0,
+          "file_changes": 67,
+          "file_patch": "@@ -0,0 +1,67 @@\n+---\n+on:\n+  slash_command:\n+    name: review\n+    events: [pull_request_comment]\n+  roles: [admin, maintainer, write]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+engine:\n+  id: copilot\n+  model: claude-opus-4.6\n+network:\n+  allowed:\n+    - defaults\n+    - dotnet\n+    - github\n+    - \"aka.ms\"\n+    - \"microsoft.com\"\n+tools:\n+  github:\n+    toolsets: [pull_requests, repos]\n+    min-integrity: none\n+safe-outputs:\n+  create-pull-request-review-comment:\n+    max: 50\n+  submit-pull-request-review:\n+    max: 1\n+    allowed-events: [COMMENT, REQUEST_CHANGES]\n+---\n+\n+# dotnes PR Reviewer\n+\n+A maintainer commented `/review` on this pull request. Perform a thorough code review following the dotnes review guidelines.\n+\n+## Instructions\n+\n+1. Read the review methodology from `.github/skills/code-reviewer/SKILL.md` — this defines the review workflow, mindset, severity levels, and comment format.\n+2. Read the core review rules that always apply:\n+   - `.github/skills/code-reviewer/references/repo-conventions.md`\n+   - `.github/skills/code-reviewer/references/ai-pitfalls.md`\n+3. Identify the changed files in the PR, then load the appropriate rule files:\n+   - `.github/skills/code-reviewer/references/csharp-rules.md` — when any `.cs` files changed\n+   - `.github/skills/code-reviewer/references/transpiler-rules.md` — when files under `src/dotnes.tasks/` changed\n+   - `.github/skills/code-reviewer/references/nes-program-rules.md` — when files under `samples/` or `src/neslib/` changed\n+   - `.github/skills/code-reviewer/references/testing-rules.md` — when test files changed or transpiler changes lack tests\n+   - `.github/skills/code-reviewer/references/msbuild-rules.md` — when `.targets`, `.props`, or `.csproj` files changed\n+   - `.github/skills/code-reviewer/references/security-rules.md` — when any code files changed\n+4. Follow the skill's workflow to analyze the pull request:\n+   - Gather context: read the diff and changed files\n+   - For each changed file, read the **full source file** to understand surrounding context\n+   - Form an independent assessment before reading the PR description\n+   - Read the PR title and description — treat claims as things to verify\n+   - Check CI status\n+   - Analyze the diff against the review rules\n+5. Post your findings as inline review comments and a review summary.\n+\n+## Constraints\n+\n+- **Always post at least one inline review comment**, even for clean PRs — add a brief 💡 observation on a key implementation line. The review framework requires at least one inline comment to submit the review.\n+- Only comment on added/modified lines visible in the diff.\n+- One issue per inline comment.\n+- If the same issue appears many times, flag it once listing all affected files.\n+- Don't flag what CI catches (compiler errors, linter issues).\n+- Avoid false positives — verify concerns given the full file context.\n+- **Never submit an APPROVE event.** Use COMMENT for clean PRs and REQUEST_CHANGES when issues are found.\n+- Prioritize: transpiler correctness > snapshot regressions > bugs > missing tests > performance > duplication > documentation.",
+          "snapshot_ref": "6b381e23a1d969989c06cb6113086a022ac2820f",
+          "snapshot_blob_sha": "0ad53652d4fd432b719d335c198217f6037399cb",
+          "snapshot_file": "snapshots/dotnes__jonathanpeppers__6b381e23a1d969989c06cb6113086a022ac2820f__dotnes-reviewer.md",
+          "snapshot_bytes": 3074,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jonathanpeppers/dotnes\",\"generated_owner\":\"jonathanpeppers\",\"generated_repo\":\"dotnes\",\"generated_workflow_path\":\".github/workflows/dotnes-reviewer.lock.yml\",\"generated_workflow_file\":\"dotnes-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/jonathanpeppers/dotnes/blob/b59d9890d4cc4ed8506d82e3b336398a21d241e0/.github/workflows/dotnes-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "jonathanpeppers/dotnes:.github/workflows/dotnes-reviewer.md",
+      "source_full_name": "jonathanpeppers/dotnes",
+      "md_path": ".github/workflows/dotnes-reviewer.md",
+      "commit_sha": "61748a0016494801effa400b360a9412b850b5ee",
+      "authored_at": "2026-07-15T19:40:35Z",
+      "committed_at": "2026-07-15T19:40:35Z",
+      "author_name": "Jonathan Peppers",
+      "author_email": "jonathan.peppers@gmail.com",
+      "author_login": "jonathanpeppers",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update dotnes reviewer to claude-opus-4.8 (#571)\n\nClaude Opus 4.6 is retired and causes the dotnes PR reviewer workflow to fail before review execution.\n\n## Summary\n\n- Update the reviewer source to use `claude-opus-4.8`\n- Recompile the generated workflow with gh-aw v0.81.6\n\n## Validation\n\n- `gh aw compile --no-emit --validate`",
+      "parent_shas": [
+        "33546879ad4df234d4efb1469edcfeb1ea06df25"
+      ],
+      "tree_sha": "00cd521576a23badd52106c8d1124eecfeeaa203",
+      "html_url": "https://github.com/jonathanpeppers/dotnes/commit/61748a0016494801effa400b360a9412b850b5ee",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jonathanpeppers/dotnes:.github/workflows/dotnes-reviewer.md",
+          "source_full_name": "jonathanpeppers/dotnes",
+          "md_path": ".github/workflows/dotnes-reviewer.md",
+          "commit_sha": "61748a0016494801effa400b360a9412b850b5ee",
+          "committed_at": "2026-07-15T19:40:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -9,7 +9,7 @@ permissions:\n   pull-requests: read\n engine:\n   id: copilot\n-  model: claude-opus-4.6\n+  model: claude-opus-4.8\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "61748a0016494801effa400b360a9412b850b5ee",
+          "snapshot_blob_sha": "f4912a657962b898faa5aed7b20e023166fc6035",
+          "snapshot_file": "snapshots/dotnes__jonathanpeppers__61748a0016494801effa400b360a9412b850b5ee__dotnes-reviewer.md",
+          "snapshot_bytes": 3074,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jonathanpeppers/dotnes\",\"generated_owner\":\"jonathanpeppers\",\"generated_repo\":\"dotnes\",\"generated_workflow_path\":\".github/workflows/dotnes-reviewer.lock.yml\",\"generated_workflow_file\":\"dotnes-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/jonathanpeppers/dotnes/blob/b59d9890d4cc4ed8506d82e3b336398a21d241e0/.github/workflows/dotnes-reviewer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

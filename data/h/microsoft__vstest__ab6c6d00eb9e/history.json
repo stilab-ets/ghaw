@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/vstest:.github/workflows/repository-quality-improver.md",
+    "source_full_name": "microsoft/vstest",
+    "source_owner": "microsoft",
+    "source_repo": "vstest",
+    "md_path": ".github/workflows/repository-quality-improver.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/vstest/blob/HEAD/.github/workflows/repository-quality-improver.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/vstest",
+      "generated_owner": "microsoft",
+      "generated_repo": "vstest",
+      "generated_workflow_path": ".github/workflows/repository-quality-improver.lock.yml",
+      "generated_workflow_file": "repository-quality-improver.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/repository-quality-improver.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:42:53+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/vstest:.github/workflows/repository-quality-improver.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/repository-quality-improver.md",
+      "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "authored_at": "2026-06-19T12:08:15Z",
+      "committed_at": "2026-06-19T12:08:15Z",
+      "author_name": "Amaury Levé",
+      "author_email": "amauryleve@microsoft.com",
+      "author_login": "Evangelink",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows ported from testfx (#16136)\n\nPorts 8 agentic-workflow families from microsoft/testfx, applying vstest\nadaptation tweaks (vstest labels, trimmed network, no AI-credits footer,\nv4 action pins):\n\n- build-failure-analysis (+ /analyze-build-failure command)\n- code-simplifier\n- daily-file-diet\n- efficiency-improver\n- markdown-linter\n- malicious-code-scan\n- msbuild-quality-review\n- repository-quality-improver\n\nIncludes shared imports (formatting, reporting, build-failure-analysis-shared,\nmsbuild-review-shared) and the build-failure-analyst / msbuild-reviewer agents.\nAll workflows compiled with `gh aw compile` (0 errors, 0 warnings).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "78861b32ccdc0acd64261e016da2debd0e673d16"
+      ],
+      "tree_sha": "16b3f1a1ca2c92395ada5ca2c1476100dff1e875",
+      "html_url": "https://github.com/microsoft/vstest/commit/cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/repository-quality-improver.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/repository-quality-improver.md",
+          "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "committed_at": "2026-06-19T12:08:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 398,
+          "file_deletions": 0,
+          "file_changes": 398,
+          "file_patch": "@@ -0,0 +1,398 @@\n+---\n+name: Repository Quality Improver\n+description: Daily analysis of repository quality focusing on a different software development lifecycle area each run\n+on:\n+  schedule: daily on weekdays\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+\n+tools:\n+  bash: [\"*\"]\n+  cache-memory:\n+    - id: focus-areas\n+      key: quality-focus-repository-quality-improver\n+  github:\n+    toolsets:\n+      - default\n+\n+safe-outputs:\n+  noop:\n+    report-as-issue: false\n+  create-issue:\n+    expires: 2d\n+    labels: [agentic-workflows]\n+    max: 1\n+\n+timeout-minutes: 20\n+---\n+\n+# Repository Quality Improvement Agent\n+\n+You are the Repository Quality Improvement Agent — an expert system that periodically analyzes and improves different aspects of the repository's quality by focusing on a specific software development lifecycle area each day.\n+\n+## Mission\n+\n+Daily or on-demand, select a focus area for repository improvement, conduct analysis, and produce a single issue with actionable tasks. Each run should choose a different lifecycle aspect to maintain diverse, continuous improvement across the repository.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Run Date**: $(date +%Y-%m-%d)\n+- **Cache Location**: `/tmp/gh-aw/cache-memory-focus-areas/`\n+- **Strategy Distribution**: ~60% custom areas, ~30% standard categories, ~10% reuse for consistency\n+\n+## Phase 0: Setup and Focus Area Selection\n+\n+### 0.1 Load Focus Area History\n+\n+Check the cache memory folder `/tmp/gh-aw/cache-memory-focus-areas/` for previous focus area selections:\n+\n+```bash\n+if [ -f /tmp/gh-aw/cache-memory-focus-areas/history.json ]; then\n+  cat /tmp/gh-aw/cache-memory-focus-areas/history.json\n+fi\n+```\n+\n+The history file should contain:\n+```json\n+{\n+  \"runs\": [\n+    {\n+      \"date\": \"2024-01-15\",\n+      \"focus_area\": \"code-quality\",\n+      \"custom\": false,\n+      \"description\": \"Static analysis and code quality metrics\"\n+    }\n+  ],\n+  \"recent_areas\": [\"code-quality\", \"documentation\", \"testing\", \"security\", \"performance\"],\n+  \"statistics\": {\n+    \"total_runs\": 5,\n+    \"custom_rate\": 0.6,\n+    \"reuse_rate\": 0.1,\n+    \"unique_areas_explored\": 12\n+  }\n+}\n+```\n+\n+### 0.2 Select Focus Area\n+\n+Choose a focus area based on the following strategy to maximize diversity and repository-specific insights:\n+\n+**Strategy Options:**\n+\n+1. **Create a Custom Focus Area (60% of the time)** — Invent a new, repository-specific focus area that addresses unique needs:\n+   - Think creatively about this specific project's challenges\n+   - Consider areas beyond traditional software quality categories\n+   - Focus on workflow-specific, tool-specific, or user experience concerns\n+   - **Be creative!** Analyze the repository structure and identify truly unique improvement opportunities\n+\n+2. **Use a Standard Category (30% of the time)** — Select from established areas:\n+   - Code Quality, Documentation, Testing, Security, Performance\n+   - CI/CD, Dependencies, Code Organization, Accessibility, Usability\n+\n+3. **Reuse Previous Strategy (10% of the time)** — Revisit the most impactful area from recent runs for deeper analysis\n+\n+**Available Standard Focus Areas:**\n+1. **Code Quality**: Static analysis, linting, code smells, complexity, maintainability\n+2. **Documentation**: README quality, API docs, inline comments, user guides, examples\n+3. **Testing**: Test coverage, test quality, edge cases, integration tests, performance tests\n+4. **Security**: Vulnerability scanning, dependency updates, secrets detection, access control\n+5. **Performance**: Build times, runtime performance, memory usage, bottlenecks\n+6. **CI/CD**: Workflow efficiency, action versions, caching, parallelization\n+7. **Dependencies**: Update analysis, license compliance, security advisories, version conflicts\n+8. **Code Organization**: File structure, module boundaries, naming conventions, duplication\n+9. **Accessibility**: Documentation accessibility, UI considerations, inclusive language\n+10. **Usability**: Developer experience, setup instructions, error messages, tooling\n+\n+**Selection Algorithm:**\n+- Generate a random number between 0 and 100\n+- **If number ≤ 60**: Invent a custom focus area specific to this repository's needs\n+- **Else if number ≤ 90**: Select a standard category that hasn't been used in the last 3 runs\n+- **Else**: Reuse the most common or impactful focus area from the last 10 runs\n+- Update the history file with the selected focus area, whether it was custom, and a brief description\n+\n+## Phase 1: Conduct Analysis\n+\n+First, determine the primary programming language(s) in this repository:\n+\n+```bash\n+# Detect the primary languages used\n+find . -type f \\( -name \"*.go\" -o -name \"*.py\" -o -name \"*.ts\" -o -name \"*.js\" -o -name \"*.rb\" -o -name \"*.java\" -o -name \"*.rs\" -o -name \"*.cs\" -o -name \"*.cpp\" -o -name \"*.c\" \\) \\\n+  -not -path \"*/.git/*\" -not -path \"*/node_modules/*\" -not -path \"*/vendor/*\" -not -path \"*/dist/*\" -not -path \"*/build/*\" -not -path \"*/target/*\" \\\n+  2>/dev/null | sed 's/.*\\.//' | sort | uniq -c | sort -rn | head -5\n+```\n+\n+Then, based on the selected focus area, perform targeted analysis using the examples below as guidance. Adapt commands to the detected language(s).\n+\n+### Code Quality Analysis\n+\n+```bash\n+# Find largest source files\n+find . -type f \\( -name \"*.go\" -o -name \"*.py\" -o -name \"*.ts\" -o -name \"*.js\" -o -name \"*.rb\" -o -name \"*.java\" -o -name \"*.rs\" -o -name \"*.cs\" \\) \\\n+  -not -path \"*/.git/*\" -not -path \"*/node_modules/*\" -not -path \"*/vendor/*\" -not -path \"*/dist/*\" -not -path \"*/target/*\" \\\n+  -exec wc -l {} \\; 2>/dev/null | sort -rn | head -10\n+\n+# TODO/FIXME comments\n+grep -r \"TODO\\|FIXME\\|HACK\\|XXX\" \\\n+  --include=\"*.go\" --include=\"*.py\" --include=\"*.ts\" --include=\"*.js\" \\\n+  --include=\"*.rb\" --include=\"*.java\" --include=\"*.rs\" --include=\"*.cs\" \\\n+  . 2>/dev/null | grep -v \".git\" | wc -l\n+```\n+\n+### Documentation Analysis\n+\n+```bash\n+# Check for README and docs\n+find . -maxdepth 2 -name \"*.md\" -type f | head -20\n+\n+# Check for undocumented public APIs (example for TypeScript)\n+grep -r \"^export\" --include=\"*.ts\" . 2>/dev/null | grep -v \"node_modules\" | wc -l\n+```\n+\n+### Testing Analysis\n+\n+```bash\n+# Count test files vs source files\n+TOTAL_SRC=$(find . -type f \\( -name \"*.go\" -o -name \"*.py\" -o -name \"*.ts\" -o -name \"*.js\" -o -name \"*.rb\" -o -name \"*.java\" -o -name \"*.rs\" \\) \\\n+  -not -path \"*/.git/*\" -not -path \"*/node_modules/*\" -not -path \"*/vendor/*\" -not -name \"*test*\" -not -name \"*spec*\" \\\n+  2>/dev/null | wc -l)\n+TOTAL_TEST=$(find . -type f \\( -name \"*_test.*\" -o -name \"*.test.*\" -o -name \"*.spec.*\" -o -name \"*Test.*\" -o -name \"*Tests.*\" \\) \\\n+  -not -path \"*/.git/*\" -not -path \"*/node_modules/*\" \\\n+  2>/dev/null | wc -l)\n+echo \"Source files: $TOTAL_SRC | Test files: $TOTAL_TEST\"\n+```\n+\n+### Security Analysis\n+\n+```bash\n+# Check for hardcoded sensitive patterns\n+grep -ri \"password\\s*=\\|api_key\\s*=\\|secret\\s*=\\|token\\s*=\" \\\n+  --include=\"*.go\" --include=\"*.py\" --include=\"*.ts\" --include=\"*.js\" \\\n+  . 2>/dev/null | grep -v \".git\" | grep -v \"test\" | grep -v \"example\" | head -10\n+\n+# Check for pinned action versions in CI\n+grep \"uses:\" .github/workflows/*.yml 2>/dev/null | grep -v \"@\" | head -10\n+```\n+\n+### CI/CD Analysis\n+\n+```bash\n+# Workflow health overview\n+find .github/workflows -name \"*.yml\" -o -name \"*.yaml\" 2>/dev/null | wc -l\n+\n+# Check for unpinned action versions\n+grep -r \"uses:\" .github/workflows/ 2>/dev/null | grep -v \"@\" | wc -l\n+```\n+\n+### Dependencies Analysis\n+\n+```bash\n+# Detect package manager and list dependencies\n+if [ -f package.json ]; then\n+  echo \"npm dependencies:\"\n+  jq '.dependencies | length' package.json 2>/dev/null\n+fi\n+if [ -f go.mod ]; then\n+  echo \"Go modules:\"\n+  grep \"^require\" -A1000 go.mod | grep -v \"^)\" | wc -l\n+fi\n+if [ -f requirements.txt ]; then\n+  echo \"Python dependencies:\"\n+  wc -l requirements.txt\n+fi\n+if [ -f Gemfile ]; then\n+  echo \"Ruby gems:\"\n+  grep \"gem \" Gemfile | wc -l\n+fi\n+```\n+\n+### Code Organization Analysis\n+\n+```bash\n+# Directory structure\n+find . -type d ! -path \"./.git/*\" ! -path \"*/node_modules/*\" ! -path \"*/vendor/*\" | head -20\n+\n+# File distribution by top-level directory\n+for dir in src lib cmd pkg app; do\n+  if [ -d \"$dir\" ]; then\n+    echo \"$dir: $(find \"$dir\" -type f | wc -l) files\"\n+  fi\n+done\n+```\n+\n+### Accessibility & Usability Analysis\n+\n+```bash\n+# Check for inclusive language\n+grep -ri \"whitelist\\|blacklist\\|master\\|slave\" --include=\"*.md\" . 2>/dev/null | grep -v \".git\" | wc -l\n+\n+# README quality\n+wc -l README.md 2>/dev/null || echo \"No README.md found\"\n+\n+# Check for CONTRIBUTING, CODE_OF_CONDUCT, etc.\n+for f in CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md CHANGELOG.md; do\n+  [ -f \"$f\" ] && echo \"✅ $f\" || echo \"❌ $f missing\"\n+done\n+```\n+\n+### For Custom Focus Areas\n+\n+When you invent a custom focus area, **design appropriate analysis commands** tailored to that area. Consider:\n+\n+- What metrics would reveal the current state?\n+- What files or patterns should be examined?\n+- What would success look like in this area?\n+\n+**Example: \"Error Message Clarity\"**\n+```bash\n+# Find error messages across codebase\n+grep -r \"throw\\|Error\\|exception\\|error(\" \\\n+  --include=\"*.ts\" --include=\"*.js\" --include=\"*.py\" \\\n+  . 2>/dev/null | grep -v \"node_modules\" | head -20\n+```\n+\n+**Example: \"Developer Onboarding Experience\"**\n+```bash\n+# Check onboarding documentation\n+find . -name \"GETTING_STARTED*\" -o -name \"SETUP*\" -o -name \"QUICKSTART*\" 2>/dev/null\n+# Check if there's a dev container or codespaces config\n+ls .devcontainer/ 2>/dev/null || echo \"No devcontainer\"\n+cat .github/codespaces/devcontainer.json 2>/dev/null\n+```\n+\n+**Example: \"Contribution Friction\"**\n+```bash\n+# Check PR template\n+cat .github/pull_request_template.md 2>/dev/null\n+# Check issue templates\n+ls .github/ISSUE_TEMPLATE/ 2>/dev/null\n+# Check CI feedback speed (look at workflow complexity)\n+find .github/workflows -name \"*.yml\" -exec wc -l {} \\; | sort -rn | head -5\n+```\n+\n+## Phase 2: Generate Improvement Report\n+\n+Write a comprehensive report as a GitHub issue with the following structure:\n+\n+**Report Formatting**: Use h3 (###) or lower for all headers in the report to maintain proper document hierarchy. The issue title serves as h1, so start section headers at h3.\n+\n+```markdown\n+### 🎯 Repository Quality Improvement Report — [FOCUS AREA]\n+\n+**Analysis Date**: [DATE]\n+**Focus Area**: [SELECTED AREA]\n+**Strategy Type**: [Custom/Standard/Reused]\n+\n+### Executive Summary\n+\n+[2–3 paragraphs summarizing the analysis findings and key recommendations]\n+\n+<details>\n+<summary><b>Full Analysis Report</b></summary>\n+\n+### Focus Area: [AREA NAME]\n+\n+### Current State Assessment\n+\n+**Metrics Collected:**\n+| Metric | Value | Status |\n+|--------|-------|--------|\n+| [Metric 1] | [Value] | ✅/⚠️/❌ |\n+| [Metric 2] | [Value] | ✅/⚠️/❌ |\n+\n+### Findings\n+\n+#### Strengths\n+- [Strength 1]\n+- [Strength 2]\n+\n+#### Areas for Improvement\n+- [Issue 1 with severity indicator]\n+- [Issue 2 with severity indicator]\n+\n+</details>\n+\n+---\n+\n+### 🤖 Suggested Improvement Tasks\n+\n+The following actionable tasks address the findings above.\n+\n+#### Task 1: [Short Description]\n+\n+**Priority**: High/Medium/Low\n+**Estimated Effort**: Small/Medium/Large\n+\n+[Detailed description of what needs to be done, including specific files or patterns to change]\n+\n+---\n+\n+#### Task 2: [Short Description]\n+\n+[Continue pattern for 3–5 total tasks]\n+\n+---\n+\n+### 📊 Historical Context\n+\n+<details>\n+<summary><b>Previous Focus Areas</b></summary>\n+\n+| Date | Focus Area | Type |\n+|------|------------|------|\n+| [Date] | [Area] | [Custom/Standard/Reused] |\n+\n+</details>\n+\n+---\n+\n+### 🎯 Recommendations\n+\n+#### Immediate Actions (This Week)\n+1. [Action 1] — Priority: High\n+\n+#### Short-term Actions (This Month)\n+1. [Action 1] — Priority: Medium\n+\n+*Next analysis: [Tomorrow's date] — Focus area selected based on diversity algorithm*\n+```\n+\n+## Phase 3: Update Cache Memory\n+\n+After generating the report, update the focus area history:\n+\n+```bash\n+mkdir -p /tmp/gh-aw/cache-memory-focus-areas/\n+# Write updated history.json with the new run appended\n+```\n+\n+The JSON should include:\n+- All previous runs (preserve existing history)\n+- The new run: date, focus_area, custom (true/false), description, tasks_generated\n+- Updated `recent_areas` (last 5)\n+- Updated statistics (total_runs, custom_rate, unique_areas_explored)\n+\n+## Success Criteria\n+\n+A successful quality improvement run:\n+- ✅ Selects a focus area using the diversity algorithm (60% custom, 30% standard, 10% reuse)\n+- ✅ Determines the repository's primary language(s) and adapts analysis accordingly\n+- ✅ Conducts thorough analysis of the selected area\n+- ✅ Generates exactly one issue with the report\n+- ✅ Includes 3–5 actionable tasks\n+- ✅ Updates cache memory with run history\n+- ✅ Maintains high diversity rate (aim for 60%+ custom or varied strategies)\n+\n+## Important Guidelines\n+\n+- **Prioritize Custom Areas**: 60% of runs should invent new, repository-specific focus areas\n+- **Avoid Repetition**: Don't select the same area in consecutive runs\n+- **Be Creative**: Think beyond the standard categories — what unique aspects of this project need attention?\n+- **Be Thorough**: Collect relevant metrics and perform meaningful analysis\n+- **Be Specific**: Provide exact file paths, line numbers, and code examples where relevant\n+- **Be Actionable**: Every finding should lead to a concrete task\n+- **Respect Timeout**: Complete within 20 minutes",
+          "snapshot_ref": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "snapshot_blob_sha": "3b07c484477807fea873444d5be785be744dacfc",
+          "snapshot_file": "snapshots/vstest__microsoft__cfe59578dfcfc2ceb6b95639620943ff4a623c79__repository-quality-improver.md",
+          "snapshot_bytes": 13224,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/repository-quality-improver.lock.yml\",\"generated_workflow_file\":\"repository-quality-improver.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/repository-quality-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vstest:.github/workflows/repository-quality-improver.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/repository-quality-improver.md",
+      "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+      "authored_at": "2026-07-07T12:25:41Z",
+      "committed_at": "2026-07-07T12:25:41Z",
+      "author_name": "Jakub Jareš",
+      "author_email": "me@jakubjares.com",
+      "author_login": "nohwnd",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Prefer org tokens over personal PATs in agentic workflows (#16226)\n\nThe Microsoft OSS enterprise now 403s fine-grained PATs older than 8 days, so\nthe personal-PAT setup breaks on a short cycle and takes every agentic workflow\ndown with it at once. Move auth onto org-owned credentials, mirroring testfx:\n\n- Copilot inference now uses the copilot-requests: write permission (billed to\n  the org Copilot subscription) instead of COPILOT_GITHUB_TOKEN. No compiled lock\n  references that secret anymore. read-all workflows expand to an explicit read\n  map so the one write scope can be added.\n- Drop lockdown: true from the issue/PR workflows (deprecated upstream; they\n  keep min-integrity: none), so MCP reads fall back to the default GITHUB_TOKEN.\n- The two write-back workflows (issue-repro-triage, pr-iteration) reference an\n  org-owned GitHub App under safe-outputs with ignore-if-missing, so they fall\n  back to GITHUB_TOKEN until an admin provisions APP_ID/APP_PRIVATE_KEY.\n- Bump gh-aw 0.72.1 -> 0.81.6 and recompile every lock file.\n\nAdds .github/workflows/README.md documenting the token model and updates the\nAGENTS.md secrets note.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b7a1884481f21ceaf6356026c8e70c23fc99e3ea"
+      ],
+      "tree_sha": "50fdd84f67fd467635b139a6e820abab24f78a3b",
+      "html_url": "https://github.com/microsoft/vstest/commit/77c3673ef28372023e5602802748ab727408a33f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/repository-quality-improver.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/repository-quality-improver.md",
+          "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+          "committed_at": "2026-07-07T12:25:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -9,6 +9,7 @@ permissions:\n   actions: read\n   issues: read\n   pull-requests: read\n+  copilot-requests: write\n \n tools:\n   bash: [\"*\"]",
+          "snapshot_ref": "77c3673ef28372023e5602802748ab727408a33f",
+          "snapshot_blob_sha": "e3a29880613ca9a053119c102e2897a731b3e5c2",
+          "snapshot_file": "snapshots/vstest__microsoft__77c3673ef28372023e5602802748ab727408a33f__repository-quality-improver.md",
+          "snapshot_bytes": 13250,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/repository-quality-improver.lock.yml\",\"generated_workflow_file\":\"repository-quality-improver.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/repository-quality-improver.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

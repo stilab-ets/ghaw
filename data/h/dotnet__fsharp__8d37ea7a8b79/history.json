@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+    "source_full_name": "dotnet/fsharp",
+    "source_owner": "dotnet",
+    "source_repo": "fsharp",
+    "md_path": ".github/workflows/labelops-pr-maintenance.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/fsharp/blob/HEAD/.github/workflows/labelops-pr-maintenance.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/fsharp",
+      "generated_owner": "dotnet",
+      "generated_repo": "fsharp",
+      "generated_workflow_path": ".github/workflows/labelops-pr-maintenance.lock.yml",
+      "generated_workflow_file": "labelops-pr-maintenance.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/fsharp/blob/536800cd82a0481c055f08d570bbc924712331b2/.github/workflows/labelops-pr-maintenance.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T11:25:17+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+      "source_full_name": "dotnet/fsharp",
+      "md_path": ".github/workflows/labelops-pr-maintenance.md",
+      "commit_sha": "8bd2fd34369dceebbd0d06931d83d2329d30407d",
+      "authored_at": "2026-05-06T09:42:54Z",
+      "committed_at": "2026-05-06T09:42:54Z",
+      "author_name": "Tomas Grosup",
+      "author_email": "Tomas.Grosup@gmail.com",
+      "author_login": "T-Gro",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add LabelOps agentic workflows (conflict & CI auto-resolve) (#19629)\n\n* Add LabelOps agentic workflows\n\nTwo opt-in, label-gated workflows for automated PR maintenance:\n\n- labelops-pr-maintenance: scheduled every 3h, iterates open PRs\n  carrying AI-Auto-Resolve-Conflicts or AI-Auto-Resolve-CI, shuffles\n  for fairness seeded by GITHUB_RUN_ID, caps at 5 PRs per run.\n  Per PR: triages CI first (pr-build-status skill), resolves conflicts\n  second. Small mechanical CI fixes applied in-place with local\n  verification. Proven flakes (flaky-test-detector ≥3 PRs) are\n  delegated to the spinoff workflow. Unfixable CI escalates by adding\n  AI-needs-CI-fix-input with a repro + up to 3 options. Labels are\n  sticky — agent never removes any label.\n\n- labelops-flake-fix: workflow_dispatch-only spinoff, dispatched from\n  the babysitter via safe-outputs.dispatch-workflow. Re-verifies the\n  flake, reproduces with a 20-iteration loop, prefers determinism fix\n  else quarantines. Scoped to tests/** and vsintegration/tests/**.\n\nBoth workflows use protected-files: fallback-to-issue to prevent any\n.github/** modifications. Ship with schedule enabled; dry-run via\nworkflow_dispatch recommended before relying on scheduled runs.",
+      "parent_shas": [
+        "ea3438ac40bc0104dbf47843390e0a1be1601509"
+      ],
+      "tree_sha": "d78b03589e19d40240cbabc664bdaa32c8e2c38f",
+      "html_url": "https://github.com/dotnet/fsharp/commit/8bd2fd34369dceebbd0d06931d83d2329d30407d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+          "source_full_name": "dotnet/fsharp",
+          "md_path": ".github/workflows/labelops-pr-maintenance.md",
+          "commit_sha": "8bd2fd34369dceebbd0d06931d83d2329d30407d",
+          "committed_at": "2026-05-06T09:42:54Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 127,
+          "file_deletions": 0,
+          "file_changes": 127,
+          "file_patch": "@@ -0,0 +1,127 @@\n+---\n+description: |\n+  LabelOps — babysits open PRs carrying opt-in AI-Auto-Resolve-* labels.\n+  Scheduled every 3 hours. Selects up to 3 non-draft, non-fork PRs with\n+  AI-Auto-Resolve-Conflicts or AI-Auto-Resolve-CI. For each PR: triages CI\n+  first, then resolves merge conflicts (only real conflicts, not mere\n+  behind-main). On proven flakes, dispatches labelops-flake-fix. On\n+  unfixable CI, escalates with AI-needs-CI-fix-input label.\n+\n+on:\n+  schedule: every 3h\n+  workflow_dispatch:\n+\n+timeout-minutes: 90\n+\n+permissions: read-all\n+\n+concurrency:\n+  group: labelops-pr-maintenance\n+  cancel-in-progress: false\n+\n+network:\n+  allowed:\n+  - defaults\n+  - dotnet\n+  - dev.azure.com\n+\n+checkout:\n+  fetch: [\"*\"]\n+  fetch-depth: 0\n+\n+tools:\n+  github:\n+    toolsets: [default, issues, pull_requests, repos, actions]\n+    min-integrity: none\n+  bash: true\n+\n+safe-outputs:\n+  add-comment:\n+    max: 5\n+    target: \"*\"\n+    hide-older-comments: true\n+  push-to-pull-request-branch:\n+    target: \"*\"\n+    max: 5\n+    protected-files: fallback-to-issue\n+  add-labels:\n+    allowed: [\"AI-needs-CI-fix-input\"]\n+    max: 3\n+    target: \"*\"\n+  dispatch-workflow:\n+    workflows: [labelops-flake-fix]\n+    max: 3\n+---\n+\n+# LabelOps — PR Maintenance\n+\n+You maintain open PRs that carry `AI-Auto-Resolve-CI` or `AI-Auto-Resolve-Conflicts` labels. Every 3 hours you check them: fix CI failures, resolve merge conflicts, or escalate what you can't fix.\n+\n+## Hard rules\n+\n+1. **Never modify `.github/**`.** Protected by `fallback-to-issue`.\n+2. **Never merge, approve, close, or reopen a PR.** You push commits, comment, add labels, dispatch flake-fix.\n+3. **Never remove a label.** Only maintainers do that.\n+4. **Never push without local verification.** Build + targeted tests must pass first. Match the CI job's configuration (Debug vs Release, TFM).\n+5. **Never rebase, force-push, amend, squash, or `git add .`.** Use merge commits. `git add <explicit paths>` only.\n+6. **Never touch fork PRs, draft PRs, or `AI-Issue-Regression-PR` PRs.** Filter in Step 1.\n+7. **Never claim \"pre-existing\" or \"flaky\" without proof.** Proof = all checks green, or `flaky-test-detector` confirms ≥3 distinct PRs.\n+8. **Cap: 3 PRs per run, 3 fix attempts per PR.** One PR at a time, fully, before moving to the next.\n+9. **Every safe-output targets the current PR by explicit number.**\n+10. **If unsure, do nothing.** Silent run > wrong push.\n+11. **Never push just to update from `main`.** Only push for real conflicts or CI fixes.\n+12. **Prefix comments with `🤖 *LabelOps — <subtopic>.*`**\n+\n+### Healthy = all checks `SUCCESS`/`SKIPPED`/`NEUTRAL`. `PENDING`/`IN_PROGRESS` = not healthy.\n+\n+### Stuck safeguard: if a LabelOps commit exists within 12h AND checks are still red → skip CI fixes, move on.\n+\n+## Step 1 — Select PRs\n+\n+```bash\n+mkdir -p /tmp/labelops\n+gh pr list --repo dotnet/fsharp --state open --limit 200 \\\n+  --search 'label:\"AI-Auto-Resolve-Conflicts\",\"AI-Auto-Resolve-CI\"' \\\n+  --json number,title,labels,headRepository,isDraft,mergeable,updatedAt,headRefOid,author,headRefName \\\n+  > /tmp/labelops/candidates.json\n+```\n+\n+Filter in Python (seed shuffle with `GITHUB_RUN_ID`): drop drafts, forks, `AI-Issue-Regression-PR`, PRs updated <10min ago. Take first 3. If empty → `noop`.\n+\n+## Step 2 — Classify each PR\n+\n+From labels: `has_ci` = `AI-Auto-Resolve-CI`, `has_conflicts` = `AI-Auto-Resolve-Conflicts`.\n+\n+`ci_blocked` = `AI-needs-CI-fix-input` present AND a prior escalation comment contains `<!-- labelops:ci-escalation:<sha> -->` matching current `headRefOid`. If blocked, skip CI; still do conflicts. Any new commit auto-unblocks.\n+\n+## Step 3 — CI (first, when `has_ci AND NOT ci_blocked`)\n+\n+Use the **`pr-build-status`** skill. Collect ALL errors from ALL platforms first.\n+\n+1. **All healthy** → proceed to Step 4.\n+\n+2. **Fixable** — you can fix it within ≤3 attempts and ≤500 LOC. Reproduce locally, fix, verify build + tests, push, comment. Don't auto-accept `.bsl` baselines (can mask regressions) or change public API surface.\n+\n+3. **Proven flake** — invoke `flaky-test-detector`. Needs ≥3 distinct unrelated PRs. If insufficient evidence, `noop`. If proven and test not introduced by this PR → check for existing `[LabelOps Flake]` PR, then dispatch `labelops-flake-fix`.\n+\n+4. **Can't fix** → reproduce locally, add `AI-needs-CI-fix-input` label, post escalation with what's failing, minimal repro, and options. End comment with `<!-- labelops:ci-escalation:<headRefOid> -->`.\n+\n+**If Step 3 pushed → stop this PR for this run.** CI restarts; next run sees fresh status.\n+\n+## Step 4 — Conflicts (after CI, when `has_conflicts` AND Step 3 didn't push)\n+\n+Pre-check with `git merge-tree --write-tree --messages origin/main HEAD`. If no `CONFLICT` lines → PR merges cleanly, do nothing (don't thrash CI).\n+\n+If conflicts exist:\n+1. `git merge origin/main --no-edit`\n+2. Resolve. Read `gh pr diff` and linked issues for context. Understand both sides before touching anything.\n+3. Build + targeted tests must pass after resolution.\n+4. Push, comment listing resolved files.\n+\n+Can't resolve → `git merge --abort`, comment explaining which files and why. No push, no label.\n+\n+## Hygiene\n+\n+- At most one comment per PR per run.\n+- `hide-older-comments: true` collapses previous LabelOps comments.\n+- `regression-pr-shepherd` owns `AI-Issue-Regression-PR` PRs — don't touch those.",
+          "snapshot_ref": "8bd2fd34369dceebbd0d06931d83d2329d30407d",
+          "snapshot_blob_sha": "84354ccd94d9fbe89c69487e709f82953ec064ce",
+          "snapshot_file": "snapshots/fsharp__dotnet__8bd2fd34369dceebbd0d06931d83d2329d30407d__labelops-pr-maintenance.md",
+          "snapshot_bytes": 5321,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/fsharp\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"fsharp\",\"generated_workflow_path\":\".github/workflows/labelops-pr-maintenance.lock.yml\",\"generated_workflow_file\":\"labelops-pr-maintenance.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/fsharp/blob/536800cd82a0481c055f08d570bbc924712331b2/.github/workflows/labelops-pr-maintenance.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+      "source_full_name": "dotnet/fsharp",
+      "md_path": ".github/workflows/labelops-pr-maintenance.md",
+      "commit_sha": "c77851b2acfffebb76682a83f430409989b6c0cb",
+      "authored_at": "2026-05-18T08:48:13Z",
+      "committed_at": "2026-05-18T08:48:13Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Increase max-patch-size for LabelOps PR Maintenance workflow (#19726)\n\n* Initial plan\n\n* Increase max-patch-size to 10240 KB for LabelOps PR Maintenance workflow\n\nLabelOps resolving merge conflicts in .bsl baseline files can produce\npatches of many megabytes. The default 1024 KB limit is too restrictive.\nSet to maximum allowed value of 10240 KB (10 MB).\n\nFixes dotnet/fsharp#18204\n\nAgent-Logs-Url: https://github.com/dotnet/fsharp/sessions/2ab60227-7344-4950-a54e-ce17e8c45c90\n\nCo-authored-by: T-Gro <46543583+T-Gro@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: T-Gro <46543583+T-Gro@users.noreply.github.com>\nCo-authored-by: Tomas Grosup <Tomas.Grosup@gmail.com>\nCo-authored-by: Tomas Grosup <tomasgrosup@microsoft.com>",
+      "parent_shas": [
+        "67d1b474d1da569ee600fbc3bee7621210975d5b"
+      ],
+      "tree_sha": "208c9544ad3245ff56c52d9c5060362cf1e1360d",
+      "html_url": "https://github.com/dotnet/fsharp/commit/c77851b2acfffebb76682a83f430409989b6c0cb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+          "source_full_name": "dotnet/fsharp",
+          "md_path": ".github/workflows/labelops-pr-maintenance.md",
+          "commit_sha": "c77851b2acfffebb76682a83f430409989b6c0cb",
+          "committed_at": "2026-05-18T08:48:13Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -36,6 +36,7 @@ tools:\n   bash: true\n \n safe-outputs:\n+  max-patch-size: 10240\n   add-comment:\n     max: 5\n     target: \"*\"",
+          "snapshot_ref": "c77851b2acfffebb76682a83f430409989b6c0cb",
+          "snapshot_blob_sha": "c4e84d3a0e96fa1839a77d56a8b4e6b84183a887",
+          "snapshot_file": "snapshots/fsharp__dotnet__c77851b2acfffebb76682a83f430409989b6c0cb__labelops-pr-maintenance.md",
+          "snapshot_bytes": 5345,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/fsharp\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"fsharp\",\"generated_workflow_path\":\".github/workflows/labelops-pr-maintenance.lock.yml\",\"generated_workflow_file\":\"labelops-pr-maintenance.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/fsharp/blob/536800cd82a0481c055f08d570bbc924712331b2/.github/workflows/labelops-pr-maintenance.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+      "source_full_name": "dotnet/fsharp",
+      "md_path": ".github/workflows/labelops-pr-maintenance.md",
+      "commit_sha": "e11c2fbe6b3202da40db3af01dcce9bc78a9ab59",
+      "authored_at": "2026-05-28T08:54:00Z",
+      "committed_at": "2026-05-28T08:54:00Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Change protected-files policy to 'allowed' for labelops-pr-maintenance workflow (#19783)\n\n\n\nThe workflow resolves merge conflicts by merging from main, which naturally\nincludes changes to protected files. The previous 'fallback-to-issue' policy\nblocked these normal merge operations. The prompt still has \"Never modify\n.github/**\" as a hard rule to prevent the agent from inventing changes.",
+      "parent_shas": [
+        "5d50ace765c880a9cbb8647c9529a8fc2751b2a5"
+      ],
+      "tree_sha": "b13b94a0840cf8c2328a4d71dc508189f624d955",
+      "html_url": "https://github.com/dotnet/fsharp/commit/e11c2fbe6b3202da40db3af01dcce9bc78a9ab59",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+          "source_full_name": "dotnet/fsharp",
+          "md_path": ".github/workflows/labelops-pr-maintenance.md",
+          "commit_sha": "e11c2fbe6b3202da40db3af01dcce9bc78a9ab59",
+          "committed_at": "2026-05-28T08:54:00Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -44,7 +44,7 @@ safe-outputs:\n   push-to-pull-request-branch:\n     target: \"*\"\n     max: 5\n-    protected-files: fallback-to-issue\n+    protected-files: allowed\n   add-labels:\n     allowed: [\"AI-needs-CI-fix-input\"]\n     max: 3\n@@ -60,7 +60,7 @@ You maintain open PRs that carry `AI-Auto-Resolve-CI` or `AI-Auto-Resolve-Confli\n \n ## Hard rules\n \n-1. **Never modify `.github/**`.** Protected by `fallback-to-issue`.\n+1. **Never modify `.github/**`.** (prompt-enforced; safe-outputs allows it for merge commits from upstream)\n 2. **Never merge, approve, close, or reopen a PR.** You push commits, comment, add labels, dispatch flake-fix.\n 3. **Never remove a label.** Only maintainers do that.\n 4. **Never push without local verification.** Build + targeted tests must pass first. Match the CI job's configuration (Debug vs Release, TFM).",
+          "snapshot_ref": "e11c2fbe6b3202da40db3af01dcce9bc78a9ab59",
+          "snapshot_blob_sha": "e817cdc12220ef803ec7bea88a42a8901eb8bb59",
+          "snapshot_file": "snapshots/fsharp__dotnet__e11c2fbe6b3202da40db3af01dcce9bc78a9ab59__labelops-pr-maintenance.md",
+          "snapshot_bytes": 5375,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/fsharp\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"fsharp\",\"generated_workflow_path\":\".github/workflows/labelops-pr-maintenance.lock.yml\",\"generated_workflow_file\":\"labelops-pr-maintenance.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/fsharp/blob/536800cd82a0481c055f08d570bbc924712331b2/.github/workflows/labelops-pr-maintenance.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+      "source_full_name": "dotnet/fsharp",
+      "md_path": ".github/workflows/labelops-pr-maintenance.md",
+      "commit_sha": "fc0e130dfa9cc62b2d1f77a0d44a73bb09dfff2a",
+      "authored_at": "2026-05-28T14:29:27Z",
+      "committed_at": "2026-05-28T14:29:27Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Disable noop issue reporting for labelops-pr-maintenance workflow (#19842)\n\n* Initial plan\n\n* Disable noop issue reporting for labelops-pr-maintenance workflow\n\nCo-authored-by: T-Gro <46543583+T-Gro@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: T-Gro <46543583+T-Gro@users.noreply.github.com>\nCo-authored-by: Tomas Grosup <Tomas.Grosup@gmail.com>",
+      "parent_shas": [
+        "6b2a50e07b094b20b5199297339d4bcf5f816387"
+      ],
+      "tree_sha": "84d3a177e20b734e8490161736d6fd1f3656d5ab",
+      "html_url": "https://github.com/dotnet/fsharp/commit/fc0e130dfa9cc62b2d1f77a0d44a73bb09dfff2a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+          "source_full_name": "dotnet/fsharp",
+          "md_path": ".github/workflows/labelops-pr-maintenance.md",
+          "commit_sha": "fc0e130dfa9cc62b2d1f77a0d44a73bb09dfff2a",
+          "committed_at": "2026-05-28T14:29:27Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -36,6 +36,8 @@ tools:\n   bash: true\n \n safe-outputs:\n+  noop:\n+    report-as-issue: false\n   max-patch-size: 10240\n   add-comment:\n     max: 5",
+          "snapshot_ref": "fc0e130dfa9cc62b2d1f77a0d44a73bb09dfff2a",
+          "snapshot_blob_sha": "c5fed47a541cef2b178ef1eb2d794066bba01b6e",
+          "snapshot_file": "snapshots/fsharp__dotnet__fc0e130dfa9cc62b2d1f77a0d44a73bb09dfff2a__labelops-pr-maintenance.md",
+          "snapshot_bytes": 5410,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/fsharp\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"fsharp\",\"generated_workflow_path\":\".github/workflows/labelops-pr-maintenance.lock.yml\",\"generated_workflow_file\":\"labelops-pr-maintenance.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/fsharp/blob/536800cd82a0481c055f08d570bbc924712331b2/.github/workflows/labelops-pr-maintenance.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+      "source_full_name": "dotnet/fsharp",
+      "md_path": ".github/workflows/labelops-pr-maintenance.md",
+      "commit_sha": "3558d1aa820003d7ab881d9a95a499778916075c",
+      "authored_at": "2026-06-18T13:43:16Z",
+      "committed_at": "2026-06-18T13:43:16Z",
+      "author_name": "Tomas Grosup",
+      "author_email": "Tomas.Grosup@gmail.com",
+      "author_login": "T-Gro",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Stop agentic-workflow failure-issue spam (#19953)\n\nThe scheduled babysitter workflows (labelops-pr-maintenance, labelops-pr-\nsecurity-scan, regression-pr-shepherd) open `[aw] … failed` tracking issues on\nevery transient gh-aw infra crash (unhealthy firewall container) or engine\nhiccup. Their real signal is the labels/comments they apply to PRs, so disable\nreport-failure-as-issue for them.\n\naw-auto-update emits `create-agent-session`, which needs a Copilot-licensed\ntoken the default GITHUB_TOKEN lacks, so every scheduled detection that finds\nan update fails the safe_outputs job and spams failure issues. Disable its\nschedule (manual dispatch only) until a suitable token is provisioned.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "6b856afd039c526d1a68086db580ee8af0a150fc"
+      ],
+      "tree_sha": "082fd50d7233da8b5cd020eb80731b247dc12cb9",
+      "html_url": "https://github.com/dotnet/fsharp/commit/3558d1aa820003d7ab881d9a95a499778916075c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/fsharp:.github/workflows/labelops-pr-maintenance.md",
+          "source_full_name": "dotnet/fsharp",
+          "md_path": ".github/workflows/labelops-pr-maintenance.md",
+          "commit_sha": "3558d1aa820003d7ab881d9a95a499778916075c",
+          "committed_at": "2026-06-18T13:43:16Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -36,6 +36,9 @@ tools:\n   bash: true\n \n safe-outputs:\n+  # Transient gh-aw infra crashes (e.g. unhealthy firewall container) and engine\n+  # hiccups must not open tracking issues — real problems surface as PR labels/comments.\n+  report-failure-as-issue: false\n   noop:\n     report-as-issue: false\n   max-patch-size: 10240",
+          "snapshot_ref": "3558d1aa820003d7ab881d9a95a499778916075c",
+          "snapshot_blob_sha": "877080780b01d1b08c0267c72015f99b78bf9891",
+          "snapshot_file": "snapshots/fsharp__dotnet__3558d1aa820003d7ab881d9a95a499778916075c__labelops-pr-maintenance.md",
+          "snapshot_bytes": 5615,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/fsharp\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"fsharp\",\"generated_workflow_path\":\".github/workflows/labelops-pr-maintenance.lock.yml\",\"generated_workflow_file\":\"labelops-pr-maintenance.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/fsharp/blob/536800cd82a0481c055f08d570bbc924712331b2/.github/workflows/labelops-pr-maintenance.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

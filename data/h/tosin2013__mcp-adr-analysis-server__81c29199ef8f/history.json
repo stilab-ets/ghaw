@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/mcp-server-validation.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/mcp-server-validation.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/mcp-server-validation.lock.yml",
+      "generated_workflow_file": "mcp-server-validation.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-server-validation.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-server-validation.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-server-validation.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 124,
+          "file_deletions": 0,
+          "file_changes": 124,
+          "file_patch": "@@ -0,0 +1,124 @@\n+---\n+name: 'MCP Server Validation'\n+description: 'Validates MCP server initialization, tool registration, protocol compliance, and Node 20/22 matrix testing'\n+on:\n+  pull_request:\n+    paths:\n+      - 'src/**'\n+      - 'tests/**'\n+      - 'package.json'\n+      - 'tsconfig.json'\n+  push:\n+    branches:\n+      - main\n+      - develop\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+  pull-requests: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[mcp-validation]'\n+  add-comment:\n+tools:\n+  bash: true\n+  github:\n+    toolsets: [issues, pull_requests]\n+---\n+\n+# MCP Server Validation\n+\n+You validate the MCP server's core functionality: initialization, tool registration, protocol compliance, and cross-version compatibility.\n+\n+## Context\n+\n+The **mcp-adr-analysis-server** exposes 27 tools via `@modelcontextprotocol/sdk`. The server must:\n+\n+- Initialize correctly on both Node.js 20 and 22\n+- Register all 27 tools in both ListTools and CallTool handlers\n+- Comply with the MCP protocol (JSON-RPC over stdio)\n+- Pass health checks (`npm run health`)\n+\n+## Validation Steps\n+\n+### Step 1: Build and Health Check\n+\n+Run the following commands:\n+\n+```bash\n+npm run build\n+npm run health\n+```\n+\n+If the health check fails, capture the full error output for diagnosis.\n+\n+### Step 2: Validate MCP Tool Registration\n+\n+Run the server in test mode and verify it initializes:\n+\n+```bash\n+node dist/src/index.js --test 2>&1 | tee mcp-validation.log\n+```\n+\n+Check that the log contains \"MCP Server Ready\" or equivalent initialization success message. If not, report the failure.\n+\n+### Step 3: Test MCP Protocol Compliance\n+\n+Verify that the MCP SDK imports work correctly:\n+\n+```bash\n+node -e \"\n+  import { Server } from '@modelcontextprotocol/sdk/server/index.js';\n+  import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';\n+  console.log('MCP SDK imports successful');\n+  console.log('MCP protocol compliance verified');\n+\"\n+```\n+\n+### Step 4: Run MCP Functionality Tests\n+\n+```bash\n+npm run test:mcp-functionality\n+```\n+\n+If this command is not available, fall back to:\n+\n+```bash\n+npm test -- --testPathPattern=\"mcp\" --verbose\n+```\n+\n+### Step 5: Verify Tool Count\n+\n+Read `src/index.ts` and count the tools registered in the `ListToolsRequestSchema` handler. Verify the count is 27 (or document the current count if it has changed).\n+\n+### Step 6: Node Version Compatibility\n+\n+Note: The copilot-setup-steps.yml runs on Node 20. If there are known Node 22 compatibility issues, document them.\n+\n+## On Failure\n+\n+If any step fails:\n+\n+1. **For PR events**: Add a comment to the PR with the failure details and suggested fix\n+2. **For push/dispatch events**: Create an issue with full diagnostic output\n+\n+**Issue title**: `[mcp-validation] {brief description of failure}`\n+\n+**Issue body** should include:\n+\n+- Which validation step failed\n+- Full error output (truncated to 100 lines if longer)\n+- Node.js version tested\n+- Suggested remediation steps\n+- Links to relevant source files\n+\n+## On Success\n+\n+If all validations pass:\n+\n+- **For PR events**: Add a comment confirming all MCP validations passed, including the tool count\n+- **For push/dispatch events**: No issue needed (output `noop`)\n+\n+---\n+\n+_Replaces: .github/agents/mcp-server-validation.yml_",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "d717c9664a69b505d262de1ccb1c4aeeab1573d2",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__mcp-server-validation.md",
+          "snapshot_bytes": 3180,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-server-validation.lock.yml\",\"generated_workflow_file\":\"mcp-server-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-server-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-server-validation.md",
+      "commit_sha": "912589333ba6f7fd570c7d98503a43d7275186da",
+      "authored_at": "2026-02-16T18:44:11Z",
+      "committed_at": "2026-02-16T18:44:11Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: add dependency installation to agentic workflow instructions (#464)\n\nAdd Step 0 (install build-essential, python3, error-tolerant npm\ninstall, tree-sitter rebuild) to knowledge-graph-validation.md and\nmcp-server-validation.md agent instructions. Recompile all three\naffected lock files via gh aw compile.\n\nCloses #462\nCloses #463\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "a5f9263e64f1d48f5d41f2505b66cee5da91b7fb"
+      ],
+      "tree_sha": "82881a1ce856ef7224e2c0eb434ad30d61bcd343",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/912589333ba6f7fd570c7d98503a43d7275186da",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-server-validation.md",
+          "commit_sha": "912589333ba6f7fd570c7d98503a43d7275186da",
+          "committed_at": "2026-02-16T18:44:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 23,
+          "file_deletions": 0,
+          "file_changes": 23,
+          "file_patch": "@@ -41,6 +41,29 @@ The **mcp-adr-analysis-server** exposes 27 tools via `@modelcontextprotocol/sdk`\n \n ## Validation Steps\n \n+### Step 0: Install Dependencies\n+\n+Install build tools required for native module compilation (e.g., tree-sitter), then install npm dependencies with error-tolerant fallbacks.\n+\n+```bash\n+# Install build tools for native modules (requires sudo)\n+sudo apt-get update -qq && sudo apt-get install -y build-essential python3 || echo \"⚠️ Could not install build tools (may already be present)\"\n+\n+# Install npm dependencies with fallback\n+if ! npm ci; then\n+  echo \"⚠️ npm ci failed, falling back to npm install...\"\n+  npm install\n+fi\n+\n+# Rebuild tree-sitter native bindings (non-blocking)\n+echo \"🔨 Rebuilding tree-sitter native bindings...\"\n+if ! npm rebuild tree-sitter; then\n+  echo \"⚠️ Tree-sitter rebuild failed, but continuing (tests handle graceful fallback)\"\n+fi\n+```\n+\n+If `npm` is not available or both install commands fail, Steps 1-4 will not be able to run. Report the dependency installation failure as the root cause.\n+\n ### Step 1: Build and Health Check\n \n Run the following commands:",
+          "snapshot_ref": "912589333ba6f7fd570c7d98503a43d7275186da",
+          "snapshot_blob_sha": "9dfe2574d94b7fac513e4ee98da29f482399d1a4",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__912589333ba6f7fd570c7d98503a43d7275186da__mcp-server-validation.md",
+          "snapshot_bytes": 4105,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-server-validation.lock.yml\",\"generated_workflow_file\":\"mcp-server-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-server-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-server-validation.md",
+      "commit_sha": "66b4ff68b284b25df42c88a75464bfb252398b68",
+      "authored_at": "2026-02-20T14:57:45Z",
+      "committed_at": "2026-02-20T14:57:45Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: update MCP server tool count from 27/23 to 73 across documentation (#522)\n\n* Initial plan\n\n* fix: update tool count from 27/23 to 73 across documentation\n\nCo-authored-by: tosin2013 <1975599+tosin2013@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: tosin2013 <1975599+tosin2013@users.noreply.github.com>\nCo-authored-by: Tosin Akinosho <tosin.akinosho@gmail.com>",
+      "parent_shas": [
+        "5620fa1f2559276e63d32a7b8301ec4a6c064a47"
+      ],
+      "tree_sha": "a318351a3a22612651c9a6e6186efbc0ac203fcd",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/66b4ff68b284b25df42c88a75464bfb252398b68",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-server-validation.md",
+          "commit_sha": "66b4ff68b284b25df42c88a75464bfb252398b68",
+          "committed_at": "2026-02-20T14:57:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -32,10 +32,10 @@ You validate the MCP server's core functionality: initialization, tool registrat\n \n ## Context\n \n-The **mcp-adr-analysis-server** exposes 27 tools via `@modelcontextprotocol/sdk`. The server must:\n+The **mcp-adr-analysis-server** exposes 73 tools via `@modelcontextprotocol/sdk`. The server must:\n \n - Initialize correctly on both Node.js 20 and 22\n-- Register all 27 tools in both ListTools and CallTool handlers\n+- Register all 73 tools in both ListTools and CallTool handlers\n - Comply with the MCP protocol (JSON-RPC over stdio)\n - Pass health checks (`npm run health`)\n ",
+          "snapshot_ref": "66b4ff68b284b25df42c88a75464bfb252398b68",
+          "snapshot_blob_sha": "7b26a9589be425e1180c3717c199fda592db0ce8",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__66b4ff68b284b25df42c88a75464bfb252398b68__mcp-server-validation.md",
+          "snapshot_bytes": 4105,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-server-validation.lock.yml\",\"generated_workflow_file\":\"mcp-server-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-server-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/mcp-server-validation.md",
+      "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "authored_at": "2026-03-16T17:48:59Z",
+      "committed_at": "2026-03-16T17:48:59Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: add node ecosystem to gh-aw network allowlist for agentic workflows\n\nAll agentic workflows that run `npm ci` were failing because the gh-aw\nsandbox firewall blocked `nodejs.org`, preventing node-gyp from\ndownloading Node.js headers needed to compile tree-sitter native modules.\n\nAdd `network: allowed: [defaults, node]` to 7 workflow frontmatters:\n- deployment-pattern-validation.md\n- mcp-server-validation.md\n- esm-module-validation.md\n- knowledge-graph-validation.md\n- docs-noob-tester.md\n- mcp-tool-checker.md\n- ai-executor-integration.md\n\nThe `node` ecosystem identifier adds nodejs.org, npmjs.org, yarnpkg.com,\ndeno.land, bun.sh, and related domains to the firewall allowlist.\nRecompiled all lock files via `gh aw compile`.\n\nFixes #632\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2877451dca32cd49ad472fd7ef99825c028fe121"
+      ],
+      "tree_sha": "c6f58323d5517991601c231a1f6edcda0c151d60",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/mcp-server-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/mcp-server-validation.md",
+          "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "committed_at": "2026-03-16T17:48:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -24,6 +24,10 @@ tools:\n   bash: true\n   github:\n     toolsets: [issues, pull_requests]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n ---\n \n # MCP Server Validation",
+          "snapshot_ref": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "snapshot_blob_sha": "47c796aaa4723b18cde21bb8542b7de038c4aedf",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__72f88fa814801e4acb65e1eaf7f4f0437de3fdef__mcp-server-validation.md",
+          "snapshot_bytes": 4151,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/mcp-server-validation.lock.yml\",\"generated_workflow_file\":\"mcp-server-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/mcp-server-validation.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

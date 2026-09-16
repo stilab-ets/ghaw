@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+    "source_full_name": "github/gh-aw-mcpg",
+    "source_owner": "github",
+    "source_repo": "gh-aw-mcpg",
+    "md_path": ".github/workflows/ghcr-download-tracker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-mcpg/blob/HEAD/.github/workflows/ghcr-download-tracker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-mcpg",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-mcpg",
+      "generated_workflow_path": ".github/workflows/ghcr-download-tracker.lock.yml",
+      "generated_workflow_file": "ghcr-download-tracker.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/ghcr-download-tracker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:48:31+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/ghcr-download-tracker.md",
+      "commit_sha": "ff7822cb51c438881c30d37aa98f6f8307add188",
+      "authored_at": "2026-03-03T13:19:38Z",
+      "committed_at": "2026-03-03T13:19:38Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add daily GHCR download tracker workflow\n\nCo-authored-by: lpcox <15877973+lpcox@users.noreply.github.com>",
+      "parent_shas": [
+        "37887a1b042dfb576165fe6b5f215382dadfa36f"
+      ],
+      "tree_sha": "02a31017f58e24b67a697acc2cbb9240fb6ce588",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/ff7822cb51c438881c30d37aa98f6f8307add188",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/ghcr-download-tracker.md",
+          "commit_sha": "ff7822cb51c438881c30d37aa98f6f8307add188",
+          "committed_at": "2026-03-03T13:19:38Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 271,
+          "file_deletions": 0,
+          "file_changes": 271,
+          "file_patch": "@@ -0,0 +1,271 @@\n+---\n+name: GHCR Download Tracker\n+description: Daily tracker that graphs ghcr.io/github/gh-aw-mcpg container image downloads over time and posts the chart in a GitHub issue\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+\n+engine: copilot\n+\n+network:\n+  allowed:\n+    - defaults\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  create-issue:\n+    title-prefix: \"[ghcr-downloads] \"\n+    labels: [metrics, ghcr, automation]\n+    close-older-issues: true\n+    max: 1\n+    expires: 8\n+  noop:\n+\n+tools:\n+  bash: [\"*\"]\n+  cache-memory:\n+\n+timeout-minutes: 15\n+strict: true\n+---\n+\n+# GHCR Download Tracker 📦📈\n+\n+You are a metrics tracking agent that monitors container image download counts for `ghcr.io/github/gh-aw-mcpg` and creates a daily report with a visual download graph.\n+\n+## Mission\n+\n+1. Fetch the current total download count for the `gh-aw-mcpg` container image from the GitHub packages API\n+2. Store the count in cache memory with today's date\n+3. Load the historical download data from cache\n+4. Generate a chart using a quickchart.io URL\n+5. Create a GitHub issue with the download graph and summary statistics\n+\n+## Step 1: Fetch Current Download Count 📊\n+\n+Use the GitHub CLI to query the packages API and sum all version download counts:\n+\n+```bash\n+gh api '/orgs/github/packages/container/gh-aw-mcpg/versions?per_page=100' \\\n+  | python3 -c \"\n+import sys, json\n+versions = json.load(sys.stdin)\n+total = sum(v.get('download_count', 0) for v in versions)\n+print(total)\n+\"\n+```\n+\n+If that command fails (e.g., permission error or package not found), also try fetching the package-level info:\n+\n+```bash\n+gh api /orgs/github/packages/container/gh-aw-mcpg 2>&1\n+```\n+\n+Record today's total download count as `currentCount`. Also record today's date:\n+\n+```bash\n+date '+%Y-%m-%d'\n+```\n+\n+## Step 2: Load Historical Data from Cache 💾\n+\n+Check the cache for historical download data:\n+\n+- **Cache directory**: `/tmp/gh-aw/cache-memory/ghcr-download-tracker/`\n+- **File**: `download-history.json`\n+\n+Expected format:\n+```json\n+{\n+  \"history\": [\n+    {\"date\": \"2026-01-01\", \"count\": 1234},\n+    {\"date\": \"2026-01-02\", \"count\": 1290}\n+  ],\n+  \"lastUpdated\": \"2026-01-02\"\n+}\n+```\n+\n+If the file does not exist, start with an empty `history` array.\n+\n+```bash\n+mkdir -p /tmp/gh-aw/cache-memory/ghcr-download-tracker/\n+cat /tmp/gh-aw/cache-memory/ghcr-download-tracker/download-history.json 2>/dev/null || echo '{\"history\":[],\"lastUpdated\":\"\"}'\n+```\n+\n+## Step 3: Update History 🔄\n+\n+Using Python, append today's data point to the history and keep only the last 90 days:\n+\n+```bash\n+python3 << 'EOF'\n+import json, os\n+from datetime import datetime, timedelta\n+\n+cache_dir = '/tmp/gh-aw/cache-memory/ghcr-download-tracker'\n+cache_file = os.path.join(cache_dir, 'download-history.json')\n+\n+today = datetime.utcnow().strftime('%Y-%m-%d')\n+current_count = <REPLACE_WITH_currentCount>\n+\n+# Load existing history\n+try:\n+    with open(cache_file) as f:\n+        data = json.load(f)\n+except (FileNotFoundError, json.JSONDecodeError):\n+    data = {'history': [], 'lastUpdated': ''}\n+\n+history = data.get('history', [])\n+\n+# Remove any existing entry for today (idempotent re-runs)\n+history = [e for e in history if e['date'] != today]\n+\n+# Append today's entry\n+history.append({'date': today, 'count': current_count})\n+\n+# Sort by date ascending\n+history.sort(key=lambda e: e['date'])\n+\n+# Keep only last 90 days\n+cutoff = (datetime.utcnow() - timedelta(days=90)).strftime('%Y-%m-%d')\n+history = [e for e in history if e['date'] >= cutoff]\n+\n+data = {'history': history, 'lastUpdated': today}\n+\n+os.makedirs(cache_dir, exist_ok=True)\n+with open(cache_file, 'w') as f:\n+    json.dump(data, f, indent=2)\n+\n+print(json.dumps(history))\n+EOF\n+```\n+\n+## Step 4: Generate Chart URL 📈\n+\n+Use Python to build a quickchart.io chart URL from the historical data.\n+\n+Limit the chart labels to at most 30 data points — if there are more than 30 entries, sample them evenly so the chart remains readable.\n+\n+```bash\n+python3 << 'PYEOF'\n+import json, urllib.parse\n+\n+# Load history from cache\n+with open('/tmp/gh-aw/cache-memory/ghcr-download-tracker/download-history.json') as f:\n+    data = json.load(f)\n+\n+history = data['history']\n+\n+# Sample down to at most 30 points if needed\n+if len(history) > 30:\n+    step = len(history) / 30\n+    history = [history[int(i * step)] for i in range(30)]\n+\n+labels = [e['date'] for e in history]\n+counts = [e['count'] for e in history]\n+\n+chart_config = {\n+    \"type\": \"line\",\n+    \"data\": {\n+        \"labels\": labels,\n+        \"datasets\": [{\n+            \"label\": \"Total Downloads\",\n+            \"data\": counts,\n+            \"borderColor\": \"rgb(99, 102, 241)\",\n+            \"backgroundColor\": \"rgba(99, 102, 241, 0.1)\",\n+            \"tension\": 0.3,\n+            \"fill\": True,\n+            \"pointRadius\": 4\n+        }]\n+    },\n+    \"options\": {\n+        \"title\": {\n+            \"display\": True,\n+            \"text\": \"ghcr.io/github/gh-aw-mcpg — Total Downloads Over Time\"\n+        },\n+        \"scales\": {\n+            \"yAxes\": [{\"ticks\": {\"beginAtZero\": False}}],\n+            \"xAxes\": [{\"ticks\": {\"maxRotation\": 45, \"autoSkip\": True, \"maxTicksLimit\": 10}}]\n+        }\n+    }\n+}\n+\n+config_str = json.dumps(chart_config, separators=(',', ':'))\n+encoded = urllib.parse.quote(config_str)\n+chart_url = f\"https://quickchart.io/chart?c={encoded}&w=700&h=350&bkg=white\"\n+print(chart_url)\n+PYEOF\n+```\n+\n+Save the printed URL as `chartUrl`.\n+\n+## Step 5: Compute Summary Statistics 📋\n+\n+From the historical data, compute:\n+\n+- **currentCount**: today's total download count\n+- **delta7**: growth over the last 7 days (difference between today's count and the count 7 days ago, or the earliest available)\n+- **delta30**: growth over the last 30 days (difference between today's count and the count 30 days ago, or the earliest available)\n+- **earliestDate**: the oldest date in the history array\n+\n+Use Python or bash arithmetic to compute these values.\n+\n+## Step 6: Build and Create the Issue 🎫\n+\n+Compose the issue body following the report structure guidelines (use `###` or lower for all headers):\n+\n+```markdown\n+### ghcr.io/github/gh-aw-mcpg — Download Statistics\n+\n+![Downloads Over Time](<chartUrl>)\n+\n+### Summary\n+\n+| Metric | Value |\n+|--------|-------|\n+| **Current Total Downloads** | <currentCount> |\n+| **7-Day Growth** | +<delta7> downloads |\n+| **30-Day Growth** | +<delta30> downloads |\n+| **Tracking Since** | <earliestDate> |\n+\n+### Daily Download History\n+\n+<details>\n+<summary><b>View Full Download History</b></summary>\n+\n+| Date | Total Downloads | Daily Δ |\n+|------|----------------|---------|\n+<one row per entry, most recent first, showing daily change>\n+\n+</details>\n+\n+**References:** Workflow run [§${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n+```\n+\n+Then use the `create-issue` safe output with:\n+\n+- **Title**: `ghcr.io/github/gh-aw-mcpg — Download Graph (<today's date>)`\n+- **Body**: the formatted report above\n+\n+The `close-older-issues: true` setting will automatically close the previous report before creating the new one, so only the latest graph issue remains open.\n+\n+## Step 7: Handle Errors Gracefully ⚠️\n+\n+If you cannot fetch the download count due to API errors or permission issues:\n+\n+1. Log the error output you received\n+2. Call the `noop` safe output with a descriptive message, e.g.:\n+   ```\n+   noop: \"Could not fetch download stats for ghcr.io/github/gh-aw-mcpg — API error: <error message>. No issue created.\"\n+   ```\n+3. Do NOT create an issue when data is unavailable\n+\n+## Notes\n+\n+- The quickchart.io chart URL is embedded as a Markdown image in the issue body. The image renders in the user's browser — no outbound network request is needed from the workflow itself.\n+- Historical data accumulates daily; entries older than 90 days are pruned automatically.\n+- The `close-older-issues: true` setting ensures only the most recent report issue is open at any time.\n+- On the first run, only a single data point will be available; the graph will show a flat line, which is expected. The trend becomes visible after a few days.",
+          "snapshot_ref": "ff7822cb51c438881c30d37aa98f6f8307add188",
+          "snapshot_blob_sha": "ae9240fd18554a3c79e8dcab91789eeca060625d",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__ff7822cb51c438881c30d37aa98f6f8307add188__ghcr-download-tracker.md",
+          "snapshot_bytes": 7984,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/ghcr-download-tracker.lock.yml\",\"generated_workflow_file\":\"ghcr-download-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/ghcr-download-tracker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/ghcr-download-tracker.md",
+      "commit_sha": "9ff2ba571cae156ac96504686277c9e9cee0dbc1",
+      "authored_at": "2026-03-09T17:33:50Z",
+      "committed_at": "2026-03-09T17:33:50Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "upgraded aw",
+      "parent_shas": [
+        "ca87ff9c6eefb0569311041ec9f83726d8c90a10"
+      ],
+      "tree_sha": "6a3c9b7c253e99006f100ea2c429de82cba1fefe",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/9ff2ba571cae156ac96504686277c9e9cee0dbc1",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/ghcr-download-tracker.md",
+          "commit_sha": "9ff2ba571cae156ac96504686277c9e9cee0dbc1",
+          "committed_at": "2026-03-09T17:33:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -22,7 +22,7 @@ safe-outputs:\n     labels: [metrics, ghcr, automation]\n     close-older-issues: true\n     max: 1\n-    expires: 8\n+    expires: 8d\n   noop:\n \n tools:\n@@ -268,4 +268,4 @@ If you cannot fetch the download count due to API errors or permission issues:\n - The quickchart.io chart URL is embedded as a Markdown image in the issue body. The image renders in the user's browser — no outbound network request is needed from the workflow itself.\n - Historical data accumulates daily; entries older than 90 days are pruned automatically.\n - The `close-older-issues: true` setting ensures only the most recent report issue is open at any time.\n-- On the first run, only a single data point will be available; the graph will show a flat line, which is expected. The trend becomes visible after a few days.\n+- On the first run, only a single data point will be available; the graph will show a flat line, which is expected. The trend becomes visible after a few days.\n\\ No newline at end of file",
+          "snapshot_ref": "9ff2ba571cae156ac96504686277c9e9cee0dbc1",
+          "snapshot_blob_sha": "45f3330b454face75955d4f5372405a539af6893",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__9ff2ba571cae156ac96504686277c9e9cee0dbc1__ghcr-download-tracker.md",
+          "snapshot_bytes": 7984,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/ghcr-download-tracker.lock.yml\",\"generated_workflow_file\":\"ghcr-download-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/ghcr-download-tracker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/ghcr-download-tracker.md",
+      "commit_sha": "a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+      "authored_at": "2026-04-11T14:36:49Z",
+      "committed_at": "2026-04-11T14:36:49Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "Disable threat-detection in all 31 workflows\n\nAdd threat-detection: { enabled: false } under safe-outputs in every\nworkflow .md file, then recompile all lock files. This removes the\ndetection job from all compiled workflows.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "206efeadcc8ecc0d7fc5516c530ef3f88d918dd3"
+      ],
+      "tree_sha": "24d552d253991b781a71e266c97d6472503f89c0",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/ghcr-download-tracker.md",
+          "commit_sha": "a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+          "committed_at": "2026-04-11T14:36:49Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -15,6 +15,8 @@ network:\n     - defaults\n \n safe-outputs:\n+  threat-detection:\n+    enabled: false\n   mentions: false\n   allowed-github-references: []\n   create-issue:",
+          "snapshot_ref": "a0916a9d66ce391d5745f73ee7c4e94bdb0700a3",
+          "snapshot_blob_sha": "82e0f8823e324b2000fab3a50ead54bc0600aa7b",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__a0916a9d66ce391d5745f73ee7c4e94bdb0700a3__ghcr-download-tracker.md",
+          "snapshot_bytes": 8023,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/ghcr-download-tracker.lock.yml\",\"generated_workflow_file\":\"ghcr-download-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/ghcr-download-tracker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+      "source_full_name": "github/gh-aw-mcpg",
+      "md_path": ".github/workflows/ghcr-download-tracker.md",
+      "commit_sha": "45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+      "authored_at": "2026-07-10T02:35:35Z",
+      "committed_at": "2026-07-10T02:35:35Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "Landon Cox",
+      "committer_email": "landon.cox@microsoft.com",
+      "committer_login": "lpcox",
+      "committer_account_type": "User",
+      "message": "fix(workflows): migrate all workflows to copilot-requests: write permission\n\nMigrate all 32 remaining agentic workflows from COPILOT_GITHUB_TOKEN\nsecret-based authentication to the copilot-requests: write permission,\nwhich uses GitHub Actions token-based inference via S2S token exchange.\n\nThis eliminates the dependency on a manually-managed secret that can\nexpire, causing widespread smoke test failures (as seen in #9027 and\nrelated issues #9023-#9026).\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "aa1c0de9de1faf699de40992aafbd95461e195db"
+      ],
+      "tree_sha": "0326f13922d6ded65aafe19d8981bfdec75c132e",
+      "html_url": "https://github.com/github/gh-aw-mcpg/commit/45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-mcpg:.github/workflows/ghcr-download-tracker.md",
+          "source_full_name": "github/gh-aw-mcpg",
+          "md_path": ".github/workflows/ghcr-download-tracker.md",
+          "commit_sha": "45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+          "committed_at": "2026-07-10T02:35:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -7,6 +7,7 @@ on:\n \n permissions:\n   contents: read\n+  copilot-requests: write\n \n engine: copilot\n ",
+          "snapshot_ref": "45a6fb81de50cc5e4c7dd0232522492a74ca8160",
+          "snapshot_blob_sha": "5101823de7ce0c64915aeca9061bbcdb5ba8a7b6",
+          "snapshot_file": "snapshots/gh-aw-mcpg__github__45a6fb81de50cc5e4c7dd0232522492a74ca8160__ghcr-download-tracker.md",
+          "snapshot_bytes": 8049,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-mcpg\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-mcpg\",\"generated_workflow_path\":\".github/workflows/ghcr-download-tracker.lock.yml\",\"generated_workflow_file\":\"ghcr-download-tracker.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-mcpg/blob/117e5496a2ffa2bb81d36e21a0d028da8b6cff4f/.github/workflows/ghcr-download-tracker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

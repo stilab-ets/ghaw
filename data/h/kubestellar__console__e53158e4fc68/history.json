@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+    "source_full_name": "kubestellar/console",
+    "source_owner": "kubestellar",
+    "source_repo": "console",
+    "md_path": ".github/workflows/auto-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/kubestellar/console/blob/HEAD/.github/workflows/auto-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "kubestellar/console",
+      "generated_owner": "kubestellar",
+      "generated_repo": "console",
+      "generated_workflow_path": ".github/workflows/auto-triage.lock.yml",
+      "generated_workflow_file": "auto-triage.lock.yml",
+      "generated_html_url": "https://github.com/kubestellar/console/blob/a09676c19d9adb53fc4477e09f0dd4e1226c62cf/.github/workflows/auto-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:57:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+      "source_full_name": "kubestellar/console",
+      "md_path": ".github/workflows/auto-triage.md",
+      "commit_sha": "80ae810f4a716ffa36f2cc49d381bcc5193dcabc",
+      "authored_at": "2026-01-27T21:19:09Z",
+      "committed_at": "2026-01-27T21:19:09Z",
+      "author_name": "Andy Anderson",
+      "author_email": "andy@clubanderson.com",
+      "author_login": "clubanderson",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "✨ Convert Copilot automation to GitHub Agentic Workflows\n\nReplace complex YAML-based GitHub Actions with gh-aw markdown workflows\nfor improved AI agent orchestration and error recovery.\n\nNew workflows:\n- auto-triage.md: Validates and triages incoming bug/feature requests\n- implement-fix.md: Orchestrates Copilot to implement fixes\n- verify-preview.md: Tests Netlify preview deployments\n- handle-complications.md: Handles DCO, builds, conflicts, Copilot comments\n- stuck-detection.md: Detects stuck items and attempts recovery\n\nKey improvements:\n- Continuous monitoring of Copilot comments on PRs\n- Automatic triage without manual label addition\n- Better error recovery with up to 3 retry attempts\n- Structured safe-outputs for controlled GitHub API access\n\nSigned-off-by: Andrew Anderson <andy@clubanderson.com>\nCo-authored-by: Claude Opus 4.5 <noreply@anthropic.com>",
+      "parent_shas": [
+        "c4896493c98d753f35b7b423f062fc5d543410e4"
+      ],
+      "tree_sha": "6f8859ec3065fdc9911b0cfaaf0b74d7dd9f49e9",
+      "html_url": "https://github.com/kubestellar/console/commit/80ae810f4a716ffa36f2cc49d381bcc5193dcabc",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+          "source_full_name": "kubestellar/console",
+          "md_path": ".github/workflows/auto-triage.md",
+          "commit_sha": "80ae810f4a716ffa36f2cc49d381bcc5193dcabc",
+          "committed_at": "2026-01-27T21:19:09Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 78,
+          "file_deletions": 0,
+          "file_changes": 78,
+          "file_patch": "@@ -0,0 +1,78 @@\n+---\n+# Auto-Triage Workflow - validates and triages incoming bug reports and feature requests\n+on:\n+  issues:\n+    types: [opened, edited, labeled]\n+\n+safe-outputs:\n+  add-labels:\n+    max: 3\n+  add-comment:\n+    max: 2\n+---\n+\n+# Auto-Triage Issues\n+\n+You are an AI assistant that triages incoming issues for the KubeStellar Console project.\n+\n+## Context\n+\n+The KubeStellar Console is a web-based UI for managing KubeStellar deployments. Users can submit bug reports and feature requests through the console, which creates GitHub issues with the `ai-fix-requested` label.\n+\n+## When to Run\n+\n+Only process issues that have the `ai-fix-requested` label. If the issue doesn't have this label, do nothing.\n+\n+## Your Task\n+\n+When a new issue is created or edited with the `ai-fix-requested` label, validate it and determine if it's ready for implementation.\n+\n+## Validation Criteria\n+\n+### For Bug Reports\n+\n+A valid bug report MUST have:\n+1. **Clear title** - Describes the bug (not generic like \"bug\" or \"doesn't work\")\n+2. **Steps to reproduce** - How to trigger the bug\n+3. **Expected behavior** - What should happen\n+4. **Actual behavior** - What actually happens\n+\n+### For Feature Requests\n+\n+A valid feature request MUST have:\n+1. **Clear title** - Describes the feature\n+2. **Use case** - Why this feature is needed\n+3. **Acceptance criteria** - How to verify the feature works\n+\n+## Validation Steps\n+\n+1. Read the issue title and body carefully\n+2. Determine if it's a bug report or feature request\n+3. Check if all required information is present\n+4. Search for duplicate issues (same or very similar problem)\n+\n+## Actions\n+\n+### If the issue is VALID and NOT a duplicate:\n+\n+1. Add the `triage/accepted` label\n+2. Post a comment confirming the issue is queued for AI implementation\n+\n+### If the issue NEEDS MORE INFORMATION:\n+\n+1. Add the `needs-more-info` label\n+2. Do NOT add `triage/accepted`\n+3. Post a comment explaining what specific information is missing\n+\n+### If the issue is a DUPLICATE:\n+\n+1. Add the `duplicate` label\n+2. Do NOT add `triage/accepted`\n+3. Post a comment linking to the original issue\n+\n+## Important Notes\n+\n+- Always be helpful and professional in comments\n+- If unsure whether something is a duplicate, err on the side of accepting it\n+- Focus on whether the issue is actionable, not whether you agree with it\n+- Do not reject issues for being too small or too large",
+          "snapshot_ref": "80ae810f4a716ffa36f2cc49d381bcc5193dcabc",
+          "snapshot_blob_sha": "271fa21dfeb7551a348e3942a92b74401dba5506",
+          "snapshot_file": "snapshots/console__kubestellar__80ae810f4a716ffa36f2cc49d381bcc5193dcabc__auto-triage.md",
+          "snapshot_bytes": 2335,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"kubestellar/console\",\"generated_owner\":\"kubestellar\",\"generated_repo\":\"console\",\"generated_workflow_path\":\".github/workflows/auto-triage.lock.yml\",\"generated_workflow_file\":\"auto-triage.lock.yml\",\"generated_html_url\":\"https://github.com/kubestellar/console/blob/a09676c19d9adb53fc4477e09f0dd4e1226c62cf/.github/workflows/auto-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+      "source_full_name": "kubestellar/console",
+      "md_path": ".github/workflows/auto-triage.md",
+      "commit_sha": "7f0c00e41fb499e06631596c9324ad6c5b25d594",
+      "authored_at": "2026-01-27T21:46:57Z",
+      "committed_at": "2026-01-27T21:46:57Z",
+      "author_name": "Andrew Anderson",
+      "author_email": "andy@clubanderson.com",
+      "author_login": "clubanderson",
+      "author_account_type": "User",
+      "committer_name": "Andrew Anderson",
+      "committer_email": "andy@clubanderson.com",
+      "committer_login": "clubanderson",
+      "committer_account_type": "User",
+      "message": "🔄 Change auto-triage to trigger on Copilot assignment\n\nWhen user clicks \"Assign to Copilot\" button and Copilot is assigned,\nthe workflow adds triage/accepted and ai-processing labels.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nSigned-off-by: Andrew Anderson <andy@clubanderson.com>",
+      "parent_shas": [
+        "2cc757937cd15c39f038c430e75c58954321a265"
+      ],
+      "tree_sha": "525397c5333fb38a2974c763e0eb3d95cf87c000",
+      "html_url": "https://github.com/kubestellar/console/commit/7f0c00e41fb499e06631596c9324ad6c5b25d594",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+          "source_full_name": "kubestellar/console",
+          "md_path": ".github/workflows/auto-triage.md",
+          "commit_sha": "7f0c00e41fb499e06631596c9324ad6c5b25d594",
+          "committed_at": "2026-01-27T21:46:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 18,
+          "file_deletions": 57,
+          "file_changes": 75,
+          "file_patch": "@@ -1,78 +1,39 @@\n ---\n-# Auto-Triage Workflow - validates and triages incoming bug reports and feature requests\n+# Auto-Triage Workflow - adds triage/accepted when Copilot is assigned to an issue\n on:\n   issues:\n-    types: [opened, edited, labeled]\n+    types: [assigned]\n \n safe-outputs:\n   add-labels:\n     max: 3\n-  add-comment:\n-    max: 2\n ---\n \n-# Auto-Triage Issues\n+# Auto-Triage on Copilot Assignment\n \n-You are an AI assistant that triages incoming issues for the KubeStellar Console project.\n-\n-## Context\n-\n-The KubeStellar Console is a web-based UI for managing KubeStellar deployments. Users can submit bug reports and feature requests through the console, which creates GitHub issues with the `ai-fix-requested` label.\n+You monitor issues for Copilot assignment. When Copilot is assigned to an issue, you add the `triage/accepted` label.\n \n ## When to Run\n \n-Only process issues that have the `ai-fix-requested` label. If the issue doesn't have this label, do nothing.\n+Only process when:\n+- The assignee is `Copilot` (the GitHub Copilot coding agent)\n+- The issue has the `ai-fix-requested` label\n \n ## Your Task\n \n-When a new issue is created or edited with the `ai-fix-requested` label, validate it and determine if it's ready for implementation.\n-\n-## Validation Criteria\n-\n-### For Bug Reports\n-\n-A valid bug report MUST have:\n-1. **Clear title** - Describes the bug (not generic like \"bug\" or \"doesn't work\")\n-2. **Steps to reproduce** - How to trigger the bug\n-3. **Expected behavior** - What should happen\n-4. **Actual behavior** - What actually happens\n-\n-### For Feature Requests\n-\n-A valid feature request MUST have:\n-1. **Clear title** - Describes the feature\n-2. **Use case** - Why this feature is needed\n-3. **Acceptance criteria** - How to verify the feature works\n-\n-## Validation Steps\n-\n-1. Read the issue title and body carefully\n-2. Determine if it's a bug report or feature request\n-3. Check if all required information is present\n-4. Search for duplicate issues (same or very similar problem)\n-\n-## Actions\n-\n-### If the issue is VALID and NOT a duplicate:\n-\n-1. Add the `triage/accepted` label\n-2. Post a comment confirming the issue is queued for AI implementation\n-\n-### If the issue NEEDS MORE INFORMATION:\n+When Copilot is assigned to an issue with `ai-fix-requested`:\n \n-1. Add the `needs-more-info` label\n-2. Do NOT add `triage/accepted`\n-3. Post a comment explaining what specific information is missing\n+1. **Add the `triage/accepted` label** - This indicates the issue is accepted for work\n+2. **Add the `ai-processing` label** - This shows the issue is being actively worked on\n \n-### If the issue is a DUPLICATE:\n+## Do Nothing If\n \n-1. Add the `duplicate` label\n-2. Do NOT add `triage/accepted`\n-3. Post a comment linking to the original issue\n+- The assignee is NOT Copilot\n+- The issue doesn't have `ai-fix-requested` label\n+- The issue already has `triage/accepted` label\n \n-## Important Notes\n+## Important\n \n-- Always be helpful and professional in comments\n-- If unsure whether something is a duplicate, err on the side of accepting it\n-- Focus on whether the issue is actionable, not whether you agree with it\n-- Do not reject issues for being too small or too large\n+- Copilot's login is exactly `Copilot` (case-sensitive)\n+- Do not post any comments - just add the labels silently\n+- This workflow is triggered by the \"Assign to Copilot\" button in the GitHub UI",
+          "snapshot_ref": "7f0c00e41fb499e06631596c9324ad6c5b25d594",
+          "snapshot_blob_sha": "3d583d2d936572e10c51ee7fffcf9cd74f1c4ded",
+          "snapshot_file": "snapshots/console__kubestellar__7f0c00e41fb499e06631596c9324ad6c5b25d594__auto-triage.md",
+          "snapshot_bytes": 1075,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"kubestellar/console\",\"generated_owner\":\"kubestellar\",\"generated_repo\":\"console\",\"generated_workflow_path\":\".github/workflows/auto-triage.lock.yml\",\"generated_workflow_file\":\"auto-triage.lock.yml\",\"generated_html_url\":\"https://github.com/kubestellar/console/blob/a09676c19d9adb53fc4477e09f0dd4e1226c62cf/.github/workflows/auto-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+      "source_full_name": "kubestellar/console",
+      "md_path": ".github/workflows/auto-triage.md",
+      "commit_sha": "3f2eaf7dc962cc27a361b26b87411922045cbf98",
+      "authored_at": "2026-03-16T14:27:44Z",
+      "committed_at": "2026-03-16T14:27:44Z",
+      "author_name": "Andrew Anderson",
+      "author_email": "andy@clubanderson.com",
+      "author_login": "clubanderson",
+      "author_account_type": "User",
+      "committer_name": "Andrew Anderson",
+      "committer_email": "andy@clubanderson.com",
+      "committer_login": "clubanderson",
+      "committer_account_type": "User",
+      "message": "🐛 Suppress failure issue creation for all gh-aw workflows\n\nAdded report-failure-as-issue: false to auto-triage, handle-complications,\nstuck-detection, and verify-preview (implement-fix already had it).\nThese workflows create noise [aw] failure issues when they fire\nredundantly alongside direct Copilot assignment.\n\nSigned-off-by: Andrew Anderson <andy@clubanderson.com>",
+      "parent_shas": [
+        "c20ec0f7c5fe5ff7704f57a22e1ad342ffd6f296"
+      ],
+      "tree_sha": "eeb51d4df254eca12bc7e0b120b816c138ea3b4a",
+      "html_url": "https://github.com/kubestellar/console/commit/3f2eaf7dc962cc27a361b26b87411922045cbf98",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+          "source_full_name": "kubestellar/console",
+          "md_path": ".github/workflows/auto-triage.md",
+          "commit_sha": "3f2eaf7dc962cc27a361b26b87411922045cbf98",
+          "committed_at": "2026-03-16T14:27:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -5,6 +5,7 @@ on:\n     types: [assigned]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   add-labels:\n     max: 3\n ---",
+          "snapshot_ref": "3f2eaf7dc962cc27a361b26b87411922045cbf98",
+          "snapshot_blob_sha": "be247bc9e0852f1c1d0332b1c9ed1e305f7b2de5",
+          "snapshot_file": "snapshots/console__kubestellar__3f2eaf7dc962cc27a361b26b87411922045cbf98__auto-triage.md",
+          "snapshot_bytes": 1108,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"kubestellar/console\",\"generated_owner\":\"kubestellar\",\"generated_repo\":\"console\",\"generated_workflow_path\":\".github/workflows/auto-triage.lock.yml\",\"generated_workflow_file\":\"auto-triage.lock.yml\",\"generated_html_url\":\"https://github.com/kubestellar/console/blob/a09676c19d9adb53fc4477e09f0dd4e1226c62cf/.github/workflows/auto-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+      "source_full_name": "kubestellar/console",
+      "md_path": ".github/workflows/auto-triage.md",
+      "commit_sha": "7648b86ba564d86094f4076b5c4785e07db4752d",
+      "authored_at": "2026-04-28T20:42:55Z",
+      "committed_at": "2026-04-28T20:42:55Z",
+      "author_name": "Andy Anderson",
+      "author_email": "andy@clubanderson.com",
+      "author_login": "clubanderson",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🐛 Disable aw noop/detection tracking issues (#10777)\n\nAdd noop: false to all 3 agentic workflow sources to prevent\nauto-creation of [aw] No-Op Runs and [aw] Detection Runs issues.\n\nSigned-off-by: Andy Anderson <andy@clubanderson.com>\nSigned-off-by: Andrew Anderson <andy@clubanderson.com>",
+      "parent_shas": [
+        "5a0444eb438b533c59541e2691313fa405181cf1"
+      ],
+      "tree_sha": "315de5217334bd08e634b7c61cb8e65e09ba0f5d",
+      "html_url": "https://github.com/kubestellar/console/commit/7648b86ba564d86094f4076b5c4785e07db4752d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+          "source_full_name": "kubestellar/console",
+          "md_path": ".github/workflows/auto-triage.md",
+          "commit_sha": "7648b86ba564d86094f4076b5c4785e07db4752d",
+          "committed_at": "2026-04-28T20:42:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -6,6 +6,7 @@ on:\n \n safe-outputs:\n   report-failure-as-issue: false\n+  noop: false\n   add-labels:\n     max: 3\n ---",
+          "snapshot_ref": "7648b86ba564d86094f4076b5c4785e07db4752d",
+          "snapshot_blob_sha": "bc011050c7372e861c4207fdf5425f82d3563e15",
+          "snapshot_file": "snapshots/console__kubestellar__7648b86ba564d86094f4076b5c4785e07db4752d__auto-triage.md",
+          "snapshot_bytes": 1122,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"kubestellar/console\",\"generated_owner\":\"kubestellar\",\"generated_repo\":\"console\",\"generated_workflow_path\":\".github/workflows/auto-triage.lock.yml\",\"generated_workflow_file\":\"auto-triage.lock.yml\",\"generated_html_url\":\"https://github.com/kubestellar/console/blob/a09676c19d9adb53fc4477e09f0dd4e1226c62cf/.github/workflows/auto-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+      "source_full_name": "kubestellar/console",
+      "md_path": ".github/workflows/auto-triage.md",
+      "commit_sha": "2432c7b78891238f33065321541e640690c7f669",
+      "authored_at": "2026-06-24T20:48:03Z",
+      "committed_at": "2026-06-24T20:48:03Z",
+      "author_name": "Andy Anderson",
+      "author_email": "andy@clubanderson.com",
+      "author_login": "clubanderson",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[scanner] fix: restrict GITHUB_TOKEN permissions in workflows (#19539)\n\nFixes #19522\n\nReplaces overly permissive 'permissions: {}' with minimal required scopes:\n- auto-triage: issues:write\n- implement-fix: issues:write, pull-requests:write, contents:write\n- stuck-detection: issues:write, pull-requests:write\n- netlify-error-reporter: read-all\n\nThis restricts GITHUB_TOKEN access to only what each workflow needs,\nfollowing the principle of least privilege.\n\nSigned-off-by: KubeStellar Scanner <scanner@kubestellar.io>\nCo-authored-by: KubeStellar Scanner <scanner@kubestellar.io>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "fe3502995746553e2603d45c1bc14d3220dc7c2b"
+      ],
+      "tree_sha": "3ebb8504dd8ad0d4199ea7e599f1ddc7f1b72c02",
+      "html_url": "https://github.com/kubestellar/console/commit/2432c7b78891238f33065321541e640690c7f669",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "kubestellar/console:.github/workflows/auto-triage.md",
+          "source_full_name": "kubestellar/console",
+          "md_path": ".github/workflows/auto-triage.md",
+          "commit_sha": "2432c7b78891238f33065321541e640690c7f669",
+          "committed_at": "2026-06-24T20:48:03Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -4,6 +4,9 @@ on:\n   issues:\n     types: [assigned]\n \n+permissions:\n+  issues: write\n+\n safe-outputs:\n   report-failure-as-issue: false\n   noop: false",
+          "snapshot_ref": "2432c7b78891238f33065321541e640690c7f669",
+          "snapshot_blob_sha": "ed0dc9d19e09518556ab6765ac6a58ed00e6dfad",
+          "snapshot_file": "snapshots/console__kubestellar__2432c7b78891238f33065321541e640690c7f669__auto-triage.md",
+          "snapshot_bytes": 1152,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"kubestellar/console\",\"generated_owner\":\"kubestellar\",\"generated_repo\":\"console\",\"generated_workflow_path\":\".github/workflows/auto-triage.lock.yml\",\"generated_workflow_file\":\"auto-triage.lock.yml\",\"generated_html_url\":\"https://github.com/kubestellar/console/blob/a09676c19d9adb53fc4477e09f0dd4e1226c62cf/.github/workflows/auto-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

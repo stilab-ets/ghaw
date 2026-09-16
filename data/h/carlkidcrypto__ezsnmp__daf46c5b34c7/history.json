@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "carlkidcrypto/ezsnmp:.github/workflows/monthly_report_tooling_maintenance.md",
+    "source_full_name": "carlkidcrypto/ezsnmp",
+    "source_owner": "carlkidcrypto",
+    "source_repo": "ezsnmp",
+    "md_path": ".github/workflows/monthly_report_tooling_maintenance.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/carlkidcrypto/ezsnmp/blob/HEAD/.github/workflows/monthly_report_tooling_maintenance.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "carlkidcrypto/ezsnmp",
+      "generated_owner": "carlkidcrypto",
+      "generated_repo": "ezsnmp",
+      "generated_workflow_path": ".github/workflows/monthly_report_tooling_maintenance.lock.yml",
+      "generated_workflow_file": "monthly_report_tooling_maintenance.lock.yml",
+      "generated_html_url": "https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/monthly_report_tooling_maintenance.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:53+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/monthly_report_tooling_maintenance.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/monthly_report_tooling_maintenance.md",
+      "commit_sha": "93e8fab2a6dd10222137a34d0a890ff3a654411a",
+      "authored_at": "2026-07-13T00:45:16Z",
+      "committed_at": "2026-07-13T00:45:16Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Move integration test results into analysis/ folder with data/ sub-folder for CSVs (#1114)\n\n* Add integration test history report\n\n* Move results into analysis/ folder with data/ sub-folder for CSVs, add timestamp and future-proof guidance\n\n* Document overview vs recent_20 CSV assumptions in analysis README and RST report\n\n* Add analysis/scripts/ with collect/update scripts and usage docs\n\n* fix: use origin/ prefix for base branch ref in black workflow\n\n* style: auto-format with black (#1115)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\n\n* feat: add monthly agentic report tooling maintenance\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: Carlos <27721404+carlkidcrypto@users.noreply.github.com>\nCo-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+      "parent_shas": [
+        "4c47d0bc601b5a603c31353ae58303824f85a012"
+      ],
+      "tree_sha": "80bf6939891b231f62ca10353d4760a39d393195",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/93e8fab2a6dd10222137a34d0a890ff3a654411a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/monthly_report_tooling_maintenance.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/monthly_report_tooling_maintenance.md",
+          "commit_sha": "93e8fab2a6dd10222137a34d0a890ff3a654411a",
+          "committed_at": "2026-07-13T00:45:16Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 115,
+          "file_deletions": 0,
+          "file_changes": 115,
+          "file_patch": "@@ -0,0 +1,115 @@\n+---\n+name: Monthly Report Tooling Maintenance\n+on:\n+  workflow_dispatch:\n+  schedule:\n+    - cron: \"0 9 1 * *\"\n+  skip-if-match:\n+    query: 'is:pr is:open head:automation/monthly-report-tooling-maintenance label:automated-pr'\n+permissions:\n+  copilot-requests: write\n+  actions: read\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[report-tooling] \"\n+    labels: [automated-pr, documentation, ci]\n+    draft: true\n+    preserve-branch-name: true\n+    if-no-changes: \"ignore\"\n+timeout-minutes: 45\n+engine:\n+  id: copilot\n+  model: claude-sonnet-4.6\n+network:\n+  allowed: [defaults, github]\n+tools:\n+  edit:\n+  bash: true\n+---\n+\n+# Monthly Report Tooling Maintenance\n+\n+Review and maintain the repository's report-generation workflows, scripts, and\n+related documentation once per month.\n+\n+## Scope\n+\n+Use the existing report tooling and docs in this repository as the source of truth:\n+\n+- `.github/workflows/valgrind_pr_history_report.yml`\n+- `.github/scripts/analyze_valgrind_pr_history.py`\n+- `.github/comment-valgrind-template.md`\n+- `.github/workflows/tests_homebrew.yml`\n+- `docker/generate_test_reports.sh`\n+- `docker/README.rst`\n+- `README.rst`\n+\n+## Goals\n+\n+- Keep report scripts and their documentation aligned.\n+- Fix small reliability issues in report tooling when they are directly discovered.\n+- Keep workflow and script changes small, safe, and focused.\n+- Open or update a single automation PR only when real changes are needed.\n+\n+## Steps\n+\n+1. Read the files in the Scope section before making changes.\n+\n+2. Review the current Valgrind history report path:\n+   - Confirm `.github/workflows/valgrind_pr_history_report.yml` still matches the\n+     behavior of `.github/scripts/analyze_valgrind_pr_history.py`.\n+   - Run the existing analyzer script from the repository root with the current\n+     repository context:\n+     - `GITHUB_REPOSITORY=${GITHUB_REPOSITORY:-carlkidcrypto/ezsnmp} python .github/scripts/analyze_valgrind_pr_history.py`\n+   - Treat exit code `1` from this script as a report result meaning leak records\n+     were found, not as a workflow failure. Only treat missing credentials,\n+     missing repository context, syntax errors, or other unexpected exceptions as\n+     failures.\n+   - Use the generated `valgrind-pr-history-report.md` and\n+     `valgrind-pr-history-report.json` to inform whether any documentation or\n+     script wording is stale.\n+\n+3. Review the Docker test summary path:\n+   - Read `docker/README.rst` and `docker/generate_test_reports.sh` together.\n+   - Run `docker/generate_test_reports.sh` only if one or more\n+     `docker/test_outputs_*` directories already exist in the working tree.\n+   - If no such directories exist, skip executing the Docker report script and\n+     only verify that the documentation accurately describes its prerequisites,\n+     filenames, and outputs.\n+\n+4. Apply only minimal fixes that are directly justified by the review:\n+   - Documentation drift (wrong filenames, missing prerequisites, stale workflow\n+     descriptions, inaccurate output details).\n+   - Small script reliability fixes in the report tooling.\n+   - Small workflow fixes in `valgrind_pr_history_report.yml` when the workflow no\n+     longer matches the script it runs.\n+\n+5. Do not make unrelated refactors, dependency upgrades, or formatting-only churn.\n+\n+6. If no meaningful changes are needed, stop with a concise no-op summary.\n+\n+7. If changes are needed, create or update one PR with:\n+   - Branch: `automation/monthly-report-tooling-maintenance`\n+   - Base: `main`\n+   - Title style: `[report-tooling] <short summary>`\n+\n+## Pull Request Body\n+\n+Include:\n+\n+- The scripts, workflows, and docs reviewed\n+- Which files changed and why\n+- Whether the Valgrind history analyzer found leak signatures during the run\n+- Whether Docker `test_outputs_*` data was available for a local report run\n+- Any follow-up gaps that still need manual attention\n+\n+## Constraints\n+\n+- Use the existing repository scripts and documentation; do not replace them with\n+  new parallel tooling.\n+- Keep changes limited to report workflows, report scripts, and directly related\n+  documentation.\n+- Do not manually edit generated `.lock.yml` files.",
+          "snapshot_ref": "93e8fab2a6dd10222137a34d0a890ff3a654411a",
+          "snapshot_blob_sha": "ab0f6b29518b0ee19151531bc12693d2d5141c40",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__93e8fab2a6dd10222137a34d0a890ff3a654411a__monthly_report_tooling_maintenance.md",
+          "snapshot_bytes": 4152,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/monthly_report_tooling_maintenance.lock.yml\",\"generated_workflow_file\":\"monthly_report_tooling_maintenance.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/monthly_report_tooling_maintenance.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Bertverbeek4PS/bc2adls:.github/workflows/ai-moderator.md",
+    "source_full_name": "Bertverbeek4PS/bc2adls",
+    "source_owner": "Bertverbeek4PS",
+    "source_repo": "bc2adls",
+    "md_path": ".github/workflows/ai-moderator.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Bertverbeek4PS/bc2adls/blob/HEAD/.github/workflows/ai-moderator.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Bertverbeek4PS/bc2adls",
+      "generated_owner": "Bertverbeek4PS",
+      "generated_repo": "bc2adls",
+      "generated_workflow_path": ".github/workflows/ai-moderator.lock.yml",
+      "generated_workflow_file": "ai-moderator.lock.yml",
+      "generated_html_url": "https://github.com/Bertverbeek4PS/bc2adls/blob/a9a434445befcd68e82522cb8335256ac2696876/.github/workflows/ai-moderator.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Bertverbeek4PS/bc2adls:.github/workflows/ai-moderator.md",
+      "source_full_name": "Bertverbeek4PS/bc2adls",
+      "md_path": ".github/workflows/ai-moderator.md",
+      "commit_sha": "b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+      "authored_at": "2026-03-30T14:34:35Z",
+      "committed_at": "2026-03-30T14:34:35Z",
+      "author_name": "Bert Verbeek",
+      "author_email": "bverbeek@4ps.nl",
+      "author_login": "Bertverbeek4PS",
+      "author_account_type": "User",
+      "committer_name": "Bert Verbeek",
+      "committer_email": "bverbeek@4ps.nl",
+      "committer_login": "Bertverbeek4PS",
+      "committer_account_type": "User",
+      "message": "Add ai-moderator, pr-triage-agent, and weekly-issue-summary workflows\n\nThree additional gh-aw agentic workflows:\n\n- ai-moderator: Detects spam, link-spam, and AI-generated content on\n  issues, comments, and PRs. Triggers on opened events; skips admins,\n  maintainers, and bots. Engine changed from codex to copilot to use\n  COPILOT_GITHUB_TOKEN. New labels created: spam, ai-generated,\n  link-spam, ai-inspected.\n\n- pr-triage-agent: Categorizes and risk-assesses all open PRs every 6h.\n  Adapted from agent-PR-only to cover all contributors. Includes\n  bc2adls-specific risk rules (AL code = medium-high risk).\n\n- weekly-issue-summary: Monday 3PM UTC summary with trend charts,\n  resolution time analysis, and backlog health report posted as a\n  GitHub Discussion.\n\nAlso adds shared/trends.md and shared/python-dataviz.md imports\nrequired by weekly-issue-summary.\n\nAll workflows compiled with gh-aw v0.64.4 (0 errors).\nRequires COPILOT_GITHUB_TOKEN repository secret.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c79861a7249927a1192a4a39de5421a04a0cd751"
+      ],
+      "tree_sha": "88674a2dee2e63d6fb6540f6ed83181ef26f788a",
+      "html_url": "https://github.com/Bertverbeek4PS/bc2adls/commit/b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Bertverbeek4PS/bc2adls:.github/workflows/ai-moderator.md",
+          "source_full_name": "Bertverbeek4PS/bc2adls",
+          "md_path": ".github/workflows/ai-moderator.md",
+          "commit_sha": "b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+          "committed_at": "2026-03-30T14:34:35Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 128,
+          "file_deletions": 0,
+          "file_changes": 128,
+          "file_patch": "@@ -0,0 +1,128 @@\n+---\n+timeout-minutes: 5\n+on:\n+  roles: all\n+  issues:\n+    types: [opened]\n+    lock-for-agent: true\n+  issue_comment:\n+    types: [created]\n+    lock-for-agent: true\n+  pull_request:\n+    types: [opened]\n+    forks: \"*\"\n+  skip-roles: [admin, maintainer, write, triage]\n+  skip-bots: [github-actions, copilot]\n+rate-limit:\n+  max: 5\n+  window: 60\n+concurrency:\n+  group: \"gh-aw-${{ github.workflow }}-${{ github.event.issue.number || github.event.pull_request.number }}\"\n+  cancel-in-progress: false\n+engine: copilot\n+tools:\n+  github:\n+    mode: local\n+    read-only: true\n+    toolsets: [default]\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+safe-outputs:\n+  add-labels:\n+    allowed: [spam, ai-generated, link-spam, ai-inspected]\n+    target: \"*\"\n+  hide-comment:\n+    max: 5\n+    allowed-reasons: [spam]\n+  threat-detection: false\n+---\n+# AI Moderator\n+\n+You are an AI-powered moderation system that automatically detects spam, link spam, and AI-generated content in GitHub issues and comments for the **bc2adls** repository (Business Central to Azure Data Lake Storage).\n+\n+## Context\n+\n+1. Use the GitHub MCP server tools to fetch the original context (see github context), unsanitized content directly from GitHub API\n+2. Do NOT use the pre-sanitized text from the activation job - fetch fresh content to analyze the original user input\n+3. **For Pull Requests**: Use `pull_request_read` with method `get_diff` to fetch the PR diff and analyze the changes for spam patterns\n+\n+## Detection Tasks\n+\n+Perform the following detection analyses on the content:\n+\n+### 1. Generic Spam Detection\n+\n+Analyze for spam indicators:\n+- Promotional content or advertisements\n+- Irrelevant links or URLs\n+- Repetitive text patterns\n+- Low-quality or nonsensical content\n+- Requests for personal information\n+- Cryptocurrency or financial scams\n+- Content that doesn't relate to Business Central, Azure Data Lake Storage, Microsoft Fabric, Power Automate, or Azure Synapse\n+\n+### 2. Link Spam Detection\n+\n+Analyze for link spam indicators:\n+- Multiple unrelated links\n+- Links to promotional websites\n+- Short URL services used to hide destinations (bit.ly, tinyurl, etc.)\n+- Links to cryptocurrency, gambling, or adult content\n+- Links that don't relate to the repository or issue topic\n+- Suspicious domains or newly registered domains\n+- Links to download executables or suspicious files\n+\n+### 3. AI-Generated Content Detection\n+\n+Analyze for AI-generated content indicators:\n+- Use of em-dashes (—) in casual contexts\n+- Excessive use of emoji, especially in technical discussions\n+- Perfect grammar and punctuation in informal settings\n+- Constructions like \"it's not X - it's Y\" or \"X isn't just Y - it's Z\"\n+- Overly formal paragraph responses to casual questions\n+- Enthusiastic but content-free responses (\"That's incredible!\", \"Amazing!\")\n+- Generic excitement without specific technical engagement\n+- Perfectly structured responses that lack natural conversational flow\n+\n+Human-written content typically has:\n+- Natural imperfections in grammar and spelling\n+- Casual internet language and slang\n+- Specific technical details and personal experiences\n+- Natural conversational flow with genuine questions or frustrations\n+- Authentic emotional reactions to technical problems\n+\n+## Actions\n+\n+Based on your analysis:\n+\n+1. **For Issues** (when issue number is present):\n+   - If generic spam is detected, use the `add-labels` safe output to add the `spam` label\n+   - If link spam is detected, use the `add-labels` safe output to add the `link-spam` label\n+   - If AI-generated content is detected, use the `add-labels` safe output to add the `ai-generated` label\n+   - Multiple labels can be added if multiple types are detected\n+   - **If no warnings or issues are found** and the content appears legitimate and on-topic, use the `add-labels` safe output to add the `ai-inspected` label\n+\n+2. **For Comments** (when comment ID is present):\n+   - If any type of spam is detected:\n+     - Use the `hide-comment` safe output to hide the comment with reason 'spam'\n+     - Also add appropriate labels to the parent issue\n+   - If the comment appears legitimate and on-topic, add the `ai-inspected` label to the parent issue\n+\n+3. **For Pull Requests** (when pull request number is present):\n+   - Fetch the PR diff using `pull_request_read` with method `get_diff`\n+   - Analyze the diff for spam patterns:\n+     - Large amounts of promotional content or links in code comments\n+     - Suspicious file additions\n+     - Mass link injection across multiple files\n+   - If spam patterns are detected, add appropriate labels (`spam`, `link-spam`, `ai-generated`)\n+   - **If no issues are found**, add the `ai-inspected` label\n+\n+## Important Guidelines\n+\n+- Be conservative with detections to avoid false positives\n+- Consider the repository context: bc2adls is a Business Central / Azure Data Lake Storage integration tool\n+- Technical discussions may naturally contain links to Microsoft docs, AL code examples, or related GitHub issues\n+- New contributors may have less polished writing - this doesn't necessarily indicate AI generation\n+- Only take action if you have high confidence in the detection",
+          "snapshot_ref": "b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+          "snapshot_blob_sha": "9d29419a13e3dc0f5246b2c4f55b20bc0e58baac",
+          "snapshot_file": "snapshots/bc2adls__Bertverbeek4PS__b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c__ai-moderator.md",
+          "snapshot_bytes": 5107,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Bertverbeek4PS/bc2adls\",\"generated_owner\":\"Bertverbeek4PS\",\"generated_repo\":\"bc2adls\",\"generated_workflow_path\":\".github/workflows/ai-moderator.lock.yml\",\"generated_workflow_file\":\"ai-moderator.lock.yml\",\"generated_html_url\":\"https://github.com/Bertverbeek4PS/bc2adls/blob/a9a434445befcd68e82522cb8335256ac2696876/.github/workflows/ai-moderator.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

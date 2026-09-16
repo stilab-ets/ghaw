@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/config-consistency-auditor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/config-consistency-auditor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/config-consistency-auditor.lock.yml",
+      "generated_workflow_file": "config-consistency-auditor.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/config-consistency-auditor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:03+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/config-consistency-auditor.md",
+      "commit_sha": "35bb9620865db8aeaad29722c346f90e241c81fb",
+      "authored_at": "2026-05-30T15:39:27Z",
+      "committed_at": "2026-05-30T15:39:27Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: complete api-proxy config follow-ups and harden DinD identity synthesis (#4063)\n\n* fix: synthesize identity files for ARC-DinD environments\n\nWhen running in ARC DinD mode, the Docker daemon's filesystem often\nlacks the runner's UID in /etc/passwd and /etc/group. This causes\n'getent passwd' to fail and the agent to run as 'nobody'.\n\nTwo-layer fix:\n- etc-mounts.ts: synthesize minimal passwd/group when staging fails\n  (source files don't exist on the DinD daemon's filesystem)\n- entrypoint.sh: runtime fallback synthesizes identity entries when\n  getent passwd fails inside the chroot\n\nThe synthesis creates entries for root and the runner user (matching\nthe host UID/GID) so the agent process has a valid username and home.\n\nCloses #4022\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: add excludeEngines to modelFallback TypeScript types\n\nThe modelFallback.excludeEngines field was present in the JSON schema and\nspec (added in PR #4015) but missing from the TypeScript interfaces in\nsrc/types/api-proxy-options.ts and src/config-file.ts. The runtime was not\naffected (JSON.stringify passthrough), but type-safety was incomplete.\n\n- Add excludeEngines?: string[] to modelFallback in api-proxy-options.ts\n- Add excludeEngines?: string[] to modelFallback in config-file.ts\n- Add config-file-mapping test for excludeEngines passthrough\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* feat: add daily config consistency auditor workflow\n\nAdds an agentic workflow that runs daily on weekdays to audit recently\nmerged PRs for configuration consistency gaps. When a new config field\nis introduced in one layer but missing from others (schema, spec,\nTypeScript types, or env var wiring), the workflow fixes the gaps and\nopens a PR.\n\nChecks:\n- JSON schema (src/ and docs/ copies must be identical)\n- Spec CLI mapping table (docs/awf-config-spec.md §5)\n- TypeScript types (src/types/*.ts, src/config-file.ts)\n- Env var wiring (src/services/api-proxy-service.ts)\n- Security classification (sensitive via env vars, non-sensitive via stdin)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: address review feedback on identity synthesis and token guard\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "0aa54a5df171a2e8536630c8945b88424d1e42c1"
+      ],
+      "tree_sha": "80dfb2c9855b1369fc8d1ede0c1047c3e4ece67b",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/35bb9620865db8aeaad29722c346f90e241c81fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/config-consistency-auditor.md",
+          "commit_sha": "35bb9620865db8aeaad29722c346f90e241c81fb",
+          "committed_at": "2026-05-30T15:39:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 193,
+          "file_deletions": 0,
+          "file_changes": 193,
+          "file_patch": "@@ -0,0 +1,193 @@\n+---\n+name: Config Consistency Auditor\n+description: >\n+  Daily audit of recently merged PRs to verify new configuration is consistently\n+  represented across JSON schema, spec, TypeScript types, and env var wiring —\n+  with security-sensitive values via env vars and non-sensitive via stdin config.\n+on:\n+  schedule: daily on weekdays\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+engine: copilot\n+strict: true\n+timeout-minutes: 20\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+    - github\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, pull_requests]\n+  cache-memory: true\n+  bash: [\"*\"]\n+  edit:\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+  create-pull-request:\n+    max: 1\n+    labels: [automation, config-consistency]\n+    title-prefix: \"fix: \"\n+---\n+\n+# Config Consistency Auditor\n+\n+You are an AI agent that audits recently merged PRs for configuration consistency.\n+Your goal is to catch gaps where new configuration was added to one layer but not\n+propagated to all required layers.\n+\n+## Configuration Layers\n+\n+Every new AWF configuration field MUST be consistently represented across:\n+\n+1. **JSON Schema** (`src/awf-config-schema.json` and `docs/awf-config.schema.json`)\n+   - Must be identical copies\n+2. **Spec** (`docs/awf-config-spec.md`)\n+   - Section 5 CLI Mapping table must list the config path and its CLI flag or env var mapping\n+3. **TypeScript Types** (`src/types/*.ts` and `src/config-file.ts`)\n+   - The config-file interface must include the field\n+   - The options type must include the mapped CLI option\n+4. **Env Var Wiring** (`src/services/api-proxy-service.ts` or other service files)\n+   - The field must be mapped to its corresponding `AWF_*` env var for the api-proxy\n+   - OR mapped to a CLI flag that the runtime handles\n+\n+## Security Classification\n+\n+Configuration fields MUST follow these rules:\n+\n+- **Security-sensitive values** (API keys, tokens, credentials, OIDC client IDs/secrets):\n+  - Passed via environment variables (`-e` flag or `--env-file`)\n+  - MUST NOT appear in stdin config JSON (which may be logged)\n+- **Non-sensitive values** (domains, multipliers, model names, timeouts, strategies):\n+  - Passed via stdin config (`--config -`)\n+  - Mapped in `src/config-file.ts`\n+\n+## Procedure\n+\n+### 1. Load last-processed state\n+\n+Read `/tmp/gh-aw/cache-memory/config-audit-state.json`. It stores:\n+```json\n+{ \"last_audit_date\": \"YYYY-MM-DD\", \"last_pr_number\": 1234 }\n+```\n+\n+- If the file exists, audit PRs merged since `last_audit_date`.\n+- If the file does NOT exist (first run), audit PRs merged in the **last 7 days**.\n+\n+### 2. Fetch recently merged PRs\n+\n+```bash\n+gh pr list --repo github/gh-aw-firewall --state merged --limit 20 \\\n+  --json number,title,mergedAt,files --jq '.[] | select(.mergedAt > \"CUTOFF_DATE\")'\n+```\n+\n+Filter to PRs that modify any of these paths (likely to introduce config):\n+- `src/config-file.ts`\n+- `src/types/*.ts`\n+- `src/awf-config-schema.json`\n+- `docs/awf-config-spec.md`\n+- `docs/awf-config.schema.json`\n+- `src/services/api-proxy-service.ts`\n+- `src/cli-options.ts` or `src/cli.ts`\n+- `containers/api-proxy/server.js`\n+- `containers/api-proxy/guards/*.js`\n+\n+If no relevant PRs are found, save state and exit with `noop`.\n+\n+### 3. For each relevant PR, check consistency\n+\n+For each PR, examine what new configuration was introduced by reading the diff:\n+\n+```bash\n+gh pr diff <NUMBER> --repo github/gh-aw-firewall\n+```\n+\n+Look for patterns indicating new config:\n+- New properties in schema JSON (`\"propertyName\": { \"type\":`)\n+- New rows in spec CLI mapping table\n+- New fields in TypeScript interfaces\n+- New `AWF_*` env var assignments\n+- New CLI `.option(` definitions\n+\n+### 4. Cross-reference all layers\n+\n+For each new configuration field found, verify it exists in ALL required layers:\n+\n+| Check | How to verify |\n+|-------|---------------|\n+| JSON Schema (src) | `grep \"fieldName\" src/awf-config-schema.json` |\n+| JSON Schema (docs) | Schemas must be identical: `diff src/awf-config-schema.json docs/awf-config.schema.json` |\n+| Spec CLI mapping | `grep \"fieldName\" docs/awf-config-spec.md` |\n+| TypeScript type | `grep \"fieldName\" src/types/*.ts src/config-file.ts` |\n+| Env var wiring | `grep \"AWF_FIELD_NAME\" src/services/api-proxy-service.ts` (for api-proxy config) |\n+\n+### 5. Check security classification\n+\n+For each new field, determine if it's security-sensitive:\n+- Contains \"key\", \"secret\", \"token\", \"credential\", \"password\" → security-sensitive\n+- Is an OIDC client ID or tenant ID → security-sensitive\n+- Is a domain, multiplier, timeout, strategy, model name → non-sensitive\n+\n+Verify:\n+- Security-sensitive fields are passed via env vars (not in config-file.ts stdin mapping)\n+- Non-sensitive fields are in config-file.ts (stdin config mapping)\n+\n+### 6. Fix gaps and create a PR\n+\n+If gaps are found, fix them directly:\n+\n+- **Missing TypeScript type field**: Add the field to the appropriate interface in\n+  `src/types/*.ts` and/or `src/config-file.ts`\n+- **Missing spec CLI mapping row**: Add the row to Section 5 of `docs/awf-config-spec.md`\n+- **Missing schema field**: Add the property to `src/awf-config-schema.json` AND\n+  `docs/awf-config.schema.json` (they must stay identical)\n+- **Missing env var wiring**: Add the mapping in `src/services/api-proxy-service.ts`\n+- **Schema drift**: Copy `src/awf-config-schema.json` to `docs/awf-config.schema.json`\n+\n+After making fixes, use the `create-pull-request` safe output with:\n+- Title: `\"fix: propagate config fields to all layers\"`\n+- Body: A summary table of what was fixed, organized by PR that introduced the gap\n+\n+Example PR body:\n+```markdown\n+## Config Consistency Fixes\n+\n+Automated fixes for configuration fields not fully propagated:\n+\n+### From PR #1234 — \"feat: add fooBar config\"\n+\n+| Field | Fix Applied |\n+|-------|-------------|\n+| `apiProxy.fooBar` | Added to TypeScript interface in `src/types/api-proxy-options.ts` |\n+\n+### Verification\n+\n+- [ ] TypeScript compiles (`tsc --noEmit`)\n+- [ ] Config-file-mapping tests pass\n+- [ ] Schema validation tests pass\n+```\n+\n+If no gaps are found, use `noop` safe output.\n+\n+### 7. Save state\n+\n+Write the current date and highest PR number to\n+`/tmp/gh-aw/cache-memory/config-audit-state.json`:\n+```json\n+{ \"last_audit_date\": \"YYYY-MM-DD\", \"last_pr_number\": 4063 }\n+```\n+\n+## Important Notes\n+\n+- Internal refactors (renaming files, moving code between modules) that don't add\n+  new user-facing config should be ignored.\n+- Test-only changes (new test files, test helpers) should be ignored.\n+- The `docs/awf-config.schema.json` and `src/awf-config-schema.json` MUST always be\n+  identical. If they differ, report that as a critical gap.\n+- Fields that are intentionally runtime-only (no config equivalent) should be noted\n+  but not flagged as gaps if documented in the spec as \"CLI-only\".",
+          "snapshot_ref": "35bb9620865db8aeaad29722c346f90e241c81fb",
+          "snapshot_blob_sha": "6a7506a31c86d3f02dffd73df9f8fa15d2e9b2b8",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__35bb9620865db8aeaad29722c346f90e241c81fb__config-consistency-auditor.md",
+          "snapshot_bytes": 6732,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/config-consistency-auditor.lock.yml\",\"generated_workflow_file\":\"config-consistency-auditor.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/config-consistency-auditor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/config-consistency-auditor.md",
+      "commit_sha": "2265b4a28956499ae1ec2c694a7a4538278768ed",
+      "authored_at": "2026-07-10T13:02:37Z",
+      "committed_at": "2026-07-10T13:02:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: optimize config-consistency-auditor — early exit, trimmed toolset, leaner prompt (#6087)\n\n* Initial plan\n\n* feat: optimize config-consistency-auditor workflow for token savings\n\n- Add fetch_prs pre-check job for early exit on days with no config-touching PRs\n- Add agent-level if: condition gated on fetch_prs.outputs.pr_count != '0'\n- Add steps: block to pre-fetch filtered PR list to /tmp/gh-aw/relevant-prs.json\n- Remove node network group (unused by this workflow)\n- Switch toolsets from [default, pull_requests] to [pull_requests] only\n- Trim prompt: condense security classification to 3-line summary\n- Trim prompt: update Step 2 to reference pre-fetched data\n- Trim prompt: remove embedded example PR body template (~17 lines)\n- Trim prompt: condense Step 5 security check (cross-references classification section)\n- Recompile: regenerate config-consistency-auditor.lock.yml\n\nCloses #6086\n\n* revert: discard lock.yml and actions-lock.json changes, keep .md edits only\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "6034976e15d64351abe1281ee02c13bebc895dcc"
+      ],
+      "tree_sha": "e5e89dce3de68a75516d47ae6cba5ccfc2a879e5",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/2265b4a28956499ae1ec2c694a7a4538278768ed",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/config-consistency-auditor.md",
+          "commit_sha": "2265b4a28956499ae1ec2c694a7a4538278768ed",
+          "committed_at": "2026-07-10T13:02:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 62,
+          "file_deletions": 55,
+          "file_changes": 117,
+          "file_patch": "@@ -14,15 +14,40 @@ permissions:\n engine: copilot\n strict: true\n timeout-minutes: 20\n+if: needs.fetch_prs.outputs.pr_count != '0'\n+jobs:\n+  fetch_prs:\n+    runs-on: ubuntu-latest\n+    permissions:\n+      pull-requests: read\n+    outputs:\n+      pr_count: ${{ steps.filter.outputs.pr_count }}\n+    steps:\n+      - name: Filter config-touching merged PRs\n+        id: filter\n+        env:\n+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+        run: |\n+          set -euo pipefail\n+          CUTOFF=$(date -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)\n+          gh pr list --repo \"$GITHUB_REPOSITORY\" --state merged --limit 50 \\\n+            --json number,title,mergedAt,files > /tmp/all-prs.json\n+          PR_COUNT=$(jq --arg cutoff \"$CUTOFF\" '\n+            [.[] | select(.mergedAt >= $cutoff) | select(\n+              (.files // []) | map(.path) |\n+              any(test(\"src/config-file\\\\.ts|src/types/|src/awf-config-schema\\\\.json|docs/awf-config-spec\\\\.md|docs/awf-config\\\\.schema\\\\.json|src/services/api-proxy-service\\\\.ts|src/cli\"))\n+            )] | length\n+          ' /tmp/all-prs.json)\n+          echo \"Found $PR_COUNT relevant merged PRs\"\n+          echo \"pr_count=$PR_COUNT\" >> \"$GITHUB_OUTPUT\"\n network:\n   allowed:\n     - defaults\n-    - node\n     - github\n tools:\n   github:\n     mode: gh-proxy\n-    toolsets: [default, pull_requests]\n+    toolsets: [pull_requests]\n   cache-memory: true\n   bash: [\"*\"]\n   edit:\n@@ -33,6 +58,23 @@ safe-outputs:\n     max: 1\n     labels: [automation, config-consistency]\n     title-prefix: \"fix: \"\n+steps:\n+  - name: Fetch relevant merged PRs\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw\n+      CUTOFF=$(date -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)\n+      gh pr list --repo \"$GITHUB_REPOSITORY\" --state merged --limit 50 \\\n+        --json number,title,mergedAt,files > /tmp/gh-aw/all-prs.json\n+      jq --arg cutoff \"$CUTOFF\" '\n+        [.[] | select(.mergedAt >= $cutoff) | select(\n+          (.files // []) | map(.path) |\n+          any(test(\"src/config-file\\\\.ts|src/types/|src/awf-config-schema\\\\.json|docs/awf-config-spec\\\\.md|docs/awf-config\\\\.schema\\\\.json|src/services/api-proxy-service\\\\.ts|src/cli\"))\n+        )]\n+      ' /tmp/gh-aw/all-prs.json > /tmp/gh-aw/relevant-prs.json\n+      echo \"Prepared $(jq length /tmp/gh-aw/relevant-prs.json) relevant PRs for audit\"\n ---\n \n # Config Consistency Auditor\n@@ -58,14 +100,9 @@ Every new AWF configuration field MUST be consistently represented across:\n \n ## Security Classification\n \n-Configuration fields MUST follow these rules:\n-\n-- **Security-sensitive values** (API keys, tokens, credentials, OIDC client IDs/secrets):\n-  - Passed via environment variables (`-e` flag or `--env-file`)\n-  - MUST NOT appear in stdin config JSON (which may be logged)\n-- **Non-sensitive values** (domains, multipliers, model names, timeouts, strategies):\n-  - Passed via stdin config (`--config -`)\n-  - Mapped in `src/config-file.ts`\n+Fields containing \"key\", \"secret\", \"token\", \"credential\", \"password\", or OIDC identifiers are\n+**security-sensitive** → env vars only (not in `src/config-file.ts`). All other fields\n+(domains, multipliers, timeouts, model names) are **non-sensitive** → stdin config via `src/config-file.ts`.\n \n ## Procedure\n \n@@ -76,28 +113,21 @@ Read `/tmp/gh-aw/cache-memory/config-audit-state.json`. It stores:\n { \"last_audit_date\": \"YYYY-MM-DD\", \"last_pr_number\": 1234 }\n ```\n \n-- If the file exists, audit PRs merged since `last_audit_date`.\n-- If the file does NOT exist (first run), audit PRs merged in the **last 7 days**.\n+- If the file exists, note the `last_audit_date` for filtering the pre-fetched PR list.\n+- If the file does NOT exist (first run), treat PRs from the last 7 days as in scope.\n+\n+### 2. Read pre-fetched relevant PRs\n \n-### 2. Fetch recently merged PRs\n+A pre-agent step already fetched and filtered config-touching merged PRs to\n+`/tmp/gh-aw/relevant-prs.json`. Read this file:\n \n ```bash\n-gh pr list --repo github/gh-aw-firewall --state merged --limit 20 \\\n-  --json number,title,mergedAt,files --jq '.[] | select(.mergedAt > \"CUTOFF_DATE\")'\n+cat /tmp/gh-aw/relevant-prs.json\n ```\n \n-Filter to PRs that modify any of these paths (likely to introduce config):\n-- `src/config-file.ts`\n-- `src/types/*.ts`\n-- `src/awf-config-schema.json`\n-- `docs/awf-config-spec.md`\n-- `docs/awf-config.schema.json`\n-- `src/services/api-proxy-service.ts`\n-- `src/cli-options.ts` or `src/cli.ts`\n-- `containers/api-proxy/server.js`\n-- `containers/api-proxy/guards/*.js`\n-\n-If no relevant PRs are found, save state and exit with `noop`.\n+If the `last_audit_date` from cache-memory is more recent than 7 days ago, additionally\n+filter the list to PRs merged after that date. If no PRs remain after filtering, save\n+state and exit with `noop`.\n \n ### 3. For each relevant PR, check consistency\n \n@@ -128,14 +158,9 @@ For each new configuration field found, verify it exists in ALL required layers:\n \n ### 5. Check security classification\n \n-For each new field, determine if it's security-sensitive:\n-- Contains \"key\", \"secret\", \"token\", \"credential\", \"password\" → security-sensitive\n-- Is an OIDC client ID or tenant ID → security-sensitive\n-- Is a domain, multiplier, timeout, strategy, model name → non-sensitive\n-\n-Verify:\n-- Security-sensitive fields are passed via env vars (not in config-file.ts stdin mapping)\n-- Non-sensitive fields are in config-file.ts (stdin config mapping)\n+For each new field, apply the security classification rules from the\n+[Security Classification](#security-classification) section above. Verify that\n+security-sensitive fields are NOT in `src/config-file.ts` and non-sensitive fields ARE.\n \n ### 6. Fix gaps and create a PR\n \n@@ -151,26 +176,8 @@ If gaps are found, fix them directly:\n \n After making fixes, use the `create-pull-request` safe output with:\n - Title: `\"fix: propagate config fields to all layers\"`\n-- Body: A summary table of what was fixed, organized by PR that introduced the gap\n-\n-Example PR body:\n-```markdown\n-## Config Consistency Fixes\n-\n-Automated fixes for configuration fields not fully propagated:\n-\n-### From PR #1234 — \"feat: add fooBar config\"\n-\n-| Field | Fix Applied |\n-|-------|-------------|\n-| `apiProxy.fooBar` | Added to TypeScript interface in `src/types/api-proxy-options.ts` |\n-\n-### Verification\n-\n-- [ ] TypeScript compiles (`tsc --noEmit`)\n-- [ ] Config-file-mapping tests pass\n-- [ ] Schema validation tests pass\n-```\n+- Body: A summary table of what was fixed, organized by PR that introduced the gap,\n+  with a verification checklist (`tsc --noEmit`, config-file-mapping tests, schema validation tests)\n \n If no gaps are found, use `noop` safe output.\n ",
+          "snapshot_ref": "2265b4a28956499ae1ec2c694a7a4538278768ed",
+          "snapshot_blob_sha": "17542a46c33d1372d8a442dd8e6e0c1540e69410",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__2265b4a28956499ae1ec2c694a7a4538278768ed__config-consistency-auditor.md",
+          "snapshot_bytes": 7763,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/config-consistency-auditor.lock.yml\",\"generated_workflow_file\":\"config-consistency-auditor.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/config-consistency-auditor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/config-consistency-auditor.md",
+      "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "authored_at": "2026-07-23T23:02:50Z",
+      "committed_at": "2026-07-23T23:02:50Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: use github.token for copilot-engine workflows (drop removed COPILOT_GITHUB_TOKEN secret) (#6556)\n\n* ci: add copilot-requests perm, use github.token for copilot engine\n\nThe COPILOT_GITHUB_TOKEN secret was removed from the repo, causing every\ncopilot-engine workflow that referenced secrets.COPILOT_GITHUB_TOKEN to\nsend an empty token to the api-proxy and get HTTP 401 from\napi.githubcopilot.com. Adding the copilot-requests: write permission lets\ngh-aw compile the built-in github.token as COPILOT_GITHUB_TOKEN instead,\nremoving the dependency on the deleted secret.\n\n* ci: fix BYOK copilot token source\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "9bfc72605e300278fe2ee93171b65db8ccaa9e6b"
+      ],
+      "tree_sha": "b4c8e557b01c145c68a8b3a54e0522567891ad4e",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/config-consistency-auditor.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/config-consistency-auditor.md",
+          "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "committed_at": "2026-07-23T23:02:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -8,6 +8,7 @@ on:\n   schedule: daily on weekdays\n   workflow_dispatch:\n permissions:\n+  copilot-requests: write\n   contents: read\n   pull-requests: read\n   issues: read",
+          "snapshot_ref": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "snapshot_blob_sha": "ef9f6009645718eb4bf888df7451646c5c70bd58",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__02cb22631932cfbeae4d633edf8f0202dbbf6b5d__config-consistency-auditor.md",
+          "snapshot_bytes": 7789,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/config-consistency-auditor.lock.yml\",\"generated_workflow_file\":\"config-consistency-auditor.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/config-consistency-auditor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

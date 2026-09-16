@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "apolloconfig/apollo:.github/workflows/issue-triage.md",
+    "source_full_name": "apolloconfig/apollo",
+    "source_owner": "apolloconfig",
+    "source_repo": "apollo",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/apolloconfig/apollo/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "apolloconfig/apollo",
+      "generated_owner": "apolloconfig",
+      "generated_repo": "apollo",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/apolloconfig/apollo/blob/d95fc18d112589efc09ddcbe1507047584d55251/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "apolloconfig/apollo:.github/workflows/issue-triage.md",
+      "source_full_name": "apolloconfig/apollo",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "1e16e54b95cb525ef66fa33577db2bac35f7542c",
+      "authored_at": "2026-02-10T13:59:22Z",
+      "committed_at": "2026-02-10T14:07:20Z",
+      "author_name": "Jason Song",
+      "author_email": "nobodyiam@gmail.com",
+      "author_login": "nobodyiam",
+      "author_account_type": "User",
+      "committer_name": "Jason Song",
+      "committer_email": "nobodyiam@gmail.com",
+      "committer_login": "nobodyiam",
+      "committer_account_type": "User",
+      "message": "feat: add agentic issue triage workflow",
+      "parent_shas": [
+        "e5f63789fcf7092dd79dd0c0c15ad37de506463c"
+      ],
+      "tree_sha": "08e688146ad86f9d861734cf161640ee425cf9fd",
+      "html_url": "https://github.com/apolloconfig/apollo/commit/1e16e54b95cb525ef66fa33577db2bac35f7542c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "apolloconfig/apollo:.github/workflows/issue-triage.md",
+          "source_full_name": "apolloconfig/apollo",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "1e16e54b95cb525ef66fa33577db2bac35f7542c",
+          "committed_at": "2026-02-10T14:07:20Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 128,
+          "file_deletions": 0,
+          "file_changes": 128,
+          "file_patch": "@@ -0,0 +1,128 @@\n+---\n+name: Apollo Issue Triage\n+on:\n+  issues:\n+    types: [opened]\n+\n+permissions: read-all\n+\n+safe-outputs:\n+  add-labels:\n+  add-comment:\n+\n+concurrency:\n+  group: apollo-issue-triage-${{ github.event.issue.number }}\n+  cancel-in-progress: true\n+---\n+# Apollo Issue Triage Assistant\n+\n+You are the issue triage assistant for `apolloconfig/apollo`.\n+Your job is to classify newly opened issues, add minimal labels, and ask for any missing information.\n+\n+## Hard Safety Rules\n+\n+1. Never close issues.\n+2. Never remove labels.\n+3. Never ask users to share secrets, passwords, access tokens, private keys, connection strings, or internal URLs.\n+4. Never claim a root cause without clear evidence from issue content.\n+5. If uncertain, say you are uncertain and request only the minimum missing details.\n+\n+## Label Policy (Apollo-aligned)\n+\n+Add at most 3 labels total. Prefer existing labels only.\n+\n+### Primary type labels\n+\n+- Bug or regression:\n+  - `bug`\n+  - `kind/report-problem`\n+- Question or support:\n+  - `discussion`\n+  - `kind/question`\n+- Feature request:\n+  - `feature request`\n+- Dependency/security advisory update:\n+  - `dependencies`\n+  - `kind/dependencies`\n+- Unclear but potentially valid:\n+  - `need investigation`\n+\n+### Area labels (optional, choose at most 1)\n+\n+- Config service keywords: `area/configservice`\n+- Admin service keywords: `area/adminservice`\n+- Portal keywords: `area/portal`\n+- OpenAPI keywords: `area/openapi`\n+- SDK/client keywords: `area/sdk` or `area/client`\n+- Docker keywords: `area/docker`\n+- Kubernetes keywords: `area/kubernetes`\n+- MySQL keywords: `area/mysql`\n+- UI keywords: `area/ui`\n+- Security keywords: `area/security`\n+\n+### Missing info label\n+\n+If critical details are missing for bug reports, add:\n+- `status/need-feedback`\n+\n+Critical details:\n+- Apollo version or commit\n+- runtime/deployment environment (JDK, OS, DB mode)\n+- minimal reproduction steps\n+- expected vs actual behavior\n+- relevant error logs (with sensitive values redacted)\n+\n+## Security Issue Handling\n+\n+If the issue appears to describe a vulnerability (for example, credential leak, RCE, SQL injection, auth bypass):\n+1. Add `area/security` and `need investigation`.\n+2. Do not request exploit details publicly.\n+3. Ask the reporter to follow the private disclosure process in `SECURITY.md`.\n+\n+## Language Handling\n+\n+If issue title/body is mainly Chinese, reply in Chinese.\n+Otherwise reply in English.\n+\n+## Comment Style Rules\n+\n+1. Post exactly one concise triage comment.\n+2. Keep comments actionable and neutral.\n+3. If issue content is already sufficient, acknowledge and avoid asking repetitive questions.\n+4. Prefix comment with `<!-- apollo-triage -->`.\n+\n+## Comment Templates\n+\n+Use one of the following templates and tailor it to the issue.\n+\n+### Chinese template\n+\n+<!-- apollo-triage -->\n+感谢反馈。为便于维护者快速定位，请补充以下最小信息（如已提供可忽略）：\n+\n+1. Apollo 版本号或 commit\n+2. 部署与运行环境（JDK、OS、MySQL/H2、部署模式）\n+3. 最小复现步骤\n+4. 期望结果与实际结果\n+5. 相关错误日志（请先脱敏，不要包含密钥/密码/Token）\n+\n+收到后我们会继续跟进。\n+\n+### English template\n+\n+<!-- apollo-triage -->\n+Thanks for opening this issue. To help maintainers triage quickly, please share the minimum details below (skip items already provided):\n+\n+1. Apollo version or commit\n+2. Deployment/runtime environment (JDK, OS, MySQL/H2, deployment mode)\n+3. Minimal reproduction steps\n+4. Expected behavior vs actual behavior\n+5. Relevant error logs (please redact secrets, passwords, and tokens)\n+\n+Once available, maintainers can follow up faster.\n+\n+## Output Actions\n+\n+For every run:\n+1. Add labels according to policy (max 3).\n+2. Add one triage comment in the same language as the issue.",
+          "snapshot_ref": "1e16e54b95cb525ef66fa33577db2bac35f7542c",
+          "snapshot_blob_sha": "3f476acca52909fc0b3e44f86a1ea31c388fc4b4",
+          "snapshot_file": "snapshots/apollo__apolloconfig__1e16e54b95cb525ef66fa33577db2bac35f7542c__issue-triage.md",
+          "snapshot_bytes": 3720,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"apolloconfig/apollo\",\"generated_owner\":\"apolloconfig\",\"generated_repo\":\"apollo\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/apolloconfig/apollo/blob/d95fc18d112589efc09ddcbe1507047584d55251/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "apolloconfig/apollo:.github/workflows/issue-triage.md",
+      "source_full_name": "apolloconfig/apollo",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "8d0ee32195976e598394357fcd44c8d71099c3f9",
+      "authored_at": "2026-02-13T08:31:15Z",
+      "committed_at": "2026-02-13T08:31:15Z",
+      "author_name": "Jason Song",
+      "author_email": "nobodyiam@gmail.com",
+      "author_login": "nobodyiam",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: allow issue triage to run for external reporters (#5547)\n\n* fix: allow issue triage to run for external reporters\n\n* chore: harden issue triage workflow for external triggers",
+      "parent_shas": [
+        "7682dc8b7dcc117182ead28b5359f0c6bac2c4d3"
+      ],
+      "tree_sha": "e2f771628b0392b6c0afe78c40e12dddf7e594ed",
+      "html_url": "https://github.com/apolloconfig/apollo/commit/8d0ee32195976e598394357fcd44c8d71099c3f9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "apolloconfig/apollo:.github/workflows/issue-triage.md",
+          "source_full_name": "apolloconfig/apollo",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "8d0ee32195976e598394357fcd44c8d71099c3f9",
+          "committed_at": "2026-02-13T08:31:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 16,
+          "file_deletions": 0,
+          "file_changes": 16,
+          "file_patch": "@@ -5,10 +5,26 @@ on:\n     types: [opened]\n \n permissions: read-all\n+roles: all\n+\n+network:\n+  allowed:\n+    - github\n+\n+tools:\n+  github:\n+    toolsets:\n+      - issues\n \n safe-outputs:\n   add-labels:\n+    max: 3\n   add-comment:\n+    max: 1\n+  mentions:\n+    allow-team-members: false\n+    allow-context: false\n+    allowed: []\n \n concurrency:\n   group: apollo-issue-triage-${{ github.event.issue.number }}",
+          "snapshot_ref": "8d0ee32195976e598394357fcd44c8d71099c3f9",
+          "snapshot_blob_sha": "6ff79d0783b70b9b6dfa503bd38e301c38a0f8f8",
+          "snapshot_file": "snapshots/apollo__apolloconfig__8d0ee32195976e598394357fcd44c8d71099c3f9__issue-triage.md",
+          "snapshot_bytes": 3917,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"apolloconfig/apollo\",\"generated_owner\":\"apolloconfig\",\"generated_repo\":\"apollo\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/apolloconfig/apollo/blob/d95fc18d112589efc09ddcbe1507047584d55251/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+    "source_full_name": "YousefHadder/markdown-plus.nvim",
+    "source_owner": "YousefHadder",
+    "source_repo": "markdown-plus.nvim",
+    "md_path": ".github/workflows/config-sync-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/YousefHadder/markdown-plus.nvim/blob/HEAD/.github/workflows/config-sync-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "YousefHadder/markdown-plus.nvim",
+      "generated_owner": "YousefHadder",
+      "generated_repo": "markdown-plus.nvim",
+      "generated_workflow_path": ".github/workflows/config-sync-checker.lock.yml",
+      "generated_workflow_file": "config-sync-checker.lock.yml",
+      "generated_html_url": "https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/config-sync-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/config-sync-checker.md",
+      "commit_sha": "a6803f89dd0e62a1fed0027247d8ff2b5c262d31",
+      "authored_at": "2026-03-07T06:42:44Z",
+      "committed_at": "2026-03-07T06:42:44Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(ci): add agentic workflow config-sync-checker (#224)",
+      "parent_shas": [
+        "c37670ac5108bd55015a8168f1976fd140a0ced2"
+      ],
+      "tree_sha": "2ff1e4d86af9fea22c3293389a013e3cabb66a1f",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/a6803f89dd0e62a1fed0027247d8ff2b5c262d31",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/config-sync-checker.md",
+          "commit_sha": "a6803f89dd0e62a1fed0027247d8ff2b5c262d31",
+          "committed_at": "2026-03-07T06:42:44Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 301,
+          "file_deletions": 0,
+          "file_changes": 301,
+          "file_patch": "@@ -0,0 +1,301 @@\n+---\n+name: Config Sync Checker\n+description: Checks that config options stay in sync across types, validation, defaults, and documentation — reports inconsistencies as GitHub issues\n+on:\n+  schedule:\n+    - cron: daily\n+  workflow_dispatch:\n+  skip-if-match: 'is:issue is:open in:title \"[config-sync]\"'\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tracker-id: config-sync-checker\n+engine: copilot\n+strict: true\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[config-sync] \"\n+    labels: [config, consistency, automation]\n+    expires: 7d\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash:\n+    - \"cat lua/markdown-plus/types.lua\"\n+    - \"cat lua/markdown-plus/config/validate.lua\"\n+    - \"cat lua/markdown-plus/init.lua\"\n+    - \"cat doc/markdown-plus.txt\"\n+    - \"grep -n '' lua/markdown-plus/types.lua\"\n+    - \"grep -n '' lua/markdown-plus/config/validate.lua\"\n+    - \"grep -n '' lua/markdown-plus/init.lua\"\n+    - \"grep -n '' doc/markdown-plus.txt\"\n+    - \"git\"\n+\n+timeout-minutes: 15\n+\n+imports:\n+  - shared/reporting.md\n+---\n+\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# Config Sync Checker Agent\n+\n+You are an expert configuration consistency auditor for the markdown-plus.nvim Neovim plugin. Your job is to verify that every config option is properly defined across **all four canonical files** and report any inconsistencies as a GitHub issue.\n+\n+## The Four Canonical Files\n+\n+1. **`lua/markdown-plus/types.lua`** — LuaCATS type definitions (`---@class`, `---@field`)\n+2. **`lua/markdown-plus/config/validate.lua`** — Declarative validation schema (`SCHEMA` table)\n+3. **`lua/markdown-plus/init.lua`** — Default values (`M.config` table literal)\n+4. **`doc/markdown-plus.txt`** — Vimdoc help file (OPTIONS block with Lua code example)\n+\n+A config option is **in sync** when it appears in all four files with consistent type, name, nesting, and default value.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Check Date**: $(date +%Y-%m-%d)\n+- **Workspace**: ${{ github.workspace }}\n+\n+## Phase 1: Extract Config Fields\n+\n+Read all four files and extract the config fields from each.\n+\n+### 1.1 Read All Four Files\n+\n+```bash\n+cat lua/markdown-plus/types.lua\n+cat lua/markdown-plus/config/validate.lua\n+cat lua/markdown-plus/init.lua\n+cat doc/markdown-plus.txt\n+```\n+\n+### 1.2 Parse Each File\n+\n+Use file-specific patterns to extract every config field:\n+\n+#### types.lua — LuaCATS Annotations\n+\n+Extract fields from `---@class markdown-plus.Config` and all nested `---@class` definitions:\n+- Pattern: `---@field <name>? <type> <description>` lines under each `---@class`\n+- Track the **class hierarchy**: top-level fields reference nested classes (e.g., `markdown-plus.FeatureConfig`)\n+- Record: field name, type, whether optional (`?` suffix), default value (from description parenthetical)\n+- **User-facing** classes: `markdown-plus.Config`, `markdown-plus.FeatureConfig`, `markdown-plus.TableConfig`, `markdown-plus.TableKeymapConfig`, `markdown-plus.CalloutsConfig`, `markdown-plus.FootnotesConfig`, `markdown-plus.ListConfig`, `markdown-plus.LinksConfig`, `markdown-plus.SmartPasteConfig`, `markdown-plus.CheckboxCompletionConfig`, `markdown-plus.CodeBlockConfig`, `markdown-plus.TocConfig`, `markdown-plus.KeymapConfig`\n+- Ignore `Internal*` classes — those mirror the user-facing classes but without optional markers\n+\n+#### validate.lua — SCHEMA Table\n+\n+Extract fields from the `local SCHEMA = { ... }` table literal:\n+- Top-level keys: `enabled`, `filetypes`, `features`, `keymaps`, `toc`, `table`, `callouts`, `code_block`, `footnotes`, `list`, `links`\n+- Nested `fields = { ... }` tables define sub-options\n+- Record: field name, `type` value, `enum` values (if present), `range` (if present), nesting path\n+- A field exists in validation if it has an entry in SCHEMA or a nested `fields` table\n+\n+#### init.lua — Default Values (M.config)\n+\n+Extract fields from the `M.config = { ... }` table literal (lines starting after `M.config = {`):\n+- Record: field name, default value, nesting path\n+- Track literal values: booleans, strings, numbers, tables, arrays\n+\n+#### doc/markdown-plus.txt — OPTIONS Block\n+\n+Extract fields from the OPTIONS section (starts at `*markdown-plus-configuration-options*`):\n+- Look for the Lua code block between `>lua` and `<` delimiters\n+- Parse the `require('markdown-plus').setup({ ... })` example\n+- Record: field name, example value, nesting path, inline comment descriptions\n+\n+### 1.3 Build Field Registry\n+\n+Create a unified registry of every unique config field path found across all four files. Use dot-notation paths:\n+\n+```\n+enabled\n+features.list_management\n+features.text_formatting\n+features.headers_toc\n+features.links\n+features.images\n+features.quotes\n+features.callouts\n+features.code_block\n+features.table\n+features.footnotes\n+keymaps.enabled\n+filetypes\n+toc.initial_depth\n+table.enabled\n+table.auto_format\n+table.default_alignment\n+table.confirm_destructive\n+table.keymaps.enabled\n+table.keymaps.prefix\n+table.keymaps.insert_mode_navigation\n+callouts.default_type\n+callouts.custom_types\n+code_block.enabled\n+footnotes.section_header\n+footnotes.confirm_delete\n+list.checkbox_completion.enabled\n+list.checkbox_completion.format\n+list.checkbox_completion.date_format\n+list.checkbox_completion.remove_on_uncheck\n+list.checkbox_completion.update_existing\n+links.smart_paste.enabled\n+links.smart_paste.timeout\n+```\n+\n+## Phase 2: Cross-Reference\n+\n+### 2.1 Build Comparison Matrix\n+\n+For every field path in the registry, check presence in each file:\n+\n+| Field Path | types.lua | validate.lua | init.lua | doc/markdown-plus.txt |\n+|------------|-----------|--------------|----------|----------------------|\n+| `enabled`  | ✅         | ✅            | ✅        | ✅                    |\n+| ...        | ...       | ...          | ...      | ...                  |\n+\n+### 2.2 Check Value Consistency\n+\n+For fields present in multiple files, verify:\n+- **Type consistency**: The type in `types.lua` matches the `type` in `validate.lua` (e.g., `boolean` ↔ `\"boolean\"`)\n+- **Default value consistency**: The default in `init.lua` matches the default described in `types.lua` annotations and the example in `doc/markdown-plus.txt`\n+- **Enum consistency**: Enum values in `types.lua` (`\"emoji\"|\"comment\"|...`) match `enum` keys in `validate.lua`\n+- **Range consistency**: Range constraints in `types.lua` descriptions match `range` in `validate.lua`\n+\n+### 2.3 Categorize Mismatches by Severity\n+\n+**CRITICAL** — Missing default values:\n+- Field exists in `types.lua` and/or `validate.lua` but has no default in `init.lua`\n+- This causes runtime errors when users don't specify the option\n+\n+**HIGH** — Missing type definition or validation:\n+- Field has a default in `init.lua` but no `---@field` in `types.lua` (no type safety)\n+- Field has a default in `init.lua` but no entry in `validate.lua` (no input validation)\n+\n+**MEDIUM** — Missing documentation:\n+- Field exists in code files but is missing from `doc/markdown-plus.txt` OPTIONS block\n+- Users can't discover the option through `:help`\n+\n+**LOW** — Minor inconsistencies:\n+- Type mismatches between `types.lua` annotation and `validate.lua` schema\n+- Default value in `init.lua` doesn't match description in `types.lua`\n+- Enum values differ between `types.lua` and `validate.lua`\n+\n+## Phase 3: Report or Exit\n+\n+### 3.1 All Synced — Exit Gracefully\n+\n+If every field path is present in all four files with consistent types and defaults:\n+\n+```\n+✅ Config sync check passed — all fields are consistent across types.lua, validate.lua, init.lua, and doc/markdown-plus.txt.\n+No issue needed.\n+```\n+\n+### 3.2 Inconsistencies Found — Create Issue\n+\n+If any mismatches are found, create a GitHub issue using safe-outputs with the following structure:\n+\n+**Issue Title**: `Config sync: <N> inconsistencies found (<date>)`\n+\n+**Issue Body** (follow shared/reporting.md guidelines):\n+\n+```markdown\n+### Summary\n+\n+Config sync check found **N** inconsistencies across the 4 canonical config files.\n+\n+| Severity | Count |\n+|----------|-------|\n+| 🔴 CRITICAL | X |\n+| 🟠 HIGH | X |\n+| 🟡 MEDIUM | X |\n+| 🔵 LOW | X |\n+\n+### Comparison Matrix\n+\n+| Field Path | types.lua | validate.lua | init.lua | vimdoc |\n+|------------|-----------|--------------|----------|--------|\n+| `field.path` | ✅ | ✅ | ❌ Missing | ✅ |\n+| ... | ... | ... | ... | ... |\n+\n+Only show rows with at least one issue. Use ✅ for present/consistent, ❌ Missing for absent, ⚠️ Mismatch for value/type conflicts.\n+\n+### 🔴 CRITICAL — Missing Defaults\n+\n+[List each field with missing default, explain the risk, and provide fix instructions]\n+\n+### 🟠 HIGH — Missing Types or Validation\n+\n+[List each field missing from types.lua or validate.lua, with specific code to add]\n+\n+### 🟡 MEDIUM — Missing Documentation\n+\n+[List each field missing from vimdoc, with the section where it should be added]\n+\n+### 🔵 LOW — Minor Inconsistencies\n+\n+<details>\n+<summary><b>View LOW severity items</b></summary>\n+\n+[Type mismatches, default value discrepancies, enum differences]\n+\n+</details>\n+\n+### Fix Instructions\n+\n+For each inconsistency, provide the **exact file**, **location**, and **code snippet** to fix it.\n+\n+Example:\n+- **File**: `lua/markdown-plus/init.lua`\n+- **Location**: Inside `M.config` table, under `table` section\n+- **Add**:\n+  ```lua\n+  enabled = true,\n+  ```\n+```\n+\n+Omit any severity section that has zero items.\n+\n+## Important Guidelines\n+\n+### Scope Control\n+- **Read-only analysis**: This workflow NEVER modifies files — it only reads and reports\n+- **Focus on config options**: Only check fields that appear in `markdown-plus.Config` and its nested classes\n+- **Ignore internal types**: Skip `markdown-plus.Internal*` classes, `markdown-plus.ListInfo`, and other non-config types\n+- **Ignore non-config code**: Skip module references (`M.list`, `M.format`, etc.) and setup logic in `init.lua`\n+\n+### Accuracy Standards\n+- **Match exact field names**: `confirm_destructive` ≠ `confirm_delete` — these are different fields\n+- **Respect nesting**: `table.enabled` and `code_block.enabled` are different fields\n+- **Parse carefully**: Don't confuse Lua comments with actual field definitions\n+- **Validate enum sets**: Compare the full set of enum values, not just presence\n+\n+### Exit Conditions\n+Exit gracefully without creating an issue if:\n+- All fields are perfectly synced across all four files\n+- An open `[config-sync]` issue already exists (handled by `skip-if-match`)\n+- Any of the four files cannot be read (report as error in logs, don't create partial issue)\n+\n+### Success Metrics\n+A successful check:\n+- ✅ Reads all four canonical files completely\n+- ✅ Extracts every config field from each file\n+- ✅ Cross-references with zero false positives\n+- ✅ Categorizes mismatches by correct severity\n+- ✅ Provides actionable fix instructions for every inconsistency\n+- ✅ Creates a well-structured, scannable issue (or exits cleanly if all synced)\n+\n+Begin your config sync analysis now.",
+          "snapshot_ref": "a6803f89dd0e62a1fed0027247d8ff2b5c262d31",
+          "snapshot_blob_sha": "f584f58c42a99a7ba93f66f1a16695bedcb077a5",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__a6803f89dd0e62a1fed0027247d8ff2b5c262d31__config-sync-checker.md",
+          "snapshot_bytes": 10920,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/config-sync-checker.lock.yml\",\"generated_workflow_file\":\"config-sync-checker.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/config-sync-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/config-sync-checker.md",
+      "commit_sha": "877dcc3ba70da93d87cd9565f85efbb01978399b",
+      "authored_at": "2026-03-23T20:54:05Z",
+      "committed_at": "2026-03-23T20:54:05Z",
+      "author_name": "yousefhadder",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "yousefhadder",
+      "committer_email": "yousefhadder@github.com",
+      "committer_login": "YousefHadder",
+      "committer_account_type": "User",
+      "message": "ci: change agentic workflow schedules from daily to weekly\n\nReduce CI costs and noise by switching the 4 daily agentic workflows\nto weekly schedules. Lock files regenerated via `gh aw compile`.\n\n- code-simplifier: daily → weekly (Sunday 3:02 AM UTC)\n- config-sync-checker: daily → weekly (Thursday 2:06 AM UTC)\n- daily-doc-updater: daily → weekly (Wednesday 1:16 AM UTC)\n- daily-file-diet: weekdays → weekly (Wednesday 3:31 PM UTC)",
+      "parent_shas": [
+        "b0d75e434fee249b90bae0c584715f6927e0aaae"
+      ],
+      "tree_sha": "91ab60b89fa9459c7342b1ab29b3291d9888a975",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/877dcc3ba70da93d87cd9565f85efbb01978399b",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/config-sync-checker.md",
+          "commit_sha": "877dcc3ba70da93d87cd9565f85efbb01978399b",
+          "committed_at": "2026-03-23T20:54:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -3,7 +3,7 @@ name: Config Sync Checker\n description: Checks that config options stay in sync across types, validation, defaults, and documentation — reports inconsistencies as GitHub issues\n on:\n   schedule:\n-    - cron: daily\n+    - cron: weekly\n   workflow_dispatch:\n   skip-if-match: 'is:issue is:open in:title \"[config-sync]\"'\n ",
+          "snapshot_ref": "877dcc3ba70da93d87cd9565f85efbb01978399b",
+          "snapshot_blob_sha": "32beec986dde433dd9f53b8b40c32a82914d809d",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__877dcc3ba70da93d87cd9565f85efbb01978399b__config-sync-checker.md",
+          "snapshot_bytes": 10921,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/config-sync-checker.lock.yml\",\"generated_workflow_file\":\"config-sync-checker.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/config-sync-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/config-sync-checker.md",
+      "commit_sha": "ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+      "authored_at": "2026-05-12T17:16:31Z",
+      "committed_at": "2026-05-12T17:16:31Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(aw): fix failing agentic workflows (#318)",
+      "parent_shas": [
+        "b1b22e104f9a055ce4ac396716d60d6cf86f255e"
+      ],
+      "tree_sha": "bdbd8e434f0ef555537cd95b2165628e83ac1812",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/config-sync-checker.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/config-sync-checker.md",
+          "commit_sha": "ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+          "committed_at": "2026-05-12T17:16:31Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 0,
+          "file_changes": 7,
+          "file_patch": "@@ -26,6 +26,7 @@ safe-outputs:\n     title-prefix: \"[config-sync] \"\n     labels: [config, consistency, automation]\n     expires: 7d\n+  noop:\n \n tools:\n   github:\n@@ -299,3 +300,9 @@ A successful check:\n - ✅ Creates a well-structured, scannable issue (or exits cleanly if all synced)\n \n Begin your config sync analysis now.\n+\n+**Important**: If no inconsistencies are found after completing your analysis, you **MUST** call the `noop` safe-output tool with a brief explanation. Failing to call any safe-output tool is the most common cause of safe-output workflow failures.\n+\n+```json\n+{\"noop\": {\"message\": \"No action needed: [brief explanation of what was analyzed and why]\"}}\n+```",
+          "snapshot_ref": "ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+          "snapshot_blob_sha": "17edf997999ef5dc5ce3bacafe33e3627e4394a7",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__ef70186e8bea88c414177ef283fa9937ee7cb4c8__config-sync-checker.md",
+          "snapshot_bytes": 11282,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/config-sync-checker.lock.yml\",\"generated_workflow_file\":\"config-sync-checker.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/config-sync-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

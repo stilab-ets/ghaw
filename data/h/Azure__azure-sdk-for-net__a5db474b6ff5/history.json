@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+    "source_full_name": "Azure/azure-sdk-for-net",
+    "source_owner": "Azure",
+    "source_repo": "azure-sdk-for-net",
+    "md_path": ".github/workflows/sdk-build-repair.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/azure-sdk-for-net/blob/HEAD/.github/workflows/sdk-build-repair.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/azure-sdk-for-net",
+      "generated_owner": "Azure",
+      "generated_repo": "azure-sdk-for-net",
+      "generated_workflow_path": ".github/workflows/sdk-build-repair.lock.yml",
+      "generated_workflow_file": "sdk-build-repair.lock.yml",
+      "generated_html_url": "https://github.com/Azure/azure-sdk-for-net/blob/c0cbf5e0ed9e8c99a79c3683afbe47d933925b71/.github/workflows/sdk-build-repair.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:24:49+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+      "source_full_name": "Azure/azure-sdk-for-net",
+      "md_path": ".github/workflows/sdk-build-repair.md",
+      "commit_sha": "c92c5ed037733f5502453db33c6bd98eb6fe2394",
+      "authored_at": "2026-06-30T21:57:30Z",
+      "committed_at": "2026-06-30T21:57:30Z",
+      "author_name": "JoshLove-msft",
+      "author_email": "54595583+JoshLove-msft@users.noreply.github.com",
+      "author_login": "JoshLove-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add SDK build-repair cloud-agent trigger workflow (#59652) (#59666)\n\n* Add SDK build-repair cloud-agent trigger workflow (#59652)\n\nAdds .github/workflows/sdk-build-repair.yml: a deterministic kickoff that starts a\nGitHub Copilot cloud-agent repair task when a generated SDK PR is labeled\n'auto-sdk-build-fix' (or a maintainer comments '/repair-build').\n\nGates (defense in depth): open PR, same-repo (no fork), authored by the release bot\n'azure-sdk', base 'main', head 'sdkauto/*', and the triggering actor has write access.\nUses pull_request_target / issue_comment so the trusted default-branch workflow runs\nwith the kickoff secret (a PR-branch edit cannot exfiltrate it); PR code is never\nchecked out and no PR-controlled free text is interpolated into the prompt.\n\nKickoff calls the Agent Tasks API (POST /agents/repos/{owner}/{repo}/tasks) with\nbase_ref + head_ref so the agent commits in place to the existing PR branch, using a\nstored user-to-server token (COPILOT_AGENT_TASKS_TOKEN), never GITHUB_TOKEN. Includes\na best-effort idempotency check and posts a status comment with the task link.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Clarify auto-trigger: label is emitted by spec-gen-sdk (#59651), not a human\n\nThe auto-sdk-build-fix label is applied automatically by the release-planner\ngeneration pipeline when the build fails (result=warning); the manual label and\n/repair-build comment are only fallbacks. Documents the end-to-end automatic flow\nin the workflow header.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Use existing COPILOT_GITHUB_TOKEN secret for agent-tasks kickoff\n\nThe dedicated COPILOT_AGENT_TASKS_TOKEN secret was never provisioned. Point the\nrepair-trigger workflow at the existing COPILOT_GITHUB_TOKEN repo secret (the\nazure-sdk bot user-to-server identity already used by the agentic workflows),\nwhich aligns with the workflow's azure-sdk author gate.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Add ENABLED kill-switch so the trigger ships dormant\n\npull_request_target / issue_comment workflows take effect as soon as they land on\nthe default branch. Gate on an ENABLED env flag (default 'false') so this can be\nmerged early and safely, then flipped on during MVP rollout once the identity,\nsafety gate, and cloud-agent environment are in place.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Revert \"Add ENABLED kill-switch so the trigger ships dormant\"\n\nThis reverts commit 29cc9c4fa9b6d0a4e5a8bcc9a4e8fec65f7a146a.\n\n* Reapply \"Add ENABLED kill-switch so the trigger ships dormant\"\n\nThis reverts commit c10c78dcba612b8cbb2505061a232c1b98b595b7.\n\n* Drive kill-switch from a GitHub Actions repo variable\n\nRead ENABLED from vars.SDK_BUILD_REPAIR_ENABLED so the flag can be toggled from the\nrepo Variables UI (Settings -> Secrets and variables -> Actions -> Variables) with\nno code change or merge. Fail-safe: unset / non-'true' keeps the workflow dormant.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Convert SDK build-repair trigger to a gh-aw agentic workflow\n\nReplace the deterministic PAT-based Agent-Tasks kickoff (.yml) with a GitHub\nAgentic Workflow (.md + compiled .lock.yml). The Copilot CLI agent runs the\nbounded auto-build-repair skill directly in Actions, using copilot-requests:\nwrite (billed to the org) so no user-to-server PAT is required (supersedes\nthe COPILOT_AGENT_TASKS_TOKEN plan, issue #59655).\n\n- Trigger: pull_request labeled auto-sdk-build-fix (automatic) plus the\n  /repair-build slash command (manual), gated to write+ roles and the\n  azure-sdk release bot.\n- Master kill-switch via the SDK_BUILD_REPAIR_ENABLED Actions variable.\n- Engine: the shared azsdk_customized_code_update engine, driven through the\n  azsdk CLI installed in a setup step (gh-aw's MCP gateway cannot host the\n  stdio azsdk MCP server directly).\n- Writes go only through safe-outputs: push-to-pull-request-branch (forks\n  refused, label re-checked, protected-files denylist) and a single summary\n  comment. No auto-merge.\n\nToward #59652.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Gate repair workflow to eligible release-planner Auto SDK PRs\n\nAddress PR review feedback on the trigger's security model:\n\n- Add a PR-eligibility gate to the workflow if: so the automatic path runs\n  only for genuine release-planner Auto SDK PRs: same-repo (no forks), opened\n  by the \u0007zure-sdk release bot, base main, head sdkauto/*. Previously the\n  guards (roles/bots) restricted *who* could trigger but not *which* PRs were\n  eligible, so a stray label on an unrelated PR could run the agent against\n  untrusted code.\n- Have the agent re-verify the same eligibility before any checkout/build,\n  covering the manual /repair-build path (PR metadata is not in the comment\n  payload, so it cannot be gated by if: alone).\n\nKept the pull_request trigger rather than pull_request_target: gh-aw flags\npull_request_target+checkout as the \"pwn-request\" vector (full write perms +\nsecrets while building untrusted PR code). Under pull_request, fork PRs get no\nsecrets (and gh-aw blocks forks), and the eligibility gate restricts same-repo\nruns to pipeline-generated sdkauto/* branches, so only trusted code executes.\n\nToward #59652.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "38ee5ba98562632113edb188cd807c658c1951f8"
+      ],
+      "tree_sha": "68f3cf4438d3e084fc7341d0b672cfcbb59d65ed",
+      "html_url": "https://github.com/Azure/azure-sdk-for-net/commit/c92c5ed037733f5502453db33c6bd98eb6fe2394",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+          "source_full_name": "Azure/azure-sdk-for-net",
+          "md_path": ".github/workflows/sdk-build-repair.md",
+          "commit_sha": "c92c5ed037733f5502453db33c6bd98eb6fe2394",
+          "committed_at": "2026-06-30T21:57:30Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 180,
+          "file_deletions": 0,
+          "file_changes": 180,
+          "file_patch": "@@ -0,0 +1,180 @@\n+---\n+# SDK build repair (agentic workflow)\n+#\n+# Auto-repairs a release-planner **Auto SDK PR** that fails to build because of\n+# hand-written customization (custom-code) drift. The release pipeline applies the\n+# `auto-sdk-build-fix` label (issue #59651) to eligible generated SDK PRs; that label\n+# is this workflow's primary trigger. A maintainer can also (re)run on demand by\n+# commenting `/repair-build` on the PR.\n+#\n+# This is a GitHub Agentic Workflow (gh-aw): the Copilot CLI agent runs the bounded\n+# `auto-build-repair` skill directly in GitHub Actions. Per\n+# https://github.blog/changelog/2026-06-11-agentic-workflows-no-longer-need-a-personal-access-token/\n+# it runs on the built-in token with `copilot-requests: write` (billed to the org) —\n+# no user-to-server PAT is needed (supersedes the COPILOT_AGENT_TASKS_TOKEN plan, #59655).\n+#\n+# Engine: the shared `azsdk_customized_code_update` engine. gh-aw's MCP Gateway only\n+# supports containerized-stdio or HTTP MCP servers, and the azsdk MCP server is plain\n+# stdio, so this workflow installs the `azsdk` CLI in a setup step and the agent drives\n+# the same engine via its CLI surface (`azsdk tsp client customized-update`).\n+#\n+# Safety: the agent job is read-only. All writes go through gh-aw safe-outputs jobs:\n+#   * `push-to-pull-request-branch` commits the fix to the PR branch (forks refused,\n+#     gated on the `auto-sdk-build-fix` label, protected-files denylist enforced).\n+#   * `add-comment` posts the audit summary.\n+# There is NO auto-merge — human review stays mandatory. The independent required\n+# safety gate (#59654) is the external backstop.\n+\n+description: \"Auto-repair custom-code build failures on release-planner Auto SDK PRs labeled auto-sdk-build-fix, by driving the shared azsdk customized-update engine in custom-code-only scope.\"\n+\n+on:\n+  # Primary, fully-automatic path: the release pipeline labels an eligible Auto SDK PR.\n+  # We use `pull_request` (not `pull_request_target`): under `pull_request`, fork PRs get\n+  # NO secrets and a read-only token (and gh-aw blocks forks by default), while the strict\n+  # eligibility gate below restricts same-repo runs to release-bot-generated `sdkauto/*`\n+  # branches — so the code that ever executes (incl. ./eng/common/mcp/azure-sdk-mcp.ps1 and\n+  # the package build) is always trusted, pipeline-generated content. `pull_request_target`\n+  # was rejected because gh-aw flags it as \"extremely insecure\" with checkout (the classic\n+  # pwn-request vector: full write perms + secrets while building untrusted PR code); for a\n+  # build-repair agent that MUST build the PR's code, the real control is the eligibility\n+  # gate, not the trigger event.\n+  pull_request:\n+    types: [labeled]\n+    names: [auto-sdk-build-fix]\n+  # Manual fallback: a maintainer (write+) comments `/repair-build` on the PR.\n+  slash_command:\n+    name: repair-build\n+    events: [pull_request, pull_request_comment]\n+  # Only repository maintainers (write+) may trigger; the release bot that applies the\n+  # label is allow-listed so the automatic path works. This is the prompt-injection /\n+  # abuse guard (gh-aw default roles are [admin, maintainer, write]).\n+  roles: [admin, maintainer, write]\n+  bots: [\"azure-sdk\"]\n+\n+# Master kill-switch (fail-safe) + PR-eligibility gate. The workflow stays dormant unless\n+# the repo Actions variable SDK_BUILD_REPAIR_ENABLED is exactly 'true'. In addition, on the\n+# automatic (pull_request) path the PR must be a genuine release-planner Auto SDK PR:\n+# same-repo (no forks), opened by the `azure-sdk` release bot, targeting `main`, on an\n+# `sdkauto/` branch. This gates *which PRs are eligible* (not just *who* can trigger), so a\n+# stray label on an unrelated/untrusted PR cannot run the repair agent against its code. The\n+# label name itself is filtered by `names:` under `on:` above. The manual /repair-build path\n+# is additionally gated by `roles:` above and by the agent's own eligibility check — see\n+# \"Eligibility\" in the prompt below.\n+if: >-\n+  ${{ vars.SDK_BUILD_REPAIR_ENABLED == 'true'\n+      && (github.event_name != 'pull_request'\n+          || (github.event.pull_request.head.repo.full_name == github.repository\n+              && github.event.pull_request.base.ref == 'main'\n+              && github.event.pull_request.user.login == 'azure-sdk'\n+              && startsWith(github.event.pull_request.head.ref, 'sdkauto/'))) }}\n+\n+engine: copilot\n+\n+# Agent job runs read-only; copilot-requests:write bills Copilot CLI usage to the org.\n+# The separate safe-outputs jobs receive the write scopes they need (contents/pull-requests).\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  copilot-requests: write\n+\n+network:\n+  allowed:\n+    - defaults\n+    - dotnet\n+    - github\n+\n+# Toolchain: the SDK build + the azsdk engine both require the .NET 10 SDK.\n+runtimes:\n+  dotnet:\n+    version: \"10.0.x\"\n+\n+# Install the shared azsdk CLI (the engine) onto PATH before the agent runs. The agent\n+# then invokes `azsdk tsp client customized-update` from bash. (gh-aw cannot host the\n+# stdio azsdk MCP server directly; see header.)\n+steps:\n+  - name: Install azsdk CLI\n+    shell: pwsh\n+    run: |\n+      $dir = Join-Path $env:RUNNER_TEMP 'azsdk-cli'\n+      ./eng/common/mcp/azure-sdk-mcp.ps1 -InstallDirectory $dir\n+      Add-Content -Path $env:GITHUB_PATH -Value $dir\n+\n+tools:\n+  github:\n+    toolsets: [context, repos, pull_requests]\n+  bash: [\":*\"]\n+  edit:\n+\n+safe-outputs:\n+  # Commit the repair (custom-code edits + regenerated Generated/) to the PR branch.\n+  # Forks are refused by this safe output; the label is re-checked at apply time; the\n+  # protected-files denylist blocks .github/, dot-dirs, manifests and instruction files.\n+  push-to-pull-request-branch:\n+    target: \"triggering\"\n+    required-labels: [auto-sdk-build-fix]\n+    if-no-changes: \"warn\"\n+    protected-files: fallback-to-issue\n+  # Audit trail: one summary comment per run.\n+  add-comment:\n+    max: 1\n+  # Do not open a tracking issue on agent failure; failures surface on the PR.\n+  report-failure-as-issue: false\n+\n+timeout-minutes: 60\n+concurrency: sdk-build-repair-${{ github.event.pull_request.number || github.event.issue.number }}\n+---\n+\n+# SDK Build Repair\n+\n+<!-- After editing this file, run 'gh aw compile sdk-build-repair' to regenerate the lock file. -->\n+\n+You are the Azure SDK for .NET **auto-build-repair** agent for `${{ github.repository }}`.\n+\n+A release-planner **Auto SDK PR** (#${{ github.event.pull_request.number || github.event.issue.number }}) was generated from a pinned TypeSpec spec and **fails to build because of hand-written customization (custom-code) drift**. Your job is to make the failing package build again by repairing **only custom (non-generated) code**, then commit the fix back to the PR for human review.\n+\n+Follow the checked-in skill **exactly** — it is the source of truth for the procedure, scope, and stop conditions:\n+\n+- Skill: `.github/skills/auto-build-repair/SKILL.md`\n+- Per-language bound: `.github/skills/auto-build-repair/repair-config.yml` (`maxIterations`)\n+\n+## The engine in this environment\n+\n+The skill drives the shared **`azsdk_customized_code_update`** engine. In this workflow the engine is the **`azsdk` CLI** (installed onto PATH by the setup step), not the MCP server. Invoke it from bash for each repair attempt:\n+\n+```bash\n+azsdk tsp client customized-update \\\n+  --edit-scope CustomCode \\\n+  --package-path \"<failing SDK package dir>\" \\\n+  --customization-request \"<the build errors / failure context>\"\n+```\n+\n+`--edit-scope CustomCode` is custom-code-only: the engine regenerates from the pinned `tsp-location.yaml` commit, patches only custom (non-generated) code, and surfaces anything that needs a spec change as out of scope (`SpecChangeRequired`) instead of applying it. **Omit `--tsp-project-path`** (only needed for `SpecInputs`/`All` scope). Read the returned structured result (build success/failure + error code) to decide the next step exactly as the skill describes.\n+\n+## Eligibility (verify before doing any work)\n+\n+This workflow only repairs genuine **release-planner Auto SDK PRs**. Before building anything, use the read-only GitHub tools to confirm **all** of the following about PR #${{ github.event.pull_request.number || github.event.issue.number }}:\n+\n+- it is in **this same repository** (the head branch is not from a fork),\n+- it was **opened by the `azure-sdk` release bot**,\n+- its **base branch is `main`**, and\n+- its **head branch starts with `sdkauto/`**.\n+\n+The automatic (label) path is already gated on these by the workflow `if:`, but the manual `/repair-build` path is not — so **you must re-check them here**. If any condition fails, **stop immediately**: do not check out, build, or run the PR's code; post one `add-comment` explaining the PR is not an eligible Auto SDK PR, and end. This prevents running the repair agent against untrusted code.\n+\n+## Operating constraints (non-negotiable)\n+\n+0. **Verify eligibility first** (see the Eligibility section above) and bail if it fails — before any checkout/build of PR code.\n+1. **One engine only.** Drive `azsdk tsp client customized-update` with `--edit-scope CustomCode`. Do **not** hand-edit code, and do **not** use any other fix engine.\n+2. **Never edit spec inputs.** Do not modify `client.tsp`, `tspconfig.yaml`, `main.tsp`, any TypeSpec source, or move the pinned commit in `tsp-location.yaml`. `--edit-scope CustomCode` enforces this.\n+3. **Commit the regenerated `Generated/`** alongside the custom-code edits — the guard is reproducibility from unchanged inputs, not a frozen `Generated/`.\n+4. **Stay out of infra.** Never touch `.github/`, `eng/`, shared props/targets, pipelines, package metadata, or secrets. (The push safe-output additionally enforces a protected-files denylist.)\n+5. **Fully headless.** Never prompt for input. Honor `maxIterations` from `repair-config.yml`; if it is reached without a green build, commit progress and report.\n+6. **No auto-merge.** Fixes land as reviewable commits only.\n+\n+## Steps\n+\n+1. Identify the single failing SDK package path from the PR diff. Collect its build errors (build the changed package to capture them).\n+2. Apply the `auto-build-repair` skill workflow: call the engine with `--edit-scope CustomCode`, the `--package-path`, and the build errors as `--customization-request`; re-invoke (idempotent) only while the error set keeps shrinking, up to `maxIterations`.\n+3. Inspect each structured result. Stop on the skill's stop conditions (`SpecChangeRequired`, `RegenerateFailed` at the pinned commit, suspected generator bug, or `maxIterations` reached) — do not retry past them or escalate to a human prompt.\n+4. **Commit the result to the PR branch** using the `push-to-pull-request-branch` safe output (custom-code edits + regenerated `Generated/`). If the only viable fix is a spec/decorator change, push nothing and report it as out of scope (requires a separate spec-repo PR).\n+5. **Post one summary comment** with the `add-comment` safe output: classified build errors, files changed (generated-vs-custom split), iterations used, final build status (green, or the specific stop reason), and confirmation that no spec inputs or the pinned commit were touched. End the comment with `--generated by Copilot`.",
+          "snapshot_ref": "c92c5ed037733f5502453db33c6bd98eb6fe2394",
+          "snapshot_blob_sha": "ad44f8b3145118b4c5897c4a06ffbf4afbcb910a",
+          "snapshot_file": "snapshots/azure-sdk-for-net__Azure__c92c5ed037733f5502453db33c6bd98eb6fe2394__sdk-build-repair.md",
+          "snapshot_bytes": 11155,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-net\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-net\",\"generated_workflow_path\":\".github/workflows/sdk-build-repair.lock.yml\",\"generated_workflow_file\":\"sdk-build-repair.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-net/blob/c0cbf5e0ed9e8c99a79c3683afbe47d933925b71/.github/workflows/sdk-build-repair.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+      "source_full_name": "Azure/azure-sdk-for-net",
+      "md_path": ".github/workflows/sdk-build-repair.md",
+      "commit_sha": "804b2c1d1e5f7eeef5289d5b81fcf29a2888f285",
+      "authored_at": "2026-07-03T18:24:38Z",
+      "committed_at": "2026-07-03T18:24:38Z",
+      "author_name": "JoshLove-msft",
+      "author_email": "54595583+JoshLove-msft@users.noreply.github.com",
+      "author_login": "JoshLove-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Support both release-bot logins in sdk-build-repair eligibility gate (#60613)\n\n* Fix release-bot login in sdk-build-repair eligibility gate\n\nThe auto-build-repair workflow gated the automatic path on the PR author\nbeing 'azure-sdk' and allow-listed that same name in bots:. The real\nrelease-planner bot that opens Auto SDK PRs (and applies the\nauto-sdk-build-fix label) is 'azure-sdk-automation[bot]', verified on\nPR #60612. With the old value the labeled-PR path was filtered out by\nthe job if: condition, and the manual /repair-build eligibility re-check\nwould also bail.\n\n- if:  github.event.pull_request.user.login == 'azure-sdk-automation[bot]'\n- bots: [\"azure-sdk-automation[bot]\"]  (the [bot] suffix is auto-normalized by gh-aw)\n- update prose eligibility references\n- recompile lock (gh aw compile, pinned v0.79.4)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Accept both azure-sdk and azure-sdk-automation[bot] release bots\n\nThe sdk-build-repair workflow previously matched only a single release-bot\nlogin. Auto SDK PRs may be authored by either azure-sdk or\nazure-sdk-automation[bot], so accept both in the bots: allowlist, the\ntrigger if: condition, and the agent prompt eligibility text.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ed383c97b198bf4a33727ad8cc517771b46007c3"
+      ],
+      "tree_sha": "b7280b0c59ab6b3341a0da4b0282b93865d058b6",
+      "html_url": "https://github.com/Azure/azure-sdk-for-net/commit/804b2c1d1e5f7eeef5289d5b81fcf29a2888f285",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+          "source_full_name": "Azure/azure-sdk-for-net",
+          "md_path": ".github/workflows/sdk-build-repair.md",
+          "commit_sha": "804b2c1d1e5f7eeef5289d5b81fcf29a2888f285",
+          "committed_at": "2026-07-03T18:24:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 4,
+          "file_changes": 10,
+          "file_patch": "@@ -49,12 +49,13 @@ on:\n   # label is allow-listed so the automatic path works. This is the prompt-injection /\n   # abuse guard (gh-aw default roles are [admin, maintainer, write]).\n   roles: [admin, maintainer, write]\n-  bots: [\"azure-sdk\"]\n+  bots: [\"azure-sdk\", \"azure-sdk-automation[bot]\"]\n \n # Master kill-switch (fail-safe) + PR-eligibility gate. The workflow stays dormant unless\n # the repo Actions variable SDK_BUILD_REPAIR_ENABLED is exactly 'true'. In addition, on the\n # automatic (pull_request) path the PR must be a genuine release-planner Auto SDK PR:\n-# same-repo (no forks), opened by the `azure-sdk` release bot, targeting `main`, on an\n+# same-repo (no forks), opened by the `azure-sdk` or `azure-sdk-automation[bot]` release bot,\n+# targeting `main`, on an\n # `sdkauto/` branch. This gates *which PRs are eligible* (not just *who* can trigger), so a\n # stray label on an unrelated/untrusted PR cannot run the repair agent against its code. The\n # label name itself is filtered by `names:` under `on:` above. The manual /repair-build path\n@@ -65,7 +66,8 @@ if: >-\n       && (github.event_name != 'pull_request'\n           || (github.event.pull_request.head.repo.full_name == github.repository\n               && github.event.pull_request.base.ref == 'main'\n-              && github.event.pull_request.user.login == 'azure-sdk'\n+              && (github.event.pull_request.user.login == 'azure-sdk'\n+                  || github.event.pull_request.user.login == 'azure-sdk-automation[bot]')\n               && startsWith(github.event.pull_request.head.ref, 'sdkauto/'))) }}\n \n engine: copilot\n@@ -155,7 +157,7 @@ azsdk tsp client customized-update \\\n This workflow only repairs genuine **release-planner Auto SDK PRs**. Before building anything, use the read-only GitHub tools to confirm **all** of the following about PR #${{ github.event.pull_request.number || github.event.issue.number }}:\n \n - it is in **this same repository** (the head branch is not from a fork),\n-- it was **opened by the `azure-sdk` release bot**,\n+- it was **opened by the `azure-sdk` or `azure-sdk-automation[bot]` release bot**,\n - its **base branch is `main`**, and\n - its **head branch starts with `sdkauto/`**.\n ",
+          "snapshot_ref": "804b2c1d1e5f7eeef5289d5b81fcf29a2888f285",
+          "snapshot_blob_sha": "023630de3cae1f66f82691c33eb2840c71085620",
+          "snapshot_file": "snapshots/azure-sdk-for-net__Azure__804b2c1d1e5f7eeef5289d5b81fcf29a2888f285__sdk-build-repair.md",
+          "snapshot_bytes": 11339,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-net\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-net\",\"generated_workflow_path\":\".github/workflows/sdk-build-repair.lock.yml\",\"generated_workflow_file\":\"sdk-build-repair.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-net/blob/c0cbf5e0ed9e8c99a79c3683afbe47d933925b71/.github/workflows/sdk-build-repair.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+      "source_full_name": "Azure/azure-sdk-for-net",
+      "md_path": ".github/workflows/sdk-build-repair.md",
+      "commit_sha": "36ccd44555748ba14eb21a935967988941b8ac5f",
+      "authored_at": "2026-07-13T16:46:10Z",
+      "committed_at": "2026-07-13T16:46:10Z",
+      "author_name": "JoshLove-msft",
+      "author_email": "54595583+JoshLove-msft@users.noreply.github.com",
+      "author_login": "JoshLove-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Limit SDK build repair to allowed PRs (#60917)\n\nRequire SDK_BUILD_REPAIR_ALLOWED_PRS to contain the triggering PR number before activating the repair workflow. An absent or empty allowlist fails closed.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: d4edfbdc-a73f-4a6e-8177-173015e7c9da",
+      "parent_shas": [
+        "372984bb9f1f3d3dbc62a06a5f9581852ceab544"
+      ],
+      "tree_sha": "75a89f0af4fac5992ce913fba03dfa8b82ff6009",
+      "html_url": "https://github.com/Azure/azure-sdk-for-net/commit/36ccd44555748ba14eb21a935967988941b8ac5f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+          "source_full_name": "Azure/azure-sdk-for-net",
+          "md_path": ".github/workflows/sdk-build-repair.md",
+          "commit_sha": "36ccd44555748ba14eb21a935967988941b8ac5f",
+          "committed_at": "2026-07-13T16:46:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 3,
+          "file_changes": 11,
+          "file_patch": "@@ -51,9 +51,11 @@ on:\n   roles: [admin, maintainer, write]\n   bots: [\"azure-sdk\", \"azure-sdk-automation[bot]\"]\n \n-# Master kill-switch (fail-safe) + PR-eligibility gate. The workflow stays dormant unless\n-# the repo Actions variable SDK_BUILD_REPAIR_ENABLED is exactly 'true'. In addition, on the\n-# automatic (pull_request) path the PR must be a genuine release-planner Auto SDK PR:\n+# Master kill-switch (fail-safe) + PR allowlist + eligibility gate. The workflow stays\n+# dormant unless the repo Actions variable SDK_BUILD_REPAIR_ENABLED is exactly 'true' and\n+# the PR number is in SDK_BUILD_REPAIR_ALLOWED_PRS (a JSON array such as `[12345]`). An\n+# absent or empty allowlist permits no PRs. In addition, on the automatic (pull_request)\n+# path the PR must be a genuine release-planner Auto SDK PR:\n # same-repo (no forks), opened by the `azure-sdk` or `azure-sdk-automation[bot]` release bot,\n # targeting `main`, on an\n # `sdkauto/` branch. This gates *which PRs are eligible* (not just *who* can trigger), so a\n@@ -63,6 +65,9 @@ on:\n # \"Eligibility\" in the prompt below.\n if: >-\n   ${{ vars.SDK_BUILD_REPAIR_ENABLED == 'true'\n+      && contains(\n+          fromJSON(vars.SDK_BUILD_REPAIR_ALLOWED_PRS || '[]'),\n+          github.event.pull_request.number || github.event.issue.number)\n       && (github.event_name != 'pull_request'\n           || (github.event.pull_request.head.repo.full_name == github.repository\n               && github.event.pull_request.base.ref == 'main'",
+          "snapshot_ref": "36ccd44555748ba14eb21a935967988941b8ac5f",
+          "snapshot_blob_sha": "72487e2bc1c069d849ca7c42920bbbdbbd0cea17",
+          "snapshot_file": "snapshots/azure-sdk-for-net__Azure__36ccd44555748ba14eb21a935967988941b8ac5f__sdk-build-repair.md",
+          "snapshot_bytes": 11641,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-net\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-net\",\"generated_workflow_path\":\".github/workflows/sdk-build-repair.lock.yml\",\"generated_workflow_file\":\"sdk-build-repair.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-net/blob/c0cbf5e0ed9e8c99a79c3683afbe47d933925b71/.github/workflows/sdk-build-repair.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+      "source_full_name": "Azure/azure-sdk-for-net",
+      "md_path": ".github/workflows/sdk-build-repair.md",
+      "commit_sha": "f309c481796efc68dfd6d4ff8176d1dfa4fb5e84",
+      "authored_at": "2026-07-29T22:18:14Z",
+      "committed_at": "2026-07-29T22:18:14Z",
+      "author_name": "JoshLove-msft",
+      "author_email": "54595583+JoshLove-msft@users.noreply.github.com",
+      "author_login": "JoshLove-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable SDK build repair workflow (#61549)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 03f1a62d-a45c-4f27-8f67-93bfe4a534b6",
+      "parent_shas": [
+        "592572648b5c92287cd03706eac640a00196d0c6"
+      ],
+      "tree_sha": "b8423a80a79abdcddecce75eb48430c4ff039cee",
+      "html_url": "https://github.com/Azure/azure-sdk-for-net/commit/f309c481796efc68dfd6d4ff8176d1dfa4fb5e84",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-net:.github/workflows/sdk-build-repair.md",
+          "source_full_name": "Azure/azure-sdk-for-net",
+          "md_path": ".github/workflows/sdk-build-repair.md",
+          "commit_sha": "f309c481796efc68dfd6d4ff8176d1dfa4fb5e84",
+          "committed_at": "2026-07-29T22:18:14Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 12,
+          "file_deletions": 9,
+          "file_changes": 21,
+          "file_patch": "@@ -51,11 +51,9 @@ on:\n   roles: [admin, maintainer, write]\n   bots: [\"azure-sdk\", \"azure-sdk-automation[bot]\"]\n \n-# Master kill-switch (fail-safe) + PR allowlist + eligibility gate. The workflow stays\n-# dormant unless the repo Actions variable SDK_BUILD_REPAIR_ENABLED is exactly 'true' and\n-# the PR number is in SDK_BUILD_REPAIR_ALLOWED_PRS (a JSON array such as `[12345]`). An\n-# absent or empty allowlist permits no PRs. In addition, on the automatic (pull_request)\n-# path the PR must be a genuine release-planner Auto SDK PR:\n+# Master kill-switch (fail-safe) + eligibility gate. The workflow stays dormant unless\n+# the repo Actions variable SDK_BUILD_REPAIR_ENABLED is exactly 'true'. In addition, on\n+# the automatic (pull_request) path the PR must be a genuine release-planner Auto SDK PR:\n # same-repo (no forks), opened by the `azure-sdk` or `azure-sdk-automation[bot]` release bot,\n # targeting `main`, on an\n # `sdkauto/` branch. This gates *which PRs are eligible* (not just *who* can trigger), so a\n@@ -65,9 +63,6 @@ on:\n # \"Eligibility\" in the prompt below.\n if: >-\n   ${{ vars.SDK_BUILD_REPAIR_ENABLED == 'true'\n-      && contains(\n-          fromJSON(vars.SDK_BUILD_REPAIR_ALLOWED_PRS || '[]'),\n-          github.event.pull_request.number || github.event.issue.number)\n       && (github.event_name != 'pull_request'\n           || (github.event.pull_request.head.repo.full_name == github.repository\n               && github.event.pull_request.base.ref == 'main'\n@@ -84,6 +79,12 @@ permissions:\n   pull-requests: read\n   copilot-requests: write\n \n+# Authenticate the nested Copilot SDK used by azsdk with the workflow's Copilot CLI\n+# and built-in token.\n+env:\n+  AZSDK_COPILOT_CLI_PATH: /usr/local/bin/copilot\n+  AZSDK_COPILOT_GITHUB_TOKEN: ${{ github.token }}\n+\n network:\n   allowed:\n     - defaults\n@@ -102,9 +103,11 @@ steps:\n   - name: Install azsdk CLI\n     shell: pwsh\n     run: |\n-      $dir = Join-Path $env:RUNNER_TEMP 'azsdk-cli'\n+      # gh-aw exposes tool-cache bin directories inside the agent sandbox.\n+      $dir = Join-Path $env:RUNNER_TOOL_CACHE 'azsdk/latest/x64/bin'\n       ./eng/common/mcp/azure-sdk-mcp.ps1 -InstallDirectory $dir\n       Add-Content -Path $env:GITHUB_PATH -Value $dir\n+      & (Join-Path $dir 'azsdk') --version\n \n tools:\n   github:",
+          "snapshot_ref": "f309c481796efc68dfd6d4ff8176d1dfa4fb5e84",
+          "snapshot_blob_sha": "cb17e782e6c20cef5e2ad387a8ca536aedc2706d",
+          "snapshot_file": "snapshots/azure-sdk-for-net__Azure__f309c481796efc68dfd6d4ff8176d1dfa4fb5e84__sdk-build-repair.md",
+          "snapshot_bytes": 11682,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-net\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-net\",\"generated_workflow_path\":\".github/workflows/sdk-build-repair.lock.yml\",\"generated_workflow_file\":\"sdk-build-repair.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-net/blob/c0cbf5e0ed9e8c99a79c3683afbe47d933925b71/.github/workflows/sdk-build-repair.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

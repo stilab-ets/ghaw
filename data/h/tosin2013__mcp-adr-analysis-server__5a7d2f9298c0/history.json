@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/docs-noob-tester.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/docs-noob-tester.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/docs-noob-tester.lock.yml",
+      "generated_workflow_file": "docs-noob-tester.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-noob-tester.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-noob-tester.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-noob-tester.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 130,
+          "file_deletions": 0,
+          "file_changes": 130,
+          "file_patch": "@@ -0,0 +1,130 @@\n+---\n+name: 'Documentation Noob Tester'\n+description: 'Simulates a brand-new developer navigating the documentation and Docusaurus site to find gaps and confusion'\n+on:\n+  schedule:\n+    - cron: '0 9 * * 1'\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[docs-noob]'\n+    max: 3\n+    expires: '7d'\n+tools:\n+  playwright:\n+  bash: true\n+  edit:\n+  github:\n+    toolsets: [issues]\n+---\n+\n+# Documentation Noob Tester\n+\n+You are a brand-new developer who has never seen this project before. Your job is to follow the documentation as literally as possible and report every point of confusion, missing prerequisite, broken link, or unclear instruction.\n+\n+## Context\n+\n+This is the **mcp-adr-analysis-server** — a Model Context Protocol (MCP) server. The documentation lives in the `docs/` directory and is served as a Docusaurus site. There are 160+ documentation files covering tutorials, how-to guides, reference material, and explanations.\n+\n+Key terms a new developer might NOT know:\n+\n+- MCP (Model Context Protocol)\n+- ADR (Architectural Decision Record)\n+- OpenRouter\n+- Firecrawl\n+- tree-sitter\n+- Knowledge Graph (in this project's context)\n+\n+## Your testing process\n+\n+### Phase 1: Quick Start Test\n+\n+1. Read `README.md` from the repository root\n+2. Follow the Quick Start instructions **exactly as written**\n+3. Track every assumption the docs make about your environment:\n+   - Does it assume you have Node.js installed? Which version?\n+   - Does it assume you know what MCP is?\n+   - Does it assume you have an OpenRouter API key?\n+   - Are there missing `npm install` or `npm run build` steps?\n+\n+### Phase 2: Documentation Site Test\n+\n+1. Run `npm run docs:build` (or the appropriate Docusaurus build command) to build the docs site\n+2. Start the docs site locally using `npm run docs:serve` or equivalent\n+3. Use Playwright to navigate the site:\n+   - Check that the homepage loads and has clear navigation\n+   - Visit every top-level navigation link\n+   - Check for broken internal links (404s)\n+   - Check for broken anchor links\n+   - Verify all code examples have proper syntax highlighting\n+\n+### Phase 3: Jargon and Clarity Audit\n+\n+Scan through the documentation files in `docs/` and flag:\n+\n+1. **Undefined jargon**: MCP-specific terms used before being defined\n+2. **Missing prerequisites**: Steps that assume prior setup without saying so\n+3. **Broken code examples**: Code blocks that reference files, functions, or APIs that don't exist\n+4. **Inconsistent naming**: Tools referred to by different names in different docs\n+5. **Stale content**: References to features, files, or APIs that have been removed or renamed\n+6. **Missing \"Why\"**: Explanations of _how_ without explaining _why_ a developer would want to do something\n+\n+### Phase 4: Tutorial Walkthrough\n+\n+If there are tutorial documents, attempt to follow them step by step. For each tutorial:\n+\n+- Can you complete it with only the information provided?\n+- Are the expected outputs described so you know if you succeeded?\n+- Is there a \"troubleshooting\" section for common issues?\n+\n+## Output\n+\n+Create an issue with the findings categorized by severity:\n+\n+**Title**: `[docs-noob] Documentation Review — {date}`\n+\n+**Body**:\n+\n+```markdown\n+## Documentation Noob Test Results\n+\n+**Date**: {date}\n+**Docs files scanned**: {count}\n+**Total findings**: {count}\n+\n+### Critical (Blocks new developers)\n+\n+{numbered list of blocking issues — missing steps, broken quick start, etc.}\n+\n+### Confusing (Slows down new developers)\n+\n+{numbered list of confusing items — jargon, unclear instructions, etc.}\n+\n+### Good (Things that work well)\n+\n+{numbered list of things the docs do well — call these out to preserve them}\n+\n+### Broken Links\n+\n+| Link  | Found In | Status            |\n+| ----- | -------- | ----------------- |\n+| {url} | {file}   | {404/timeout/etc} |\n+\n+### Jargon Without Definition\n+\n+| Term   | First Used In | Suggested Fix |\n+| ------ | ------------- | ------------- |\n+| {term} | {file}:{line} | {suggestion}  |\n+\n+### Recommended Improvements\n+\n+1. {improvement 1}\n+2. {improvement 2}\n+3. {improvement 3}\n+\n+---\n+\n+_Generated by Documentation Noob Tester agentic workflow_\n+```",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "9d20294a92eeba1ee30277f23502d2478922f729",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__docs-noob-tester.md",
+          "snapshot_bytes": 4124,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-noob-tester.lock.yml\",\"generated_workflow_file\":\"docs-noob-tester.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-noob-tester.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-noob-tester.md",
+      "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "authored_at": "2026-02-20T00:13:55Z",
+      "committed_at": "2026-02-20T00:13:55Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs: fix documentation review findings from issue #508 (#509)\n\n* docs: fix documentation review findings from issue #508\n\n- Fix 25+ broken relative links that escape Docusaurus docs root\n  (../README.md, ../../CONTRIBUTING.md → absolute GitHub URLs)\n- Fix broken anchor links in CONVERSION_CHECKLIST, self-learning-architecture,\n  and firecrawl-setup docs\n- Fix sample-project links in docs/adrs/README.md to use absolute GitHub URLs\n- Add \"Server installed but nothing happens\" troubleshooting section\n  explaining MCP client requirement with download links\n- Add \"Firecrawl Integration Issues\" troubleshooting section\n- Expand MCP acronym in README title, add MCP client to prerequisites,\n  show config path prominently, add docs build instructions\n- Fix EXECUTION_MODE=prompt → EXECUTION_MODE=prompt-only (matches source)\n- Clarify sample-project only available from source, not npm\n- Add MCP client and OpenRouter API key to tutorial prerequisites\n- Create docs/reference/glossary.md defining key terms (MCP, ADR, AST,\n  Firecrawl, Knowledge Graph, OpenRouter, Ripgrep, tree-sitter)\n\nCloses #508\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: change gh-aw Copilot agents from weekly to monthly schedules\n\nReduce Copilot API costs by running agentic workflows monthly instead\nof weekly. Schedules staggered across the month to avoid overlap:\n\n- docs-noob-tester: 1st of month (was every Monday)\n- docs-site-validator: 8th of month (was every Wednesday)\n- mcp-tool-checker: 15th of month (was every Wednesday)\n- dependabot-bundler: 22nd of month (was every Monday)\n\nAll agents retain workflow_dispatch for manual triggering.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: fix npm audit failures by scoping to production deps\n\nNew CVEs published for minimatch, ajv, and hono affected dev\ndependencies (jest, eslint, typedoc, @modelcontextprotocol/inspector).\nThese are not exploitable in production since they never ship to users.\n\n- Run `npm audit fix --omit=dev` to fix production-only vulns (ajv, hono)\n- Update Makefile check-deps and security-check to use --omit=dev\n- Update security-scanning.yml to use --omit=dev\n- Production deps: 0 vulnerabilities\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: scope dependencies.yml audit to production deps\n\nSame --omit=dev fix as the other workflows — dev dependency\nCVEs (jest, eslint, typedoc) should not block the security-audit job.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "3b8b49ba616902846f15de6597dc7c4d370a6db6"
+      ],
+      "tree_sha": "5a010ea1bba3609ac18ce729dc37d466f601bc06",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-noob-tester.md",
+          "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "committed_at": "2026-02-20T00:13:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -3,7 +3,7 @@ name: 'Documentation Noob Tester'\n description: 'Simulates a brand-new developer navigating the documentation and Docusaurus site to find gaps and confusion'\n on:\n   schedule:\n-    - cron: '0 9 * * 1'\n+    - cron: '0 9 1 * *' # Monthly on 1st\n   workflow_dispatch:\n permissions:\n   issues: read",
+          "snapshot_ref": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "snapshot_blob_sha": "b2ab4228d7575ee8c77409c9b949978e15d675c1",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__60ddaf6b47ae4e72b1f972430749d1f79eef5d44__docs-noob-tester.md",
+          "snapshot_bytes": 4141,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-noob-tester.lock.yml\",\"generated_workflow_file\":\"docs-noob-tester.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-noob-tester.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-noob-tester.md",
+      "commit_sha": "6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+      "authored_at": "2026-02-20T19:15:56Z",
+      "committed_at": "2026-02-20T19:15:56Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(ci): add placeholder/template content detection to docs validation agents (#538)\n\nBoth the Documentation Noob Tester and Docs Site Validator now detect\npages that are unpopulated scaffolds (e.g., \"Concept 1\", \"We chose this\napproach because...\", \"[High-level explanation]\"). These placeholder pages\nare published to the live site and confuse users expecting real content.\n\n- docs-noob-tester.md: New Phase 4 scans docs/ files for 6 placeholder\n  indicators and reports them by severity (Critical if in site nav)\n- docs-site-validator.md: New Check 10 detects placeholder content on the\n  live site during Playwright crawl\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "6f849f8040114e778114f0f1ae8912b750540900"
+      ],
+      "tree_sha": "2a568c517aa5eff66e160d9f90d0dbf05d9b0efc",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-noob-tester.md",
+          "commit_sha": "6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+          "committed_at": "2026-02-20T19:15:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 28,
+          "file_deletions": 1,
+          "file_changes": 29,
+          "file_patch": "@@ -71,7 +71,28 @@ Scan through the documentation files in `docs/` and flag:\n 5. **Stale content**: References to features, files, or APIs that have been removed or renamed\n 6. **Missing \"Why\"**: Explanations of _how_ without explaining _why_ a developer would want to do something\n \n-### Phase 4: Tutorial Walkthrough\n+### Phase 4: Placeholder and Template Content Detection\n+\n+Scan every markdown file under `docs/` for pages that are **scaffolds or templates that were never populated with real content**. These pages are published to the live Docusaurus site and confuse users who land on them expecting real documentation.\n+\n+Detection heuristics — flag a page as a placeholder if it contains **2 or more** of these indicators:\n+\n+1. **Generic headings**: \"Concept 1\", \"Concept 2\", \"Alternative 1\", \"Alternative 2\"\n+2. **Ellipsis stubs**: Sentences ending with \"...\" that are clearly unfinished (e.g., \"Understanding the architecture requires knowledge of...\", \"We chose this approach because...\")\n+3. **Bracketed placeholders**: Text like \"[High-level explanation]\", \"[Design Principle 1]\", \"[Process 1]\", \"[Decision 1]\", \"[Explanation]\"\n+4. **Template table data**: Table cells containing only \"Pro 1\", \"Pro 2\", \"Con 1\", \"Con 2\", \"Benefit vs Cost\"\n+5. **Very low word count**: Pages under 100 words of actual content (excluding frontmatter, headings, and markdown syntax)\n+6. **No project-specific terms**: Pages that don't mention any of: MCP, ADR, tool names, TypeScript, Node.js, or other project-specific concepts\n+\n+For each placeholder page found, note:\n+\n+- The file path\n+- Which indicators matched\n+- Whether the page is reachable from site navigation (and thus visible to users)\n+\n+**Severity**: Placeholder pages reachable from navigation are **Critical** (they damage credibility). Unreachable placeholder pages are **Confusing** (they add noise to the repository).\n+\n+### Phase 5: Tutorial Walkthrough\n \n If there are tutorial documents, attempt to follow them step by step. For each tutorial:\n \n@@ -112,6 +133,12 @@ Create an issue with the findings categorized by severity:\n | ----- | -------- | ----------------- |\n | {url} | {file}   | {404/timeout/etc} |\n \n+### Placeholder / Template Pages\n+\n+| File   | Indicators Found             | In Site Navigation? | Severity             |\n+| ------ | ---------------------------- | ------------------- | -------------------- |\n+| {file} | {list of matched indicators} | {Yes/No}            | {Critical/Confusing} |\n+\n ### Jargon Without Definition\n \n | Term   | First Used In | Suggested Fix |",
+          "snapshot_ref": "6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+          "snapshot_blob_sha": "684921f6e142bbc50df3748a5b7ee1632ba133ea",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__6b39f0f9db6a8e3de43f03898ca6d6a045092c4b__docs-noob-tester.md",
+          "snapshot_bytes": 5986,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-noob-tester.lock.yml\",\"generated_workflow_file\":\"docs-noob-tester.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-noob-tester.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-noob-tester.md",
+      "commit_sha": "2877451dca32cd49ad472fd7ef99825c028fe121",
+      "authored_at": "2026-03-16T17:28:09Z",
+      "committed_at": "2026-03-16T17:30:46Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: update docs-noob-tester workflow to match actual doc infrastructure\n\nThe workflow referenced a Docusaurus site that doesn't exist. The project\nuses TypeDoc for API docs (npm run docs:build) served via Python HTTP\nserver (npm run docs:serve), not Docusaurus.\n\nChanges:\n- Remove all Docusaurus references from workflow instructions\n- Rewrite Phase 2 to test the actual TypeDoc API docs site on localhost:8080\n- Scope Phases 3-4 to representative doc samples to fit within timeout\n- Add prioritization guidance so agent completes high-impact phases first\n- Fix copilot-instructions.md: schedule is monthly, not weekly\n- Recompile lock file via gh aw compile\n\nFixes #630\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2f85a22bd5202df03e5b12001642281b57336769"
+      ],
+      "tree_sha": "f48ab2501ed65023904853d7c0353f7824e8202e",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/2877451dca32cd49ad472fd7ef99825c028fe121",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-noob-tester.md",
+          "commit_sha": "2877451dca32cd49ad472fd7ef99825c028fe121",
+          "committed_at": "2026-03-16T17:30:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 18,
+          "file_deletions": 18,
+          "file_changes": 36,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n name: 'Documentation Noob Tester'\n-description: 'Simulates a brand-new developer navigating the documentation and Docusaurus site to find gaps and confusion'\n+description: 'Simulates a brand-new developer navigating the documentation and API docs site to find gaps and confusion'\n on:\n   schedule:\n     - cron: '0 9 1 * *' # Monthly on 1st\n@@ -26,7 +26,7 @@ You are a brand-new developer who has never seen this project before. Your job i\n \n ## Context\n \n-This is the **mcp-adr-analysis-server** — a Model Context Protocol (MCP) server. The documentation lives in the `docs/` directory and is served as a Docusaurus site. There are 160+ documentation files covering tutorials, how-to guides, reference material, and explanations.\n+This is the **mcp-adr-analysis-server** — a Model Context Protocol (MCP) server. The documentation lives in the `docs/` directory as markdown files organized into subdirectories: `tutorials/`, `how-to-guides/`, `reference/`, `explanation/`, `adrs/`, `examples/`, `patterns/`, `research/`, and others. API documentation is generated via TypeDoc (`npm run docs:build`) and served locally with a Python HTTP server (`npm run docs:serve` on port 8080). There is no Docusaurus or other static site generator configured.\n \n Key terms a new developer might NOT know:\n \n@@ -39,6 +39,8 @@ Key terms a new developer might NOT know:\n \n ## Your testing process\n \n+**Important**: Focus on the highest-impact phases first. If time is limited, completing Phases 1-3 well is more valuable than rushing through all five.\n+\n ### Phase 1: Quick Start Test\n \n 1. Read `README.md` from the repository root\n@@ -49,20 +51,19 @@ Key terms a new developer might NOT know:\n    - Does it assume you have an OpenRouter API key?\n    - Are there missing `npm install` or `npm run build` steps?\n \n-### Phase 2: Documentation Site Test\n+### Phase 2: API Documentation Site Test\n \n-1. Run `npm run docs:build` (or the appropriate Docusaurus build command) to build the docs site\n-2. Start the docs site locally using `npm run docs:serve` or equivalent\n-3. Use Playwright to navigate the site:\n-   - Check that the homepage loads and has clear navigation\n-   - Visit every top-level navigation link\n+1. Run `npm run docs:build` to generate API documentation via TypeDoc into `docs/api/`\n+2. Start the docs site locally using `npm run docs:serve` (serves `docs/api/` on `http://localhost:8080`)\n+3. Use Playwright to navigate the generated API docs site:\n+   - Check that the index page loads at `http://localhost:8080`\n+   - Verify navigation links work (modules, classes, functions)\n    - Check for broken internal links (404s)\n-   - Check for broken anchor links\n-   - Verify all code examples have proper syntax highlighting\n+   - Spot-check that key classes and functions have documentation\n \n ### Phase 3: Jargon and Clarity Audit\n \n-Scan through the documentation files in `docs/` and flag:\n+Scan a representative sample of documentation files in `docs/` (focus on `tutorials/`, `how-to-guides/`, `README.md`, and `QUICK_START.md`) and flag:\n \n 1. **Undefined jargon**: MCP-specific terms used before being defined\n 2. **Missing prerequisites**: Steps that assume prior setup without saying so\n@@ -73,7 +74,7 @@ Scan through the documentation files in `docs/` and flag:\n \n ### Phase 4: Placeholder and Template Content Detection\n \n-Scan every markdown file under `docs/` for pages that are **scaffolds or templates that were never populated with real content**. These pages are published to the live Docusaurus site and confuse users who land on them expecting real documentation.\n+Scan markdown files under `docs/` (prioritize `tutorials/`, `how-to-guides/`, `explanation/`, and `reference/`) for pages that are **scaffolds or templates that were never populated with real content**.\n \n Detection heuristics — flag a page as a placeholder if it contains **2 or more** of these indicators:\n \n@@ -88,13 +89,12 @@ For each placeholder page found, note:\n \n - The file path\n - Which indicators matched\n-- Whether the page is reachable from site navigation (and thus visible to users)\n \n-**Severity**: Placeholder pages reachable from navigation are **Critical** (they damage credibility). Unreachable placeholder pages are **Confusing** (they add noise to the repository).\n+**Severity**: Placeholder pages in key directories (`tutorials/`, `how-to-guides/`) are **Critical**. Others are **Confusing**.\n \n ### Phase 5: Tutorial Walkthrough\n \n-If there are tutorial documents, attempt to follow them step by step. For each tutorial:\n+If there are tutorial documents in `docs/tutorials/`, attempt to follow them step by step. For each tutorial:\n \n - Can you complete it with only the information provided?\n - Are the expected outputs described so you know if you succeeded?\n@@ -135,9 +135,9 @@ Create an issue with the findings categorized by severity:\n \n ### Placeholder / Template Pages\n \n-| File   | Indicators Found             | In Site Navigation? | Severity             |\n-| ------ | ---------------------------- | ------------------- | -------------------- |\n-| {file} | {list of matched indicators} | {Yes/No}            | {Critical/Confusing} |\n+| File   | Indicators Found             | Severity             |\n+| ------ | ---------------------------- | -------------------- |\n+| {file} | {list of matched indicators} | {Critical/Confusing} |\n \n ### Jargon Without Definition\n ",
+          "snapshot_ref": "2877451dca32cd49ad472fd7ef99825c028fe121",
+          "snapshot_blob_sha": "e82eb3e20d75142756691b75dbb4b560174af3a1",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__2877451dca32cd49ad472fd7ef99825c028fe121__docs-noob-tester.md",
+          "snapshot_bytes": 6281,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-noob-tester.lock.yml\",\"generated_workflow_file\":\"docs-noob-tester.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-noob-tester.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-noob-tester.md",
+      "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "authored_at": "2026-03-16T17:48:59Z",
+      "committed_at": "2026-03-16T17:48:59Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: add node ecosystem to gh-aw network allowlist for agentic workflows\n\nAll agentic workflows that run `npm ci` were failing because the gh-aw\nsandbox firewall blocked `nodejs.org`, preventing node-gyp from\ndownloading Node.js headers needed to compile tree-sitter native modules.\n\nAdd `network: allowed: [defaults, node]` to 7 workflow frontmatters:\n- deployment-pattern-validation.md\n- mcp-server-validation.md\n- esm-module-validation.md\n- knowledge-graph-validation.md\n- docs-noob-tester.md\n- mcp-tool-checker.md\n- ai-executor-integration.md\n\nThe `node` ecosystem identifier adds nodejs.org, npmjs.org, yarnpkg.com,\ndeno.land, bun.sh, and related domains to the firewall allowlist.\nRecompiled all lock files via `gh aw compile`.\n\nFixes #632\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2877451dca32cd49ad472fd7ef99825c028fe121"
+      ],
+      "tree_sha": "c6f58323d5517991601c231a1f6edcda0c151d60",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-noob-tester.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-noob-tester.md",
+          "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "committed_at": "2026-03-16T17:48:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -18,6 +18,10 @@ tools:\n   edit:\n   github:\n     toolsets: [issues]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n ---\n \n # Documentation Noob Tester",
+          "snapshot_ref": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "snapshot_blob_sha": "61a059aaff51c0eecd4412976a1369374bae8738",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__72f88fa814801e4acb65e1eaf7f4f0437de3fdef__docs-noob-tester.md",
+          "snapshot_bytes": 6327,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-noob-tester.lock.yml\",\"generated_workflow_file\":\"docs-noob-tester.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-noob-tester.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

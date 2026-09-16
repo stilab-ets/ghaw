@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+    "source_full_name": "github/gh-aw-threat-detection",
+    "source_owner": "github",
+    "source_repo": "gh-aw-threat-detection",
+    "md_path": ".github/workflows/smoke-claude-standalone.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-threat-detection/blob/HEAD/.github/workflows/smoke-claude-standalone.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-threat-detection",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-threat-detection",
+      "generated_workflow_path": ".github/workflows/smoke-claude-standalone.lock.yml",
+      "generated_workflow_file": "smoke-claude-standalone.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-claude-standalone.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:47+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-claude-standalone.md",
+      "commit_sha": "174dd25aa47d50e4bebe964d79cbeaba9cf2b625",
+      "authored_at": "2026-07-21T17:58:47Z",
+      "committed_at": "2026-07-21T17:58:47Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(smoke): add standalone smoke workflows using native gh-aw-detection flag (#567)\n\nRecompile the base smoke workflows with gh-aw v0.82.14 and add\nsmoke-{copilot,claude,codex}-standalone.md. The standalone workflows enable\nthe native external detector path (`features: gh-aw-detection: true`), which\ndownloads the published threat-detect binary from github/gh-aw-threat-detection\nreleases and runs it under AWF. This replaces the brittle\ncreate-threat-detection-sibling-workflows.py container hack with a\nfirst-class gh-aw frontmatter flag.\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "2cebe4e183d84fb09c4b88af7352e55e8741c64d"
+      ],
+      "tree_sha": "b3ed691964d38b605b74afa6d6140d38a517b741",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/174dd25aa47d50e4bebe964d79cbeaba9cf2b625",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-claude-standalone.md",
+          "commit_sha": "174dd25aa47d50e4bebe964d79cbeaba9cf2b625",
+          "committed_at": "2026-07-21T17:58:47Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 69,
+          "file_deletions": 0,
+          "file_changes": 69,
+          "file_patch": "@@ -0,0 +1,69 @@\n+---\n+description: Smoke test workflow that validates Claude engine execution with the released threat-detect binary\n+on:\n+  workflow_dispatch:\n+  schedule: daily\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+name: Smoke Claude Standalone\n+engine:\n+  id: claude\n+  max-turns: 20\n+  bare: true\n+strict: false\n+features:\n+  gh-aw-detection: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  bash:\n+    - \"*\"\n+  github:\n+runtimes:\n+  go:\n+    version: \"1.26\"\n+checkout:\n+  fetch-depth: 1\n+safe-outputs:\n+  allowed-domains: [default-safe-outputs]\n+  threat-detection:\n+    continue-on-error: false\n+  create-issue:\n+    expires: 2h\n+    close-older-issues: true\n+    close-older-key: \"smoke-claude-standalone\"\n+    labels: [automation, testing]\n+timeout-minutes: 15\n+---\n+\n+# Smoke Test: Claude Engine Validation (Standalone Detector)\n+\n+Keep outputs concise.\n+\n+This workflow validates the Claude engine while exercising the **native external\n+threat-detect path** (`features: gh-aw-detection: true`). gh-aw downloads the\n+published `threat-detect` binary from the `github/gh-aw-threat-detection` releases\n+and runs it under AWF, replacing the script-generated container sibling.\n+\n+## Test Requirements\n+\n+1. Use GitHub tools to read the latest 2 pull requests in `${{ github.repository }}` and record their numbers and titles only.\n+2. Use bash to run `make test` in `${{ github.workspace }}` and verify it succeeds.\n+3. Use bash to create a minimal artifacts directory under `/tmp/gh-aw/smoke-claude-standalone-${{ github.run_id }}` with:\n+   - `aw-prompts/prompt.txt`\n+   - `agent_output.json`\n+4. Use bash to run `./bin/threat-detect --version`; if the binary does not exist, run `make build` first.\n+5. Use bash to write a concise status file at `/tmp/gh-aw/agent/smoke-claude-standalone-${{ github.run_id }}.txt`.\n+\n+## Output\n+\n+Always create an issue titled `Smoke Test: Claude Standalone - ${{ github.run_id }}` with:\n+- ✅ or ❌ for each test\n+- Overall status: PASS or FAIL\n+- Run URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n+- Timestamp",
+          "snapshot_ref": "174dd25aa47d50e4bebe964d79cbeaba9cf2b625",
+          "snapshot_blob_sha": "346687f45dc5b018e9229d7247bd3578c1d74a94",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__174dd25aa47d50e4bebe964d79cbeaba9cf2b625__smoke-claude-standalone.md",
+          "snapshot_bytes": 2088,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-claude-standalone.lock.yml\",\"generated_workflow_file\":\"smoke-claude-standalone.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-claude-standalone.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-claude-standalone.md",
+      "commit_sha": "30576f760dba8257dd34bc42071159033c9fc376",
+      "authored_at": "2026-07-22T16:40:28Z",
+      "committed_at": "2026-07-22T16:40:28Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(smoke): use gh-proxy mode for GitHub tools in standalone smokes (#608)\n\n* fix(smoke): use gh-proxy mode for GitHub tools in standalone smokes\n\nThe standalone smoke agent jobs failed Test Requirement 1 (\"read the\nlatest 2 pull requests\") because the local Docker GitHub MCP server tool\nsurface was not reaching the agent (\"No such tool available\") and the\nbash `gh` fallback was unauthenticated (issues #602, #579; same pattern\nas non-standalone #581).\n\nSwitch tools.github to `mode: gh-proxy`, which uses the pre-authenticated\n`gh` CLI via the AWF cli-proxy sidecar instead of the local MCP server.\nThe proxy authenticates from GH_AW_GITHUB_MCP_SERVER_TOKEN ||\nGH_AW_GITHUB_TOKEN || GITHUB_TOKEN, so it works with the default\nGITHUB_TOKEN (which already has pull-requests: read), removing both the\nMCP-server startup dependency and the unauthenticated-gh failure.\n\nThis is independent of the threat-detect binary version pin (v0.2.2 vs\nv0.3.0), which only affects the separate detection job.\n\nRecompiled the three *-standalone.lock.yml files.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* fix(smoke): recompile standalone smokes without strict override\n\nThe previous recompile inadvertently baked strict:true into the lock\nfiles, contradicting the source frontmatter's strict:false. Recompile\nhonoring the declared strict:false so the generated artifacts match the\ndocumented source configuration (addresses PR review feedback).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n---------\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "bd0a54d8e2b3f6e7ab24e620609024ff069be09d"
+      ],
+      "tree_sha": "510756acfe6233396b86dceeefbc31344bcc7b68",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/30576f760dba8257dd34bc42071159033c9fc376",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-claude-standalone.md",
+          "commit_sha": "30576f760dba8257dd34bc42071159033c9fc376",
+          "committed_at": "2026-07-22T16:40:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -24,6 +24,7 @@ tools:\n   bash:\n     - \"*\"\n   github:\n+    mode: gh-proxy\n runtimes:\n   go:\n     version: \"1.26\"",
+          "snapshot_ref": "30576f760dba8257dd34bc42071159033c9fc376",
+          "snapshot_blob_sha": "f9d2ba3929ca18b8ff727ebef71c137ac732d93e",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__30576f760dba8257dd34bc42071159033c9fc376__smoke-claude-standalone.md",
+          "snapshot_bytes": 2107,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-claude-standalone.lock.yml\",\"generated_workflow_file\":\"smoke-claude-standalone.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-claude-standalone.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-claude-standalone.md",
+      "commit_sha": "5499c507ad58cf7f27ad529e0ae9faf9ba53b3f4",
+      "authored_at": "2026-07-27T15:57:12Z",
+      "committed_at": "2026-07-27T15:57:12Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Use Claude Sonnet 4.6 for Smoke Claude Standalone workflow (#657)\n\n* Initial plan\n\n* Use Claude Sonnet 4.6 for Smoke Claude Standalone workflow\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ed6f17d56a4c85a83fbc57b8a95a5f63576d5809"
+      ],
+      "tree_sha": "b50037e14af343fe0ef483c2e09068e53ba46c82",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/5499c507ad58cf7f27ad529e0ae9faf9ba53b3f4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-claude-standalone.md",
+          "commit_sha": "5499c507ad58cf7f27ad529e0ae9faf9ba53b3f4",
+          "committed_at": "2026-07-27T15:57:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -13,6 +13,7 @@ engine:\n   id: claude\n   max-turns: 20\n   bare: true\n+model: claude-sonnet-4.6\n strict: false\n features:\n   gh-aw-detection: true",
+          "snapshot_ref": "5499c507ad58cf7f27ad529e0ae9faf9ba53b3f4",
+          "snapshot_blob_sha": "6358c3ac7ad491c91da4399071b79656dbfdb7f4",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__5499c507ad58cf7f27ad529e0ae9faf9ba53b3f4__smoke-claude-standalone.md",
+          "snapshot_bytes": 2132,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-claude-standalone.lock.yml\",\"generated_workflow_file\":\"smoke-claude-standalone.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-claude-standalone.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-claude-standalone.md",
+      "commit_sha": "d5c9d26a864d2a3c48da01bfcfcdc760e70c5f44",
+      "authored_at": "2026-07-27T18:40:12Z",
+      "committed_at": "2026-07-27T18:40:12Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(smoke): pin Claude detection model to claude-sonnet-4.6 (#660)\n\nThe detection step of Smoke Claude Standalone began failing because\nclaude-code 2.1.220 defaults to `claude-opus-5`, which the AWF api-proxy\nrejects (no pricing configured). The detection step passes no `--model`\nand the `GH_AW_MODEL_DETECTION_CLAUDE` / `GH_AW_DEFAULT_MODEL_CLAUDE`\nrepo variables are unset, so the empty fallback let Claude use its\nshifting CLI default. The agent job is already immune via PR #657.\n\nPin the detection model through\n`safe-outputs.threat-detection.engine.env.ANTHROPIC_MODEL`. In the\npinned compiler (gh-aw v0.83.4) the standalone external-detector path\ndoes not honor `threat-detection.model`, but it does merge\n`threat-detection.engine.env` into the detection step's env. At runtime\n`threat-detect`'s ResolveModel reads the empty `GH_AW_MODEL_DETECTION_CLAUDE`\nfirst, then falls back to the native `ANTHROPIC_MODEL`, so detection now\nuses claude-sonnet-4.6. Setting the repo variable still overrides it.\n\nRecompiled with gh-aw v0.83.4 so frontmatter/body hashes stay\nconsistent and lock validation passes.\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "5499c507ad58cf7f27ad529e0ae9faf9ba53b3f4"
+      ],
+      "tree_sha": "30c63c9767025c8448e2b4db5cb9f8bec8fb0875",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/d5c9d26a864d2a3c48da01bfcfcdc760e70c5f44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-claude-standalone.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-claude-standalone.md",
+          "commit_sha": "d5c9d26a864d2a3c48da01bfcfcdc760e70c5f44",
+          "committed_at": "2026-07-27T18:40:12Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -35,6 +35,10 @@ safe-outputs:\n   allowed-domains: [default-safe-outputs]\n   threat-detection:\n     continue-on-error: false\n+    engine:\n+      id: claude\n+      env:\n+        ANTHROPIC_MODEL: claude-sonnet-4.6\n   create-issue:\n     expires: 2h\n     close-older-issues: true",
+          "snapshot_ref": "d5c9d26a864d2a3c48da01bfcfcdc760e70c5f44",
+          "snapshot_blob_sha": "9a0019959b4f45eac557acf43ada82e794d0bbc0",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__d5c9d26a864d2a3c48da01bfcfcdc760e70c5f44__smoke-claude-standalone.md",
+          "snapshot_bytes": 2215,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-claude-standalone.lock.yml\",\"generated_workflow_file\":\"smoke-claude-standalone.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-claude-standalone.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

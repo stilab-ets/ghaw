@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "rysweet/amplihack:.github/workflows/repo-guardian.md",
+    "source_full_name": "rysweet/amplihack",
+    "source_owner": "rysweet",
+    "source_repo": "amplihack",
+    "md_path": ".github/workflows/repo-guardian.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/rysweet/amplihack/blob/HEAD/.github/workflows/repo-guardian.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "rysweet/amplihack",
+      "generated_owner": "rysweet",
+      "generated_repo": "amplihack",
+      "generated_workflow_path": ".github/workflows/repo-guardian.lock.yml",
+      "generated_workflow_file": "repo-guardian.lock.yml",
+      "generated_html_url": "https://github.com/rysweet/amplihack/blob/84424457d588fce4e492abfebfd03432ec647a56/.github/workflows/repo-guardian.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:26+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "rysweet/amplihack:.github/workflows/repo-guardian.md",
+      "source_full_name": "rysweet/amplihack",
+      "md_path": ".github/workflows/repo-guardian.md",
+      "commit_sha": "e3484850485d1ac49e034cd6b0d1d7ca76653c96",
+      "authored_at": "2026-02-15T20:09:03Z",
+      "committed_at": "2026-02-15T20:09:03Z",
+      "author_name": "Ryan Sweet",
+      "author_email": "rysweet@microsoft.com",
+      "author_login": "rysweet",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(gh-aw): Add repo-guardian workflow (#2317)\n\n* feat(gh-aw): Add repo-guardian workflow\n\nBlocks PRs containing ephemeral content:\n- Meeting notes, status updates, sprint retrospectives\n- Temporary scripts and one-off fixes\n- Point-in-time documents that will become stale\n\nEnsures repository stays clean and focused on durable content.\n\nCo-Authored-By: Claude Sonnet 4.5 (1M context) <noreply@anthropic.com>\n\n* chore: Auto-bump patch version\n\n---------\n\nCo-authored-by: Ubuntu <azureuser@amplihack-dev.ftnmxvem3frujn3lepas045p5c.xx.internal.cloudapp.net>\nCo-authored-by: Claude Sonnet 4.5 (1M context) <noreply@anthropic.com>\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+      "parent_shas": [
+        "d25dc4138c28cdb8daa2b89d23a952ffccab72f9"
+      ],
+      "tree_sha": "fa49a90c413a57d8e95ce2d5fb1c6aa903962cd6",
+      "html_url": "https://github.com/rysweet/amplihack/commit/e3484850485d1ac49e034cd6b0d1d7ca76653c96",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "rysweet/amplihack:.github/workflows/repo-guardian.md",
+          "source_full_name": "rysweet/amplihack",
+          "md_path": ".github/workflows/repo-guardian.md",
+          "commit_sha": "e3484850485d1ac49e034cd6b0d1d7ca76653c96",
+          "committed_at": "2026-02-15T20:09:03Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 94,
+          "file_deletions": 0,
+          "file_changes": 94,
+          "file_patch": "@@ -0,0 +1,94 @@\n+---\n+on:\n+  pull_request:\n+    types: [opened, synchronize, reopened]\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+---\n+\n+# Repo Guardian\n+\n+You are a repository guardian agent for `${{ github.repository }}`.\n+Your job is to examine every file changed in PR #`${{ github.event.pull_request.number }}`\n+and determine whether any file is **ephemeral content** that does not belong in the repository.\n+\n+## Rules\n+\n+### What to reject: Point-in-Time Documents\n+\n+Files whose content describes something that happened during development and\n+will become stale as development continues. These belong in **issues, PR comments,\n+commit messages, or external logs** — not in the repo.\n+\n+Examples:\n+\n+- Meeting notes, meeting minutes\n+- Sprint retrospectives, sprint reviews, sprint planning notes\n+- Status updates, weekly reports, daily standups\n+- Development diaries or journals\n+- Investigation notes (unless they are formal Architecture Decision Records)\n+- Postmortems (unless they follow a durable incident-response template)\n+- Files with date prefixes that suggest a snapshot in time (e.g. `2024-01-15-deployment-notes.md`)\n+- Content using language like \"As of today...\" or \"Currently we are...\" that will become stale\n+\n+### What to reject: Temporary Scripts\n+\n+Scripts that are specific to a moment in time and are not durable, reusable,\n+or part of the project's permanent tooling.\n+\n+Examples:\n+\n+- One-off fix scripts (`fix-permissions.sh`, `one-off-migration.py`)\n+- Debug scripts (`debug-auth.sh`, `temp-test.py`)\n+- Quick-fix / hack / workaround scripts\n+- Scripts with hardcoded environment-specific values (specific IPs, dates, paths)\n+- Scripts that say \"run this once\" or \"delete after use\"\n+- Scratch files or throwaway utilities\n+\n+### What is NOT a violation\n+\n+Do NOT flag these:\n+\n+- `CHANGELOG.md`, `HISTORY.md` — durable by design\n+- Architecture Decision Records (ADRs) — even with dates, these are durable reference docs\n+- Configuration files (`.yml`, `.json`, `.toml`) for the project\n+- GitHub Actions workflows (`.github/workflows/`)\n+- Reusable scripts that are part of the project's toolchain (parameterized, documented)\n+- Test fixtures and test data\n+- The `repo-guardian.config.json` configuration file\n+\n+## Override mechanism\n+\n+Before reporting violations, check all PR comments. If any comment from a\n+non-bot user with OWNER, MEMBER, or COLLABORATOR association contains\n+`repo-guardian:override` **followed by a non-empty reason**, do NOT block the PR.\n+The reason must be present for auditability purposes. Instead of reporting violations,\n+post a comment acknowledging the override, who authorized it, and the reason provided.\n+\n+## How to analyze\n+\n+For each changed file in the PR:\n+\n+1. Check the **filename** for temporal indicators (dates, \"temp\", \"hack\", \"one-off\", etc.)\n+2. Read the **file content** and assess whether it is durable reference material or ephemeral\n+3. Use your judgment — a file named `2024-01-15-architecture-decision.md` containing a proper ADR is fine; a file named `notes-from-tuesday.md` is not\n+4. Consider the file's location — scripts in `scripts/` with proper docs and parameterization are durable; a script in the repo root called `fix-thing.sh` is likely temporary\n+\n+## How to report\n+\n+If violations are found:\n+\n+1. Post ONE PR comment with header `## Repo Guardian - Action Required`\n+2. List each violating file with the filename, why it was flagged (quote the problematic content or pattern), and where the content should go instead\n+3. Include override instructions: \"To override, add a PR comment containing `repo-guardian:override <reason>` where `<reason>` is a required non-empty justification for allowing the file(s)\"\n+\n+If no violations are found, post ONE PR comment with header `## Repo Guardian - Passed`.\n+\n+Be thorough but avoid false positives. When in doubt, flag it with a note that it may be intentional.",
+          "snapshot_ref": "e3484850485d1ac49e034cd6b0d1d7ca76653c96",
+          "snapshot_blob_sha": "e7e3f3622dc088c3abe22eb4a0d94bfa2088ae09",
+          "snapshot_file": "snapshots/amplihack__rysweet__e3484850485d1ac49e034cd6b0d1d7ca76653c96__repo-guardian.md",
+          "snapshot_bytes": 3896,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rysweet/amplihack\",\"generated_owner\":\"rysweet\",\"generated_repo\":\"amplihack\",\"generated_workflow_path\":\".github/workflows/repo-guardian.lock.yml\",\"generated_workflow_file\":\"repo-guardian.lock.yml\",\"generated_html_url\":\"https://github.com/rysweet/amplihack/blob/84424457d588fce4e492abfebfd03432ec647a56/.github/workflows/repo-guardian.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "rysweet/amplihack:.github/workflows/repo-guardian.md",
+      "source_full_name": "rysweet/amplihack",
+      "md_path": ".github/workflows/repo-guardian.md",
+      "commit_sha": "9fc6b0576d539fad43f61e900aa37a5504f60232",
+      "authored_at": "2026-03-09T04:48:01Z",
+      "committed_at": "2026-03-09T04:48:01Z",
+      "author_name": "Ryan Sweet",
+      "author_email": "rysweet@microsoft.com",
+      "author_login": "rysweet",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: switch all agentic workflows to Claude engine\n\nSwitch 12 Copilot-engine workflows to Claude. COPILOT_GITHUB_TOKEN requires a fine-grained PAT (web UI only); ANTHROPIC_API_KEY is already configured.",
+      "parent_shas": [
+        "d5c6251582372ba3a4262c9b22c5b7285e6bf5b3"
+      ],
+      "tree_sha": "4a2da2d6d1edc657dfc257495fbe2ccb24eee98e",
+      "html_url": "https://github.com/rysweet/amplihack/commit/9fc6b0576d539fad43f61e900aa37a5504f60232",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "rysweet/amplihack:.github/workflows/repo-guardian.md",
+          "source_full_name": "rysweet/amplihack",
+          "md_path": ".github/workflows/repo-guardian.md",
+          "commit_sha": "9fc6b0576d539fad43f61e900aa37a5504f60232",
+          "committed_at": "2026-03-09T04:48:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -8,6 +8,7 @@ permissions:\n   issues: read\n   pull-requests: read\n \n+engine: claude\n safe-outputs:\n   add-comment:\n     max: 1",
+          "snapshot_ref": "9fc6b0576d539fad43f61e900aa37a5504f60232",
+          "snapshot_blob_sha": "be4abd13016723d7a2b49b1d06ebf80c6b18d7cb",
+          "snapshot_file": "snapshots/amplihack__rysweet__9fc6b0576d539fad43f61e900aa37a5504f60232__repo-guardian.md",
+          "snapshot_bytes": 3911,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"rysweet/amplihack\",\"generated_owner\":\"rysweet\",\"generated_repo\":\"amplihack\",\"generated_workflow_path\":\".github/workflows/repo-guardian.lock.yml\",\"generated_workflow_file\":\"repo-guardian.lock.yml\",\"generated_html_url\":\"https://github.com/rysweet/amplihack/blob/84424457d588fce4e492abfebfd03432ec647a56/.github/workflows/repo-guardian.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+    "source_full_name": "dotnet/macios",
+    "source_owner": "dotnet",
+    "source_repo": "macios",
+    "md_path": ".github/workflows/ci-postmortem.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/macios/blob/HEAD/.github/workflows/ci-postmortem.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/macios",
+      "generated_owner": "dotnet",
+      "generated_repo": "macios",
+      "generated_workflow_path": ".github/workflows/ci-postmortem.lock.yml",
+      "generated_workflow_file": "ci-postmortem.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/macios/blob/3f28365bb3f74ad77aecab4b953eb842366db6c7/.github/workflows/ci-postmortem.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:25:18+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+      "source_full_name": "dotnet/macios",
+      "md_path": ".github/workflows/ci-postmortem.md",
+      "commit_sha": "d30dc133fce63bb65b5c169aa4b7f67830b677d7",
+      "authored_at": "2026-05-20T13:40:11Z",
+      "committed_at": "2026-05-20T13:40:11Z",
+      "author_name": "Rolf Bjarne Kvinge",
+      "author_email": "rokvin@microsoft.com",
+      "author_login": "rolfbjarne",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[copilot] Add CI postmortem skill and weekly agentic workflow (#25303)\n\n\n## Summary\n\nAdds a new Copilot skill and agentic workflow for automated weekly CI post-mortem analysis. The skill identifies flaky tests, infrastructure issues, and shared regressions that are unrelated to any specific PR, and files/updates GitHub issues to track them.\n\n### What's included\n\n- **`.agents/skills/macios-ci-postmortem/SKILL.md`** — Skill definition with a 4-phase workflow:\n  1. **Discovery** — collect recent PR-validation builds from AzDO (pipelines 16533, 21922, 23727)\n  2. **Extraction** — download TestSummary (fast triage), then targeted HtmlReport artifacts; parse NUnit XML for individual test failures; extract timeline data for bot/worker correlation\n  3. **Classification** — categorize as flaky (rerun recovery / cross-PR), infrastructure/bot-specific, shared regression, or PR-specific\n  4. **Issue Actions** — file/update GitHub issues with `ci-postmortem` + `copilot` labels\n\n- **`.agents/skills/macios-ci-postmortem/references/azure-devops-cli.md`** — AzDO CLI reference\n\n- **`.github/workflows/ci-postmortem.md`** (+ compiled `.lock.yml`) — Agentic workflow running every Sunday at midnight UTC\n\n### Key design decisions\n\n- **TestSummary-first triage**: Only download large HtmlReport zips (~100MB each) for jobs with confirmed test failures, not all failed jobs\n- **One issue per test**: Easier to merge than split\n- **AppSizeTest excluded**: Expected to fail across PRs, not actionable\n- **First-failed-step root cause detection**: Only report the first failed step (ignoring `continueOnError: true` steps) — all subsequent failures in the same job are cascading effects\n- **Bot-specific analysis**: Extracts `workerName` from timelines to detect bot-concentrated failures\n- **Windows integration macOS bot tracking**: For any failure in the Windows integration stage, always extract and report the macOS bot name from the 'Reserve macOS bot for tests' job\n- **Rerun detection**: Uses commit SHA matching to confirm flaky tests\n- **Deep links**: Links to specific job + task in AzDO (`j=` and `t=` parameters) so the reader lands directly on the failing log\n- **Specific error messages**: Includes actual compiler/linker/MSBuild error codes (CS####, MT####, etc.) and NUnit assertion messages in issues\n- **Build failure analysis**: Collects binlogs when available and includes specific build error messages\n- **Reopen policy**: Closed issues are only reopened if the fix is >2 weeks old and failures still occur on builds targeting `main` that incorporate the fix\n\n### Validation\n\nThe skill has been run weekly since late April 2026. Results across multiple runs:\n- Filed issues for flaky tests (#25222–#25225, #25240–#25242, #25384–#25390, #25444–#25447)\n- Filed issues for infrastructure patterns (#25263–#25265, #25299, #25309, #25312–#25314)\n- Updated existing issues with weekly occurrence data\n- Correctly identified and skipped PR-specific failures\n- Successfully tracked resolution (e.g., workload install failures in #25312 went to 0)\n\n🤖 Pull request created by Copilot\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Rolf Bjarne Kvinge <rokvin@microsoft.com>",
+      "parent_shas": [
+        "77b40577d580330a3e38fabb1a053412119b2242"
+      ],
+      "tree_sha": "4212b797dbc02968b1dd9cfe69ee8b4b06b91d79",
+      "html_url": "https://github.com/dotnet/macios/commit/d30dc133fce63bb65b5c169aa4b7f67830b677d7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+          "source_full_name": "dotnet/macios",
+          "md_path": ".github/workflows/ci-postmortem.md",
+          "commit_sha": "d30dc133fce63bb65b5c169aa4b7f67830b677d7",
+          "committed_at": "2026-05-20T13:40:11Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 57,
+          "file_deletions": 0,
+          "file_changes": 57,
+          "file_patch": "@@ -0,0 +1,57 @@\n+---\n+on:\n+  schedule:\n+    - cron: \"weekly on sunday\"\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+engine:\n+  id: copilot\n+  model: claude-sonnet-4.5\n+network:\n+  allowed:\n+    - defaults\n+    - dotnet\n+    - github\n+    - \"aka.ms\"\n+    - \"dev.azure.com\"\n+    - \"devdiv.visualstudio.com\"\n+    - \"microsoft.com\"\n+    - \"vsassets.io\"\n+tools:\n+  github:\n+    toolsets: [issues, repos]\n+    min-integrity: none\n+safe-outputs:\n+  create-issue:\n+    max: 20\n+  add-comment:\n+    max: 20\n+  update-issue:\n+    max: 20\n+---\n+\n+# CI Post-Mortem Analysis\n+\n+Perform a weekly post-mortem analysis of CI failures across recent PRs in dotnet/macios to identify flaky tests, infrastructure issues, and shared regressions that are not caused by any specific PR.\n+\n+## Instructions\n+\n+1. Read the skill definition from `.agents/skills/macios-ci-postmortem/SKILL.md` — this contains the full 4-phase workflow.\n+2. Read the Azure DevOps CLI reference from `.agents/skills/macios-ci-postmortem/references/azure-devops-cli.md`.\n+3. Execute all four phases of the workflow:\n+   - **Phase 1: Discovery** — collect all PR-validation builds from the last 7 days\n+   - **Phase 2: Extraction** — download TestSummary artifacts for triage, then HtmlReport artifacts only for jobs with test failures, and parse NUnit XML for individual test-level failures\n+   - **Phase 3: Classification** — categorize failures as flaky (cross-PR or rerun-recovered), infrastructure (bot-specific or cross-bot), or PR-specific (exclude these). Also exclude `AppSizeTest` failures.\n+   - **Phase 4: Issue Actions** — search for existing `ci-postmortem` issues, then file new issues or comment on existing ones\n+4. All issues must have the `ci-postmortem` and `copilot` labels.\n+5. File one issue per distinct test failure — do not group unrelated test failures together.\n+6. For infrastructure issues, check if failures are concentrated on specific bots by extracting `workerName` from build timelines.\n+\n+## Constraints\n+\n+- Only file issues for failures that appear across 2+ unrelated PRs, or that are confirmed flaky by rerun recovery (same commit, different outcome).\n+- Never file issues for PR-specific failures — those are the PR author's responsibility.\n+- Always search for existing `ci-postmortem` issues before creating new ones. Comment on existing issues if the failure is already tracked.\n+- Always exclude `AppSizeTest` failures — they are expected to fail across PRs.",
+          "snapshot_ref": "d30dc133fce63bb65b5c169aa4b7f67830b677d7",
+          "snapshot_blob_sha": "64065525ca6e4414fbec4590a330b864939aea5b",
+          "snapshot_file": "snapshots/macios__dotnet__d30dc133fce63bb65b5c169aa4b7f67830b677d7__ci-postmortem.md",
+          "snapshot_bytes": 2426,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/macios\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"macios\",\"generated_workflow_path\":\".github/workflows/ci-postmortem.lock.yml\",\"generated_workflow_file\":\"ci-postmortem.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/macios/blob/3f28365bb3f74ad77aecab4b953eb842366db6c7/.github/workflows/ci-postmortem.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+      "source_full_name": "dotnet/macios",
+      "md_path": ".github/workflows/ci-postmortem.md",
+      "commit_sha": "dc9651151bc2d439dc17261589ed8274e4d1c71c",
+      "authored_at": "2026-06-04T16:06:18Z",
+      "committed_at": "2026-06-04T16:06:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[github] Disable weekly schedule trigger for CI Post-Mortem Analysis workflow (#25602)\n\n\nThe CI Post-Mortem workflow was failing on its weekly schedule because it requires authenticated Azure DevOps access that isn't available in the scheduled runner environment. Disabling the schedule so the workflow can only be triggered manually (`workflow_dispatch`).\n\n## Changes\n\n- **`.github/workflows/ci-postmortem.md`** — removed the `schedule` trigger from the frontmatter `on:` block\n- **`.github/workflows/ci-postmortem.lock.yml`** — recompiled from updated source\n\n---------\n\nCo-authored-by: rolfbjarne <249268+rolfbjarne@users.noreply.github.com>",
+      "parent_shas": [
+        "ac159468375779e75d07ca0a41eeb414b838304c"
+      ],
+      "tree_sha": "b4d34a1272402a09d3c1a4d9e06db5705ab7a4b8",
+      "html_url": "https://github.com/dotnet/macios/commit/dc9651151bc2d439dc17261589ed8274e4d1c71c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+          "source_full_name": "dotnet/macios",
+          "md_path": ".github/workflows/ci-postmortem.md",
+          "commit_sha": "dc9651151bc2d439dc17261589ed8274e4d1c71c",
+          "committed_at": "2026-06-04T16:06:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -1,7 +1,5 @@\n ---\n on:\n-  schedule:\n-    - cron: \"weekly on sunday\"\n   workflow_dispatch:\n permissions:\n   contents: read",
+          "snapshot_ref": "dc9651151bc2d439dc17261589ed8274e4d1c71c",
+          "snapshot_blob_sha": "ae2eda3ac76c6410653c46f2ca5fdbf7963c2429",
+          "snapshot_file": "snapshots/macios__dotnet__dc9651151bc2d439dc17261589ed8274e4d1c71c__ci-postmortem.md",
+          "snapshot_bytes": 2383,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/macios\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"macios\",\"generated_workflow_path\":\".github/workflows/ci-postmortem.lock.yml\",\"generated_workflow_file\":\"ci-postmortem.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/macios/blob/3f28365bb3f74ad77aecab4b953eb842366db6c7/.github/workflows/ci-postmortem.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+      "source_full_name": "dotnet/macios",
+      "md_path": ".github/workflows/ci-postmortem.md",
+      "commit_sha": "931eb83d09c23402f6ae74ac3f905b9bf2991da9",
+      "authored_at": "2026-06-22T15:43:38Z",
+      "committed_at": "2026-06-22T15:43:38Z",
+      "author_name": "Rolf Bjarne Kvinge",
+      "author_email": "rokvin@microsoft.com",
+      "author_login": "rolfbjarne",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[gh-aw] Eliminate magic GH_AW_* secret references from lock files (#25765)\n\n\nThe dotnet/macios secret-audit report flags every secret name that appears in a compiled agentic workflow, including the \"magic\" fallback secrets that gh-aw emits as the tail of its token-resolution chains (`GH_AW_GITHUB_TOKEN` and `GH_AW_GITHUB_MCP_SERVER_TOKEN`). Those names showed up in all three `*.lock.yml` files even though we never configure them, because gh-aw bakes the full fallback expression into every safe-output handler, into the GitHub MCP server wiring, and into the checkout \"Fetch additional refs\" step.\n\nSet explicit `github-token: ${{ secrets.GITHUB_TOKEN }}` overrides so the compiler short-circuits each fallback chain before it references the magic names:\n\n- `tools.github.github-token` → replaces the `GH_AW_GITHUB_MCP_SERVER_TOKEN` → `GH_AW_GITHUB_TOKEN` → `GITHUB_TOKEN` chain used by the GitHub MCP server container.\n- `safe-outputs.github-token` → replaces the `GH_AW_GITHUB_TOKEN` → `GITHUB_TOKEN` chain used by the safe-output handlers.\n- `checkout.github-token` (code-radiator only) → replaces the `GH_AW_GITHUB_MCP_SERVER_TOKEN` → `GH_AW_GITHUB_TOKEN` → `GITHUB_TOKEN` chain used by the \"Fetch additional refs\" step that `checkout.fetch: [\"*\"]` generates. `GITHUB_TOKEN` is sufficient to fetch refs from the same repository, so there is no functional change.\n\n`GH_AW_CI_TRIGGER_TOKEN` is intentionally left in place in code-radiator. Unlike the chains above it is **not** a magic fallback: it is the documented secret gh-aw uses to push an empty commit after `create-pull-request` / `push-to-pull-request-branch` so that CI runs on the auto-created merge PRs (pushes made with `GITHUB_TOKEN` do not trigger workflow runs — a GitHub Actions security feature). Overriding it with `GITHUB_TOKEN` would silently stop CI from triggering on those PRs.\n\nThis branch also recompiles all three workflows with the locally installed gh-aw compiler (v0.79.8), which refreshes the generated lock files, the `agentics-maintenance.yml` maintenance workflow, `actions-lock.json`, and the gh-aw dependabot ignore entry.\n\nAfter recompiling, the `# Secrets used:` block in each lock file lists only secrets that are actually configured:\n\n| Workflow | Secrets |\n|----------|---------|\n| `ci-postmortem.lock.yml` | `COPILOT_GITHUB_TOKEN`, `GITHUB_TOKEN` |\n| `code-radiator.lock.yml` | `COPILOT_GITHUB_TOKEN`, `GH_AW_CI_TRIGGER_TOKEN`, `GITHUB_TOKEN` |\n| `macios-reviewer.lock.yml` | `COPILOT_GITHUB_TOKEN`, `GITHUB_TOKEN` |\n\n`gh aw compile` reports 0 errors on all three workflows.\n\nInspired by dotnet/android#11685 (commit `dbd72dd`).\n\n🤖 Pull request created by Copilot\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "ed2342fa8c4a2fa57b8779d307bc0d229971d69a"
+      ],
+      "tree_sha": "cedeea01f5acd74dfdaf3e726a487a34e4f879bd",
+      "html_url": "https://github.com/dotnet/macios/commit/931eb83d09c23402f6ae74ac3f905b9bf2991da9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+          "source_full_name": "dotnet/macios",
+          "md_path": ".github/workflows/ci-postmortem.md",
+          "commit_sha": "931eb83d09c23402f6ae74ac3f905b9bf2991da9",
+          "committed_at": "2026-06-22T15:43:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -19,9 +19,11 @@ network:\n     - \"vsassets.io\"\n tools:\n   github:\n+    github-token: ${{ secrets.GITHUB_TOKEN }}\n     toolsets: [issues, repos]\n     min-integrity: none\n safe-outputs:\n+  github-token: ${{ secrets.GITHUB_TOKEN }}\n   create-issue:\n     max: 20\n   add-comment:",
+          "snapshot_ref": "931eb83d09c23402f6ae74ac3f905b9bf2991da9",
+          "snapshot_blob_sha": "dc97ac002d9df062f538de95c2a5fcc57c41f5c0",
+          "snapshot_file": "snapshots/macios__dotnet__931eb83d09c23402f6ae74ac3f905b9bf2991da9__ci-postmortem.md",
+          "snapshot_bytes": 2473,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/macios\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"macios\",\"generated_workflow_path\":\".github/workflows/ci-postmortem.lock.yml\",\"generated_workflow_file\":\"ci-postmortem.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/macios/blob/3f28365bb3f74ad77aecab4b953eb842366db6c7/.github/workflows/ci-postmortem.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+      "source_full_name": "dotnet/macios",
+      "md_path": ".github/workflows/ci-postmortem.md",
+      "commit_sha": "27809d5399a5fc99e823f18d4f1bff9de51dcade",
+      "authored_at": "2026-06-25T09:42:41Z",
+      "committed_at": "2026-06-25T09:42:41Z",
+      "author_name": "Rolf Bjarne Kvinge",
+      "author_email": "rokvin@microsoft.com",
+      "author_login": "rolfbjarne",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[github] Set the agentic workflow's environment to 'gh-aw-environment'. (#25806)\n\nAnd recompile. This should eventually get rid of the COPILOT_GITHUB_TOKEN secret, once https://github.com/github/gh-aw/issues/38900 is released (and we update and recompile with that version of gh-aw).",
+      "parent_shas": [
+        "4ec421496cfc6639791cd417fa6185a05471a3e9"
+      ],
+      "tree_sha": "109b75781a05265c42b09ef77c1d6a55809967d5",
+      "html_url": "https://github.com/dotnet/macios/commit/27809d5399a5fc99e823f18d4f1bff9de51dcade",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+          "source_full_name": "dotnet/macios",
+          "md_path": ".github/workflows/ci-postmortem.md",
+          "commit_sha": "27809d5399a5fc99e823f18d4f1bff9de51dcade",
+          "committed_at": "2026-06-25T09:42:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -4,6 +4,7 @@ on:\n permissions:\n   contents: read\n   issues: read\n+environment: gh-aw-environment\n engine:\n   id: copilot\n   model: claude-sonnet-4.5",
+          "snapshot_ref": "27809d5399a5fc99e823f18d4f1bff9de51dcade",
+          "snapshot_blob_sha": "1bd40d9f1d8584bd94e43984394f09c0a265ff09",
+          "snapshot_file": "snapshots/macios__dotnet__27809d5399a5fc99e823f18d4f1bff9de51dcade__ci-postmortem.md",
+          "snapshot_bytes": 2504,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/macios\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"macios\",\"generated_workflow_path\":\".github/workflows/ci-postmortem.lock.yml\",\"generated_workflow_file\":\"ci-postmortem.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/macios/blob/3f28365bb3f74ad77aecab4b953eb842366db6c7/.github/workflows/ci-postmortem.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+      "source_full_name": "dotnet/macios",
+      "md_path": ".github/workflows/ci-postmortem.md",
+      "commit_sha": "6cc41aa017e98632173b0573665bee8e0ce6163d",
+      "authored_at": "2026-07-01T09:38:10Z",
+      "committed_at": "2026-07-01T09:38:10Z",
+      "author_name": "Rolf Bjarne Kvinge",
+      "author_email": "rokvin@microsoft.com",
+      "author_login": "rolfbjarne",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[github] Adapt GH-AW workflows to the PAT pool (#25888)\n\n## Summary\n- add the shared GH-AW PAT pool import and its repository setup\ndocumentation\n- update `code-radiator`, `ci-postmortem`, and `macios-reviewer` to\nsource `COPILOT_GITHUB_TOKEN` from the selected PAT slot while\ncontinuing to use the existing `gh-aw-environment`\n- add a workflow that validates the configured `COPILOT_PAT_0` through\n`COPILOT_PAT_9` entries and regenerate the affected lock files\n\nRecreated from #25838.\n\n---------\n\nCo-authored-by: vitek-karas <10670590+vitek-karas@users.noreply.github.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8cbe6f920bd8260b043b73e9b49403fdabb359e7"
+      ],
+      "tree_sha": "c35cfa392fd338542acd24c44506eb3a40969394",
+      "html_url": "https://github.com/dotnet/macios/commit/6cc41aa017e98632173b0573665bee8e0ce6163d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/macios:.github/workflows/ci-postmortem.md",
+          "source_full_name": "dotnet/macios",
+          "md_path": ".github/workflows/ci-postmortem.md",
+          "commit_sha": "6cc41aa017e98632173b0573665bee8e0ce6163d",
+          "committed_at": "2026-07-01T09:38:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 29,
+          "file_deletions": 0,
+          "file_changes": 29,
+          "file_patch": "@@ -1,13 +1,42 @@\n ---\n on:\n   workflow_dispatch:\n+  permissions: {}\n+\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in the existing `gh-aw-environment` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: gh-aw-environment\n+\n permissions:\n   contents: read\n   issues: read\n environment: gh-aw-environment\n engine:\n   id: copilot\n   model: claude-sonnet-4.5\n+  env:\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "6cc41aa017e98632173b0573665bee8e0ce6163d",
+          "snapshot_blob_sha": "26c9ef4f3e1a9aa056749db9c639304ae2e76b4f",
+          "snapshot_file": "snapshots/macios__dotnet__6cc41aa017e98632173b0573665bee8e0ce6163d__ci-postmortem.md",
+          "snapshot_bytes": 3818,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/macios\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"macios\",\"generated_workflow_path\":\".github/workflows/ci-postmortem.lock.yml\",\"generated_workflow_file\":\"ci-postmortem.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/macios/blob/3f28365bb3f74ad77aecab4b953eb842366db6c7/.github/workflows/ci-postmortem.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

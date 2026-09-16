@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+    "source_full_name": "iamnbutler/gpui-unofficial",
+    "source_owner": "iamnbutler",
+    "source_repo": "gpui-unofficial",
+    "md_path": ".github/workflows/ci-fix.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/iamnbutler/gpui-unofficial/blob/HEAD/.github/workflows/ci-fix.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "iamnbutler/gpui-unofficial",
+      "generated_owner": "iamnbutler",
+      "generated_repo": "gpui-unofficial",
+      "generated_workflow_path": ".github/workflows/ci-fix.lock.yml",
+      "generated_workflow_file": "ci-fix.lock.yml",
+      "generated_html_url": "https://github.com/iamnbutler/gpui-unofficial/blob/76d3fc3b5d4b10e218fa24431ecad0669e320dcc/.github/workflows/ci-fix.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:57:09+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+      "source_full_name": "iamnbutler/gpui-unofficial",
+      "md_path": ".github/workflows/ci-fix.md",
+      "commit_sha": "1c536e6800e77bf9680d26b3c93792806221c8f2",
+      "authored_at": "2026-04-03T01:30:15Z",
+      "committed_at": "2026-04-03T01:30:15Z",
+      "author_name": "iamnbutler",
+      "author_email": "iamnbutler@github.com",
+      "author_login": "iamnbutler",
+      "author_account_type": "User",
+      "committer_name": "iamnbutler",
+      "committer_email": "iamnbutler@github.com",
+      "committer_login": "iamnbutler",
+      "committer_account_type": "User",
+      "message": "Add CI fix agent and handle crates.io rate limits\n\n- Add gh-aw ci-fix workflow that auto-diagnoses and fixes CI failures\n- Respect crates.io rate limit: burst of 5 new crates, then 10min between each\n- Check if crate already exists on registry before counting toward new crate limit",
+      "parent_shas": [
+        "ba7f9f0caf79ba5f0f6a5e45cfc43137c8cd015d"
+      ],
+      "tree_sha": "dd95eb0c72aab720e51469cb33374ca0d5cfbfb7",
+      "html_url": "https://github.com/iamnbutler/gpui-unofficial/commit/1c536e6800e77bf9680d26b3c93792806221c8f2",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+          "source_full_name": "iamnbutler/gpui-unofficial",
+          "md_path": ".github/workflows/ci-fix.md",
+          "commit_sha": "1c536e6800e77bf9680d26b3c93792806221c8f2",
+          "committed_at": "2026-04-03T01:30:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 81,
+          "file_deletions": 0,
+          "file_changes": 81,
+          "file_patch": "@@ -0,0 +1,81 @@\n+---\n+description: |\n+  Automatically diagnoses and fixes failures in the Sync, Release, and CI workflows.\n+  Analyzes logs, identifies root causes, and pushes fixes.\n+\n+on:\n+  workflow_run:\n+    workflows: [\"Sync Zed Releases\", \"Release\", \"CI\"]\n+    types: [completed]\n+    branches: [main]\n+\n+if: ${{ github.event.workflow_run.conclusion == 'failure' }}\n+\n+permissions: read-all\n+\n+network:\n+  allowed: [defaults, rust]\n+\n+safe-outputs:\n+  create-pull-request:\n+    draft: false\n+    title-prefix: \"[CI Fix] \"\n+    labels: [automation, ci-fix]\n+    max: 3\n+  add-comment:\n+  create-issue:\n+    title-prefix: \"[CI Fix] \"\n+    labels: [automation, ci-fix]\n+\n+tools:\n+  bash: true\n+  github:\n+    toolsets: [default]\n+---\n+\n+# CI Fix Agent\n+\n+You are an agent that fixes CI failures in the gpui-unofficial repository.\n+\n+## Context\n+\n+This repository automatically transforms and publishes Zed's gpui framework crates to crates.io.\n+The pipeline is:\n+1. **Sync Zed Releases** — detects new zed releases, transforms crates (rename packages, update deps), verifies build with path deps, then re-transforms with version deps and opens a PR\n+2. **CI** — builds the xtask tool on PRs and pushes to main\n+3. **Release** — on merge, publishes all crates to crates.io in dependency order, then creates a GitHub release\n+\n+The transform tool is at `xtask/src/transform.rs`. It extracts crates from zed's monorepo, renames them with a `-gpui-unofficial` suffix, uses Cargo.toml package aliasing so source code doesn't need modification, and resolves workspace dependencies.\n+\n+## Your Task\n+\n+A workflow just failed (run #${{ github.event.workflow_run.run_number }}, conclusion: ${{ github.event.workflow_run.conclusion }}).\n+\n+1. **Fetch the failed run's logs** using `get_job_logs` with `failed_only=true` for run ID `${{ github.event.workflow_run.id }}`.\n+\n+2. **Diagnose the root cause.** Common failure categories:\n+   - **Missing crate metadata** — crates.io requires `description`, `license`, `repository` fields. Fix in `transform.rs` where package metadata is set.\n+   - **Unresolved workspace dependencies** — a zed internal crate not in `CRATE_PUBLISH_ORDER`. Fix by adding it to the publish order and handling its source path.\n+   - **Permission errors** — workflow needs `contents: write` or `pull-requests: write`. Fix in the workflow YAML.\n+   - **Dependency not found on crates.io** — the crate has version deps but dependencies haven't been published yet. This is a publish ordering issue.\n+   - **Build errors** — new zed code introduces dependencies or APIs we don't handle. May need to add crates to `CRATE_PUBLISH_ORDER` or update the transform logic.\n+   - **crates.io rate limiting or propagation** — may need to increase `PUBLISH_DELAY` in `publish.rs`.\n+\n+3. **Fix the issue.** Make the minimal change needed. Common fixes:\n+   - Edit `xtask/src/transform.rs` to add missing metadata, handle new crates, or fix dependency resolution\n+   - Edit `xtask/src/publish.rs` to adjust publish logic\n+   - Edit `.github/workflows/*.yml` to fix permissions or workflow config\n+   - Do NOT modify files inside `crates/` directly — they are generated by the transform\n+\n+4. **Verify your fix** by running `cargo build -p xtask` to ensure the tool compiles.\n+\n+5. **Create a PR** with your fix. Use a clear title describing what broke and what you fixed.\n+\n+6. If the failure is not something you can fix (e.g., external service outage, crates.io downtime), **create an issue** documenting the failure and suggesting manual steps.\n+\n+## Important Rules\n+\n+- Never modify generated files in `crates/` — always fix the transform tool or workflow config\n+- Keep changes minimal and focused on the specific failure\n+- The naming convention is `{original-name}-gpui-unofficial` (e.g., `collections-gpui-unofficial`)\n+- The main crate `gpui` maps to just `gpui-unofficial` (special case in `unofficial_name()`)",
+          "snapshot_ref": "1c536e6800e77bf9680d26b3c93792806221c8f2",
+          "snapshot_blob_sha": "8b9157f102f4a82a61441a492f63e537fb6a09cc",
+          "snapshot_file": "snapshots/gpui-unofficial__iamnbutler__1c536e6800e77bf9680d26b3c93792806221c8f2__ci-fix.md",
+          "snapshot_bytes": 3847,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/gpui-unofficial\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"gpui-unofficial\",\"generated_workflow_path\":\".github/workflows/ci-fix.lock.yml\",\"generated_workflow_file\":\"ci-fix.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/gpui-unofficial/blob/76d3fc3b5d4b10e218fa24431ecad0669e320dcc/.github/workflows/ci-fix.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+      "source_full_name": "iamnbutler/gpui-unofficial",
+      "md_path": ".github/workflows/ci-fix.md",
+      "commit_sha": "cecab5b9f9cb1d9db762a2e5ff6ad9abe73c665e",
+      "authored_at": "2026-04-03T02:01:16Z",
+      "committed_at": "2026-04-03T02:01:16Z",
+      "author_name": "iamnbutler",
+      "author_email": "iamnbutler@github.com",
+      "author_login": "iamnbutler",
+      "author_account_type": "User",
+      "committer_name": "iamnbutler",
+      "committer_email": "iamnbutler@github.com",
+      "committer_login": "iamnbutler",
+      "committer_account_type": "User",
+      "message": "Recompile ci-fix workflow with updated config",
+      "parent_shas": [
+        "500efd69d096e82ca9a7b12a089986eef2c06b4f"
+      ],
+      "tree_sha": "a5fcd4fb8202699280730c58ea02627ab7b01c51",
+      "html_url": "https://github.com/iamnbutler/gpui-unofficial/commit/cecab5b9f9cb1d9db762a2e5ff6ad9abe73c665e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+          "source_full_name": "iamnbutler/gpui-unofficial",
+          "md_path": ".github/workflows/ci-fix.md",
+          "commit_sha": "cecab5b9f9cb1d9db762a2e5ff6ad9abe73c665e",
+          "committed_at": "2026-04-03T02:01:16Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -11,6 +11,8 @@ on:\n \n if: ${{ github.event.workflow_run.conclusion == 'failure' }}\n \n+engine: \"claude\"\n+\n permissions: read-all\n \n network:\n@@ -41,6 +43,7 @@ You are an agent that fixes CI failures in the gpui-unofficial repository.\n \n This repository automatically transforms and publishes Zed's gpui framework crates to crates.io.\n The pipeline is:\n+\n 1. **Sync Zed Releases** — detects new zed releases, transforms crates (rename packages, update deps), verifies build with path deps, then re-transforms with version deps and opens a PR\n 2. **CI** — builds the xtask tool on PRs and pushes to main\n 3. **Release** — on merge, publishes all crates to crates.io in dependency order, then creates a GitHub release",
+          "snapshot_ref": "cecab5b9f9cb1d9db762a2e5ff6ad9abe73c665e",
+          "snapshot_blob_sha": "a8d9c44c7dc194ca4ee09134afdfc8fcb777b3ac",
+          "snapshot_file": "snapshots/gpui-unofficial__iamnbutler__cecab5b9f9cb1d9db762a2e5ff6ad9abe73c665e__ci-fix.md",
+          "snapshot_bytes": 3866,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/gpui-unofficial\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"gpui-unofficial\",\"generated_workflow_path\":\".github/workflows/ci-fix.lock.yml\",\"generated_workflow_file\":\"ci-fix.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/gpui-unofficial/blob/76d3fc3b5d4b10e218fa24431ecad0669e320dcc/.github/workflows/ci-fix.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+      "source_full_name": "iamnbutler/gpui-unofficial",
+      "md_path": ".github/workflows/ci-fix.md",
+      "commit_sha": "0b00946a1119330820b49958558244dfd1ff4078",
+      "authored_at": "2026-04-17T14:18:05Z",
+      "committed_at": "2026-04-17T14:18:05Z",
+      "author_name": "Nate Butler",
+      "author_email": "iamnbutler@gmail.com",
+      "author_login": "iamnbutler",
+      "author_account_type": "User",
+      "committer_name": "Nate Butler",
+      "committer_email": "iamnbutler@gmail.com",
+      "committer_login": "iamnbutler",
+      "committer_account_type": "User",
+      "message": "Add duplicate PR check to CI Fix agent\n\nInstructs the agent to check for existing open PRs with ci-fix label\nbefore creating new ones, preventing duplicate fix PRs.",
+      "parent_shas": [
+        "bb5c378b1df5db8ccedc9e0455a53e1ca77d9936"
+      ],
+      "tree_sha": "9415fc725bdb52fdd319f07f70c48c0b2985ece3",
+      "html_url": "https://github.com/iamnbutler/gpui-unofficial/commit/0b00946a1119330820b49958558244dfd1ff4078",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "iamnbutler/gpui-unofficial:.github/workflows/ci-fix.md",
+          "source_full_name": "iamnbutler/gpui-unofficial",
+          "md_path": ".github/workflows/ci-fix.md",
+          "commit_sha": "0b00946a1119330820b49958558244dfd1ff4078",
+          "committed_at": "2026-04-17T14:18:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 6,
+          "file_changes": 14,
+          "file_patch": "@@ -54,27 +54,29 @@ The transform tool is at `xtask/src/transform.rs`. It extracts crates from zed's\n \n A workflow just failed (run #${{ github.event.workflow_run.run_number }}, conclusion: ${{ github.event.workflow_run.conclusion }}).\n \n-1. **Fetch the failed run's logs** using `get_job_logs` with `failed_only=true` for run ID `${{ github.event.workflow_run.id }}`.\n+1. **Check for existing fix PRs first.** Before doing anything else, search for open PRs with the `ci-fix` label or `[CI Fix]` title prefix. If a PR already exists that addresses the same failure (e.g., same missing crate, same build error), **do not create a duplicate**. Instead, use `noop` to report that a fix is already in progress and link to the existing PR.\n \n-2. **Diagnose the root cause.** Common failure categories:\n+2. **Fetch the failed run's logs** using `get_job_logs` with `failed_only=true` for run ID `${{ github.event.workflow_run.id }}`.\n+\n+3. **Diagnose the root cause.** Common failure categories:\n    - **Missing crate metadata** — crates.io requires `description`, `license`, `repository` fields. Fix in `transform.rs` where package metadata is set.\n    - **Unresolved workspace dependencies** — a zed internal crate not in `CRATE_PUBLISH_ORDER`. Fix by adding it to the publish order and handling its source path.\n    - **Permission errors** — workflow needs `contents: write` or `pull-requests: write`. Fix in the workflow YAML.\n    - **Dependency not found on crates.io** — the crate has version deps but dependencies haven't been published yet. This is a publish ordering issue.\n    - **Build errors** — new zed code introduces dependencies or APIs we don't handle. May need to add crates to `CRATE_PUBLISH_ORDER` or update the transform logic.\n    - **crates.io rate limiting or propagation** — may need to increase `PUBLISH_DELAY` in `publish.rs`.\n \n-3. **Fix the issue.** Make the minimal change needed. Common fixes:\n+4. **Fix the issue.** Make the minimal change needed. Common fixes:\n    - Edit `xtask/src/transform.rs` to add missing metadata, handle new crates, or fix dependency resolution\n    - Edit `xtask/src/publish.rs` to adjust publish logic\n    - Edit `.github/workflows/*.yml` to fix permissions or workflow config\n    - Do NOT modify files inside `crates/` directly — they are generated by the transform\n \n-4. **Verify your fix** by running `cargo build -p xtask` to ensure the tool compiles.\n+5. **Verify your fix** by running `cargo build -p xtask` to ensure the tool compiles.\n \n-5. **Create a PR** with your fix. Use a clear title describing what broke and what you fixed.\n+6. **Create a PR** with your fix. Use a clear title describing what broke and what you fixed.\n \n-6. If the failure is not something you can fix (e.g., external service outage, crates.io downtime), **create an issue** documenting the failure and suggesting manual steps.\n+7. If the failure is not something you can fix (e.g., external service outage, crates.io downtime), **create an issue** documenting the failure and suggesting manual steps.\n \n ## Important Rules\n ",
+          "snapshot_ref": "0b00946a1119330820b49958558244dfd1ff4078",
+          "snapshot_blob_sha": "07b6df8441cd4d9f63d0f2ff521bf12487a454e1",
+          "snapshot_file": "snapshots/gpui-unofficial__iamnbutler__0b00946a1119330820b49958558244dfd1ff4078__ci-fix.md",
+          "snapshot_bytes": 4233,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"iamnbutler/gpui-unofficial\",\"generated_owner\":\"iamnbutler\",\"generated_repo\":\"gpui-unofficial\",\"generated_workflow_path\":\".github/workflows/ci-fix.lock.yml\",\"generated_workflow_file\":\"ci-fix.lock.yml\",\"generated_html_url\":\"https://github.com/iamnbutler/gpui-unofficial/blob/76d3fc3b5d4b10e218fa24431ecad0669e320dcc/.github/workflows/ci-fix.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

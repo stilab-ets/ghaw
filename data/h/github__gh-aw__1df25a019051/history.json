@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/eslint-miner.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/eslint-miner.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/eslint-miner.lock.yml",
+      "generated_workflow_file": "eslint-miner.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-miner.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 5
+    },
+    "collected_at_utc": "2026-08-04T11:44:24+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-miner.md",
+      "commit_sha": "35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+      "authored_at": "2026-06-27T22:21:12Z",
+      "committed_at": "2026-06-27T22:21:12Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Establish ESLint Linter Factory for actions/setup/js and add dedicated ESLint daily workflows (#41938)",
+      "parent_shas": [
+        "5b7ef28a594bd0a936367cd130726c4980bc2637"
+      ],
+      "tree_sha": "6d59c82c938f627c771603ffba0def39f38fb6f2",
+      "html_url": "https://github.com/github/gh-aw/commit/35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-miner.md",
+          "commit_sha": "35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+          "committed_at": "2026-06-27T22:21:12Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 99,
+          "file_deletions": 0,
+          "file_changes": 99,
+          "file_patch": "@@ -0,0 +1,99 @@\n+---\n+name: ESLint Miner\n+description: Daily workflow that mines JavaScript/TypeScript patterns in actions/setup/js and creates new TypeScript-based ESLint rules in actions/setup/js/eslint-factory\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+  discussions: read\n+  pull-requests: read\n+  actions: read\n+  copilot-requests: write\n+tracker-id: eslint-miner\n+engine:\n+  id: copilot\n+  copilot-sdk: true\n+lsp:\n+  typescript:\n+    command: typescript-language-server\n+    args: [\"--stdio\"]\n+    fileExtensions:\n+      \".ts\": typescript\n+      \".js\": javascript\n+      \".cjs\": javascript\n+      \".mjs\": javascript\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+tools:\n+  cli-proxy: true\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, discussions, issues, repos]\n+  cache-memory:\n+    key: eslint-miner-state-${{ github.workflow }}\n+  bash:\n+    - \"*\"\n+  edit:\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[eslint-miner] \"\n+    labels: [automation, eslint, cookie]\n+    reviewers: [copilot]\n+    draft: true\n+    expires: 7d\n+    if-no-changes: warn\n+    allowed-files:\n+      - \"actions/setup/js/eslint-factory/**\"\n+    protected-files: fallback-to-issue\n+  noop:\n+timeout-minutes: 120\n+max-turns: 1000\n+---\n+\n+# ESLint Miner\n+\n+You are the daily **ESLint Miner** for `github/gh-aw`.\n+\n+## Mission\n+\n+Each day, produce at most one high-signal custom ESLint rule that improves code quality in:\n+\n+- `actions/setup/js/**/*.cjs`\n+- `actions/setup/js/**/*.js`\n+- `actions/setup/js/**/*.ts`\n+\n+Out of scope:\n+\n+- Go code\n+- Documentation-only improvements\n+- JavaScript outside `actions/setup/js`\n+\n+## Required flow\n+\n+1. Mine issues/discussions from the last 14 days for recurring JavaScript/TypeScript failures in `actions/setup/js`.\n+2. Scan `actions/setup/js` for recurring patterns that should be enforced automatically.\n+3. Read existing rules in `actions/setup/js/eslint-factory/src/rules`.\n+4. Choose one net-new rule idea with low false-positive risk.\n+5. Implement the rule in TypeScript under `actions/setup/js/eslint-factory/src/rules` and register it in `src/index.ts`.\n+6. Update `actions/setup/js/eslint-factory/eslint.config.cjs` only if needed to enable the new rule.\n+7. Validate with:\n+   - `cd actions/setup/js/eslint-factory && npm install`\n+   - `cd actions/setup/js/eslint-factory && npm run build`\n+   - `cd actions/setup/js/eslint-factory && npm run lint:setup-js`\n+8. Open one draft PR with evidence and rationale.\n+\n+## Rule quality bar\n+\n+- Must be specific and actionable.\n+- Must include a clear diagnostic message.\n+- Must target behavior observed in `actions/setup/js`.\n+- Must avoid stylistic-only opinions.\n+- Must not require changing files outside `actions/setup/js` and `actions/setup/js/eslint-factory`.\n+\n+## Final action\n+\n+Call exactly one safe output (`create_pull_request` or `noop`) as the last action.",
+          "snapshot_ref": "35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+          "snapshot_blob_sha": "72c6001daa25077afa0369810fe402cfbbbda0bc",
+          "snapshot_file": "snapshots/gh-aw__github__35777da04c8f5230a9627bc0ad01f8a6b98dd72c__eslint-miner.md",
+          "snapshot_bytes": 2815,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-miner.lock.yml\",\"generated_workflow_file\":\"eslint-miner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-miner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-miner.md",
+      "commit_sha": "2d16c282d0fa3e367972fb3383669a960621ad02",
+      "authored_at": "2026-06-28T02:30:33Z",
+      "committed_at": "2026-06-28T02:30:33Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Move eslint-factory to repository root (#41975)",
+      "parent_shas": [
+        "3ec2f0c8dc6c36b5bfdfa52c04255c5d3c38b6f1"
+      ],
+      "tree_sha": "23db6c4336f43d3297d08ba7c546d7cf192847fd",
+      "html_url": "https://github.com/github/gh-aw/commit/2d16c282d0fa3e367972fb3383669a960621ad02",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-miner.md",
+          "commit_sha": "2d16c282d0fa3e367972fb3383669a960621ad02",
+          "committed_at": "2026-06-28T02:30:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 9,
+          "file_deletions": 9,
+          "file_changes": 18,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n name: ESLint Miner\n-description: Daily workflow that mines JavaScript/TypeScript patterns in actions/setup/js and creates new TypeScript-based ESLint rules in actions/setup/js/eslint-factory\n+description: Daily workflow that mines JavaScript/TypeScript patterns in actions/setup/js and creates new TypeScript-based ESLint rules in eslint-factory\n on:\n   schedule: daily\n   workflow_dispatch:\n@@ -47,7 +47,7 @@ safe-outputs:\n     expires: 7d\n     if-no-changes: warn\n     allowed-files:\n-      - \"actions/setup/js/eslint-factory/**\"\n+      - \"eslint-factory/**\"\n     protected-files: fallback-to-issue\n   noop:\n timeout-minutes: 120\n@@ -76,14 +76,14 @@ Out of scope:\n \n 1. Mine issues/discussions from the last 14 days for recurring JavaScript/TypeScript failures in `actions/setup/js`.\n 2. Scan `actions/setup/js` for recurring patterns that should be enforced automatically.\n-3. Read existing rules in `actions/setup/js/eslint-factory/src/rules`.\n+3. Read existing rules in `eslint-factory/src/rules`.\n 4. Choose one net-new rule idea with low false-positive risk.\n-5. Implement the rule in TypeScript under `actions/setup/js/eslint-factory/src/rules` and register it in `src/index.ts`.\n-6. Update `actions/setup/js/eslint-factory/eslint.config.cjs` only if needed to enable the new rule.\n+5. Implement the rule in TypeScript under `eslint-factory/src/rules` and register it in `src/index.ts`.\n+6. Update `eslint-factory/eslint.config.cjs` only if needed to enable the new rule.\n 7. Validate with:\n-   - `cd actions/setup/js/eslint-factory && npm install`\n-   - `cd actions/setup/js/eslint-factory && npm run build`\n-   - `cd actions/setup/js/eslint-factory && npm run lint:setup-js`\n+   - `cd eslint-factory && npm install`\n+   - `cd eslint-factory && npm run build`\n+   - `cd eslint-factory && npm run lint:setup-js`\n 8. Open one draft PR with evidence and rationale.\n \n ## Rule quality bar\n@@ -92,7 +92,7 @@ Out of scope:\n - Must include a clear diagnostic message.\n - Must target behavior observed in `actions/setup/js`.\n - Must avoid stylistic-only opinions.\n-- Must not require changing files outside `actions/setup/js` and `actions/setup/js/eslint-factory`.\n+- Must not require changing files outside `actions/setup/js` and `eslint-factory`.\n \n ## Final action\n ",
+          "snapshot_ref": "2d16c282d0fa3e367972fb3383669a960621ad02",
+          "snapshot_blob_sha": "1b7fb42ca0cf87e256622a2e84f516d5082b992f",
+          "snapshot_file": "snapshots/gh-aw__github__2d16c282d0fa3e367972fb3383669a960621ad02__eslint-miner.md",
+          "snapshot_bytes": 2662,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-miner.lock.yml\",\"generated_workflow_file\":\"eslint-miner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-miner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-miner.md",
+      "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "authored_at": "2026-06-28T18:46:18Z",
+      "committed_at": "2026-06-28T18:46:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Apply remaining changes (#42119)",
+      "parent_shas": [
+        "f0cf4df7343e548bebb36985a895314e136469ef"
+      ],
+      "tree_sha": "30b81bf66f1fefd910376450ca0b8d58890ef22c",
+      "html_url": "https://github.com/github/gh-aw/commit/a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-miner.md",
+          "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "committed_at": "2026-06-28T18:46:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -11,6 +11,11 @@ permissions:\n   pull-requests: read\n   actions: read\n   copilot-requests: write\n+\n+sandbox:\n+  agent:\n+    sudo: false\n+\n tracker-id: eslint-miner\n engine:\n   id: copilot",
+          "snapshot_ref": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "snapshot_blob_sha": "8a95d00f854554cf5816160936110ba2205d3a2f",
+          "snapshot_file": "snapshots/gh-aw__github__a2c8ef53839b08f76646833fd1859f4d1cf7079d__eslint-miner.md",
+          "snapshot_bytes": 2698,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-miner.lock.yml\",\"generated_workflow_file\":\"eslint-miner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-miner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-miner.md",
+      "commit_sha": "8cd73e156dfcdb8a74b0b340814a1d2921df3ae3",
+      "authored_at": "2026-07-27T06:18:51Z",
+      "committed_at": "2026-07-27T06:18:51Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add max-tool-denials: 3 to all 67 copilot-sdk workflows (#48293)",
+      "parent_shas": [
+        "d647e8b4c3fc4129b536520c3720d53788a194e9"
+      ],
+      "tree_sha": "d177903645490f5c69fe757def3b5c5e5cd84b81",
+      "html_url": "https://github.com/github/gh-aw/commit/8cd73e156dfcdb8a74b0b340814a1d2921df3ae3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-miner.md",
+          "commit_sha": "8cd73e156dfcdb8a74b0b340814a1d2921df3ae3",
+          "committed_at": "2026-07-27T06:18:51Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -20,6 +20,7 @@ tracker-id: eslint-miner\n engine:\n   id: copilot\n   copilot-sdk: true\n+max-tool-denials: 3\n lsp:\n   typescript:\n     command: typescript-language-server",
+          "snapshot_ref": "8cd73e156dfcdb8a74b0b340814a1d2921df3ae3",
+          "snapshot_blob_sha": "863541a6b320d2e46c77248093ee7a97f37685fe",
+          "snapshot_file": "snapshots/gh-aw__github__8cd73e156dfcdb8a74b0b340814a1d2921df3ae3__eslint-miner.md",
+          "snapshot_bytes": 2718,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-miner.lock.yml\",\"generated_workflow_file\":\"eslint-miner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-miner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-miner.md",
+      "commit_sha": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+      "authored_at": "2026-07-30T07:02:05Z",
+      "committed_at": "2026-07-30T07:02:05Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable evals on 20 more workflows (#49078)",
+      "parent_shas": [
+        "9a9a67ff1b759de97722da8333824856fecaf039"
+      ],
+      "tree_sha": "626271d8ec79778c279ed9b99fbf769f3b7f18f8",
+      "html_url": "https://github.com/github/gh-aw/commit/8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-miner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-miner.md",
+          "commit_sha": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+          "committed_at": "2026-07-30T07:02:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -58,6 +58,11 @@ safe-outputs:\n   noop:\n timeout-minutes: 120\n max-turns: 1000\n+evals:\n+  - id: eslint_patterns_mined\n+    question: Did the agent analyze JavaScript or TypeScript patterns to identify a useful ESLint rule?\n+  - id: rule_pr_created_or_noop\n+    question: Did the agent create a pull request for a new ESLint rule, or use noop when no suitable rule was found?\n ---\n \n # ESLint Miner",
+          "snapshot_ref": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+          "snapshot_blob_sha": "027ace1d488c2207618fb6e3aeb577b75be2e4fc",
+          "snapshot_file": "snapshots/gh-aw__github__8fcdd9f048c3f75a5046372f4000abef92cdac1b__eslint-miner.md",
+          "snapshot_bytes": 3009,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-miner.lock.yml\",\"generated_workflow_file\":\"eslint-miner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-miner.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

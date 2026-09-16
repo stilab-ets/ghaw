@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/wiki-drift-detector.md",
+    "source_full_name": "neverinfamous/memory-journal-mcp",
+    "source_owner": "neverinfamous",
+    "source_repo": "memory-journal-mcp",
+    "md_path": ".github/workflows/wiki-drift-detector.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/neverinfamous/memory-journal-mcp/blob/HEAD/.github/workflows/wiki-drift-detector.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "neverinfamous/memory-journal-mcp",
+      "generated_owner": "neverinfamous",
+      "generated_repo": "memory-journal-mcp",
+      "generated_workflow_path": ".github/workflows/wiki-drift-detector.lock.yml",
+      "generated_workflow_file": "wiki-drift-detector.lock.yml",
+      "generated_html_url": "https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/wiki-drift-detector.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:03+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/wiki-drift-detector.md",
+      "source_full_name": "neverinfamous/memory-journal-mcp",
+      "md_path": ".github/workflows/wiki-drift-detector.md",
+      "commit_sha": "968ea6ed1bb484c98a70048e4ef70e8c5eb13b72",
+      "authored_at": "2026-03-23T20:49:27Z",
+      "committed_at": "2026-03-23T20:49:27Z",
+      "author_name": "Chris LeRoux",
+      "author_email": "writenotenow@gmail.com",
+      "author_login": "neverinfamous",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "v6.2.1 - CI gatekeeper, SDK Zod validation fixes, dual-schema docs (#325)\n\n* chore: round coverage badges to whole %, update bump-deploy workflow\n\n* refactor: derive hardcoded tool/resource counts from source\n\nReplace hardcoded count literals (61, 45, 20) with computed values\nfrom getAllToolNames().length and TOOL_GROUPS in tests and source.\n\n- server-instructions.test.ts: .toBe(61) -> .toBe(getAllToolNames().length)\n- codemode-tool-handlers.test.ts: .toBe(61) -> .toBe(getAllToolNames().length)\n- resource-handlers.test.ts: 'Active Tools (61)' -> template literal\n- tool-filtering-presets.spec.ts: .toBe(45) -> TOTAL_TOOLS - GITHUB_TOOLS\n- server-instructions-gotchas.ts: 'All 20 team tools' -> interpolated\n- server-instructions.ts: regenerated from updated gotchas source\n\n* chore: trim npm package — add files field, override unused deps\n\n- Add files field to package.json: tarball shrinks from 367 files / 3.9 MB\n  to 13 files / 585 KB (85% reduction)\n- Override onnxruntime-web with empty stub (90 MB unused browser runtime)\n- Override sharp with empty stub (unused image processing transitive dep)\n\n* test: add 7 Playwright E2E spec files for expanded test coverage\n\n- zod-sweep: validation sweep calling tools with {} args (~35 tests)\n- boundary: edge cases (empty results, idempotency, self-loops)\n- errors-extended: systematic per-group error path coverage\n- numeric-coercion: string-for-number parameter resilience\n- help-resources: memory://help resource system verification\n- integration-workflows: cross-group pipeline validation\n- streamable-http: SDK round-trip via Streamable HTTP transport\n\nAlso adds callToolRaw, getBaseURL, expectHandlerError to helpers.ts\n\n* fix: restore_backup structured errors + team self-loop guard + team DB test infra\n\nPhase 1:\n- Relax restore_backup inputSchema (confirm: optional) so validation\n  errors reach handler instead of returning MCP-level isError: true\n\nPhase 2:\n- Add TEAM_DB_PATH to playwright.config.ts for functional team tool coverage\n- Add self-loop guard to team_link_entries matching personal link_entries\n- Convert payloads-team.spec.ts to use managed server without TEAM_DB_PATH\n- Add env override support to startServer helper\n- Remove team_search and team_visualize_relationships from zod-sweep\n  (optional params — succeed on {})\n\n* fix: increase worker-sandbox beforeAll timeout to 30s for esbuild cold starts\n\n* feat: add GitHub Commander skill system with shipped workflow files\n\n* refine: assertive description and expanded trigger conditions for GitHub Commander\n\n* docs: add dependabot-auto-merge to README.md workflows map and table\n\n* ci: add wiki documentation drift detector workflow\n\n* Improve suggested rules.\n\n* docs: consolidate feature tables in README and DOCKER_README\n\n* fix: use esbuild JS API instead of npx execSync in worker-sandbox test\n\nThe beforeAll hook was timing out on Windows because\npx esbuild\nvia execSync can hang during package resolution. Replaced with\nesbuild.buildSync() which uses the already-installed package directly.\n\n* test(e2e): add codemode-groups.spec.ts for per-group API surface validation\n\n* test: improve coverage to 96.65% lines / 85.56% branches\n\nAdd 6 test files with ~30 new tests covering:\n- worker-sandbox RPC error paths and custom timeout\n- security rate limit cleanup and RangeError handling\n- native-connection exec mutation paths\n- help resource all tool groups (admin, search, relationships, etc.)\n- handler catch blocks via Zod validation errors\n- team tools with/without teamDb (vector, backup, export, admin)\n- auth-context functions (runWithAuthContext, setAuthContext, etc.)\n- resource-annotations helpers (withPriority, withAutoRead, withSessionInit)\n\n* Update E2E readme badges.\n\n* v6.2.0 - GitHub Commander skills, shipped skills auto-discovery, Wiki Drift Detector\n\n* fix(ci): gate deployments and wrap sdk zod errors\n\n* v6.2.1 - CI gatekeeper, SDK Zod validation fixes, dual-schema docs",
+      "parent_shas": [
+        "40f615566e5e03f145d6a3b8c9dfdf185476fd79"
+      ],
+      "tree_sha": "d8ab0aa8b0d271123f8002ddb8763586609c0b7d",
+      "html_url": "https://github.com/neverinfamous/memory-journal-mcp/commit/968ea6ed1bb484c98a70048e4ef70e8c5eb13b72",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/wiki-drift-detector.md",
+          "source_full_name": "neverinfamous/memory-journal-mcp",
+          "md_path": ".github/workflows/wiki-drift-detector.md",
+          "commit_sha": "968ea6ed1bb484c98a70048e4ef70e8c5eb13b72",
+          "committed_at": "2026-03-23T20:49:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 94,
+          "file_deletions": 0,
+          "file_changes": 94,
+          "file_patch": "@@ -0,0 +1,94 @@\n+---\n+description: 'Audit the GitHub Wiki documentation for accuracy and consistency on every code PR'\n+private: true\n+labels: [documentation, automation, wiki]\n+\n+on:\n+  pull_request:\n+    types: [opened, ready_for_review]\n+    paths: ['src/**', 'package.json', 'Dockerfile', 'tsconfig*.json', 'scripts/**']\n+\n+engine:\n+  id: copilot\n+  model: claude-opus-4-20250514\n+\n+network:\n+  allowed:\n+    - defaults\n+\n+permissions: read-all\n+\n+safe-outputs:\n+  add-comment:\n+    max: 3\n+    discussions: false\n+  noop:\n+    max: 1\n+\n+timeout-minutes: 15\n+concurrency: wiki-drift-detector\n+---\n+\n+# Wiki Documentation Drift Detector\n+\n+You are auditing the GitHub Wiki documentation for the **memory-journal-mcp** project — a TypeScript MCP server for project context management. Your job is to check if the wiki documentation is accurate and consistent with recent code changes.\n+\n+## Important Rules\n+\n+- **You are read-only.** Never modify files. Only post comments.\n+- **Be specific.** Quote the exact section and line that needs updating in the wiki.\n+- **Don't nitpick.** Focus on factual accuracy, tool schemas, and consistency, not style or wording preferences.\n+- **If everything looks good, say so.** Post a short ✅ confirmation via noop, don't create noise.\n+\n+## Step 1: Clone the Wiki\n+\n+The wiki is hosted in a separate Git repository. You must clone it to a temporary directory first.\n+Run this command in your terminal:\n+`git clone https://github.com/neverinfamous/memory-journal-mcp.wiki.git /tmp/wiki`\n+\n+## Step 2: Understand Recent Changes\n+\n+1. Read the PR diff to understand what code changed in the main repository.\n+2. Read the `UNRELEASED.md` file. **Never read the full `CHANGELOG.md`** — it is very long and only the unreleased section is relevant.\n+3. Read the latest release notes file from `releases/` (the one with the highest version number).\n+\n+## Step 3: Audit Core Wiki Pages\n+\n+Examine the files in `/tmp/wiki` against the PR diff and unreleased changes:\n+\n+- **Tools.md** & **Resources.md** — Are all features described still accurate? Were tools or resources added, removed, or modified? Do the parameter schemas match? Does the tool count match the codebase?\n+- **Configuration.md** — Are all documented environment variables and CLI flags still used in the code? Are there any new ones missing from the docs?\n+- **Code-Mode.md** & **Architecture.md** — Has the architecture changed (e.g., changes to the sandboxed JS execution engine or adapter interfaces) in ways that invalidate these docs?\n+- **Copilot-Integration.md** — Validate that integration flows (e.g., briefing usage, finding syncing) remain correct if the MCP server interface was changed.\n+\n+## Step 4: Cross-Document Consistency\n+\n+Compare the wiki files for consistency:\n+\n+- Feature descriptions and tool/resource counts across `Tools.md`, `Resources.md`, and `Home.md`.\n+- Environment variable documentation.\n+\n+## Step 5: Report Findings\n+\n+### If drift is found:\n+\n+Use the `add-comment` tool to post a PR conversation comment with your findings organized as:\n+\n+```\n+## 📋 Wiki Drift Report\n+\n+### ⚠️ Drift Detected\n+\n+**[PageName].md**\n+- Line X: [description of issue and suggested fix]\n+\n+### 🔄 Cross-Wiki Inconsistencies\n+- [description of what doesn't match between wiki pages]\n+\n+### ✅ Verified Pages\n+- [list of wiki pages that are accurate]\n+```\n+\n+### If no drift is found:\n+\n+Use the noop tool with: \"✅ Wiki documentation audit complete — no drift detected.\"",
+          "snapshot_ref": "968ea6ed1bb484c98a70048e4ef70e8c5eb13b72",
+          "snapshot_blob_sha": "70116092d0377a416e0487d0fcd7c15301a29e0a",
+          "snapshot_file": "snapshots/memory-journal-mcp__neverinfamous__968ea6ed1bb484c98a70048e4ef70e8c5eb13b72__wiki-drift-detector.md",
+          "snapshot_bytes": 3406,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neverinfamous/memory-journal-mcp\",\"generated_owner\":\"neverinfamous\",\"generated_repo\":\"memory-journal-mcp\",\"generated_workflow_path\":\".github/workflows/wiki-drift-detector.lock.yml\",\"generated_workflow_file\":\"wiki-drift-detector.lock.yml\",\"generated_html_url\":\"https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/wiki-drift-detector.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/wiki-drift-detector.md",
+      "source_full_name": "neverinfamous/memory-journal-mcp",
+      "md_path": ".github/workflows/wiki-drift-detector.md",
+      "commit_sha": "14d9c70ea17deb637cde33b8b45fa57063c9e217",
+      "authored_at": "2026-04-11T01:45:17Z",
+      "committed_at": "2026-04-11T01:45:17Z",
+      "author_name": "Chris LeRoux",
+      "author_email": "writenotenow@gmail.com",
+      "author_login": "neverinfamous",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Release v7.3.0 (#429)\n\n* chore: resolve unused variable warnings in test coverage and sync dockers README\n\n* chore: bump timeout for help-resource tests to prevent CPU starvation during parallel vitest runs\n\n* chore: relax ESLint test-specific constraints to allow mock patterns and assertions without global violation\n\n* chore: bump agent-skills package version to 1.0.7\n\n* chore: verify admin and backup via code mode\n\n* test: verify core CRUD via code mode (phase 20)\n\n* test: verify Code Mode error matrix (Phase 29)\n\n* test: verify Code Mode error matrix (Phase 29)\n\n* docs: verifiable GitHub tools tested cleanly via Code Mode\n\n* test(codemode): fix OS path-matching in IO interoperability tests and verify\n\n* test: verify phase 23 cross-group orchestration via code mode\n\n* chore(test): verify payload optimization via code mode\n\n* test(codemode): verify readonly sandbox enforcement\n\n* fix(relationships): enforce structured ResourceNotFoundError for nonexistent visualization targets\n\n* test: verify relationships and visualization in code mode\n\n* docs: log Phase 21 test pass in UNRELEASED.md\n\n* docs(changelog): certify team admin codemode verification\n\n* test: verify team tools via codemode (Phase 28.1-28.3)\n\n* docs: verify team vector and cross-tool error paths via Code Mode (Phase 28.9-28.10)\n\n* docs: add Phase 22 Code Mode multi-step workflow verification\n\n* Clean up test prompts after successful passes.\n\n* fix(github): always include openCount in milestone status resource summary\n\n* chore: verify IO tools via direct MCP tests\n\n* chore: verify relationships testing via direct calls\n\n* fix(search): apply metadata filters to vector and hybrid results\n\n* fix(error-handling): align validation codes, int coercion, prompt safety, success fields\n\n* test: update VALIDATION_FAILED assertions to VALIDATION_ERROR\n\n* fix(error-handling): unify validation code and update test assertions\n\n- Update E2E test assertions to use VALIDATION_ERROR instead of VALIDATION_FAILED\n- Increase timeout for rebuild_vector_index in E2E tests\n- Update UNRELEASED.md with Phase 11 results\n\n* fix(search): standardize schemas and improve semantic search recall\n\nStandardize success: true field for read-only tools across Analytics, Team and Vector modules.\n\nAdd oversampling to semantic_search to ensure metadata filtering behaves correctly without losing matches.\n\nEstablish personal and team semantic_search metadata parity.\n\n* fix(relationships): re-apply soft-deleted entry guard in link_entries\n\n* test: implement strict whitelist cleanup script and apply db purge\n\n* docs(test): document cleanup-seed-data script in index\n\n* fix(github): add error boundary to create_github_issue_with_entry output schema\n\n* chore(tests): verify Team Collaboration and integration tools\n\n* docs(changelog): log core tools Verification Suite completion\n\n* fix(github): add missing success flag to get_repo_insights\n\n* test: verify team tool group configuration error bounds and fallback capabilities\n\n* Cleaned up UNRELEASED.md.\n\n* Update readmes.\n\n* docs: format UNRELEASED.md per Keep a Changelog standards\n\n* v7.3.0 - Adaptive Context Verification\n\n* test(codemode): verify Admin, Backup, and Export features via Code Mode\n\n* test(codemode): verify API discoverability phase 17\n\n* chore(docs): code mode core crud verification\n\n* test(codemode): verify Phase 29 structured error matrix\n\n* test: verify GitHub integration tools via Code Mode\n\n* chore(docs): document Phase 26 Code Mode IO Verification\n\n* test(codemode): verify cross-group orchestration via phase 23\n\n* chore(test): verify codemode readonly mode restrictions\n\n* test: Phase 16 Sandbox Basics verification via Code Mode\n\n* docs: phase 21 code mode search and semantics verification\n\n* test: verify Phase 19 Code Mode Error Handling & Security\n\n* test(codemode): verify team admin operations via code mode bridge\n\n* chore: verify Phase 28.1-28.3 Team CRUD & Date Range Search via Code Mode\n\n* chore: document phase 28 verification of team vector and cross-tool errors in changelog\n\n* docs: verify multi-step workflows via code mode\n\n* docs(changelog): record Phase 2 CRUD tool verification pass\n\n* chore(testing): verify core infrastructure tools\n\n* docs: trace Phase 10 verification of automated scheduler\n\n* chore: document Phase 3 text search verification\n\n* test(search): complete semantic search and analytics native verification\n\n* docs: add Phase 2 GitHub tools testing verification matrix to UNRELEASED.md\n\n* docs(changelog): log Backup & Export tools verification\n\n* chore(test): verify core tool group via direct mapping\n\n* Clean out UNRELEASED.md.\n\n* Clean up changelog.",
+      "parent_shas": [
+        "172f2210a4e53e790327b92dc4335138485d795f"
+      ],
+      "tree_sha": "5de415859fafa033d5d75a04747e4223902fca50",
+      "html_url": "https://github.com/neverinfamous/memory-journal-mcp/commit/14d9c70ea17deb637cde33b8b45fa57063c9e217",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/wiki-drift-detector.md",
+          "source_full_name": "neverinfamous/memory-journal-mcp",
+          "md_path": ".github/workflows/wiki-drift-detector.md",
+          "commit_sha": "14d9c70ea17deb637cde33b8b45fa57063c9e217",
+          "committed_at": "2026-04-11T01:45:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -19,6 +19,7 @@ network:\n permissions: read-all\n \n safe-outputs:\n+  report-failure-as-issue: false\n   add-comment:\n     max: 3\n     discussions: false",
+          "snapshot_ref": "14d9c70ea17deb637cde33b8b45fa57063c9e217",
+          "snapshot_blob_sha": "cd299d4f679a482be31adf8e7903a11982236930",
+          "snapshot_file": "snapshots/memory-journal-mcp__neverinfamous__14d9c70ea17deb637cde33b8b45fa57063c9e217__wiki-drift-detector.md",
+          "snapshot_bytes": 3439,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neverinfamous/memory-journal-mcp\",\"generated_owner\":\"neverinfamous\",\"generated_repo\":\"memory-journal-mcp\",\"generated_workflow_path\":\".github/workflows/wiki-drift-detector.lock.yml\",\"generated_workflow_file\":\"wiki-drift-detector.lock.yml\",\"generated_html_url\":\"https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/wiki-drift-detector.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

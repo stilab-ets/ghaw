@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/cyclomatic-complexity-reducer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/cyclomatic-complexity-reducer.lock.yml",
+      "generated_workflow_file": "cyclomatic-complexity-reducer.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/cyclomatic-complexity-reducer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:48:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+      "commit_sha": "1066a2fee0c30991a50bf6a50b221308b43ee6a8",
+      "authored_at": "2026-04-22T07:50:30Z",
+      "committed_at": "2026-04-22T07:50:30Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add cyclomatic complexity reducer agentic workflow (#298)\n\n* feat: add cyclomatic complexity reducer agentic workflow\n\nDaily scheduled GitHub Agentic Workflow that:\n1. Runs Clippy cognitive complexity analysis in JSON mode\n2. Ranks functions by complexity score\n3. Refactors the highest-complexity function (extract helpers, flatten nesting, simplify logic)\n4. Verifies tests pass and complexity is reduced\n5. Submits a PR with the changes\n6. Uses cache-memory to track progress across runs\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: use read-only permissions for complexity reducer workflow\n\ngh-aw strict mode (default) refuses write permissions — writes happen\nthrough the safe-outputs system (create-pull-request). Align with the\npattern used by all other workflows in this repo.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* regenerate with newer gh-aw\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "75b5f5796b387c76aca8326db96439500b8f9e01"
+      ],
+      "tree_sha": "cf556a059ad009d2f307f666966a8ccacfa913e6",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/1066a2fee0c30991a50bf6a50b221308b43ee6a8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+          "commit_sha": "1066a2fee0c30991a50bf6a50b221308b43ee6a8",
+          "committed_at": "2026-04-22T07:50:30Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 150,
+          "file_deletions": 0,
+          "file_changes": 150,
+          "file_patch": "@@ -0,0 +1,150 @@\n+---\n+on:\n+  schedule: daily\n+description: Identifies and refactors functions with high cyclomatic complexity using Clippy analysis\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  cache-memory: true\n+network:\n+  allowed: [defaults, rust]\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+---\n+\n+# Cyclomatic Complexity Reducer\n+\n+You are a senior Rust engineer focused on code maintainability. Your job is to find the most complex functions in this codebase using Clippy's cognitive complexity lint and refactor them to be simpler, more readable, and easier to test — without changing behaviour.\n+\n+## Step 1: Check Previous Runs\n+\n+Read cache-memory to avoid re-processing functions that were already refactored or deliberately skipped:\n+\n+```bash\n+cat /tmp/gh-aw/cache-memory/complexity-state.json 2>/dev/null || echo \"{}\"\n+```\n+\n+## Step 2: Run Clippy Complexity Analysis\n+\n+Run Clippy in JSON mode with the cognitive complexity lint explicitly enabled and configured with a low threshold to surface candidates:\n+\n+```bash\n+cargo clippy --all-targets --all-features --message-format=json -- \\\n+  -W clippy::cognitive_complexity 2>/dev/null \\\n+  | jq -c 'select(.reason == \"compiler-message\")\n+           | select(.message.code.code == \"clippy::cognitive_complexity\")\n+           | {\n+               file: .message.spans[0].file_name,\n+               start: .message.spans[0].line_start,\n+               end: .message.spans[0].line_end,\n+               text: .message.message\n+             }' \\\n+  | sort -t'\"' -k8 -rn\n+```\n+\n+If no results appear, try lowering the threshold:\n+\n+```bash\n+cargo clippy --all-targets --all-features --message-format=json -- \\\n+  -W clippy::cognitive_complexity \\\n+  --cfg 'clippy' 2>/dev/null \\\n+  | jq -c 'select(.reason == \"compiler-message\")\n+           | select(.message.code.code == \"clippy::cognitive_complexity\")' \\\n+  | head -20\n+```\n+\n+If Clippy doesn't flag any functions at the default threshold, that's fine — fall back to a manual scan. Look for functions with deeply nested control flow:\n+\n+```bash\n+# Find functions with many levels of nesting (heuristic)\n+grep -rn 'fn ' src/ --include='*.rs' | head -50\n+```\n+\n+Then read the longest/most complex-looking functions and assess them manually.\n+\n+## Step 3: Rank and Select Target\n+\n+From the results, pick the **single function with the highest reported complexity**. If cache-memory shows it was already processed, move to the next one.\n+\n+Read the full function to understand its structure:\n+\n+```bash\n+# Example — adjust file/lines from Step 2 output\n+sed -n '<start>,<end>p' <file>\n+```\n+\n+Also read surrounding context (the impl block, callers, tests) so you understand the function's contract.\n+\n+## Step 4: Plan the Refactor\n+\n+Before changing code, plan a strategy. Common approaches, in order of preference:\n+\n+1. **Extract helper functions** — break logically distinct blocks into well-named functions. This is almost always the right first move.\n+2. **Flatten nested control flow** — use early returns, `let-else`, or guard clauses to reduce nesting depth.\n+3. **Simplify boolean logic** — combine conditions, use `matches!()`, eliminate double negations.\n+4. **Replace branching with data** — use lookup tables, iterators, or `Option`/`Result` combinators instead of long match arms.\n+5. **Split into modules** — if the function is doing too many things, the enclosing module may need restructuring.\n+\n+**Rules:**\n+- Do NOT change public API signatures.\n+- Do NOT change observable behaviour — the existing tests must continue to pass.\n+- Preserve all comments that are still relevant.\n+- Name extracted functions descriptively — the name should make the call site easier to read than the original inline code.\n+\n+## Step 5: Apply the Refactor\n+\n+Make the changes. Focus on one function per run to keep PRs reviewable.\n+\n+## Step 6: Verify\n+\n+Run the full test suite and Clippy to confirm:\n+\n+```bash\n+# Tests must pass\n+cargo test\n+\n+# Clippy must be clean\n+cargo clippy --all-targets --all-features\n+\n+# Re-run complexity check on the refactored function\n+cargo clippy --all-targets --all-features --message-format=json -- \\\n+  -W clippy::cognitive_complexity 2>/dev/null \\\n+  | jq -c 'select(.reason == \"compiler-message\")\n+           | select(.message.code.code == \"clippy::cognitive_complexity\")\n+           | select(.message.spans[0].file_name == \"<FILE>\")\n+           | .message.message'\n+```\n+\n+If the complexity is not reduced, reconsider the approach. If tests fail, fix or revert.\n+\n+## Step 7: Update Memory\n+\n+Save state so the next run picks up where this one left off:\n+\n+```json\n+{\n+  \"last_processed\": \"<file>:<function_name>\",\n+  \"date\": \"<today>\",\n+  \"action\": \"refactored|skipped|no-candidates\",\n+  \"original_complexity\": <N>,\n+  \"new_complexity\": <N>,\n+  \"history\": [\"<previous entries>\"]\n+}\n+```\n+\n+Write this to `/tmp/gh-aw/cache-memory/complexity-state.json`.\n+\n+## Step 8: Submit\n+\n+If changes were made and all checks pass, create a pull request:\n+- **Title**: `refactor: reduce complexity of <function_name> in <file>`\n+- **Description**: Explain what was complex, what you changed, and the before/after complexity scores.\n+\n+### When No Action Is Needed\n+\n+If no functions exceed the complexity threshold, or all candidates were already processed, use `noop` with a message like: \"No functions exceed the cognitive complexity threshold. Codebase is in good shape.\"",
+          "snapshot_ref": "1066a2fee0c30991a50bf6a50b221308b43ee6a8",
+          "snapshot_blob_sha": "60f2143d01b2e89f0c91bd98d0223a33e3efa240",
+          "snapshot_file": "snapshots/ado-aw__githubnext__1066a2fee0c30991a50bf6a50b221308b43ee6a8__cyclomatic-complexity-reducer.md",
+          "snapshot_bytes": 5345,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/cyclomatic-complexity-reducer.lock.yml\",\"generated_workflow_file\":\"cyclomatic-complexity-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/cyclomatic-complexity-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+      "commit_sha": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+      "authored_at": "2026-05-24T17:50:34Z",
+      "committed_at": "2026-05-24T17:50:34Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): add dev.azure.com and learn.microsoft.com to all network.allowed lists (#736)",
+      "parent_shas": [
+        "a1a98db75240f3dae6f2edf2eb4a8bbab720680a"
+      ],
+      "tree_sha": "6aba8911a30a93c9b59c41d7bb45a9b4a705e21d",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/8b10d174d0769f5e61962f3d2e37938ac9d86374",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+          "commit_sha": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+          "committed_at": "2026-05-24T17:50:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -11,7 +11,7 @@ tools:\n     toolsets: [default]\n   cache-memory: true\n network:\n-  allowed: [defaults, rust]\n+  allowed: [defaults, rust, dev.azure.com, learn.microsoft.com]\n safe-outputs:\n   create-pull-request:\n     max: 1",
+          "snapshot_ref": "8b10d174d0769f5e61962f3d2e37938ac9d86374",
+          "snapshot_blob_sha": "fa549eca602f75c20f143c4d78868c4f08b68a65",
+          "snapshot_file": "snapshots/ado-aw__githubnext__8b10d174d0769f5e61962f3d2e37938ac9d86374__cyclomatic-complexity-reducer.md",
+          "snapshot_bytes": 5381,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/cyclomatic-complexity-reducer.lock.yml\",\"generated_workflow_file\":\"cyclomatic-complexity-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/cyclomatic-complexity-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+      "commit_sha": "5819bc40f40d3a14a85386f804f2b11ed9f8d9fd",
+      "authored_at": "2026-06-01T10:24:17Z",
+      "committed_at": "2026-06-01T10:24:17Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): tune scheduled agentic workflow cadence from merge patterns (#814)\n\n* Tune scheduled workflow cadences from merged PR patterns\n\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>\n\n* Recompile lock files for tuned workflow schedules\n\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>\n\n* Adjust low-frequency schedules to weekday cadence\n\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>",
+      "parent_shas": [
+        "10244ce0524f11b12a421f294c9bfa01b5f38cbf"
+      ],
+      "tree_sha": "1ca8ac6d85bb67267d5a563c9dbb24452e21f7c5",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/5819bc40f40d3a14a85386f804f2b11ed9f8d9fd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+          "commit_sha": "5819bc40f40d3a14a85386f804f2b11ed9f8d9fd",
+          "committed_at": "2026-06-01T10:24:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n on:\n-  schedule: daily\n+  schedule: daily on weekdays\n description: Identifies and refactors functions with high cyclomatic complexity using Clippy analysis\n permissions:\n   contents: read",
+          "snapshot_ref": "5819bc40f40d3a14a85386f804f2b11ed9f8d9fd",
+          "snapshot_blob_sha": "c12c94c7f62a385104b80464aeca4dcf7336bf3b",
+          "snapshot_file": "snapshots/ado-aw__githubnext__5819bc40f40d3a14a85386f804f2b11ed9f8d9fd__cyclomatic-complexity-reducer.md",
+          "snapshot_bytes": 5393,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/cyclomatic-complexity-reducer.lock.yml\",\"generated_workflow_file\":\"cyclomatic-complexity-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/cyclomatic-complexity-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+      "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "authored_at": "2026-06-14T17:57:37Z",
+      "committed_at": "2026-06-14T17:57:37Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): disable AI-credit limits and use copilot-requests permission (#1010)\n\nSet max-ai-credits: -1 and max-daily-ai-credits: -1 on every agentic workflow to remove the per-run and rolling-24h AIC guardrails. Add copilot-requests: write to each permissions block so Copilot inference uses the run's GITHUB_TOKEN instead of the COPILOT_GITHUB_TOKEN PAT, eliminating periodic token refreshes.\n\nLock files regenerated with gh aw compile (v0.79.6); also includes the actions-lock.json refresh, copilot-setup-steps.yml SHA bump, the generated agentics-maintenance.yml, and the gh-aw v0.79.6 agents/skills artifacts emitted by the same compile run.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e"
+      ],
+      "tree_sha": "9ddb4d6d49e0ee57f481587c53366bbbc8b6fc44",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+          "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "committed_at": "2026-06-14T17:57:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -6,6 +6,7 @@ permissions:\n   contents: read\n   pull-requests: read\n   issues: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [default]\n@@ -15,6 +16,8 @@ network:\n safe-outputs:\n   create-pull-request:\n     max: 1\n+max-ai-credits: -1\n+max-daily-ai-credits: -1\n ---\n \n # Cyclomatic Complexity Reducer",
+          "snapshot_ref": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "snapshot_blob_sha": "fbb7050369d57ed4820687d093de3fe2596d6604",
+          "snapshot_file": "snapshots/ado-aw__githubnext__1e567a9a63b77d670b547544df5d7b2bf37b8985__cyclomatic-complexity-reducer.md",
+          "snapshot_bytes": 5463,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/cyclomatic-complexity-reducer.lock.yml\",\"generated_workflow_file\":\"cyclomatic-complexity-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/cyclomatic-complexity-reducer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+      "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "authored_at": "2026-07-02T09:30:40Z",
+      "committed_at": "2026-07-02T09:30:40Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): remove AI credit budget caps on agentic workflows (#1298)\n\nSet safe-outputs.threat-detection.max-ai-credits to -1 on all 19\ngh-aw workflows and recompile their lock files so both the agent and\nthreat-detection stages run with unlimited AI credit budgets.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "105e11b195b79286266bef2fe1347a90a414531f"
+      ],
+      "tree_sha": "802695ed1f750dceae8470c21cadf1030203215f",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/cyclomatic-complexity-reducer.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/cyclomatic-complexity-reducer.md",
+          "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "committed_at": "2026-07-02T09:30:40Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -14,6 +14,8 @@ tools:\n network:\n   allowed: [defaults, rust, dev.azure.com, learn.microsoft.com]\n safe-outputs:\n+  threat-detection:\n+    max-ai-credits: -1\n   create-pull-request:\n     max: 1\n max-ai-credits: -1",
+          "snapshot_ref": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "snapshot_blob_sha": "4507feaa4f85cbc5b2f16b970f3eee7c134f03cc",
+          "snapshot_file": "snapshots/ado-aw__githubnext__e06f17da0e8020a36fdff4b6033adc32f6b09ce1__cyclomatic-complexity-reducer.md",
+          "snapshot_bytes": 5506,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/cyclomatic-complexity-reducer.lock.yml\",\"generated_workflow_file\":\"cyclomatic-complexity-reducer.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/cyclomatic-complexity-reducer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "shopware/shopware:.github/workflows/sw-triage.md",
+    "source_full_name": "shopware/shopware",
+    "source_owner": "shopware",
+    "source_repo": "shopware",
+    "md_path": ".github/workflows/sw-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/shopware/shopware/blob/HEAD/.github/workflows/sw-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "shopware/shopware",
+      "generated_owner": "shopware",
+      "generated_repo": "shopware",
+      "generated_workflow_path": ".github/workflows/sw-triage.lock.yml",
+      "generated_workflow_file": "sw-triage.lock.yml",
+      "generated_html_url": "https://github.com/shopware/shopware/blob/4792bba1f49e066821450fc2e47e079954a1a288/.github/workflows/sw-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:27+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "shopware/shopware:.github/workflows/sw-triage.md",
+      "source_full_name": "shopware/shopware",
+      "md_path": ".github/workflows/sw-triage.md",
+      "commit_sha": "6ae48120549492f0ceb1da1d7cbe627cd0925401",
+      "authored_at": "2026-07-03T08:57:26Z",
+      "committed_at": "2026-07-03T08:57:26Z",
+      "author_name": "Timo",
+      "author_email": "t.altholtmann@shopware.com",
+      "author_login": "taltholtmann",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "refactor(ci): unify agentic skills under sw-* prefix and add sw-review workflow (#17908)",
+      "parent_shas": [
+        "60076216b62b57860002dd975e97786137d51584"
+      ],
+      "tree_sha": "993810e29bcfca3ec4003da481aa92898a679ca2",
+      "html_url": "https://github.com/shopware/shopware/commit/6ae48120549492f0ceb1da1d7cbe627cd0925401",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "shopware/shopware:.github/workflows/sw-triage.md",
+          "source_full_name": "shopware/shopware",
+          "md_path": ".github/workflows/sw-triage.md",
+          "commit_sha": "6ae48120549492f0ceb1da1d7cbe627cd0925401",
+          "committed_at": "2026-07-03T08:57:26Z",
+          "event_status": "renamed",
+          "previous_path": ".github/workflows/triage.md",
+          "file_additions": 8,
+          "file_deletions": 11,
+          "file_changes": 19,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n # gh aw SOURCE for Shopware issue triage (read-only).\n-# Compile with `gh aw compile` → produces triage.lock.yml (committed, never hand-edited).\n+# Compile with `gh aw compile` → produces sw-triage.lock.yml (committed, never hand-edited).\n \n on:\n   workflow_dispatch:\n@@ -11,10 +11,10 @@ on:\n         required: false\n         type: number\n   slash_command:\n-    name: triage\n+    name: sw-triage\n     events: [issue_comment]\n   label_command:\n-    name: qi/triage\n+    name: qi/sw-triage\n     events: [issues]\n     remove_label: false\n   status-comment:\n@@ -26,26 +26,23 @@ if: >-\n   (\n     github.event_name == 'issue_comment' &&\n     github.event.issue.pull_request == null &&\n-    (\n-      github.event.comment.body == '/triage' ||\n-      startsWith(github.event.comment.body, '/triage ')\n-    )\n+    startsWith(github.event.comment.body, '/sw-triage')\n   ) ||\n   (\n     github.event_name == 'issues' &&\n     github.event.action == 'labeled' &&\n-    github.event.label.name == 'qi/triage'\n+    github.event.label.name == 'qi/sw-triage'\n   )\n \n run-name: \"Shopware Issue Triage #${{ github.event.issue.number || github.event.inputs.issue_number }}\"\n \n concurrency:                 # explicit — workflow_dispatch default group cancels parallel runs (gh-aw #19467)\n-  group: triage-${{ github.event.issue.number || github.event.inputs.issue_number }}\n+  group: sw-triage-${{ github.event.issue.number || github.event.inputs.issue_number }}\n   cancel-in-progress: false\n \n engine:\n   id: claude\n-  model: claude-sonnet-4-6   # explicit pin (Sonnet was already the default, just no drift)\n+  model: claude-sonnet-4-6   # explicit pin (Sonnet family is the repo default)\n   max-turns: 50              # claude-only hard cap; headroom for hard-to-locate issues while still bounding runaway loops.\n   env:\n     # The repo's ANTHROPIC_API_KEY secret is empty; the real Quality-Initiative key is in\n@@ -113,7 +110,7 @@ post-steps:\n \n # Shopware Issue Triage\n \n-{{#runtime-import .github/aw/triage-policy.md}}\n+{{#runtime-import .github/aw/sw-triage-policy.md}}\n \n ---\n ",
+          "snapshot_ref": "6ae48120549492f0ceb1da1d7cbe627cd0925401",
+          "snapshot_blob_sha": "572fcbd2525a5064729264796f0acc6b1b6d0690",
+          "snapshot_file": "snapshots/shopware__shopware__6ae48120549492f0ceb1da1d7cbe627cd0925401__sw-triage.md",
+          "snapshot_bytes": 5324,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"shopware/shopware\",\"generated_owner\":\"shopware\",\"generated_repo\":\"shopware\",\"generated_workflow_path\":\".github/workflows/sw-triage.lock.yml\",\"generated_workflow_file\":\"sw-triage.lock.yml\",\"generated_html_url\":\"https://github.com/shopware/shopware/blob/4792bba1f49e066821450fc2e47e079954a1a288/.github/workflows/sw-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

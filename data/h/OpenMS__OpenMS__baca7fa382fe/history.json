@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "OpenMS/OpenMS:.github/workflows/changelog-sync.md",
+    "source_full_name": "OpenMS/OpenMS",
+    "source_owner": "OpenMS",
+    "source_repo": "OpenMS",
+    "md_path": ".github/workflows/changelog-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/OpenMS/OpenMS/blob/HEAD/.github/workflows/changelog-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "OpenMS/OpenMS",
+      "generated_owner": "OpenMS",
+      "generated_repo": "OpenMS",
+      "generated_workflow_path": ".github/workflows/changelog-sync.lock.yml",
+      "generated_workflow_file": "changelog-sync.lock.yml",
+      "generated_html_url": "https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/changelog-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "OpenMS/OpenMS:.github/workflows/changelog-sync.md",
+      "source_full_name": "OpenMS/OpenMS",
+      "md_path": ".github/workflows/changelog-sync.md",
+      "commit_sha": "a4e55651230626206f7c89203fccc05b368e18f5",
+      "authored_at": "2026-03-16T14:33:14Z",
+      "committed_at": "2026-03-16T14:33:14Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add nightly changelog-sync agent workflow (#8913)\n\n* Initial plan\n\n* [DOC] Add nightly changelog sync workflow\n\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>\n\n* [DOC] Refine changelog sync agent prompt\n\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: timosachsenberg <5803621+timosachsenberg@users.noreply.github.com>",
+      "parent_shas": [
+        "b29ee41ba43b5844118ba70d44c10f670a06e022"
+      ],
+      "tree_sha": "d24e9681d434292694a3efdc66ae36f8e5896ebb",
+      "html_url": "https://github.com/OpenMS/OpenMS/commit/a4e55651230626206f7c89203fccc05b368e18f5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "OpenMS/OpenMS:.github/workflows/changelog-sync.md",
+          "source_full_name": "OpenMS/OpenMS",
+          "md_path": ".github/workflows/changelog-sync.md",
+          "commit_sha": "a4e55651230626206f7c89203fccc05b368e18f5",
+          "committed_at": "2026-03-16T14:33:14Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 100,
+          "file_deletions": 0,
+          "file_changes": 100,
+          "file_patch": "@@ -0,0 +1,100 @@\n+---\n+description: Nightly workflow to identify noteworthy recent code changes that should be reflected in the changelog and open a pull request with the necessary updates.\n+on:\n+  schedule: daily\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    mode: remote\n+    toolsets: [default]\n+  bash: true\n+  edit:\n+  web-fetch:\n+safe-outputs:\n+  create-pull-request:\n+    base-branch: develop\n+    title-prefix: \"[changelog-sync] \"\n+    labels: [automated]\n+    draft: false\n+    if-no-changes: ignore\n+checkout:\n+  fetch-depth: 0\n+---\n+\n+# Changelog Sync Agent\n+\n+You are a changelog maintenance agent for the OpenMS project — a C++ library for LC-MS data management and mass spectrometry analyses.\n+\n+## Your Task\n+\n+Your goal is to identify noteworthy recent code changes (from the last 7 days) that are not yet reflected in the top-level `CHANGELOG` file and open a pull request with the necessary updates.\n+\n+## Steps to Follow\n+\n+### 1. Find Recent Code Changes\n+\n+Run the following bash command to find non-documentation files that changed in the last 7 days:\n+\n+```bash\n+git log --since=\"7 days ago\" --name-only --pretty=format: \\\n+  | sort -u \\\n+  | grep -v '^$' \\\n+  | grep -vE '^(doc/|\\.github/|src/tests/|tools/)' \\\n+  | grep -E '\\.(cpp|c|h|hpp|py|cmake)$|CMakeLists\\.txt$|CHANGELOG_PARAMS$'\n+```\n+\n+If there are no recent code changes, output a brief summary and stop — there is nothing to update.\n+\n+### 2. Review the Current Changelog\n+\n+Read the top-level `CHANGELOG` file and focus on the current `under development` release section. In this repository, that is the first release block whose title line includes `(under development)`. If no such section exists, stop and report that the changelog format does not match expectations rather than editing historical release entries. Only update that active release section.\n+\n+### 3. Identify Changelog-Worthy Changes\n+\n+For each recent code change, inspect the relevant files and determine whether it represents a changelog-worthy user-facing change, such as:\n+\n+- new or changed tool behavior\n+- bug fixes that affect users\n+- API changes\n+- format support changes\n+- dependency updates that matter to users or packagers\n+- build or packaging changes users should know about\n+- notable pyOpenMS additions, fixes, or breaking changes\n+\n+Do **not** add entries for purely internal refactorings, test-only changes, comment-only changes, or maintenance work with no meaningful user impact.\n+\n+Before proposing an update, check whether the change is already described in the current `under development` section. Do not duplicate existing entries.\n+\n+### 4. Update the Changelog\n+\n+If you find missing changelog-worthy updates:\n+\n+- Make **minimal, targeted edits** to the top-level `CHANGELOG` file only.\n+- Preserve the existing structure, indentation, and wording style.\n+- Add entries in the most appropriate existing subsection whenever possible.\n+- If no suitable subsection exists, add the smallest reasonable new subsection within the current `under development` release section.\n+- Include pull request numbers when they are clearly discoverable from git history or file context.\n+- Keep entries concise, factual, and user-focused.\n+\n+### 5. Create a Pull Request\n+\n+After making any necessary changelog edits, create a pull request to the `develop` branch with:\n+\n+- A clear title describing that the changelog was synchronized with recent changes.\n+- A body that lists:\n+  - which source files or areas triggered the changelog review\n+  - which changelog entries were added or updated\n+  - a brief explanation of why each change belongs in the changelog\n+\n+If you find no missing changelog entries, do **not** create a pull request. Simply output a short summary confirming that the changelog is already up to date for the reviewed changes.\n+\n+## Important Guidelines\n+\n+- Be conservative: only add entries when you are confident the change is user-relevant.\n+- Do not rewrite or reorganize unrelated parts of the changelog.\n+- Avoid duplicate bullets that restate existing changelog content.\n+- Prefer accuracy and minimal diffs over completeness for speculative changes.\n+- Respect the existing release-note style already used in `CHANGELOG`.",
+          "snapshot_ref": "a4e55651230626206f7c89203fccc05b368e18f5",
+          "snapshot_blob_sha": "4a9047ea9011c8c622b7585fd4013adf015fe829",
+          "snapshot_file": "snapshots/OpenMS__OpenMS__a4e55651230626206f7c89203fccc05b368e18f5__changelog-sync.md",
+          "snapshot_bytes": 4159,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"OpenMS/OpenMS\",\"generated_owner\":\"OpenMS\",\"generated_repo\":\"OpenMS\",\"generated_workflow_path\":\".github/workflows/changelog-sync.lock.yml\",\"generated_workflow_file\":\"changelog-sync.lock.yml\",\"generated_html_url\":\"https://github.com/OpenMS/OpenMS/blob/3146dd85de1dd523f8b238ce6e8d8e2f00fa3245/.github/workflows/changelog-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+    "source_full_name": "meshery/meshery",
+    "source_owner": "meshery",
+    "source_repo": "meshery",
+    "md_path": ".github/workflows/pull-request-reviewer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/meshery/meshery/blob/HEAD/.github/workflows/pull-request-reviewer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "meshery/meshery",
+      "generated_owner": "meshery",
+      "generated_repo": "meshery",
+      "generated_workflow_path": ".github/workflows/pull-request-reviewer.lock.yml",
+      "generated_workflow_file": "pull-request-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/meshery/meshery/blob/e54a01d3d01967bbb68d12e3e8f1eda21556711d/.github/workflows/pull-request-reviewer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3,
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:58:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+      "source_full_name": "meshery/meshery",
+      "md_path": ".github/workflows/pull-request-reviewer.md",
+      "commit_sha": "490421926a66d2b5af1b2ef83f86a7bbe46f1531",
+      "authored_at": "2026-05-01T22:41:35Z",
+      "committed_at": "2026-05-01T22:41:35Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[workflow] add pull request reviewer agentic workflow source\n\nAgent-Logs-Url: https://github.com/meshery/meshery/sessions/e02ae222-251f-471f-a323-8afd90c0a5b4\n\nCo-authored-by: pontusringblom <170570911+pontusringblom@users.noreply.github.com>",
+      "parent_shas": [
+        "2c6a3f2a75d689f413c24e0ef460b88d2a90d33a"
+      ],
+      "tree_sha": "8915938a97a6854df413c9797b4321676e7e005d",
+      "html_url": "https://github.com/meshery/meshery/commit/490421926a66d2b5af1b2ef83f86a7bbe46f1531",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+          "source_full_name": "meshery/meshery",
+          "md_path": ".github/workflows/pull-request-reviewer.md",
+          "commit_sha": "490421926a66d2b5af1b2ef83f86a7bbe46f1531",
+          "committed_at": "2026-05-01T22:41:35Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 59,
+          "file_deletions": 0,
+          "file_changes": 59,
+          "file_patch": "@@ -0,0 +1,59 @@\n+---\n+name: Pull Request Reviewer\n+description: Reviews newly opened pull requests and leaves concise, polite feedback as PR review comments\n+on:\n+  pull_request_target:\n+    types: [opened, reopened, ready_for_review]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+engine: copilot\n+timeout-minutes: 20\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  create-pull-request-review-comment:\n+    max: 5\n+  submit-pull-request-review:\n+  missing-data: false\n+  missing-tool: false\n+  noop: false\n+  report-failure-as-issue: false\n+  report-incomplete: false\n+network:\n+  allowed:\n+    - defaults\n+---\n+\n+# Pull request review\n+\n+Review the newly opened pull request and leave feedback directly on the PR.\n+\n+## Scope\n+\n+- Review the PR title, description, changed files, and diff.\n+- Focus on correctness, security, reliability, maintainability, tests, and user-visible regressions.\n+- Ignore minor style nits, formatting-only issues, and unrelated concerns.\n+- Skip generated files, lock files, snapshots, vendored content, and other derived artifacts unless they reveal a real defect.\n+\n+## Commenting rules\n+\n+- Always leave feedback in the pull request as one or more review comments.\n+- Keep feedback polite, concise, and actionable.\n+- Prefer inline review comments for specific issues tied to changed lines.\n+- If you identify a change that should be made, explain exactly what should change and why.\n+- Limit feedback to the most important issues; do not overwhelm the author with low-value comments.\n+- If you do not find actionable issues, submit a brief review comment saying no blocking issues were found and optionally note one positive observation.\n+- Never approve the PR and never request changes; submit a review with the `COMMENT` event only.\n+\n+## Process\n+\n+1. Read the pull request metadata and inspect the diff.\n+2. Identify only substantive issues worth telling the author about.\n+3. Create up to five inline review comments when specific file-level feedback is warranted.\n+4. Submit a concise overall review summary that references the most important findings, or states that no blocking issues were found.\n+\n+## Usage\n+\n+Edit this file and run `gh aw compile pull-request-reviewer` to regenerate the lock file.",
+          "snapshot_ref": "490421926a66d2b5af1b2ef83f86a7bbe46f1531",
+          "snapshot_blob_sha": "6d2dd9550b418fd74c8ecdf207f5d028ee14ee97",
+          "snapshot_file": "snapshots/meshery__meshery__490421926a66d2b5af1b2ef83f86a7bbe46f1531__pull-request-reviewer.md",
+          "snapshot_bytes": 2195,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meshery/meshery\",\"generated_owner\":\"meshery\",\"generated_repo\":\"meshery\",\"generated_workflow_path\":\".github/workflows/pull-request-reviewer.lock.yml\",\"generated_workflow_file\":\"pull-request-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/meshery/meshery/blob/e54a01d3d01967bbb68d12e3e8f1eda21556711d/.github/workflows/pull-request-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+      "source_full_name": "meshery/meshery",
+      "md_path": ".github/workflows/pull-request-reviewer.md",
+      "commit_sha": "8cf2cb0044b3dae50c1f1caf234f9982e84d84b1",
+      "authored_at": "2026-05-01T22:42:10Z",
+      "committed_at": "2026-05-01T22:42:10Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[workflow] compile pull request reviewer agentic workflow\n\nAgent-Logs-Url: https://github.com/meshery/meshery/sessions/e02ae222-251f-471f-a323-8afd90c0a5b4\n\nCo-authored-by: pontusringblom <170570911+pontusringblom@users.noreply.github.com>",
+      "parent_shas": [
+        "490421926a66d2b5af1b2ef83f86a7bbe46f1531"
+      ],
+      "tree_sha": "32552b9da5b6fd3f5d8293e2af5d325bc83f1b1c",
+      "html_url": "https://github.com/meshery/meshery/commit/8cf2cb0044b3dae50c1f1caf234f9982e84d84b1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+          "source_full_name": "meshery/meshery",
+          "md_path": ".github/workflows/pull-request-reviewer.md",
+          "commit_sha": "8cf2cb0044b3dae50c1f1caf234f9982e84d84b1",
+          "committed_at": "2026-05-01T22:42:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -3,9 +3,10 @@ name: Pull Request Reviewer\n description: Reviews newly opened pull requests and leaves concise, polite feedback as PR review comments\n on:\n   pull_request_target:\n-    types: [opened, reopened, ready_for_review]\n+    types: [opened, reopened]\n permissions:\n   contents: read\n+  issues: read\n   pull-requests: read\n engine: copilot\n timeout-minutes: 20",
+          "snapshot_ref": "8cf2cb0044b3dae50c1f1caf234f9982e84d84b1",
+          "snapshot_blob_sha": "5ea3b9a10769790ca0273cd53df648c391f3ad99",
+          "snapshot_file": "snapshots/meshery__meshery__8cf2cb0044b3dae50c1f1caf234f9982e84d84b1__pull-request-reviewer.md",
+          "snapshot_bytes": 2192,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meshery/meshery\",\"generated_owner\":\"meshery\",\"generated_repo\":\"meshery\",\"generated_workflow_path\":\".github/workflows/pull-request-reviewer.lock.yml\",\"generated_workflow_file\":\"pull-request-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/meshery/meshery/blob/e54a01d3d01967bbb68d12e3e8f1eda21556711d/.github/workflows/pull-request-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+      "source_full_name": "meshery/meshery",
+      "md_path": ".github/workflows/pull-request-reviewer.md",
+      "commit_sha": "5c0f5b1c129bd2d6f8e2f989aa42e97b72631850",
+      "authored_at": "2026-05-02T00:44:50Z",
+      "committed_at": "2026-05-02T00:44:50Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[workflow] document reviewer trust gate and harden comments output\n\nAgent-Logs-Url: https://github.com/meshery/meshery/sessions/8493fed6-8fd5-4916-aac2-1ad3b61f0c90\n\nCo-authored-by: marblom007 <158522975+marblom007@users.noreply.github.com>",
+      "parent_shas": [
+        "529a25954d48ed55d93777303b88629f1264f83d"
+      ],
+      "tree_sha": "ba32f282395729fe6022edfec8f0cbc3569a1d21",
+      "html_url": "https://github.com/meshery/meshery/commit/5c0f5b1c129bd2d6f8e2f989aa42e97b72631850",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+          "source_full_name": "meshery/meshery",
+          "md_path": ".github/workflows/pull-request-reviewer.md",
+          "commit_sha": "5c0f5b1c129bd2d6f8e2f989aa42e97b72631850",
+          "committed_at": "2026-05-02T00:44:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 12,
+          "file_deletions": 6,
+          "file_changes": 18,
+          "file_patch": "@@ -1,6 +1,6 @@\n ---\n name: Pull Request Reviewer\n-description: Reviews newly opened pull requests and leaves concise, polite feedback as PR review comments\n+description: Reviews newly opened pull requests from trusted repository contributors and leaves concise, polite feedback as PR review comments\n on:\n   pull_request_target:\n     types: [opened, reopened]\n@@ -14,9 +14,10 @@ tools:\n   github:\n     toolsets: [default]\n safe-outputs:\n+  add-comment:\n+    max: 1\n   create-pull-request-review-comment:\n     max: 5\n-  submit-pull-request-review:\n   missing-data: false\n   missing-tool: false\n   noop: false\n@@ -31,6 +32,11 @@ network:\n \n Review the newly opened pull request and leave feedback directly on the PR.\n \n+## Activation\n+\n+- This workflow runs on `pull_request_target`, so the compiled workflow intentionally limits activation to pull requests opened by trusted repository contributors with `admin`, `maintainer`, or `write` access.\n+- Pull requests from forks and other external contributors are skipped by design so the workflow can safely use repository-scoped secrets and post review feedback.\n+\n ## Scope\n \n - Review the PR title, description, changed files, and diff.\n@@ -40,20 +46,20 @@ Review the newly opened pull request and leave feedback directly on the PR.\n \n ## Commenting rules\n \n-- Always leave feedback in the pull request as one or more review comments.\n+- Always leave feedback in the pull request as one or more comments.\n - Keep feedback polite, concise, and actionable.\n - Prefer inline review comments for specific issues tied to changed lines.\n - If you identify a change that should be made, explain exactly what should change and why.\n - Limit feedback to the most important issues; do not overwhelm the author with low-value comments.\n-- If you do not find actionable issues, submit a brief review comment saying no blocking issues were found and optionally note one positive observation.\n-- Never approve the PR and never request changes; submit a review with the `COMMENT` event only.\n+- If you do not find actionable issues, post a brief PR comment saying no blocking issues were found and optionally note one positive observation.\n+- Never approve the PR and never request changes.\n \n ## Process\n \n 1. Read the pull request metadata and inspect the diff.\n 2. Identify only substantive issues worth telling the author about.\n 3. Create up to five inline review comments when specific file-level feedback is warranted.\n-4. Submit a concise overall review summary that references the most important findings, or states that no blocking issues were found.\n+4. Post one concise overall PR comment that references the most important findings, or states that no blocking issues were found.\n \n ## Usage\n ",
+          "snapshot_ref": "5c0f5b1c129bd2d6f8e2f989aa42e97b72631850",
+          "snapshot_blob_sha": "2a164df08e56adc4b346744725ea17e4a6922e5b",
+          "snapshot_file": "snapshots/meshery__meshery__5c0f5b1c129bd2d6f8e2f989aa42e97b72631850__pull-request-reviewer.md",
+          "snapshot_bytes": 2551,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meshery/meshery\",\"generated_owner\":\"meshery\",\"generated_repo\":\"meshery\",\"generated_workflow_path\":\".github/workflows/pull-request-reviewer.lock.yml\",\"generated_workflow_file\":\"pull-request-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/meshery/meshery/blob/e54a01d3d01967bbb68d12e3e8f1eda21556711d/.github/workflows/pull-request-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+      "source_full_name": "meshery/meshery",
+      "md_path": ".github/workflows/pull-request-reviewer.md",
+      "commit_sha": "a078ec0927bd5f53e7bdb3d3fee63af10cf52b3c",
+      "authored_at": "2026-05-02T01:34:01Z",
+      "committed_at": "2026-05-02T01:34:01Z",
+      "author_name": "jamieplu",
+      "author_email": "179417684+jamieplu@users.noreply.github.com",
+      "author_login": "jamieplu",
+      "author_account_type": "User",
+      "committer_name": "jamieplu",
+      "committer_email": "179417684+jamieplu@users.noreply.github.com",
+      "committer_login": "jamieplu",
+      "committer_account_type": "User",
+      "message": "add PR comment\n\nSigned-off-by: jamieplu <179417684+jamieplu@users.noreply.github.com>",
+      "parent_shas": [
+        "987a0731a78277cddc23a168b6d9e3416c690b56"
+      ],
+      "tree_sha": "87bc8a6e51c0b12fa09051240c37035ff8306bbe",
+      "html_url": "https://github.com/meshery/meshery/commit/a078ec0927bd5f53e7bdb3d3fee63af10cf52b3c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+          "source_full_name": "meshery/meshery",
+          "md_path": ".github/workflows/pull-request-reviewer.md",
+          "commit_sha": "a078ec0927bd5f53e7bdb3d3fee63af10cf52b3c",
+          "committed_at": "2026-05-02T01:34:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -2,8 +2,9 @@\n name: Pull Request Reviewer\n description: Reviews newly opened pull requests from trusted repository contributors and leaves concise, polite feedback as PR review comments\n on:\n-  pull_request_target:\n-    types: [opened, reopened]\n+  pull_request:\n+    types: [opened]\n+  skip-if-match: ${{ !contains(fromJSON('[\"dependabot[bot]\", \"copilot\", \"gemini\", \"codex\", \"claude\"]'), github.actor) }}\n permissions:\n   contents: read\n   issues: read",
+          "snapshot_ref": "a078ec0927bd5f53e7bdb3d3fee63af10cf52b3c",
+          "snapshot_blob_sha": "dfc81540e941e6719eeaceef7e789018e5763475",
+          "snapshot_file": "snapshots/meshery__meshery__a078ec0927bd5f53e7bdb3d3fee63af10cf52b3c__pull-request-reviewer.md",
+          "snapshot_bytes": 2655,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meshery/meshery\",\"generated_owner\":\"meshery\",\"generated_repo\":\"meshery\",\"generated_workflow_path\":\".github/workflows/pull-request-reviewer.lock.yml\",\"generated_workflow_file\":\"pull-request-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/meshery/meshery/blob/e54a01d3d01967bbb68d12e3e8f1eda21556711d/.github/workflows/pull-request-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+      "source_full_name": "meshery/meshery",
+      "md_path": ".github/workflows/pull-request-reviewer.md",
+      "commit_sha": "e4a48d8b88ab4c2e5e9cdac83dc2ac1bafe30239",
+      "authored_at": "2026-05-14T21:20:47Z",
+      "committed_at": "2026-05-15T00:19:43Z",
+      "author_name": "Pontus Ringblom",
+      "author_email": "170570911+pontusringblom@users.noreply.github.com",
+      "author_login": "pontusringblom",
+      "author_account_type": "User",
+      "committer_name": "Pontus Ringblom",
+      "committer_email": "170570911+pontusringblom@users.noreply.github.com",
+      "committer_login": "pontusringblom",
+      "committer_account_type": "User",
+      "message": "[CI] Change pr reviewer activation logic\n\nSigned-off-by: Pontus Ringblom <170570911+pontusringblom@users.noreply.github.com>",
+      "parent_shas": [
+        "6eaf5e1198be89461c31e4f9c62dd2a437b7ccd9"
+      ],
+      "tree_sha": "98acb1305c0a4c951a797fe511ff1f290aea50c3",
+      "html_url": "https://github.com/meshery/meshery/commit/e4a48d8b88ab4c2e5e9cdac83dc2ac1bafe30239",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "meshery/meshery:.github/workflows/pull-request-reviewer.md",
+          "source_full_name": "meshery/meshery",
+          "md_path": ".github/workflows/pull-request-reviewer.md",
+          "commit_sha": "e4a48d8b88ab4c2e5e9cdac83dc2ac1bafe30239",
+          "committed_at": "2026-05-15T00:19:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 38,
+          "file_changes": 43,
+          "file_patch": "@@ -1,15 +1,17 @@\n ---\n name: Pull Request Reviewer\n-description: Reviews newly opened pull requests from trusted repository contributors and leaves concise, polite feedback as PR review comments\n+description: Reviews newly opened pull requests targeting master and leaves concise, polite feedback as PR comments\n on:\n   pull_request:\n+    branches: [master]\n     types: [opened]\n-  skip-if-match: ${{ !contains(fromJSON('[\"dependabot[bot]\", \"copilot\", \"gemini\", \"codex\", \"claude\"]'), github.actor) }}\n permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n engine: copilot\n+imports:\n+  - .github/agents/meshery-code-contributor.md\n timeout-minutes: 20\n tools:\n   github:\n@@ -29,39 +31,4 @@ network:\n     - defaults\n ---\n \n-# Pull request review\n-\n-Review the newly opened pull request and leave feedback directly on the PR.\n-\n-## Activation\n-\n-- This workflow runs on `pull_request_target`, so the compiled workflow intentionally limits activation to pull requests opened by trusted repository contributors with `admin`, `maintainer`, or `write` access.\n-- Pull requests from forks and other external contributors are skipped by design so the workflow can safely use repository-scoped secrets and post review feedback.\n-\n-## Scope\n-\n-- Review the PR title, description, changed files, and diff.\n-- Focus on correctness, security, reliability, maintainability, tests, and user-visible regressions.\n-- Ignore minor style nits, formatting-only issues, and unrelated concerns.\n-- Skip generated files, lock files, snapshots, vendored content, and other derived artifacts unless they reveal a real defect.\n-\n-## Commenting rules\n-\n-- Always leave feedback in the pull request as one or more comments.\n-- Keep feedback polite, concise, and actionable.\n-- Prefer inline review comments for specific issues tied to changed lines.\n-- If you identify a change that should be made, explain exactly what should change and why.\n-- Limit feedback to the most important issues; do not overwhelm the author with low-value comments.\n-- If you do not find actionable issues, post a brief PR comment saying no blocking issues were found and optionally note one positive observation.\n-- Never approve the PR and never request changes.\n-\n-## Process\n-\n-1. Read the pull request metadata and inspect the diff.\n-2. Identify only substantive issues worth telling the author about.\n-3. Create up to five inline review comments when specific file-level feedback is warranted.\n-4. Post one concise overall PR comment that references the most important findings, or states that no blocking issues were found.\n-\n-## Usage\n-\n-Edit this file and run `gh aw compile pull-request-reviewer` to regenerate the lock file.\n+Offer concise, polite, feedback on the following pull request(s). Add comment(s) to pull request. Include any changes needed, if any.",
+          "snapshot_ref": "e4a48d8b88ab4c2e5e9cdac83dc2ac1bafe30239",
+          "snapshot_blob_sha": "5cdc542b8dd9c3dd9ad03b0211ff921a69dc0a0c",
+          "snapshot_file": "snapshots/meshery__meshery__e4a48d8b88ab4c2e5e9cdac83dc2ac1bafe30239__pull-request-reviewer.md",
+          "snapshot_bytes": 792,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"meshery/meshery\",\"generated_owner\":\"meshery\",\"generated_repo\":\"meshery\",\"generated_workflow_path\":\".github/workflows/pull-request-reviewer.lock.yml\",\"generated_workflow_file\":\"pull-request-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/meshery/meshery/blob/e54a01d3d01967bbb68d12e3e8f1eda21556711d/.github/workflows/pull-request-reviewer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

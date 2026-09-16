@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "primer/react:.github/workflows/issue-triage.md",
+    "source_full_name": "primer/react",
+    "source_owner": "primer",
+    "source_repo": "react",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/primer/react/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "primer/react",
+      "generated_owner": "primer",
+      "generated_repo": "react",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/primer/react/blob/da3df9aba582c7bcedbe69f1bdc5ab64ac90d32b/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:14+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "primer/react:.github/workflows/issue-triage.md",
+      "source_full_name": "primer/react",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "ae4d2c158efe2fb839e232dd14c800510c263c24",
+      "authored_at": "2026-07-24T19:03:37Z",
+      "committed_at": "2026-07-24T19:03:37Z",
+      "author_name": "Alon Dahari",
+      "author_email": "climbinghobo@gmail.com",
+      "author_login": "alondahari",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic issue-intents triage workflow (#8226)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Jon Rohan <yes@jonrohan.codes>\nCopilot-Session: 18b601b7-747f-480d-aef9-47f0a799b3c4",
+      "parent_shas": [
+        "e92b67a26f2efb0eb4a61ffcab51419688b5df44"
+      ],
+      "tree_sha": "eda78d06ab7e6d65be5dba26ee5d1d4fbd15ba3d",
+      "html_url": "https://github.com/primer/react/commit/ae4d2c158efe2fb839e232dd14c800510c263c24",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "primer/react:.github/workflows/issue-triage.md",
+          "source_full_name": "primer/react",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "ae4d2c158efe2fb839e232dd14c800510c263c24",
+          "committed_at": "2026-07-24T19:03:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 69,
+          "file_deletions": 0,
+          "file_changes": 69,
+          "file_patch": "@@ -0,0 +1,69 @@\n+---\n+description: |\n+  Triage assistant for new and reopened issues. Reads the issue and its comments,\n+  classifies the issue type when it is unset, applies relevant existing labels, flags\n+  likely duplicate or related issues, asks the author for missing information only when it\n+  is genuinely needed, and suggests handing well-scoped, actionable issues to Copilot.\n+  Existing labels are preserved and issues are never closed automatically.\n+\n+on:\n+  issues:\n+    types: [opened, reopened]\n+  reaction: eyes\n+\n+permissions: read-all\n+\n+network: defaults\n+\n+safe-outputs:\n+  set-issue-type:\n+    max: 1\n+    issue-intent: true\n+  add-labels:\n+    max: 5\n+    issue-intent: true\n+  add-comment:\n+    max: 1\n+  assign-to-agent:\n+    name: copilot\n+    allowed: [copilot]\n+    max: 1\n+    target: triggering\n+    issue-intent: true\n+\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+\n+timeout-minutes: 15\n+---\n+\n+# Issue triage\n+\n+Triage issue #${{ github.event.issue.number }} in ${{ github.repository }}.\n+\n+Base every decision only on what the issue and its comments actually say. Do not invent\n+missing context or guess beyond the evidence. Keep the issue's existing labels; only add\n+labels. Never close the issue.\n+\n+Read the issue and its comments, and discover this repository's available issue types and\n+existing labels at runtime before acting. Search for similar issues using the key terms\n+from the title and body.\n+\n+Your goals:\n+\n+- **Classify the issue type.** If the issue already has a type, leave it. Otherwise set the\n+  single best-fitting type from those this repository offers. If it is too ambiguous to\n+  type confidently, leave it untyped.\n+- **Add relevant labels.** Apply existing repository labels that describe the issue's nature\n+  and area. Only use labels that already exist; never invent labels, and do not re-add\n+  labels the issue already has. If nothing fits, add none.\n+- **Flag likely duplicates or related issues.** If the issue is very likely a duplicate of\n+  an existing one, flag it and name the candidate rather than acting on it directly; never\n+  close it. Leave merely adjacent issues alone.\n+- **Request missing information only when genuinely needed.** If the issue lacks the detail\n+  required to act on it, post a single, specific comment asking the author for exactly what\n+  is missing. Otherwise post nothing — never summarize your triage or report what you did.\n+- **Suggest handing off to Copilot.** When the issue is well-scoped and actionable, suggest\n+  assigning it to Copilot.\n+- **When nothing needs to change, take no action.**",
+          "snapshot_ref": "ae4d2c158efe2fb839e232dd14c800510c263c24",
+          "snapshot_blob_sha": "ff89c80c4585a5eed28d8546602697b5129f9d31",
+          "snapshot_file": "snapshots/react__primer__ae4d2c158efe2fb839e232dd14c800510c263c24__issue-triage.md",
+          "snapshot_bytes": 2531,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"primer/react\",\"generated_owner\":\"primer\",\"generated_repo\":\"react\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/primer/react/blob/da3df9aba582c7bcedbe69f1bdc5ab64ac90d32b/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

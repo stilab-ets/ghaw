@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+    "source_full_name": "SSWConsulting/SSW.Rules.Content",
+    "source_owner": "SSWConsulting",
+    "source_repo": "SSW.Rules.Content",
+    "md_path": ".github/workflows/content-judge.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/HEAD/.github/workflows/content-judge.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SSWConsulting/SSW.Rules.Content",
+      "generated_owner": "SSWConsulting",
+      "generated_repo": "SSW.Rules.Content",
+      "generated_workflow_path": ".github/workflows/content-judge.lock.yml",
+      "generated_workflow_file": "content-judge.lock.yml",
+      "generated_html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-judge.md",
+      "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "authored_at": "2026-04-01T05:40:31Z",
+      "committed_at": "2026-04-01T05:40:31Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Add agentic workflows for auditing SSW Rules (#12307)\n\n<!-- **Tip: Use [SSW Rule Writer\nGPT](https://chat.openai.com/g/g-cOvrRzEnU-ssw-rules-writer) for help\nwith writing rules 🤖** -->\n>\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nEmail Subject - Do you avoid redundant linking (aka have a single link\nto a single location)? | SSW.Rules\n\n> 2. What was changed?\n\nThis PR adds a number of agentic workflows to SSW Rules that work\ntogether to update content on SSW Rules and catalog the work that has\nbeen done. I've included a mermaid diagram with a description of the\nflows as well as how to use them in the README referenced in this PR.\n\nBefore merging I also need to add the following new secrets to the repo\n\n- [x] TAVILY_API_KEY\n- [x] COPILOT_GITHUB_TOKEN\n- [x] CONTENTHAWK_GITHUB_PAT\n- [x] Give workflows permissions to creat/approve pull requests\n\n<img width=\"1619\" height=\"646\" alt=\"CleanShot 2026-03-27 at 15 00 18\"\nsrc=\"https://github.com/user-attachments/assets/a8cce0a9-0573-4c25-ac24-ba9bc56045a0\"\n/>\n\n**Figure: Proposed new flows**\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\n@18-th",
+      "parent_shas": [
+        "8f64357ba47cf0dbc014d929abac603d03708dfa"
+      ],
+      "tree_sha": "7bbf19cca2a23bcaabc508b0a79fbe890d86c405",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-judge.md",
+          "commit_sha": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "committed_at": "2026-04-01T05:40:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 311,
+          "file_deletions": 0,
+          "file_changes": 311,
+          "file_patch": "@@ -0,0 +1,311 @@\n+---\n+description: >\n+  Agent 2a (Judge) of the ContentHawk pipeline.\n+  Runs on a cron schedule (or manually) and picks up the first available\n+  snapshot from the TODO folder. Reads the snapshot to obtain the Label,\n+  Intent, and Issue Preferences, then iterates over every pending row in\n+  order. For each file it reads the content, judges whether the file needs\n+  action based on the Intent captured by Agent 1, and opens a labelled\n+  GitHub issue for files that need fixing.\n+  After all affordable rows have been processed a post-step dispatches\n+  Agent 2b (content-judge-pr) which reads the created issues and opens a\n+  pull request to update the snapshot.\n+  Stops immediately if the number of open labelled issues already meets\n+  or exceeds max_open_issues without making any changes.\n+name: Content Judge (Agent 2a)\n+on:\n+  schedule:\n+    - cron: \"0 * * * */7\"\n+  workflow_dispatch:\n+\n+engine:\n+  id: copilot\n+  model: gpt-5-mini\n+\n+mcp-servers:\n+  tavily:\n+    command: npx\n+    args: [\"-y\", \"tavily-mcp\"]\n+    env:\n+      TAVILY_API_KEY: \"${{ secrets.TAVILY_API_KEY }}\"\n+    allowed: [\"tavily_search\"]\n+\n+\n+mcp-scripts:\n+  list-snapshots:\n+    description: >\n+      Lists all snapshot files in the TODO folder, sorted oldest-first\n+      so the first line is the next snapshot to process.\n+    run: |\n+      ls .github/ContentHawk/TODO/*_Snapshot_*.md 2>/dev/null | sort\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - \"*.tavily.com\"\n+\n+concurrency:\n+  group: \"contenthawk-judge\"\n+  cancel-in-progress: true\n+\n+safe-outputs:\n+  report-failure-as-issue: false\n+  create-issue:\n+    title-prefix: \"🦅 ContentHawk - Content Audit: \"\n+    max: 30\n+steps:\n+  - name: Generated Skipped Files Output\n+    run: mkdir -p /tmp/gh-aw && echo \"\" > /tmp/gh-aw/skipped_files.txt && echo \"\" > /tmp/gh-aw/label_name.txt\n+tools:\n+  github:\n+    lockdown: false\n+    toolsets: [issues, repos, search, labels, pull_requests]\n+    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+\n+post-steps:\n+  - name: Check if work was done\n+    id: noop-check\n+    if: always()\n+    run: |\n+      if [ -f /tmp/gh-aw/work_done.txt ]; then\n+        echo \"did_work=true\" >> \"$GITHUB_OUTPUT\"\n+      else\n+        echo \"did_work=false\" >> \"$GITHUB_OUTPUT\"\n+        echo \"Noop run — agent exited before processing any files.\"\n+      fi\n+  - name: Workflow Summary\n+    if: always()\n+    run: |\n+      LABEL_NAME=\"\"\n+      if [ -f /tmp/gh-aw/label_name.txt ]; then\n+        LABEL_NAME=$(cat /tmp/gh-aw/label_name.txt | tr -d '[:space:]')\n+      fi\n+\n+      echo \"## ContentHawk — Agent 2 (Judge)\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      echo \"### Run Info\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Field              | Value |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"|--------------------|-------|\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Event              | \\`${{ github.event_name }}\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Label              | \\`${LABEL_NAME:-<not resolved>}\\` |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"| Max Open Issues    | 30 |\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+\n+      echo \"### Agent Output\" >> \"$GITHUB_STEP_SUMMARY\"\n+      echo \"\" >> \"$GITHUB_STEP_SUMMARY\"\n+      if [ -d /tmp/gh-aw ]; then\n+        echo \"\\`\\`\\`\" >> \"$GITHUB_STEP_SUMMARY\"\n+        find /tmp/gh-aw -type f | head -30 >> \"$GITHUB_STEP_SUMMARY\"\n+        echo \"\\`\\`\\`\" >> \"$GITHUB_STEP_SUMMARY\"\n+      else\n+        echo \"_No agent output directory found._\" >> \"$GITHUB_STEP_SUMMARY\"\n+      fi\n+\n+  - name: Ensure skipped files artifact is readable\n+    if: always() && steps.noop-check.outputs.did_work == 'true'\n+    run: chmod a+r /tmp/gh-aw/skipped_files.txt 2>/dev/null || true\n+\n+  - name: Upload Agent Artifacts\n+    if: always() && steps.noop-check.outputs.did_work == 'true'\n+    uses: actions/upload-artifact@v7\n+    with:\n+      name: ${{ github.run_id }}\n+      path: /tmp/gh-aw/skipped_files.txt\n+      if-no-files-found: error\n+      retention-days: 7\n+\n+  - name: Trigger Agent 2b (PR Creator)\n+    if: success() && steps.noop-check.outputs.did_work == 'true'\n+    env:\n+      GH_TOKEN: ${{ secrets.CONTENTHAWK_GITHUB_PAT }}\n+      INPUT_JUDGE_RUN_ID: ${{ github.run_id }}\n+    run: |\n+      set -euo pipefail\n+\n+      # Read the label written by the agent\n+      LABEL_NAME=\"\"\n+      if [ -f /tmp/gh-aw/label_name.txt ]; then\n+        LABEL_NAME=$(cat /tmp/gh-aw/label_name.txt | tr -d '[:space:]')\n+      fi\n+      if [ -z \"$LABEL_NAME\" ]; then\n+        echo \"::error::Agent did not write a label to /tmp/gh-aw/label_name.txt — cannot trigger Agent 2b.\"\n+        exit 1\n+      fi\n+\n+      git fetch origin main --depth 1\n+      # Snapshot path convention (Agent 1): .github/ContentHawk/TODO/YYYY-MM-DD_Snapshot_<label>.md\n+      _matches=()\n+      while IFS= read -r _path; do\n+        case \"$_path\" in\n+          .github/ContentHawk/TODO/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_Snapshot_${LABEL_NAME}.md)\n+            _matches+=(\"$_path\") ;;\n+        esac\n+      done < <(git ls-tree -r origin/main --name-only | grep '^\\.github/ContentHawk/TODO/' || true)\n+      SNAPSHOT_PATH=$(printf '%s\\n' \"${_matches[@]:-}\" | sort -r | head -1)\n+      if [ -z \"$SNAPSHOT_PATH\" ]; then\n+        echo \"::error::No snapshot on main matching <date>_Snapshot_${LABEL_NAME}.md under .github/ContentHawk/TODO/\"\n+        exit 1\n+      fi\n+      echo \"Resolved snapshot: $SNAPSHOT_PATH\"\n+      gh workflow run content-judge-pr.lock.yml \\\n+        -f snapshot_path=\"$SNAPSHOT_PATH\" \\\n+        -f label_name=\"$LABEL_NAME\" \\\n+        -f judge_run_id=\"$INPUT_JUDGE_RUN_ID\"\n+---\n+\n+## Important context\n+\n+This workflow picks up the first available snapshot from the TODO folder, judges each pending file against the intent, and opens issues for files that need fixing. It does **not** update the snapshot or create a PR.\n+\n+Use the MCP script `list-snapshots` to find snapshot files in the TODO folder. Read and parse the first (oldest) snapshot file to get the intent, label, and pending files. For each pending file, read its content, judge it against the intent (using web search if needed), and create an issue if it needs action. Stop processing more files if the number of open issues with the snapshot's label meets or exceeds 30.\n+\n+### Step 0 — Discover the first available snapshot\n+\n+Use the MCP script `list-snapshots` to list all snapshot files in `.github/ContentHawk/TODO/`.\n+\n+If the result is **empty** (no snapshot files found), **stop immediately** with a message:\n+\n+> No snapshot files found in `.github/ContentHawk/TODO/`. Nothing to process. Exiting.\n+\n+Do **not** create any issues. End the workflow here.\n+\n+If files are found, **choose `snapshot_path`** — use the **first line** of the result (the oldest snapshot, i.e. the one that has been waiting longest). Read the full content of that file from `main`.\n+\n+### Step 1 — Read and parse the snapshot\n+\n+#### 1a. Parse the Agent Configuration table\n+\n+Extract the following fields from the `## Agent Configuration` table:\n+\n+* **Intent** — what to look for in each file\n+* **Issue Preferences** — how to write issues (templates, detail level, max per run, etc.)\n+* **Label** — the label slug stored in the snapshot\n+\n+Call the extracted label value **`label_name`**. This is the label that will be used throughout the rest of the workflow to find issues, label created issues, and guard headroom.\n+\n+**Important:** After extracting the label, write it to a file so post-steps can use it:\n+\n+```\n+echo \"<label_name>\" > /tmp/gh-aw/label_name.txt\n+```\n+\n+#### 1b. Parse the Files to Review table\n+\n+Collect every row from the `## Files to Review` table where `CheckResult` is exactly `pending`. Preserve the exact row order from the table — this is the processing order. Call this list `pending_rows`.\n+\n+If `pending_rows` is empty (all rows already have a non-pending CheckResult), **stop immediately** with a message:\n+\n+> No pending rows found in snapshot. Nothing to do.\n+\n+### Step 1c — Check for in-flight Judge PR\n+\n+Before doing any work, check whether there are any open PRs for this label. Search for open pull requests that have the label `<label_name>` **and** contain the string `gh-aw-workflow-id: content-judge-pr` anywhere in the PR body.\n+\n+Use the GitHub `search` toolset to find matching PRs:\n+\n+* Search query: `is:pr is:open label:<label_name> \"gh-aw-workflow-id: content-judge-pr\"` in this repository.\n+\n+If **any** matching PR is found, **stop immediately** with a message:\n+\n+> In-flight Judge PR detected: #\\<pr_number\\> already exists for label '\\<label_name\\>'. Skipping this run to avoid duplicate work.\n+\n+Do **not** create any issues. End the workflow here.\n+\n+### Step 2 — Check open-issue headroom\n+\n+Count the number of currently open issues that carry the label `<label_name>`:\n+\n+list issues with the tool `list_issues` tool from the toolsset. with `state=open`\n+`labels=<label_name>` and count them.\n+\n+Let this count be `open_count`. Let `max_open_issues` = 30.\n+\n+If `open_count >= max_open_issues`, **stop immediately**. Output a message like:\n+\n+> Issue limit reached: $open_count open issues already exist with label '<label_name>' (max: 30). Run again after issues are closed.\n+\n+Do **not** create any issues.\n+\n+### Step 3 — Process pending rows in order\n+\n+**Before entering the loop**, write the work marker so post-steps know this was not a noop:\n+\n+```\n+echo \"true\" > /tmp/gh-aw/work_done.txt\n+```\n+\n+Work through `pending_rows` one at a time, **in order**. For each row:\n+\n+#### 3a. Re-check headroom\n+\n+Before processing this row, re-count open issues:\n+\n+list issues with the tool `list_issues` tool from the toolsset. with `state=open`\n+`labels=<label_name>` and count them.\n+\n+If the count meets or exceeds `max_open_issues` **stop the loop**. Log a message noting the headroom limit was reached and how many rows remain unprocessed.\n+\n+#### 3b. Read the content file\n+\n+Read the full content of the file at the `Path` value from the row. If the file does not exist in the repository, log a warning and continue to the next row.\n+\n+#### 3c. Judge the file\n+\n+Evaluate the file's content against the **Intent** extracted in Step 1a. Your judgment must determine:\n+\n+1. **`needs_action`** (`true` or `false`) — does this file require attention based on the intent?\n+2. **`issue_summary`** — if `needs_action` is true: a concise description of the specific problem (≤ 10 words, used directly in the issue title). Make it specific to this file, not generic.\n+3. **`issue_body`** — if `needs_action` is true: a fuller description for the issue body (see Step 3d for required sections). Respect any formatting or template instructions from **Issue Preferences**.\n+\n+**Using web search during judgment**: If evaluating the file requires external context (e.g. checking whether a technology is deprecated, whether a recommended practice has changed, whether a link or reference is still valid), use the Tavily search tool:\n+\n+* Formulate targeted queries like `\"[technology] deprecated 2025\"`, `\"[tool] end of life\"`, `\"[topic] current best practices\"`\n+* Let search results inform whether the file's content is outdated, inaccurate, or in need of the action described in the intent\n+* If search results are inconclusive, default to `needs_action = false` (do not create spurious issues)\n+\n+#### 3d. Create an issue (if `needs_action = true`)\n+\n+Create a GitHub issue using the `create-issue` safe-output tool. Add the label `<label_name>` to the issue.\n+\n+\n+**Title**: `🦅 ContentHawk - Content Audit: <issue_summary>`\n+\n+> Note: the `title-prefix` safe-output setting will prepend `🦅 ContentHawk - Content Audit: ` automatically — so only pass the `<issue_summary>` part as the title value.\n+\n+**Body** (use these exact sections, honouring any formatting instructions from Issue Preferences):\n+\n+```markdown\n+### File\n+\n+`<Path>`\n+\n+### Finding\n+\n+<A clear explanation of why this file needs attention, based on your analysis. Be specific — reference the actual content that triggered the finding.>\n+\n+### Suggestions\n+\n+<Concrete, actionable suggestions for how to resolve the issue. If you used web search, include relevant references.>\n+\n+---\n+\n+contenthawk-run-id: ${{ github.run_id }}\n+```\n+\n+Log the issue creation. Continue to the next row.\n+\n+#### 3e. Skip the file (if `needs_action = false`)\n+\n+  if you find a file that does not need action, use the following command to append the file path to a list of skipped files for this run.\n+\n+```\n+echo \"- <Path>\" >> /tmp/gh-aw/skipped_files.txt\n+```\n+\n+### Step 4 — Summary\n+\n+After the loop completes, output a summary of the run. Include the total number of issues created, files skipped, and rows still pending (if the headroom limit was reached). Include the **`snapshot_path`** you resolved in Step 0 so logs tie back to the correct file. Skipped files are written to `/tmp/gh-aw/skipped_files.txt` and will be uploaded automatically by the artifact post-step.",
+          "snapshot_ref": "e231121470b4ba5338e933dc2171d3b1fd3ded2b",
+          "snapshot_blob_sha": "d61a3f06cbe6037caa054305345d020f1079e7ff",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__e231121470b4ba5338e933dc2171d3b1fd3ded2b__content-judge.md",
+          "snapshot_bytes": 12795,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-judge.lock.yml\",\"generated_workflow_file\":\"content-judge.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-judge.md",
+      "commit_sha": "84f42b43f65499258fa19f7dd4e02239a7e52ef4",
+      "authored_at": "2026-04-09T01:52:17Z",
+      "committed_at": "2026-04-09T01:52:17Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 ContentHawk - Make workflows only run once per week (#12440)\n\n<!-- **Tip: Use [SSW Rule Writer\nGPT](https://chat.openai.com/g/g-cOvrRzEnU-ssw-rules-writer) for help\nwith writing rules 🤖** -->\n>\n> 1. What triggered this change? (PBI link, Email Subject, conversation\n+ reason, etc)\n\nIn this [issue](https://github.com/SSWConsulting/SSW.AI/issues/67) I\nnoted that content hawk was running on an hourly basis on Sunday.\n\nThis is not expected behaviour. It should only run once on Sunday at\nmidnight (UTC)\n\n> 2. What was changed?\n\nI updated the cron frequency for `content-judge.md` and\n`content-fixer.md` to only run on the first hour on Sunday.\n\n> 3. I paired or mob programmed with: <!-- list names or remove if not\nrelevant -->\n\nN/A\n<!-- E.g. I paired or mob programmed with: @gordonbeeming and\n@sethdailyssw -->\n\n<img width=\"951\" height=\"280\" alt=\"image\"\nsrc=\"https://github.com/user-attachments/assets/16f5bf23-627e-49dd-9648-52095c7ec37a\"\n/>\n\n**Figure: New proposed run frequency on\n[Cronlab.Guru](https://crontab.guru/#0_0_*_*_*/7)**",
+      "parent_shas": [
+        "c94a56e2d46884b9e096cb3e61279e457a3d1a29"
+      ],
+      "tree_sha": "bb03d44044143db6515bd28809fdb7f3934642bb",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/84f42b43f65499258fa19f7dd4e02239a7e52ef4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-judge.md",
+          "commit_sha": "84f42b43f65499258fa19f7dd4e02239a7e52ef4",
+          "committed_at": "2026-04-09T01:52:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -15,7 +15,7 @@ description: >\n name: Content Judge (Agent 2a)\n on:\n   schedule:\n-    - cron: \"0 * * * */7\"\n+    - cron: \"0 0 * * */7\"\n   workflow_dispatch:\n \n engine:",
+          "snapshot_ref": "84f42b43f65499258fa19f7dd4e02239a7e52ef4",
+          "snapshot_blob_sha": "c762ce345b7dc92dd1dc182d641cfa5574885ce9",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__84f42b43f65499258fa19f7dd4e02239a7e52ef4__content-judge.md",
+          "snapshot_bytes": 12795,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-judge.lock.yml\",\"generated_workflow_file\":\"content-judge.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+      "source_full_name": "SSWConsulting/SSW.Rules.Content",
+      "md_path": ".github/workflows/content-judge.md",
+      "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "authored_at": "2026-05-15T01:11:10Z",
+      "committed_at": "2026-05-15T01:11:10Z",
+      "author_name": "Caleb Williams [SSW]",
+      "author_email": "65635198+Calinator444@users.noreply.github.com",
+      "author_login": "Calinator444",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "🦅 Installing ContentHawk (#12715)\n\nUpgraded ContentHawk using the brand new schmick Claude skill for\ninstalling it 😉.\n\n\n**What changed?**\nI reworked the workflows to avoid the need for a user to supply a custom\nGitHub token (`CONTENTHAWK_GITHUB_PAT`). The main thing that changed is\nthat `Content Judge` no longer triggers using `workflow_dispatch` as\nthis would require a personalised GitHub token to be used. Triggering\nGitHub within Agentic workflows requires a custom GitHub token unless\nthey are triggered via `safe_outputs` (The workflow level permissions\nfor agentic workflows enforce this).\n\n**Changes**\n- Removed all references to `CONTENTHAWK_GITHUB_PAT`\n- 👨‍⚖️Updated `Content Judge PR` to trigger when `Content Judge`\nfinishes running\n- 👨‍⚖️Updated `Content Judge PR` to get inputs from workflow artefacts\nto circumvent permissions issues\n- 🗾Update `Content Campaign` to run existing label in [pre-activation\nsteps](https://github.github.com/gh-aw/reference/triggers/#pre-activation-steps-onsteps)\nto allow for job level GITHUB_TOKEN permissions.",
+      "parent_shas": [
+        "9205018548c1659e85a538d9795e6d08efe03112"
+      ],
+      "tree_sha": "785242e56c1a6e859cb7d930c0fc14327b379444",
+      "html_url": "https://github.com/SSWConsulting/SSW.Rules.Content/commit/0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SSWConsulting/SSW.Rules.Content:.github/workflows/content-judge.md",
+          "source_full_name": "SSWConsulting/SSW.Rules.Content",
+          "md_path": ".github/workflows/content-judge.md",
+          "commit_sha": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "committed_at": "2026-05-15T01:11:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 41,
+          "file_changes": 48,
+          "file_patch": "@@ -41,6 +41,7 @@ mcp-scripts:\n \n permissions: read-all\n \n+\n network:\n   allowed:\n     - defaults\n@@ -62,9 +63,10 @@ tools:\n   github:\n     lockdown: false\n     toolsets: [issues, repos, search, labels, pull_requests]\n-    github-token: \"${{ secrets.CONTENTHAWK_GITHUB_PAT }}\"\n+    github-token: \"${{ secrets.GITHUB_TOKEN }}\"\n \n post-steps:\n+\n   - name: Check if work was done\n     id: noop-check\n     if: always()\n@@ -107,54 +109,18 @@ post-steps:\n \n   - name: Ensure skipped files artifact is readable\n     if: always() && steps.noop-check.outputs.did_work == 'true'\n-    run: chmod a+r /tmp/gh-aw/skipped_files.txt 2>/dev/null || true\n+    run: chmod a+r /tmp/gh-aw/skipped_files.txt /tmp/gh-aw/label_name.txt 2>/dev/null || true\n \n   - name: Upload Agent Artifacts\n     if: always() && steps.noop-check.outputs.did_work == 'true'\n     uses: actions/upload-artifact@v7\n     with:\n       name: ${{ github.run_id }}\n-      path: /tmp/gh-aw/skipped_files.txt\n+      path: |\n+        /tmp/gh-aw/skipped_files.txt\n+        /tmp/gh-aw/label_name.txt\n       if-no-files-found: error\n       retention-days: 7\n-\n-  - name: Trigger Agent 2b (PR Creator)\n-    if: success() && steps.noop-check.outputs.did_work == 'true'\n-    env:\n-      GH_TOKEN: ${{ secrets.CONTENTHAWK_GITHUB_PAT }}\n-      INPUT_JUDGE_RUN_ID: ${{ github.run_id }}\n-    run: |\n-      set -euo pipefail\n-\n-      # Read the label written by the agent\n-      LABEL_NAME=\"\"\n-      if [ -f /tmp/gh-aw/label_name.txt ]; then\n-        LABEL_NAME=$(cat /tmp/gh-aw/label_name.txt | tr -d '[:space:]')\n-      fi\n-      if [ -z \"$LABEL_NAME\" ]; then\n-        echo \"::error::Agent did not write a label to /tmp/gh-aw/label_name.txt — cannot trigger Agent 2b.\"\n-        exit 1\n-      fi\n-\n-      git fetch origin main --depth 1\n-      # Snapshot path convention (Agent 1): .github/ContentHawk/TODO/YYYY-MM-DD_Snapshot_<label>.md\n-      _matches=()\n-      while IFS= read -r _path; do\n-        case \"$_path\" in\n-          .github/ContentHawk/TODO/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_Snapshot_${LABEL_NAME}.md)\n-            _matches+=(\"$_path\") ;;\n-        esac\n-      done < <(git ls-tree -r origin/main --name-only | grep '^\\.github/ContentHawk/TODO/' || true)\n-      SNAPSHOT_PATH=$(printf '%s\\n' \"${_matches[@]:-}\" | sort -r | head -1)\n-      if [ -z \"$SNAPSHOT_PATH\" ]; then\n-        echo \"::error::No snapshot on main matching <date>_Snapshot_${LABEL_NAME}.md under .github/ContentHawk/TODO/\"\n-        exit 1\n-      fi\n-      echo \"Resolved snapshot: $SNAPSHOT_PATH\"\n-      gh workflow run content-judge-pr.lock.yml \\\n-        -f snapshot_path=\"$SNAPSHOT_PATH\" \\\n-        -f label_name=\"$LABEL_NAME\" \\\n-        -f judge_run_id=\"$INPUT_JUDGE_RUN_ID\"\n ---\n \n ## Important context",
+          "snapshot_ref": "0a9e7b77dc698a3fb4ea446221daf3c33523439b",
+          "snapshot_blob_sha": "1deff581c17f66a308f0d31c062cafa411360caf",
+          "snapshot_file": "snapshots/SSW.Rules.Content__SSWConsulting__0a9e7b77dc698a3fb4ea446221daf3c33523439b__content-judge.md",
+          "snapshot_bytes": 11289,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SSWConsulting/SSW.Rules.Content\",\"generated_owner\":\"SSWConsulting\",\"generated_repo\":\"SSW.Rules.Content\",\"generated_workflow_path\":\".github/workflows/content-judge.lock.yml\",\"generated_workflow_file\":\"content-judge.lock.yml\",\"generated_html_url\":\"https://github.com/SSWConsulting/SSW.Rules.Content/blob/989b4b3afda7e9d5de811183c4b6b78364b2842f/.github/workflows/content-judge.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

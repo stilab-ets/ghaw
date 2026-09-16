@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "jurre/huebar:.github/workflows/release-notes.md",
+    "source_full_name": "jurre/huebar",
+    "source_owner": "jurre",
+    "source_repo": "huebar",
+    "md_path": ".github/workflows/release-notes.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/jurre/huebar/blob/HEAD/.github/workflows/release-notes.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "jurre/huebar",
+      "generated_owner": "jurre",
+      "generated_repo": "huebar",
+      "generated_workflow_path": ".github/workflows/release-notes.lock.yml",
+      "generated_workflow_file": "release-notes.lock.yml",
+      "generated_html_url": "https://github.com/jurre/huebar/blob/9028f7587c2c260d75489adf013a3a57a120100e/.github/workflows/release-notes.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:57:25+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "jurre/huebar:.github/workflows/release-notes.md",
+      "source_full_name": "jurre/huebar",
+      "md_path": ".github/workflows/release-notes.md",
+      "commit_sha": "fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+      "authored_at": "2026-02-15T20:51:58Z",
+      "committed_at": "2026-02-15T20:51:58Z",
+      "author_name": "Jurre",
+      "author_email": "jurre@github.com",
+      "author_login": "jurre",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows: code review and release notes (#33)\n\n- code-review: Reviews PRs against AGENTS.md guidelines on every PR\n  (error handling, security APIs, accessibility, feedback loops, etc.)\n- release-notes: Generates user-friendly release highlights on publish\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "dbdc36cbeb9222b1bbd89faaf6315d644e29071b"
+      ],
+      "tree_sha": "c3cc3ecccb041188b15f38007ef36717c233c157",
+      "html_url": "https://github.com/jurre/huebar/commit/fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "jurre/huebar:.github/workflows/release-notes.md",
+          "source_full_name": "jurre/huebar",
+          "md_path": ".github/workflows/release-notes.md",
+          "commit_sha": "fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+          "committed_at": "2026-02-15T20:51:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 90,
+          "file_deletions": 0,
+          "file_changes": 90,
+          "file_patch": "@@ -0,0 +1,90 @@\n+---\n+description: Generates user-friendly release notes when a new release is published\n+on:\n+  release:\n+    types: [published]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [pull_requests, repos]\n+safe-outputs:\n+  update-release:\n+timeout-minutes: 10\n+---\n+\n+# HueBar Release Notes Generator\n+\n+Generate clear, user-friendly release notes for HueBar, a macOS menubar app for controlling Philips Hue lights.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Release Tag**: ${{ github.event.release.tag_name }}\n+\n+## Step 1: Gather Data\n+\n+Use bash and GitHub tools to collect information:\n+\n+```bash\n+# Get the current release body (auto-generated notes)\n+gh release view \"${{ github.event.release.tag_name }}\" --json body --jq .body > /tmp/release_body.txt\n+\n+# Get the previous release tag\n+PREV_TAG=$(gh release list --limit 2 --json tagName --jq '.[1].tagName // empty')\n+echo \"Previous: $PREV_TAG\"\n+\n+# List PRs merged between releases\n+if [ -n \"$PREV_TAG\" ]; then\n+  PREV_DATE=$(gh release view \"$PREV_TAG\" --json publishedAt --jq .publishedAt)\n+  CURR_DATE=$(gh release view \"${{ github.event.release.tag_name }}\" --json publishedAt --jq .publishedAt)\n+  gh pr list --state merged --limit 100 \\\n+    --json number,title,labels,mergedAt \\\n+    --jq \"[.[] | select(.mergedAt >= \\\"$PREV_DATE\\\" and .mergedAt <= \\\"$CURR_DATE\\\")]\"\n+fi\n+```\n+\n+## Step 2: Categorize Changes\n+\n+Group changes into these categories (omit empty ones):\n+\n+- **✨ New Features** — User-visible new capabilities\n+- **🐛 Bug Fixes** — Issues resolved\n+- **⚡ Improvements** — Performance, reliability, code quality\n+- **📚 Documentation** — AGENTS.md or README updates\n+\n+Skip purely internal refactoring unless it improves user experience.\n+\n+## Step 3: Write Release Notes\n+\n+Format:\n+\n+```markdown\n+## What's New in [tag]\n+\n+[1 sentence summary]\n+\n+### ✨ New Features\n+- Feature description (#PR)\n+\n+### 🐛 Bug Fixes\n+- Fix description (#PR)\n+\n+### ⚡ Improvements\n+- Improvement description (#PR)\n+```\n+\n+**Writing guidelines:**\n+- Lead with user benefit: \"Lights now respond faster\" not \"Reduced API latency\"\n+- Keep it scannable — one line per change\n+- Link PR numbers\n+- Skip developer-only changes\n+\n+## Step 4: Update Release\n+\n+Call the `update_release` safe output to prepend the highlights before the auto-generated notes:\n+\n+- `tag`: \"${{ github.event.release.tag_name }}\"\n+- `operation`: \"prepend\"\n+- `body`: Your formatted release notes markdown",
+          "snapshot_ref": "fae2b1bbcc974ae523b463acdb3cda5cda7c4e10",
+          "snapshot_blob_sha": "8bfdd14e5c5ad6aa8f329ad1e07631f06c817091",
+          "snapshot_file": "snapshots/huebar__jurre__fae2b1bbcc974ae523b463acdb3cda5cda7c4e10__release-notes.md",
+          "snapshot_bytes": 2430,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"jurre/huebar\",\"generated_owner\":\"jurre\",\"generated_repo\":\"huebar\",\"generated_workflow_path\":\".github/workflows/release-notes.lock.yml\",\"generated_workflow_file\":\"release-notes.lock.yml\",\"generated_html_url\":\"https://github.com/jurre/huebar/blob/9028f7587c2c260d75489adf013a3a57a120100e/.github/workflows/release-notes.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

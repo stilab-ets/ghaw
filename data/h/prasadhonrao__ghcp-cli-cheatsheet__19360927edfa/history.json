@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+    "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+    "source_owner": "prasadhonrao",
+    "source_repo": "ghcp-cli-cheatsheet",
+    "md_path": ".github/workflows/traffic-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/HEAD/.github/workflows/traffic-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "generated_owner": "prasadhonrao",
+      "generated_repo": "ghcp-cli-cheatsheet",
+      "generated_workflow_path": ".github/workflows/traffic-updater.lock.yml",
+      "generated_workflow_file": "traffic-updater.lock.yml",
+      "generated_html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/traffic-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:43:14+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/traffic-updater.md",
+      "commit_sha": "1739fd7fa667c5857ac67a5f3d0826f60e8c5873",
+      "authored_at": "2026-05-27T08:27:45Z",
+      "committed_at": "2026-05-27T08:27:45Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "feat: replace traffic-updater.yml with agentic workflow (.md + compiled .lock.yml)",
+      "parent_shas": [
+        "ecf6534c85c27a621aba73669ea4939c78b7f10c"
+      ],
+      "tree_sha": "22e3ef15bd6e8d47fcada5cf1125c1948f4d4ed6",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/1739fd7fa667c5857ac67a5f3d0826f60e8c5873",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/traffic-updater.md",
+          "commit_sha": "1739fd7fa667c5857ac67a5f3d0826f60e8c5873",
+          "committed_at": "2026-05-27T08:27:45Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 101,
+          "file_deletions": 0,
+          "file_changes": 101,
+          "file_patch": "@@ -0,0 +1,101 @@\n+---\n+name: 'Traffic Updater'\n+description: 'Weekly collection of repo traffic data (views and unique visitors). Accumulates totals in public/traffic.json and opens a PR.'\n+on:\n+  schedule: weekly on monday\n+  workflow_dispatch:\n+tools:\n+  bash: ['date']\n+  edit:\n+mcp-scripts:\n+  fetch-traffic:\n+    description: 'Fetch the last 14 days of traffic views for this repository from the GitHub API. Returns JSON with a views array containing timestamp, count, and uniques per day.'\n+    run: |\n+      gh api repos/$GITHUB_REPOSITORY/traffic/views\n+    env:\n+      GH_TOKEN: '${{ secrets.GH_AW_GITHUB_TOKEN }}'\n+safe-outputs:\n+  allowed-domains:\n+    - github.com\n+  noop:\n+    report-as-issue: false\n+  create-pull-request:\n+    labels: [automated-update, traffic-data]\n+    title-prefix: '[bot] '\n+    base-branch: main\n+    fallback-as-issue: false\n+    protected-files: allowed\n+    allowed-files:\n+      - 'public/traffic.json'\n+    github-token: ${{ secrets.GH_AW_GITHUB_TOKEN }}\n+---\n+\n+# Collect Weekly Repo Traffic\n+\n+You are a traffic collection bot for the **ghcp-cli-cheatsheet** repository. Your job is to fetch the previous week's traffic numbers from the GitHub API and accumulate them in `public/traffic.json`.\n+\n+## Definitions\n+\n+- Traffic data lives in `public/traffic.json`.\n+- The file has this exact shape:\n+  ```json\n+  {\n+    \"updatedAt\": \"YYYY-MM-DD\",\n+    \"lastRecordedDate\": \"YYYY-MM-DD\",\n+    \"totalViews\": 0,\n+    \"totalUniques\": 0\n+  }\n+  ```\n+- `lastRecordedDate` tracks the most recent day already counted, so re-running the workflow never double-counts.\n+- Today's date is always excluded because the day is not yet complete.\n+\n+## Step 1 — Determine the last recorded date\n+\n+Read `public/traffic.json`. Parse `lastRecordedDate` to find the last day already accumulated.\n+\n+If the file is missing or `lastRecordedDate` is empty, treat the start date as 14 days ago — the maximum window the GitHub traffic API provides.\n+\n+## Step 2 — Fetch traffic data\n+\n+Call the `fetch-traffic` tool (no inputs needed). It returns JSON with a `views` array containing objects with `timestamp`, `count`, and `uniques` for each day in the last 14 days.\n+\n+## Step 3 — Filter to new dates only\n+\n+From the API response, keep only entries whose date is **after** the last recorded date from Step 1.\n+\n+Also exclude **today's date** since the day is not yet complete and the numbers would be partial.\n+\n+If there are no new dates to add, stop here and report that no new data is available.\n+\n+## Step 4 — Accumulate totals\n+\n+Sum the `count` values from the filtered entries and add to `totalViews`.\n+Sum the `uniques` values from the filtered entries and add to `totalUniques`.\n+\n+Set `lastRecordedDate` to the most recent date among the filtered entries (chronologically last), formatted as `YYYY-MM-DD`.\n+Set `updatedAt` to today's date in `YYYY-MM-DD` format.\n+\n+## Step 5 — Write updated traffic data\n+\n+Overwrite `public/traffic.json` with the updated values using the `edit` tool. Keep the exact JSON shape from the Definitions section — no extra fields.\n+\n+## Step 6 — Open a pull request\n+\n+Create a pull request targeting the `main` branch.\n+\n+**Title format:**\n+\n+```\n+Add traffic data for week of MM/DD – MM/DD\n+```\n+\n+**PR body must include:**\n+\n+1. The date range collected (first and last new date)\n+2. New views and unique visitors added this run\n+3. Updated cumulative totals\n+4. A short table showing the daily breakdown:\n+\n+| Date  | Views | Unique Visitors |\n+| ----- | ----- | --------------- |\n+| MM/DD | n     | n               |",
+          "snapshot_ref": "1739fd7fa667c5857ac67a5f3d0826f60e8c5873",
+          "snapshot_blob_sha": "ddaee41032120024645c8561fdd409a64c7a1a33",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__1739fd7fa667c5857ac67a5f3d0826f60e8c5873__traffic-updater.md",
+          "snapshot_bytes": 3481,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/traffic-updater.lock.yml\",\"generated_workflow_file\":\"traffic-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/traffic-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/traffic-updater.md",
+      "commit_sha": "4889dd931deda3c6019d552766731f8c40dac201",
+      "authored_at": "2026-05-27T09:08:41Z",
+      "committed_at": "2026-05-27T09:08:41Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "feat: add repos toolset to traffic-updater workflow",
+      "parent_shas": [
+        "9a03e1d7bc06283def00a816b5c695c183ecc055"
+      ],
+      "tree_sha": "5b68f71829b50e588e8cc5dc58322c78e5ee9449",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/4889dd931deda3c6019d552766731f8c40dac201",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/traffic-updater.md",
+          "commit_sha": "4889dd931deda3c6019d552766731f8c40dac201",
+          "committed_at": "2026-05-27T09:08:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -7,6 +7,8 @@ on:\n tools:\n   bash: ['date']\n   edit:\n+  github:\n+    toolsets: [repos]\n mcp-scripts:\n   fetch-traffic:\n     description: 'Fetch the last 14 days of traffic views for this repository from the GitHub API. Returns JSON with a views array containing timestamp, count, and uniques per day.'",
+          "snapshot_ref": "4889dd931deda3c6019d552766731f8c40dac201",
+          "snapshot_blob_sha": "ea32d8c512330568094eaf99df729f99e8c1bef2",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__4889dd931deda3c6019d552766731f8c40dac201__traffic-updater.md",
+          "snapshot_bytes": 3513,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/traffic-updater.lock.yml\",\"generated_workflow_file\":\"traffic-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/traffic-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/traffic-updater.md",
+      "commit_sha": "d8f06fd932dd275ff749ccec2bcbc1023559ef41",
+      "authored_at": "2026-05-27T09:22:57Z",
+      "committed_at": "2026-05-27T09:22:57Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "fix: use default GITHUB_TOKEN for PR creation in traffic-updater",
+      "parent_shas": [
+        "4889dd931deda3c6019d552766731f8c40dac201"
+      ],
+      "tree_sha": "a57e5f8cf0fa1ee581f23c51f7b7441cea357049",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/d8f06fd932dd275ff749ccec2bcbc1023559ef41",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/traffic-updater.md",
+          "commit_sha": "d8f06fd932dd275ff749ccec2bcbc1023559ef41",
+          "committed_at": "2026-05-27T09:22:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -29,7 +29,6 @@ safe-outputs:\n     protected-files: allowed\n     allowed-files:\n       - 'public/traffic.json'\n-    github-token: ${{ secrets.GH_AW_GITHUB_TOKEN }}\n ---\n \n # Collect Weekly Repo Traffic",
+          "snapshot_ref": "d8f06fd932dd275ff749ccec2bcbc1023559ef41",
+          "snapshot_blob_sha": "6e463de60235d38b6d60c004569d7e9f6b285f7a",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__d8f06fd932dd275ff749ccec2bcbc1023559ef41__traffic-updater.md",
+          "snapshot_bytes": 3461,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/traffic-updater.lock.yml\",\"generated_workflow_file\":\"traffic-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/traffic-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/traffic-updater.md",
+      "commit_sha": "e4c804a7a19f6419c303307fdb449e86da4ba4f9",
+      "authored_at": "2026-05-27T09:29:35Z",
+      "committed_at": "2026-05-27T09:29:35Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "fix: restore GH_AW_GITHUB_TOKEN for traffic-updater PR creation",
+      "parent_shas": [
+        "d8f06fd932dd275ff749ccec2bcbc1023559ef41"
+      ],
+      "tree_sha": "5b68f71829b50e588e8cc5dc58322c78e5ee9449",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/e4c804a7a19f6419c303307fdb449e86da4ba4f9",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/traffic-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/traffic-updater.md",
+          "commit_sha": "e4c804a7a19f6419c303307fdb449e86da4ba4f9",
+          "committed_at": "2026-05-27T09:29:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -29,6 +29,7 @@ safe-outputs:\n     protected-files: allowed\n     allowed-files:\n       - 'public/traffic.json'\n+    github-token: ${{ secrets.GH_AW_GITHUB_TOKEN }}\n ---\n \n # Collect Weekly Repo Traffic",
+          "snapshot_ref": "e4c804a7a19f6419c303307fdb449e86da4ba4f9",
+          "snapshot_blob_sha": "ea32d8c512330568094eaf99df729f99e8c1bef2",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__e4c804a7a19f6419c303307fdb449e86da4ba4f9__traffic-updater.md",
+          "snapshot_bytes": 3513,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/traffic-updater.lock.yml\",\"generated_workflow_file\":\"traffic-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/traffic-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

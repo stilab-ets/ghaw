@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/docs-site-validator.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/docs-site-validator.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/docs-site-validator.lock.yml",
+      "generated_workflow_file": "docs-site-validator.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-site-validator.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4
+    },
+    "collected_at_utc": "2026-08-04T12:43:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-site-validator.md",
+      "commit_sha": "c9d960b9fcdcf1ba478a16bcbf35e82ebbd833d8",
+      "authored_at": "2026-02-16T16:24:31Z",
+      "committed_at": "2026-02-16T16:24:31Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: add docs site validator agentic workflow\n\nValidates the live GitHub Pages Docusaurus site after each deployment\nand weekly. Checks: site reachability, broken links (crawls 200 pages),\nmissing assets, search functionality, sitemap.xml, robots.txt, mobile\nresponsiveness, HTTPS/mixed content, 404 page, and accessibility basics.\n\nTriggers on deploy-docusaurus.yml completion, weekly on Wednesdays,\nand manual dispatch.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "24ff1b346378d00273797f78ac63d1f8ea3c5423"
+      ],
+      "tree_sha": "d56f83477f7091d6753b685f615f094bda51e77f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/c9d960b9fcdcf1ba478a16bcbf35e82ebbd833d8",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-site-validator.md",
+          "commit_sha": "c9d960b9fcdcf1ba478a16bcbf35e82ebbd833d8",
+          "committed_at": "2026-02-16T16:24:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 210,
+          "file_deletions": 0,
+          "file_changes": 210,
+          "file_patch": "@@ -0,0 +1,210 @@\n+---\n+name: 'Docs Site Validator'\n+description: 'Validates the live GitHub Pages Docusaurus site for broken links, missing assets, search, sitemap, mobile responsiveness, accessibility, and HTTPS compliance'\n+on:\n+  workflow_run:\n+    workflows:\n+      - 'Deploy Docusaurus to GitHub Pages'\n+    types:\n+      - completed\n+    branches:\n+      - main\n+  schedule:\n+    - cron: '0 8 * * 3'\n+  workflow_dispatch:\n+permissions:\n+  actions: read\n+  issues: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[docs-site]'\n+    max: 3\n+    expires: '7d'\n+  noop:\n+tools:\n+  playwright:\n+    allowed_domains: ['defaults', 'tosin2013.github.io']\n+  bash: true\n+  web-fetch:\n+  github:\n+    toolsets: [issues, actions]\n+---\n+\n+# Docs Site Validator\n+\n+You validate the live GitHub Pages Docusaurus site at **https://tosin2013.github.io/mcp-adr-analysis-server/** for broken links, missing assets, search functionality, sitemap correctness, mobile responsiveness, accessibility basics, and HTTPS compliance.\n+\n+## Context\n+\n+The **mcp-adr-analysis-server** documentation is a Docusaurus site deployed to GitHub Pages via `deploy-docusaurus.yml`. The site has 160+ pages covering tutorials, how-to guides, reference material, and API documentation (auto-generated via TypeDoc).\n+\n+**Site URL**: `https://tosin2013.github.io/mcp-adr-analysis-server/`\n+**Base path**: `/mcp-adr-analysis-server/`\n+**Config**: `onBrokenLinks: 'warn'`, `onBrokenMarkdownLinks: 'warn'` (Docusaurus tolerates broken links at build time)\n+\n+## When triggered by workflow_run\n+\n+If the Deploy Docusaurus workflow **failed**, check the deployment logs and create an issue about the deployment failure. If it **succeeded**, proceed with the full validation below.\n+\n+## Validation Checks\n+\n+### Check 1: Site Reachability\n+\n+Use Playwright to navigate to the site root:\n+\n+1. Load `https://tosin2013.github.io/mcp-adr-analysis-server/`\n+2. Verify HTTP 200 response\n+3. Verify the page title contains \"MCP ADR Analysis Server\"\n+4. Verify the page is not a GitHub 404 page\n+5. Check that the page loads within 10 seconds\n+\n+If the site is not reachable, create an issue immediately and skip remaining checks.\n+\n+### Check 2: Broken Link Crawl\n+\n+Starting from the homepage, crawl internal links:\n+\n+1. Collect all `<a href>` links on the homepage that point to the same domain\n+2. Follow each internal link and verify it returns HTTP 200\n+3. Go one level deep: for each page visited, also check its internal links\n+4. Track all links that return 404, 500, or timeout\n+5. Limit crawl to 200 pages to stay within time budget\n+6. Exclude external links (those will be checked separately in a lighter pass)\n+\n+For external links found on the site:\n+\n+1. Collect unique external URLs\n+2. Check the top 50 external links for reachability (HEAD request)\n+3. Flag any that return 4xx or 5xx\n+\n+### Check 3: Missing Assets\n+\n+While crawling, check for:\n+\n+1. Broken images (`<img src>` returning 404)\n+2. Missing CSS/JS bundles (check network console for failed resource loads)\n+3. Missing favicon (`/mcp-adr-analysis-server/img/favicon.ico`)\n+4. Broken OpenGraph/social media preview images\n+\n+### Check 4: Search Functionality\n+\n+If the site has a search feature (Docusaurus Algolia or local search):\n+\n+1. Open the search interface\n+2. Type \"MCP\" and verify results appear\n+3. Type \"ADR\" and verify results appear\n+4. Verify clicking a search result navigates to the correct page\n+\n+If search is not configured, note this as a recommendation.\n+\n+### Check 5: Sitemap Validation\n+\n+1. Fetch `https://tosin2013.github.io/mcp-adr-analysis-server/sitemap.xml`\n+2. Verify it returns valid XML\n+3. Count the number of URLs listed\n+4. Spot-check 10 random URLs from the sitemap — verify they return HTTP 200\n+5. Check that the sitemap includes major sections (tutorials, how-to, reference)\n+\n+### Check 6: robots.txt\n+\n+1. Fetch `https://tosin2013.github.io/mcp-adr-analysis-server/robots.txt`\n+2. Verify it exists and is not blocking the site from indexing\n+3. Verify it references the sitemap URL\n+\n+### Check 7: Mobile Responsiveness\n+\n+Using Playwright with a mobile viewport (iPhone 12 — 390x844):\n+\n+1. Load the homepage\n+2. Verify the navigation menu is accessible (hamburger menu or similar)\n+3. Check that content is readable without horizontal scrolling\n+4. Test one documentation page to verify code blocks don't overflow\n+5. Verify the sidebar/navigation works on mobile\n+\n+### Check 8: HTTPS & Mixed Content\n+\n+1. Verify the site is served over HTTPS\n+2. Check for mixed content warnings (HTTP resources loaded on an HTTPS page)\n+3. Verify all internal links use HTTPS\n+\n+### Check 9: 404 Page\n+\n+1. Navigate to a non-existent path: `https://tosin2013.github.io/mcp-adr-analysis-server/this-page-does-not-exist`\n+2. Verify a custom 404 page is shown (not GitHub's default 404)\n+3. Verify the 404 page has navigation back to the main site\n+\n+### Check 10: Accessibility Basics\n+\n+Using Playwright, check for:\n+\n+1. All images have `alt` attributes\n+2. The page has a proper heading hierarchy (single `<h1>`, then `<h2>`, etc.)\n+3. Links have descriptive text (not just \"click here\")\n+4. Color contrast is sufficient on the homepage (basic check)\n+5. The site is navigable with keyboard (Tab through main nav elements)\n+\n+## Output\n+\n+If any checks fail, create an issue:\n+\n+**Title**: `[docs-site] {count} issue(s) found on live site — {date}`\n+\n+**Body**:\n+\n+```markdown\n+## Docs Site Validation Report\n+\n+**Site**: https://tosin2013.github.io/mcp-adr-analysis-server/\n+**Date**: {date}\n+**Trigger**: {workflow_run / schedule / manual}\n+**Pages crawled**: {count}\n+\n+### Summary\n+\n+| Check                 | Status          | Issues          |\n+| --------------------- | --------------- | --------------- |\n+| Site Reachability     | {pass/fail}     | {details}       |\n+| Broken Links          | {pass/fail}     | {count} broken  |\n+| Missing Assets        | {pass/fail}     | {count} missing |\n+| Search                | {pass/fail/n/a} | {details}       |\n+| Sitemap               | {pass/fail}     | {details}       |\n+| robots.txt            | {pass/fail}     | {details}       |\n+| Mobile Responsive     | {pass/fail}     | {details}       |\n+| HTTPS / Mixed Content | {pass/fail}     | {details}       |\n+| 404 Page              | {pass/fail}     | {details}       |\n+| Accessibility         | {pass/fail}     | {count} issues  |\n+\n+### Broken Links\n+\n+| Page          | Broken Link  | Status        |\n+| ------------- | ------------ | ------------- |\n+| {source_page} | {broken_url} | {status_code} |\n+\n+### Missing Assets\n+\n+| Page   | Asset URL   | Type         |\n+| ------ | ----------- | ------------ |\n+| {page} | {asset_url} | {img/css/js} |\n+\n+### Accessibility Issues\n+\n+| Page   | Issue         | Severity          |\n+| ------ | ------------- | ----------------- |\n+| {page} | {description} | {high/medium/low} |\n+\n+### Mobile Issues\n+\n+{description of any mobile layout issues found}\n+\n+### Recommendations\n+\n+1. {recommendation 1}\n+2. {recommendation 2}\n+3. {recommendation 3}\n+\n+---\n+\n+_Generated by Docs Site Validator agentic workflow_\n+```\n+\n+If all checks pass with zero issues, output `noop`.",
+          "snapshot_ref": "c9d960b9fcdcf1ba478a16bcbf35e82ebbd833d8",
+          "snapshot_blob_sha": "f6b2d119e1523e0252c925e1f8bafd143e4fd255",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__c9d960b9fcdcf1ba478a16bcbf35e82ebbd833d8__docs-site-validator.md",
+          "snapshot_bytes": 6980,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-site-validator.lock.yml\",\"generated_workflow_file\":\"docs-site-validator.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-site-validator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-site-validator.md",
+      "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "authored_at": "2026-02-20T00:13:55Z",
+      "committed_at": "2026-02-20T00:13:55Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs: fix documentation review findings from issue #508 (#509)\n\n* docs: fix documentation review findings from issue #508\n\n- Fix 25+ broken relative links that escape Docusaurus docs root\n  (../README.md, ../../CONTRIBUTING.md → absolute GitHub URLs)\n- Fix broken anchor links in CONVERSION_CHECKLIST, self-learning-architecture,\n  and firecrawl-setup docs\n- Fix sample-project links in docs/adrs/README.md to use absolute GitHub URLs\n- Add \"Server installed but nothing happens\" troubleshooting section\n  explaining MCP client requirement with download links\n- Add \"Firecrawl Integration Issues\" troubleshooting section\n- Expand MCP acronym in README title, add MCP client to prerequisites,\n  show config path prominently, add docs build instructions\n- Fix EXECUTION_MODE=prompt → EXECUTION_MODE=prompt-only (matches source)\n- Clarify sample-project only available from source, not npm\n- Add MCP client and OpenRouter API key to tutorial prerequisites\n- Create docs/reference/glossary.md defining key terms (MCP, ADR, AST,\n  Firecrawl, Knowledge Graph, OpenRouter, Ripgrep, tree-sitter)\n\nCloses #508\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: change gh-aw Copilot agents from weekly to monthly schedules\n\nReduce Copilot API costs by running agentic workflows monthly instead\nof weekly. Schedules staggered across the month to avoid overlap:\n\n- docs-noob-tester: 1st of month (was every Monday)\n- docs-site-validator: 8th of month (was every Wednesday)\n- mcp-tool-checker: 15th of month (was every Wednesday)\n- dependabot-bundler: 22nd of month (was every Monday)\n\nAll agents retain workflow_dispatch for manual triggering.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: fix npm audit failures by scoping to production deps\n\nNew CVEs published for minimatch, ajv, and hono affected dev\ndependencies (jest, eslint, typedoc, @modelcontextprotocol/inspector).\nThese are not exploitable in production since they never ship to users.\n\n- Run `npm audit fix --omit=dev` to fix production-only vulns (ajv, hono)\n- Update Makefile check-deps and security-check to use --omit=dev\n- Update security-scanning.yml to use --omit=dev\n- Production deps: 0 vulnerabilities\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n* ci: scope dependencies.yml audit to production deps\n\nSame --omit=dev fix as the other workflows — dev dependency\nCVEs (jest, eslint, typedoc) should not block the security-audit job.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "3b8b49ba616902846f15de6597dc7c4d370a6db6"
+      ],
+      "tree_sha": "5a010ea1bba3609ac18ce729dc37d466f601bc06",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-site-validator.md",
+          "commit_sha": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "committed_at": "2026-02-20T00:13:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -10,7 +10,7 @@ on:\n     branches:\n       - main\n   schedule:\n-    - cron: '0 8 * * 3'\n+    - cron: '0 8 8 * *' # Monthly on 8th\n   workflow_dispatch:\n permissions:\n   actions: read",
+          "snapshot_ref": "60ddaf6b47ae4e72b1f972430749d1f79eef5d44",
+          "snapshot_blob_sha": "0c8af163a07ec99cd50825b53b30e975b95198e8",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__60ddaf6b47ae4e72b1f972430749d1f79eef5d44__docs-site-validator.md",
+          "snapshot_bytes": 6997,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-site-validator.lock.yml\",\"generated_workflow_file\":\"docs-site-validator.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-site-validator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-site-validator.md",
+      "commit_sha": "6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+      "authored_at": "2026-02-20T19:15:56Z",
+      "committed_at": "2026-02-20T19:15:56Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(ci): add placeholder/template content detection to docs validation agents (#538)\n\nBoth the Documentation Noob Tester and Docs Site Validator now detect\npages that are unpopulated scaffolds (e.g., \"Concept 1\", \"We chose this\napproach because...\", \"[High-level explanation]\"). These placeholder pages\nare published to the live site and confuse users expecting real content.\n\n- docs-noob-tester.md: New Phase 4 scans docs/ files for 6 placeholder\n  indicators and reports them by severity (Critical if in site nav)\n- docs-site-validator.md: New Check 10 detects placeholder content on the\n  live site during Playwright crawl\n\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "6f849f8040114e778114f0f1ae8912b750540900"
+      ],
+      "tree_sha": "2a568c517aa5eff66e160d9f90d0dbf05d9b0efc",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-site-validator.md",
+          "commit_sha": "6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+          "committed_at": "2026-02-20T19:15:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 20,
+          "file_deletions": 1,
+          "file_changes": 21,
+          "file_patch": "@@ -133,7 +133,19 @@ Using Playwright with a mobile viewport (iPhone 12 — 390x844):\n 2. Verify a custom 404 page is shown (not GitHub's default 404)\n 3. Verify the 404 page has navigation back to the main site\n \n-### Check 10: Accessibility Basics\n+### Check 10: Placeholder / Template Content Detection\n+\n+While crawling pages, check each page's text content for signs it is an **unpopulated template or scaffold** that was published without real content. Flag a page if it matches **2 or more** of these indicators:\n+\n+1. **Generic headings**: \"Concept 1\", \"Concept 2\", \"Alternative 1\", \"Alternative 2\", or numbered placeholders like \"[Design Principle 1]\"\n+2. **Ellipsis stub sentences**: Body text that is a single short sentence ending with \"...\" (e.g., \"We chose this approach because...\", \"Understanding the architecture requires knowledge of...\")\n+3. **Bracketed placeholders**: Visible text like \"[High-level explanation]\", \"[Explanation]\", \"[Process 1]\"\n+4. **Template table data**: Table cells containing only generic entries like \"Pro 1, Pro 2\", \"Con 1, Con 2\", \"Benefit vs Cost\"\n+5. **Extremely low content**: Pages with fewer than 100 words of visible body text (excluding navigation, sidebar, and footer)\n+\n+This is **Critical** — placeholder pages visible to users on the live site damage project credibility and waste developer time.\n+\n+### Check 11: Accessibility Basics\n \n Using Playwright, check for:\n \n@@ -172,6 +184,7 @@ If any checks fail, create an issue:\n | Mobile Responsive     | {pass/fail}     | {details}       |\n | HTTPS / Mixed Content | {pass/fail}     | {details}       |\n | 404 Page              | {pass/fail}     | {details}       |\n+| Placeholder Content   | {pass/fail}     | {count} pages   |\n | Accessibility         | {pass/fail}     | {count} issues  |\n \n ### Broken Links\n@@ -186,6 +199,12 @@ If any checks fail, create an issue:\n | ------ | ----------- | ------------ |\n | {page} | {asset_url} | {img/css/js} |\n \n+### Placeholder / Template Pages\n+\n+| Page URL | Page Title | Indicators Found             |\n+| -------- | ---------- | ---------------------------- |\n+| {url}    | {title}    | {list of matched indicators} |\n+\n ### Accessibility Issues\n \n | Page   | Issue         | Severity          |",
+          "snapshot_ref": "6b39f0f9db6a8e3de43f03898ca6d6a045092c4b",
+          "snapshot_blob_sha": "889439fdaace1bbaf84bd55d6da9de84d7d6a608",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__6b39f0f9db6a8e3de43f03898ca6d6a045092c4b__docs-site-validator.md",
+          "snapshot_bytes": 8360,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-site-validator.lock.yml\",\"generated_workflow_file\":\"docs-site-validator.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-site-validator.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/docs-site-validator.md",
+      "commit_sha": "8f650881f6db2dbe131f4472da3192de4eec7a3f",
+      "authored_at": "2026-04-19T18:26:37Z",
+      "committed_at": "2026-04-19T18:26:37Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: regenerate gh-aw lock files for v0.68.3 and fix docs-site-validator config\n\n- Regenerate all 11 .lock.yml files from gh-aw v0.45.0 to v0.68.3\n- Fix docs-site-validator.md: move allowed-domains under safe-outputs\n- Resolves MCP Server Validation, ESM Module Validation, Knowledge Graph\n  Validation, and Deployment Pattern Validation CI failures caused by\n  missing convert_gateway_config_copilot.sh script path changes\n\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+      "parent_shas": [
+        "e1169965cf7173fe98313a369bccf7200916c837"
+      ],
+      "tree_sha": "29389cb580be73fed32b6bebcba4a798ec8f5326",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/8f650881f6db2dbe131f4472da3192de4eec7a3f",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/docs-site-validator.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/docs-site-validator.md",
+          "commit_sha": "8f650881f6db2dbe131f4472da3192de4eec7a3f",
+          "committed_at": "2026-04-19T18:26:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -20,10 +20,10 @@ safe-outputs:\n     title-prefix: '[docs-site]'\n     max: 3\n     expires: '7d'\n+  allowed-domains: ['defaults', 'tosin2013.github.io']\n   noop:\n tools:\n   playwright:\n-    allowed_domains: ['defaults', 'tosin2013.github.io']\n   bash: true\n   web-fetch:\n   github:",
+          "snapshot_ref": "8f650881f6db2dbe131f4472da3192de4eec7a3f",
+          "snapshot_blob_sha": "a3b6ae303a4f3c64b4788128906c0d9b68ca78ee",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__8f650881f6db2dbe131f4472da3192de4eec7a3f__docs-site-validator.md",
+          "snapshot_bytes": 8358,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/docs-site-validator.lock.yml\",\"generated_workflow_file\":\"docs-site-validator.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/docs-site-validator.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

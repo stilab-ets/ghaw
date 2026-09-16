@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/eslint-refiner.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/eslint-refiner.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/eslint-refiner.lock.yml",
+      "generated_workflow_file": "eslint-refiner.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-refiner.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 5
+    },
+    "collected_at_utc": "2026-08-04T11:44:25+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-refiner.md",
+      "commit_sha": "35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+      "authored_at": "2026-06-27T22:21:12Z",
+      "committed_at": "2026-06-27T22:21:12Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Establish ESLint Linter Factory for actions/setup/js and add dedicated ESLint daily workflows (#41938)",
+      "parent_shas": [
+        "5b7ef28a594bd0a936367cd130726c4980bc2637"
+      ],
+      "tree_sha": "6d59c82c938f627c771603ffba0def39f38fb6f2",
+      "html_url": "https://github.com/github/gh-aw/commit/35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-refiner.md",
+          "commit_sha": "35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+          "committed_at": "2026-06-27T22:21:12Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 93,
+          "file_deletions": 0,
+          "file_changes": 93,
+          "file_patch": "@@ -0,0 +1,93 @@\n+---\n+private: true\n+on:\n+  schedule: daily\n+  workflow_dispatch: null\n+permissions:\n+  contents: read\n+  discussions: read\n+  issues: read\n+  pull-requests: read\n+network:\n+  allowed:\n+  - defaults\n+  - github\n+  - node\n+imports:\n+- uses: shared/daily-audit-base.md\n+  with:\n+    expires: 1d\n+    title-prefix: \"[eslint-refiner] \"\n+- shared/otlp.md\n+safe-outputs:\n+  create-issue:\n+    expires: 7d\n+    labels:\n+    - eslint\n+    - cookie\n+    max: 3\n+description: Daily ESLint rule refinement using diagnostics trends from actions/setup/js\n+emoji: 🤖\n+engine: claude\n+name: ESLint Refiner\n+strict: true\n+timeout-minutes: 45\n+tools:\n+  bash:\n+  - cat actions/setup/js/eslint-factory/package.json\n+  - find actions/setup/js -name \"*.cjs\" -type f\n+  - find actions/setup/js/eslint-factory/src/rules -name \"*.ts\" -type f\n+  - wc -l\n+  cli-proxy: true\n+  edit: null\n+  github:\n+    mode: gh-proxy\n+    toolsets:\n+    - default\n+    - issues\n+  repo-memory:\n+    branch-name: memory/eslint-refiner\n+    description: Historical ESLint rule refinement runs and diagnostics snapshots\n+    file-glob:\n+    - \"*.json\"\n+    - \"*.jsonl\"\n+tracker-id: eslint-refiner\n+---\n+# ESLint Refiner\n+\n+You are **ESLint Refiner**, focused on improving the quality of custom ESLint rules in `actions/setup/js/eslint-factory`.\n+\n+## Mission\n+\n+Each day:\n+\n+1. Review recent diagnostics and issue feedback for ESLint factory rules.\n+2. Identify false positives, weak diagnostics, or missing edge cases.\n+3. Propose 1-3 high-impact refinement tasks for TypeScript ESLint rules.\n+4. Create up to 3 non-duplicate issues with concrete acceptance criteria.\n+5. Persist strategy and findings in repo-memory for future runs.\n+6. Publish a daily discussion report with summary metrics.\n+\n+## Scope\n+\n+In scope:\n+\n+- `actions/setup/js/eslint-factory/**`\n+- JavaScript/TypeScript files in `actions/setup/js/**` as rule targets\n+\n+Out of scope:\n+\n+- Go analysis rules\n+- JavaScript outside `actions/setup/js`\n+\n+## Success criteria\n+\n+- Refinement strategy documented with clear rationale.\n+- 1-3 concrete refinement tasks generated.\n+- Up to 3 non-duplicate issues created or duplicates explicitly skipped.\n+- Repo-memory updated for continuity.\n+- Daily discussion generated.\n+\n+Begin analysis now.\n+\n+{{#runtime-import shared/noop-reminder.md}}",
+          "snapshot_ref": "35777da04c8f5230a9627bc0ad01f8a6b98dd72c",
+          "snapshot_blob_sha": "c11d094d33e7bf56c73842fa842953950ffd2e8f",
+          "snapshot_file": "snapshots/gh-aw__github__35777da04c8f5230a9627bc0ad01f8a6b98dd72c__eslint-refiner.md",
+          "snapshot_bytes": 2220,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-refiner.lock.yml\",\"generated_workflow_file\":\"eslint-refiner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-refiner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-refiner.md",
+      "commit_sha": "2d16c282d0fa3e367972fb3383669a960621ad02",
+      "authored_at": "2026-06-28T02:30:33Z",
+      "committed_at": "2026-06-28T02:30:33Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Move eslint-factory to repository root (#41975)",
+      "parent_shas": [
+        "3ec2f0c8dc6c36b5bfdfa52c04255c5d3c38b6f1"
+      ],
+      "tree_sha": "23db6c4336f43d3297d08ba7c546d7cf192847fd",
+      "html_url": "https://github.com/github/gh-aw/commit/2d16c282d0fa3e367972fb3383669a960621ad02",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-refiner.md",
+          "commit_sha": "2d16c282d0fa3e367972fb3383669a960621ad02",
+          "committed_at": "2026-06-28T02:30:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "@@ -34,9 +34,9 @@ strict: true\n timeout-minutes: 45\n tools:\n   bash:\n-  - cat actions/setup/js/eslint-factory/package.json\n+  - cat eslint-factory/package.json\n   - find actions/setup/js -name \"*.cjs\" -type f\n-  - find actions/setup/js/eslint-factory/src/rules -name \"*.ts\" -type f\n+  - find eslint-factory/src/rules -name \"*.ts\" -type f\n   - wc -l\n   cli-proxy: true\n   edit: null\n@@ -55,7 +55,7 @@ tracker-id: eslint-refiner\n ---\n # ESLint Refiner\n \n-You are **ESLint Refiner**, focused on improving the quality of custom ESLint rules in `actions/setup/js/eslint-factory`.\n+You are **ESLint Refiner**, focused on improving the quality of custom ESLint rules in `eslint-factory`.\n \n ## Mission\n \n@@ -72,7 +72,7 @@ Each day:\n \n In scope:\n \n-- `actions/setup/js/eslint-factory/**`\n+- `eslint-factory/**`\n - JavaScript/TypeScript files in `actions/setup/js/**` as rule targets\n \n Out of scope:",
+          "snapshot_ref": "2d16c282d0fa3e367972fb3383669a960621ad02",
+          "snapshot_blob_sha": "f4ef95f9d5cea027872a1259508687f7e5e225f4",
+          "snapshot_file": "snapshots/gh-aw__github__2d16c282d0fa3e367972fb3383669a960621ad02__eslint-refiner.md",
+          "snapshot_bytes": 2152,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-refiner.lock.yml\",\"generated_workflow_file\":\"eslint-refiner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-refiner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-refiner.md",
+      "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "authored_at": "2026-06-28T18:46:18Z",
+      "committed_at": "2026-06-28T18:46:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Apply remaining changes (#42119)",
+      "parent_shas": [
+        "f0cf4df7343e548bebb36985a895314e136469ef"
+      ],
+      "tree_sha": "30b81bf66f1fefd910376450ca0b8d58890ef22c",
+      "html_url": "https://github.com/github/gh-aw/commit/a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-refiner.md",
+          "commit_sha": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "committed_at": "2026-06-28T18:46:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -8,6 +8,11 @@ permissions:\n   discussions: read\n   issues: read\n   pull-requests: read\n+\n+sandbox:\n+  agent:\n+    sudo: false\n+\n network:\n   allowed:\n   - defaults",
+          "snapshot_ref": "a2c8ef53839b08f76646833fd1859f4d1cf7079d",
+          "snapshot_blob_sha": "8dcbe262ec77e48a3527d1a573531ca5e45000bc",
+          "snapshot_file": "snapshots/gh-aw__github__a2c8ef53839b08f76646833fd1859f4d1cf7079d__eslint-refiner.md",
+          "snapshot_bytes": 2188,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-refiner.lock.yml\",\"generated_workflow_file\":\"eslint-refiner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-refiner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-refiner.md",
+      "commit_sha": "1170fc484978ff65b6e026755866aea0af490710",
+      "authored_at": "2026-07-07T06:08:34Z",
+      "committed_at": "2026-07-07T06:08:34Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ambient-context: remove noop-reminder imports, trim workflow prompts (~3,600 chars/run saved) (#43910)",
+      "parent_shas": [
+        "22a0f5933fa05ef6444ab7c4b90aad065ce5592a"
+      ],
+      "tree_sha": "c1e1453b083cd21c07c5afb1bcd880168be3ebb3",
+      "html_url": "https://github.com/github/gh-aw/commit/1170fc484978ff65b6e026755866aea0af490710",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-refiner.md",
+          "commit_sha": "1170fc484978ff65b6e026755866aea0af490710",
+          "committed_at": "2026-07-07T06:08:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 3,
+          "file_changes": 4,
+          "file_patch": "@@ -93,6 +93,4 @@ Out of scope:\n - Repo-memory updated for continuity.\n - Daily discussion generated.\n \n-Begin analysis now.\n-\n-{{#runtime-import shared/noop-reminder.md}}\n+Begin analysis now.\n\\ No newline at end of file",
+          "snapshot_ref": "1170fc484978ff65b6e026755866aea0af490710",
+          "snapshot_blob_sha": "878fa63c1b47ee17ec73d502a3422c588151e7a1",
+          "snapshot_file": "snapshots/gh-aw__github__1170fc484978ff65b6e026755866aea0af490710__eslint-refiner.md",
+          "snapshot_bytes": 2142,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-refiner.lock.yml\",\"generated_workflow_file\":\"eslint-refiner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-refiner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/eslint-refiner.md",
+      "commit_sha": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+      "authored_at": "2026-07-30T07:02:05Z",
+      "committed_at": "2026-07-30T07:02:05Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable evals on 20 more workflows (#49078)",
+      "parent_shas": [
+        "9a9a67ff1b759de97722da8333824856fecaf039"
+      ],
+      "tree_sha": "626271d8ec79778c279ed9b99fbf769f3b7f18f8",
+      "html_url": "https://github.com/github/gh-aw/commit/8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/eslint-refiner.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/eslint-refiner.md",
+          "commit_sha": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+          "committed_at": "2026-07-30T07:02:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -57,6 +57,11 @@ tools:\n     - \"*.json\"\n     - \"*.jsonl\"\n tracker-id: eslint-refiner\n+evals:\n+  - id: eslint_trends_analyzed\n+    question: Did the agent analyze ESLint diagnostics trends to identify rule refinement opportunities?\n+  - id: refinements_reported\n+    question: Did the agent report actionable ESLint rule refinements or explain why no refinement was needed?\n ---\n # ESLint Refiner\n ",
+          "snapshot_ref": "8fcdd9f048c3f75a5046372f4000abef92cdac1b",
+          "snapshot_blob_sha": "8b1c4525765832db8bace5df2eff1123854f7fde",
+          "snapshot_file": "snapshots/gh-aw__github__8fcdd9f048c3f75a5046372f4000abef92cdac1b__eslint-refiner.md",
+          "snapshot_bytes": 2425,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/eslint-refiner.lock.yml\",\"generated_workflow_file\":\"eslint-refiner.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/eslint-refiner.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

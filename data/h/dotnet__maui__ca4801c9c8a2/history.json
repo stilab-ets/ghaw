@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+    "source_full_name": "dotnet/maui",
+    "source_owner": "dotnet",
+    "source_repo": "maui",
+    "md_path": ".github/workflows/aw-actions-update.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/dotnet/maui/blob/HEAD/.github/workflows/aw-actions-update.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "dotnet/maui",
+      "generated_owner": "dotnet",
+      "generated_repo": "maui",
+      "generated_workflow_path": ".github/workflows/aw-actions-update.lock.yml",
+      "generated_workflow_file": "aw-actions-update.lock.yml",
+      "generated_html_url": "https://github.com/dotnet/maui/blob/a1521eda4980d8b6a890323ee3273e2e96f71703/.github/workflows/aw-actions-update.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:25:19+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+      "source_full_name": "dotnet/maui",
+      "md_path": ".github/workflows/aw-actions-update.md",
+      "commit_sha": "83816ebe6e3784c9a14d3c10367596f533617864",
+      "authored_at": "2026-07-09T20:31:11Z",
+      "committed_at": "2026-07-09T20:31:11Z",
+      "author_name": "Shane Neuville",
+      "author_email": "5375137+PureWeen@users.noreply.github.com",
+      "author_login": "PureWeen",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add gh-aw self-updater workflows (action-pin refresh + version updater) (#36460)\n\n<!-- Please let the below note in for people that find this PR -->\n> [!NOTE]\n> Are you waiting for the changes in this PR to be merged?\n> It would be very helpful if you could [test the resulting\nartifacts](https://github.com/dotnet/maui/wiki/Testing-PR-Builds) from\nthis PR and let us know in a comment if this change resolves your issue.\nThank you!\n\n## Description\n\nAdds **two net-new** [GitHub Agentic Workflows](https://gh.io/gh-aw)\nthat keep dotnet/maui's own gh-aw setup current. This is\n**maintenance-only automation** — it does **not** touch the existing 11\ngh-aw workflows, product code, or CI. Both are **credential-free** on\nthe write path (they use only the default `GITHUB_TOKEN` via\nsafe-outputs); the Copilot PAT pool is used solely for model\n**inference**, exactly like every existing MAUI agentic workflow.\n\n### Workflow A — `aw-actions-update.md` (\"Action Pin Refresh\")\nLow-risk action-pin refresher.\n- **Triggers:** weekly `schedule` + `workflow_dispatch`, pinned to\n`main` (`checkout: ref: main`), fork-guarded.\n- **What it does:** installs the gh-aw CLI **pinned to v0.80.9** (the\nsame `compiler_version` as the committed locks, so `actions-lock.json`\nstays consistent with them — no version skew; failing closed if that\nexact version can't be installed), runs `gh aw update`, then opens a PR\n**only** when `.github/aw/actions-lock.json` changes (the SHA-pin\nlockfile for the actions our workflows use).\n- **Blast radius pinned:** `allowed-files` restricts the write to that\nsingle file, and `protected-files: allowed` is scoped to just that one\npath under `.github/`. Generated `.github/workflows/*.lock.yml` and any\nsource-workflow drift are explicitly discarded (including brand-new\n**untracked** files, via a scoped `git clean`) and verified out with\n`git status --porcelain` — this workflow can *only* touch the actions\nlock.\n- De-dupes against its **own** open `[actions]` PRs (scoped to `--author\n\"app/github-actions\"`); no-ops quietly when there's nothing to update.\n\n> **Known behavior (by design, not a defect):**\n> - The PR only edits `.github/aw/actions-lock.json`. Because each\n`.lock.yml` embeds its resolved action SHAs, the refreshed pins take\nruntime effect only after the workflows are **recompiled** (`gh aw\ncompile`) — which is Workflow B's maintainer runbook. Pushing\nregenerated `.lock.yml` files would require a GitHub-App `workflows:\nwrite` token this credential-free workflow deliberately avoids.\n> - Because the PR is created with the default `GITHUB_TOKEN`, it will\n**not** auto-trigger CI (GitHub platform rule: `GITHUB_TOKEN` pushes\ndon't fire workflow events). A maintainer may need to nudge CI (e.g.,\nclose/reopen the PR or push an empty commit).\n\n### Workflow B — `aw-version-update.md` (\"Agentic Workflow Version\nAuto-Update\")\ngh-aw version updater, **detect → file issue** design (fully automatic,\ncredential-free).\n- **Triggers:** weekly `schedule` (live) + `workflow_dispatch`, pinned\nto `main`, fork-guarded.\n- **What it does:** a **read-only** detector (`permissions: { contents:\nread, issues: read }`) installs/refreshes the gh-aw CLI **to the latest\nrelease** (detecting newer versions is its whole purpose), runs `gh aw\nupgrade` + `gh aw compile`, and checks whether that produces a non-empty\nchange set (`git status --porcelain`, so brand-new untracked locks are\ncaught). It then hard-resets its worktree so nothing leaks out of the\ndetection run.\n- **If an upgrade is pending,** it emits exactly **one** `create-issue`\n— a `[Auto Update]` tracking issue asking a maintainer to run `gh aw\nupgrade` locally and open the PR. The issue is filed with the default\n`GITHUB_TOKEN` (`issues: write`, granted to the separate safe-outputs\njob). Steady state is `noop` (no issue, no noise).\n- **De-dupes** against its **own** open `[Auto Update]` issues (scoped\nto `--author \"app/github-actions\"`), and runs with `min-integrity:\napproved` so community content stays out of the agent's view.\n\n> **Why an issue instead of an automated PR (deliberate design):** `gh\naw upgrade` / `gh aw compile` regenerate `.github/workflows/*.lock.yml`,\nwhich the default `GITHUB_TOKEN` cannot push (GitHub platform rule) and\nwhich would otherwise require a Copilot-licensed / `workflow`-scoped\nagent token this repo intentionally does **not** provision. Filing an\nissue keeps the workflow fully automatic and credential-free; a\nmaintainer performs the actual upgrade. There is **no**\n`create-agent-session`, `GH_AW_AGENT_TOKEN`, or staged-delegation step.\n\nBoth workflows reuse MAUI's existing Copilot PAT-pool import +\n`copilot-pat-pool` environment (inference only), carry a fork guard\n(won't run in forks), and were compiled with **gh-aw v0.80.9** — the\nsame `compiler_version` as all 11 existing locks, so no other lock files\nare bumped.\n\n## Validation\n- ✅ `gh aw compile` — **0 errors, 0 warnings** on both.\n- ✅ `gh aw lint` — clean across all workflows.\n- ✅ gh-aw security review (gh-aw-guide scanner) — clean on both.\n- ✅ Scope check — only the 4 new workflow files (2 `.md` + 2 generated\n`.lock.yml`); the existing 11 workflows are untouched. No auto-generated\nfiles (`cgmanifest.json`, `templatestrings.json`) changed.\n\n## Rollout\n- **Workflow A** can be enabled immediately — low-risk, single-file,\nhuman-reviewed PRs.\n- **Workflow B** is safe to run live on merge — its only possible write\nis a single tracking issue for a maintainer; the actual upgrade is\nalways human-performed. No secrets to provision.\n\n## Notes for reviewers\n- No hardcoded PATs; both use the standard `COPILOT_PAT_0..9` pool via\nthe existing `shared/pat_pool.md` import (inference only).\n- No auto-merge — every PR/issue these produce is\nhuman-reviewed/actioned.\n- `.lock.yml` files are auto-generated; regenerate via `gh aw compile\n<name>`, never hand-edit.\n\n<sub>Co-authored-by: Copilot App</sub>\n\n---------\n\nCo-authored-by: PureWeen <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "3c1b74f6c0ea8beb6ee57f99d26c42d45ecb0c82"
+      ],
+      "tree_sha": "f0585b63190106691e44634253ceec1882972bb5",
+      "html_url": "https://github.com/dotnet/maui/commit/83816ebe6e3784c9a14d3c10367596f533617864",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+          "source_full_name": "dotnet/maui",
+          "md_path": ".github/workflows/aw-actions-update.md",
+          "commit_sha": "83816ebe6e3784c9a14d3c10367596f533617864",
+          "committed_at": "2026-07-09T20:31:11Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 285,
+          "file_deletions": 0,
+          "file_changes": 285,
+          "file_patch": "@@ -0,0 +1,285 @@\n+---\n+name: \"Action Pin Refresh\"\n+description: |\n+  Weekly gh-aw maintenance workflow for dotnet/maui. Runs `gh aw update --verbose`\n+  to refresh pinned GitHub Actions SHAs in `.github/aw/actions-lock.json`, then opens\n+  a PR only for that lockfile. Generated `.github/workflows/*.lock.yml` files, and\n+  any sourced workflow drift, are intentionally excluded from this action-pin PR.\n+\n+# ###############################################################\n+# Select a PAT from the pool and override COPILOT_GITHUB_TOKEN.\n+# Run agentic jobs in an isolated `copilot-pat-pool` environment.\n+#\n+# When org-level billing is available, this will be removed.\n+# See `shared/pat_pool.README.md` for more information.\n+# ###############################################################\n+imports:\n+  - uses: shared/pat_pool.md\n+    with:\n+      environment: copilot-pat-pool\n+\n+environment: copilot-pat-pool\n+\n+on:\n+  schedule: weekly\n+  workflow_dispatch:\n+  # Forces a no-op pre_activation job, required by the pat_pool import.\n+  # See shared/pat_pool.README.md (Known Issues).\n+  permissions: {}\n+\n+# Runs on dotnet/maui only. `!github.event.repository.fork` is cheap\n+# defense-in-depth so forks that inherit this file never run it on schedule.\n+if: |\n+  github.repository == 'dotnet/maui' && !github.event.repository.fork\n+\n+permissions:\n+  contents: read\n+  # Required by the github `default` toolset (includes the issues toolset). The\n+  # agent's own work uses only bash `gh pr list` + git + the create-pull-request\n+  # safe-output, but the declared toolset needs issues:read to compile clean.\n+  issues: read\n+  pull-requests: read\n+\n+# Pin dispatch/schedule runs to main so the refresh always operates on the\n+# canonical actions-lock.json (a workflow_dispatch could otherwise select a\n+# stale branch).\n+checkout:\n+  ref: main\n+\n+# Lets maintainers find every asset this workflow creates (PRs, comments).\n+tracker-id: aw-actions-update\n+\n+engine:\n+  id: copilot\n+  env:\n+    COPILOT_GITHUB_TOKEN: |\n+      ${{ case(\n+        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n+        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n+        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n+        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n+        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n+        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n+        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n+        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n+        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n+        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n+        'NO COPILOT PAT AVAILABLE')\n+      }}\n+\n+concurrency:\n+  group: \"aw-actions-update\"\n+  cancel-in-progress: false\n+\n+timeout-minutes: 15\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+tools:\n+  github:\n+    # Dedup uses bash `gh pr list` and the PR is a safe-output, so the agent\n+    # needs only the default toolset (matches the upstream reference workflow).\n+    toolsets: [default]\n+  bash: [\"gh\", \"git\", \"grep\", \"sed\", \"awk\", \"sort\", \"uniq\", \"jq\", \"cat\", \"echo\", \"date\", \"test\", \"true\", \"false\", \"bash\", \"sh\"]\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[actions] \"\n+    labels: [dependencies, agentic-workflows]\n+    draft: false\n+    # The only write target, `.github/aw/actions-lock.json`, lives under the\n+    # protected `.github/` dot-folder. `allowed` intentionally permits writing it;\n+    # the single-entry `allowed-files` list below is the real file-scope guard, so\n+    # nothing else — including any `.github/workflows/**` file — can ever be touched.\n+    protected-files: allowed\n+    # Enforced allowlist: the only file this PR may ever touch. Fails closed if the\n+    # agent forgets to discard generated locks or sourced-workflow drift.\n+    allowed-files:\n+      - .github/aw/actions-lock.json\n+  # Most weekly runs are no-ops (pins already fresh). Without this, gh-aw's default\n+  # (noop: report-as-issue: true) files a \"no action taken\" issue every idle run.\n+  noop:\n+    report-as-issue: false\n+---\n+\n+# Action Pin Refresh — dotnet/maui\n+\n+You are an AI automation agent that keeps dotnet/maui's pinned GitHub Actions SHAs fresh.\n+\n+Your only intended code change is `.github/aw/actions-lock.json`. Do not include generated\n+`.github/workflows/*.lock.yml` files in the PR. Do not include gh-aw version upgrades or compiled\n+workflow refreshes; those belong to the separate gh-aw version-updater workflow.\n+\n+## Step 0 — De-duplicate existing action-pin PRs\n+\n+Before changing anything, check for an open action-pin PR:\n+\n+```bash\n+gh pr list --state open --search '\"[actions]\" in:title' --author \"app/github-actions\" --json number,title,url,headRefName --limit 20\n+```\n+\n+If there is already an open PR whose title starts with `[actions]`, exit gracefully without\n+creating another PR. Mention the existing PR in the run output only. (The `--author` filter scopes\n+the check to this workflow's own bot-created PRs — safe-outputs opens them as `app/github-actions` —\n+so an unrelated user-opened PR with a colliding title cannot suppress the refresh.)\n+\n+## Step 1 — Ensure the gh-aw CLI is available at the pinned version\n+\n+The `gh aw` command comes from the `github/gh-aw` gh extension, which may not be preinstalled on\n+the runner. **Pin the install to `v0.80.9`** — the same `compiler_version` all committed\n+`.github/workflows/*.lock.yml` files were built with. `gh aw update` caps native action-pin\n+resolution at the CLI's own version, so a newer CLI would refresh `actions-lock.json` in a way\n+that no longer matches the v0.80.9-compiled locks (version skew). Bumping gh-aw is a deliberate,\n+coordinated change handled by the separate `aw-version-update` runbook — not something this\n+weekly pin-refresher should do implicitly.\n+\n+Remove any pre-installed copy, then install the pinned tag. **Fail closed** (log and exit without\n+creating a PR) if the pinned install does not succeed — never silently continue on a stale or\n+wrong-version CLI.\n+\n+```bash\n+GH_AW_PINNED_VERSION=\"v0.80.9\"   # keep in sync with the committed *.lock.yml compiler_version\n+gh extension remove gh-aw 2>/dev/null || true\n+if ! gh extension install github/gh-aw --pin \"$GH_AW_PINNED_VERSION\"; then\n+  echo \"Failed to install gh-aw $GH_AW_PINNED_VERSION; not creating a PR.\"\n+  exit 0\n+fi\n+INSTALLED_VERSION=\"$(gh aw --version 2>/dev/null || true)\"\n+echo \"gh-aw: $INSTALLED_VERSION\"\n+case \"$INSTALLED_VERSION\" in\n+  *\"$GH_AW_PINNED_VERSION\"*) : ;;   # good — pinned version is active\n+  *) echo \"gh-aw is not the pinned $GH_AW_PINNED_VERSION; not creating a PR.\"; exit 0 ;;\n+esac\n+```\n+\n+## Step 2 — Run the update command\n+\n+Run:\n+\n+```bash\n+set +e\n+gh aw update --verbose\n+update_status=$?\n+set -e\n+if [ \"$update_status\" -ne 0 ]; then\n+  echo \"gh aw update failed with exit code $update_status; not creating a PR.\"\n+  exit 0\n+fi\n+```\n+\n+The update may:\n+\n+- refresh pinned action SHAs in `.github/aw/actions-lock.json`;\n+- recompile `.github/workflows/*.lock.yml` files;\n+- refresh workflows that use `source:` from upstream repositories.\n+\n+MAUI currently sources some workflows from `githubnext/agentics` (for example,\n+`daily-repo-status`). If `gh aw update` reports or produces upstream-source drift, capture the\n+paths and summarize that in the PR body, but do not include those source/compiled workflow changes\n+in this PR.\n+\n+## Step 3 — Inspect changes\n+\n+Run:\n+\n+```bash\n+git status\n+git diff .github/aw/actions-lock.json\n+```\n+\n+Only create a PR if `.github/aw/actions-lock.json` changed. If it did not change, restore any\n+compiled/source workflow changes and exit gracefully:\n+\n+```bash\n+git checkout -- .github/workflows/*.lock.yml 2>/dev/null || true\n+git checkout -- .github/workflows/*.md 2>/dev/null || true\n+echo \"All action pins are already up to date; no PR needed.\"\n+```\n+\n+## Step 4 — Exclude workflow lock/source drift from this PR\n+\n+If `.github/aw/actions-lock.json` changed, first record any workflow drift for the PR body:\n+\n+```bash\n+git status --porcelain -- .github/workflows | grep -E '\\.(md|lock\\.yml)$' || true\n+```\n+\n+Then discard generated lock files:\n+\n+```bash\n+git checkout -- .github/workflows/*.lock.yml 2>/dev/null || true\n+```\n+\n+If sourced workflow `.md` files also changed, discard them too after recording their paths:\n+\n+```bash\n+git checkout -- .github/workflows/*.md 2>/dev/null || true\n+```\n+\n+`git checkout --` only restores **tracked** files. `gh aw update` can also create brand-new\n+**untracked** files under `.github/workflows/` (for example, a lock for a newly sourced workflow).\n+Remove those too so they cannot leak into the PR or hide from the verification below:\n+\n+```bash\n+git clean -f -- .github/workflows/\n+```\n+\n+Verify the final change set contains only the action pin lockfile. Use `git status --porcelain`\n+(not `git diff --name-only`) so **untracked** files are also caught:\n+\n+```bash\n+git status --porcelain\n+```\n+\n+If `git status --porcelain` reports anything other than a single `.github/aw/actions-lock.json`\n+entry, do not create a PR.\n+\n+## Step 5 — Create the PR only for `.github/aw/actions-lock.json`\n+\n+Use the `create-pull-request` safe-output. The safe-output already adds the `[actions] ` title\n+prefix, so use this title text:\n+\n+```text\n+Update GitHub Actions pins\n+```\n+\n+PR body template:\n+\n+~~~~markdown\n+### GitHub Actions pin refresh\n+\n+This PR updates pinned GitHub Actions SHAs in `.github/aw/actions-lock.json` using:\n+\n+~~~bash\n+gh aw update --verbose\n+~~~\n+\n+### Updated actions\n+\n+[List each updated action from `git diff .github/aw/actions-lock.json`, including before/after refs or SHAs when visible.]\n+\n+### Scope\n+\n+- Included: `.github/aw/actions-lock.json`\n+- Excluded: generated `.github/workflows/*.lock.yml` files; they will regenerate on the next compile\n+- Excluded: gh-aw version upgrades and workflow source updates; those are handled separately\n+\n+### Sourced workflow drift\n+\n+[If `gh aw update` reported or produced changes for workflows sourced from upstream, list the paths and say they were intentionally not included in this action-pin PR. Otherwise write: \"None observed.\"]\n+\n+### Validation\n+\n+- Ran `gh aw update --verbose`\n+- Confirmed final diff contains only `.github/aw/actions-lock.json`\n+~~~~\n+\n+## Edge cases\n+\n+- If no action pins changed, create no PR.\n+- If only `.github/workflows/*.lock.yml` or sourced workflow `.md` files changed, restore them and create no PR.\n+- If `gh aw update --verbose` fails, report the failure in the run output and create no PR.\n+- If an open `[actions]` PR already exists, create no duplicate PR.",
+          "snapshot_ref": "83816ebe6e3784c9a14d3c10367596f533617864",
+          "snapshot_blob_sha": "75c6aeee387004276079d77acc8b0ae0429d071a",
+          "snapshot_file": "snapshots/maui__dotnet__83816ebe6e3784c9a14d3c10367596f533617864__aw-actions-update.md",
+          "snapshot_bytes": 10508,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/maui\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"maui\",\"generated_workflow_path\":\".github/workflows/aw-actions-update.lock.yml\",\"generated_workflow_file\":\"aw-actions-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/maui/blob/a1521eda4980d8b6a890323ee3273e2e96f71703/.github/workflows/aw-actions-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+      "source_full_name": "dotnet/maui",
+      "md_path": ".github/workflows/aw-actions-update.md",
+      "commit_sha": "c1dc240f1871a2928541e737cd0d6f9b938bf5b1",
+      "authored_at": "2026-07-16T19:43:06Z",
+      "committed_at": "2026-07-16T19:43:06Z",
+      "author_name": "Shane Neuville",
+      "author_email": "5375137+PureWeen@users.noreply.github.com",
+      "author_login": "PureWeen",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Action Pin Refresh gh CLI authentication (#36487)\n\n<!-- Please let the below note in for people that find this PR -->\n> [!NOTE]\n> Are you waiting for the changes in this PR to be merged?\n> It would be very helpful if you could [test the resulting\nartifacts](https://github.com/dotnet/maui/wiki/Testing-PR-Builds) from\nthis PR and let us know in a comment if this change resolves your issue.\nThank you!\n\n## Summary\n\nThe live manual validation of Action Pin Refresh ([run\n29052735587](https://github.com/dotnet/maui/actions/runs/29052735587))\ncorrectly produced a no-op: the runner had gh-aw v0.81.6 preinstalled,\nbut the v0.80.9-compiled workflow needed its matching CLI. `gh extension\nremove gh-aw` could not authenticate because the agent had only the\nCopilot inference PAT, and direct binary download was blocked.\n\nThis follow-up supplies the agent's `GH_TOKEN` from the workflow's\nexisting read-only `${{ github.token }}` permissions, leaving the\nCopilot PAT limited to inference. It also reads and validates the\nrequired gh-aw version from `aw-actions-update.lock.yml` metadata,\navoiding manual pin drift when the dedicated version-updater changes the\ncompiler version.\n\n## Scope\n\n- `.github/workflows/aw-actions-update.md`\n- Regenerated `.github/workflows/aw-actions-update.lock.yml` (compiled\nwith gh-aw v0.80.9)\n\nThe safe-output remains constrained to `.github/aw/actions-lock.json`;\npermissions and write scope are unchanged.\n\n## Validation\n\n- `gh aw compile aw-actions-update`\n- gh-aw workflow security scanner: `aw-actions-update.md` passed\n- `gh aw lint .github/workflows/aw-actions-update.lock.yml` reported no\nlint issues; its local actionlint integration exited 125 due to a\ntooling error.\n\nCo-authored-by: PureWeen <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "6aad9ad08d82eeda905e514fda7beddc7b929f05"
+      ],
+      "tree_sha": "330eb0023017f92afb5e01de10fea3197ce10efb",
+      "html_url": "https://github.com/dotnet/maui/commit/c1dc240f1871a2928541e737cd0d6f9b938bf5b1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+          "source_full_name": "dotnet/maui",
+          "md_path": ".github/workflows/aw-actions-update.md",
+          "commit_sha": "c1dc240f1871a2928541e737cd0d6f9b938bf5b1",
+          "committed_at": "2026-07-16T19:43:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 19,
+          "file_deletions": 9,
+          "file_changes": 28,
+          "file_patch": "@@ -52,6 +52,9 @@ tracker-id: aw-actions-update\n engine:\n   id: copilot\n   env:\n+    # Authenticate the agent's `gh` CLI commands with this workflow's read-only\n+    # GitHub Actions token, not the Copilot inference PAT.\n+    GH_TOKEN: ${{ github.token }}\n     COPILOT_GITHUB_TOKEN: |\n       ${{ case(\n         needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n@@ -129,19 +132,26 @@ so an unrelated user-opened PR with a colliding title cannot suppress the refres\n ## Step 1 — Ensure the gh-aw CLI is available at the pinned version\n \n The `gh aw` command comes from the `github/gh-aw` gh extension, which may not be preinstalled on\n-the runner. **Pin the install to `v0.80.9`** — the same `compiler_version` all committed\n-`.github/workflows/*.lock.yml` files were built with. `gh aw update` caps native action-pin\n-resolution at the CLI's own version, so a newer CLI would refresh `actions-lock.json` in a way\n-that no longer matches the v0.80.9-compiled locks (version skew). Bumping gh-aw is a deliberate,\n-coordinated change handled by the separate `aw-version-update` runbook — not something this\n-weekly pin-refresher should do implicitly.\n+the runner. Read this workflow's required version from the `compiler_version` metadata in its\n+committed lock file. `gh aw update` caps native action-pin resolution at the CLI's own version, so\n+a newer CLI would refresh `actions-lock.json` in a way that no longer matches the compiled lock\n+(version skew). Bumping gh-aw is a deliberate, coordinated change handled by the separate\n+`aw-version-update` runbook — not something this weekly pin-refresher should do implicitly.\n \n Remove any pre-installed copy, then install the pinned tag. **Fail closed** (log and exit without\n-creating a PR) if the pinned install does not succeed — never silently continue on a stale or\n-wrong-version CLI.\n+creating a PR) if the lock metadata is invalid or the pinned install does not succeed — never\n+silently continue on a stale or wrong-version CLI. The workflow sets `GH_TOKEN` from its\n+read-only GitHub Actions token so the GitHub CLI can remove a preinstalled extension and install\n+the lock-pinned release without using the Copilot inference PAT.\n \n ```bash\n-GH_AW_PINNED_VERSION=\"v0.80.9\"   # keep in sync with the committed *.lock.yml compiler_version\n+GH_AW_LOCK_FILE=\".github/workflows/aw-actions-update.lock.yml\"\n+GH_AW_PINNED_VERSION=\"$(sed -nE '1s/^# gh-aw-metadata: .*\"compiler_version\":\"([^\"]+)\".*$/\\1/p' \"$GH_AW_LOCK_FILE\")\"\n+if ! printf '%s\\n' \"$GH_AW_PINNED_VERSION\" | grep -Eq '^v[0-9]+\\.[0-9]+\\.[0-9]+$'; then\n+  echo \"Could not read a valid gh-aw compiler_version from $GH_AW_LOCK_FILE; not creating a PR.\"\n+  exit 0\n+fi\n+\n gh extension remove gh-aw 2>/dev/null || true\n if ! gh extension install github/gh-aw --pin \"$GH_AW_PINNED_VERSION\"; then\n   echo \"Failed to install gh-aw $GH_AW_PINNED_VERSION; not creating a PR.\"",
+          "snapshot_ref": "c1dc240f1871a2928541e737cd0d6f9b938bf5b1",
+          "snapshot_blob_sha": "b6a5a9374384324a434a2905546af7c7e8ddb5bc",
+          "snapshot_file": "snapshots/maui__dotnet__c1dc240f1871a2928541e737cd0d6f9b938bf5b1__aw-actions-update.md",
+          "snapshot_bytes": 11156,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/maui\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"maui\",\"generated_workflow_path\":\".github/workflows/aw-actions-update.lock.yml\",\"generated_workflow_file\":\"aw-actions-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/maui/blob/a1521eda4980d8b6a890323ee3273e2e96f71703/.github/workflows/aw-actions-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+      "source_full_name": "dotnet/maui",
+      "md_path": ".github/workflows/aw-actions-update.md",
+      "commit_sha": "78ffaf8de9a68cb7c117ac33e6dff17e3cd3e8af",
+      "authored_at": "2026-07-21T17:14:38Z",
+      "committed_at": "2026-07-21T17:14:38Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[CI] Agentic workflows: Update gh-aw generated assets to v0.81.6 (#36486)\n\n<!-- Please let the below note in for people that find this PR -->\n> [!NOTE]\n> Are you waiting for the changes in this PR to be merged?\n> It would be very helpful if you could [test the resulting\nartifacts](https://github.com/dotnet/maui/wiki/Testing-PR-Builds) from\nthis PR and let us know in a comment if this change resolves your issue.\nThank you!\n\n### Description of Change\n\nUpdates the agentic workflow infrastructure for gh-aw v0.81.6 by\napplying the generated `gh aw upgrade && gh aw compile` output.\n\nKey changes:\n- Refreshes `.github/aw/actions-lock.json` and generated\n`.github/workflows/*.lock.yml` files to gh-aw `v0.81.6`.\n- Renames/updates the agentic workflows agent definition and adds the\ngenerated agentic workflow skill files.\n- Adds the missing local `.github/skills/otel-queries/SKILL.md` target\nreferenced by the new agentic-workflows router for\nOTEL/trace/telemetry-driven analysis.\n- Pins gh-aw prompt/reference URLs in\n`.github/agents/agentic-workflows.md` and designer references to\n`v0.81.6` instead of floating `main`.\n- Adds the missing ASCII Charts prompt route and wires\n`aw-actions-update` safe outputs to depend on `pat_pool`.\n- Hardens `rerun-review-scanner` by pinning the write-scoped\n`trigger-rerun-review` safe-output checkout to `main` before running\n`.github/scripts/Invoke-RerunReviewTrigger.ps1` with `GH_TOKEN`.\n- Hardens `agentic-labeler` with a source-level safe-output allowlist\nthat permits only `area-*` and `platform/*` labels. gh-aw v0.81.6\nvalidates, sanitizes, and length-bounds label names through its\nissue-intent normalizer.\n- Updates workflow source files changed by the compiler, including\naction pins and rerun/CI scanner workflow sources.\n- Updates PAT pool validation/docs to use the generated gh-aw setup\nscripts and Copilot CLI `1.0.65`.\n- Hardens maintenance workflows by deriving the gh-aw updater pin from\n`actions-lock.json`, requiring exactly one non-empty setup-cli lock\nentry with graceful fail-closed fallback, and avoiding `eval` in PAT\nvalidation.\n\n### Issues Fixed\n\nFixes #36485\n\n### Validation\n\n- `gh aw upgrade --approve --verbose`\n- `gh aw compile --approve --verbose`\n- `gh aw validate --verbose`\n- YAML parse check for `.github/workflows/validate-pat-pool.yml`\n- Verified action tags for `actions/checkout@v7.0.0` and\n`actions/github-script@v9.0.0`\n- Focused positive/negative checks for gh-aw pinned-version extraction\nfrom `.github/aw/actions-lock.json`, including duplicate-entry graceful\nguard behavior under `set -e`\n- Static route-target check that\n`.github/skills/agentic-workflows/SKILL.md` references existing\n`.github/skills/otel-queries/SKILL.md`\n- Static check that `.github/agents/agentic-workflows.md` no longer\nreferences floating `raw.githubusercontent.com/github/gh-aw/main` prompt\nURLs\n- Static checks for OTEL and ASCII Charts route targets, pinned designer\nreference URLs, and `safe-outputs.needs: [pat_pool]`\n- Targeted check that `rerun-review-scanner` pins the write-scoped\nsafe-output checkout to `main` in both source and generated lock files\n- Verified upstream gh-aw v0.81.6 routes `add_labels` through\n`validateIssueIntentLabels` for type checking, sanitization, and a\n128-character limit\n- Verified the regenerated `agentic-labeler.lock.yml` carries `allowed:\n[\"area-*\", \"platform/*\"]` in both safe-output configuration surfaces\n\n### Platforms Tested\n\n- [ ] iOS\n- [x] Android — not applicable; workflow-only change\n- [ ] Windows\n- [ ] Mac\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: PureWeen <5375137+PureWeen@users.noreply.github.com>",
+      "parent_shas": [
+        "3faa8767deee62f57762d17c11d77b4603580281"
+      ],
+      "tree_sha": "f5478505bce5636ea8663e2a9776e942b32427bc",
+      "html_url": "https://github.com/dotnet/maui/commit/78ffaf8de9a68cb7c117ac33e6dff17e3cd3e8af",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+          "source_full_name": "dotnet/maui",
+          "md_path": ".github/workflows/aw-actions-update.md",
+          "commit_sha": "78ffaf8de9a68cb7c117ac33e6dff17e3cd3e8af",
+          "committed_at": "2026-07-21T17:14:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -89,6 +89,7 @@ tools:\n   bash: [\"gh\", \"git\", \"grep\", \"sed\", \"awk\", \"sort\", \"uniq\", \"jq\", \"cat\", \"echo\", \"date\", \"test\", \"true\", \"false\", \"bash\", \"sh\"]\n \n safe-outputs:\n+  needs: [pat_pool]\n   create-pull-request:\n     title-prefix: \"[actions] \"\n     labels: [dependencies, agentic-workflows]\n@@ -129,7 +130,7 @@ creating another PR. Mention the existing PR in the run output only. (The `--aut\n the check to this workflow's own bot-created PRs — safe-outputs opens them as `app/github-actions` —\n so an unrelated user-opened PR with a colliding title cannot suppress the refresh.)\n \n-## Step 1 — Ensure the gh-aw CLI is available at the pinned version\n+## Step 1 — Ensure the gh-aw CLI is available at the committed lock version\n \n The `gh aw` command comes from the `github/gh-aw` gh extension, which may not be preinstalled on\n the runner. Read this workflow's required version from the `compiler_version` metadata in its",
+          "snapshot_ref": "78ffaf8de9a68cb7c117ac33e6dff17e3cd3e8af",
+          "snapshot_blob_sha": "28ef7fe5ab053afc698a873f70287539d5e3f09c",
+          "snapshot_file": "snapshots/maui__dotnet__78ffaf8de9a68cb7c117ac33e6dff17e3cd3e8af__aw-actions-update.md",
+          "snapshot_bytes": 11184,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/maui\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"maui\",\"generated_workflow_path\":\".github/workflows/aw-actions-update.lock.yml\",\"generated_workflow_file\":\"aw-actions-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/maui/blob/a1521eda4980d8b6a890323ee3273e2e96f71703/.github/workflows/aw-actions-update.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+      "source_full_name": "dotnet/maui",
+      "md_path": ".github/workflows/aw-actions-update.md",
+      "commit_sha": "8ae89f6afbe8e9cc2e456e4d8f351ec53e424aac",
+      "authored_at": "2026-07-21T20:01:14Z",
+      "committed_at": "2026-07-21T20:01:14Z",
+      "author_name": "Shane Neuville",
+      "author_email": "5375137+PureWeen@users.noreply.github.com",
+      "author_login": "PureWeen",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[CI] Agentic workflows: Update gh-aw workflows to v0.82.14 (#36705)\n\n<!-- Please let the below note in for people that find this PR -->\n> [!NOTE]\n> Are you waiting for the changes in this PR to be merged?\n> It would be very helpful if you could [test the resulting\nartifacts](https://github.com/dotnet/maui/wiki/Testing-PR-Builds) from\nthis PR and let us know in a comment if this change resolves your issue.\nThank you!\n\n## Summary\n\nUpdates all repository agentic workflows from gh-aw v0.81.6 to the\nlatest stable v0.82.14 and repairs the PAT-pool source shape that\nprevented regeneration with the new compiler.\n\n## Root Cause\n\nThe v0.82.14 compiler emitted invalid generated YAML for the multiline\n`engine.env.COPILOT_GITHUB_TOKEN` `case()` expressions used by all 14\nworkflows (`non-map value is specified`). This was a\ncompiler/source-shape incompatibility, not an organization-billing or\nPAT-authentication failure. Audited v0.81.6 runs showed the existing\n`copilot-pat-pool` job, Copilot inference, and safe outputs completing\nsuccessfully.\n\n## Changes\n\n- Normalize all PAT-pool `COPILOT_GITHUB_TOKEN` expressions to\ncompiler-safe single-line scalars.\n- Preserve the environment-scoped PAT pool; do not add `permissions:\ncopilot-requests: write` or org-billed inference.\n- Apply supported v0.82.14 migrations, including top-level `model`\nfields and `checkout: false` for the `pull_request_target` labeler.\n- Add explicit protected-file blocking to code-writing workflows.\n- Update gh-aw action pins, dispatcher assets, PAT-pool documentation,\nand the PAT validator.\n- Regenerate all 14 `.lock.yml` files and `agentics-maintenance.yml`\nwith gh-aw v0.82.14.\n- Remove the obsolete local agentic workflow designer skill replaced by\nthe v0.82.14 dispatcher route.\n\n## Validation\n\n- `gh aw compile --approve --strict --validate --schedule-seed\ndotnet/maui --verbose` — 14/14 workflows compiled successfully.\n- Trial-mode compile against `PureWeen/maui` — 14/14 workflows compiled\nsuccessfully.\n- `gh aw trial ... --clone-repo PureWeen/maui --dry-run` accepted all 14\nworkflows without changes.\n- `gh aw fix` reports no remaining migrations.\n- All 14 lock files report compiler v0.82.14.\n- Structural YAML parsing passed for all locks, maintenance, and PAT\nvalidation workflows.\n- PAT-pool preservation checks confirm all workflows still use\n`COPILOT_GITHUB_TOKEN` and none grant `copilot-requests: write`.\n\nContainer-backed actionlint, zizmor, and poutine could not run locally\nbecause the Docker Desktop daemon was unavailable.\n\n---------\n\nCo-authored-by: PureWeen <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "be2a405f95da8a18637f00837d2c48550d20321d"
+      ],
+      "tree_sha": "6782b80880009632fc486e24b3ec30d75c4a1d1c",
+      "html_url": "https://github.com/dotnet/maui/commit/8ae89f6afbe8e9cc2e456e4d8f351ec53e424aac",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "dotnet/maui:.github/workflows/aw-actions-update.md",
+          "source_full_name": "dotnet/maui",
+          "md_path": ".github/workflows/aw-actions-update.md",
+          "commit_sha": "8ae89f6afbe8e9cc2e456e4d8f351ec53e424aac",
+          "committed_at": "2026-07-21T20:01:14Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 14,
+          "file_changes": 15,
+          "file_patch": "@@ -55,20 +55,7 @@ engine:\n     # Authenticate the agent's `gh` CLI commands with this workflow's read-only\n     # GitHub Actions token, not the Copilot inference PAT.\n     GH_TOKEN: ${{ github.token }}\n-    COPILOT_GITHUB_TOKEN: |\n-      ${{ case(\n-        needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0,\n-        needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1,\n-        needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2,\n-        needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3,\n-        needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4,\n-        needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5,\n-        needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6,\n-        needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,\n-        needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,\n-        needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,\n-        'NO COPILOT PAT AVAILABLE')\n-      }}\n+    COPILOT_GITHUB_TOKEN: ${{ case(needs.pat_pool.outputs.pat_number == '0', secrets.COPILOT_PAT_0, needs.pat_pool.outputs.pat_number == '1', secrets.COPILOT_PAT_1, needs.pat_pool.outputs.pat_number == '2', secrets.COPILOT_PAT_2, needs.pat_pool.outputs.pat_number == '3', secrets.COPILOT_PAT_3, needs.pat_pool.outputs.pat_number == '4', secrets.COPILOT_PAT_4, needs.pat_pool.outputs.pat_number == '5', secrets.COPILOT_PAT_5, needs.pat_pool.outputs.pat_number == '6', secrets.COPILOT_PAT_6, needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7, needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8, needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9, 'NO COPILOT PAT AVAILABLE') }}\n \n concurrency:\n   group: \"aw-actions-update\"",
+          "snapshot_ref": "8ae89f6afbe8e9cc2e456e4d8f351ec53e424aac",
+          "snapshot_blob_sha": "0c416536dfc4efa0d6edd14c99f5768f4abd005d",
+          "snapshot_file": "snapshots/maui__dotnet__8ae89f6afbe8e9cc2e456e4d8f351ec53e424aac__aw-actions-update.md",
+          "snapshot_bytes": 11081,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"dotnet/maui\",\"generated_owner\":\"dotnet\",\"generated_repo\":\"maui\",\"generated_workflow_path\":\".github/workflows/aw-actions-update.lock.yml\",\"generated_workflow_file\":\"aw-actions-update.lock.yml\",\"generated_html_url\":\"https://github.com/dotnet/maui/blob/a1521eda4980d8b6a890323ee3273e2e96f71703/.github/workflows/aw-actions-update.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

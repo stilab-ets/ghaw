@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+    "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+    "source_owner": "MaggieAppleton",
+    "source_repo": "maggieappleton.com-V3",
+    "md_path": ".github/workflows/planner.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/HEAD/.github/workflows/planner.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "generated_owner": "MaggieAppleton",
+      "generated_repo": "maggieappleton.com-V3",
+      "generated_workflow_path": ".github/workflows/planner.lock.yml",
+      "generated_workflow_file": "planner.lock.yml",
+      "generated_html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/planner.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:07+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/planner.md",
+      "commit_sha": "f2d2769b70efb0f75cde609d2da186f2bbcf19a4",
+      "authored_at": "2026-04-25T14:29:45Z",
+      "committed_at": "2026-04-25T14:29:45Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "Maggie Appleton",
+      "committer_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "committer_login": "MaggieAppleton",
+      "committer_account_type": "User",
+      "message": "Restructure agent kit into category folders, add gh-aw pipeline\n\nReplace flat .claude/skills layout with maggie-agent-kit's category-organized\nskills (animation, design-and-ui, planning-and-product). Add planner +\nimplementer agentic workflows for the plan → sub-issues → PR pipeline.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>",
+      "parent_shas": [
+        "f25bd0e3ed0abc71b9beb53685f79b98b3db7134"
+      ],
+      "tree_sha": "14338c593a8994527dd706858045bdc875ee5eb8",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/f2d2769b70efb0f75cde609d2da186f2bbcf19a4",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/planner.md",
+          "commit_sha": "f2d2769b70efb0f75cde609d2da186f2bbcf19a4",
+          "committed_at": "2026-04-25T14:29:45Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 121,
+          "file_deletions": 0,
+          "file_changes": 121,
+          "file_patch": "@@ -0,0 +1,121 @@\n+---\n+name: Plan issue → sub-issues\n+on:\n+  issues:\n+    types: [opened, labeled]\n+    names: [plan]\n+  # Don't re-plan an issue we've already processed.\n+  skip-if-match: 'label:plan-processed'\n+  stop-after: \"+30d\"\n+permissions:\n+  contents: read\n+  issues: read\n+engine:\n+  id: claude\n+  model: claude-sonnet-4-6\n+  max-turns: 20\n+timeout-minutes: 15\n+rate-limit:\n+  max: 5\n+  window: 60\n+tools:\n+  github:\n+    toolsets: [issues, repos, context]\n+safe-outputs:\n+  create-issue:\n+    max: 10\n+    # Labels the agent is allowed to put on sub-issues.\n+    # The agent chooses one of `ready-to-implement` or `needs-human-answer`\n+    # per sub-issue.\n+  link-sub-issue:\n+    max: 10\n+  add-labels:\n+    max: 2\n+    allowed: [plan-processed]\n+  add-comment:\n+    max: 1\n+---\n+\n+# Plan → Sub-issues\n+\n+You are reading a GitHub issue that contains a **plan** — a high-level description of a feature or piece of work, usually written by a human after an exploratory conversation with another agent.\n+\n+Your job: break the plan into independently-grabbable sub-issues using **tracer-bullet vertical slices**, then create them as sub-issues of the plan issue.\n+\n+## Input\n+\n+The plan issue is **#${{ github.event.issue.number }}** in `${{ github.repository }}`.\n+\n+Its sanitized content:\n+\n+```\n+${{ steps.sanitized.outputs.text }}\n+```\n+\n+If that's empty or missing, fetch it via the GitHub tool.\n+\n+## How to slice\n+\n+Each sub-issue must be a **thin vertical slice** that cuts through all integration layers end-to-end — not a horizontal slice of one layer.\n+\n+Rules:\n+- Each slice delivers a narrow but COMPLETE path through every relevant layer (schema, API, UI, tests).\n+- A completed slice is demoable or verifiable on its own.\n+- Prefer many thin slices over few thick ones.\n+- Aim for 3–8 sub-issues; never exceed 10.\n+- Create them in dependency order (blockers first) so later issues can reference earlier ones by number.\n+\n+## Ready vs. blocked on human input\n+\n+For each slice, decide whether it is **ready to implement autonomously** or **needs a human answer first**:\n+\n+- `ready-to-implement` — the slice is concrete enough that an implementer agent could pick it up, write the code, and open a PR without further input. All architectural and UX choices are already made or obvious from context.\n+- `needs-human-answer` — there is a real blocking question (ambiguous requirement, missing design decision, unclear acceptance criteria, needs a design review). Write the issue anyway, but clearly list the open questions in the body so the human can answer.\n+\n+Prefer `ready-to-implement`. Only flag `needs-human-answer` when there is a *specific* unresolved question — not just because the slice feels big.\n+\n+## Sub-issue template\n+\n+Each `create-issue` must use this body format:\n+\n+```markdown\n+## Parent plan\n+\n+#<plan-issue-number>\n+\n+## What to build\n+\n+<concise description of the vertical slice — end-to-end behavior, not layer-by-layer>\n+\n+## Acceptance criteria\n+\n+- [ ] <criterion 1>\n+- [ ] <criterion 2>\n+- [ ] <criterion 3>\n+\n+## Blocked by\n+\n+- #<issue-number>   (or \"None — can start immediately\")\n+\n+## Open questions\n+\n+<only if labeled `needs-human-answer`. List each blocking question as a bullet.>\n+```\n+\n+## Labels\n+\n+Apply exactly **one** of these labels to each sub-issue via the `labels` field on `create-issue`:\n+- `ready-to-implement`\n+- `needs-human-answer`\n+\n+## Linking\n+\n+After creating each sub-issue, call `link-sub-issue` to make it a sub-issue of the plan issue #${{ github.event.issue.number }}.\n+\n+## Finish-up\n+\n+When done:\n+1. Apply the `plan-processed` label to the plan issue (via `add-labels`, targeting the triggering issue).\n+2. Post one summary comment on the plan issue (via `add-comment`) listing the sub-issues you created with a one-line description each, and calling out any that are flagged `needs-human-answer`.\n+\n+If the plan issue is too vague to slice at all, do not create issues. Instead, post a comment asking for the specific clarifications needed, apply the `plan-processed` label so you don't re-fire, and emit `noop`.",
+          "snapshot_ref": "f2d2769b70efb0f75cde609d2da186f2bbcf19a4",
+          "snapshot_blob_sha": "d0ae0f47ac24f667c3decb887c7dac9deb5cf61f",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__f2d2769b70efb0f75cde609d2da186f2bbcf19a4__planner.md",
+          "snapshot_bytes": 3985,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/planner.lock.yml\",\"generated_workflow_file\":\"planner.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/planner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/planner.md",
+      "commit_sha": "1354f9bdf41516a97d8187f48ae20e46781741be",
+      "authored_at": "2026-04-27T09:47:11Z",
+      "committed_at": "2026-04-27T09:47:11Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "Maggie Appleton",
+      "committer_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "committer_login": "MaggieAppleton",
+      "committer_account_type": "User",
+      "message": "update planner workflow to remove skip-if-match condition",
+      "parent_shas": [
+        "73270fd844156915028dc5a29e0ef380e1893a5f"
+      ],
+      "tree_sha": "7cd631eaa57009db3651ce04c5bf269caecfc5a8",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/1354f9bdf41516a97d8187f48ae20e46781741be",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/planner.md",
+          "commit_sha": "1354f9bdf41516a97d8187f48ae20e46781741be",
+          "committed_at": "2026-04-27T09:47:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -4,8 +4,6 @@ on:\n   issues:\n     types: [opened, labeled]\n     names: [plan]\n-  # Don't re-plan an issue we've already processed.\n-  skip-if-match: 'label:plan-processed'\n   stop-after: \"+30d\"\n permissions:\n   contents: read",
+          "snapshot_ref": "1354f9bdf41516a97d8187f48ae20e46781741be",
+          "snapshot_blob_sha": "41020b6a857c0e8563d19fd1ade41eda7cb56ae4",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__1354f9bdf41516a97d8187f48ae20e46781741be__planner.md",
+          "snapshot_bytes": 3893,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/planner.lock.yml\",\"generated_workflow_file\":\"planner.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/planner.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+      "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+      "md_path": ".github/workflows/planner.md",
+      "commit_sha": "cd4542cd737035def3cd2c0e5aa82cdca8d4427e",
+      "authored_at": "2026-05-01T08:29:20Z",
+      "committed_at": "2026-05-01T08:29:20Z",
+      "author_name": "Maggie Appleton",
+      "author_email": "5599295+MaggieAppleton@users.noreply.github.com",
+      "author_login": "MaggieAppleton",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: stop planner workflow infinite-looping on agent-created sub-issues (#210)\n\nThe planner triggered on `[opened, labeled]`, which fired on every\nsub-issue it created via `safe-outputs.create-issue` — each one re-fired\nthe planner, producing runaway recursion (~100 issues/PRs per run).\nRestrict the trigger to `[labeled]` so only human-applied `plan` labels\nfire it, re-add the `skip-if-match: label:plan-processed` idempotency\nguard, and auto-tag sub-issues `ai-generated` per the gh-aw\nResearchPlanAssignOps pattern for defence in depth.\n\nCo-authored-by: Claude Opus 4.7 <noreply@anthropic.com>",
+      "parent_shas": [
+        "0a5772c0e9316e531698675bfe91ba82e6352e65"
+      ],
+      "tree_sha": "25cfa0cbcefffec21f95f51742c4ddc8d3533079",
+      "html_url": "https://github.com/MaggieAppleton/maggieappleton.com-V3/commit/cd4542cd737035def3cd2c0e5aa82cdca8d4427e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "MaggieAppleton/maggieappleton.com-V3:.github/workflows/planner.md",
+          "source_full_name": "MaggieAppleton/maggieappleton.com-V3",
+          "md_path": ".github/workflows/planner.md",
+          "commit_sha": "cd4542cd737035def3cd2c0e5aa82cdca8d4427e",
+          "committed_at": "2026-05-01T08:29:20Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 9,
+          "file_deletions": 4,
+          "file_changes": 13,
+          "file_patch": "@@ -2,8 +2,10 @@\n name: Plan issue → sub-issues\n on:\n   issues:\n-    types: [opened, labeled]\n+    types: [labeled]\n     names: [plan]\n+  # Don't re-plan an issue we've already processed.\n+  skip-if-match: 'label:plan-processed'\n   stop-after: \"+30d\"\n permissions:\n   contents: read\n@@ -22,9 +24,10 @@ tools:\n safe-outputs:\n   create-issue:\n     max: 10\n-    # Labels the agent is allowed to put on sub-issues.\n-    # The agent chooses one of `ready-to-implement` or `needs-human-answer`\n-    # per sub-issue.\n+    # Auto-applied to every sub-issue so downstream automation can\n+    # recognise machine-authored content. The agent additionally chooses\n+    # one of `ready-to-implement` or `needs-human-answer` per sub-issue.\n+    labels: [ai-generated]\n   link-sub-issue:\n     max: 10\n   add-labels:\n@@ -102,6 +105,8 @@ Each `create-issue` must use this body format:\n \n ## Labels\n \n+Every sub-issue is automatically tagged `ai-generated` by the workflow — you don't need to add that yourself.\n+\n Apply exactly **one** of these labels to each sub-issue via the `labels` field on `create-issue`:\n - `ready-to-implement`\n - `needs-human-answer`",
+          "snapshot_ref": "cd4542cd737035def3cd2c0e5aa82cdca8d4427e",
+          "snapshot_blob_sha": "466dc4d01936941061807f54570641f096e378f9",
+          "snapshot_file": "snapshots/maggieappleton.com-V3__MaggieAppleton__cd4542cd737035def3cd2c0e5aa82cdca8d4427e__planner.md",
+          "snapshot_bytes": 4177,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"MaggieAppleton/maggieappleton.com-V3\",\"generated_owner\":\"MaggieAppleton\",\"generated_repo\":\"maggieappleton.com-V3\",\"generated_workflow_path\":\".github/workflows/planner.lock.yml\",\"generated_workflow_file\":\"planner.lock.yml\",\"generated_html_url\":\"https://github.com/MaggieAppleton/maggieappleton.com-V3/blob/261d4db8ec32f13a2ae64ba215babb954b5c3445/.github/workflows/planner.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/daily-graft-intelligence.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/daily-graft-intelligence.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/daily-graft-intelligence.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/daily-graft-intelligence.lock.yml",
+      "generated_workflow_file": "daily-graft-intelligence.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-graft-intelligence.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:42:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/daily-graft-intelligence.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/daily-graft-intelligence.md",
+      "commit_sha": "a5a84b69be33d7c3ba08459b4291d4c9670fcfbf",
+      "authored_at": "2026-07-29T13:08:59Z",
+      "committed_at": "2026-07-29T13:08:59Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add shared Graft wrapper and daily repository intelligence workflow (#48881)",
+      "parent_shas": [
+        "6058f2272599aed5fe00cbd9d572ca89298cf3ea"
+      ],
+      "tree_sha": "a6063ddbfb5e3137d525ecd643b7bdcf76fd1c3c",
+      "html_url": "https://github.com/github/gh-aw/commit/a5a84b69be33d7c3ba08459b4291d4c9670fcfbf",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/daily-graft-intelligence.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/daily-graft-intelligence.md",
+          "commit_sha": "a5a84b69be33d7c3ba08459b4291d4c9670fcfbf",
+          "committed_at": "2026-07-29T13:08:59Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 121,
+          "file_deletions": 0,
+          "file_changes": 121,
+          "file_patch": "@@ -0,0 +1,121 @@\n+---\n+emoji: \"🧠\"\n+name: Daily Graft Intelligence\n+private: true\n+description: Daily repository intelligence report that uses Graft to explain changed subsystems, blast radius, and hotspots from the last 24 hours\n+on:\n+  schedule:\n+    - cron: daily\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+engine:\n+  id: copilot\n+  copilot-sdk: true\n+strict: true\n+tracker-id: daily-graft-intelligence\n+timeout-minutes: 20\n+sandbox:\n+  agent:\n+    sudo: false\n+imports:\n+  - uses: shared/daily-issue-base.md\n+    with:\n+      title-prefix: \"[graft-intelligence] \"\n+      expires: 2d\n+      labels: [automated-analysis, cookie]\n+  - shared/gh.md\n+  - shared/mcp/graft.md\n+  - shared/noop-reminder.md\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+tools:\n+  bash:\n+    - \"cat /tmp/gh-aw/agent/graft-changed-files.txt\"\n+    - \"cat /tmp/gh-aw/agent/graft-recent-activity.txt\"\n+steps:\n+  - name: Collect recent repository activity\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/agent\n+      git log --since=\"24 hours ago\" --date=iso-strict \\\n+        --format='commit %H%nAuthor: %an <%ae>%nDate: %ad%nSubject: %s%n' \\\n+        --name-status > /tmp/gh-aw/agent/graft-recent-activity.txt || true\n+      git log --since=\"24 hours ago\" --name-only --pretty=format: \\\n+        | sed '/^$/d' \\\n+        | sort -u > /tmp/gh-aw/agent/graft-changed-files.txt || true\n+features:\n+  gh-aw-detection: true\n+evals:\n+  - id: graph_built_and_checked\n+    question: Did the workflow build a fresh Graft graph and verify it before analysis?\n+  - id: report_or_noop_produced\n+    question: Was a daily intelligence issue created when there were meaningful repository changes, or was noop used appropriately when there was nothing to report?\n+---\n+\n+# Daily Graft Intelligence\n+\n+You are a repository intelligence analyst. Produce a concise daily report for the last 24 full hours ending at workflow start (UTC) using the pre-built Graft graph as your primary context source.\n+\n+## Data Sources\n+\n+1. `/tmp/gh-aw/agent/graft-changed-files.txt` — unique files changed in the last 24 hours\n+2. `/tmp/gh-aw/agent/graft-recent-activity.txt` — commit metadata and file status lines for the same window\n+3. Graft MCP tools — repository map, subsystem summaries, call/dependency relationships, and targeted structural search\n+\n+## Required workflow\n+\n+1. Read `/tmp/gh-aw/agent/graft-changed-files.txt`.\n+2. If the file is empty, call `noop` with a message that no repository files changed in the last 24 full hours.\n+3. Call `graft_check` to confirm the graph is current.\n+4. Call `graft_map` to identify the most connected directories, symbols, and hotspots.\n+5. Read `/tmp/gh-aw/agent/graft-recent-activity.txt` and identify the most meaningful changed files or subsystems.\n+6. Use Graft tools to explain those changes:\n+   - `graft_ask` for high-level subsystem understanding\n+   - `graft_callers` for blast-radius analysis around the most important changed symbols or files\n+   - `graft_skeleton` when you need quick API-surface context for a changed file\n+   - `graft_grep` only for targeted confirmation of a pattern or term\n+7. Synthesize one report issue with the highest-signal findings only.\n+\n+## Analysis goals\n+\n+Focus on the questions a maintainer would ask first:\n+\n+- Which subsystems changed?\n+- Why do those changes matter in the context of the broader codebase?\n+- What nearby callers, dependencies, or hotspots suggest elevated blast radius?\n+- What architectural or maintenance follow-ups are worth tracking?\n+\n+Do not restate raw commit logs. Turn the raw changes into codebase-aware intelligence.\n+\n+## Report requirements\n+\n+- Use `###` headings only.\n+- Keep the visible summary brief.\n+- Put long per-file or per-symbol breakdowns inside `<details>` blocks.\n+- Call out uncertainty explicitly when Graft context is incomplete.\n+- Avoid `@mentions` and GitHub issue/PR references.\n+- Include at most 5 changed areas and at most 3 follow-up recommendations.\n+\n+## Suggested structure\n+\n+### Summary\n+- 2-4 bullets with the most important signals from the day\n+\n+### Changed Areas\n+- Short explanation of the most important subsystems or files\n+\n+### Blast Radius and Hotspots\n+- Highlight callers, dependencies, and hotspot context that increase risk or importance\n+\n+### Recommendations\n+- Concrete follow-ups for maintainers\n+\n+### References\n+- Mention the reporting window and the workflow run ID\n+\n+If the changes are trivial housekeeping with no meaningful architectural or operational signal, call `noop` instead of creating a low-value issue.",
+          "snapshot_ref": "a5a84b69be33d7c3ba08459b4291d4c9670fcfbf",
+          "snapshot_blob_sha": "341157112726c08241a3bec055c559cff25bf378",
+          "snapshot_file": "snapshots/gh-aw__github__a5a84b69be33d7c3ba08459b4291d4c9670fcfbf__daily-graft-intelligence.md",
+          "snapshot_bytes": 4536,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/daily-graft-intelligence.lock.yml\",\"generated_workflow_file\":\"daily-graft-intelligence.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/daily-graft-intelligence.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

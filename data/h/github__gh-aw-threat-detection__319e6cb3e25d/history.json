@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+    "source_full_name": "github/gh-aw-threat-detection",
+    "source_owner": "github",
+    "source_repo": "gh-aw-threat-detection",
+    "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-threat-detection/blob/HEAD/.github/workflows/smoke-copilot-standalone-latest.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-threat-detection",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-threat-detection",
+      "generated_workflow_path": ".github/workflows/smoke-copilot-standalone-latest.lock.yml",
+      "generated_workflow_file": "smoke-copilot-standalone-latest.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-copilot-standalone-latest.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:48:47+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+      "commit_sha": "96be1522f957e14948f2130eea977b412b81d440",
+      "authored_at": "2026-07-28T21:07:21Z",
+      "committed_at": "2026-07-28T21:07:21Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci(smoke): test the latest detector under the real AWF path (#665)\n\n* refactor(smoke): split Smoke Standalone Latest into three per-engine workflows\n\nReplace the single smoke-standalone-latest.yml matrix workflow with three\nper-engine workflows (smoke-{copilot,claude,codex}-standalone-latest.yml).\nEach always resolves the newest published github/gh-aw-threat-detection\nrelease (overridable via detector_tag) instead of the tag pinned by\nproduction gh-aw, making it easy to diagnose and validate fixes per engine.\nUpdate smoke.yml to dispatch the three workflows and refresh README docs.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* ci(smoke): add latest-detector meta-workflow under real AWF path\n\nReplace the earlier three direct-on-runner \"standalone latest\" smoke\nworkflows with a single meta-workflow (smoke-standalone-latest.yml) that:\n\n  * resolves the newest prereleases of github/gh-aw and\n    github/gh-aw-threat-detection (both overridable via inputs),\n  * clones gh-aw at that prerelease and patches the hard-pinned\n    DefaultThreatDetectVersion Go constant to the detector tag,\n  * rebuilds the gh-aw compiler and recompiles the three\n    smoke-<engine>-standalone.md workflows (SHA-pinned action mode\n    matching the gh-aw prerelease),\n  * pushes the recompiled locks to a throwaway branch and dispatches the\n    real smoke-<engine>-standalone.lock.yml runs on it.\n\nThis exercises production's actual native gh-aw + AWF detection path with\nonly the detector version swapped, so each engine still runs as its own\nindependent AWF-backed smoke. Also wires smoke.yml's include_latest input\nto the meta-workflow and refreshes the README.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* ci(smoke): harden latest-detector meta-workflow per review\n\nAddress three review findings in smoke-standalone-latest.yml:\n\n* Ref resolution now falls back to the latest stable release when no\n  prerelease exists (for both gh-aw and gh-aw-threat-detection), so the\n  default and automatic runs no longer fail when a repo has no prerelease.\n* Support tag/branch/SHA compiler refs by fetching the exact ref instead\n  of `clone --branch`, and resolve a separate `action_tag` (always a real\n  gh-aw release tag) for --action-tag, so a gh-aw branch or commit SHA\n  still produces runnable, correctly SHA-pinned github/gh-aw-actions.\n* Only delete a stale throwaway branch once all of its child smoke runs\n  have completed, so a later meta-run can't delete a branch out from\n  under an in-flight child (whose checkout would then fail).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* ci(smoke): replace latest meta-workflow with PR-based refresh flow\n\nRework latest-detector smoke testing into a simpler, fully reviewable,\nsingle-branch (main) model:\n\n* Add committed smoke-<engine>-standalone-latest.{md,lock.yml} — latest\n  counterparts of the pinned standalone smokes. They are dispatch-only\n  plus a push trigger scoped to their own .lock.yml on main, so merging a\n  refresh PR runs them automatically under the real gh-aw + AWF path.\n* Add refresh-latest-smokes.yml: clones gh-aw at the newest (pre)release,\n  patches DefaultThreatDetectVersion to the newest detector (pre)release,\n  builds the compiler, recompiles the three -latest.md with SHA-pinned\n  action mode, and opens/updates a PR with the regenerated locks.\n* Remove the smoke-standalone-latest.yml meta-workflow and its\n  throwaway-branch / cross-branch-dispatch machinery.\n* Point smoke.yml's include_latest at the -latest.lock.yml files and\n  refresh the README.\n\nThe committed -latest locks currently pin gh-aw v0.83.3 + detector main.\nOnly the detector version differs from production.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* ci(smoke): resolve newest version release, ignore rolling main\n\nFix two ref-resolution issues in refresh-latest-smokes.yml:\n\n* Pick the newest release by publish date across prereleases AND stable\n  releases, so a newer stable (e.g. gh-aw v0.83.4) wins over an older\n  prerelease (v0.83.3), instead of always preferring the newest\n  prerelease.\n* Restrict resolution to semantic-version tags (^v[0-9]), ignoring the\n  detector's rolling `main` prerelease tag. `main` is re-published in\n  place, which would make the pinned locks non-reproducible; the newest\n  real detector version tag is v0.3.1.\n\nRegenerate the committed latest smoke locks accordingly: gh-aw v0.83.4,\ndetector v0.3.1, github/gh-aw-actions/setup pinned to v0.83.4.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* ci(smoke): add scope choice (standard / standard+latest / latest)\n\nReplace smoke.yml's boolean include_latest input with a `scope` choice so\nthe top-level Smoke workflow can run the pinned smokes only, both pinned\nand latest, or the latest-detector smokes on their own. Gate each\ndispatch step on the selected scope.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n---------\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "6950802f7ab60ba38247a5a62e75d7649a3305b4"
+      ],
+      "tree_sha": "8af7771885c149f65449481756838e96917cfea2",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/96be1522f957e14948f2130eea977b412b81d440",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+          "commit_sha": "96be1522f957e14948f2130eea977b412b81d440",
+          "committed_at": "2026-07-28T21:07:21Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 82,
+          "file_deletions": 0,
+          "file_changes": 82,
+          "file_patch": "@@ -0,0 +1,82 @@\n+---\n+description: Smoke test workflow that validates Copilot engine execution with the released threat-detect binary\n+on:\n+  workflow_dispatch:\n+  push:\n+    branches:\n+      - main\n+    paths:\n+      - .github/workflows/smoke-copilot-standalone-latest.lock.yml\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+  copilot-requests: write\n+name: Smoke Copilot Standalone Latest\n+engine:\n+  id: copilot\n+strict: false\n+features:\n+  gh-aw-detection: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  bash:\n+    - \"*\"\n+  github:\n+    mode: gh-proxy\n+  web-fetch:\n+runtimes:\n+  go:\n+    version: \"1.26\"\n+checkout:\n+  fetch-depth: 1\n+safe-outputs:\n+  allowed-domains: [default-safe-outputs]\n+  threat-detection:\n+    continue-on-error: false\n+  create-issue:\n+    expires: 2h\n+    close-older-issues: true\n+    close-older-key: \"smoke-copilot-standalone-latest\"\n+    labels: [automation, testing]\n+timeout-minutes: 15\n+---\n+\n+# Smoke Test: Copilot Engine Validation (Standalone Detector)\n+\n+> **Generated / latest-detector variant.** This is the *latest* counterpart of\n+> `smoke-copilot-standalone.md`. Its `.lock.yml` is regenerated by the\n+> `refresh-latest-smokes.yml` workflow against the newest gh-aw and\n+> gh-aw-threat-detection (pre)releases. Do **not** run a plain `gh aw compile`\n+> on it — that would revert the patched detector version. It runs on manual\n+> dispatch and whenever its `.lock.yml` changes on `main`.\n+\n+Keep outputs concise.\n+\n+This workflow validates the Copilot engine while exercising the **native external\n+threat-detect path** (`features: gh-aw-detection: true`). gh-aw downloads the\n+published `threat-detect` binary from the `github/gh-aw-threat-detection` releases\n+and runs it under AWF, replacing the script-generated container sibling.\n+\n+## Test Requirements\n+\n+1. Use GitHub tools to read the latest 2 pull requests in `${{ github.repository }}` and record their numbers and titles only.\n+2. Use `web-fetch` to fetch `https://github.com/github/gh-aw-threat-detection` and verify the response mentions `gh-aw-threat-detection`.\n+3. Use bash to run `make build` in `${{ github.workspace }}` and verify it succeeds.\n+4. Use bash to create a minimal artifacts directory under `/tmp/gh-aw/smoke-copilot-standalone-${{ github.run_id }}` with:\n+   - `aw-prompts/prompt.txt`\n+   - `agent_output.json`\n+5. Use bash to run `./bin/threat-detect --version` and verify it prints a version.\n+6. Use bash to write a concise status file at `/tmp/gh-aw/agent/smoke-copilot-standalone-${{ github.run_id }}.txt`.\n+\n+## Output\n+\n+Always create an issue titled `Smoke Test: Copilot Standalone Latest - ${{ github.run_id }}` with:\n+- ✅ or ❌ for each test\n+- Overall status: PASS or FAIL\n+- Run URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n+- Timestamp",
+          "snapshot_ref": "96be1522f957e14948f2130eea977b412b81d440",
+          "snapshot_blob_sha": "26b07853ca73814869d0ac3a36a3d2831edc7049",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__96be1522f957e14948f2130eea977b412b81d440__smoke-copilot-standalone-latest.md",
+          "snapshot_bytes": 2793,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-standalone-latest.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-standalone-latest.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-copilot-standalone-latest.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+      "commit_sha": "3f5333feff1bb05dd8a4eb903f495de7f633f1db",
+      "authored_at": "2026-07-28T22:03:17Z",
+      "committed_at": "2026-07-28T22:03:17Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(smoke): drop push trigger from latest smokes to unblock dispatch (#671)\n\n* fix(smoke): drop push trigger from latest smokes to unblock dispatch\n\nThe smoke-*-standalone-latest workflows declared a `push` trigger, which\ncaused gh-aw to generate a `pre_activation` team-membership gate\n(required roles: admin,maintainer,write). When dispatched from smoke.yml,\nthe actor is `github-actions[bot]` (permission `none`), so activation\nfailed. The non-latest smokes use only schedule + workflow_dispatch and\nhave no such gate.\n\nRemove the `push` trigger from the three `-latest` .md sources and their\ncompiled .lock.yml files, along with the now-unused `pre_activation` job\nand all references to it. Update refresh-latest-smokes.yml docs/PR body to\nreflect that latest smokes are now dispatched (via smoke.yml or manually)\nrather than push-triggered on merge.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* chore(smoke): recompile latest smoke locks with gh-aw v0.83.4\n\nRegenerate the three smoke-*-standalone-latest.lock.yml files with the\ncanonical gh-aw v0.83.4 compiler (detector version constant patched to\nv0.3.1, matching refresh-latest-smokes.yml and the committed pins) instead\nof the previous hand-edits. This corrects the frontmatter_hash and lets the\ncompiler emit the simplified concurrency group for the now push-free\ntrigger, while preserving the detector pin, action SHAs, container digests,\nand the COPILOT_GITHUB_TOKEN secret.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n---------\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "0298a93fb3f0ad5f91cccca6da5b1e2bd200dc4e"
+      ],
+      "tree_sha": "0575d436de62efa7a493b98c1e86f3b0410b8d1b",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/3f5333feff1bb05dd8a4eb903f495de7f633f1db",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+          "commit_sha": "3f5333feff1bb05dd8a4eb903f495de7f633f1db",
+          "committed_at": "2026-07-28T22:03:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 5,
+          "file_changes": 5,
+          "file_patch": "@@ -2,11 +2,6 @@\n description: Smoke test workflow that validates Copilot engine execution with the released threat-detect binary\n on:\n   workflow_dispatch:\n-  push:\n-    branches:\n-      - main\n-    paths:\n-      - .github/workflows/smoke-copilot-standalone-latest.lock.yml\n permissions:\n   contents: read\n   issues: read",
+          "snapshot_ref": "3f5333feff1bb05dd8a4eb903f495de7f633f1db",
+          "snapshot_blob_sha": "7cbf00f8bfaef22735c281fe477ea2a1ed555b62",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__3f5333feff1bb05dd8a4eb903f495de7f633f1db__smoke-copilot-standalone-latest.md",
+          "snapshot_bytes": 2680,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-standalone-latest.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-standalone-latest.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-copilot-standalone-latest.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+      "commit_sha": "ee541c0f8c61cd38c05333ef6198c4babd8b4dc1",
+      "authored_at": "2026-07-30T18:55:23Z",
+      "committed_at": "2026-07-30T18:55:23Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: push refreshed smoke locks with workflows-permitted token (#677)\n\n* ci: push refreshed smoke locks with workflows-permitted token\n\nPersist GH_AW_GITHUB_TOKEN via actions/checkout so the git push in the\nRefresh Latest Smokes workflow can update the smoke `.lock.yml` files\nunder .github/workflows/. The built-in GITHUB_TOKEN (github-actions[bot]\nGitHub App) is refused for workflow-file changes without the `workflows`\npermission.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* ci: replace lock-refresh workflows with read-only version check\n\nAdd `gh-aw-version-check.yml`, a daily read-only workflow that verifies\neach compiled `*.lock.yml` tracks the right versions per category\n(standard -> latest stable gh-aw; standalone smoke -> latest gh-aw\nrelease/prerelease; standalone latest -> latest gh-aw + latest detector\nrelease/prerelease). On drift it opens/updates a single tracking issue\npointing at the update-workflow-versions skill; it builds and compiles\nnothing and needs only `contents: read` + `issues: write`.\n\nDelete `refresh-latest-smokes.yml` and `update-gh-aw.yml`, which pushed\nregenerated locks and required a `workflows`-permitted token.\n\nAdd `scripts/check-workflow-versions.sh` (the read-only check) and\n`scripts/recompile-workflows.sh` (regenerates locks per category,\npatching the detector constant for the latest workflows), plus the\n`update-workflow-versions` skill documenting the human-reviewed\nregeneration flow. Update README and smoke workflow references.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n---------\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "61f71f2749e8500a5b4f4bb356e904a565c818c9"
+      ],
+      "tree_sha": "c1181ba9b7a7a338841bce6b5ca345d880d2e26b",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/ee541c0f8c61cd38c05333ef6198c4babd8b4dc1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+          "commit_sha": "ee541c0f8c61cd38c05333ef6198c4babd8b4dc1",
+          "committed_at": "2026-07-30T18:55:23Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -44,8 +44,8 @@ timeout-minutes: 15\n # Smoke Test: Copilot Engine Validation (Standalone Detector)\n \n > **Generated / latest-detector variant.** This is the *latest* counterpart of\n-> `smoke-copilot-standalone.md`. Its `.lock.yml` is regenerated by the\n-> `refresh-latest-smokes.yml` workflow against the newest gh-aw and\n+> `smoke-copilot-standalone.md`. Its `.lock.yml` is regenerated per the\n+> `update-workflow-versions` skill against the newest gh-aw and\n > gh-aw-threat-detection (pre)releases. Do **not** run a plain `gh aw compile`\n > on it — that would revert the patched detector version. It runs on manual\n > dispatch and whenever its `.lock.yml` changes on `main`.",
+          "snapshot_ref": "ee541c0f8c61cd38c05333ef6198c4babd8b4dc1",
+          "snapshot_blob_sha": "59c78ffcbacfd4ec42b361fea2273df01a09cde5",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__ee541c0f8c61cd38c05333ef6198c4babd8b4dc1__smoke-copilot-standalone-latest.md",
+          "snapshot_bytes": 2677,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-standalone-latest.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-standalone-latest.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-copilot-standalone-latest.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+      "source_full_name": "github/gh-aw-threat-detection",
+      "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+      "commit_sha": "aeaa68423ef4e25736254262e844d4948cfea404",
+      "authored_at": "2026-08-03T23:32:56Z",
+      "committed_at": "2026-08-03T23:32:56Z",
+      "author_name": "David Slater",
+      "author_email": "davidslater@users.noreply.github.com",
+      "author_login": "davidslater",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(smoke): pin copilot detection model to claude-sonnet-5 (#725)\n\n* fix(smoke): pin copilot detection model to claude-sonnet-5\n\nThe Copilot standalone smoke detection job failed under AWF with\n\"400 The requested model is not supported\". The copilot harness (gh-aw\n1.0.75) validates the requested model against the api-proxy's awf-reflect\nregistry, which is built from apiProxy.models in the AWF config used to\nlaunch the sandbox. The detection job's AWF config omits apiProxy.models,\nso awf-reflect has no 'auto' alias and the harness rejects\nCOPILOT_MODEL=auto.\n\nPin a concrete detection model (claude-sonnet-5) via\nsafe-outputs.threat-detection.model so detection no longer depends on the\n'auto' alias being resolvable. Updated both the .md frontmatter and the\npatched .lock.yml detection COPILOT_MODEL fallback for the latest and\nstable copilot standalone smokes. Agent-job model resolution is\nunaffected.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* fix(smoke): pin copilot detection model via engine.model and recompile at gh-aw v0.84.3\n\nThe prior attempt set `threat-detection.model` (unparsed) and hand-edited the\nlocks, which the compiler in v0.84.0 could not honor: the detection job's\nCOPILOT_MODEL stayed a `vars.* || 'auto'` fallback. gh-aw v0.84.3 added the\nexternal-detector model wiring (threatDetectionData.Model), so compiling with\n`threat-detection.engine.model: claude-sonnet-5` now emits a hard-pinned\n`COPILOT_MODEL: claude-sonnet-5` in the detection job — no repo/org variable\ncan override it back to `auto`.\n\nLocks regenerated from source via the update-workflow-versions skill: gh-aw\nv0.84.3 (release build) with DefaultThreatDetectVersion patched to detector\nv0.3.4. No manual lock edits.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n* chore(workflows): bump remaining smoke and monitor locks to gh-aw v0.84.3\n\nRecompile the claude/codex standalone smokes and the standard monitor\nworkflows so every lock tracks the versions the gh-aw Version Check expects:\n\n- compiler_version -> v0.84.3 (stable == latest gh-aw) for all workflows\n- detector -> v0.3.4 (latest) for every *-standalone-latest lock\n\nNo frontmatter/model changes; this is a pure version bump (AWF 0.27.42->0.27.43,\nCopilot CLI 1.0.75->1.0.77, gh-aw-mcpg v0.4.6->v0.4.7, github-mcp-server\nv1.7.0->v1.8.0, setup action v0.83.4/v0.84.0->v0.84.3). Locks regenerated via\nthe update-workflow-versions skill (release build of gh-aw v0.84.3 with\nDefaultThreatDetectVersion patched to v0.3.4); no manual lock edits.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>\n\n---------\n\nCo-authored-by: GitHub Ace <githubnext@users.noreply.github.com>\nCo-authored-by: David Slater <12449447+davidslater@users.noreply.github.com>",
+      "parent_shas": [
+        "0fb2d80e4441c7f9b42011fc0aa795c3928f5f8e"
+      ],
+      "tree_sha": "867ac87eaa5c5554a7d77978dad81300b75664a1",
+      "html_url": "https://github.com/github/gh-aw-threat-detection/commit/aeaa68423ef4e25736254262e844d4948cfea404",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-threat-detection:.github/workflows/smoke-copilot-standalone-latest.md",
+          "source_full_name": "github/gh-aw-threat-detection",
+          "md_path": ".github/workflows/smoke-copilot-standalone-latest.md",
+          "commit_sha": "aeaa68423ef4e25736254262e844d4948cfea404",
+          "committed_at": "2026-08-03T23:32:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -33,6 +33,9 @@ safe-outputs:\n   allowed-domains: [default-safe-outputs]\n   threat-detection:\n     continue-on-error: false\n+    engine:\n+      id: copilot\n+      model: claude-sonnet-5\n   create-issue:\n     expires: 2h\n     close-older-issues: true",
+          "snapshot_ref": "aeaa68423ef4e25736254262e844d4948cfea404",
+          "snapshot_blob_sha": "a3b016a166915c024ef07d71324fc1be6306d49a",
+          "snapshot_file": "snapshots/gh-aw-threat-detection__github__aeaa68423ef4e25736254262e844d4948cfea404__smoke-copilot-standalone-latest.md",
+          "snapshot_bytes": 2736,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-threat-detection\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-threat-detection\",\"generated_workflow_path\":\".github/workflows/smoke-copilot-standalone-latest.lock.yml\",\"generated_workflow_file\":\"smoke-copilot-standalone-latest.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-threat-detection/blob/aeaa68423ef4e25736254262e844d4948cfea404/.github/workflows/smoke-copilot-standalone-latest.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

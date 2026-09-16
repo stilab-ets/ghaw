@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium:.github/workflows/process-monitor.md",
+    "source_full_name": "adoptium/adoptium",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium",
+    "md_path": ".github/workflows/process-monitor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium/blob/HEAD/.github/workflows/process-monitor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium",
+      "generated_workflow_path": ".github/workflows/process-monitor.lock.yml",
+      "generated_workflow_file": "process-monitor.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/process-monitor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:32+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/process-monitor.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/process-monitor.md",
+      "commit_sha": "7ab78458fee4d99f9b9586eb62e8f833f127e6a0",
+      "authored_at": "2026-07-23T11:37:44Z",
+      "committed_at": "2026-07-23T11:37:44Z",
+      "author_name": "Sham Homssi",
+      "author_email": "shomssi@andrew.cmu.edu",
+      "author_login": "shomssi",
+      "author_account_type": "User",
+      "committer_name": "Sham Homssi",
+      "committer_email": "shomssi@andrew.cmu.edu",
+      "committer_login": "shomssi",
+      "committer_account_type": "User",
+      "message": "Add process-monitor workflow with EMO draft-issue guidance",
+      "parent_shas": [
+        "2d9bbe162d551733f2031f1ea89e87cb6c84dfe7"
+      ],
+      "tree_sha": "32b3b0903773b0423851c5e25ec1591ec198f198",
+      "html_url": "https://github.com/adoptium/adoptium/commit/7ab78458fee4d99f9b9586eb62e8f833f127e6a0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/process-monitor.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/process-monitor.md",
+          "commit_sha": "7ab78458fee4d99f9b9586eb62e8f833f127e6a0",
+          "committed_at": "2026-07-23T11:37:44Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 74,
+          "file_deletions": 0,
+          "file_changes": 74,
+          "file_patch": "@@ -0,0 +1,74 @@\n+---\n+description: Monitors adoptium repository activity and alerts committers when Eclipse Foundation process rules apply.\n+on:\n+  issues:\n+    types: [opened, edited]\n+  pull_request:\n+    types: [opened, edited, synchronize]\n+  workflow_dispatch:\n+model: gpt-4o\n+engine:\n+  id: copilot\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+network:\n+  allowed:\n+    - defaults\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+---\n+\n+# Eclipse Foundation Process Monitor\n+When activity occurs in this repository, check whether it triggers any Eclipse Foundation process rules or legal requirements based on the Eclipse Project Handbook (https://www.eclipse.org/projects/handbook/). If a rule applies, post a single comment explaining what process is required and what the committer should do next.\n+\n+## Scope\n+- Analyze the issue or pull request that triggered this workflow.\n+- Focus only on activity that has clear process implications under the Eclipse Foundation Development Process (EDP) or IP Policy.\n+- Do not comment on routine code changes, bug fixes, or activity with no process implications.\n+\n+## What to check\n+\n+For each trigger, evaluate whether the activity falls into any of the following categories:\n+\n+**IP and Legal**\n+- Adding new images, icons, logos, or artwork → a legal/IP review may be required before merging. The committer should open an EMO legal review issue at https://gitlab.eclipse.org/eclipsefdn/emo-team/emo.\n+- Adding or updating third-party dependencies or libraries → IP due diligence is required. The committer must vet the licence using the Eclipse Dash License Tool before the content can be included in a release.\n+- Adding AI-generated content → must comply with the Generative AI Usage Guidelines for Eclipse Committers. Disclosure is required.\n+- Changing the project license or adding content under a new license → requires PMC and EMO approval.\n+\n+**Contributions and ECA**\n+- A pull request from a contributor who is not a committer → the Eclipse Contributor Agreement (ECA) must be on file. The ECA hook should flag this automatically, but committers must not merge until the contributor is covered.\n+- Commit author email does not match the Eclipse Foundation account email → the commit record is invalid per EDP requirements.\n+\n+**Releases and Reviews**\n+- A PR or issue referencing a new release, version bump, or release plan → a release review must be completed with the EMO before the release is official.\n+- A project moving from incubation to mature → a graduation review is required.\n+- Significant scope changes (new features outside the declared project scope, restructuring) → a restructuring review may be required.\n+\n+**Branding and Trademarks**\n+- Adding or modifying project logos, names, or trademarks → the Eclipse Foundation holds all project trademarks; changes must follow the Trademark Usage Policy and may require EMO involvement.\n+- Adding vendor-specific links or references → must follow vendor neutrality rules; vendor links are not permitted in technical documentation.\n+\n+**Governance**\n+- Nominating or discussing a new committer → a formal committer election must be run through the EMO process, not informally decided in an issue or PR.\n+- Discussing retirement of a committer → must follow the formal retirement process; project leads are responsible for announcing retirements on the dev-list.\n+\n+## Process\n+1. Read the issue or pull request title, body, and any labels.\n+2. Determine whether any of the categories above apply.\n+3. If one or more apply, post a single comment that:\n+   - Identifies which process rule is triggered (be specific).\n+   - Explains briefly why it applies to this activity.\n+   - States what the committer needs to do next (e.g. open an EMO issue, run the Dash tool, ensure ECA is on file).\n+   - Links to the relevant section of the Eclipse Project Handbook where applicable.\n+4. If no process rules apply, do not post anything.\n+\n+## Constraints\n+- Read-only: do not close, label, assign, or modify the issue or PR — only comment.\n+- Post at most one comment per trigger.\n+- Do not comment on activity with no process implications — false positives erode trust.\n+- Do not reproduce legal text verbatim; summarize and link instead.\n\\ No newline at end of file",
+          "snapshot_ref": "7ab78458fee4d99f9b9586eb62e8f833f127e6a0",
+          "snapshot_blob_sha": "5d89a457c7751c719198c22fe953026a11815cc0",
+          "snapshot_file": "snapshots/adoptium__adoptium__7ab78458fee4d99f9b9586eb62e8f833f127e6a0__process-monitor.md",
+          "snapshot_bytes": 4243,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/process-monitor.lock.yml\",\"generated_workflow_file\":\"process-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/process-monitor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

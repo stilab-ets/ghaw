@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+    "source_full_name": "microsoft/vstest",
+    "source_owner": "microsoft",
+    "source_repo": "vstest",
+    "md_path": ".github/workflows/http-link-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/vstest/blob/HEAD/.github/workflows/http-link-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/vstest",
+      "generated_owner": "microsoft",
+      "generated_repo": "vstest",
+      "generated_workflow_path": ".github/workflows/http-link-checker.lock.yml",
+      "generated_workflow_file": "http-link-checker.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/http-link-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:42:52+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/http-link-checker.md",
+      "commit_sha": "97309688eff455de68e50e0d955b27ed818f5cda",
+      "authored_at": "2026-06-10T13:26:11Z",
+      "committed_at": "2026-06-10T13:26:11Z",
+      "author_name": "Azat Mukhametshin",
+      "author_email": "azatm@microsoft.com",
+      "author_login": "azat-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Split the link checker workflow into HTTP and Relative link checker (#16104)\n\n* link-checker.md fixes\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* copilot comments fixes\n\n* bash indent fixes\n\n* explicit check for relative links is added\n\n* reduce token load\n\n* minor change\n\n* Initial plan\n\n* Fix link checker anchor validation\n\nCo-authored-by: azat-msft <290065318+azat-msft@users.noreply.github.com>\n\n* skipping domain on 429, fixing trailing parens in https links\n\n* token-wise cautious prompt for broken anchors\n\n* removed testing http links\n\n* separate http link checker added\n\n* changed names of checkers\n\n* compiled old link checker removed\n\n* resolving copilot comments\n\n---------\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: azat-msft <290065318+azat-msft@users.noreply.github.com>",
+      "parent_shas": [
+        "b3f4b8eb031880a4fd5f779ca9605325d9643cb0"
+      ],
+      "tree_sha": "25a87b16ecb81a52dd7dd3b49e92d980af493ab7",
+      "html_url": "https://github.com/microsoft/vstest/commit/97309688eff455de68e50e0d955b27ed818f5cda",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/http-link-checker.md",
+          "commit_sha": "97309688eff455de68e50e0d955b27ed818f5cda",
+          "committed_at": "2026-06-10T13:26:11Z",
+          "event_status": "renamed",
+          "previous_path": ".github/workflows/link-checker.md",
+          "file_additions": 49,
+          "file_deletions": 99,
+          "file_changes": 148,
+          "file_patch": "@@ -1,7 +1,7 @@\n ---\n description: Weekly automated link checker that finds and fixes broken links in documentation files\n on:\n-  schedule: weekly\n+  schedule: weekly on Friday\n permissions: read-all\n timeout-minutes: 60\n network:\n@@ -19,10 +19,9 @@ steps:\n   - name: Check and test all documentation links\n     id: link-check\n     run: |\n-      echo \"# Link Check Results\" > /tmp/link-check-results.md\n-      echo \"\" >> /tmp/link-check-results.md\n-      echo \"# Broken Links\" > /tmp/broken-links.md\n-      echo \"\" >> /tmp/broken-links.md\n+      mkdir -p /tmp/gh-aw/agent\n+      echo \"# Link Check Results\" > /tmp/gh-aw/agent/link-check-results.md\n+      echo \"\" >> /tmp/gh-aw/agent/link-check-results.md\n       \n       # Find all markdown files in docs directory and README\n       echo \"Finding all markdown files...\"\n@@ -35,31 +34,27 @@ steps:\n       fi\n \n       # Extract all links from markdown files\n-      echo \"## Links Found\" >> /tmp/link-check-results.md\n-      echo \"\" >> /tmp/link-check-results.md\n-\n+      echo \"## Links Found\" >> /tmp/gh-aw/agent/link-check-results.md\n+      echo \"\" >> /tmp/gh-aw/agent/link-check-results.md\n+      \n       # Use grep to find markdown links and HTTP(S) URLs\n       # Format for relative links: \"source_file|url\" to allow path resolution\n       for file in $MARKDOWN_FILES; do\n         echo \"Checking $file...\"\n         # Extract markdown links [text](url)\n-        grep -oP '\\[([^\\]]+)\\]\\(([^\\)]+)\\)' \"$file\" | grep -oP '\\(([^\\)]+)\\)' | tr -d '()' | while IFS= read -r link; do\n-          echo \"$file|$link\" >> /tmp/all-links.txt\n-        done 2>/dev/null || true\n+        grep -oP '\\[([^\\]]+)\\]\\(([^\\)]+)\\)' \"$file\" | grep -oP '\\(([^\\)]+)\\)' | tr -d '()' >> /tmp/gh-aw/agent/all-links.txt 2>/dev/null || true\n         # Extract plain HTTP(S) URLs\n-        grep -oP 'https?://[^\\s<>\"]+' \"$file\" | while IFS= read -r link; do\n-          echo \"$file|$link\" >> /tmp/all-links.txt\n-        done 2>/dev/null || true\n+        grep -oP 'https?://[^\\s<>\"]+' \"$file\" >> /tmp/gh-aw/agent/all-links.txt 2>/dev/null || true\n       done\n \n       # Remove duplicates and sort\n-      if [ -f /tmp/all-links.txt ]; then\n-        sort -u /tmp/all-links.txt > /tmp/unique-links.txt\n-        LINK_COUNT=$(wc -l < /tmp/unique-links.txt)\n-        echo \"Found $LINK_COUNT unique links\" >> /tmp/link-check-results.md\n-        echo \"\" >> /tmp/link-check-results.md\n+      if [ -f /tmp/gh-aw/agent/all-links.txt ]; then\n+        sort -u /tmp/gh-aw/agent/all-links.txt > /tmp/gh-aw/agent/unique-links.txt\n+        LINK_COUNT=$(wc -l < /tmp/gh-aw/agent/unique-links.txt)\n+        echo \"Found $LINK_COUNT unique links\" >> /tmp/gh-aw/agent/link-check-results.md\n+        echo \"\" >> /tmp/gh-aw/agent/link-check-results.md\n       else\n-        echo \"No links found\" >> /tmp/link-check-results.md\n+        echo \"No links found\" >> /tmp/gh-aw/agent/link-check-results.md\n         echo \"no_links=true\" >> $GITHUB_OUTPUT\n         exit 0\n       fi\n@@ -86,83 +81,39 @@ steps:\n         return 1\n       }\n       # Test each link\n-      echo \"## Link Test Results\" >> /tmp/link-check-results.md\n-      echo \"\" >> /tmp/link-check-results.md\n-      echo \"Testing links...\" >> /tmp/link-check-results.md\n-\n+      echo \"## Link Test Results\" >> /tmp/gh-aw/agent/link-check-results.md\n+      echo \"\" >> /tmp/gh-aw/agent/link-check-results.md\n+      echo \"Testing links...\" >> /tmp/gh-aw/agent/link-check-results.md\n+      \n       BROKEN_COUNT=0\n       WORKING_COUNT=0\n-      while IFS='|' read -r source_file url; do\n-        if [[ \"$url\" == \"http\"* ]]; then\n-          # Test HTTP(S) links with curl\n-          HTTP_CODE=$(curl -L -s -o /dev/null -w \"%{http_code}\" --max-time 10 \"$url\" 2>/dev/null || echo \"000\")\n-          if [[ \"$HTTP_CODE\" =~ ^2 ]] || [[ \"$HTTP_CODE\" =~ ^3 ]]; then\n-            WORKING_COUNT=$((WORKING_COUNT + 1))\n-            echo \"✅ $url (HTTP $HTTP_CODE)\" >> /tmp/link-check-results.md\n-          else\n-            BROKEN_COUNT=$((BROKEN_COUNT + 1))\n-            echo \"❌ $url (HTTP $HTTP_CODE) in $source_file\" >> /tmp/link-check-results.md\n-            echo \"❌ $url (HTTP $HTTP_CODE) in $source_file\" >> /tmp/broken-links.md\n-          fi\n-        elif [[ \"$url\" == \"#\"* ]]; then\n-          # Same-file anchor link\n-          ANCHOR=\"${url#\\#}\"\n-          if check_anchor \"$source_file\" \"$ANCHOR\"; then\n-            WORKING_COUNT=$((WORKING_COUNT + 1))\n-            echo \"✅ $url (anchor in $source_file)\" >> /tmp/link-check-results.md\n-          else\n-            BROKEN_COUNT=$((BROKEN_COUNT + 1))\n-            echo \"❌ $url (anchor not found in $source_file)\" >> /tmp/link-check-results.md\n-            echo \"❌ $url (anchor not found in $source_file)\" >> /tmp/broken-links.md\n-          fi\n-        elif [[ ! \"$url\" =~ ^[a-zA-Z][a-zA-Z0-9+.-]*: ]]; then\n-          # Relative file link, possibly with anchor\n-          # Split into file path and optional anchor\n-          REL_PATH=\"${url%%#*}\"\n-          ANCHOR=\"\"\n-          if [[ \"$url\" == *\"#\"* ]]; then\n-            ANCHOR=\"${url#*#}\"\n-          fi\n-          # Resolve relative to the source file's directory\n-          SOURCE_DIR=$(dirname \"$source_file\")\n-          TARGET_PATH=\"$SOURCE_DIR/$REL_PATH\"\n-          # Normalize the path\n-          TARGET_PATH=$(realpath --relative-to=. \"$TARGET_PATH\" 2>/dev/null || echo \"$TARGET_PATH\")\n-          if [[ -z \"$REL_PATH\" ]] && [[ -n \"$ANCHOR\" ]]; then\n-            # Link is just \"#anchor\" handled above, but in case of edge cases\n-            WORKING_COUNT=$((WORKING_COUNT + 1))\n-          elif [[ ! -f \"$TARGET_PATH\" ]]; then\n-            BROKEN_COUNT=$((BROKEN_COUNT + 1))\n-            echo \"❌ $url (file not found: $TARGET_PATH) in $source_file\" >> /tmp/link-check-results.md\n-            echo \"❌ $url (file not found: $TARGET_PATH) in $source_file\" >> /tmp/broken-links.md\n-          elif [[ -n \"$ANCHOR\" ]]; then\n-            # File exists, check the anchor\n-            if check_anchor \"$TARGET_PATH\" \"$ANCHOR\"; then\n-              WORKING_COUNT=$((WORKING_COUNT + 1))\n-              echo \"✅ $url (file + anchor OK) in $source_file\" >> /tmp/link-check-results.md\n-            else\n-              BROKEN_COUNT=$((BROKEN_COUNT + 1))\n-              echo \"❌ $url (file exists but anchor '#$ANCHOR' not found in $TARGET_PATH) in $source_file\" >> /tmp/link-check-results.md\n-              echo \"❌ $url (file exists but anchor '#$ANCHOR' not found in $TARGET_PATH) in $source_file\" >> /tmp/broken-links.md\n-            fi\n-          else\n-            WORKING_COUNT=$((WORKING_COUNT + 1))\n-            echo \"✅ $url (file exists: $TARGET_PATH)\" >> /tmp/link-check-results.md\n-          fi\n-        else\n+      \n+      while IFS= read -r url; do\n+        # Skip relative links and anchors\n+        if [[ \"$url\" == \"#\"* ]] || [[ \"$url\" != \"http\"* ]]; then\n           continue\n         fi\n-      done < /tmp/unique-links.txt\n-\n-      echo \"\" >> /tmp/link-check-results.md\n-      echo \"**Summary:** $WORKING_COUNT working, $BROKEN_COUNT broken\" >> /tmp/link-check-results.md\n-      echo \"\" >> /tmp/broken-links.md\n-      echo \"**Summary:** $BROKEN_COUNT broken links\" >> /tmp/broken-links.md\n+        \n+        # Test the link with curl\n+        HTTP_CODE=$(curl -L -s -o /dev/null -w \"%{http_code}\" --max-time 10 \"$url\" 2>/dev/null || echo \"000\")\n+        \n+        if [[ \"$HTTP_CODE\" =~ ^2 ]] || [[ \"$HTTP_CODE\" =~ ^3 ]]; then\n+          WORKING_COUNT=$((WORKING_COUNT + 1))\n+          echo \"✅ $url (HTTP $HTTP_CODE)\" >> /tmp/gh-aw/agent/link-check-results.md\n+        else\n+          BROKEN_COUNT=$((BROKEN_COUNT + 1))\n+          echo \"❌ $url (HTTP $HTTP_CODE)\" >> /tmp/gh-aw/agent/link-check-results.md\n+        fi\n+      done < /tmp/gh-aw/agent/unique-links.txt\n+      \n+      echo \"\" >> /tmp/gh-aw/agent/link-check-results.md\n+      echo \"**Summary:** $WORKING_COUNT working, $BROKEN_COUNT broken\" >> /tmp/gh-aw/agent/link-check-results.md\n+      \n       # Output results\n       echo \"broken_count=$BROKEN_COUNT\" >> $GITHUB_OUTPUT\n       echo \"working_count=$WORKING_COUNT\" >> $GITHUB_OUTPUT\n-\n-      cat /tmp/link-check-results.md\n+      \n+      cat /tmp/gh-aw/agent/link-check-results.md\n     shell: bash\n \n tools:\n@@ -181,11 +132,9 @@ safe-outputs:\n     protected-files: fallback-to-issue\n     if-no-changes: \"warn\"\n   noop:\n-    report-as-issue: false\n-source: githubnext/agentics/workflows/link-checker.md@c02eadfca420f2b351f9fcaee883c507a63ca316\n ---\n \n-# Weekly Link Checker & Fixer\n+# Weekly HTTP Link Checker & Fixer\n \n You are an automated link checker and fixer agent. Your job is to find and fix broken links in the documentation files of this repository.\n \n@@ -195,13 +144,14 @@ Your workflow has already collected and tested all links in the previous step. U\n \n ## Step 1: Review Link Check Results\n \n-The link check step has already run. Read `/tmp/broken-links.md` to see all broken links that need fixing:\n-- Each line lists a broken URL and the source file where it appears\n-- HTTP status codes are included for external links\n+The link check step has already run and created a report at `/tmp/gh-aw/agent/link-check-results.md`. Read this file to see:\n+- All links found in the documentation\n+- Which links are working (✅) and which are broken (❌)\n+- HTTP status codes for each link\n \n Use bash to read the file:\n ```bash\n-cat /tmp/broken-links.md\n+cat /tmp/gh-aw/agent/link-check-results.md\n ```\n \n ## Step 2: Load Cache Memory\n@@ -303,5 +253,5 @@ Based on your work:\n ## Context\n \n - Repository: `${{ github.repository }}`\n-- Run weekly on Fridays to catch broken links early\n-- Link test results are available at `/tmp/link-check-results.md`\n+- Run weekly to catch broken links early\n+- Link test results are available at `/tmp/gh-aw/agent/link-check-results.md`\n\\ No newline at end of file",
+          "snapshot_ref": "97309688eff455de68e50e0d955b27ed818f5cda",
+          "snapshot_blob_sha": "b05ecc6bd8e64fad365513ac390bcdebdff1d89a",
+          "snapshot_file": "snapshots/vstest__microsoft__97309688eff455de68e50e0d955b27ed818f5cda__http-link-checker.md",
+          "snapshot_bytes": 9316,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/http-link-checker.lock.yml\",\"generated_workflow_file\":\"http-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/http-link-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/http-link-checker.md",
+      "commit_sha": "7832b64bd9c7f70ccb74d57a98d2aa12c971bc35",
+      "authored_at": "2026-06-12T11:31:28Z",
+      "committed_at": "2026-06-12T11:31:28Z",
+      "author_name": "Azat Mukhametshin",
+      "author_email": "azatm@microsoft.com",
+      "author_login": "azat-msft",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[fix] Update HTTP link extractor to exclude duplicates (#16114)\n\n* removed duplicate links\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* resolving copilot comments\n\n---------\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b08dd681a3121771a3d998f8aa6b1a2b875ef1d2"
+      ],
+      "tree_sha": "fe3ad4c0e008bacb13d4f67f15d1418e0a119072",
+      "html_url": "https://github.com/microsoft/vstest/commit/7832b64bd9c7f70ccb74d57a98d2aa12c971bc35",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/http-link-checker.md",
+          "commit_sha": "7832b64bd9c7f70ccb74d57a98d2aa12c971bc35",
+          "committed_at": "2026-06-12T11:31:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -43,8 +43,8 @@ steps:\n         echo \"Checking $file...\"\n         # Extract markdown links [text](url)\n         grep -oP '\\[([^\\]]+)\\]\\(([^\\)]+)\\)' \"$file\" | grep -oP '\\(([^\\)]+)\\)' | tr -d '()' >> /tmp/gh-aw/agent/all-links.txt 2>/dev/null || true\n-        # Extract plain HTTP(S) URLs\n-        grep -oP 'https?://[^\\s<>\"]+' \"$file\" >> /tmp/gh-aw/agent/all-links.txt 2>/dev/null || true\n+        # Extract plain HTTP(S) URLs from non-markdown-link text to avoid duplicates/trailing ')'\n+        sed -E 's/\\[[^]]+\\]\\(([^)]+)\\)/ /g' \"$file\" | grep -oP 'https?://[^\\s<>\"]+' | awk '{ if (index($0,\"(\") == 0) sub(/\\)$/, \"\", $0); print }' >> /tmp/gh-aw/agent/all-links.txt 2>/dev/null || true\n       done\n \n       # Remove duplicates and sort",
+          "snapshot_ref": "7832b64bd9c7f70ccb74d57a98d2aa12c971bc35",
+          "snapshot_blob_sha": "18ba416872ce31fca5f2783386a41c8daf004cd3",
+          "snapshot_file": "snapshots/vstest__microsoft__7832b64bd9c7f70ccb74d57a98d2aa12c971bc35__http-link-checker.md",
+          "snapshot_bytes": 9477,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/http-link-checker.lock.yml\",\"generated_workflow_file\":\"http-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/http-link-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/http-link-checker.md",
+      "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+      "authored_at": "2026-07-07T12:25:41Z",
+      "committed_at": "2026-07-07T12:25:41Z",
+      "author_name": "Jakub Jareš",
+      "author_email": "me@jakubjares.com",
+      "author_login": "nohwnd",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Prefer org tokens over personal PATs in agentic workflows (#16226)\n\nThe Microsoft OSS enterprise now 403s fine-grained PATs older than 8 days, so\nthe personal-PAT setup breaks on a short cycle and takes every agentic workflow\ndown with it at once. Move auth onto org-owned credentials, mirroring testfx:\n\n- Copilot inference now uses the copilot-requests: write permission (billed to\n  the org Copilot subscription) instead of COPILOT_GITHUB_TOKEN. No compiled lock\n  references that secret anymore. read-all workflows expand to an explicit read\n  map so the one write scope can be added.\n- Drop lockdown: true from the issue/PR workflows (deprecated upstream; they\n  keep min-integrity: none), so MCP reads fall back to the default GITHUB_TOKEN.\n- The two write-back workflows (issue-repro-triage, pr-iteration) reference an\n  org-owned GitHub App under safe-outputs with ignore-if-missing, so they fall\n  back to GITHUB_TOKEN until an admin provisions APP_ID/APP_PRIVATE_KEY.\n- Bump gh-aw 0.72.1 -> 0.81.6 and recompile every lock file.\n\nAdds .github/workflows/README.md documenting the token model and updates the\nAGENTS.md secrets note.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b7a1884481f21ceaf6356026c8e70c23fc99e3ea"
+      ],
+      "tree_sha": "50fdd84f67fd467635b139a6e820abab24f78a3b",
+      "html_url": "https://github.com/microsoft/vstest/commit/77c3673ef28372023e5602802748ab727408a33f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/http-link-checker.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/http-link-checker.md",
+          "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+          "committed_at": "2026-07-07T12:25:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 17,
+          "file_deletions": 1,
+          "file_changes": 18,
+          "file_patch": "@@ -2,7 +2,23 @@\n description: Weekly automated link checker that finds and fixes broken links in documentation files\n on:\n   schedule: weekly on Friday\n-permissions: read-all\n+permissions:\n+  actions: read\n+  attestations: read\n+  checks: read\n+  contents: read\n+  copilot-requests: write\n+  deployments: read\n+  discussions: read\n+  issues: read\n+  models: read\n+  packages: read\n+  pages: read\n+  pull-requests: read\n+  repository-projects: read\n+  security-events: read\n+  statuses: read\n+  vulnerability-alerts: read\n timeout-minutes: 60\n network:\n   allowed:",
+          "snapshot_ref": "77c3673ef28372023e5602802748ab727408a33f",
+          "snapshot_blob_sha": "aa0765cc50901e88d2ab1c307046b428d0a5c137",
+          "snapshot_file": "snapshots/vstest__microsoft__77c3673ef28372023e5602802748ab727408a33f__http-link-checker.md",
+          "snapshot_bytes": 9784,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/http-link-checker.lock.yml\",\"generated_workflow_file\":\"http-link-checker.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/http-link-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

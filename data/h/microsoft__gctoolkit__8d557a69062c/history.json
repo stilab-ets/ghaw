@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/gctoolkit:.github/workflows/relevance-summary.md",
+    "source_full_name": "microsoft/gctoolkit",
+    "source_owner": "microsoft",
+    "source_repo": "gctoolkit",
+    "md_path": ".github/workflows/relevance-summary.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/gctoolkit/blob/HEAD/.github/workflows/relevance-summary.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/gctoolkit",
+      "generated_owner": "microsoft",
+      "generated_repo": "gctoolkit",
+      "generated_workflow_path": ".github/workflows/relevance-summary.lock.yml",
+      "generated_workflow_file": "relevance-summary.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/gctoolkit/blob/2daacd65912abf969d729549363573a63493b54e/.github/workflows/relevance-summary.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/gctoolkit:.github/workflows/relevance-summary.md",
+      "source_full_name": "microsoft/gctoolkit",
+      "md_path": ".github/workflows/relevance-summary.md",
+      "commit_sha": "6cea1b4d3772827f51e6ce19922b0fd229eeebad",
+      "authored_at": "2026-02-26T18:10:59Z",
+      "committed_at": "2026-02-26T18:10:59Z",
+      "author_name": "Bruno Borges",
+      "author_email": "brborges@microsoft.com",
+      "author_login": "brunoborges",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add relevance-summary workflow (#491)\n\nManually triggered workflow that summarizes all open issues and PRs\nthat have received a /relevance-check response into a single issue\nwith a table showing assessment and recommended action.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "edaf4c27f290c7444fe4487113e637a5a25dff47"
+      ],
+      "tree_sha": "a0525b10ef10aa8f71e2cd0c7b0f12b6dadc7cdb",
+      "html_url": "https://github.com/microsoft/gctoolkit/commit/6cea1b4d3772827f51e6ce19922b0fd229eeebad",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/gctoolkit:.github/workflows/relevance-summary.md",
+          "source_full_name": "microsoft/gctoolkit",
+          "md_path": ".github/workflows/relevance-summary.md",
+          "commit_sha": "6cea1b4d3772827f51e6ce19922b0fd229eeebad",
+          "committed_at": "2026-02-26T18:10:59Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 73,
+          "file_deletions": 0,
+          "file_changes": 73,
+          "file_patch": "@@ -0,0 +1,73 @@\n+---\n+description: \"Manually triggered workflow that summarizes all open issues and PRs with a /relevance-check response into a single issue\"\n+on:\n+  workflow_dispatch:\n+engine:\n+  id: copilot\n+  model: claude-sonnet-4.5\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"Relevance Summary:\"\n+    labels: [report]\n+    close-older-issues: true\n+---\n+\n+# Relevance Check Summary Report\n+\n+You are a report generator for the **${{ github.repository }}** repository.\n+Your job is to find all open issues and pull requests that have received a `/relevance-check` response, and compile a summary issue.\n+\n+## Instructions\n+\n+### 1. Find Relevant Items\n+\n+Search all **open** issues and pull requests in this repository.\n+For each one, read its comments and look for a comment that contains a **\"Relevance Assessment\"** section — this is the output of the `/relevance-check` slash command.\n+\n+A relevance-check response contains these markers:\n+- A heading or bold text with **\"Relevance Assessment:\"** followed by one of: `Still Relevant`, `Likely Outdated`, or `Needs Discussion`\n+- A **Recommendation** section with one of: ✅ **Keep open**, 🗄️ **Consider closing**, or 💬 **Needs maintainer input**\n+\n+### 2. Extract Information\n+\n+For each issue or PR that has a relevance-check response, extract:\n+- The issue/PR number and title\n+- Whether it is an issue or a pull request\n+- The relevance assessment verdict (Still Relevant / Likely Outdated / Needs Discussion)\n+- The recommended action (Keep open / Consider closing / Needs maintainer input)\n+\n+### 3. Create the Summary Issue\n+\n+Create a single issue with a table summarizing all findings. Use this structure:\n+\n+```\n+### Relevance Check Summary\n+\n+Summary of all open issues and pull requests that have been evaluated with `/relevance-check`.\n+\n+**Generated:** YYYY-MM-DD\n+\n+| # | Type | Title | Assessment | Recommendation |\n+|---|------|-------|------------|----------------|\n+| [#N](link) | Issue/PR | Brief title | Still Relevant / Likely Outdated / Needs Discussion | ✅ Keep open / 🗄️ Consider closing / 💬 Needs maintainer input |\n+\n+### Statistics\n+- Total evaluated: N\n+- Still Relevant: N\n+- Likely Outdated: N\n+- Needs Discussion: N\n+```\n+\n+### 4. Guidelines\n+\n+- If no open issues or PRs have a relevance-check response, create the issue stating that no items were found.\n+- Sort the table by assessment: list \"Likely Outdated\" items first (most actionable), then \"Needs Discussion\", then \"Still Relevant\".\n+- Keep titles brief in the table — truncate to ~60 characters if needed.\n+- Always link the issue/PR number to its URL.",
+          "snapshot_ref": "6cea1b4d3772827f51e6ce19922b0fd229eeebad",
+          "snapshot_blob_sha": "110e311ae0922cad76bab9e8f079485af807270d",
+          "snapshot_file": "snapshots/gctoolkit__microsoft__6cea1b4d3772827f51e6ce19922b0fd229eeebad__relevance-summary.md",
+          "snapshot_bytes": 2659,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/gctoolkit\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"gctoolkit\",\"generated_workflow_path\":\".github/workflows/relevance-summary.lock.yml\",\"generated_workflow_file\":\"relevance-summary.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/gctoolkit/blob/2daacd65912abf969d729549363573a63493b54e/.github/workflows/relevance-summary.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+---
+name: "News: Committee Reports"
+description: Generates committee reports analysis articles in core languages (EN, SV). Translations for remaining 12 languages are handled by the dedicated news-translate workflow via dispatch-workflow. Single article type per run.
+strict: false
+imports:
+  - ../prompts/00-base-contract.md
+  - ../prompts/01-bash-and-shell-safety.md
+  - ../prompts/02-mcp-access.md
+  - ../prompts/03-data-download.md
+  - ../prompts/04-analysis-pipeline.md
+  - ../prompts/05-analysis-gate.md
+  - ../prompts/06-article-generation.md
+  - ../prompts/07-commit-and-pr.md
+on:
+  schedule: daily around 4:00 on weekdays
+  workflow_dispatch:
+    inputs:
+      article_date:
+        description: 'Article date (YYYY-MM-DD) for manual backfills. Defaults to today when omitted or scheduled.'
+        required: false
+      force_generation:
+        description: Force generation even if recent articles exist
+        type: boolean
+        required: false
+        default: false
+      languages:
+        description: 'Core languages for content generation (en,sv | nordic | eu-core | all). Translations for remaining languages are handled by the dedicated news-translate workflow.'
+        required: false
+        default: en,sv
+      analysis_depth:
+        description: 'Analysis depth for AI iterations (standard=1-2 iterations, deep=2-3 iterations, comprehensive=3+ iterations). Controls SWOT complexity, stakeholder count, and dashboard charts.'
+        required: false
+        default: deep
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: read
+  discussions: read
+  security-events: read
+
+timeout-minutes: 45
+
+concurrency:
+  group: gh-aw-news-committee-reports-${{ inputs.article_date || 'today' }}
+  cancel-in-progress: false
+
+features:
+  mcp-gateway: true
+
+sandbox:
+  mcp:
+    keepalive-interval: 300 # gh-aw mcp-gateway `keepaliveInterval` — overrides upstream default 1500s (25 min) with a 5-min HTTP MCP ping. Keeps `riksdag-regering` (HTTP) and any other HTTP-backed MCPs warm for the entire 45-min job; lets us run 45-50 min sessions safely. Does NOT keep the local `safeoutputs` Streamable-HTTP idle session alive (Timer C ~25-30 min) — call `safeoutputs___create_pull_request` by minute 28 (hard 30). See prompts/07-commit-and-pr.md §Deadline enforcement and reference: https://github.com/github/gh-aw/blob/main/docs/src/content/docs/reference/mcp-gateway.md
+
+runtimes:
+  node:
+    version: "25"
+
+network:
+  allowed:
+    - node
+    - containers # node:25-alpine containers used by SCB + World Bank MCP servers
+    - github
+    - riksdag-regering-ai.onrender.com
+    - api.scb.se
+    - api.worldbank.org
+    - api.imf.org
+    - data.imf.org
+    - www.imf.org
+    - data.riksdagen.se
+    - www.riksdagen.se
+    - riksdagen.se
+    - www.regeringen.se
+    - www.scb.se
+    - www.statskontoret.se
+    - statskontoret.se
+    - regeringen.se
+    - hack23.com
+    - www.hack23.com
+    - riksdagsmonitor.com
+    - www.riksdagsmonitor.com
+    - raw.githubusercontent.com
+    - hack23.github.io
+    - defaults
+
+mcp-servers:
+  riksdag-regering:
+    url: https://riksdag-regering-ai.onrender.com/mcp
+    allowed: ["*"]
+  scb:
+    container: "node:25-alpine"
+    entrypoint: "npx"
+    entrypointArgs: ["-y", "@jarib/pxweb-mcp@2.0.0", "--url", "https://api.scb.se/OV0104/v2beta"]
+    allowed: ["*"]
+  world-bank:
+    container: "node:25-alpine"
+    entrypoint: "npx"
+    entrypointArgs: ["-y", "worldbank-mcp@1.0.1"]
+    allowed: ["*"]
+
+tools:
+  startup-timeout: 180
+  timeout: 120
+  github:
+    toolsets:
+      - all
+  agentic-workflows: true
+  bash: true
+  edit:
+  web-fetch:
+  cache-memory:
+    key: news-${{ github.workflow }}-${{ inputs.article_date || 'today' }}
+    retention-days: 14
+
+safe-outputs:
+  allowed-domains:
+    - riksdag-regering-ai.onrender.com
+    - api.scb.se
+    - api.worldbank.org
+    - api.imf.org
+    - data.imf.org
+    - www.imf.org
+    - data.riksdagen.se
+    - www.riksdagen.se
+    - riksdagen.se
+    - www.regeringen.se
+    - www.scb.se
+    - www.statskontoret.se
+    - statskontoret.se
+    - hack23.com
+    - www.hack23.com
+    - riksdagsmonitor.com
+    - www.riksdagsmonitor.com
+    - raw.githubusercontent.com
+    - hack23.github.io
+  max-patch-size: 4096
+  create-pull-request:
+    labels: [agentic-news, analysis-data]
+    draft: false
+    expires: 14d
+    max: 1
+    if-no-changes: warn       # Don't fail when nothing changed (resilience)
+    fallback-as-issue: true   # If org disables Actions PR creation, fall back to an issue with branch link
+  add-comment: {}
+  dispatch-workflow:
+    workflows: [news-translate]
+    max: 1
+
+steps:
+  - name: News pre-warm & pre-flight (composite)
+    uses: ./.github/actions/news-prewarm
+engine:
+  id: copilot
+  model: claude-opus-4.7
+---
+
+# 📋 Committee Reports
+
+Generates deep political intelligence analysis **and** the rendered HTML article for parliamentary committee reports in one single agentic run. Core languages are `en` + `sv`; translations to the remaining twelve languages are produced by the separate `news-translate` workflow.
+
+## What this workflow does
+
+- **Article type**: `committee-reports`
+- **Analysis subfolder**: `analysis/daily/$ARTICLE_DATE/committee-reports/`
+- **Aggregated markdown**: `analysis/daily/$ARTICLE_DATE/committee-reports/article.md` (produced by `scripts/aggregate-analysis.ts`)
+- **Rendered HTML**: `news/$ARTICLE_DATE-committee-reports-{en,sv}.html` (produced by `scripts/render-articles.ts`)
+- **Single-run model**: one run does download → analysis Pass 1 + 2 → gate → aggregate → render → ONE PR. There is no separate "article run". Translations are handled exclusively by `news-translate`.
+
+## Time budget
+
+> 🔴 **CRITICAL — safeoutputs MCP idle timeout (~30 min)**: The `safeoutputs` MCP server's Streamable-HTTP session expires after **~30 minutes of idle time**. **Your first and only `safeoutputs___*` call MUST happen by minute 28 at the latest.** This is a harder deadline than the ~60-minute Copilot-API token window and the 45-minute job `timeout-minutes` budget described in `00-base-contract.md §Session keepalive requirement`.
+>
+> **AI-FIRST within the compressed budget**: Pass 2 is still mandatory. Under the tightened ~28-min budget, prefer **scope compression over iteration skipping** — reduce the download/manifest scope if needed, but maintain 1:1 per-document coverage and always perform a full read-back-and-improve Pass 2 on whatever artifacts exist. For scheduled runs treat `analysis_depth` as `standard` in practice; reserve `deep`/`comprehensive` for manual `workflow_dispatch` backfills.
+
+**Single run** (produces all 23 analysis artifacts + aggregated `article.md` + EN/SV HTML, target ~28 min):
+
+| Minutes | Phase | Module |
+|---------|-------|--------|
+| 0–2 | MCP pre-warm + pre-flight check | 02 / 03 |
+| 2–5 | Download data + catalogue | 03 |
+| 5–15 | Analysis Pass 1 (methodology read + per-doc analyses + **all 23 artifacts**: Family A 9 + B 2 + C 5 + D 7) | 04 |
+| 15–21 | Analysis Pass 2 (read-back + improvements on all 22 text files) | 04 |
+| 21–22 | Analysis Gate (checks 1–8) | 05 |
+| 22–24 | `scripts/aggregate-analysis.ts` (concat → `article.md`) + `scripts/render-articles.ts --lang en,sv` (render HTML) | 06 |
+| 24–28 | Stage analysis + `article.md` + `news/*.html`, commit, **ONE** `safeoutputs___create_pull_request` — **HARD DEADLINE minute 28** | 07 |
+
+Trim scope before quality. Never open a second PR within a run — there is no second PR. **If you reach minute 25 without staging, stop all remaining analysis work, run the aggregator + renderer on whatever artifacts exist, commit, and call `safeoutputs___create_pull_request` immediately** — a partial-but-delivered PR is infinitely better than losing all work to a `session not found` error.
+
+## Inputs
+
+- `article_date` — override date (defaults to today)
+- `force_generation` — regenerate even if today's content exists; also forces analysis re-run
+- `languages` — core content languages (default `en,sv`)
+- `analysis_depth` — `standard` | `deep` (default) | `comprehensive`
+
+## Run-mode selection
+
+At the start of every run, the pre-flight check in `03-data-download.md` detects whether `analysis/daily/$ARTICLE_DATE/committee-reports/` already contains all **23 required artifacts**:
+
+- **No analysis found** → run the full pipeline (download → Pass 1 → Pass 2 → gate → aggregate → render → PR).
+- **Analysis found** → skip download / Pass 1 / Pass 2 / gate, re-load the analysis into context, run aggregate + render, and open the PR.
+
+Repeated runs for the same `$ARTICLE_DATE` always use the same analysis folder when `force_generation=false`.
+
+All other rules (bash format, AWF shell safety, MCP access, download pipeline, analysis methodology & gate, aggregate + render, commit & PR policy) live in the imported modules.

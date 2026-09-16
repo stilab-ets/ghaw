@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/smoke-bounded-queries.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/smoke-bounded-queries.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/smoke-bounded-queries.lock.yml",
+      "generated_workflow_file": "smoke-bounded-queries.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:48:18+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-bounded-queries.md",
+      "commit_sha": "bb9f69d154ae08a11e43b4b1222b361046ee443b",
+      "authored_at": "2026-07-30T22:23:02Z",
+      "committed_at": "2026-07-30T22:23:02Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: rewrite bounded query smoke test as agentic workflow (#6753)\n\n* ci: rewrite bounded query smoke workflow\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* ci: address bounded query workflow review\n\nRestore deterministic budget coverage and enforce audit validation.\n\nIsolate direct repository tools and stabilize release-mode lock generation.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90",
+      "parent_shas": [
+        "2d6bc3cc0885c62e4489d094b1c9a46a831cf011"
+      ],
+      "tree_sha": "42ab5a0d181a7a106230ea813dbc95a3814a35a7",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/bb9f69d154ae08a11e43b4b1222b361046ee443b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-bounded-queries.md",
+          "commit_sha": "bb9f69d154ae08a11e43b4b1222b361046ee443b",
+          "committed_at": "2026-07-30T22:23:02Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 123,
+          "file_deletions": 0,
+          "file_changes": 123,
+          "file_patch": "@@ -0,0 +1,123 @@\n+---\n+name: Smoke Bounded Queries\n+description: Smoke test for declarative bounded queries in agentic workflow frontmatter\n+on:\n+  schedule: every 12h\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  copilot-requests: write\n+env:\n+  GH_TOKEN: ${{ github.token }}\n+engine:\n+  id: copilot\n+  version: 1.0.34\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  github:\n+    toolsets: [context]\n+    allowed: []\n+    bounded-queries:\n+      private-repos:\n+        - repo: github/gh-aw\n+          sensitivity: internal\n+      runtime: docker\n+      memory-limit: 2g\n+      interpreter: python3\n+sandbox:\n+  agent:\n+    id: awf\n+    version: v0.28.0\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+timeout-minutes: 15\n+strict: false\n+concurrency:\n+  group: smoke-bounded-queries\n+  cancel-in-progress: false\n+jobs:\n+  verify_budget_matrix:\n+    name: Verify confidentiality budgets\n+    runs-on: ubuntu-latest\n+    timeout-minutes: 30\n+    permissions:\n+      contents: read\n+    steps:\n+      - name: Checkout repository\n+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1\n+        with:\n+          persist-credentials: false\n+      - name: Setup Node.js\n+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0\n+        with:\n+          node-version: \"24\"\n+          package-manager-cache: false\n+      - name: Build AWF\n+        run: |\n+          npm ci\n+          npm run build\n+          sudo tee /usr/local/bin/awf > /dev/null <<EOF\n+          #!/bin/bash\n+          exec \"$(command -v node)\" \"${GITHUB_WORKSPACE}/dist/cli.js\" \"\\$@\"\n+          EOF\n+          sudo chmod +x /usr/local/bin/awf\n+      - name: Exercise confidentiality budgets\n+        env:\n+          GH_TOKEN: ${{ github.token }}\n+        run: scripts/ci/smoke-bounded-queries.sh\n+post-steps:\n+  - name: Validate bounded-query invocation\n+    if: always()\n+    env:\n+      AUDIT_LOG: /tmp/gh-aw/sandbox/firewall/audit/bounded-query.jsonl\n+      OUTPUTS_FILE: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS }}\n+    run: |\n+      node - \"$AUDIT_LOG\" \"$OUTPUTS_FILE\" <<'NODE'\n+      const fs = require(\"fs\");\n+      const [auditPath, outputsPath] = process.argv.slice(2);\n+      const readJsonLines = (path) => fs.readFileSync(path, \"utf8\")\n+        .trim()\n+        .split(\"\\n\")\n+        .filter(Boolean)\n+        .map((line) => JSON.parse(line));\n+\n+      const invocations = readJsonLines(auditPath).filter(\n+        (record) => record.kind === \"invocation\" &&\n+          record.repo === \"github/gh-aw\" &&\n+          record.sensitivity === \"internal\"\n+      );\n+      if (invocations.length !== 1) {\n+        throw new Error(`expected one successful bounded query, found ${invocations.length}`);\n+      }\n+\n+      const outputs = fs.readFileSync(outputsPath, \"utf8\");\n+      if (!outputs.includes('\"noop\"') || !outputs.includes(\"PASS\")) {\n+        throw new Error(\"agent did not report a bounded-query PASS through noop\");\n+      }\n+      NODE\n+---\n+\n+# Smoke Test: Bounded Queries\n+\n+Use the generated `bounded-query` skill to answer exactly one finite question about\n+`github/gh-aw`: does the repository root contain a `go.mod` file?\n+\n+The query must:\n+\n+1. Use a boolean JSON schema.\n+2. Run a Python script inside the bounded-query environment that checks\n+   `/query/repo/go.mod`.\n+3. Return `true`.\n+\n+No GitHub API tools are available to the agent. Do not use network requests or\n+the current checkout to answer the question. The test passes only when the\n+bounded query succeeds and returns `true`.\n+\n+Call `noop` with a concise PASS result that includes the returned boolean only\n+when the query returns `true`. If the skill is unavailable, call\n+`safeoutputs-missing_tool`. If the query fails or returns anything other than\n+`true`, call `safeoutputs-missing_data`. Never report FAIL through `noop`.",
+          "snapshot_ref": "bb9f69d154ae08a11e43b4b1222b361046ee443b",
+          "snapshot_blob_sha": "ea4470ce71d563f3c96cedbd64f6387465b89a4a",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__bb9f69d154ae08a11e43b4b1222b361046ee443b__smoke-bounded-queries.md",
+          "snapshot_bytes": 3747,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-bounded-queries.lock.yml\",\"generated_workflow_file\":\"smoke-bounded-queries.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-bounded-queries.md",
+      "commit_sha": "ef8b73c2ff5f2f5f74fe6ade011a40a154061fb8",
+      "authored_at": "2026-07-30T23:33:05Z",
+      "committed_at": "2026-07-30T23:33:05Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix bounded query smoke workflow run (#6755)\n\n* fix: persist bounded query audit records\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: run agent with unreleased bounded queries\n\nBootstrap the latest published AWF release.\n\nReplace it with the workflow checkout build before the agent starts.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: build bounded query images for agent smoke\n\nAvoid pulling unreleased AWF images.\n\nBuild the agent sandbox images from the workflow checkout instead.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: allow local agent image builds\n\nRemove the generated skip-pull flag that conflicts with build-local.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n---------\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90",
+      "parent_shas": [
+        "bb9f69d154ae08a11e43b4b1222b361046ee443b"
+      ],
+      "tree_sha": "dfa1ea2e4587b604106fd1fe17d7efc085534180",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/ef8b73c2ff5f2f5f74fe6ade011a40a154061fb8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-bounded-queries.md",
+          "commit_sha": "ef8b73c2ff5f2f5f74fe6ade011a40a154061fb8",
+          "committed_at": "2026-07-30T23:33:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 14,
+          "file_deletions": 0,
+          "file_changes": 14,
+          "file_patch": "@@ -31,6 +31,20 @@ sandbox:\n   agent:\n     id: awf\n     version: v0.28.0\n+    args:\n+      - --build-local\n+steps:\n+  - name: Build unreleased AWF\n+    run: |\n+      npm ci\n+      npm run build\n+pre-agent-steps:\n+  - name: Replace release bootstrap with current AWF build\n+    run: |\n+      mkdir -p \"$HOME/.local/bin\"\n+      printf '#!/bin/bash\\nexec \"%s\" \"%s/dist/cli.js\" \"$@\"\\n' \\\n+        \"$(command -v node)\" \"$GITHUB_WORKSPACE\" > \"$HOME/.local/bin/awf\"\n+      chmod +x \"$HOME/.local/bin/awf\"\n safe-outputs:\n   threat-detection:\n     enabled: false",
+          "snapshot_ref": "ef8b73c2ff5f2f5f74fe6ade011a40a154061fb8",
+          "snapshot_blob_sha": "46e86829ccbf66e3600d81a28b21ba7c83179ff6",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__ef8b73c2ff5f2f5f74fe6ade011a40a154061fb8__smoke-bounded-queries.md",
+          "snapshot_bytes": 4158,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-bounded-queries.lock.yml\",\"generated_workflow_file\":\"smoke-bounded-queries.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-bounded-queries.md",
+      "commit_sha": "717a1b733c33ffec1da2d9d77162f80a1ed2af3c",
+      "authored_at": "2026-07-31T13:39:59Z",
+      "committed_at": "2026-07-31T13:39:59Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Upgrade gh-aw extension to latest pre-release and recompile workflows (#6798)\n\n- Upgraded gh-aw using 'gh aw upgrade --pre-releases'\n- Updated container image pins (ghcr.io/github/gh-aw-mcpg:v0.4.7)\n- Updated action references (setup-node v7.0.0)\n- Ran post-processing on smoke workflows\n- All tests pass (4947 tests)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "f4ee66e3fb6961cedc97912c760513a5f10fb8e7"
+      ],
+      "tree_sha": "a93011a0dc8c660be9ccb47fae794c3842ac94f6",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/717a1b733c33ffec1da2d9d77162f80a1ed2af3c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-bounded-queries.md",
+          "commit_sha": "717a1b733c33ffec1da2d9d77162f80a1ed2af3c",
+          "committed_at": "2026-07-31T13:39:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -66,7 +66,7 @@ jobs:\n         with:\n           persist-credentials: false\n       - name: Setup Node.js\n-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0\n+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0\n         with:\n           node-version: \"24\"\n           package-manager-cache: false",
+          "snapshot_ref": "717a1b733c33ffec1da2d9d77162f80a1ed2af3c",
+          "snapshot_blob_sha": "da0e627fb38da66d63b9c22dac57619d1804873f",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__717a1b733c33ffec1da2d9d77162f80a1ed2af3c__smoke-bounded-queries.md",
+          "snapshot_bytes": 4159,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-bounded-queries.lock.yml\",\"generated_workflow_file\":\"smoke-bounded-queries.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

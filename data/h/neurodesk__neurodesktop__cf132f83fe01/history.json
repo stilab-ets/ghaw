@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+    "source_full_name": "neurodesk/neurodesktop",
+    "source_owner": "neurodesk",
+    "source_repo": "neurodesktop",
+    "md_path": ".github/workflows/package-update-radar.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/neurodesk/neurodesktop/blob/HEAD/.github/workflows/package-update-radar.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "neurodesk/neurodesktop",
+      "generated_owner": "neurodesk",
+      "generated_repo": "neurodesktop",
+      "generated_workflow_path": ".github/workflows/package-update-radar.lock.yml",
+      "generated_workflow_file": "package-update-radar.lock.yml",
+      "generated_html_url": "https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/package-update-radar.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:01+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/package-update-radar.md",
+      "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+      "authored_at": "2026-07-29T00:14:29Z",
+      "committed_at": "2026-07-29T00:14:29Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "fix maintenance workflows",
+      "parent_shas": [
+        "b523d75f2b32ff713db35b3ad0725a9806ff77a1"
+      ],
+      "tree_sha": "a55f6c043a53b1616f58930658aa41bd35b03cbf",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/2a1df33ef74729614931d791f5750f2366f7dab0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/package-update-radar.md",
+          "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "committed_at": "2026-07-29T00:14:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 168,
+          "file_deletions": 0,
+          "file_changes": 168,
+          "file_patch": "@@ -0,0 +1,168 @@\n+---\n+name: Weekly Package Update Radar\n+description: Survey every pinned package, tool, action, and base image, then report the available upgrades in one tracking issue.\n+labels: [automation, maintenance, dependencies]\n+on:\n+  schedule: weekly\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+\n+engine:\n+  id: codex\n+  model: ${{ vars.GH_AW_MODEL_AGENT_CODEX || vars.GH_AW_DEFAULT_MODEL_CODEX || 'neurodesk' }}\n+  env:\n+    OPENAI_BASE_URL: \"https://llm.neurodesk.org/openai\"\n+    OPENAI_API_KEY: ${{ secrets.CODEX_API_KEY || secrets.OPENAI_API_KEY }}\n+\n+models:\n+  providers:\n+    openai:\n+      models:\n+        neurodesk:\n+          cost:\n+            input: \"3e-06\"\n+            output: \"1.5e-05\"\n+\n+strict: true\n+max-ai-credits: -1\n+max-daily-ai-credits: -1\n+max-turn-cache-misses: 2000\n+timeout-minutes: 40\n+\n+imports:\n+  - uses: .github/workflows/shared/agentic-models.md\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - python\n+    - node\n+    - containers\n+    - linux-distros\n+    - llm.neurodesk.org\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+\n+safe-outputs:\n+  threat-detection:\n+    engine: false\n+  create-issue:\n+    title-prefix: \"[package-updates] \"\n+    labels: [agentic-workflow, dependencies]\n+    max: 1\n+  add-comment:\n+    max: 1\n+    target: \"*\"\n+    issues: true\n+    pull-requests: false\n+    discussions: false\n+    hide-older-comments: true\n+  noop:\n+    report-as-issue: false\n+---\n+\n+# Package Update Radar\n+\n+Report which pinned packages have newer upstream releases. This workflow is a\n+read-only survey: it never edits repository files and never opens a pull\n+request. `maintenance-updates` consumes this radar and applies at most one\n+verified update per week, so the radar's job is to keep an accurate, ranked\n+candidate list rather than to change anything.\n+\n+## Inventory Surfaces\n+\n+Cover every surface that pins a third-party version:\n+\n+- `Dockerfile` build arguments, including the base image tag, Apptainer, Go,\n+  gRPC, CVMFS, Guacamole, Tomcat and the Jakarta EE migration tool,\n+  code-server, OpenCode, NiiVue, and any other `ARG *_VERSION` pin.\n+- `Dockerfile` package installs: `pip install` pins, `npm pack`/`npm install`\n+  pins, conda pins, and version-constrained apt packages.\n+- JupyterLab extension and Python pins that `docs/architecture.md` and\n+  `docs/testing.md` describe as version-sensitive, such as Notebook\n+  Intelligence, `jupyterlab_myst`, `jupyterlab-niivue`, and `ipywidgets`.\n+- `extensions/neurodesk-launcher/package.json` and\n+  `extensions/neurodesk-launcher/pyproject.toml` dependency ranges.\n+- Composite actions under `.github/actions/**` and the pinned action refs used\n+  by repository workflows.\n+- Pinned tool versions in `scripts/**` and `config/**`.\n+\n+Ignore vendored `node_modules` trees; report the declared dependency instead of\n+its transitive lockfile entries.\n+\n+## Evidence Budget\n+\n+- Build the inventory from repository files first. Use at most 15 read commands\n+  for the whole inventory pass.\n+- Use at most 20 upstream version probes per run, one per tracked component.\n+  Prefer a single authoritative source per component: the GitHub releases API,\n+  the PyPI or npm registry JSON, the distribution package index, or the\n+  container registry tag list.\n+- Never probe the same component twice. If a probe fails or is ambiguous,\n+  record the component as `unknown` with the reason and move on.\n+- If the inventory is larger than the probe budget, probe the components that\n+  the previous radar issue ranked highest, note the surfaces you skipped, and\n+  say explicitly that coverage was truncated.\n+\n+## Ranking Rules\n+\n+Classify each component with a newer release as one of:\n+\n+- **Security** — the gap includes a published advisory or CVE fix. Always rank\n+  these first and cite the advisory identifier.\n+- **Ready** — patch or minor gap with published release notes and no breaking\n+  change relevant to this image.\n+- **Needs review** — major gap, a breaking change in the release notes, a pin\n+  that `AGENTS.md` or `docs/testing.md` couples to mandated container\n+  validation, or a component whose upgrade touches the frontend rebuild of\n+  Notebook Intelligence or MyST.\n+- **Blocked** — a newer release exists but something in this repository\n+  prevents it; state the blocker.\n+\n+Do not recommend replacing a pin with a floating tag. Do not recommend\n+hand-editing generated lock data. Treat a component as current when the pin\n+already matches the newest release for its supported line.\n+\n+## Report Format\n+\n+The issue body must contain, in this order:\n+\n+1. A one-line summary with the run date, the number of components tracked, and\n+   the counts per classification.\n+2. A markdown table with the columns `Component`, `Surface`, `Pinned`,\n+   `Latest`, `Gap`, `Class`, `Evidence`. `Surface` is the file and pin name.\n+   `Evidence` is the upstream release-notes or advisory URL used.\n+3. A short `Recommended next update` section naming the single best candidate\n+   for `maintenance-updates` and why it is the safest high-value pick.\n+4. A `Coverage` section listing components probed as `unknown`, surfaces\n+   skipped, and any budget that was hit.\n+\n+Keep the table to the components that are behind, current-but-security-relevant,\n+or unknown. Do not pad it with components that are already current.\n+\n+## Output Contract\n+\n+Search open issues for one labeled `agentic-workflow` whose title starts with\n+the `[package-updates]` prefix.\n+\n+- If no such issue is open, call `create-issue` with the title\n+  `Pinned dependency radar` and the report as the body. The workflow adds the\n+  title prefix.\n+- If one is already open, call `add-comment` on it with the current report.\n+  Older radar comments are collapsed automatically, so write the comment as a\n+  complete standalone report rather than a diff against the previous run.\n+\n+Never open a second radar issue while one is open, and never do both actions in\n+one run.\n+\n+Call `noop` with a concise reason when the survey finds no component behind its\n+latest upstream release and no open radar issue needs correcting.",
+          "snapshot_ref": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "snapshot_blob_sha": "4df76cbdfebc92be05598f1d05004fffaf4c6796",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__2a1df33ef74729614931d791f5750f2366f7dab0__package-update-radar.md",
+          "snapshot_bytes": 6032,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/package-update-radar.lock.yml\",\"generated_workflow_file\":\"package-update-radar.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/package-update-radar.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/package-update-radar.md",
+      "commit_sha": "d6c6e69ee1b0a8c8c0b6b14198d3afe9c36b2169",
+      "authored_at": "2026-08-01T02:23:21Z",
+      "committed_at": "2026-08-01T02:23:21Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "remove opencode webui - wait for upstream rewrite",
+      "parent_shas": [
+        "5412ce61a57418812baed3238e9cbbedbe67ddcc"
+      ],
+      "tree_sha": "b9d97d8480b423dd9919e4123278d546a4e8ac4a",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/d6c6e69ee1b0a8c8c0b6b14198d3afe9c36b2169",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/package-update-radar.md",
+          "commit_sha": "d6c6e69ee1b0a8c8c0b6b14198d3afe9c36b2169",
+          "committed_at": "2026-08-01T02:23:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -84,7 +84,7 @@ Cover every surface that pins a third-party version:\n \n - `Dockerfile` build arguments, including the base image tag, Apptainer, Go,\n   gRPC, CVMFS, Guacamole, Tomcat and the Jakarta EE migration tool,\n-  code-server, OpenCode, NiiVue, and any other `ARG *_VERSION` pin.\n+  code-server, OpenCode, and any other `ARG *_VERSION` pin.\n - `Dockerfile` package installs: `pip install` pins, `npm pack`/`npm install`\n   pins, conda pins, and version-constrained apt packages.\n - JupyterLab extension and Python pins that `docs/architecture.md` and",
+          "snapshot_ref": "d6c6e69ee1b0a8c8c0b6b14198d3afe9c36b2169",
+          "snapshot_blob_sha": "0e6f74fed5255a99e3df9bd5bdac3cd479af270a",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__d6c6e69ee1b0a8c8c0b6b14198d3afe9c36b2169__package-update-radar.md",
+          "snapshot_bytes": 6024,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/package-update-radar.lock.yml\",\"generated_workflow_file\":\"package-update-radar.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/package-update-radar.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/package-update-radar.md",
+      "commit_sha": "a895f367d92b03f16ae906e59ddc488d89fca0c3",
+      "authored_at": "2026-08-04T01:39:23Z",
+      "committed_at": "2026-08-04T01:39:26Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "make aw more robust",
+      "parent_shas": [
+        "e858d8963b29eb80624f0ba8aab956e1dd9842b6"
+      ],
+      "tree_sha": "cc6986fd9cc2eaef7db60c9aede4b87318e84a3b",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/a895f367d92b03f16ae906e59ddc488d89fca0c3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/package-update-radar.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/package-update-radar.md",
+          "commit_sha": "a895f367d92b03f16ae906e59ddc488d89fca0c3",
+          "committed_at": "2026-08-04T01:39:26Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 34,
+          "file_deletions": 6,
+          "file_changes": 40,
+          "file_patch": "@@ -15,6 +15,7 @@ permissions:\n engine:\n   id: codex\n   model: ${{ vars.GH_AW_MODEL_AGENT_CODEX || vars.GH_AW_DEFAULT_MODEL_CODEX || 'neurodesk' }}\n+  args: [\"-c\", \"features.multi_agent=false\"]\n   env:\n     OPENAI_BASE_URL: \"https://llm.neurodesk.org/openai\"\n     OPENAI_API_KEY: ${{ secrets.CODEX_API_KEY || secrets.OPENAI_API_KEY }}\n@@ -78,6 +79,20 @@ request. `maintenance-updates` consumes this radar and applies at most one\n verified update per week, so the radar's job is to keep an accurate, ranked\n candidate list rather than to change anything.\n \n+## Completion Guard\n+\n+- First, use the GitHub tool to search for the existing open radar issue.\n+  Never use the shell `gh` CLI; it is not authenticated in the agent job.\n+- Work directly without sub-agents, progress narration, or a todo list.\n+- The run is complete only after exactly one safe-output tool call:\n+  `create_issue`, `add_comment`, `noop`, `missing_tool`, or `missing_data`.\n+  Never finish with a plan, progress message, checklist, or ordinary assistant\n+  response.\n+- If a budget below is exhausted or evidence is incomplete, stop researching\n+  and publish the best partial report. Mark unresolved components `unknown`\n+  and list skipped surfaces under `Coverage`; partial coverage is preferable\n+  to producing no safe output.\n+\n ## Inventory Surfaces\n \n Cover every surface that pins a third-party version:\n@@ -101,17 +116,24 @@ its transitive lockfile entries.\n \n ## Evidence Budget\n \n-- Build the inventory from repository files first. Use at most 15 read commands\n-  for the whole inventory pass.\n-- Use at most 20 upstream version probes per run, one per tracked component.\n+- Build the inventory from repository files first. Use at most 4\n+  repository-read shell commands for the whole inventory pass. Batch related\n+  searches with `rg`; never print a whole file or an unfiltered registry\n+  response.\n+- Use at most 12 upstream version probes per run, one per tracked component.\n   Prefer a single authoritative source per component: the GitHub releases API,\n   the PyPI or npm registry JSON, the distribution package index, or the\n   container registry tag list.\n - Never probe the same component twice. If a probe fails or is ambiguous,\n-  record the component as `unknown` with the reason and move on.\n+  record the component as `unknown` with the reason and move on; do not try a\n+  fallback source. Filter every response to the version and evidence URL needed\n+  for the report.\n - If the inventory is larger than the probe budget, probe the components that\n   the previous radar issue ranked highest, note the surfaces you skipped, and\n   say explicitly that coverage was truncated.\n+- As soon as either budget is reached, perform no more research. Rank the\n+  evidence already collected, build the report, and make the required\n+  safe-output call.\n \n ## Ranking Rules\n \n@@ -151,8 +173,9 @@ or unknown. Do not pad it with components that are already current.\n \n ## Output Contract\n \n-Search open issues for one labeled `agentic-workflow` whose title starts with\n-the `[package-updates]` prefix.\n+Use the GitHub-tool search performed before the inventory to identify an open\n+issue labeled `agentic-workflow` whose title starts with the\n+`[package-updates]` prefix.\n \n - If no such issue is open, call `create-issue` with the title\n   `Pinned dependency radar` and the report as the body. The workflow adds the\n@@ -166,3 +189,8 @@ one run.\n \n Call `noop` with a concise reason when the survey finds no component behind its\n latest upstream release and no open radar issue needs correcting.\n+\n+If the GitHub read tool is unavailable, call `missing_tool`. If upstream data\n+cannot be read well enough to produce even a partial report, call\n+`missing_data`. These are terminal safe outputs; do not merely describe the\n+failure in a normal response.",
+          "snapshot_ref": "a895f367d92b03f16ae906e59ddc488d89fca0c3",
+          "snapshot_blob_sha": "1720d41ba35059443c98c46046e3ea79be0f649b",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__a895f367d92b03f16ae906e59ddc488d89fca0c3__package-update-radar.md",
+          "snapshot_bytes": 7505,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/package-update-radar.lock.yml\",\"generated_workflow_file\":\"package-update-radar.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/package-update-radar.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

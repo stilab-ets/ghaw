@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+    "source_full_name": "lablup/backend.ai-webui",
+    "source_owner": "lablup",
+    "source_repo": "backend.ai-webui",
+    "md_path": ".github/workflows/storybook-coverage-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/lablup/backend.ai-webui/blob/HEAD/.github/workflows/storybook-coverage-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "lablup/backend.ai-webui",
+      "generated_owner": "lablup",
+      "generated_repo": "backend.ai-webui",
+      "generated_workflow_path": ".github/workflows/storybook-coverage-checker.lock.yml",
+      "generated_workflow_file": "storybook-coverage-checker.lock.yml",
+      "generated_html_url": "https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/storybook-coverage-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:04+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/storybook-coverage-checker.md",
+      "commit_sha": "d3b1453c2acd135a5007be3e2b809f4e9ee453f8",
+      "authored_at": "2026-02-04T07:07:34Z",
+      "committed_at": "2026-02-04T07:07:34Z",
+      "author_name": "limshyun",
+      "author_email": "126482821+limshyun@users.noreply.github.com",
+      "author_login": "limshyun",
+      "author_account_type": "User",
+      "committer_name": "limshyun",
+      "committer_email": "126482821+limshyun@users.noreply.github.com",
+      "committer_login": "limshyun",
+      "committer_account_type": "User",
+      "message": "feat(FR-1909): add storybook coverage checker and update story command (#5135)\n\nResolves #5038 ([FR-1909](https://lablup.atlassian.net/browse/FR-1909))\n\n## What Changed\n\nThis PR adds automated Storybook story generation and coverage checking functionality:\n\n1. **Enhanced `/create-bui-component-story` command**\n   - Now supports batch processing of multiple components\n   - Added UPDATE mode to sync existing stories with component props changes\n   - Detects added/removed/changed props using +/-/~ notation\n\n2. **New Storybook Coverage Checker workflow**\n   - Automatically analyzes PR changes when ready for review\n   - Compares component props with story argTypes\n   - Posts detailed coverage report as PR comment\n   - Provides commands to create/update missing or outdated stories\n\n## Why This Change\n\nManually writing Story files for every component is time-consuming and often skipped under tight deadlines. This automation ensures consistent documentation while developers can focus on review and refinement.\n\n## Files Changed\n\n- `.claude/commands/create-bui-component-story.md` - Updated command to support batch and UPDATE mode\n- `.github/workflows/storybook-check.yml` - Modified workflow trigger\n- `.github/workflows/storybook-coverage-checker.md` - New coverage checker workflow\n- `.github/workflows/storybook-coverage-checker.lock.yml` - Generated lock file\n\n**Checklist:**\n\n- [x] Documentation - Workflow instructions included in markdown files\n- [x] Test case(s) - Will be tested when PR transitions to ready for review\n\n[FR-1909]: https://lablup.atlassian.net/browse/FR-1909?atlOrigin=eyJpIjoiNWRkNTljNzYxNjVmNDY3MDlhMDU5Y2ZhYzA5YTRkZjUiLCJwIjoiZ2l0aHViLWNvbS1KU1cifQ",
+      "parent_shas": [
+        "bbb0ef0c53be52f88655dd5e096e332248cd641d"
+      ],
+      "tree_sha": "ef570c2c25bf5b1bd113aabd30687b79082aa737",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/d3b1453c2acd135a5007be3e2b809f4e9ee453f8",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/storybook-coverage-checker.md",
+          "commit_sha": "d3b1453c2acd135a5007be3e2b809f4e9ee453f8",
+          "committed_at": "2026-02-04T07:07:34Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 163,
+          "file_deletions": 0,
+          "file_changes": 163,
+          "file_patch": "@@ -0,0 +1,163 @@\n+---\n+name: Storybook Coverage Checker\n+description: Analyze component changes and check Storybook story coverage\n+\n+on:\n+  workflow_dispatch:\n+\n+permissions:\n+  pull-requests: read\n+  contents: read\n+\n+tools:\n+  github:\n+    toolsets: [pull_requests, repos]\n+  bash:\n+\n+safe-outputs:\n+  add-comment:\n+    target: \"*\"\n+---\n+\n+# Storybook Coverage Checker\n+\n+You are a Storybook coverage analyzer. When a PR is ready for review, analyze changed component files and check if their Storybook stories are up-to-date.\n+\n+**NOTE:** This workflow is triggered by GitHub Actions (`storybook-check.yml`) when a PR changes from draft to ready for review.\n+\n+## Your Task\n+\n+1. **Identify the PR**: Find the most recent open PR on this branch\n+2. **Get Changed Files**: Identify component files changed in the PR\n+3. **Analyze Each Component**: For each changed component file:\n+   - Check if a `.stories.tsx` file exists\n+   - Parse the component's Props interface\n+   - Parse the story's argTypes (if story exists)\n+   - Compare props vs argTypes coverage\n+4. **Generate Report**: Create a PR comment with analysis results\n+\n+## Analysis Steps\n+\n+### Step 1: Find the PR\n+\n+Use the GitHub MCP server tools (configured via `tools.github.toolsets: [pull_requests, repos]`) to find the pull request for the current branch. Query open pull requests whose head ref matches the current branch name and select the most recent one.\n+\n+### Step 2: Get Changed Component Files\n+\n+Using the same GitHub tools, retrieve the list of files changed in the identified pull request (for example, via the pull request \"files\" API). From that list, keep only component files under `packages/backend.ai-ui/src/components/` that end with `.tsx`, excluding any paths ending with `.stories.tsx` or `.test.tsx`.\n+\n+### Step 3: Analyze Each Component\n+\n+For each component file:\n+\n+1. **Read the component file** to extract the Props interface:\n+   - Look for `interface *Props` or `type *Props`\n+   - Extract all prop names and their types\n+   - Identify BAI-specific props (not inherited from Ant Design)\n+\n+2. **Check if story file exists**:\n+   - Story file path: `{component_path%.tsx}.stories.tsx`\n+   - If not exists: Mark as \"Create\"\n+\n+3. **If story exists, read and analyze**:\n+   - Extract `argTypes` from the meta configuration\n+   - Compare with component props\n+   - Identify:\n+     - `+propName`: Props in component but not in argTypes (added)\n+     - `-propName`: Props in argTypes but not in component (removed)\n+     - `~propName`: Props with different types (changed)\n+\n+4. **Determine status**:\n+   - `Create`: No story file exists\n+   - `Update`: Story exists but has differences\n+   - `Up-to-date`: Story matches component props\n+\n+## PR Comment Format\n+\n+**ALWAYS** create a PR comment with the following format, even if all components are up-to-date:\n+\n+```markdown\n+## Storybook Coverage Report\n+\n+### Analysis Results\n+\n+| Component | Status | Details |\n+|-----------|--------|---------|\n+| BAICard | Update | +`loading`, -`oldProp`, ~`status` type changed |\n+| BAIModal | Up-to-date | All props covered |\n+| BAIFlex | Create | No story file |\n+\n+### Commands\n+\n+`@claude` /manage-bui-component-story BAICard BAIFlex\n+\n+<details>\n+<summary><strong>Detailed Changes</strong></summary>\n+\n+#### BAICard (Update)\n+**Component**: `packages/backend.ai-ui/src/components/BAICard.tsx`\n+**Story**: `packages/backend.ai-ui/src/components/BAICard.stories.tsx`\n+\n+**Changes:**\n+| Change | Prop | Type | Description |\n+|--------|------|------|-------------|\n+| + Added | `loading` | `boolean` | Shows loading state |\n+| - Removed | `oldProp` | `string` | No longer exists in component |\n+| ~ Changed | `status` | `'default' \\| 'success'` → `'default' \\| 'success' \\| 'warning'` | Type expanded |\n+\n+**Suggested argType for `loading`:**\n+```typescript\n+loading: {\n+  control: { type: 'boolean' },\n+  description: 'Shows loading state',\n+  table: {\n+    type: { summary: 'boolean' },\n+    defaultValue: { summary: 'false' },\n+  },\n+},\n+```\n+\n+</details>\n+\n+---\n+\n+> [Storybook guidelines](https://github.com/lablup/backend.ai-webui/blob/main/.github/instructions/storybook.instructions.md)\n+\n+> AI generated by [Storybook Coverage Checker](https://github.com/lablup/backend.ai-webui/actions/runs/${{ github.run_id }})\n+```\n+\n+## Important Notes\n+\n+1. **Always create a comment**: Even if all stories are up-to-date, create a report showing \"Up-to-date\" status\n+2. **Commands section**: Only include commands for components that need action (Create or Update)\n+3. **Details notation**:\n+   - `+propName`: Added prop (in component, not in story)\n+   - `-propName`: Removed prop (in story, not in component)\n+   - `~propName`: Changed prop (type mismatch)\n+4. **BAI-specific props**: Focus on props defined in the component's own interface, not inherited from Ant Design\n+5. **Use `add_comment`**: This safe-output tool will automatically comment on the relevant pull request when configured with `target: \"*\"`, so `item_number` is not required\n+\n+## Example Analysis\n+\n+Given a component like:\n+```typescript\n+export interface BAICardProps extends CardProps {\n+  status?: 'default' | 'success' | 'warning' | 'error';\n+  extraButtonTitle?: string;\n+  loading?: boolean;  // NEW\n+}\n+```\n+\n+And a story with:\n+```typescript\n+argTypes: {\n+  status: { ... },\n+  extraButtonTitle: { ... },\n+  oldProp: { ... },  // REMOVED from component\n+}\n+```\n+\n+Result:\n+- `+loading`: Added (in component, not in argTypes)\n+- `-oldProp`: Removed (in argTypes, not in component)\n+- Status: Update",
+          "snapshot_ref": "d3b1453c2acd135a5007be3e2b809f4e9ee453f8",
+          "snapshot_blob_sha": "2ebf65ecc835be4bbfa3b09498be0485caf32c63",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__d3b1453c2acd135a5007be3e2b809f4e9ee453f8__storybook-coverage-checker.md",
+          "snapshot_bytes": 5391,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/storybook-coverage-checker.lock.yml\",\"generated_workflow_file\":\"storybook-coverage-checker.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/storybook-coverage-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/storybook-coverage-checker.md",
+      "commit_sha": "642733bcda3e01769ec6193857f91504259558ed",
+      "authored_at": "2026-07-02T07:17:40Z",
+      "committed_at": "2026-07-02T07:17:40Z",
+      "author_name": "Jong Eun Lee",
+      "author_email": "jongeun@lablup.com",
+      "author_login": "yomybaby",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: repair Storybook Coverage Checker Copilot auth (gh-aw recompile + model pin) (#8112)\n\nCo-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+      "parent_shas": [
+        "236d06e8887d701bc7f43ef80986c39ba3b6506c"
+      ],
+      "tree_sha": "bcf699e22742eeda1a7763905f97f7fad0a88cfa",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/642733bcda3e01769ec6193857f91504259558ed",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/storybook-coverage-checker.md",
+          "commit_sha": "642733bcda3e01769ec6193857f91504259558ed",
+          "committed_at": "2026-07-02T07:17:40Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 1,
+          "file_changes": 6,
+          "file_patch": "@@ -5,14 +5,18 @@ description: Analyze component changes and check Storybook story coverage\n on:\n   workflow_dispatch:\n \n+engine:\n+  id: copilot\n+  model: claude-sonnet-4.5\n+\n permissions:\n   pull-requests: read\n   contents: read\n \n tools:\n   github:\n     toolsets: [pull_requests, repos]\n-  bash:\n+  bash: [\"cat\", \"date\", \"echo\", \"grep\", \"head\", \"ls\", \"pwd\", \"sort\", \"tail\", \"uniq\", \"wc\", \"yq\"]\n \n safe-outputs:\n   add-comment:",
+          "snapshot_ref": "642733bcda3e01769ec6193857f91504259558ed",
+          "snapshot_blob_sha": "25ffb166f8928044b2bdbcee9abe93b5911727cb",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__642733bcda3e01769ec6193857f91504259558ed__storybook-coverage-checker.md",
+          "snapshot_bytes": 5530,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/storybook-coverage-checker.lock.yml\",\"generated_workflow_file\":\"storybook-coverage-checker.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/storybook-coverage-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+      "source_full_name": "lablup/backend.ai-webui",
+      "md_path": ".github/workflows/storybook-coverage-checker.md",
+      "commit_sha": "1c047052d2ea45fb2bc018584215560384bd154b",
+      "authored_at": "2026-07-07T02:32:41Z",
+      "committed_at": "2026-07-07T02:32:41Z",
+      "author_name": "agatha197",
+      "author_email": "28584164+agatha197@users.noreply.github.com",
+      "author_login": "agatha197",
+      "author_account_type": "User",
+      "committer_name": "agatha197",
+      "committer_email": "28584164+agatha197@users.noreply.github.com",
+      "committer_login": "agatha197",
+      "committer_account_type": "User",
+      "message": "fix(FR-3266): pass PR number to add_comment in storybook-coverage-checker (#8169)\n\nResolves #8168 (FR-3266)\n\n## Problem\nThe **Storybook Coverage Checker** agentic workflow (`storybook-coverage-checker`) fails its safe-output step on every run:\n\n> The `add_comment` safe output handler failed because the target was set to `*` (wildcard) but no specific item number (`item_number` / `issue_number` / `pull_request_number` / …) was provided — 0 successful, 1 failed.\n\n## Root cause\n`storybook-check.yml` fires on `pull_request: ready_for_review` and then launches `storybook-coverage-checker` via `workflow_dispatch` (passing only `ref: branch`). Running as `workflow_dispatch`, the workflow has **no triggering PR context**, so it configures `safe-outputs.add-comment.target: \"*\"`. With `target: \"*\"`, gh-aw requires each `add_comment` output to carry the PR number (`item_number`). The prompt instead told the agent that `item_number` was **not** required, so the emitted comment had no target and the handler rejected it.\n\n## Fix\n- `storybook-coverage-checker.md`: instruct the agent to remember the PR it identifies in Step 1 and pass it as `item_number` in the `add_comment` output; correct the misleading \"not required\" note in Important Notes.\n- Recompiled `storybook-coverage-checker.lock.yml` with `gh aw compile` (pinned **v0.77.5** to match the repo). The lock imports the prompt at runtime via `{{#runtime-import}}`, so the only change is the `body_hash` in the metadata header.\n\n## Verification\n- `gh aw compile storybook-coverage-checker` → 0 errors, 0 warnings.\n- Lock diff = 1 line (`body_hash`); no compiler/version churn.\n\nStacked on #8119.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+      "parent_shas": [
+        "27521d5c5fcfcd2e1c58a0d12cb9a7e901fa9215"
+      ],
+      "tree_sha": "285ac5029e79b9f71c4ca843d177d0b1c1ca1076",
+      "html_url": "https://github.com/lablup/backend.ai-webui/commit/1c047052d2ea45fb2bc018584215560384bd154b",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "lablup/backend.ai-webui:.github/workflows/storybook-coverage-checker.md",
+          "source_full_name": "lablup/backend.ai-webui",
+          "md_path": ".github/workflows/storybook-coverage-checker.md",
+          "commit_sha": "1c047052d2ea45fb2bc018584215560384bd154b",
+          "committed_at": "2026-07-07T02:32:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -44,7 +44,7 @@ You are a Storybook coverage analyzer. When a PR is ready for review, analyze ch\n \n ### Step 1: Find the PR\n \n-Use the GitHub MCP server tools (configured via `tools.github.toolsets: [pull_requests, repos]`) to find the pull request for the current branch. Query open pull requests whose head ref matches the current branch name and select the most recent one.\n+Use the GitHub MCP server tools (configured via `tools.github.toolsets: [pull_requests, repos]`) to find the pull request for the current branch. Query open pull requests whose head ref matches the current branch name and select the most recent one. **Remember this PR number** — because this workflow runs via `workflow_dispatch` (no triggering PR context), you must pass it explicitly as `item_number` when you call `add_comment` (see Important Notes below).\n \n ### Step 2: Get Changed Component Files\n \n@@ -139,7 +139,7 @@ loading: {\n    - `-propName`: Removed prop (in story, not in component)\n    - `~propName`: Changed prop (type mismatch)\n 4. **BAI-specific props**: Focus on props defined in the component's own interface, not inherited from Ant Design\n-5. **Use `add_comment`**: This safe-output tool will automatically comment on the relevant pull request when configured with `target: \"*\"`, so `item_number` is not required\n+5. **Use `add_comment`**: Because `safe-outputs.add-comment` is configured with `target: \"*\"` (this workflow is dispatched, so it has no triggering PR), you **must** set `item_number` in the `add_comment` output to the pull request number you identified in Step 1. Omitting it makes the safe-output handler fail with \"no specific item number was provided\".\n \n ## Example Analysis\n ",
+          "snapshot_ref": "1c047052d2ea45fb2bc018584215560384bd154b",
+          "snapshot_blob_sha": "b7f35566970c890a1a61832fec842a1f93bd5c76",
+          "snapshot_file": "snapshots/backend.ai-webui__lablup__1c047052d2ea45fb2bc018584215560384bd154b__storybook-coverage-checker.md",
+          "snapshot_bytes": 5927,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"lablup/backend.ai-webui\",\"generated_owner\":\"lablup\",\"generated_repo\":\"backend.ai-webui\",\"generated_workflow_path\":\".github/workflows/storybook-coverage-checker.lock.yml\",\"generated_workflow_file\":\"storybook-coverage-checker.lock.yml\",\"generated_html_url\":\"https://github.com/lablup/backend.ai-webui/blob/d756ce8b0b7bff633e2d99cca7de0b4c2814dede/.github/workflows/storybook-coverage-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

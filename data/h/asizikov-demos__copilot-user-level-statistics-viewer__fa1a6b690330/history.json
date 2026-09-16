@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+    "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+    "source_owner": "asizikov-demos",
+    "source_repo": "copilot-user-level-statistics-viewer",
+    "md_path": ".github/workflows/dependency-audit.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/blob/HEAD/.github/workflows/dependency-audit.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+      "generated_owner": "asizikov-demos",
+      "generated_repo": "copilot-user-level-statistics-viewer",
+      "generated_workflow_path": ".github/workflows/dependency-audit.lock.yml",
+      "generated_workflow_file": "dependency-audit.lock.yml",
+      "generated_html_url": "https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/blob/cdff7b599802e2eec48ce7984485e229b3016ec6/.github/workflows/dependency-audit.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:24:37+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+      "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+      "md_path": ".github/workflows/dependency-audit.md",
+      "commit_sha": "2e7cb3318fd3e809c90d6d9ea47f191eee10bbb9",
+      "authored_at": "2026-02-21T12:56:04Z",
+      "committed_at": "2026-02-21T12:56:04Z",
+      "author_name": "Anton Sizikov",
+      "author_email": "asizikov@github.com",
+      "author_login": "asizikov",
+      "author_account_type": "User",
+      "committer_name": "Anton Sizikov",
+      "committer_email": "asizikov@github.com",
+      "committer_login": "asizikov",
+      "committer_account_type": "User",
+      "message": "ci: add weekly dependency audit agentic workflow",
+      "parent_shas": [
+        "b0810c149de21e1906017da62626fe3d94d0688f"
+      ],
+      "tree_sha": "fe2214057617ad3f4d14876f4997aecd6b58fb51",
+      "html_url": "https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/commit/2e7cb3318fd3e809c90d6d9ea47f191eee10bbb9",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+          "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+          "md_path": ".github/workflows/dependency-audit.md",
+          "commit_sha": "2e7cb3318fd3e809c90d6d9ea47f191eee10bbb9",
+          "committed_at": "2026-02-21T12:56:04Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 104,
+          "file_deletions": 0,
+          "file_changes": 104,
+          "file_patch": "@@ -0,0 +1,104 @@\n+---\n+description: Weekly dependency audit — find vulnerabilities and outdated packages, apply updates, and open a PR.\n+\n+on:\n+  workflow_dispatch:\n+  schedule: weekly on monday\n+  skip-if-match:\n+    query: 'is:pr is:open in:title \"[deps]\"'\n+    max: 1\n+\n+permissions:\n+  contents: read\n+  actions: read\n+  pull-requests: read\n+\n+concurrency:\n+  group: dependency-audit\n+  cancel-in-progress: false\n+\n+strict: true\n+engine: copilot\n+network: defaults\n+\n+runtimes:\n+  node:\n+    version: \"22\"\n+\n+tools:\n+  edit:\n+  bash: [\"npm:*\", \"node:*\", \"npx:*\", \"cat:*\", \"jq:*\", \"git:*\"]\n+  github:\n+    toolsets: [repos, pull_requests]\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[deps] \"\n+    labels: [\"dependencies\", \"automated\"]\n+    draft: true\n+    expires: 14\n+\n+timeout-minutes: 30\n+\n+steps:\n+  - name: Checkout\n+    uses: actions/checkout@v5\n+\n+  - name: Install dependencies\n+    run: npm ci\n+---\n+\n+# Weekly Dependency Audit\n+\n+Perform a full dependency audit, apply safe updates, and open a pull request.\n+\n+## Phase 1 — Assess\n+\n+1. Run `npm audit --json` and save the output. Identify all vulnerabilities grouped by severity (critical, high, moderate, low).\n+2. Run `npm outdated --json` and save the output. Identify all outdated packages, noting which have **major** version bumps vs minor/patch.\n+3. If there are **no** vulnerabilities and **no** outdated packages, call `noop` with the message \"All dependencies are up to date and no vulnerabilities found.\" and stop.\n+\n+## Phase 2 — Fix vulnerabilities\n+\n+1. If `npm audit` reported fixable vulnerabilities, run `npm audit fix` (without `--force`).\n+2. Run `npm run build` to verify the build still passes.\n+3. Run `npm run lint` to verify linting still passes.\n+4. If the build or lint fails, revert the changes with `git checkout -- .` and skip to Phase 3.\n+5. If changes were made and everything passes, create an atomic commit:\n+   - Message: `fix(deps): resolve npm audit vulnerabilities`\n+   - Include only `package.json` and `package-lock.json`.\n+\n+## Phase 3 — Update minor and patch versions\n+\n+1. Run `npm update` to apply all semver-compatible (minor + patch) updates.\n+2. Run `npm run build` to verify the build still passes.\n+3. Run `npm run lint` to verify linting still passes.\n+4. If the build or lint fails, revert the changes with `git checkout -- .` and skip to Phase 4.\n+5. If changes were made and everything passes, create an atomic commit:\n+   - Message: `chore(deps): update minor and patch dependencies`\n+   - Include only `package.json` and `package-lock.json`.\n+\n+## Phase 4 — Major version updates (one at a time)\n+\n+For each outdated package that has a **major** version update available (from the Phase 1 assessment):\n+\n+1. Run `npm install <package>@latest` for that single package.\n+2. Run `npm run build` to verify the build still passes.\n+3. Run `npm run lint` to verify linting still passes.\n+4. If the build or lint fails, revert with `git checkout -- .` and note this package as \"skipped — breaks build\" for the PR description.\n+5. If everything passes, create an atomic commit:\n+   - Message: `feat(deps): update <package> to v<new-version>`\n+   - Include only `package.json` and `package-lock.json`.\n+\n+## Phase 5 — Create the pull request\n+\n+If **any** commits were made in Phases 2–4, create a pull request:\n+- **Title**: `Weekly dependency update — <date>`  (use today's date in YYYY-MM-DD format)\n+- **Body** must include:\n+  - A summary of all changes grouped by phase\n+  - The full vulnerability report from `npm audit` (before fixes)\n+  - The full outdated report from `npm outdated` (before updates)\n+  - A list of any skipped major updates and why they were skipped\n+  - Confirmation that every commit passed build and lint checks\n+\n+If no commits were made (all updates failed validation), call `noop` with a message explaining that updates were attempted but none passed validation.",
+          "snapshot_ref": "2e7cb3318fd3e809c90d6d9ea47f191eee10bbb9",
+          "snapshot_blob_sha": "5200fe98d46e9c35c15549ea7b22afd244437248",
+          "snapshot_file": "snapshots/copilot-user-level-statistics-viewer__asizikov-demos__2e7cb3318fd3e809c90d6d9ea47f191eee10bbb9__dependency-audit.md",
+          "snapshot_bytes": 3821,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"asizikov-demos/copilot-user-level-statistics-viewer\",\"generated_owner\":\"asizikov-demos\",\"generated_repo\":\"copilot-user-level-statistics-viewer\",\"generated_workflow_path\":\".github/workflows/dependency-audit.lock.yml\",\"generated_workflow_file\":\"dependency-audit.lock.yml\",\"generated_html_url\":\"https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/blob/cdff7b599802e2eec48ce7984485e229b3016ec6/.github/workflows/dependency-audit.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+      "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+      "md_path": ".github/workflows/dependency-audit.md",
+      "commit_sha": "ef9c25d54c3f81799b6a35fef5474870f3e710a3",
+      "authored_at": "2026-02-21T13:37:41Z",
+      "committed_at": "2026-02-21T13:37:41Z",
+      "author_name": "Anton Sizikov",
+      "author_email": "asizikov@github.com",
+      "author_login": "asizikov",
+      "author_account_type": "User",
+      "committer_name": "Anton Sizikov",
+      "committer_email": "asizikov@github.com",
+      "committer_login": "asizikov",
+      "committer_account_type": "User",
+      "message": "fix(ci): improve dependency audit workflow output quality",
+      "parent_shas": [
+        "b5e460d52fd4b0ac7849e7ec4cb5395846b33b8f"
+      ],
+      "tree_sha": "6ca43857cdb2ffba8a259164351bef3fb9cceb16",
+      "html_url": "https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/commit/ef9c25d54c3f81799b6a35fef5474870f3e710a3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+          "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+          "md_path": ".github/workflows/dependency-audit.md",
+          "commit_sha": "ef9c25d54c3f81799b6a35fef5474870f3e710a3",
+          "committed_at": "2026-02-21T13:37:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 36,
+          "file_deletions": 13,
+          "file_changes": 49,
+          "file_patch": "@@ -35,8 +35,9 @@ safe-outputs:\n   create-pull-request:\n     title-prefix: \"[deps] \"\n     labels: [\"dependencies\", \"automated\"]\n+    reviewers: [\"copilot\"]\n     draft: true\n-    expires: 14\n+    expires: 14d\n \n timeout-minutes: 30\n \n@@ -54,17 +55,18 @@ Perform a full dependency audit, apply safe updates, and open a pull request.\n \n ## Phase 1 — Assess\n \n-1. Run `npm audit --json` and save the output. Identify all vulnerabilities grouped by severity (critical, high, moderate, low).\n+1. Run `npm audit --json` and save the output. Identify all vulnerabilities grouped by severity (critical, high, moderate, low). For each vulnerability, note whether it affects a **production** dependency or a **dev-only** dependency.\n 2. Run `npm outdated --json` and save the output. Identify all outdated packages, noting which have **major** version bumps vs minor/patch.\n 3. If there are **no** vulnerabilities and **no** outdated packages, call `noop` with the message \"All dependencies are up to date and no vulnerabilities found.\" and stop.\n \n ## Phase 2 — Fix vulnerabilities\n \n-1. If `npm audit` reported fixable vulnerabilities, run `npm audit fix` (without `--force`).\n-2. Run `npm run build` to verify the build still passes.\n-3. Run `npm run lint` to verify linting still passes.\n-4. If the build or lint fails, revert the changes with `git checkout -- .` and skip to Phase 3.\n-5. If changes were made and everything passes, create an atomic commit:\n+1. First run `npm audit fix --dry-run` to check if any non-breaking fixes are available. If no fixes would be applied, skip to Phase 3.\n+2. If fixes are available, run `npm audit fix` (without `--force`).\n+3. Run `npm run build` to verify the build still passes.\n+4. Run `npm run lint` to verify linting still passes.\n+5. If the build or lint fails, revert the changes with `git checkout -- .` and skip to Phase 3.\n+6. If changes were made and everything passes, create an atomic commit:\n    - Message: `fix(deps): resolve npm audit vulnerabilities`\n    - Include only `package.json` and `package-lock.json`.\n \n@@ -94,11 +96,32 @@ For each outdated package that has a **major** version update available (from th\n \n If **any** commits were made in Phases 2–4, create a pull request:\n - **Title**: `Weekly dependency update — <date>`  (use today's date in YYYY-MM-DD format)\n-- **Body** must include:\n-  - A summary of all changes grouped by phase\n-  - The full vulnerability report from `npm audit` (before fixes)\n-  - The full outdated report from `npm outdated` (before updates)\n-  - A list of any skipped major updates and why they were skipped\n-  - Confirmation that every commit passed build and lint checks\n+- **Body** must include all sections below. Use **markdown tables**, not raw JSON.\n+\n+### Required PR body sections\n+\n+1. **Summary** — one-paragraph overview of what changed.\n+\n+2. **Changes Applied** — for each phase that made changes, list the updated packages in a table:\n+\n+   | Package | Previous | Updated | Type |\n+   |---------|----------|---------|------|\n+   | example | 1.0.0    | 1.1.0   | minor |\n+\n+3. **Vulnerability Report** (before fixes) — summarise `npm audit` results in a table:\n+\n+   | Package | Severity | Dev-only? | Fix available | Notes |\n+   |---------|----------|-----------|---------------|-------|\n+\n+   Include a short note at the top stating total counts per severity and how many are production vs dev-only dependencies.\n+\n+4. **Outdated Packages** (before updates) — summarise `npm outdated` results in a table:\n+\n+   | Package | Current | Wanted | Latest | Update type |\n+   |---------|---------|--------|--------|-------------|\n+\n+5. **Skipped Updates** — list any major updates that were skipped and why (e.g., \"breaks build\", \"breaks lint\"). If none, state \"None\".\n+\n+6. **Validation** — confirm that every commit passed build and lint checks.\n \n If no commits were made (all updates failed validation), call `noop` with a message explaining that updates were attempted but none passed validation.",
+          "snapshot_ref": "ef9c25d54c3f81799b6a35fef5474870f3e710a3",
+          "snapshot_blob_sha": "c87cb2c47b12c2c8049d46aa803105c8ec9d5020",
+          "snapshot_file": "snapshots/copilot-user-level-statistics-viewer__asizikov-demos__ef9c25d54c3f81799b6a35fef5474870f3e710a3__dependency-audit.md",
+          "snapshot_bytes": 4902,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"asizikov-demos/copilot-user-level-statistics-viewer\",\"generated_owner\":\"asizikov-demos\",\"generated_repo\":\"copilot-user-level-statistics-viewer\",\"generated_workflow_path\":\".github/workflows/dependency-audit.lock.yml\",\"generated_workflow_file\":\"dependency-audit.lock.yml\",\"generated_html_url\":\"https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/blob/cdff7b599802e2eec48ce7984485e229b3016ec6/.github/workflows/dependency-audit.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+      "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+      "md_path": ".github/workflows/dependency-audit.md",
+      "commit_sha": "a7c609d0eeed661dfd8bcf578af6343c5e8d0c11",
+      "authored_at": "2026-06-19T13:32:43Z",
+      "committed_at": "2026-06-19T13:32:43Z",
+      "author_name": "Anton Sizikov",
+      "author_email": "asizikov@github.com",
+      "author_login": "asizikov",
+      "author_account_type": "User",
+      "committer_name": "Anton Sizikov",
+      "committer_email": "asizikov@github.com",
+      "committer_login": "asizikov",
+      "committer_account_type": "User",
+      "message": "ci: use GITHUB_TOKEN for agentic workflows\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "8e8f72f96950bc598b807cc4eb262322cb8f16a3"
+      ],
+      "tree_sha": "527c69ee3ebca92037f904619cc7485319e758d9",
+      "html_url": "https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/commit/a7c609d0eeed661dfd8bcf578af6343c5e8d0c11",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "asizikov-demos/copilot-user-level-statistics-viewer:.github/workflows/dependency-audit.md",
+          "source_full_name": "asizikov-demos/copilot-user-level-statistics-viewer",
+          "md_path": ".github/workflows/dependency-audit.md",
+          "commit_sha": "a7c609d0eeed661dfd8bcf578af6343c5e8d0c11",
+          "committed_at": "2026-06-19T13:32:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -12,6 +12,7 @@ permissions:\n   contents: read\n   actions: read\n   pull-requests: read\n+  copilot-requests: write\n \n concurrency:\n   group: dependency-audit\n@@ -44,6 +45,8 @@ timeout-minutes: 30\n steps:\n   - name: Checkout\n     uses: actions/checkout@v5\n+    with:\n+      persist-credentials: false\n \n   - name: Install dependencies\n     run: npm ci",
+          "snapshot_ref": "a7c609d0eeed661dfd8bcf578af6343c5e8d0c11",
+          "snapshot_blob_sha": "a2fb894baaa23b6fe3cdc800c98c714c987d6f74",
+          "snapshot_file": "snapshots/copilot-user-level-statistics-viewer__asizikov-demos__a7c609d0eeed661dfd8bcf578af6343c5e8d0c11__dependency-audit.md",
+          "snapshot_bytes": 4971,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"asizikov-demos/copilot-user-level-statistics-viewer\",\"generated_owner\":\"asizikov-demos\",\"generated_repo\":\"copilot-user-level-statistics-viewer\",\"generated_workflow_path\":\".github/workflows/dependency-audit.lock.yml\",\"generated_workflow_file\":\"dependency-audit.lock.yml\",\"generated_html_url\":\"https://github.com/asizikov-demos/copilot-user-level-statistics-viewer/blob/cdff7b599802e2eec48ce7984485e229b3016ec6/.github/workflows/dependency-audit.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

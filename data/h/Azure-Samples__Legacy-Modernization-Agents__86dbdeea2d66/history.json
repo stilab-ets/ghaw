@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure-Samples/Legacy-Modernization-Agents:.github/workflows/documentation-updater.md",
+    "source_full_name": "Azure-Samples/Legacy-Modernization-Agents",
+    "source_owner": "Azure-Samples",
+    "source_repo": "Legacy-Modernization-Agents",
+    "md_path": ".github/workflows/documentation-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure-Samples/Legacy-Modernization-Agents/blob/HEAD/.github/workflows/documentation-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure-Samples/Legacy-Modernization-Agents",
+      "generated_owner": "Azure-Samples",
+      "generated_repo": "Legacy-Modernization-Agents",
+      "generated_workflow_path": ".github/workflows/documentation-updater.lock.yml",
+      "generated_workflow_file": "documentation-updater.lock.yml",
+      "generated_html_url": "https://github.com/Azure-Samples/Legacy-Modernization-Agents/blob/b260b5ad01e52d9c2e928edf7c53f05e8ae52eac/.github/workflows/documentation-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:38+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure-Samples/Legacy-Modernization-Agents:.github/workflows/documentation-updater.md",
+      "source_full_name": "Azure-Samples/Legacy-Modernization-Agents",
+      "md_path": ".github/workflows/documentation-updater.md",
+      "commit_sha": "8c3fc7aad0d90abbac4a72a5ae057aca2adde663",
+      "authored_at": "2026-02-20T09:24:34Z",
+      "committed_at": "2026-02-20T09:24:34Z",
+      "author_name": "Julia Kordick",
+      "author_email": "moin@jkordick.dev",
+      "author_login": "jkordick",
+      "author_account_type": "User",
+      "committer_name": "Julia Kordick",
+      "committer_email": "moin@jkordick.dev",
+      "committer_login": "jkordick",
+      "committer_account_type": "User",
+      "message": "Add documentation gh action flow",
+      "parent_shas": [
+        "b2a39d62768415d9e497660fe47ca0a9aa79b338"
+      ],
+      "tree_sha": "f80918734614d5ffe7352e7053aa93772b1c0934",
+      "html_url": "https://github.com/Azure-Samples/Legacy-Modernization-Agents/commit/8c3fc7aad0d90abbac4a72a5ae057aca2adde663",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure-Samples/Legacy-Modernization-Agents:.github/workflows/documentation-updater.md",
+          "source_full_name": "Azure-Samples/Legacy-Modernization-Agents",
+          "md_path": ".github/workflows/documentation-updater.md",
+          "commit_sha": "8c3fc7aad0d90abbac4a72a5ae057aca2adde663",
+          "committed_at": "2026-02-20T09:24:34Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 182,
+          "file_deletions": 0,
+          "file_changes": 182,
+          "file_patch": "@@ -0,0 +1,182 @@\n+---\n+name: Documentation Updater\n+description: Checks if documentation is up to date on pushes and PRs, and notifies responsible users when it is not\n+on:\n+  push:\n+    branches: [main]\n+  pull_request:\n+    branches: [main]\n+    types: [opened, synchronize, closed]\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: write\n+  pull-requests: write\n+\n+tracker-id: documentation-updater\n+engine: copilot\n+strict: true\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [default]\n+  bash:\n+    - \"find docs -name '*.md' -o -name '*.mdx'\"\n+    - \"find docs -maxdepth 1 -ls\"\n+    - \"find docs -name '*.md' -exec cat {} +\"\n+    - \"grep -r '*' docs\"\n+    - \"git\"\n+\n+timeout-minutes: 45\n+---\n+\n+# Documentation Checker\n+\n+You are an AI documentation agent that verifies whether project documentation is up to date with recent code changes. You do **not** update documentation yourself — instead you notify the responsible person when documentation is missing or outdated and make a suggestion for the documentation updates that are needed.\n+\n+## Trigger Context\n+\n+This workflow is triggered in three scenarios. You **must** determine which scenario applies and follow the corresponding flow exactly.\n+\n+| Trigger | Condition | Flow |\n+|---|---|---|\n+| `push` to `main` | Direct push (no associated merged PR) | **Flow A** |\n+| `pull_request` `opened` or `synchronize` | PR is open against `main` | **Flow B** |\n+| `pull_request` `closed` with `merged == true` | PR was just merged into `main` | **Flow C → Flow A** |\n+\n+Use the event context (`${{ github.event_name }}`, `${{ github.event.action }}`, `${{ github.event.pull_request.merged }}`) to determine the active flow.\n+\n+---\n+\n+## Flow A — Direct Push to Main\n+\n+**Trigger**: A push lands on `main` without going through a PR, **or** a merged PR still has documentation gaps (escalated from Flow C).\n+\n+### Steps\n+\n+1. **Identify the pusher**: Use `${{ github.actor }}` to determine who pushed to main.\n+2. **Identify changed files**: Use `list_commits` and `get_commit` to review the commits that were pushed. Collect the list of changed files.\n+3. **Check documentation** (see [Documentation Check Process](#documentation-check-process) below).\n+4. **If documentation is up to date**: Exit gracefully. No action needed.\n+5. **If documentation is outdated or missing**:\n+   - **Open a GitHub issue** using `create_issue` with:\n+     - **Title**: `[docs] Documentation update needed for push to main by @${{ github.actor }}`\n+     - **Labels**: `documentation`\n+     - **Assignee**: `${{ github.actor }}`\n+     - **Body**: Include a summary of what code changed, which documentation is missing or outdated, and specific suggestions for what should be documented. Reference the commit SHAs.\n+\n+---\n+\n+## Flow B — Pull Request Opened or Updated\n+\n+**Trigger**: A PR is opened or updated (synchronized) targeting `main`.\n+\n+### Steps\n+\n+1. **Identify changed files**: Use `pull_request_read` to get the PR details. Use `list_pull_request_files` or compare the PR diff to collect the list of changed files.\n+2. **Check documentation** (see [Documentation Check Process](#documentation-check-process) below).\n+3. **If documentation is up to date**: Leave a short nice and approving comment on the PR confirming docs look good, and exit gracefully.\n+4. **If documentation is outdated or missing**:\n+   - **Comment on the PR** using `create_issue_comment` (on the PR number) with:\n+     - A clear summary of which documentation is missing or outdated\n+     - Specific suggestions for what should be documented and where\n+     - A checklist the author can follow to fix the gaps before merging\n+   - Do **not** open an issue at this stage — the author has a chance to fix it before merge.\n+\n+---\n+\n+## Flow C — Pull Request Merged into Main\n+\n+**Trigger**: A PR targeting `main` is closed with `merged == true`.\n+\n+### Steps\n+\n+1. **Identify changed files**: Use `pull_request_read` and `list_pull_request_files` to collect the full set of changed files from the merged PR.\n+2. **Check documentation** (see [Documentation Check Process](#documentation-check-process) below).\n+3. **If documentation is up to date**: Exit gracefully. The author addressed any earlier feedback.\n+4. **If documentation is still outdated or missing**:\n+   - **Escalate to Flow A**: Open a GitHub issue using `create_issue` with:\n+     - **Title**: `[docs] Documentation update needed after merge of PR #${{ github.event.pull_request.number }}`\n+     - **Labels**: `documentation`\n+     - **Assignee**: `${{ github.actor }}` (the user who merged the PR)\n+     - **Body**: Include a summary of the merged PR, what documentation is missing, and specific suggestions. Reference the PR number.\n+\n+---\n+\n+## Documentation Check Process\n+\n+This is the shared analysis procedure used by all three flows.\n+\n+### 1. Review Documentation Instructions\n+\n+Before analyzing, read the documentation guidelines:\n+\n+```bash\n+cat .github/instructions/documentation.instructions.md\n+```\n+\n+### 2. Analyze the Code Changes\n+\n+For each changed file, determine:\n+\n+- **Features Added**: New functionality, commands, options, tools, or capabilities\n+- **Features Removed**: Deprecated or removed functionality\n+- **Features Modified**: Changed behavior, updated APIs, or modified interfaces\n+- **Breaking Changes**: Any changes that affect existing users\n+\n+Skip changes that are purely internal refactoring with no user-facing impact.\n+\n+### 3. Scan Existing Documentation\n+\n+Explore the documentation in `docs/`, `README.md`, and any other documentation files:\n+\n+```bash\n+find docs/ -name '*.md' | head -50\n+```\n+\n+For each user-facing change identified in step 2, check if:\n+- The feature/change is already documented\n+- Existing documentation accurately reflects the new behavior\n+- Any removed features still have references that should be cleaned up\n+\n+### 4. Determine Documentation Status\n+\n+Produce a verdict: **up-to-date** or **outdated**.\n+\n+A change requires documentation updates if:\n+- A new user-facing feature, command, or configuration option was added without corresponding docs\n+- An existing documented feature had its behavior changed but docs were not updated\n+- A documented feature was removed but docs still reference it\n+- Breaking changes were introduced without migration guidance\n+\n+A change does **not** require documentation updates if:\n+- It is purely internal refactoring with no user-facing impact\n+- It only affects tests, CI, or build tooling\n+- Documentation was already updated in the same changeset\n+\n+---\n+\n+## Guidelines\n+\n+- **Be Thorough**: Review all changed files, not just top-level ones\n+- **Be Accurate**: Only flag genuine documentation gaps — avoid false positives\n+- **Be Specific**: When reporting gaps, name the exact files and sections that need updates. Provide concrete suggestions.\n+- **Be Selective**: Skip internal refactoring unless it changes user-facing behavior\n+- **Respect the Author**: In PR comments, be constructive, nice and helpful, not demanding\n+- **Avoid Duplicates**: Before opening an issue, search for existing open issues with the `documentation` label that cover the same gap. If one exists, comment on it instead of creating a new one.\n+- **Link References**: Include links to relevant commits, PRs, and existing documentation where applicable\n+\n+## Important Notes\n+\n+- You have access to GitHub tools to search and review code changes, create issues, and comment on PRs\n+- You have access to bash commands to explore the documentation structure\n+- You do **not** have the edit tool — your job is to notify, not to fix\n+- Always read the documentation instructions before analyzing\n+- Focus on user-facing features and changes that affect the developer experience\n\\ No newline at end of file",
+          "snapshot_ref": "8c3fc7aad0d90abbac4a72a5ae057aca2adde663",
+          "snapshot_blob_sha": "f83662559621d697c8b928c8eb39f24fb145d396",
+          "snapshot_file": "snapshots/Legacy-Modernization-Agents__Azure-Samples__8c3fc7aad0d90abbac4a72a5ae057aca2adde663__documentation-updater.md",
+          "snapshot_bytes": 7653,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure-Samples/Legacy-Modernization-Agents\",\"generated_owner\":\"Azure-Samples\",\"generated_repo\":\"Legacy-Modernization-Agents\",\"generated_workflow_path\":\".github/workflows/documentation-updater.lock.yml\",\"generated_workflow_file\":\"documentation-updater.lock.yml\",\"generated_html_url\":\"https://github.com/Azure-Samples/Legacy-Modernization-Agents/blob/b260b5ad01e52d9c2e928edf7c53f05e8ae52eac/.github/workflows/documentation-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure-Samples/Legacy-Modernization-Agents:.github/workflows/documentation-updater.md",
+      "source_full_name": "Azure-Samples/Legacy-Modernization-Agents",
+      "md_path": ".github/workflows/documentation-updater.md",
+      "commit_sha": "00f8df9781ae3ddac8a57105a15797b717d73669",
+      "authored_at": "2026-02-20T09:46:17Z",
+      "committed_at": "2026-02-20T09:46:17Z",
+      "author_name": "Julia Kordick",
+      "author_email": "moin@jkordick.dev",
+      "author_login": "jkordick",
+      "author_account_type": "User",
+      "committer_name": "Julia Kordick",
+      "committer_email": "moin@jkordick.dev",
+      "committer_login": "jkordick",
+      "committer_account_type": "User",
+      "message": "Update documentation-updater workflow to adjust permissions and enhance issue/comment handling\n\n- Changed permissions for issues and pull requests from write to read.\n- Added safe-output configurations for creating issues and adding comments.\n- Updated documentation on event context usage for clarity.\n- Revised instructions for handling documentation updates in various workflow scenarios.",
+      "parent_shas": [
+        "8c3fc7aad0d90abbac4a72a5ae057aca2adde663"
+      ],
+      "tree_sha": "bc1ba80b531263f58a42ce8d801d916807510c42",
+      "html_url": "https://github.com/Azure-Samples/Legacy-Modernization-Agents/commit/00f8df9781ae3ddac8a57105a15797b717d73669",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure-Samples/Legacy-Modernization-Agents:.github/workflows/documentation-updater.md",
+          "source_full_name": "Azure-Samples/Legacy-Modernization-Agents",
+          "md_path": ".github/workflows/documentation-updater.md",
+          "commit_sha": "00f8df9781ae3ddac8a57105a15797b717d73669",
+          "committed_at": "2026-02-20T09:46:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 22,
+          "file_deletions": 13,
+          "file_changes": 35,
+          "file_patch": "@@ -11,8 +11,8 @@ on:\n \n permissions:\n   contents: read\n-  issues: write\n-  pull-requests: write\n+  issues: read\n+  pull-requests: read\n \n tracker-id: documentation-updater\n engine: copilot\n@@ -34,6 +34,15 @@ tools:\n     - \"grep -r '*' docs\"\n     - \"git\"\n \n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[docs] \"\n+    labels: [documentation]\n+    close-older-issues: true\n+    max: 2\n+  add-comment:\n+    max: 2\n+\n timeout-minutes: 45\n ---\n \n@@ -51,7 +60,10 @@ This workflow is triggered in three scenarios. You **must** determine which scen\n | `pull_request` `opened` or `synchronize` | PR is open against `main` | **Flow B** |\n | `pull_request` `closed` with `merged == true` | PR was just merged into `main` | **Flow C → Flow A** |\n \n-Use the event context (`${{ github.event_name }}`, `${{ github.event.action }}`, `${{ github.event.pull_request.merged }}`) to determine the active flow.\n+Use the event context to determine the active flow:\n+- If `${{ github.event.pull_request.number }}` is empty/unset, this is a **push** event → **Flow A**\n+- If `${{ github.event.pull_request.number }}` is set and `${{ github.event.pull_request.state }}` is `open`, this is a PR opened/updated → **Flow B**\n+- If `${{ github.event.pull_request.number }}` is set and `${{ github.event.pull_request.state }}` is `closed`, this is a merged PR → **Flow C → Flow A**\n \n ---\n \n@@ -66,10 +78,8 @@ Use the event context (`${{ github.event_name }}`, `${{ github.event.action }}`,\n 3. **Check documentation** (see [Documentation Check Process](#documentation-check-process) below).\n 4. **If documentation is up to date**: Exit gracefully. No action needed.\n 5. **If documentation is outdated or missing**:\n-   - **Open a GitHub issue** using `create_issue` with:\n-     - **Title**: `[docs] Documentation update needed for push to main by @${{ github.actor }}`\n-     - **Labels**: `documentation`\n-     - **Assignee**: `${{ github.actor }}`\n+   - **Request issue creation** via safe-output with:\n+     - **Title**: `Documentation update needed for push to main by @${{ github.actor }}`\n      - **Body**: Include a summary of what code changed, which documentation is missing or outdated, and specific suggestions for what should be documented. Reference the commit SHAs.\n \n ---\n@@ -84,7 +94,7 @@ Use the event context (`${{ github.event_name }}`, `${{ github.event.action }}`,\n 2. **Check documentation** (see [Documentation Check Process](#documentation-check-process) below).\n 3. **If documentation is up to date**: Leave a short nice and approving comment on the PR confirming docs look good, and exit gracefully.\n 4. **If documentation is outdated or missing**:\n-   - **Comment on the PR** using `create_issue_comment` (on the PR number) with:\n+   - **Request a comment** on the PR via safe-output with:\n      - A clear summary of which documentation is missing or outdated\n      - Specific suggestions for what should be documented and where\n      - A checklist the author can follow to fix the gaps before merging\n@@ -102,10 +112,8 @@ Use the event context (`${{ github.event_name }}`, `${{ github.event.action }}`,\n 2. **Check documentation** (see [Documentation Check Process](#documentation-check-process) below).\n 3. **If documentation is up to date**: Exit gracefully. The author addressed any earlier feedback.\n 4. **If documentation is still outdated or missing**:\n-   - **Escalate to Flow A**: Open a GitHub issue using `create_issue` with:\n-     - **Title**: `[docs] Documentation update needed after merge of PR #${{ github.event.pull_request.number }}`\n-     - **Labels**: `documentation`\n-     - **Assignee**: `${{ github.actor }}` (the user who merged the PR)\n+   - **Escalate to Flow A**: Request issue creation via safe-output with:\n+     - **Title**: `Documentation update needed after merge of PR #${{ github.event.pull_request.number }}`\n      - **Body**: Include a summary of the merged PR, what documentation is missing, and specific suggestions. Reference the PR number.\n \n ---\n@@ -175,8 +183,9 @@ A change does **not** require documentation updates if:\n \n ## Important Notes\n \n-- You have access to GitHub tools to search and review code changes, create issues, and comment on PRs\n+- You have access to GitHub tools to search and review code changes\n - You have access to bash commands to explore the documentation structure\n+- Issues and PR comments are created via safe-outputs — you do **not** have direct write permissions\n - You do **not** have the edit tool — your job is to notify, not to fix\n - Always read the documentation instructions before analyzing\n - Focus on user-facing features and changes that affect the developer experience\n\\ No newline at end of file",
+          "snapshot_ref": "00f8df9781ae3ddac8a57105a15797b717d73669",
+          "snapshot_blob_sha": "e2c1f99cf2ea94ff54597bf5b1fdefad915e5a3b",
+          "snapshot_file": "snapshots/Legacy-Modernization-Agents__Azure-Samples__00f8df9781ae3ddac8a57105a15797b717d73669__documentation-updater.md",
+          "snapshot_bytes": 7959,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure-Samples/Legacy-Modernization-Agents\",\"generated_owner\":\"Azure-Samples\",\"generated_repo\":\"Legacy-Modernization-Agents\",\"generated_workflow_path\":\".github/workflows/documentation-updater.lock.yml\",\"generated_workflow_file\":\"documentation-updater.lock.yml\",\"generated_html_url\":\"https://github.com/Azure-Samples/Legacy-Modernization-Agents/blob/b260b5ad01e52d9c2e928edf7c53f05e8ae52eac/.github/workflows/documentation-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+    "source_full_name": "natnew/Awesome-Data-Science",
+    "source_owner": "natnew",
+    "source_repo": "Awesome-Data-Science",
+    "md_path": ".github/workflows/issue-triage-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/natnew/Awesome-Data-Science/blob/HEAD/.github/workflows/issue-triage-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "natnew/Awesome-Data-Science",
+      "generated_owner": "natnew",
+      "generated_repo": "Awesome-Data-Science",
+      "generated_workflow_path": ".github/workflows/issue-triage-agent.lock.yml",
+      "generated_workflow_file": "issue-triage-agent.lock.yml",
+      "generated_html_url": "https://github.com/natnew/Awesome-Data-Science/blob/60f54ddaa5ba940b9c6ca4f5fe7dc35b4ae69aa1/.github/workflows/issue-triage-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T12:42:57+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Data-Science",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "e0267f8246dec77c20b615235397e956ba5166ac",
+      "authored_at": "2026-02-18T09:37:05Z",
+      "committed_at": "2026-02-18T09:37:05Z",
+      "author_name": "Natasha",
+      "author_email": "natashanewboldlondon@gmail.com",
+      "author_login": "natnew",
+      "author_account_type": "User",
+      "committer_name": "Natasha",
+      "committer_email": "natashanewboldlondon@gmail.com",
+      "committer_login": "natnew",
+      "committer_account_type": "User",
+      "message": "Add agentic workflow issue-triage-agent",
+      "parent_shas": [
+        "87069ef3667d2c733eb93a0a897971bb7260475e"
+      ],
+      "tree_sha": "af9a7e67e94ae09d7a2f5407379630d09d00af48",
+      "html_url": "https://github.com/natnew/Awesome-Data-Science/commit/e0267f8246dec77c20b615235397e956ba5166ac",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Data-Science",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "e0267f8246dec77c20b615235397e956ba5166ac",
+          "committed_at": "2026-02-18T09:37:05Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 91,
+          "file_deletions": 0,
+          "file_changes": 91,
+          "file_patch": "@@ -0,0 +1,91 @@\n+---\n+on:\n+  schedule: 0 14 * * 1-5\n+  workflow_dispatch: null\n+permissions:\n+  issues: read\n+imports:\n+- github/gh-aw/.github/workflows/shared/mood.md@852cb06ad52958b402ed982b69957ffc57ca0619\n+- github/gh-aw/.github/workflows/shared/reporting.md@852cb06ad52958b402ed982b69957ffc57ca0619\n+safe-outputs:\n+  add-comment: {}\n+  add-labels:\n+    allowed:\n+    - bug\n+    - feature\n+    - enhancement\n+    - documentation\n+    - question\n+    - help-wanted\n+    - good-first-issue\n+source: github/gh-aw/.github/workflows/issue-triage-agent.md@852cb06ad52958b402ed982b69957ffc57ca0619\n+strict: true\n+timeout-minutes: 5\n+tools:\n+  github:\n+    lockdown: true\n+    toolsets:\n+    - issues\n+    - labels\n+---\n+# Issue Triage Agent\n+\n+List open issues in ${{ github.repository }} that have no labels. For each unlabeled issue, analyze the title and body, then add one of the allowed labels: `bug`, `feature`, `enhancement`, `documentation`, `question`, `help-wanted`, or `good-first-issue`, `community`.\n+\n+Skip issues that:\n+- Already have any of these labels\n+- Have been assigned to any user (especially non-bot users)\n+\n+After adding the label to an issue, mention the issue author in a comment using this format (follow shared/reporting.md guidelines):\n+\n+**Comment Template**:\n+```markdown\n+### 🏷️ Issue Triaged\n+\n+Hi @{author}! I've categorized this issue as **{label_name}** based on the following analysis:\n+\n+**Reasoning**: {brief_explanation_of_why_this_label}\n+\n+<details>\n+<summary><b>View Triage Details</b></summary>\n+\n+#### Analysis\n+- **Keywords detected**: {list_of_keywords_that_matched}\n+- **Issue type indicators**: {what_made_this_fit_the_category}\n+- **Confidence**: {High/Medium/Low}\n+\n+#### Recommended Next Steps\n+- {context_specific_suggestion_1}\n+- {context_specific_suggestion_2}\n+\n+</details>\n+\n+**References**: [Triage run §{run_id}](https://github.com/github/gh-aw/actions/runs/{run_id})\n+```\n+\n+**Key formatting requirements**:\n+- Use h3 (###) for the main heading\n+- Keep reasoning visible for quick understanding\n+- Wrap detailed analysis in `<details>` tags\n+- Include workflow run reference\n+- Keep total comment concise (collapsed details prevent noise)\n+\n+## Batch Comment Optimization\n+\n+For efficiency, if multiple issues are triaged in a single run:\n+1. Add individual labels to each issue\n+2. Add a brief comment to each issue (using the template above)\n+3. Optionally: Create a discussion summarizing all triage actions for that run\n+\n+This provides both per-issue context and batch visibility.\n+\n+## Labels\n+\n+- `bug`: Indicates a problem or error in the code that needs fixing.\n+- `feature`: Represents a new feature request or enhancement to existing functionality.\n+- `enhancement`: Suggests improvements to existing features or code.\n+- `documentation`: Pertains to issues related to documentation, such as missing or unclear docs.\n+- `question`: Used for issues that are asking for clarification or have questions about the project.\n+- `help-wanted`: Indicates that the issue is a good candidate for external contributions and help\n+- `good-first-issue`: Marks issues that are suitable for newcomers to the project, often with simpler scope.\n+- `community`: Indicates that the issue is related to community engagement, such as events, discussions, or contributions that don't fit into the other categories. From authors who are not contributors to the codebase but are engaging with the project in other ways.",
+          "snapshot_ref": "e0267f8246dec77c20b615235397e956ba5166ac",
+          "snapshot_blob_sha": "572db811c552e752ed6f6fc5fc9e3f813678c2ec",
+          "snapshot_file": "snapshots/Awesome-Data-Science__natnew__e0267f8246dec77c20b615235397e956ba5166ac__issue-triage-agent.md",
+          "snapshot_bytes": 3365,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Data-Science\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Data-Science\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Data-Science/blob/60f54ddaa5ba940b9c6ca4f5fe7dc35b4ae69aa1/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Data-Science",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "37b734ae241b3727d10b1fb8ec1f1550605dcaff",
+      "authored_at": "2026-02-18T09:48:39Z",
+      "committed_at": "2026-02-18T09:48:39Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Fix Issue Triage Agent by disabling lockdown mode that requires unconfigured custom token\n\nCo-authored-by: natnew <37782009+natnew@users.noreply.github.com>",
+      "parent_shas": [
+        "c1c2625e583528d054b28d1a4580d984f9636572"
+      ],
+      "tree_sha": "ad0d96e1a60edb4cb0872ebf8f7ddbd355764a48",
+      "html_url": "https://github.com/natnew/Awesome-Data-Science/commit/37b734ae241b3727d10b1fb8ec1f1550605dcaff",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Data-Science",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "37b734ae241b3727d10b1fb8ec1f1550605dcaff",
+          "committed_at": "2026-02-18T09:48:39Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -23,7 +23,7 @@ strict: true\n timeout-minutes: 5\n tools:\n   github:\n-    lockdown: true\n+    lockdown: false\n     toolsets:\n     - issues\n     - labels",
+          "snapshot_ref": "37b734ae241b3727d10b1fb8ec1f1550605dcaff",
+          "snapshot_blob_sha": "2feadcc9a9cb5f4da7d9468e15572897804416c6",
+          "snapshot_file": "snapshots/Awesome-Data-Science__natnew__37b734ae241b3727d10b1fb8ec1f1550605dcaff__issue-triage-agent.md",
+          "snapshot_bytes": 3366,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Data-Science\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Data-Science\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Data-Science/blob/60f54ddaa5ba940b9c6ca4f5fe7dc35b4ae69aa1/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Data-Science",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "1c70f259aa9090ceb241cf8ef8651b165e787808",
+      "authored_at": "2026-02-18T10:05:18Z",
+      "committed_at": "2026-02-18T10:05:18Z",
+      "author_name": "Natasha",
+      "author_email": "natashanewboldlondon@gmail.com",
+      "author_login": "natnew",
+      "author_account_type": "User",
+      "committer_name": "Natasha",
+      "committer_email": "natashanewboldlondon@gmail.com",
+      "committer_login": "natnew",
+      "committer_account_type": "User",
+      "message": "update issue-triage-agent workflow configuration",
+      "parent_shas": [
+        "8fca4003ddd2ba90095b57cf25ec3dd707bbeb73"
+      ],
+      "tree_sha": "790b5347570ad61d48da8579acc667c276554ce6",
+      "html_url": "https://github.com/natnew/Awesome-Data-Science/commit/1c70f259aa9090ceb241cf8ef8651b165e787808",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Data-Science:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Data-Science",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "1c70f259aa9090ceb241cf8ef8651b165e787808",
+          "committed_at": "2026-02-18T10:05:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 22,
+          "file_deletions": 77,
+          "file_changes": 99,
+          "file_patch": "@@ -1,91 +1,36 @@\n ---\n+timeout-minutes: 5\n+name: Issue Triage Agent\n+\n on:\n-  schedule: 0 14 * * 1-5\n-  workflow_dispatch: null\n+  issues:\n+    types: [opened, reopened]\n+\n permissions:\n   issues: read\n-imports:\n-- github/gh-aw/.github/workflows/shared/mood.md@852cb06ad52958b402ed982b69957ffc57ca0619\n-- github/gh-aw/.github/workflows/shared/reporting.md@852cb06ad52958b402ed982b69957ffc57ca0619\n-safe-outputs:\n-  add-comment: {}\n-  add-labels:\n-    allowed:\n-    - bug\n-    - feature\n-    - enhancement\n-    - documentation\n-    - question\n-    - help-wanted\n-    - good-first-issue\n-source: github/gh-aw/.github/workflows/issue-triage-agent.md@852cb06ad52958b402ed982b69957ffc57ca0619\n-strict: true\n-timeout-minutes: 5\n+\n tools:\n   github:\n-    lockdown: false\n-    toolsets:\n-    - issues\n-    - labels\n+    toolsets: [issues, labels]\n+\n+safe-outputs:\n+  add-labels:\n+    allowed: [bug, feature, enhancement, documentation, question, help-wanted, good-first-issue]\n+  add-comment: {}\n ---\n+\n # Issue Triage Agent\n \n-List open issues in ${{ github.repository }} that have no labels. For each unlabeled issue, analyze the title and body, then add one of the allowed labels: `bug`, `feature`, `enhancement`, `documentation`, `question`, `help-wanted`, or `good-first-issue`, `community`.\n+List open issues in ${{ github.repository }} that have no labels. For each\n+unlabeled issue, analyze the title and body, then add one of the allowed\n+labels: `bug`, `feature`, `enhancement`, `documentation`, `question`,\n+`help-wanted`, or `good-first-issue`.\n \n Skip issues that:\n - Already have any of these labels\n - Have been assigned to any user (especially non-bot users)\n \n-After adding the label to an issue, mention the issue author in a comment using this format (follow shared/reporting.md guidelines):\n-\n-**Comment Template**:\n-```markdown\n-### 🏷️ Issue Triaged\n-\n-Hi @{author}! I've categorized this issue as **{label_name}** based on the following analysis:\n-\n-**Reasoning**: {brief_explanation_of_why_this_label}\n-\n-<details>\n-<summary><b>View Triage Details</b></summary>\n-\n-#### Analysis\n-- **Keywords detected**: {list_of_keywords_that_matched}\n-- **Issue type indicators**: {what_made_this_fit_the_category}\n-- **Confidence**: {High/Medium/Low}\n-\n-#### Recommended Next Steps\n-- {context_specific_suggestion_1}\n-- {context_specific_suggestion_2}\n-\n-</details>\n-\n-**References**: [Triage run §{run_id}](https://github.com/github/gh-aw/actions/runs/{run_id})\n-```\n-\n-**Key formatting requirements**:\n-- Use h3 (###) for the main heading\n-- Keep reasoning visible for quick understanding\n-- Wrap detailed analysis in `<details>` tags\n-- Include workflow run reference\n-- Keep total comment concise (collapsed details prevent noise)\n-\n-## Batch Comment Optimization\n-\n-For efficiency, if multiple issues are triaged in a single run:\n-1. Add individual labels to each issue\n-2. Add a brief comment to each issue (using the template above)\n-3. Optionally: Create a discussion summarizing all triage actions for that run\n-\n-This provides both per-issue context and batch visibility.\n-\n-## Labels\n-\n-- `bug`: Indicates a problem or error in the code that needs fixing.\n-- `feature`: Represents a new feature request or enhancement to existing functionality.\n-- `enhancement`: Suggests improvements to existing features or code.\n-- `documentation`: Pertains to issues related to documentation, such as missing or unclear docs.\n-- `question`: Used for issues that are asking for clarification or have questions about the project.\n-- `help-wanted`: Indicates that the issue is a good candidate for external contributions and help\n-- `good-first-issue`: Marks issues that are suitable for newcomers to the project, often with simpler scope.\n-- `community`: Indicates that the issue is related to community engagement, such as events, discussions, or contributions that don't fit into the other categories. From authors who are not contributors to the codebase but are engaging with the project in other ways.\n+Do research on the issue in the context of the codebase and, after\n+adding the label to an issue, mention the issue author in a comment, explain\n+why the label was added and give a brief summary of how the issue may be\n+addressed.",
+          "snapshot_ref": "1c70f259aa9090ceb241cf8ef8651b165e787808",
+          "snapshot_blob_sha": "54a171704e2aed2bab68b986f30faf853962da0b",
+          "snapshot_file": "snapshots/Awesome-Data-Science__natnew__1c70f259aa9090ceb241cf8ef8651b165e787808__issue-triage-agent.md",
+          "snapshot_bytes": 941,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Data-Science\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Data-Science\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Data-Science/blob/60f54ddaa5ba940b9c6ca4f5fe7dc35b4ae69aa1/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

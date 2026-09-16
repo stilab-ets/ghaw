@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/copilot-sdk:.github/workflows/issue-classification.md",
+    "source_full_name": "github/copilot-sdk",
+    "source_owner": "github",
+    "source_repo": "copilot-sdk",
+    "md_path": ".github/workflows/issue-classification.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/copilot-sdk/blob/HEAD/.github/workflows/issue-classification.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/copilot-sdk",
+      "generated_owner": "github",
+      "generated_repo": "copilot-sdk",
+      "generated_workflow_path": ".github/workflows/issue-classification.lock.yml",
+      "generated_workflow_file": "issue-classification.lock.yml",
+      "generated_html_url": "https://github.com/github/copilot-sdk/blob/f324f722751e0360573e3f1d572c3d44d44b8709/.github/workflows/issue-classification.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:27:10+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/copilot-sdk:.github/workflows/issue-classification.md",
+      "source_full_name": "github/copilot-sdk",
+      "md_path": ".github/workflows/issue-classification.md",
+      "commit_sha": "ad63b09d08c0645686257024b35e200529a9cc0d",
+      "authored_at": "2026-04-02T17:49:33Z",
+      "committed_at": "2026-04-02T17:49:33Z",
+      "author_name": "Mackinnon Buck",
+      "author_email": "mackinnon.buck@gmail.com",
+      "author_login": "MackinnonBuck",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add AI-powered issue triage system with correction tracking (#951)\n\n* Add AI-powered issue triage system with correction tracking\n\nImplements a delegator-based triage agent using GitHub Agentic Workflows,\na slash-command-driven correction feedback loop, and automated correction\ncollection with CCA integration.\n\nKey changes:\n- Re-initialize gh-aw to latest version\n- Add issue classification workflow with 4 type-specific handlers\n- Add /triage_feedback slash command and correction collection pipeline\n- Add corrections test suite (vitest, 28 tests)\n- Add verify-compiled CI check for gh-aw frontmatter changes\n- Add corrections-tests CI workflow\n- Update justfile with install/test recipes for corrections\n- Fix existing workflows for new gh-aw syntax (roles: under on:)\n\n* Add permissions blocks to CI workflows, restore logs .gitignore\n\n* Limit push trigger to main branch to avoid duplicate CI runs\n\n* Pin gh-aw setup action to v1, guard against undefined client_payload\n\n* Pin gh-aw setup-cli to v0.64.2 via version input\n\n* Merge origin/main, recompile workflows with gh-aw v0.65.5",
+      "parent_shas": [
+        "1587e344ff566dcd4b6ecbddaa96174c8d3180a9"
+      ],
+      "tree_sha": "df4c2ff06ac0c36ccdab72f09c476621733e1793",
+      "html_url": "https://github.com/github/copilot-sdk/commit/ad63b09d08c0645686257024b35e200529a9cc0d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/copilot-sdk:.github/workflows/issue-classification.md",
+          "source_full_name": "github/copilot-sdk",
+          "md_path": ".github/workflows/issue-classification.md",
+          "commit_sha": "ad63b09d08c0645686257024b35e200529a9cc0d",
+          "committed_at": "2026-04-02T17:49:33Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 125,
+          "file_deletions": 0,
+          "file_changes": 125,
+          "file_patch": "@@ -0,0 +1,125 @@\n+---\n+description: Classifies newly opened issues and delegates to type-specific handler workflows\n+on:\n+  issues:\n+    types: [opened]\n+  workflow_dispatch:\n+    inputs:\n+      issue_number:\n+        description: \"Issue number to triage\"\n+        required: true\n+        type: string\n+  roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+    min-integrity: none\n+safe-outputs:\n+  call-workflow: [handle-bug, handle-enhancement, handle-question, handle-documentation]\n+  add-comment:\n+    max: 1\n+    target: triggering\n+timeout-minutes: 10\n+---\n+\n+# Issue Classification Agent\n+\n+You are an AI agent that classifies newly opened issues in the copilot-sdk repository and delegates them to the appropriate handler.\n+\n+Your **only** job is to classify the issue and delegate to a handler workflow, or leave a comment if the issue can't be classified. You do not close issues or modify them in any other way.\n+\n+## Your Task\n+\n+1. Fetch the full issue content using GitHub tools\n+2. Read the issue title, body, and author information\n+3. Follow the classification instructions below to determine the correct classification\n+4. Take action:\n+   - If the issue is a **bug**: call the `handle-bug` workflow with the issue number\n+   - If the issue is an **enhancement**: call the `handle-enhancement` workflow with the issue number\n+   - If the issue is a **question**: call the `handle-question` workflow with the issue number\n+   - If the issue is a **documentation** issue: call the `handle-documentation` workflow with the issue number\n+   - If the issue does **not** clearly fit any category: leave a brief comment explaining why the issue couldn't be classified and that a human will review it\n+\n+When calling a handler workflow, pass `issue_number` set to the issue number.\n+\n+## Issue Classification Instructions\n+\n+You are classifying issues for the **copilot-sdk** repository — a multi-language SDK (Node.js/TypeScript, Python, Go, .NET) that communicates with the Copilot CLI via JSON-RPC.\n+\n+### Classifications\n+\n+Classify each issue into **exactly one** of the following categories. If none fit, see \"Unclassifiable Issues\" below.\n+\n+#### `bug`\n+Something isn't working correctly. The issue describes unexpected behavior, errors, crashes, or regressions in existing functionality.\n+\n+Examples:\n+- \"Session creation fails with timeout error\"\n+- \"Python SDK throws TypeError when streaming is enabled\"\n+- \"Go client panics on malformed JSON-RPC response\"\n+\n+#### `enhancement`\n+A request for new functionality or improvement to existing behavior. The issue proposes something that doesn't exist yet or asks for a change in how something works.\n+\n+Examples:\n+- \"Add retry logic to the Node.js client\"\n+- \"Support custom headers in the .NET SDK\"\n+- \"Allow configuring connection timeout per-session\"\n+\n+#### `question`\n+A general question about SDK usage, behavior, or capabilities. The author is seeking help or clarification, not reporting a problem or requesting a feature.\n+\n+Examples:\n+- \"How do I use streaming with the Python SDK?\"\n+- \"What's the difference between create and resume session?\"\n+- \"Is there a way to set custom tool permissions?\"\n+\n+#### `documentation`\n+The issue relates to documentation — missing docs, incorrect docs, unclear explanations, or requests for new documentation.\n+\n+Examples:\n+- \"README is missing Go SDK installation steps\"\n+- \"API reference for session.ui is outdated\"\n+- \"Add migration guide from v1 to v2\"\n+\n+### Unclassifiable Issues\n+\n+If the issue doesn't clearly fit any of the above categories (e.g., meta discussions, process questions, infrastructure issues, license questions), do **not** delegate to a handler. Instead, leave a brief comment explaining why the issue couldn't be automatically classified and that a human will review it.\n+\n+### Classification Guidelines\n+\n+1. **Read the full issue** — title, body, and any initial comments from the author.\n+2. **Be skeptical of the author's framing** — users often mislabel their own issues. Someone may claim something is a \"bug\" when the product is working as designed (making it an enhancement). Classify based on the actual content, not the author's label.\n+3. **When in doubt between `bug` and `question`** — if the author is unsure whether something is a bug or they're using the SDK incorrectly, classify as `bug`. It's easier to reclassify later.\n+4. **When in doubt between `enhancement` and `bug`** — if the author describes behavior they find undesirable but the SDK is working as designed, classify as `enhancement`. This applies even if the author explicitly calls it a bug — what matters is whether the current behavior is actually broken or functioning as intended.\n+5. **Classify into exactly one category** — never delegate to two handlers for the same issue.\n+6. **Verify whether reported behavior is actually a bug** — confirm that the described behavior is genuinely broken before classifying as `bug`. If the product is working as designed, classify as `enhancement` instead. Do not assess reproducibility, priority, or duplicates — those are for downstream handlers.\n+\n+### Repository Context\n+\n+The copilot-sdk is a monorepo with four SDK implementations:\n+\n+- **Node.js/TypeScript** (`nodejs/src/`): The primary/reference implementation\n+- **Python** (`python/copilot/`): Python SDK with async support\n+- **Go** (`go/`): Go SDK with OpenTelemetry integration\n+- **.NET** (`dotnet/src/`): .NET SDK targeting net8.0\n+\n+Common areas of issues:\n+- **JSON-RPC client**: Session creation, resumption, event handling\n+- **Streaming**: Delta events, message completion, reasoning events\n+- **Tools**: Tool definition, execution, permissions\n+- **Type generation**: Generated types from `@github/copilot` schema\n+- **E2E testing**: Test harness, replay proxy, snapshot fixtures\n+- **UI elicitation**: Confirm, select, input dialogs via session.ui\n+\n+## Context\n+\n+- Repository: ${{ github.repository }}\n+- Issue number: ${{ github.event.issue.number || inputs.issue_number }}\n+- Issue title: ${{ github.event.issue.title }}\n+\n+Use the GitHub tools to fetch the full issue details, especially when triggered manually via `workflow_dispatch`.",
+          "snapshot_ref": "ad63b09d08c0645686257024b35e200529a9cc0d",
+          "snapshot_blob_sha": "af682461f5250d73e96433fc77a53f5feab4cb7c",
+          "snapshot_file": "snapshots/copilot-sdk__github__ad63b09d08c0645686257024b35e200529a9cc0d__issue-classification.md",
+          "snapshot_bytes": 6134,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/copilot-sdk\",\"generated_owner\":\"github\",\"generated_repo\":\"copilot-sdk\",\"generated_workflow_path\":\".github/workflows/issue-classification.lock.yml\",\"generated_workflow_file\":\"issue-classification.lock.yml\",\"generated_html_url\":\"https://github.com/github/copilot-sdk/blob/f324f722751e0360573e3f1d572c3d44d44b8709/.github/workflows/issue-classification.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/copilot-sdk:.github/workflows/issue-classification.md",
+      "source_full_name": "github/copilot-sdk",
+      "md_path": ".github/workflows/issue-classification.md",
+      "commit_sha": "ebc84e30c86fa5d18dd2bf7221c927b8cd16eed4",
+      "authored_at": "2026-07-16T17:34:05Z",
+      "committed_at": "2026-07-16T17:34:05Z",
+      "author_name": "Lukasz Warchol",
+      "author_email": "lukewar@github.com",
+      "author_login": "lukewar",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable built-in issue intent safe outputs on issue-triage (#1880)\n\n* Enable issue intents on issue-triage workflow\n\nRecompile issue-triage.lock.yml with gh-aw v0.82.1 to wire\nGH_AW_RUNTIME_FEATURES=${{ vars.GH_AW_RUNTIME_FEATURES }}, enabling native\nissue intents (rationale/confidence) for the workflow's add-labels safe\noutput. No behavior change: the trigger, permissions, prompt, and safe\noutputs are unchanged, and the source .md is untouched.\n\nThe actions-lock.json pin bump (github/gh-aw-actions/setup v0.82.1) is\nrequired by the recompiled lock.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* Bump verify-compiled gh-aw pin to v0.82.1 and recompile locks\n\nThe verify-compiled workflow pinned gh-aw v0.77.5 while issue-triage.lock.yml\nwas compiled with v0.82.1, so CI recompiled at v0.77.5 and the byte diff failed\nthe check. Bump the pin to v0.82.1 to match, and recompile all lock files at\nv0.82.1 so they are consistent with the pinned compiler.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* chore(aw): upgrade aw workflows with latest pre-release\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix(ci): align verify workflow gh-aw toolchain\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* Add generated agentics-maintenance workflow (gh-aw v0.82.10)\n\n`gh aw compile` with the v0.82.10 toolchain introduced by this PR emits\n`.github/workflows/agentics-maintenance.yml`. Commit the generated file\nso it is tracked alongside the recompiled locks.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 004ba78d-3cf4-41ab-8647-180e683460f0\n\n* Enable org billing (copilot-requests) for agentic workflows\n\nAdd `permissions.copilot-requests: write` to all 11 agentic (gh-aw)\nworkflows so their Copilot usage is billed to the org, and recompile the\nlock files. The compiled workflows now authenticate the Copilot CLI with\nthe GitHub Actions token and set S2STOKENS=true.\n\nAuthored by adding `features.copilot-requests: true`, migrating it with\n`gh aw fix --write` (the deprecated flag maps to the permission), and\nrecompiling with gh-aw v0.82.10.\n\nRebased onto #1880 (issue-intents), which bumps the pinned gh-aw CLI to\nv0.82.10.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 004ba78d-3cf4-41ab-8647-180e683460f0\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Steve Sanderson <SteveSandersonMS@users.noreply.github.com>",
+      "parent_shas": [
+        "526c66fbb2c8f7f2e12075134992c43a0197c567"
+      ],
+      "tree_sha": "564ea20003f7f767b01e18e988f0e147ef4cd9cf",
+      "html_url": "https://github.com/github/copilot-sdk/commit/ebc84e30c86fa5d18dd2bf7221c927b8cd16eed4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/copilot-sdk:.github/workflows/issue-classification.md",
+          "source_full_name": "github/copilot-sdk",
+          "md_path": ".github/workflows/issue-classification.md",
+          "commit_sha": "ebc84e30c86fa5d18dd2bf7221c927b8cd16eed4",
+          "committed_at": "2026-07-16T17:34:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -14,6 +14,7 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [default]",
+          "snapshot_ref": "ebc84e30c86fa5d18dd2bf7221c927b8cd16eed4",
+          "snapshot_blob_sha": "b1e3345f919183d5810ebfa4ab0ba49795ce700e",
+          "snapshot_file": "snapshots/copilot-sdk__github__ebc84e30c86fa5d18dd2bf7221c927b8cd16eed4__issue-classification.md",
+          "snapshot_bytes": 6160,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/copilot-sdk\",\"generated_owner\":\"github\",\"generated_repo\":\"copilot-sdk\",\"generated_workflow_path\":\".github/workflows/issue-classification.lock.yml\",\"generated_workflow_file\":\"issue-classification.lock.yml\",\"generated_html_url\":\"https://github.com/github/copilot-sdk/blob/f324f722751e0360573e3f1d572c3d44d44b8709/.github/workflows/issue-classification.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

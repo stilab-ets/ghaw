@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+    "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+    "source_owner": "prasadhonrao",
+    "source_repo": "ghcp-cli-cheatsheet",
+    "md_path": ".github/workflows/cheatsheet-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/HEAD/.github/workflows/cheatsheet-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "generated_owner": "prasadhonrao",
+      "generated_repo": "ghcp-cli-cheatsheet",
+      "generated_workflow_path": ".github/workflows/cheatsheet-updater.lock.yml",
+      "generated_workflow_file": "cheatsheet-updater.lock.yml",
+      "generated_html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/cheatsheet-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T12:43:15+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/cheatsheet-updater.md",
+      "commit_sha": "68b3c60eecd6f5ebe0e7a2637b6feeadca8b4366",
+      "authored_at": "2026-05-20T20:08:34Z",
+      "committed_at": "2026-05-20T20:08:34Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "feat: add Cheatsheet Updater workflow for automated updates and checks",
+      "parent_shas": [
+        "56a7628fb9e9e6106da4c23b51c9db7b57401c50"
+      ],
+      "tree_sha": "d6bd75b95a4d60ce65d14c70d05c8294a4eadd05",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/68b3c60eecd6f5ebe0e7a2637b6feeadca8b4366",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/cheatsheet-updater.md",
+          "commit_sha": "68b3c60eecd6f5ebe0e7a2637b6feeadca8b4366",
+          "committed_at": "2026-05-20T20:08:34Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 117,
+          "file_deletions": 0,
+          "file_changes": 117,
+          "file_patch": "@@ -0,0 +1,117 @@\n+---\n+name: \"Cheatsheet Updater\"\n+description: \"Weekly check (Mondays) for new GitHub Copilot CLI features and updates. Opens a PR if the cheatsheet content needs updating.\"\n+on:\n+  schedule: weekly on monday\n+  workflow_dispatch:\n+tools:\n+  bash: [\"curl\", \"gh\"]\n+  edit:\n+  web-fetch:\n+  github:\n+    toolsets: [repos]\n+safe-outputs:\n+  allowed-domains:\n+    - github.com\n+    - docs.github.com\n+create-pull-request:\n+  labels: [automated-update, copilot-cli-updates]\n+  title-prefix: \"[bot] \"\n+  base-branch: main\n+---\n+\n+# Cheatsheet Updater\n+\n+You are a maintainer for the **GitHub Copilot CLI Cheatsheet** repository — a visual reference site for Copilot CLI commands. Your job is to check for recent updates to the Copilot CLI and determine if the cheatsheet content needs updating.\n+\n+## Step 1 — Gather recent Copilot CLI updates\n+\n+Use `web-fetch` to read the following pages and extract the latest entries from the past 7 days:\n+\n+- https://github.com/github/copilot-cli/blob/main/changelog.md — CLI changelog\n+\n+Also use `gh` CLI to check the latest releases and commits in the `github/copilot-cli` repo.\n+\n+Look for:\n+\n+- New commands added (e.g. new slash commands like `/newcommand`)\n+- Existing commands renamed or removed\n+- Changes to command syntax, subcommands, or flags\n+- New categories or groupings of commands\n+\n+## Step 2 — Check for existing open PRs to avoid duplicates\n+\n+List all open pull requests in this repo that have the `automated-update` or `copilot-cli-updates` labels. Read their titles and descriptions to understand which commands or changes each PR already covers.\n+\n+Build a list of changes that are **already addressed** by open PRs and exclude them from anything you propose. If every change found in Step 1 is already covered, stop here and report that no new updates are needed.\n+\n+## Step 3 — Compare against current cheatsheet content\n+\n+Read all JSON files in `src/data/categories/` — these are the source of truth for what commands are currently documented. Also read `src/types/index.ts` to understand the `Command` type shape and the `CATEGORIES` array.\n+\n+Identify:\n+\n+- **Missing commands** — new CLI commands not yet present in any category JSON\n+- **Outdated commands** — commands that have been renamed, removed, or had their syntax significantly changed\n+- **Wrong category** — commands that have moved to a different grouping\n+\n+If nothing is new or everything is already up to date, stop here and report that no updates are needed.\n+\n+## Step 4 — Update the cheatsheet data\n+\n+For each change needed, edit the relevant file in `src/data/categories/`.\n+\n+Follow these conventions exactly (from `AGENTS.md`):\n+\n+**Adding a new command** — add an entry to the matching category JSON:\n+```json\n+{\n+  \"id\": \"{2-3-letter-prefix}-{n}\",\n+  \"title\": \"/commandname\",\n+  \"syntax\": \"/commandname [ARGS]\",\n+  \"description\": \"One sentence: what it does.\",\n+  \"analogy\": \"Like [familiar concept] — [brief explanation].\",\n+  \"examples\": [\n+    \"/commandname  # brief inline comment\"\n+  ],\n+  \"category\": \"category-slug\"\n+}\n+```\n+\n+**Adding a new category** — also add a `Category` entry to the `CATEGORIES` array in `src/types/index.ts`.\n+\n+**Removing a command** — delete the entire JSON entry. Also remove the corresponding entry from `scripts/demos.json` if one exists.\n+\n+**Renaming / syntax change** — update `title`, `syntax`, and `examples` fields in place. Update `scripts/demos.json` if a demo exists for that command.\n+\n+Do not add `terminalDemo` fields — those are added separately after GIF recordings are made.\n+Do not modify any `.tsx`, `.css`, or non-data files unless a new category requires a `CATEGORIES` entry in `src/types/index.ts`.\n+\n+**Also update `scripts/demos.json`** for every command added or removed:\n+\n+- **New command** — add a demo entry following the existing pattern:\n+  ```json\n+  {\n+    \"id\": \"commandname\",\n+    \"category\": \"category-slug\",\n+    \"description\": \"Brief description of what the demo shows\",\n+    \"command\": \"/commandname example-arg\",\n+    \"responseWait\": 10\n+  }\n+  ```\n+  Use `\"responseWait\": 20` for commands that trigger AI responses, `6` for instant commands.\n+  If the command requires prior conversation history or opens an interactive TUI, use a `steps` array instead — see existing examples like `/compact` or `/model` in `scripts/demos.json`.\n+\n+- **Removed command** — delete the matching entry from `scripts/demos.json`.\n+\n+The `generate-gifs.yml` workflow will automatically detect the change to `scripts/demos.json` on this PR branch and generate the GIF, committing it back to the branch. The PR should not be merged until that workflow completes successfully and the GIF is committed.\n+\n+## Step 5 — Open a pull request\n+\n+Create a pull request targeting `main`. The PR title should summarize what changed (e.g., \"Add /newcommand to chat category\"). The PR body should include:\n+\n+1. What new features or changes were found (with links to changelog entries)\n+2. Which JSON files were updated and what changed in each\n+3. Any commands removed and why (deprecated / renamed)\n+\n+Apply the labels `automated-update` and `copilot-cli-updates` to the PR.",
+          "snapshot_ref": "68b3c60eecd6f5ebe0e7a2637b6feeadca8b4366",
+          "snapshot_blob_sha": "3b1233edfd1fe211ba50404580820bfb9f158777",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__68b3c60eecd6f5ebe0e7a2637b6feeadca8b4366__cheatsheet-updater.md",
+          "snapshot_bytes": 5082,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/cheatsheet-updater.lock.yml\",\"generated_workflow_file\":\"cheatsheet-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/cheatsheet-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/cheatsheet-updater.md",
+      "commit_sha": "694b0ac17bf46470809409b19ff1e17a3fefbd89",
+      "authored_at": "2026-05-20T21:37:56Z",
+      "committed_at": "2026-05-20T21:37:56Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "chore: update GIF generation workflow and add manual recording instructions",
+      "parent_shas": [
+        "732296cdfb5253b9f6c1e83a53b571d5c160753f"
+      ],
+      "tree_sha": "7a5b7a060349555546da6ab05a75c5793caa98fa",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/694b0ac17bf46470809409b19ff1e17a3fefbd89",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/cheatsheet-updater.md",
+          "commit_sha": "694b0ac17bf46470809409b19ff1e17a3fefbd89",
+          "committed_at": "2026-05-20T21:37:56Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 1,
+          "file_changes": 8,
+          "file_patch": "@@ -104,7 +104,13 @@ Do not modify any `.tsx`, `.css`, or non-data files unless a new category requir\n \n - **Removed command** — delete the matching entry from `scripts/demos.json`.\n \n-The `generate-gifs.yml` workflow will automatically detect the change to `scripts/demos.json` on this PR branch and generate the GIF, committing it back to the branch. The PR should not be merged until that workflow completes successfully and the GIF is committed.\n+Do NOT add `terminalDemo` fields to the category JSON files. GIF recordings require a local authenticated Copilot CLI session and must be generated manually after the PR is merged using:\n+```bash\n+npm run create:tape\n+npm run create:gif -- --category <category>\n+```\n+\n+Apply the label `needs-gifs` to the PR so the maintainer knows to record demos locally after merge.\n \n ## Step 5 — Open a pull request\n ",
+          "snapshot_ref": "694b0ac17bf46470809409b19ff1e17a3fefbd89",
+          "snapshot_blob_sha": "c72d9b8222215fdfa06cb999ae471971ad554a97",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__694b0ac17bf46470809409b19ff1e17a3fefbd89__cheatsheet-updater.md",
+          "snapshot_bytes": 5181,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/cheatsheet-updater.lock.yml\",\"generated_workflow_file\":\"cheatsheet-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/cheatsheet-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/cheatsheet-updater.md",
+      "commit_sha": "4b2c78825f9e59ee299ef6af52aebd6019ca05b9",
+      "authored_at": "2026-05-21T06:43:34Z",
+      "committed_at": "2026-05-21T06:43:34Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "fix: update README and cheatsheet updater instructions for command data synchronization",
+      "parent_shas": [
+        "5c22b0e73b93263bdbad6551e9b6a57a2ce62455"
+      ],
+      "tree_sha": "3bba1473cd9d407cfac0467c6eb0dbbb0cb4b299",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/4b2c78825f9e59ee299ef6af52aebd6019ca05b9",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/cheatsheet-updater.md",
+          "commit_sha": "4b2c78825f9e59ee299ef6af52aebd6019ca05b9",
+          "committed_at": "2026-05-21T06:43:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 0,
+          "file_changes": 6,
+          "file_patch": "@@ -112,6 +112,12 @@ npm run create:gif -- --category <category>\n \n Apply the label `needs-gifs` to the PR so the maintainer knows to record demos locally after merge.\n \n+**Also update `README.md`** to keep it in sync with data changes:\n+\n+- **Categories table** — update the command count for any category that gained or lost commands\n+- **Example command entry** — if the `Command` TypeScript interface in `src/types/index.ts` changes, update the matching `interface Command` block in the README\n+- Do not change any other sections of the README unless directly relevant to the commands changed\n+\n ## Step 5 — Open a pull request\n \n Create a pull request targeting `main`. The PR title should summarize what changed (e.g., \"Add /newcommand to chat category\"). The PR body should include:",
+          "snapshot_ref": "4b2c78825f9e59ee299ef6af52aebd6019ca05b9",
+          "snapshot_blob_sha": "3dd1cbe7cd53a0d0ecfcadf6affe8c8598091442",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__4b2c78825f9e59ee299ef6af52aebd6019ca05b9__cheatsheet-updater.md",
+          "snapshot_bytes": 5608,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/cheatsheet-updater.lock.yml\",\"generated_workflow_file\":\"cheatsheet-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/cheatsheet-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/cheatsheet-updater.md",
+      "commit_sha": "4bdbc8a575d61cbda9a16016e7abdc17b0ea2099",
+      "authored_at": "2026-05-27T06:53:29Z",
+      "committed_at": "2026-05-27T06:53:29Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow: nest create-pull-request under safe-outputs and add compiled lock.yml\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "81dfe8da343b1b5efda0b57eb0c2e5a3598c7103"
+      ],
+      "tree_sha": "a766ff34d3230e1bf597fe51a5c22078d0e099a4",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/4bdbc8a575d61cbda9a16016e7abdc17b0ea2099",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/cheatsheet-updater.md",
+          "commit_sha": "4bdbc8a575d61cbda9a16016e7abdc17b0ea2099",
+          "committed_at": "2026-05-27T06:53:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "@@ -14,10 +14,10 @@ safe-outputs:\n   allowed-domains:\n     - github.com\n     - docs.github.com\n-create-pull-request:\n-  labels: [automated-update, copilot-cli-updates]\n-  title-prefix: \"[bot] \"\n-  base-branch: main\n+  create-pull-request:\n+    labels: [automated-update, copilot-cli-updates]\n+    title-prefix: \"[bot] \"\n+    base-branch: main\n ---\n \n # Cheatsheet Updater",
+          "snapshot_ref": "4bdbc8a575d61cbda9a16016e7abdc17b0ea2099",
+          "snapshot_blob_sha": "3dd2a164b877cbdaa142eeb86c8d14372893fa03",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__4bdbc8a575d61cbda9a16016e7abdc17b0ea2099__cheatsheet-updater.md",
+          "snapshot_bytes": 5616,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/cheatsheet-updater.lock.yml\",\"generated_workflow_file\":\"cheatsheet-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/cheatsheet-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+      "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+      "md_path": ".github/workflows/cheatsheet-updater.md",
+      "commit_sha": "ddc344ed6aca8d900ff6b0ad045e95b59855ca87",
+      "authored_at": "2026-05-27T07:39:19Z",
+      "committed_at": "2026-05-27T07:39:19Z",
+      "author_name": "prasadhonrao",
+      "author_email": "honrao.prasad@gmail.com",
+      "author_login": "prasadhonrao",
+      "author_account_type": "User",
+      "committer_name": "prasadhonrao",
+      "committer_email": "honrao.prasad@gmail.com",
+      "committer_login": "prasadhonrao",
+      "committer_account_type": "User",
+      "message": "Add CLI availability verification step to cheatsheet-updater workflow\n\nAdds Step 2 to verify new commands from the changelog are actually\npublished in a CLI release before adding them to the cheatsheet.\nCommands not yet in a published release are flagged as 'Pending' and\nexcluded from the PR, with a note in the PR body.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "debf18b2d656ef9fdbfc6a7939e3e34934735afb"
+      ],
+      "tree_sha": "70b7325182b880324f457b24068f4dacccd83fbe",
+      "html_url": "https://github.com/prasadhonrao/ghcp-cli-cheatsheet/commit/ddc344ed6aca8d900ff6b0ad045e95b59855ca87",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "prasadhonrao/ghcp-cli-cheatsheet:.github/workflows/cheatsheet-updater.md",
+          "source_full_name": "prasadhonrao/ghcp-cli-cheatsheet",
+          "md_path": ".github/workflows/cheatsheet-updater.md",
+          "commit_sha": "ddc344ed6aca8d900ff6b0ad045e95b59855ca87",
+          "committed_at": "2026-05-27T07:39:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 21,
+          "file_deletions": 4,
+          "file_changes": 25,
+          "file_patch": "@@ -39,13 +39,29 @@ Look for:\n - Changes to command syntax, subcommands, or flags\n - New categories or groupings of commands\n \n-## Step 2 — Check for existing open PRs to avoid duplicates\n+## Step 2 — Verify commands are actually available in the CLI\n+\n+For every **new command** found in Step 1, verify it is actually available in the currently released CLI before including it in any cheatsheet update.\n+\n+Use `gh` CLI to fetch the latest release of `github/copilot-cli` and check its release notes or assets. Cross-reference the command against the official CLI help reference:\n+\n+- https://github.com/github/copilot-cli/blob/main/docs/commands.md — if it exists, use this as the authoritative list of available commands\n+- Otherwise, check the release tag for the version that introduced the command and confirm that version is published (not just mentioned in changelog)\n+\n+For each new command, classify it as one of:\n+- ✅ **Available** — confirmed present in a published release; include in cheatsheet update\n+- ⏳ **Pending** — in changelog but not yet in a published release or the release is too recent to confirm; **exclude from this PR** and note it in the PR body under a \"Pending availability\" section\n+- ❌ **Removed/Reverted** — mentioned in changelog but subsequently pulled; skip entirely\n+\n+Only proceed with commands classified as ✅ **Available**. Do not add commands to the cheatsheet that have not been confirmed in a published release.\n+\n+## Step 3 — Check for existing open PRs to avoid duplicates\n \n List all open pull requests in this repo that have the `automated-update` or `copilot-cli-updates` labels. Read their titles and descriptions to understand which commands or changes each PR already covers.\n \n Build a list of changes that are **already addressed** by open PRs and exclude them from anything you propose. If every change found in Step 1 is already covered, stop here and report that no new updates are needed.\n \n-## Step 3 — Compare against current cheatsheet content\n+## Step 4 — Compare against current cheatsheet content\n \n Read all JSON files in `src/data/categories/` — these are the source of truth for what commands are currently documented. Also read `src/types/index.ts` to understand the `Command` type shape and the `CATEGORIES` array.\n \n@@ -57,7 +73,7 @@ Identify:\n \n If nothing is new or everything is already up to date, stop here and report that no updates are needed.\n \n-## Step 4 — Update the cheatsheet data\n+## Step 5 — Update the cheatsheet data\n \n For each change needed, edit the relevant file in `src/data/categories/`.\n \n@@ -118,12 +134,13 @@ Apply the label `needs-gifs` to the PR so the maintainer knows to record demos l\n - **Example command entry** — if the `Command` TypeScript interface in `src/types/index.ts` changes, update the matching `interface Command` block in the README\n - Do not change any other sections of the README unless directly relevant to the commands changed\n \n-## Step 5 — Open a pull request\n+## Step 6 — Open a pull request\n \n Create a pull request targeting `main`. The PR title should summarize what changed (e.g., \"Add /newcommand to chat category\"). The PR body should include:\n \n 1. What new features or changes were found (with links to changelog entries)\n 2. Which JSON files were updated and what changed in each\n 3. Any commands removed and why (deprecated / renamed)\n+4. A **\"Pending availability\"** section listing any changelog commands that were excluded because they could not be confirmed in a published release\n \n Apply the labels `automated-update` and `copilot-cli-updates` to the PR.",
+          "snapshot_ref": "ddc344ed6aca8d900ff6b0ad045e95b59855ca87",
+          "snapshot_blob_sha": "db74a15cd6d218c4f96a7f8abd40b866b09b10ed",
+          "snapshot_file": "snapshots/ghcp-cli-cheatsheet__prasadhonrao__ddc344ed6aca8d900ff6b0ad045e95b59855ca87__cheatsheet-updater.md",
+          "snapshot_bytes": 7038,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"prasadhonrao/ghcp-cli-cheatsheet\",\"generated_owner\":\"prasadhonrao\",\"generated_repo\":\"ghcp-cli-cheatsheet\",\"generated_workflow_path\":\".github/workflows/cheatsheet-updater.lock.yml\",\"generated_workflow_file\":\"cheatsheet-updater.lock.yml\",\"generated_html_url\":\"https://github.com/prasadhonrao/ghcp-cli-cheatsheet/blob/3285485b524762251858f1282c6488cd096aeb0c/.github/workflows/cheatsheet-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

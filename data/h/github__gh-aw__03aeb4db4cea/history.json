@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw:.github/workflows/smoke-github-claude.md",
+    "source_full_name": "github/gh-aw",
+    "source_owner": "github",
+    "source_repo": "gh-aw",
+    "md_path": ".github/workflows/smoke-github-claude.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw/blob/HEAD/.github/workflows/smoke-github-claude.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw",
+      "generated_workflow_path": ".github/workflows/smoke-github-claude.lock.yml",
+      "generated_workflow_file": "smoke-github-claude.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-github-claude.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:46:46+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-github-claude.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-github-claude.md",
+      "commit_sha": "356d959b3578a3f237ed1bb91e33b8e75f66b0e2",
+      "authored_at": "2026-07-15T06:00:38Z",
+      "committed_at": "2026-07-15T06:00:38Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Split engine provider selection from harness execution and route Claude/Codex via reflected CAPI endpoints (#45490)\n\n* feat(workflow): split provider/harness interfaces and reflect endpoint routing\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* feat: route claude/codex provider endpoints from reflect and add engine.provider override\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* feat(workflows): add smoke-github-claude workflow and routing\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* Add changeset (#45608)\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\nCo-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>",
+      "parent_shas": [
+        "1b5e730c28cd13602d8c42bcd7429d0946daa1fd"
+      ],
+      "tree_sha": "ca91a03b2e0f04a437b1e45499887d97a3e6aa88",
+      "html_url": "https://github.com/github/gh-aw/commit/356d959b3578a3f237ed1bb91e33b8e75f66b0e2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-github-claude.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-github-claude.md",
+          "commit_sha": "356d959b3578a3f237ed1bb91e33b8e75f66b0e2",
+          "committed_at": "2026-07-15T06:00:38Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 45,
+          "file_deletions": 0,
+          "file_changes": 45,
+          "file_patch": "@@ -0,0 +1,45 @@\n+---\n+private: true\n+emoji: \"🧪\"\n+description: Smoke test for Claude engine using GitHub provider that posts a concise PR summary comment\n+on:\n+  slash_command:\n+    name: smoke-github-claude\n+    strategy: centralized\n+    events: [pull_request, pull_request_comment]\n+  status-comment: true\n+permissions:\n+  contents: read\n+  pull-requests: read\n+name: Smoke GitHub Claude\n+engine:\n+  id: claude\n+  model-provider: github\n+  model: claude-haiku-4.5\n+  bare: true\n+strict: true\n+tools:\n+  github:\n+    mode: gh-proxy\n+safe-outputs:\n+  allowed-domains: [default-safe-outputs]\n+  add-comment:\n+    max: 1\n+    hide-older-comments: true\n+timeout-minutes: 10\n+---\n+\n+# Smoke Test: Claude on GitHub Provider PR Summary\n+\n+Goal: validate that Claude with `model-provider: github` can read the current pull request and post one concise summary comment.\n+\n+1. If this run is not in PR context, call `noop` and stop.\n+2. Read the current PR details for `${{ github.event.pull_request.number }}` from `${{ github.repository }}`.\n+3. Produce a short summary with:\n+   - PR title\n+   - author\n+   - file count\n+   - a 2-3 sentence high-level summary of what changed\n+4. Post exactly one `add_comment` safe output to the current PR with this summary.\n+\n+Keep the comment compact (max 8 lines).",
+          "snapshot_ref": "356d959b3578a3f237ed1bb91e33b8e75f66b0e2",
+          "snapshot_blob_sha": "2c5fe15b44b1f7874ace7e6a50878094119be4e4",
+          "snapshot_file": "snapshots/gh-aw__github__356d959b3578a3f237ed1bb91e33b8e75f66b0e2__smoke-github-claude.md",
+          "snapshot_bytes": 1239,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-github-claude.lock.yml\",\"generated_workflow_file\":\"smoke-github-claude.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-github-claude.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw:.github/workflows/smoke-github-claude.md",
+      "source_full_name": "github/gh-aw",
+      "md_path": ".github/workflows/smoke-github-claude.md",
+      "commit_sha": "36884336ee4366866880539677bbd7864122497e",
+      "authored_at": "2026-07-19T09:39:37Z",
+      "committed_at": "2026-07-19T09:39:37Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add top-level `model` field, deprecate `engine.model` (#46570)",
+      "parent_shas": [
+        "74058183471b424ce264dcd057765ceafe8931c6"
+      ],
+      "tree_sha": "762b0c8619a348af864fefcde591badf2ac6b5ea",
+      "html_url": "https://github.com/github/gh-aw/commit/36884336ee4366866880539677bbd7864122497e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw:.github/workflows/smoke-github-claude.md",
+          "source_full_name": "github/gh-aw",
+          "md_path": ".github/workflows/smoke-github-claude.md",
+          "commit_sha": "36884336ee4366866880539677bbd7864122497e",
+          "committed_at": "2026-07-19T09:39:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -12,10 +12,10 @@ permissions:\n   contents: read\n   pull-requests: read\n name: Smoke GitHub Claude\n+model: claude-haiku-4.5\n engine:\n   id: claude\n   model-provider: github\n-  model: claude-haiku-4.5\n   bare: true\n strict: true\n tools:\n@@ -42,4 +42,4 @@ Goal: validate that Claude with `model-provider: github` can read the current pu\n    - a 2-3 sentence high-level summary of what changed\n 4. Post exactly one `add_comment` safe output to the current PR with this summary.\n \n-Keep the comment compact (max 8 lines).\n+Keep the comment compact (max 8 lines).\n\\ No newline at end of file",
+          "snapshot_ref": "36884336ee4366866880539677bbd7864122497e",
+          "snapshot_blob_sha": "975f0509635515b2977e398156aa85a4877df2cd",
+          "snapshot_file": "snapshots/gh-aw__github__36884336ee4366866880539677bbd7864122497e__smoke-github-claude.md",
+          "snapshot_bytes": 1236,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw\",\"generated_workflow_path\":\".github/workflows/smoke-github-claude.lock.yml\",\"generated_workflow_file\":\"smoke-github-claude.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw/blob/57b002417b2f0be0cd5b86325af2d6121c53d314/.github/workflows/smoke-github-claude.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

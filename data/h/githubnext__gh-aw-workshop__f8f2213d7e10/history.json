@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+    "source_full_name": "githubnext/gh-aw-workshop",
+    "source_owner": "githubnext",
+    "source_repo": "gh-aw-workshop",
+    "md_path": ".github/workflows/markdown-dedup.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/gh-aw-workshop/blob/HEAD/.github/workflows/markdown-dedup.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/gh-aw-workshop",
+      "generated_owner": "githubnext",
+      "generated_repo": "gh-aw-workshop",
+      "generated_workflow_path": ".github/workflows/markdown-dedup.lock.yml",
+      "generated_workflow_file": "markdown-dedup.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/markdown-dedup.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:49:15+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/markdown-dedup.md",
+      "commit_sha": "9fa50dc134f0c0219fc433015884ce1f008b458d",
+      "authored_at": "2026-07-11T16:18:29Z",
+      "committed_at": "2026-07-11T16:18:29Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add markdown-dedup agentic workflow: AST chunker + TF-IDF clustering + inline dedup issuer (#161)",
+      "parent_shas": [
+        "a6c3736945c42f3c3e7dfe33d5510b545039682a"
+      ],
+      "tree_sha": "ffedec7926879f79d3c7394df2bf0b176b297704",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/9fa50dc134f0c0219fc433015884ce1f008b458d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/markdown-dedup.md",
+          "commit_sha": "9fa50dc134f0c0219fc433015884ce1f008b458d",
+          "committed_at": "2026-07-11T16:18:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 462,
+          "file_deletions": 0,
+          "file_changes": 462,
+          "file_patch": "@@ -0,0 +1,462 @@\n+---\n+emoji: 🧹\n+name: Markdown Dedup\n+description: >\n+  Daily scanner that uses a Markdown AST parser (mistletoe / QMD-style) to\n+  chunk workshop and workflow markdown files into sections, computes TF-IDF\n+  cosine similarity to cluster near-duplicate segments, and opens agent-ready\n+  issues prompting automated consolidation.\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+    inputs:\n+      focus:\n+        description: \"Optional: 'workshop' to scan workshop/ only, 'workflows' to scan .github/workflows/ only\"\n+        required: false\n+        type: string\n+  skip-if-match: \"is:issue is:open label:dedup\"\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+  copilot-requests: write\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+  agentic-workflows:\n+  bash: true\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[dedup] \"\n+    labels: [documentation, dedup]\n+    deduplicate-by-title: true\n+    max: 5\n+network:\n+  allowed:\n+    - defaults\n+timeout-minutes: 20\n+steps:\n+  - name: Install Markdown AST parser\n+    run: pip install --quiet mistletoe\n+\n+  - name: Chunk markdown files using AST parser\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/data\n+\n+      python3 <<'PY'\n+      import collections\n+      import json\n+      import pathlib\n+      import re\n+      import sys\n+\n+      # -- AST parser setup --------------------------------------------------\n+      try:\n+          import mistletoe\n+          from mistletoe import Document\n+          from mistletoe.ast_renderer import AstRenderer\n+          PARSER = \"mistletoe\"\n+      except ImportError:\n+          PARSER = \"regex\"\n+\n+      # -- mistletoe-based AST chunker ---------------------------------------\n+\n+      def _text_from_node(node):\n+          \"\"\"Recursively extract plain text from a mistletoe AST node dict.\"\"\"\n+          if isinstance(node, str):\n+              return node\n+          raw = node.get(\"content\", \"\")\n+          if isinstance(raw, str) and raw:\n+              return raw\n+          parts = [_text_from_node(c) for c in node.get(\"children\", [])]\n+          return \" \".join(p for p in parts if p)\n+\n+      def chunk_with_mistletoe(text, filepath):\n+          \"\"\"Return a list of section dicts using mistletoe's full AST.\"\"\"\n+          with AstRenderer() as renderer:\n+              doc = Document(text)\n+              raw = renderer.render(doc)\n+          ast = json.loads(raw)\n+\n+          chunks = []\n+          heading_stack = []   # [{level, title}]\n+          current = None\n+\n+          for node in ast.get(\"children\", []):\n+              if node.get(\"type\") == \"Heading\":\n+                  level = node.get(\"level\", 1)\n+                  title = _text_from_node(node).strip()\n+\n+                  if current is not None:\n+                      current[\"content\"] = \"\\n\".join(current.pop(\"_lines\"))\n+                      current[\"text\"] = (current[\"title\"] + \" \" + current[\"content\"]).strip()\n+                      current[\"word_count\"] = len(re.findall(r'\\S+', current[\"text\"]))\n+                      if current[\"word_count\"] >= 20:\n+                          chunks.append(current)\n+\n+                  heading_stack = [h for h in heading_stack if h[\"level\"] < level]\n+                  heading_stack.append({\"level\": level, \"title\": title})\n+                  current = {\n+                      \"file\": str(filepath),\n+                      \"level\": level,\n+                      \"title\": title,\n+                      \"heading_path\": [h[\"title\"] for h in heading_stack],\n+                      \"_lines\": [],\n+                  }\n+              elif current is not None:\n+                  current[\"_lines\"].append(_text_from_node(node))\n+\n+          if current is not None:\n+              current[\"content\"] = \"\\n\".join(current.pop(\"_lines\"))\n+              current[\"text\"] = (current[\"title\"] + \" \" + current[\"content\"]).strip()\n+              current[\"word_count\"] = len(re.findall(r'\\S+', current[\"text\"]))\n+              if current[\"word_count\"] >= 20:\n+                  chunks.append(current)\n+\n+          return chunks\n+\n+      # -- regex-based fallback chunker -------------------------------------\n+\n+      def chunk_with_regex(text, filepath):\n+          \"\"\"Heading-level section chunker using regex (no external deps).\"\"\"\n+          heading_re = re.compile(r'^(#{1,6})\\s+(.+)$')\n+          fence_re = re.compile(r'^```')\n+\n+          lines = text.splitlines()\n+          chunks = []\n+          in_fence = False\n+          current = None\n+          heading_stack = []\n+\n+          for lineno, raw_line in enumerate(lines, start=1):\n+              line = raw_line.rstrip()\n+              if fence_re.match(line):\n+                  in_fence = not in_fence\n+              if not in_fence:\n+                  m = heading_re.match(line)\n+                  if m:\n+                      level = len(m.group(1))\n+                      title = m.group(2).strip()\n+\n+                      if current is not None:\n+                          current[\"content\"] = \"\\n\".join(current.pop(\"_lines\"))\n+                          current[\"text\"] = (current[\"title\"] + \" \" + current[\"content\"]).strip()\n+                          current[\"word_count\"] = len(re.findall(r'\\S+', current[\"text\"]))\n+                          if current[\"word_count\"] >= 20:\n+                              chunks.append(current)\n+\n+                      heading_stack = [h for h in heading_stack if h[\"level\"] < level]\n+                      heading_stack.append({\"level\": level, \"title\": title})\n+                      current = {\n+                          \"file\": str(filepath),\n+                          \"level\": level,\n+                          \"title\": title,\n+                          \"heading_path\": [h[\"title\"] for h in heading_stack],\n+                          \"_lines\": [],\n+                      }\n+                      continue\n+              if current is not None:\n+                  current[\"_lines\"].append(line)\n+\n+          if current is not None:\n+              current[\"content\"] = \"\\n\".join(current.pop(\"_lines\"))\n+              current[\"text\"] = (current[\"title\"] + \" \" + current[\"content\"]).strip()\n+              current[\"word_count\"] = len(re.findall(r'\\S+', current[\"text\"]))\n+              if current[\"word_count\"] >= 20:\n+                  chunks.append(current)\n+\n+          return chunks\n+\n+      # -- file collection ---------------------------------------------------\n+\n+      focus = \"${{ inputs.focus || '' }}\"\n+      files_to_scan = []\n+\n+      if focus != \"workflows\":\n+          workshop_dir = pathlib.Path(\"workshop\")\n+          if workshop_dir.exists():\n+              files_to_scan.extend(\n+                  sorted(p for p in workshop_dir.glob(\"*.md\") if p.name != \"README.md\")\n+              )\n+\n+      if focus != \"workshop\":\n+          wf_dir = pathlib.Path(\".github/workflows\")\n+          if wf_dir.exists():\n+              files_to_scan.extend(sorted(p for p in wf_dir.glob(\"*.md\")))\n+\n+      # -- chunk all files ---------------------------------------------------\n+\n+      all_chunks = []\n+      for fpath in files_to_scan:\n+          raw = fpath.read_text(errors=\"replace\")\n+          # Strip YAML frontmatter\n+          body = raw\n+          if raw.startswith(\"---\\n\") and \"\\n---\\n\" in raw[4:]:\n+              end = raw.find(\"\\n---\\n\", 4)\n+              body = raw[end + 5:]\n+\n+          try:\n+              if PARSER == \"mistletoe\":\n+                  file_chunks = chunk_with_mistletoe(body, fpath)\n+              else:\n+                  file_chunks = chunk_with_regex(body, fpath)\n+          except Exception:\n+              file_chunks = chunk_with_regex(body, fpath)\n+\n+          all_chunks.extend(file_chunks)\n+\n+      # -- persist -----------------------------------------------------------\n+\n+      output = {\n+          \"parser\": PARSER,\n+          \"total_files\": len(files_to_scan),\n+          \"total_chunks\": len(all_chunks),\n+          \"chunks\": all_chunks,\n+      }\n+      pathlib.Path(\"/tmp/gh-aw/data/md-chunks.json\").write_text(\n+          json.dumps(output, indent=2)\n+      )\n+      print(\n+          f\"Parser: {PARSER} | Files: {len(files_to_scan)} | \"\n+          f\"Sections: {len(all_chunks)}\"\n+      )\n+      PY\n+\n+  - name: Cluster near-duplicate sections (TF-IDF cosine)\n+    run: |\n+      set -euo pipefail\n+\n+      python3 <<'PY'\n+      import collections\n+      import json\n+      import math\n+      import pathlib\n+      import re\n+\n+      # 0.55 = lower bound of \"partial overlap\" range (see markdown-chunker SKILL.md)\n+      SIMILARITY_THRESHOLD = 0.55\n+\n+      def tokenize(text):\n+          return re.findall(r'\\b[a-z]{3,}\\b', text.lower())\n+\n+      def tfidf_vector(tokens, idf):\n+          tf = collections.Counter(tokens)\n+          total = len(tokens) or 1\n+          return {t: (count / total) * idf.get(t, 1.0) for t, count in tf.items()}\n+\n+      def cosine(v1, v2):\n+          shared = set(v1) & set(v2)\n+          if not shared:\n+              return 0.0\n+          dot = sum(v1[k] * v2[k] for k in shared)\n+          mag1 = math.sqrt(sum(x * x for x in v1.values()))\n+          mag2 = math.sqrt(sum(x * x for x in v2.values()))\n+          return dot / (mag1 * mag2) if mag1 and mag2 else 0.0\n+\n+      # -- load chunks -------------------------------------------------------\n+\n+      data = json.loads(pathlib.Path(\"/tmp/gh-aw/data/md-chunks.json\").read_text())\n+      chunks = data[\"chunks\"]\n+\n+      if not chunks:\n+          pathlib.Path(\"/tmp/gh-aw/data/md-clusters.json\").write_text(\n+              json.dumps({\"clusters\": [], \"total_pairs\": 0, \"total_clusters\": 0})\n+          )\n+          print(\"No chunks to cluster\")\n+          sys.exit(0)\n+\n+      # -- TF-IDF ------------------------------------------------------------\n+\n+      tokenized = [tokenize(c[\"text\"]) for c in chunks]\n+\n+      df = collections.Counter()\n+      for tok_set in tokenized:\n+          for t in set(tok_set):\n+              df[t] += 1\n+      N = len(chunks)\n+      idf = {t: math.log(N / (1 + cnt)) for t, cnt in df.items()}\n+\n+      vectors = [tfidf_vector(tok, idf) for tok in tokenized]\n+\n+      # -- pairwise similarity (cross-file only) -----------------------------\n+\n+      similar_pairs = []\n+      for i in range(len(chunks)):\n+          for j in range(i + 1, len(chunks)):\n+              if chunks[i][\"file\"] == chunks[j][\"file\"]:\n+                  continue\n+              sim = cosine(vectors[i], vectors[j])\n+              if sim >= SIMILARITY_THRESHOLD:\n+                  similar_pairs.append((i, j, round(sim, 3)))\n+\n+      # -- union-find clustering ---------------------------------------------\n+\n+      parent = list(range(len(chunks)))\n+\n+      def find(x):\n+          while parent[x] != x:\n+              parent[x] = parent[parent[x]]\n+              x = parent[x]\n+          return x\n+\n+      def union(a, b):\n+          parent[find(a)] = find(b)\n+\n+      for i, j, _ in similar_pairs:\n+          union(i, j)\n+\n+      group_map = collections.defaultdict(list)\n+      for idx in range(len(chunks)):\n+          group_map[find(idx)].append(idx)\n+\n+      # -- build cluster objects ---------------------------------------------\n+\n+      pair_lookup = {(min(i, j), max(i, j)): sim for i, j, sim in similar_pairs}\n+\n+      clusters = []\n+      for root, members in group_map.items():\n+          if len(members) < 2:\n+              continue\n+          files = {chunks[m][\"file\"] for m in members}\n+          if len(files) < 2:\n+              continue\n+\n+          member_set = set(members)\n+          max_sim = max(\n+              (pair_lookup.get((min(i, j), max(i, j)), 0.0)\n+               for i in members for j in members if i != j),\n+              default=0.0,\n+          )\n+\n+          clusters.append({\n+              \"id\": f\"cluster-{root}\",\n+              \"size\": len(members),\n+              \"files\": sorted(files),\n+              \"max_similarity\": max_sim,\n+              \"chunks\": [chunks[m] for m in members],\n+          })\n+\n+      clusters.sort(key=lambda c: -c[\"max_similarity\"])\n+\n+      # Keep top 10 clusters by similarity to bound issue creation volume\n+      result = {\n+          \"clusters\": clusters[:10],\n+          \"total_pairs\": len(similar_pairs),\n+          \"total_clusters\": len(clusters),\n+      }\n+      pathlib.Path(\"/tmp/gh-aw/data/md-clusters.json\").write_text(\n+          json.dumps(result, indent=2)\n+      )\n+      print(\n+          f\"Similar pairs: {len(similar_pairs)} | \"\n+          f\"Cross-file clusters: {len(clusters)}\"\n+      )\n+      PY\n+---\n+\n+# Markdown Dedup Reviewer\n+\n+You are a technical content editor for the **gh-aw-workshop** repository.\n+\n+Your job is to detect duplicate and near-duplicate content across markdown files,\n+triage each cluster using an inline analyst agent, and open focused issues that\n+prompt an automated agent to consolidate the redundant sections.\n+\n+---\n+\n+## Phase 1 — Load Results\n+\n+Read:\n+\n+- `/tmp/gh-aw/data/md-chunks.json` — all significant sections parsed from markdown files\n+- `/tmp/gh-aw/data/md-clusters.json` — top clusters of near-duplicate sections\n+\n+Key fields in `md-clusters.json`:\n+\n+| Field | Meaning |\n+|---|---|\n+| `clusters` | Top ≤ 10 clusters sorted by `max_similarity` descending |\n+| `total_pairs` | Cross-file similar pairs detected |\n+| `total_clusters` | Total cross-file clusters found |\n+\n+For chunking details, consult the `markdown-chunker` inline skill:\n+`.github/skills/markdown-chunker/SKILL.md`\n+\n+If `total_clusters == 0` or `clusters` is empty, call `noop` with:\n+\n+```\n+No duplicate clusters found. Scanned {total_files} files → {total_chunks} sections.\n+```\n+\n+---\n+\n+## Phase 2 — Triage Each Cluster\n+\n+For each cluster in `clusters`, invoke the `markdown-dedup-analyst` inline agent\n+(`.github/agents/markdown-dedup-analyst.agent.md`) and pass the full cluster object.\n+\n+Ask the analyst:\n+\n+1. Are these sections genuinely redundant (same concept, similar wording)?\n+2. Which file/section should be the canonical home for the content?\n+3. What exact change should the collapsing agent make?\n+4. Is there value lost by merging (unique details in only one copy)?\n+\n+Collect the structured JSON verdict for each cluster before moving to Phase 3.\n+\n+---\n+\n+## Phase 3 — Verify Findings\n+\n+For each cluster where the analyst returned `\"verdict\": \"genuine\"`, read the\n+actual file sections to confirm:\n+\n+- Both sections exist and match the cluster data.\n+- The similarity is real (not an artefact of very short repeated boilerplate).\n+- The canonical file and proposed action are sensible.\n+\n+Discard any cluster where verification fails.\n+\n+---\n+\n+## Phase 4 — Create Issues\n+\n+For each verified genuine duplicate cluster, create one issue.\n+\n+**Title** format (the `[dedup]` prefix is added automatically):\n+\n+```\n+<basename(file1)> + <basename(file2)>: duplicate \"<section title>\" (sim={similarity})\n+```\n+\n+**Body** must include:\n+\n+- Which sections are duplicated — file path + heading breadcrumb for each\n+- A short excerpt (≤ 5 lines) showing the overlap\n+- The analyst's recommended consolidation action (canonical file, what to keep,\n+  how to cross-reference)\n+- A closing line: `This issue is ready for an automated agent to resolve.`\n+\n+Limit to 5 issues maximum.\n+\n+---\n+\n+## No-op Rule\n+\n+Call `noop` (with a concise reason) when:\n+\n+- No clusters were detected.\n+- All clusters are `parallel` or `false-positive` after triage.\n+- Fewer than 2 clusters pass verification.\n+\n+---\n+\n+## Safe Outputs\n+\n+| Situation | Output |\n+|---|---|\n+| Confirmed duplicate clusters exist | `create-issue` (one per cluster) |\n+| Nothing actionable | `noop` with reason |",
+          "snapshot_ref": "9fa50dc134f0c0219fc433015884ce1f008b458d",
+          "snapshot_blob_sha": "f23495b847332a09e8612a85fbf3afafa6e9a2cb",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__9fa50dc134f0c0219fc433015884ce1f008b458d__markdown-dedup.md",
+          "snapshot_bytes": 15199,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/markdown-dedup.lock.yml\",\"generated_workflow_file\":\"markdown-dedup.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/markdown-dedup.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/markdown-dedup.md",
+      "commit_sha": "a3570d3a9dd48d5a5083fb59726685b700a5f89c",
+      "authored_at": "2026-07-12T08:09:32Z",
+      "committed_at": "2026-07-12T08:09:32Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Refine markdown dedup to include same-file clusters (#299)",
+      "parent_shas": [
+        "82c8e470c05905ec416093567798028347156306"
+      ],
+      "tree_sha": "74716fee2e3e5f2e4b9b3e1aa999949500a74a56",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/a3570d3a9dd48d5a5083fb59726685b700a5f89c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/markdown-dedup.md",
+          "commit_sha": "a3570d3a9dd48d5a5083fb59726685b700a5f89c",
+          "committed_at": "2026-07-12T08:09:32Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 10,
+          "file_changes": 18,
+          "file_patch": "@@ -4,8 +4,9 @@ name: Markdown Dedup\n description: >\n   Daily scanner that uses a Markdown AST parser (mistletoe / QMD-style) to\n   chunk workshop and workflow markdown files into sections, computes TF-IDF\n-  cosine similarity to cluster near-duplicate segments, and opens agent-ready\n-  issues prompting automated consolidation.\n+  cosine similarity to cluster near-duplicate segments (across files and\n+  within the same file), and opens agent-ready issues prompting automated\n+  consolidation.\n on:\n   schedule: daily\n   workflow_dispatch:\n@@ -235,6 +236,7 @@ steps:\n       import math\n       import pathlib\n       import re\n+      import sys\n \n       # 0.55 = lower bound of \"partial overlap\" range (see markdown-chunker SKILL.md)\n       SIMILARITY_THRESHOLD = 0.55\n@@ -281,13 +283,11 @@ steps:\n \n       vectors = [tfidf_vector(tok, idf) for tok in tokenized]\n \n-      # -- pairwise similarity (cross-file only) -----------------------------\n+      # -- pairwise similarity ------------------------------------------------\n \n       similar_pairs = []\n       for i in range(len(chunks)):\n           for j in range(i + 1, len(chunks)):\n-              if chunks[i][\"file\"] == chunks[j][\"file\"]:\n-                  continue\n               sim = cosine(vectors[i], vectors[j])\n               if sim >= SIMILARITY_THRESHOLD:\n                   similar_pairs.append((i, j, round(sim, 3)))\n@@ -321,8 +321,6 @@ steps:\n           if len(members) < 2:\n               continue\n           files = {chunks[m][\"file\"] for m in members}\n-          if len(files) < 2:\n-              continue\n \n           member_set = set(members)\n           max_sim = max(\n@@ -352,7 +350,7 @@ steps:\n       )\n       print(\n           f\"Similar pairs: {len(similar_pairs)} | \"\n-          f\"Cross-file clusters: {len(clusters)}\"\n+          f\"Clusters: {len(clusters)}\"\n       )\n       PY\n ---\n@@ -379,8 +377,8 @@ Key fields in `md-clusters.json`:\n | Field | Meaning |\n |---|---|\n | `clusters` | Top ≤ 10 clusters sorted by `max_similarity` descending |\n-| `total_pairs` | Cross-file similar pairs detected |\n-| `total_clusters` | Total cross-file clusters found |\n+| `total_pairs` | Similar pairs detected |\n+| `total_clusters` | Total clusters found |\n \n For chunking details, consult the `markdown-chunker` inline skill:\n `.github/skills/markdown-chunker/SKILL.md`",
+          "snapshot_ref": "a3570d3a9dd48d5a5083fb59726685b700a5f89c",
+          "snapshot_blob_sha": "7d20330a599751c3456a228b29310aa344f50def",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__a3570d3a9dd48d5a5083fb59726685b700a5f89c__markdown-dedup.md",
+          "snapshot_bytes": 15090,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/markdown-dedup.lock.yml\",\"generated_workflow_file\":\"markdown-dedup.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/markdown-dedup.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/markdown-dedup.md",
+      "commit_sha": "b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+      "authored_at": "2026-07-12T10:07:36Z",
+      "committed_at": "2026-07-12T10:07:36Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add non-numbered header guidance and normalize existing docs (#338)",
+      "parent_shas": [
+        "a3da970e22d283127a97f7074a34c21b47f9c187"
+      ],
+      "tree_sha": "a49443f217004e084d006f10ae18289d001ac84f",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/markdown-dedup.md",
+          "commit_sha": "b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+          "committed_at": "2026-07-12T10:07:36Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "@@ -365,7 +365,7 @@ prompt an automated agent to consolidate the redundant sections.\n \n ---\n \n-## Phase 1 — Load Results\n+## Load Results\n \n Read:\n \n@@ -391,7 +391,7 @@ No duplicate clusters found. Scanned {total_files} files → {total_chunks} sect\n \n ---\n \n-## Phase 2 — Triage Each Cluster\n+## Triage Each Cluster\n \n For each cluster in `clusters`, invoke the `markdown-dedup-analyst` inline agent\n (`.github/agents/markdown-dedup-analyst.agent.md`) and pass the full cluster object.\n@@ -407,7 +407,7 @@ Collect the structured JSON verdict for each cluster before moving to Phase 3.\n \n ---\n \n-## Phase 3 — Verify Findings\n+## Verify Findings\n \n For each cluster where the analyst returned `\"verdict\": \"genuine\"`, read the\n actual file sections to confirm:\n@@ -420,7 +420,7 @@ Discard any cluster where verification fails.\n \n ---\n \n-## Phase 4 — Create Issues\n+## Create Issues\n \n For each verified genuine duplicate cluster, create one issue.\n ",
+          "snapshot_ref": "b898e85c5ae64f7bebccc130d1396b9a5c2646ea",
+          "snapshot_blob_sha": "4c34339d78d6f586aa53e3597ca8d487e42f1caf",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__b898e85c5ae64f7bebccc130d1396b9a5c2646ea__markdown-dedup.md",
+          "snapshot_bytes": 15042,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/markdown-dedup.lock.yml\",\"generated_workflow_file\":\"markdown-dedup.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/markdown-dedup.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/markdown-dedup.md",
+      "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+      "authored_at": "2026-07-14T22:45:21Z",
+      "committed_at": "2026-07-14T22:45:21Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `expires: 1d` to all agentic workflow safe-outputs (#1125)",
+      "parent_shas": [
+        "b4fd7e2d2ad27cd43d5764482c3fe5e06dd8112d"
+      ],
+      "tree_sha": "a141fde523b6534bacfbf9f0f444b5474b1ad009",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/964af15393f94c1cd7239080ac7e2207139848fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/markdown-dedup.md",
+          "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "committed_at": "2026-07-14T22:45:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -34,6 +34,7 @@ safe-outputs:\n     labels: [documentation, dedup]\n     deduplicate-by-title: true\n     max: 5\n+    expires: 1d\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "snapshot_blob_sha": "8f8dd058050dce2565081941163e1924b9136179",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__964af15393f94c1cd7239080ac7e2207139848fb__markdown-dedup.md",
+          "snapshot_bytes": 15058,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/markdown-dedup.lock.yml\",\"generated_workflow_file\":\"markdown-dedup.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/markdown-dedup.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/markdown-dedup.md",
+      "commit_sha": "2ada3468471dba6ed7ff88bfd40b52212c9b276d",
+      "authored_at": "2026-07-20T12:07:52Z",
+      "committed_at": "2026-07-20T12:07:52Z",
+      "author_name": "Mara Nikola Kiefer",
+      "author_email": "8320933+mnkiefer@users.noreply.github.com",
+      "author_login": "mnkiefer",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Adding diagnostic checks in codespace and local terminal setups (#1389)",
+      "parent_shas": [
+        "b8d789c461cdc7c6d0bb84b56513b6b422cef28f"
+      ],
+      "tree_sha": "07d4c39799bb6aaef5412688b3e87e811355d8f3",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/2ada3468471dba6ed7ff88bfd40b52212c9b276d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/markdown-dedup.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/markdown-dedup.md",
+          "commit_sha": "2ada3468471dba6ed7ff88bfd40b52212c9b276d",
+          "committed_at": "2026-07-20T12:07:52Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 1,
+          "file_changes": 4,
+          "file_patch": "@@ -44,6 +44,8 @@ steps:\n     run: pip install --quiet mistletoe\n \n   - name: Chunk markdown files using AST parser\n+    env:\n+      EXPR_6e274c4c: ${{ inputs.focus || '' }}\n     run: |\n       set -euo pipefail\n       mkdir -p /tmp/gh-aw/data\n@@ -174,7 +176,7 @@ steps:\n \n       # -- file collection ---------------------------------------------------\n \n-      focus = \"${{ inputs.focus || '' }}\"\n+      focus = \"$EXPR_6e274c4c\"\n       files_to_scan = []\n \n       if focus != \"workflows\":",
+          "snapshot_ref": "2ada3468471dba6ed7ff88bfd40b52212c9b276d",
+          "snapshot_blob_sha": "b36beccbe1affbd52f3f71b3cd03168128da7014",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__2ada3468471dba6ed7ff88bfd40b52212c9b276d__markdown-dedup.md",
+          "snapshot_bytes": 15103,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/markdown-dedup.lock.yml\",\"generated_workflow_file\":\"markdown-dedup.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/markdown-dedup.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

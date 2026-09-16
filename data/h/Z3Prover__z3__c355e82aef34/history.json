@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/tactic-to-simplifier.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/tactic-to-simplifier.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/tactic-to-simplifier.lock.yml",
+      "generated_workflow_file": "tactic-to-simplifier.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tactic-to-simplifier.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 4,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:47+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tactic-to-simplifier.md",
+      "commit_sha": "610a3d3c5a7127e5b87018e01a0458f73f438cfe",
+      "authored_at": "2026-02-21T03:22:56Z",
+      "committed_at": "2026-02-21T03:22:56Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add tactic-to-simplifier comparison agentic workflow\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "ac174ab3084e5aa90784e61b404988b3a66447aa"
+      ],
+      "tree_sha": "b6e4e5458b257be784bc079af7b8a466990a59f6",
+      "html_url": "https://github.com/Z3Prover/z3/commit/610a3d3c5a7127e5b87018e01a0458f73f438cfe",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tactic-to-simplifier.md",
+          "commit_sha": "610a3d3c5a7127e5b87018e01a0458f73f438cfe",
+          "committed_at": "2026-02-21T03:22:56Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 278,
+          "file_deletions": 0,
+          "file_changes": 278,
+          "file_patch": "@@ -0,0 +1,278 @@\n+---\n+description: Compares exposed tactics and simplifiers in Z3, and creates issues for tactics that can be converted to simplifiers\n+\n+on:\n+  schedule: weekly\n+  workflow_dispatch:\n+\n+timeout-minutes: 30\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+network: defaults\n+\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [default]\n+  bash: [\":*\"]\n+  glob: {}\n+  view: {}\n+\n+safe-outputs:\n+  create-issue:\n+    labels:\n+      - enhancement\n+      - refactoring\n+      - tactic-to-simplifier\n+    title-prefix: \"[tactic-to-simplifier] \"\n+    max: 3\n+  github-token: ${{ secrets.GITHUB_TOKEN }}\n+\n+steps:\n+  - name: Checkout repository\n+    uses: actions/checkout@v5\n+    with:\n+      persist-credentials: false\n+\n+---\n+\n+# Tactic-to-Simplifier Comparison Agent\n+\n+You are an expert Z3 theorem prover developer. Your task is to compare the tactics and simplifiers exposed in the Z3 codebase, identify tactics that could be converted into simplifiers, and create GitHub issues with the proposed code changes.\n+\n+## Background\n+\n+Z3 has two related but distinct abstraction layers:\n+\n+- **Tactics** (`tactic` base class in `src/tactic/tactic.h`): Operate on *goals* (sets of formulas). Registered with `ADD_TACTIC` macros.\n+- **Simplifiers** (`dependent_expr_simplifier` base class in `src/ast/simplifiers/dependent_expr_state.h`): Operate on individual `dependent_expr` objects in a `dependent_expr_state`. Registered with `ADD_SIMPLIFIER` macros.\n+\n+The preferred modern pattern wraps a simplifier as a tactic using `dependent_expr_state_tactic` (see `src/tactic/dependent_expr_state_tactic.h`). Example from `src/tactic/core/propagate_values2_tactic.h`:\n+\n+```cpp\n+inline tactic * mk_propagate_values2_tactic(ast_manager & m, params_ref const & p = params_ref()) {\n+    return alloc(dependent_expr_state_tactic, m, p,\n+                 [](auto& m, auto& p, auto &s) -> dependent_expr_simplifier* { return alloc(propagate_values, m, p, s); });\n+}\n+\n+/*\n+  ADD_TACTIC(\"propagate-values2\", \"propagate constants.\", \"mk_propagate_values2_tactic(m, p)\")\n+  ADD_SIMPLIFIER(\"propagate-values\", \"propagate constants.\", \"alloc(propagate_values, m, p, s)\")\n+*/\n+```\n+\n+## Your Task\n+\n+### Step 1: Collect All Tactics\n+\n+Scan all header files in `src/` to extract every `ADD_TACTIC` registration:\n+\n+```bash\n+grep -rn \"ADD_TACTIC(\" src/ --include=\"*.h\" | grep -v \"^Binary\"\n+```\n+\n+Parse each line to extract:\n+- Tactic name (first quoted string)\n+- Description (second quoted string)\n+- Factory expression (third quoted string)\n+- File path\n+\n+### Step 2: Collect All Simplifiers\n+\n+Scan all header files to extract every `ADD_SIMPLIFIER` registration:\n+\n+```bash\n+grep -rn \"ADD_SIMPLIFIER(\" src/ --include=\"*.h\" | grep -v \"^Binary\"\n+```\n+\n+Parse each line to extract:\n+- Simplifier name\n+- Description\n+- Factory expression\n+- File path\n+\n+### Step 3: Compare and Find Gaps\n+\n+Build a comparison table. For each tactic, check if there is a corresponding simplifier with the same or a closely related name.\n+\n+Key rules for matching:\n+- Exact name match: tactic `simplify` ↔ simplifier `simplify`\n+- Version suffix: tactic `propagate-values2` corresponds to simplifier `propagate-values` (the \"2\" suffix indicates the tactic wraps the simplifier)\n+- Suffix `2`: tactics with `2` suffix (e.g., `elim-uncnstr2`, `propagate-bv-bounds2`) typically already have a simplifier counterpart\n+\n+Identify tactics that have **no corresponding simplifier**.\n+\n+### Step 4: Evaluate Convertibility\n+\n+For each tactic without a corresponding simplifier, assess whether it is a good candidate for conversion by examining its implementation:\n+\n+```bash\n+# Read the tactic's header file to understand its implementation\n+grep -rn \"mk_<tactic_name>_tactic\\|class <tactic_name>\" src/ --include=\"*.h\" --include=\"*.cpp\"\n+```\n+\n+A tactic is a **good conversion candidate** if:\n+1. It transforms formulas in a formula-by-formula way (no goal splitting/branching)\n+2. It does not produce multiple goals from one\n+3. It is a pure simplification (rewrites terms without adding new conjuncts that split the goal)\n+4. It doesn't require global goal analysis beyond what `dependent_expr_state` provides\n+\n+A tactic is **not suitable** for conversion if:\n+- It splits goals into multiple subgoals\n+- It requires tight coupling to the goal infrastructure\n+- It depends on features unavailable in `dependent_expr_simplifier` (e.g., `goal_num_occurs`)\n+- It only makes sense in a tactic pipeline (e.g., `fail`, `skip`, `sat`, `smt`, solver tactics)\n+- It is a portfolio tactic (combines multiple tactics)\n+\n+### Step 5: Check for Existing Issues\n+\n+Before creating any issue, search for existing open issues to avoid duplicates:\n+\n+Use GitHub tools to search: `repo:${{ github.repository }} is:issue is:open label:tactic-to-simplifier \"<tactic-name>\"`\n+\n+Also check cache memory for previously created issues.\n+\n+### Step 6: Create Issues for Convertible Tactics\n+\n+For each convertible tactic that does not already have an open issue:\n+\n+1. Read the tactic's existing implementation carefully (header + cpp files)\n+2. Design the corresponding `dependent_expr_simplifier` subclass\n+3. Draft the code for the new simplifier\n+\n+Use `create-issue` to create a GitHub issue with:\n+\n+**Title**: `Convert tactic '<tactic-name>' to a simplifier`\n+\n+**Body**:\n+\n+```markdown\n+## Summary\n+\n+The `<tactic-name>` tactic (described as: \"<description>\") currently only exists as a `tactic`\n+and has no corresponding `dependent_expr_simplifier`. This issue proposes converting it to\n+expose it as both a tactic (via the `dependent_expr_state_tactic` wrapper) and a simplifier.\n+\n+## Background\n+\n+Z3 provides two abstraction layers for formula transformation:\n+- **Tactics** (`tactic` base class): Operate on goals\n+- **Simplifiers** (`dependent_expr_simplifier` base class): Operate on individual formulas in a `dependent_expr_state`\n+\n+The modern pattern wraps a simplifier inside a tactic using `dependent_expr_state_tactic`.\n+\n+## Current Implementation\n+\n+File: `<path/to/tactic/header.h>`\n+\n+```cpp\n+// Existing tactic registration\n+ADD_TACTIC(\"<tactic-name>\", \"<description>\", \"mk_<tactic_name>_tactic(m, p)\")\n+```\n+\n+## Proposed Change\n+\n+### 1. Create a new simplifier class in `src/ast/simplifiers/<name>_simplifier.h`:\n+\n+```cpp\n+#pragma once\n+#include \"ast/simplifiers/dependent_expr_state.h\"\n+// ... other includes\n+\n+class <name>_simplifier : public dependent_expr_simplifier {\n+    // ... internal state\n+public:\n+    <name>_simplifier(ast_manager& m, params_ref const& p, dependent_expr_state& s)\n+        : dependent_expr_simplifier(m, s) { }\n+\n+    char const* name() const override { return \"<simplifier-name>\"; }\n+\n+    void reduce() override {\n+        for (unsigned idx : indices()) {\n+            auto& d = m_fmls[idx];\n+            // ... transform d.fml() ...\n+            expr_ref new_fml(m);\n+            // apply simplification\n+            m_fmls.update(idx, dependent_expr(m, new_fml, nullptr, d.dep()));\n+        }\n+    }\n+};\n+```\n+\n+### 2. Update `<path/to/existing/tactic_header.h>` to add the simplifier registration and new tactic factory:\n+\n+```cpp\n+#include \"tactic/dependent_expr_state_tactic.h\"\n+#include \"ast/simplifiers/<name>_simplifier.h\"\n+\n+inline tactic* mk_<name>2_tactic(ast_manager& m, params_ref const& p = params_ref()) {\n+    return alloc(dependent_expr_state_tactic, m, p,\n+        [](auto& m, auto& p, auto& s) -> dependent_expr_simplifier* {\n+            return alloc(<name>_simplifier, m, p, s);\n+        });\n+}\n+\n+/*\n+  ADD_TACTIC(\"<tactic-name>2\", \"<description>\", \"mk_<name>2_tactic(m, p)\")\n+  ADD_SIMPLIFIER(\"<tactic-name>\", \"<description>\", \"alloc(<name>_simplifier, m, p, s)\")\n+*/\n+```\n+\n+## Benefits\n+\n+- Enables use of `<tactic-name>` in Z3's simplifier pipeline (used by the new solver engine)\n+- Follows the established modern pattern for formula simplification in Z3\n+- No behavioral change for existing tactic users\n+\n+## Notes\n+\n+- The original `mk_<tactic_name>_tactic` should remain for backward compatibility\n+- The simplifier should implement `supports_proofs()` if proof generation is relevant\n+```\n+\n+**Important instructions for issue body**:\n+- Replace all placeholders (`<tactic-name>`, `<name>`, `<description>`, `<path>`, etc.) with **real, specific values** from the actual source code\n+- Provide **actual code** based on reading the tactic's implementation, not generic templates\n+- Include the real factory expression, include paths, and class names from the existing implementation\n+- If the tactic has parameters, include them in the simplifier\n+- If the tactic wraps another component (rewriter, solver, etc.), include that in the simplifier too\n+\n+### Step 7: Update Cache Memory\n+\n+Store in cache memory:\n+- The list of all tactics analyzed in this run\n+- The list of issues created (tactic name → issue number)\n+- Tactics determined to be non-convertible and why\n+- Tactics with existing issues (to skip in future runs)\n+\n+## Conversion Criteria Reference\n+\n+### Likely Convertible (if no simplifier exists)\n+- Pure term rewriting tactics (apply rewriting rules)\n+- Bound propagation tactics\n+- Variable elimination tactics that work formula-by-formula\n+- Normalization tactics (NNF, SNF) that apply local transformations\n+- Tactics that simplify based on syntactic structure\n+\n+### Not Convertible (skip these)\n+- Solver-based tactics (`ctx-solver-simplify`, `sat`, `smt`, etc.) — require a solver\n+- Portfolio/combinator tactics (`then`, `or-else`, `repeat`, etc.)\n+- Decision procedure tactics (`qfbv`, `qflra`, etc.)\n+- Tactics that split goals (`split-clause`, `tseitin-cnf`, `occf`)\n+- Tactics that only make sense in goal context (`fail`, `skip`)\n+- Tactics using `goal_num_occurs` for occurrence counting (the simplifier doesn't have this)\n+- Tactics that produce multiple result goals\n+\n+## Guidelines\n+\n+- **Be specific**: Provide actual file paths, class names, and factory expressions — no generic placeholders\n+- **Be careful**: Only create issues for tactics that are genuinely good candidates\n+- **Avoid duplicates**: Always check existing issues before creating new ones\n+- **One issue per tactic**: Create separate issues for each convertible tactic\n+- **Read the code**: Examine the actual tactic implementation before proposing code for the simplifier\n+- **Be incremental**: If there are many candidates, focus on the most impactful ones first\n+- **Limit per run**: Create at most 3 new issues per run to avoid flooding the issue tracker",
+          "snapshot_ref": "610a3d3c5a7127e5b87018e01a0458f73f438cfe",
+          "snapshot_blob_sha": "994b76dacf5b7752778af534cc22b84158d3e82a",
+          "snapshot_file": "snapshots/z3__Z3Prover__610a3d3c5a7127e5b87018e01a0458f73f438cfe__tactic-to-simplifier.md",
+          "snapshot_bytes": 10251,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tactic-to-simplifier.lock.yml\",\"generated_workflow_file\":\"tactic-to-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tactic-to-simplifier.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tactic-to-simplifier.md",
+      "commit_sha": "3bc7623f030eecd64ecd709a0e26050c1322336d",
+      "authored_at": "2026-03-12T20:01:30Z",
+      "committed_at": "2026-03-12T20:01:30Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add noop report-as-issue: false to all agentic workflow frontmatter\n\nPrevents no-op workflow runs from posting comments to the [aw] No-Op\nRuns tracking issue by setting safe-outputs.noop.report-as-issue: false\nin all 13 agentic workflow .md files.\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "30afc4ab5aeac6ea5d8c465c97af91e8f6d7297d"
+      ],
+      "tree_sha": "d50d89daf10d9c5aaf207f18b72b4502ba86450d",
+      "html_url": "https://github.com/Z3Prover/z3/commit/3bc7623f030eecd64ecd709a0e26050c1322336d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tactic-to-simplifier.md",
+          "commit_sha": "3bc7623f030eecd64ecd709a0e26050c1322336d",
+          "committed_at": "2026-03-12T20:01:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -30,6 +30,8 @@ safe-outputs:\n       - tactic-to-simplifier\n     title-prefix: \"[tactic-to-simplifier] \"\n     max: 3\n+  noop:\n+    report-as-issue: false\n   github-token: ${{ secrets.GITHUB_TOKEN }}\n \n steps:",
+          "snapshot_ref": "3bc7623f030eecd64ecd709a0e26050c1322336d",
+          "snapshot_blob_sha": "95d796baf04c830f9402d105071d056e2d6eb980",
+          "snapshot_file": "snapshots/z3__Z3Prover__3bc7623f030eecd64ecd709a0e26050c1322336d__tactic-to-simplifier.md",
+          "snapshot_bytes": 10286,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tactic-to-simplifier.lock.yml\",\"generated_workflow_file\":\"tactic-to-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tactic-to-simplifier.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tactic-to-simplifier.md",
+      "commit_sha": "a00ac9be84dd91d7d32cb267415a2469f65b2b95",
+      "authored_at": "2026-03-24T16:15:08Z",
+      "committed_at": "2026-03-24T16:15:08Z",
+      "author_name": "Nikolaj Bjorner",
+      "author_email": "nbjorner@microsoft.com",
+      "author_login": "NikolajBjorner",
+      "author_account_type": "User",
+      "committer_name": "Nikolaj Bjorner",
+      "committer_email": "nbjorner@microsoft.com",
+      "committer_login": "NikolajBjorner",
+      "committer_account_type": "User",
+      "message": "udpated wf\n\nSigned-off-by: Nikolaj Bjorner <nbjorner@microsoft.com>",
+      "parent_shas": [
+        "81a86c21021f3a04cdba9a8c426a44e8ed1ca7b5"
+      ],
+      "tree_sha": "0e1d553d3545adb28d0a8503f5ff4caecf6dda28",
+      "html_url": "https://github.com/Z3Prover/z3/commit/a00ac9be84dd91d7d32cb267415a2469f65b2b95",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tactic-to-simplifier.md",
+          "commit_sha": "a00ac9be84dd91d7d32cb267415a2469f65b2b95",
+          "committed_at": "2026-03-24T16:15:08Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -36,7 +36,7 @@ safe-outputs:\n \n steps:\n   - name: Checkout repository\n-    uses: actions/checkout@v5\n+    uses: actions/checkout@v6.0.2\n     with:\n       persist-credentials: false\n ",
+          "snapshot_ref": "a00ac9be84dd91d7d32cb267415a2469f65b2b95",
+          "snapshot_blob_sha": "56f698a0b7a79c9b5ba66f65ab748116b2aad093",
+          "snapshot_file": "snapshots/z3__Z3Prover__a00ac9be84dd91d7d32cb267415a2469f65b2b95__tactic-to-simplifier.md",
+          "snapshot_bytes": 10290,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tactic-to-simplifier.lock.yml\",\"generated_workflow_file\":\"tactic-to-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tactic-to-simplifier.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tactic-to-simplifier.md",
+      "commit_sha": "4a1f448a06119befd416413fc5493e00b9611b6d",
+      "authored_at": "2026-04-11T17:19:45Z",
+      "committed_at": "2026-04-11T17:19:45Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow compilation errors (gh-aw v0.68 compat) (#9275)\n\n* Start: recompile agentic workflows, fix errors and security issues\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/88b80d94-e7d6-4e8f-a106-baa2e7e212d6\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n* Fix agentic workflow compilation errors: remove glob/view tools, resolve merge conflict, fix serena tool and missing imports\n\nAgent-Logs-Url: https://github.com/Z3Prover/z3/sessions/88b80d94-e7d6-4e8f-a106-baa2e7e212d6\n\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "3c7e5c8197d6ca62bf8ebae1fd31599c83f161b1"
+      ],
+      "tree_sha": "e135a08ad18a1800325a1c6b26193231afce3cb9",
+      "html_url": "https://github.com/Z3Prover/z3/commit/4a1f448a06119befd416413fc5493e00b9611b6d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tactic-to-simplifier.md",
+          "commit_sha": "4a1f448a06119befd416413fc5493e00b9611b6d",
+          "committed_at": "2026-04-11T17:19:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 2,
+          "file_changes": 2,
+          "file_patch": "@@ -19,8 +19,6 @@ tools:\n   github:\n     toolsets: [default]\n   bash: [\":*\"]\n-  glob: {}\n-  view: {}\n \n safe-outputs:\n   create-issue:",
+          "snapshot_ref": "4a1f448a06119befd416413fc5493e00b9611b6d",
+          "snapshot_blob_sha": "9c6faf8aa74f5c60bea00fee8aeaa016a54a441c",
+          "snapshot_file": "snapshots/z3__Z3Prover__4a1f448a06119befd416413fc5493e00b9611b6d__tactic-to-simplifier.md",
+          "snapshot_bytes": 10268,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tactic-to-simplifier.lock.yml\",\"generated_workflow_file\":\"tactic-to-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tactic-to-simplifier.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tactic-to-simplifier.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tactic-to-simplifier.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tactic-to-simplifier.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -21,6 +21,7 @@ tools:\n   bash: [\":*\"]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-issue:\n     labels:\n       - enhancement",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "48d24ae9bd6942b192606baf658e21e17517a713",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__tactic-to-simplifier.md",
+          "snapshot_bytes": 10301,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tactic-to-simplifier.lock.yml\",\"generated_workflow_file\":\"tactic-to-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tactic-to-simplifier.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

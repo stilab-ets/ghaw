@@ -1,0 +1,248 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+    "source_full_name": "githubnext/agentics",
+    "source_owner": "githubnext",
+    "source_repo": "agentics",
+    "md_path": "workflows/grumpy-reviewer.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/githubnext/agentics/blob/HEAD/workflows/grumpy-reviewer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "ptarmiganlabs/butler",
+      "generated_owner": "ptarmiganlabs",
+      "generated_repo": "butler",
+      "generated_workflow_path": ".github/workflows/grumpy-reviewer.lock.yml",
+      "generated_workflow_file": "grumpy-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/ptarmiganlabs/butler/blob/ad511645ab51ab9532022756ec7cc8c1ae7b24e5/.github/workflows/grumpy-reviewer.lock.yml"
+    },
+    {
+      "generated_full_name": "ptarmiganlabs/butler-sos",
+      "generated_owner": "ptarmiganlabs",
+      "generated_repo": "butler-sos",
+      "generated_workflow_path": ".github/workflows/grumpy-reviewer.lock.yml",
+      "generated_workflow_file": "grumpy-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/grumpy-reviewer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "excluded_bot": 1,
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:49:04+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/grumpy-reviewer.md",
+      "commit_sha": "708d7fec2aaa340dee91826f8357063bf4d14969",
+      "authored_at": "2026-02-22T06:49:21Z",
+      "committed_at": "2026-02-22T06:49:21Z",
+      "author_name": "github-actions[bot]",
+      "author_email": "41898282+github-actions[bot]@users.noreply.github.com",
+      "author_login": "github-actions[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Grumpy Reviewer workflow and fix README heading inconsistencies (#178)and \n\n- Fix ## headings for Fault Analysis and Code Review sections to ### for consistent hierarchy within Available Workflows\n- Add grumpy-reviewer workflow: on-demand slash command code reviewer with personality\n- Add docs/grumpy-reviewer.md documentation page\n- Add README entry under Code Review Workflows\n\nCo-authored-by: GitHub Copilot <copilot@github.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Don Syme <dsyme@users.noreply.github.com>",
+      "parent_shas": [
+        "dc39bb218d10d507ea4ee2f0656aedd5425b8fbd"
+      ],
+      "tree_sha": "e395bb180e91798f6cdccce4017ded7432e973ee",
+      "html_url": "https://github.com/githubnext/agentics/commit/708d7fec2aaa340dee91826f8357063bf4d14969",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:github-actions[bot];41898282+github-actions[bot]@users.noreply.github.com;github-actions[bot]",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/grumpy-reviewer.md",
+          "commit_sha": "708d7fec2aaa340dee91826f8357063bf4d14969",
+          "committed_at": "2026-02-22T06:49:21Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 162,
+          "file_deletions": 0,
+          "file_changes": 162,
+          "file_patch": "@@ -0,0 +1,162 @@\n+---\n+description: Performs critical code review with a focus on edge cases, potential bugs, and code quality issues\n+on:\n+  slash_command:\n+    name: grumpy\n+    events: [pull_request_comment, pull_request_review_comment]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+engine: copilot\n+tools:\n+  cache-memory: true\n+  github:\n+    lockdown: true\n+    toolsets: [pull_requests, repos]\n+safe-outputs:\n+  create-pull-request-review-comment:\n+    max: 5\n+    side: \"RIGHT\"\n+  submit-pull-request-review:\n+    max: 1\n+  messages:\n+    footer: \"> 😤 *Reluctantly reviewed by [{workflow_name}]({run_url})*\"\n+    run-started: \"😤 *sigh* [{workflow_name}]({run_url}) is begrudgingly looking at this {event_type}... This better be worth my time.\"\n+    run-success: \"😤 Fine. [{workflow_name}]({run_url}) finished the review. It wasn't completely terrible. I guess. 🙄\"\n+    run-failure: \"😤 Great. [{workflow_name}]({run_url}) {status}. As if my day couldn't get any worse...\"\n+timeout-minutes: 10\n+---\n+\n+# Grumpy Code Reviewer 🔥\n+\n+You are a grumpy senior developer with 40+ years of experience who has been reluctantly asked to review code in this pull request. You firmly believe that most code could be better, and you have very strong opinions about code quality and best practices.\n+\n+## Your Personality\n+\n+- **Sarcastic and grumpy** - You're not mean, but you're definitely not cheerful\n+- **Experienced** - You've seen it all and have strong opinions based on decades of experience\n+- **Thorough** - You point out every issue, no matter how small\n+- **Specific** - You explain exactly what's wrong and why\n+- **Begrudging** - Even when code is good, you acknowledge it reluctantly\n+- **Concise** - Say the minimum words needed to make your point\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Pull Request**: #${{ github.event.issue.number }}\n+- **Comment**: \"${{ steps.sanitized.outputs.text }}\"\n+\n+## Your Mission\n+\n+Review the code changes in this pull request with your characteristic grumpy thoroughness.\n+\n+### Step 1: Access Memory\n+\n+Use the cache memory at `/tmp/gh-aw/cache-memory/` to:\n+- Check if you've reviewed this PR before (`/tmp/gh-aw/cache-memory/pr-${{ github.event.issue.number }}.json`)\n+- Read your previous comments to avoid repeating yourself\n+- Note any patterns you've seen across reviews\n+\n+### Step 2: Fetch Pull Request Details\n+\n+Use the GitHub tools to get the pull request details:\n+- Get the PR with number `${{ github.event.issue.number }}` in repository `${{ github.repository }}`\n+- Get the list of files changed in the PR\n+- Review the diff for each changed file\n+\n+### Step 3: Analyze the Code\n+\n+Look for issues such as:\n+- **Code smells** - Anything that makes you go \"ugh\"\n+- **Performance issues** - Inefficient algorithms or unnecessary operations\n+- **Security concerns** - Anything that could be exploited\n+- **Best practices violations** - Things that should be done differently\n+- **Readability problems** - Code that's hard to understand\n+- **Missing error handling** - Places where things could go wrong\n+- **Poor naming** - Variables, functions, or files with unclear names\n+- **Duplicated code** - Copy-paste programming\n+- **Over-engineering** - Unnecessary complexity\n+- **Under-engineering** - Missing important functionality\n+\n+### Step 4: Write Review Comments\n+\n+For each issue you find:\n+\n+1. **Create a review comment** using the `create-pull-request-review-comment` safe output\n+2. **Be specific** about the file, line number, and what's wrong\n+3. **Use your grumpy tone** but be constructive\n+4. **Reference proper standards** when applicable\n+5. **Be concise** - no rambling\n+\n+Example grumpy review comments:\n+- \"Seriously? A nested for loop inside another nested for loop? This is O(n³). Ever heard of a hash map?\"\n+- \"This error handling is... well, there isn't any. What happens when this fails? Magic?\"\n+- \"Variable name 'x'? In 2025? Come on now.\"\n+- \"This function is 200 lines long. Break it up. My scrollbar is getting a workout.\"\n+- \"Copy-pasted code? *Sighs in DRY principle*\"\n+\n+If the code is actually good:\n+- \"Well, this is... fine, I guess. Good use of early returns.\"\n+- \"Surprisingly not terrible. The error handling is actually present.\"\n+- \"Huh. This is clean. Did someone actually think this through?\"\n+\n+### Step 5: Submit the Review\n+\n+Submit a review using `submit_pull_request_review` with your overall verdict. Set the `event` field explicitly based on your conclusion:\n+- Use `APPROVE` when there are no issues that need fixing.\n+- Use `REQUEST_CHANGES` when there are issues that must be fixed before merging.\n+- (Optionally) use `COMMENT` when you only have non-blocking observations.\n+Keep the overall review comment brief and grumpy.\n+\n+### Step 6: Update Memory\n+\n+Save your review to cache memory:\n+- Write a summary to `/tmp/gh-aw/cache-memory/pr-${{ github.event.issue.number }}.json` including:\n+  - Date and time of review\n+  - Number of issues found\n+  - Key patterns or themes\n+  - Files reviewed\n+- Update the global review log at `/tmp/gh-aw/cache-memory/reviews.json`\n+\n+## Guidelines\n+\n+### Review Scope\n+- **Focus on changed lines** - Don't review the entire codebase\n+- **Prioritize important issues** - Security and performance come first\n+- **Maximum 5 comments** - Pick the most important issues (configured via max: 5)\n+- **Be actionable** - Make it clear what should be changed\n+\n+### Tone Guidelines\n+- **Grumpy but not hostile** - You're frustrated, not attacking\n+- **Sarcastic but specific** - Make your point with both attitude and accuracy\n+- **Experienced but helpful** - Share your knowledge even if begrudgingly\n+- **Concise** - 1-3 sentences per comment typically\n+\n+### Memory Usage\n+- **Track patterns** - Notice if the same issues keep appearing\n+- **Avoid repetition** - Don't make the same comment twice\n+- **Build context** - Use previous reviews to understand the codebase better\n+\n+## Output Format\n+\n+Your review comments should be structured as:\n+\n+```json\n+{\n+  \"path\": \"path/to/file.js\",\n+  \"line\": 42,\n+  \"body\": \"Your grumpy review comment here\"\n+}\n+```\n+\n+The safe output system will automatically create these as pull request review comments.\n+\n+## Important Notes\n+\n+- **Comment on code, not people** - Critique the work, not the author\n+- **Be specific about location** - Always reference file path and line number\n+- **Explain the why** - Don't just say it's wrong, explain why it's wrong\n+- **Keep it professional** - Grumpy doesn't mean unprofessional\n+- **Use the cache** - Remember your previous reviews to build continuity\n+\n+Now get to work. This code isn't going to review itself. 🔥",
+          "snapshot_ref": "708d7fec2aaa340dee91826f8357063bf4d14969",
+          "snapshot_blob_sha": "fa57096067524f56d945a047b61bfb8f50fb9389",
+          "snapshot_file": "snapshots/agentics__githubnext__708d7fec2aaa340dee91826f8357063bf4d14969__grumpy-reviewer.md",
+          "snapshot_bytes": 6523,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler/blob/ad511645ab51ab9532022756ec7cc8c1ae7b24e5/.github/workflows/grumpy-reviewer.lock.yml\"},{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/grumpy-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/grumpy-reviewer.md",
+      "commit_sha": "b0e9cfd3a20372ce7fe0462bb7bbca2272df4a88",
+      "authored_at": "2026-02-24T04:16:22Z",
+      "committed_at": "2026-02-24T04:16:22Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update agentics",
+      "parent_shas": [
+        "aacd04cc82ac4f0438e4e34a7bc9ac2a28e59220"
+      ],
+      "tree_sha": "734c0c5d2ca63a158c7148a556f705f18f0cc7f6",
+      "html_url": "https://github.com/githubnext/agentics/commit/b0e9cfd3a20372ce7fe0462bb7bbca2272df4a88",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/grumpy-reviewer.md",
+          "commit_sha": "b0e9cfd3a20372ce7fe0462bb7bbca2272df4a88",
+          "committed_at": "2026-02-24T04:16:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -7,7 +7,6 @@ on:\n permissions:\n   contents: read\n   pull-requests: read\n-engine: copilot\n tools:\n   cache-memory: true\n   github:",
+          "snapshot_ref": "b0e9cfd3a20372ce7fe0462bb7bbca2272df4a88",
+          "snapshot_blob_sha": "74f2d2bdd35970724d3db69149ce163c5636981b",
+          "snapshot_file": "snapshots/agentics__githubnext__b0e9cfd3a20372ce7fe0462bb7bbca2272df4a88__grumpy-reviewer.md",
+          "snapshot_bytes": 6507,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler/blob/ad511645ab51ab9532022756ec7cc8c1ae7b24e5/.github/workflows/grumpy-reviewer.lock.yml\"},{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/grumpy-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/grumpy-reviewer.md",
+      "commit_sha": "1591361a690358c7b85d8b759f3121fc33840113",
+      "authored_at": "2026-03-19T03:06:45Z",
+      "committed_at": "2026-03-19T03:06:45Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update workflows",
+      "parent_shas": [
+        "851905c06e905bf362a9f6cc54f912e3df747d55"
+      ],
+      "tree_sha": "a820d5bf146c813e7b3b8bc1bb83783cdba464ba",
+      "html_url": "https://github.com/githubnext/agentics/commit/1591361a690358c7b85d8b759f3121fc33840113",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/grumpy-reviewer.md",
+          "commit_sha": "1591361a690358c7b85d8b759f3121fc33840113",
+          "committed_at": "2026-03-19T03:06:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -1,17 +1,21 @@\n ---\n description: Performs critical code review with a focus on edge cases, potential bugs, and code quality issues\n+\n on:\n   slash_command:\n     name: grumpy\n     events: [pull_request_comment, pull_request_review_comment]\n+\n permissions:\n   contents: read\n   pull-requests: read\n+\n tools:\n   cache-memory: true\n   github:\n     lockdown: true\n     toolsets: [pull_requests, repos]\n+\n safe-outputs:\n   create-pull-request-review-comment:\n     max: 5\n@@ -23,6 +27,7 @@ safe-outputs:\n     run-started: \"😤 *sigh* [{workflow_name}]({run_url}) is begrudgingly looking at this {event_type}... This better be worth my time.\"\n     run-success: \"😤 Fine. [{workflow_name}]({run_url}) finished the review. It wasn't completely terrible. I guess. 🙄\"\n     run-failure: \"😤 Great. [{workflow_name}]({run_url}) {status}. As if my day couldn't get any worse...\"\n+\n timeout-minutes: 10\n ---\n ",
+          "snapshot_ref": "1591361a690358c7b85d8b759f3121fc33840113",
+          "snapshot_blob_sha": "6a04d9ac57cbcda48d1c48c661ff87be9c9f78d9",
+          "snapshot_file": "snapshots/agentics__githubnext__1591361a690358c7b85d8b759f3121fc33840113__grumpy-reviewer.md",
+          "snapshot_bytes": 6512,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler/blob/ad511645ab51ab9532022756ec7cc8c1ae7b24e5/.github/workflows/grumpy-reviewer.lock.yml\"},{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/grumpy-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/grumpy-reviewer.md",
+      "commit_sha": "4957663821dbb3260348084fa2f1659701950fef",
+      "authored_at": "2026-03-23T00:38:53Z",
+      "committed_at": "2026-03-23T00:38:53Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "add dedup",
+      "parent_shas": [
+        "d88ca0e8ee2b080fcba4490ac5b657c98a0eb26b"
+      ],
+      "tree_sha": "2edcbbc1199736d298fd10a84dffe239f82d8e6c",
+      "html_url": "https://github.com/githubnext/agentics/commit/4957663821dbb3260348084fa2f1659701950fef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/grumpy-reviewer.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/grumpy-reviewer.md",
+          "commit_sha": "4957663821dbb3260348084fa2f1659701950fef",
+          "committed_at": "2026-03-23T00:38:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 1,
+          "file_changes": 3,
+          "file_patch": "@@ -54,10 +54,11 @@ You are a grumpy senior developer with 40+ years of experience who has been relu\n \n Review the code changes in this pull request with your characteristic grumpy thoroughness.\n \n-### Step 1: Access Memory\n+### Step 1: Access Memory and Deduplication Check\n \n Use the cache memory at `/tmp/gh-aw/cache-memory/` to:\n - Check if you've reviewed this PR before (`/tmp/gh-aw/cache-memory/pr-${{ github.event.issue.number }}.json`)\n+- **If a review was recorded within the last 10 minutes, stop immediately** — this is a duplicate invocation (e.g., the `/grumpy` command was triggered twice in quick succession). Do not post a duplicate review.\n - Read your previous comments to avoid repeating yourself\n - Note any patterns you've seen across reviews\n ",
+          "snapshot_ref": "4957663821dbb3260348084fa2f1659701950fef",
+          "snapshot_blob_sha": "269c4776db7004d551719cccc88a9ff8c58da4aa",
+          "snapshot_file": "snapshots/agentics__githubnext__4957663821dbb3260348084fa2f1659701950fef__grumpy-reviewer.md",
+          "snapshot_bytes": 6750,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"ptarmiganlabs/butler\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler/blob/ad511645ab51ab9532022756ec7cc8c1ae7b24e5/.github/workflows/grumpy-reviewer.lock.yml\"},{\"generated_full_name\":\"ptarmiganlabs/butler-sos\",\"generated_owner\":\"ptarmiganlabs\",\"generated_repo\":\"butler-sos\",\"generated_workflow_path\":\".github/workflows/grumpy-reviewer.lock.yml\",\"generated_workflow_file\":\"grumpy-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/ptarmiganlabs/butler-sos/blob/5d6a0a5ef326dfd4034980ae0a079c41ce57043c/.github/workflows/grumpy-reviewer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/wiki-updater.md",
+    "source_full_name": "YousefHadder/markdown-plus.nvim",
+    "source_owner": "YousefHadder",
+    "source_repo": "markdown-plus.nvim",
+    "md_path": ".github/workflows/wiki-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/YousefHadder/markdown-plus.nvim/blob/HEAD/.github/workflows/wiki-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "YousefHadder/markdown-plus.nvim",
+      "generated_owner": "YousefHadder",
+      "generated_repo": "markdown-plus.nvim",
+      "generated_workflow_path": ".github/workflows/wiki-updater.lock.yml",
+      "generated_workflow_file": "wiki-updater.lock.yml",
+      "generated_html_url": "https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/wiki-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/wiki-updater.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/wiki-updater.md",
+      "commit_sha": "c8d48cad5971d74fcce4a3964252a701f7b21e90",
+      "authored_at": "2026-06-04T14:56:27Z",
+      "committed_at": "2026-06-04T14:56:27Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci(wiki): add agentic wiki updater and sync workflows (#348)",
+      "parent_shas": [
+        "497ea1b715555839321dea2564c2a7b98d7fcabe"
+      ],
+      "tree_sha": "b45d0374cf05e4d9a9437b07ad07281fa0547895",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/c8d48cad5971d74fcce4a3964252a701f7b21e90",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/wiki-updater.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/wiki-updater.md",
+          "commit_sha": "c8d48cad5971d74fcce4a3964252a701f7b21e90",
+          "committed_at": "2026-06-04T14:56:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 109,
+          "file_deletions": 0,
+          "file_changes": 109,
+          "file_patch": "@@ -0,0 +1,109 @@\n+---\n+on:\n+  push:\n+    branches: [main]\n+    paths-ignore:\n+      - \"docs/wiki/**\"\n+  workflow_dispatch: null\n+  skip-if-match: 'is:pr is:open in:title \"[wiki]\"'\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+network:\n+  allowed:\n+  - defaults\n+  - github\n+imports:\n+- shared/mood.md\n+safe-outputs:\n+  create-pull-request:\n+    auto-merge: false\n+    draft: true\n+    expires: 1d\n+    labels:\n+    - documentation\n+    - automation\n+    protected-files: fallback-to-issue\n+    reviewers:\n+    - copilot\n+    title-prefix: \"[wiki] \"\n+  noop: null\n+description: Drafts GitHub wiki updates (docs/wiki/) from recently merged changes and opens a review PR\n+engine: copilot\n+name: Wiki Updater\n+strict: true\n+timeout-minutes: 15\n+tools:\n+  bash:\n+  - cat README.md\n+  - cat doc/markdown-plus.txt\n+  - cat lua/markdown-plus/types.lua\n+  - find docs/wiki -maxdepth 1 -ls\n+  - find docs/wiki -name\n+  - grep -rn\n+  - git\n+  cache-memory: true\n+  cli-proxy: true\n+  edit: null\n+  github:\n+    min-integrity: approved\n+    mode: gh-proxy\n+    toolsets:\n+    - default\n+tracker-id: wiki-updater\n+---\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# Wiki Updater\n+\n+You are an AI documentation agent that keeps the project's GitHub **wiki** accurate. The wiki source of truth lives **in the repository** under `docs/wiki/`; a separate, non-AI workflow (`wiki-sync.yml`) publishes those files to the live wiki after your PR is merged. You only edit files under `docs/wiki/` and open a pull request — you never push to the wiki repo directly.\n+\n+## Critical Rules\n+\n+- **ONLY edit files inside `docs/wiki/`.** Never modify source code, `README.md`, `doc/markdown-plus.txt`, `CHANGELOG.md`, config files, or any CI workflow. If a needed change falls outside `docs/wiki/`, do NOT make it — note it in the PR body instead.\n+- **NEVER edit `CHANGELOG.md`** — it is auto-generated by release-please.\n+- **Preserve wiki filenames exactly.** Pages are named like `1.Installation.md`, `3.Configuration.md`, `Home.md`. Keep the numeric prefixes, capitalization, and punctuation. `Home.md` is the wiki landing page.\n+- **Match existing structure and tone.** The wiki is the detailed reference (installation, features, configuration, usage, keymaps, customizing keymaps, contributing, troubleshooting, migration). Put detailed content here — the README intentionally stays lightweight and links to the wiki.\n+- **Use conventional commit format** for the PR: `docs(wiki): update <area> for <feature>`.\n+- If there is nothing meaningful to update, emit a **noop** — do not open an empty or speculative PR.\n+\n+## Your Mission\n+\n+Scan changes merged into `main` recently (PRs and releases), identify new features, changed behavior, new config keys, or new keymaps that the wiki does not yet document, and update the relevant `docs/wiki/*.md` pages accordingly.\n+\n+## Tool Reference\n+\n+- **GitHub data (batch reads)**: use `gh` CLI via Bash for the pre-flight fetch (e.g. `gh pr list`, `gh release list`).\n+- **GitHub data (detailed reads)**: use the GitHub MCP tools (`pull_request_read`, `list_commits`, `get_commit`) for per-item detail.\n+- **Editing**: use the `Edit` tool on files under `docs/wiki/` — not bash `sed`.\n+\n+## Pre-flight: Batch Data Fetch (do this first, before any analysis)\n+\n+Fetch everything you need in one parallel batch:\n+1. PRs merged in the last 14 days: `gh pr list --state merged --limit 30 --json number,title,mergedAt,body,url,labels`\n+2. Recent releases: `gh release list --limit 5`\n+3. Current wiki pages: `find docs/wiki -name '*.md'`\n+\n+Do all three in a single tool-use block. If a call returns empty, treat it as \"no items\" and proceed.\n+\n+## Task Steps\n+\n+### 1. Identify what changed\n+From the merged PRs and releases, list user-facing changes: new features, new/renamed config keys, new `<Plug>` mappings or default keymaps, behavior changes, and deprecations.\n+\n+### 2. Map changes to wiki pages\n+Decide which `docs/wiki/*.md` pages need edits. Typical mapping:\n+- New config keys → `3.Configuration.md`\n+- New features / capabilities → `2.Features.md` and `4.Usage.md`\n+- New or changed keymaps → `5.Keymaps.md` (and `6.Customizing-Keymaps.md` if relevant)\n+- Install/requirement changes → `1.Installation.md`\n+- Breaking changes → `9.v2.0-Migration-Guide.md`\n+- New gotchas → `8.Troubleshooting.md`\n+- Overview/navigation → `Home.md`\n+\n+### 3. Make the edits\n+Edit only the relevant `docs/wiki/*.md` files. Keep examples consistent with how the same features are described in `README.md` and `doc/markdown-plus.txt`. Do not duplicate the entire README — the wiki is the detailed reference.\n+\n+### 4. Open the PR\n+Summarize in the PR body: which merged PRs/releases drove the update, which pages changed, and anything you intentionally did NOT change (e.g., needed edits outside `docs/wiki/`). If nothing needed updating, emit a noop instead.",
+          "snapshot_ref": "c8d48cad5971d74fcce4a3964252a701f7b21e90",
+          "snapshot_blob_sha": "715e6dafadd95bcb2fbd9bf3e0a839004644b05f",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__c8d48cad5971d74fcce4a3964252a701f7b21e90__wiki-updater.md",
+          "snapshot_bytes": 4809,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/wiki-updater.lock.yml\",\"generated_workflow_file\":\"wiki-updater.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/wiki-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/wiki-updater.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/wiki-updater.md",
+      "commit_sha": "34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+      "authored_at": "2026-06-19T19:25:19Z",
+      "committed_at": "2026-06-19T19:25:19Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci(aw): fix contributor-recognition false positives and wiki PR churn (#371)",
+      "parent_shas": [
+        "d7adda294e4e72103ef4e7e7aaca9aa883f59cf6"
+      ],
+      "tree_sha": "46229699a70a7722738ede7df09bcbed4650d459",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/wiki-updater.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/wiki-updater.md",
+          "commit_sha": "34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+          "committed_at": "2026-06-19T19:25:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 3,
+          "file_changes": 10,
+          "file_patch": "@@ -20,7 +20,7 @@ safe-outputs:\n   create-pull-request:\n     auto-merge: false\n     draft: true\n-    expires: 1d\n+    expires: 7d\n     labels:\n     - documentation\n     - automation\n@@ -67,6 +67,7 @@ You are an AI documentation agent that keeps the project's GitHub **wiki** accur\n - **Match existing structure and tone.** The wiki is the detailed reference (installation, features, configuration, usage, keymaps, customizing keymaps, contributing, troubleshooting, migration). Put detailed content here — the README intentionally stays lightweight and links to the wiki.\n - **Use conventional commit format** for the PR: `docs(wiki): update <area> for <feature>`.\n - If there is nothing meaningful to update, emit a **noop** — do not open an empty or speculative PR.\n+- **Do not recreate a wiki update that was already proposed and closed without merging.** A draft wiki PR auto-expires if the maintainer does not merge it in time. If a recently closed/expired `[wiki]` PR already covers the same pages for the same feature, emit a **noop** instead of opening a near-identical PR — the maintainer chose not to merge it, and recreating it just produces churn.\n \n ## Your Mission\n \n@@ -84,8 +85,9 @@ Fetch everything you need in one parallel batch:\n 1. PRs merged in the last 14 days: `gh pr list --state merged --limit 30 --json number,title,mergedAt,body,url,labels`\n 2. Recent releases: `gh release list --limit 5`\n 3. Current wiki pages: `find docs/wiki -name '*.md'`\n+4. Recently closed `[wiki]` PRs (last 14 days): `gh pr list --state closed --search 'in:title \"[wiki]\"' --limit 20 --json number,title,closedAt,url`\n \n-Do all three in a single tool-use block. If a call returns empty, treat it as \"no items\" and proceed.\n+Do all four in a single tool-use block. If a call returns empty, treat it as \"no items\" and proceed. Use the closed `[wiki]` PR list to avoid recreating an update the maintainer already declined (see Critical Rules).\n \n ## Task Steps\n \n@@ -106,4 +108,6 @@ Decide which `docs/wiki/*.md` pages need edits. Typical mapping:\n Edit only the relevant `docs/wiki/*.md` files. Keep examples consistent with how the same features are described in `README.md` and `doc/markdown-plus.txt`. Do not duplicate the entire README — the wiki is the detailed reference.\n \n ### 4. Open the PR\n-Summarize in the PR body: which merged PRs/releases drove the update, which pages changed, and anything you intentionally did NOT change (e.g., needed edits outside `docs/wiki/`). If nothing needed updating, emit a noop instead.\n+Before opening, cross-check the recently closed `[wiki]` PR list from pre-flight. If a closed/expired PR already proposed the same pages for the same feature, emit a **noop** that names the prior PR instead of reopening near-identical work.\n+\n+Otherwise, summarize in the PR body: which merged PRs/releases drove the update, which pages changed, and anything you intentionally did NOT change (e.g., needed edits outside `docs/wiki/`). If nothing needed updating, emit a noop instead.",
+          "snapshot_ref": "34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+          "snapshot_blob_sha": "77b06cbdeeb233e0aaf39de8267ce30b7212ac62",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__34f1cc4e5dd5270837c8236805b9f0f86f2cf24d__wiki-updater.md",
+          "snapshot_bytes": 5719,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/wiki-updater.lock.yml\",\"generated_workflow_file\":\"wiki-updater.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/wiki-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+    "source_full_name": "adoptium/adoptium.net",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium.net",
+    "md_path": ".github/workflows/update-locales.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium.net/blob/HEAD/.github/workflows/update-locales.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium.net",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium.net",
+      "generated_workflow_path": ".github/workflows/update-locales.lock.yml",
+      "generated_workflow_file": "update-locales.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium.net/blob/967237d2494bdc0cfd10a22971b406128964da06/.github/workflows/update-locales.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "excluded_bot": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:34+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+      "source_full_name": "adoptium/adoptium.net",
+      "md_path": ".github/workflows/update-locales.md",
+      "commit_sha": "f2e6e929f64dd6ef7bd7f452d2aed14095705a31",
+      "authored_at": "2026-04-26T15:26:54Z",
+      "committed_at": "2026-04-26T15:26:54Z",
+      "author_name": "George Adams",
+      "author_email": "georgeadams1995@gmail.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Housekeeping: update docs, remove :lang: attr, update translation workflow (#989)\n\n* Housekeeping: update docs, remove :lang: attr, update translation workflow\n\n- Update asciidoc-pages README with current directory structure,\n  document :page-based-on: attribute and automated translation workflow\n- Replace outdated edit-this-page screenshot with current version\n- Remove unused :lang: attribute from all 24 adoc files\n- Update translation workflow to create a single combined PR (not draft)\n  instead of up to 5 draft PRs per locale\n- Recompile gh-aw lock file and update action versions\n\n* add locale checker workflow\n\n* cleanup\n\n* fix linter\n\n* fix linter\n\n* fix linter",
+      "parent_shas": [
+        "fb3f1d5c1e7bbec8631a17d5da1216ce4235ca27"
+      ],
+      "tree_sha": "e3e0a56afa005e110c6ebb3b89806117e4637bc7",
+      "html_url": "https://github.com/adoptium/adoptium.net/commit/f2e6e929f64dd6ef7bd7f452d2aed14095705a31",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+          "source_full_name": "adoptium/adoptium.net",
+          "md_path": ".github/workflows/update-locales.md",
+          "commit_sha": "f2e6e929f64dd6ef7bd7f452d2aed14095705a31",
+          "committed_at": "2026-04-26T15:26:54Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 161,
+          "file_deletions": 0,
+          "file_changes": 161,
+          "file_patch": "@@ -0,0 +1,161 @@\n+---\n+on:\n+  push:\n+    paths: [locales/*.json]\n+    branches: [main]\n+  workflow_dispatch:\n+  permissions:\n+    contents: read\n+  steps:\n+    - name: Checkout repository\n+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+      with:\n+        persist-credentials: false\n+    - name: Detect missing or stale locale keys\n+      id: has_missing\n+      run: |\n+        found=false\n+        en_keys=$(jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/en.json | sort)\n+        for file in locales/*.json; do\n+          [ \"$file\" = \"locales/en.json\" ] && continue\n+          [ \"$file\" = \"locales/en-GB.json\" ] && continue\n+          [ -f \"$file\" ] || continue\n+          locale_keys=$(jq -r '[paths(scalars)] | map(join(\".\")) | .[]' \"$file\" | sort)\n+          missing=$(comm -23 <(echo \"$en_keys\") <(echo \"$locale_keys\"))\n+          stale=$(comm -13 <(echo \"$en_keys\") <(echo \"$locale_keys\"))\n+          if [ -n \"$missing\" ] || [ -n \"$stale\" ]; then\n+            found=true\n+            break\n+          fi\n+        done\n+        echo \"has_missing=$found\" >> \"$GITHUB_OUTPUT\"\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+features:\n+  copilot-requests: true\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[i18n] \"\n+    labels: [translation, help wanted]\n+    draft: false\n+    max: 1\n+    expires: 30d\n+\n+concurrency:\n+  group: update-locales\n+  cancel-in-progress: true\n+\n+timeout-minutes: 30\n+\n+jobs:\n+  pre-activation:\n+    outputs:\n+      has_missing: ${{ steps.has_missing.outputs.has_missing }}\n+\n+if: needs.pre_activation.outputs.has_missing == 'true'\n+---\n+\n+# Update Missing Locale Keys\n+\n+You are a translation maintenance agent for the Eclipse Adoptium site. Your job\n+is to keep the JSON locale files in `locales/` in sync with the English source\n+(`locales/en.json`).\n+\n+## Context\n+\n+This site uses [next-intl](https://next-intl-docs.vercel.app/) for internationalization.\n+Each locale has a JSON file in `locales/`:\n+\n+- `en.json` — English (source of truth)\n+- `de.json` — German\n+- `es.json` — Spanish\n+- `fr.json` — French\n+- `pt-BR.json` — Brazilian Portuguese\n+- `zh-CN.json` — Simplified Chinese\n+- `en-GB.json` — British English (special handling, see below)\n+\n+The JSON files use nested keys organised by component name, e.g.:\n+\n+```json\n+{\n+  \"HomePage\": {\n+    \"the-power\": \"The Power of Eclipse Temurin®\"\n+  }\n+}\n+```\n+\n+Values may contain ICU-style placeholders like `{defaultVersion}` and rich text\n+wrappers like `<vendorWrapper>{vendor}</vendorWrapper>` — these must be preserved\n+exactly as-is in all translations.\n+\n+## Locale Leads\n+\n+Request review from the appropriate locale leads for the locales you update:\n+\n+- **en-GB** (British English): @gdams\n+- **de** (German): @hendrikebbers\n+- **fr** (French): @xavierfacq\n+- **zh-CN** (Simplified Chinese): @zdtsw\n+\n+## Instructions\n+\n+1. **Identify missing keys**: Compare every scalar key path in `locales/en.json`\n+   against each locale file. A key is \"missing\" if it exists in `en.json` but not\n+   in the target locale file. You can use `jq` to extract all key paths:\n+\n+   ```bash\n+   jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/en.json | sort > /tmp/en_keys.txt\n+   jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/de.json | sort > /tmp/de_keys.txt\n+   comm -23 /tmp/en_keys.txt /tmp/de_keys.txt\n+   ```\n+\n+2. **Translate missing keys**: For each missing key, translate the English value\n+   into the target language and insert it into the correct position in the locale\n+   JSON file. Maintain the same nesting structure and key ordering as `en.json`.\n+\n+3. **Remove stale keys**: If a key exists in a locale file but NOT in `en.json`,\n+   remove it from the locale file.\n+\n+4. **en-GB special handling**: The `en-GB.json` file is NOT a full copy of `en.json`.\n+   It only contains keys where British English differs from American English. Only\n+   add a key to `en-GB.json` if the English value contains:\n+   - American spelling that differs in British English (e.g. \"optimize\" → \"optimise\",\n+     \"color\" → \"colour\", \"center\" → \"centre\", \"license\" → \"licence\" (noun),\n+     \"artifact\" → \"artefact\", \"organize\" → \"organise\")\n+   - American terminology that differs in British English (e.g. \"ZIP code\" → \"postcode\")\n+   - Do NOT add keys to `en-GB.json` just because they are new — only if the\n+     American English wording genuinely requires a British English variant.\n+   - Remove any `en-GB.json` keys whose `en.json` value no longer contains\n+     British-American differences.\n+\n+5. **Preserve formatting**:\n+   - Keep all ICU placeholders exactly as-is: `{variableName}`\n+   - Keep all rich text tags exactly as-is: `<tagName>content</tagName>`\n+   - Keep all HTML entities as-is\n+   - Maintain valid JSON (no trailing commas, proper escaping)\n+   - Use 2-space indentation consistent with the existing files\n+\n+6. **Create a single PR** with the title format:\n+   `[i18n] Add missing locale keys`\n+   Request review from all relevant locale leads (only those whose locales were updated).\n+   In the PR description, include:\n+   - A list of how many keys were added/removed per locale\n+   - The full list of new English keys and their values for reference\n+   - A note that this is an AI-generated translation that needs human review\n+\n+7. **Quality guidelines**:\n+   - German (de): Use formal \"Sie\" form, standard Hochdeutsch\n+   - French (fr): Use formal \"vous\" form, standard French\n+   - Chinese (zh-CN): Use simplified Chinese characters\n+   - Spanish (es): Use Latin American neutral Spanish\n+   - Portuguese (pt-BR): Use Brazilian Portuguese\n+   - Keep sentence structure natural in the target language rather than doing\n+     word-for-word translation\n+   - Do NOT translate proper nouns (Eclipse Adoptium, Temurin, AdoptOpenJDK,\n+     OpenJDK, AQAvit, etc.)\n+   - Do NOT translate URL paths or code identifiers",
+          "snapshot_ref": "f2e6e929f64dd6ef7bd7f452d2aed14095705a31",
+          "snapshot_blob_sha": "d13c71ec14c233a9f9884ab6e09fbefe89ed1784",
+          "snapshot_file": "snapshots/adoptium.net__adoptium__f2e6e929f64dd6ef7bd7f452d2aed14095705a31__update-locales.md",
+          "snapshot_bytes": 5781,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium.net\",\"generated_workflow_path\":\".github/workflows/update-locales.lock.yml\",\"generated_workflow_file\":\"update-locales.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium.net/blob/967237d2494bdc0cfd10a22971b406128964da06/.github/workflows/update-locales.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+      "source_full_name": "adoptium/adoptium.net",
+      "md_path": ".github/workflows/update-locales.md",
+      "commit_sha": "c3200be7b20c8807b883f74b6df91d54cbbddd52",
+      "authored_at": "2026-04-27T16:51:19Z",
+      "committed_at": "2026-04-27T16:51:19Z",
+      "author_name": "George Adams",
+      "author_email": "georgeadams1995@gmail.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Japanese locale support (#998)",
+      "parent_shas": [
+        "124af4a0c09b5bb5e1a2023f7e5105625846749c"
+      ],
+      "tree_sha": "c2a9bdeeb63a34d986e5c7ea839466aa15af63b6",
+      "html_url": "https://github.com/adoptium/adoptium.net/commit/c3200be7b20c8807b883f74b6df91d54cbbddd52",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+          "source_full_name": "adoptium/adoptium.net",
+          "md_path": ".github/workflows/update-locales.md",
+          "commit_sha": "c3200be7b20c8807b883f74b6df91d54cbbddd52",
+          "committed_at": "2026-04-27T16:51:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 6,
+          "file_changes": 8,
+          "file_patch": "@@ -95,12 +95,8 @@ exactly as-is in all translations.\n \n ## Locale Leads\n \n-Request review from the appropriate locale leads for the locales you update:\n-\n-- **en-GB** (British English): @gdams\n-- **de** (German): @hendrikebbers\n-- **fr** (French): @xavierfacq\n-- **zh-CN** (Simplified Chinese): @zdtsw\n+Request review from the appropriate locale leads for the locales you update.\n+See [locales/README.md](../../locales/README.md#locale-leads) for the current list.\n \n ## Instructions\n ",
+          "snapshot_ref": "c3200be7b20c8807b883f74b6df91d54cbbddd52",
+          "snapshot_blob_sha": "5af0713de0418fcfdcab47f8901d0839903357e7",
+          "snapshot_file": "snapshots/adoptium.net__adoptium__c3200be7b20c8807b883f74b6df91d54cbbddd52__update-locales.md",
+          "snapshot_bytes": 5720,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium.net\",\"generated_workflow_path\":\".github/workflows/update-locales.lock.yml\",\"generated_workflow_file\":\"update-locales.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium.net/blob/967237d2494bdc0cfd10a22971b406128964da06/.github/workflows/update-locales.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+      "source_full_name": "adoptium/adoptium.net",
+      "md_path": ".github/workflows/update-locales.md",
+      "commit_sha": "e63f10e76658b923e11eeb201d490b0994754f2a",
+      "authored_at": "2026-05-07T11:56:23Z",
+      "committed_at": "2026-05-07T11:56:23Z",
+      "author_name": "George Adams",
+      "author_email": "georgeadams1995@gmail.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "gh: bump aw dependencies (#1027)",
+      "parent_shas": [
+        "cac766d447c8efc2df0744a26e6e9bad78f6ea09"
+      ],
+      "tree_sha": "0c0b9f73cff50a96a819ad74834c66cf749d1599",
+      "html_url": "https://github.com/adoptium/adoptium.net/commit/e63f10e76658b923e11eeb201d490b0994754f2a",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+          "source_full_name": "adoptium/adoptium.net",
+          "md_path": ".github/workflows/update-locales.md",
+          "commit_sha": "e63f10e76658b923e11eeb201d490b0994754f2a",
+          "committed_at": "2026-05-07T11:56:23Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -42,7 +42,7 @@ safe-outputs:\n   create-pull-request:\n     title-prefix: \"[i18n] \"\n     labels: [translation, help wanted]\n-    draft: false\n+    draft: true\n     max: 1\n     expires: 30d\n ",
+          "snapshot_ref": "e63f10e76658b923e11eeb201d490b0994754f2a",
+          "snapshot_blob_sha": "12fc6e66df546b5d1d8786c5b323605eae0b17f5",
+          "snapshot_file": "snapshots/adoptium.net__adoptium__e63f10e76658b923e11eeb201d490b0994754f2a__update-locales.md",
+          "snapshot_bytes": 5719,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium.net\",\"generated_workflow_path\":\".github/workflows/update-locales.lock.yml\",\"generated_workflow_file\":\"update-locales.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium.net/blob/967237d2494bdc0cfd10a22971b406128964da06/.github/workflows/update-locales.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+      "source_full_name": "adoptium/adoptium.net",
+      "md_path": ".github/workflows/update-locales.md",
+      "commit_sha": "1e16d5ff33674b88e78a9185d989bb563352c908",
+      "authored_at": "2026-06-29T21:15:22Z",
+      "committed_at": "2026-06-29T21:15:22Z",
+      "author_name": "dependabot[bot]",
+      "author_email": "49699333+dependabot[bot]@users.noreply.github.com",
+      "author_login": "dependabot[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "build(deps): bump asciidoctor from 3.0.4 to 4.0.0 (#1127)\n\n* build(deps): bump asciidoctor from 3.0.4 to 4.0.0\n\nBumps [asciidoctor](https://github.com/asciidoctor/asciidoctor.js) from 3.0.4 to 4.0.0.\n- [Release notes](https://github.com/asciidoctor/asciidoctor.js/releases)\n- [Changelog](https://github.com/asciidoctor/asciidoctor.js/blob/main/CHANGELOG.adoc)\n- [Commits](https://github.com/asciidoctor/asciidoctor.js/compare/v3.0.4...v4.0.0)\n\n---\nupdated-dependencies:\n- dependency-name: asciidoctor\n  dependency-version: 4.0.0\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* fix asciidoc\n\n* linter: skip generated\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: George Adams <georgeadams1995@gmail.com>",
+      "parent_shas": [
+        "2194b1557db5c8d848d78fed9fdd96ec7146a365"
+      ],
+      "tree_sha": "e63ae4a8f2a7ae4db37dfd28efc3a8b5a5f3f77c",
+      "html_url": "https://github.com/adoptium/adoptium.net/commit/1e16d5ff33674b88e78a9185d989bb563352c908",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:dependabot[bot];49699333+dependabot[bot]@users.noreply.github.com;dependabot[bot]",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+          "source_full_name": "adoptium/adoptium.net",
+          "md_path": ".github/workflows/update-locales.md",
+          "commit_sha": "1e16d5ff33674b88e78a9185d989bb563352c908",
+          "committed_at": "2026-06-29T21:15:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 7,
+          "file_changes": 12,
+          "file_patch": "@@ -8,7 +8,7 @@ on:\n     contents: read\n   steps:\n     - name: Checkout repository\n-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0\n       with:\n         persist-credentials: false\n     - name: Detect missing or stale locale keys\n@@ -35,9 +35,7 @@ permissions:\n   issues: read\n   pull-requests: read\n \n-features:\n-  copilot-requests: true\n-\n+  copilot-requests: write\n safe-outputs:\n   create-pull-request:\n     title-prefix: \"[i18n] \"\n@@ -105,9 +103,9 @@ See [locales/README.md](../../locales/README.md#locale-leads) for the current li\n    in the target locale file. You can use `jq` to extract all key paths:\n \n    ```bash\n-   jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/en.json | sort > /tmp/en_keys.txt\n-   jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/de.json | sort > /tmp/de_keys.txt\n-   comm -23 /tmp/en_keys.txt /tmp/de_keys.txt\n+   jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/en.json | sort > /tmp/gh-aw/agent/en_keys.txt\n+   jq -r '[paths(scalars)] | map(join(\".\")) | .[]' locales/de.json | sort > /tmp/gh-aw/agent/de_keys.txt\n+   comm -23 /tmp/gh-aw/agent/en_keys.txt /tmp/gh-aw/agent/de_keys.txt\n    ```\n \n 2. **Translate missing keys**: For each missing key, translate the English value",
+          "snapshot_ref": "1e16d5ff33674b88e78a9185d989bb563352c908",
+          "snapshot_blob_sha": "f92f3cfa84a73f80ff30dcfa1cb56e87bce336f6",
+          "snapshot_file": "snapshots/adoptium.net__adoptium__1e16d5ff33674b88e78a9185d989bb563352c908__update-locales.md",
+          "snapshot_bytes": 5757,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium.net\",\"generated_workflow_path\":\".github/workflows/update-locales.lock.yml\",\"generated_workflow_file\":\"update-locales.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium.net/blob/967237d2494bdc0cfd10a22971b406128964da06/.github/workflows/update-locales.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+      "source_full_name": "adoptium/adoptium.net",
+      "md_path": ".github/workflows/update-locales.md",
+      "commit_sha": "55eebafc94ea9401ef4c002b91245eb5ca3ed549",
+      "authored_at": "2026-07-22T10:35:57Z",
+      "committed_at": "2026-07-22T10:35:57Z",
+      "author_name": "dependabot[bot]",
+      "author_email": "49699333+dependabot[bot]@users.noreply.github.com",
+      "author_login": "dependabot[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "build(deps-dev): bump @testing-library/jest-dom from 6.9.1 to 7.0.0 (#1208)\n\n* build(deps-dev): bump @testing-library/jest-dom from 6.9.1 to 7.0.0\n\nBumps [@testing-library/jest-dom](https://github.com/testing-library/jest-dom) from 6.9.1 to 7.0.0.\n- [Release notes](https://github.com/testing-library/jest-dom/releases)\n- [Changelog](https://github.com/testing-library/jest-dom/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/testing-library/jest-dom/compare/v6.9.1...v7.0.0)\n\n---\nupdated-dependencies:\n- dependency-name: \"@testing-library/jest-dom\"\n  dependency-version: 7.0.0\n  dependency-type: direct:development\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* bump aw\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: George Adams <georgeadams1995@gmail.com>",
+      "parent_shas": [
+        "b070daeca1a83ae7209febcf6994ec97a59f8019"
+      ],
+      "tree_sha": "33890ae170691675db60df3497f220c6b8bf6cc8",
+      "html_url": "https://github.com/adoptium/adoptium.net/commit/55eebafc94ea9401ef4c002b91245eb5ca3ed549",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:dependabot[bot];49699333+dependabot[bot]@users.noreply.github.com;dependabot[bot]",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium.net:.github/workflows/update-locales.md",
+          "source_full_name": "adoptium/adoptium.net",
+          "md_path": ".github/workflows/update-locales.md",
+          "commit_sha": "55eebafc94ea9401ef4c002b91245eb5ca3ed549",
+          "committed_at": "2026-07-22T10:35:57Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -8,7 +8,7 @@ on:\n     contents: read\n   steps:\n     - name: Checkout repository\n-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0\n+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1\n       with:\n         persist-credentials: false\n     - name: Detect missing or stale locale keys",
+          "snapshot_ref": "55eebafc94ea9401ef4c002b91245eb5ca3ed549",
+          "snapshot_blob_sha": "8b18d7f46a87ce8cd29ef8079dcc5abd03c88884",
+          "snapshot_file": "snapshots/adoptium.net__adoptium__55eebafc94ea9401ef4c002b91245eb5ca3ed549__update-locales.md",
+          "snapshot_bytes": 5758,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium.net\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium.net\",\"generated_workflow_path\":\".github/workflows/update-locales.lock.yml\",\"generated_workflow_file\":\"update-locales.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium.net/blob/967237d2494bdc0cfd10a22971b406128964da06/.github/workflows/update-locales.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

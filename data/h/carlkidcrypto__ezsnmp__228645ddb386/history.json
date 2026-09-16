@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+    "source_full_name": "carlkidcrypto/ezsnmp",
+    "source_owner": "carlkidcrypto",
+    "source_repo": "ezsnmp",
+    "md_path": ".github/workflows/coverage_autofix_python.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/carlkidcrypto/ezsnmp/blob/HEAD/.github/workflows/coverage_autofix_python.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "carlkidcrypto/ezsnmp",
+      "generated_owner": "carlkidcrypto",
+      "generated_repo": "ezsnmp",
+      "generated_workflow_path": ".github/workflows/coverage_autofix_python.lock.yml",
+      "generated_workflow_file": "coverage_autofix_python.lock.yml",
+      "generated_html_url": "https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/coverage_autofix_python.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:55+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/coverage_autofix_python.md",
+      "commit_sha": "7e36e75882ea8fa88a50b2dfd80a6ad6e04926fd",
+      "authored_at": "2026-06-28T14:57:54Z",
+      "committed_at": "2026-06-28T14:57:54Z",
+      "author_name": "Carlos",
+      "author_email": "27721404+carlkidcrypto@users.noreply.github.com",
+      "author_login": "carlkidcrypto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Split coverage autofix workflow into separate Python and C++ focused … (#1018)\n\n* Split coverage autofix workflow into separate Python and C++ focused workflows and remove Docker requirements\n\n* Compile new Python and C++ coverage workflows\n\n* Remove old coverage_autofix_every_3_days.lock.yml\n\n---------\n\nCo-authored-by: Clawbot <clawbot@openclaw.ai>",
+      "parent_shas": [
+        "b1908a71034269c0a443b481f6230ba46aecd065"
+      ],
+      "tree_sha": "5c758a681d7f476dd06cf5439a2decfe0967d203",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/7e36e75882ea8fa88a50b2dfd80a6ad6e04926fd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/coverage_autofix_python.md",
+          "commit_sha": "7e36e75882ea8fa88a50b2dfd80a6ad6e04926fd",
+          "committed_at": "2026-06-28T14:57:54Z",
+          "event_status": "renamed",
+          "previous_path": ".github/workflows/coverage_autofix_every_3_days.md",
+          "file_additions": 13,
+          "file_deletions": 54,
+          "file_changes": 67,
+          "file_patch": "@@ -1,24 +1,24 @@\n ---\n-name: Coverage Autofix Every 3 Days\n+name: Coverage Autofix Python\n on:\n   schedule:\n     - cron: \"0 9 */3 * *\"\n   workflow_dispatch:\n   skip-if-match:\n-    query: 'is:pr is:open head:automation/coverage-autofix-every-3-days label:automated-pr'\n+    query: 'is:pr is:open head:automation/coverage-autofix-python label:automated-pr'\n permissions:\n   actions: read\n   contents: read\n safe-outputs:\n   create-pull-request:\n-    title-prefix: \"[coverage-autofix] \"\n+    title-prefix: \"[coverage-autofix-py] \"\n     labels: [automated-pr]\n     draft: true\n     preserve-branch-name: true\n     if-no-changes: \"ignore\"\n   add-labels:\n     target: \"*\"\n-    allowed: [coverage, tests, cpp, python]\n+    allowed: [coverage, tests, python]\n     max: 4\n timeout-minutes: 45\n engine:\n@@ -31,24 +31,19 @@ tools:\n   bash: true\n ---\n \n-# Coverage Checks And Suggested Fixes\n+# Python Coverage Checks And Suggested Fixes\n \n-Run an end-to-end coverage health check for both Python and C++ tests, then\n+Run an end-to-end coverage health check for Python tests, then\n propose and implement minimal, safe fixes that improve coverage and reliability.\n \n ## Hard Requirements\n \n - Focus only on this repository.\n - Keep changes scoped and low-risk.\n - Prefer tests first when improving coverage.\n-- Run coverage checks in both native and Dockerized environments for Python and C++.\n-- Dockerized checks must cover this distro set used by the repo workflows:\n-  almalinux10_netsnmp_5.9, archlinux_netsnmp_5.7, archlinux_netsnmp_5.8,\n-  archlinux_netsnmp_5.9, centos7_netsnmp_5.7, centos8_netsnmp_5.8,\n-  fedora42_netsnmp_5.7, fedora42_netsnmp_5.8,\n-  fedora42_netsnmp_5.9, rockylinux8_netsnmp_5.8, rockylinux9_netsnmp_5.9.\n+- Run coverage checks in native environment.\n - Do not open a new pull request if an open automation PR already exists for\n-  branch `automation/coverage-autofix-every-3-days`.\n+  branch `automation/coverage-autofix-python`.\n - If no meaningful change is needed, make no file edits and end cleanly.\n \n ## Coverage Check Procedure\n@@ -60,29 +55,8 @@ propose and implement minimal, safe fixes that improve coverage and reliability.\n    - `pytest -v -s -n auto --dist loadfile --junitxml=test-results.xml --cov=ezsnmp --cov-report=term-missing --cov-report=xml:coverage.xml --cov-config=.coveragerc python_tests/`\n    - Read coverage from `coverage.xml` when available.\n \n-2. Run C++ tests and coverage from `cpp_tests/` on Linux:\n-   - `meson setup build || true`\n-   - `ninja -C build`\n-   - `meson test -C build --print-errorlogs`\n-   - `lcov --capture --directory build --output-file coverage.info --ignore-errors mismatch,inconsistent || true`\n-   - If `coverage.info` exists, filter external/system paths before evaluating totals.\n-\n-3. Run Dockerized Python tests and coverage across the distro set above.\n-  For each distro:\n-  - Pull `carlkidcrypto/ezsnmp_test_images:<distro>-latest`\n-  - Start a container with the repo mounted at `/ezsnmp`\n-  - Run Python tests in-container with at least `pytest python_tests/`\n-  - Collect and evaluate `coverage.xml` for that distro\n-  - Treat any per-distro Python test failure as actionable\n-\n-4. Run Dockerized C++ tests and coverage across the same distro set.\n-  For each distro:\n-  - Run `docker/run_cpp_tests_in_all_dockers.sh <distro>`\n-  - Collect and evaluate `docker/test_outputs_<distro>/lcov_coverage.info`\n-  - Treat any per-distro C++ test failure as actionable\n-\n-5. Determine if action is needed:\n-   - If Python or C++ coverage is below 99%, or tests reveal clear reliability\n+2. Determine if action is needed:\n+   - If Python coverage is below 99%, or tests reveal clear reliability\n      gaps, create targeted fixes.\n    - If current coverage looks healthy and no concrete improvement is justified,\n      do not change code.\n@@ -113,40 +87,25 @@ black <modified_python_files>\n \n If no Python files were changed, skip this sub-step.\n \n-### C++ — clang-format\n-\n-Run `clang-format` on every C++ source or header file that was added or modified.\n-Do **not** run clang-format on SWIG interface files (`.i` files under\n-`ezsnmp/interface/`).\n-\n-```\n-clang-format -i <modified_cpp_or_header_files>\n-```\n-\n-If no C++ files were changed, skip this sub-step.\n-\n Commit any formatting changes as part of the same PR branch before opening the\n pull request.\n \n ## Pull Request Output\n \n When changes exist, create exactly one PR using this fixed branch name:\n \n-- Branch: `automation/coverage-autofix-every-3-days`\n+- Branch: `automation/coverage-autofix-python`\n - Base: `main`\n-- Title style: `[coverage-autofix] <short summary>`\n+- Title style: `[coverage-autofix-py] <short summary>`\n - PR body must include:\n   - Native Python coverage before/after (if measurable)\n-  - Native C++ coverage before/after (if measurable)\n-  - Dockerized Python coverage before/after by distro (if measurable)\n-  - Dockerized C++ coverage before/after by distro (if measurable)\n   - Summary of tests added/updated\n   - Any limitations or follow-up recommendations\n \n After creating the PR, attempt a best-effort follow-up label step:\n \n - Add supplemental labels to the created PR when possible: `coverage`, `tests`,\n-  `cpp`, `python`.\n+  `python`.\n - Treat this as non-critical metadata enrichment. If supplemental labeling fails,\n   do not treat the run as a primary failure and do not abandon the created PR.\n ",
+          "snapshot_ref": "7e36e75882ea8fa88a50b2dfd80a6ad6e04926fd",
+          "snapshot_blob_sha": "d9a81ab3807a50cceaa697ca10339f50ed5bc610",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__7e36e75882ea8fa88a50b2dfd80a6ad6e04926fd__coverage_autofix_python.md",
+          "snapshot_bytes": 3521,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/coverage_autofix_python.lock.yml\",\"generated_workflow_file\":\"coverage_autofix_python.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/coverage_autofix_python.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/coverage_autofix_python.md",
+      "commit_sha": "173d9644645538bd16f6d4087fdc1f06387a6ff8",
+      "authored_at": "2026-07-03T16:28:43Z",
+      "committed_at": "2026-07-03T16:28:43Z",
+      "author_name": "Carlos",
+      "author_email": "27721404+carlkidcrypto@users.noreply.github.com",
+      "author_login": "carlkidcrypto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: update all agentic workflows to use claude-sonnet-4.6 (#1049)\n\n* ci: update all agentic workflows to use claude-sonnet-4.6\n\n* ci: update both .md and .lock.yml for claude-sonnet-4.6\n\n---------\n\nCo-authored-by: Clawbot <clawbot@openclaw.ai>",
+      "parent_shas": [
+        "79edd47ef3095bdcee31d92ea611994b19fab76c"
+      ],
+      "tree_sha": "50faae8e37e53a7caf72c819914ff9b98b866ae4",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/173d9644645538bd16f6d4087fdc1f06387a6ff8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/coverage_autofix_python.md",
+          "commit_sha": "173d9644645538bd16f6d4087fdc1f06387a6ff8",
+          "committed_at": "2026-07-03T16:28:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -23,7 +23,7 @@ safe-outputs:\n timeout-minutes: 45\n engine:\n   id: copilot\n-  model: claude-opus-4.8\n+  model: claude-sonnet-4.6\n network:\n   allowed: [defaults, python]\n tools:",
+          "snapshot_ref": "173d9644645538bd16f6d4087fdc1f06387a6ff8",
+          "snapshot_blob_sha": "9d567cd5fd0d2b1678c274ce2a47da64a489670b",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__173d9644645538bd16f6d4087fdc1f06387a6ff8__coverage_autofix_python.md",
+          "snapshot_bytes": 3523,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/coverage_autofix_python.lock.yml\",\"generated_workflow_file\":\"coverage_autofix_python.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/coverage_autofix_python.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/coverage_autofix_python.md",
+      "commit_sha": "9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+      "authored_at": "2026-07-08T01:41:34Z",
+      "committed_at": "2026-07-08T01:41:34Z",
+      "author_name": "Carlos",
+      "author_email": "27721404+carlkidcrypto@users.noreply.github.com",
+      "author_login": "carlkidcrypto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix: Add copilot-requests permission for Agentic Workflows (#1091)\n\n* Fix: Add copilot-requests permission for Agentic Workflows\n\n* Compile Agentic Workflows with updated permissions\n\n* Fix: add copilot-requests permission to all agentic workflows and re-compile\n\n---------\n\nCo-authored-by: Clawbot <clawbot@openclaw.ai>",
+      "parent_shas": [
+        "845edd43ce29074bf94539821e28224b71804b0e"
+      ],
+      "tree_sha": "bdf324b7e369738a1a9bcb7282b2c51cda20e4e9",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/coverage_autofix_python.md",
+          "commit_sha": "9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+          "committed_at": "2026-07-08T01:41:34Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -7,6 +7,7 @@ on:\n   skip-if-match:\n     query: 'is:pr is:open head:automation/coverage-autofix-python label:automated-pr'\n permissions:\n+  copilot-requests: write\n   actions: read\n   contents: read\n safe-outputs:",
+          "snapshot_ref": "9cffe8c4ad819dc17a8e6f81943021f07a5a9db3",
+          "snapshot_blob_sha": "067b47b7a664de26c130c1e5bf573c81b9e24ac2",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__9cffe8c4ad819dc17a8e6f81943021f07a5a9db3__coverage_autofix_python.md",
+          "snapshot_bytes": 3549,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/coverage_autofix_python.lock.yml\",\"generated_workflow_file\":\"coverage_autofix_python.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/coverage_autofix_python.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/coverage_autofix_python.md",
+      "commit_sha": "ad583164ceacecb2d3fa9002e666121c30bd146d",
+      "authored_at": "2026-07-12T01:23:09Z",
+      "committed_at": "2026-07-12T01:23:09Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Coverage Autofix Python: run in Docker to get net-snmp libraries (#1108)\n\n* Initial plan\n\n* Fix Coverage Autofix Python workflow to run in Docker with net-snmp\n\nThe agentic workflow was failing because it tried to run coverage checks\nin the native runner environment, which lacks the net-snmp C libraries\nrequired to build the ezsnmp C++ extension.\n\nChanges:\n- Add `containers` to `network.allowed` so Docker Hub and GHCR registries\n  are accessible from within the agent container\n- Replace the native coverage check procedure with a Docker-based approach:\n  pulls the pre-built archlinux_netsnmp_5.9 test image, starts snmpd in\n  the background, installs the package, and runs pytest with coverage\n- Update Hard Requirements to reflect Docker-based execution\n- Recompile .lock.yml with gh aw compile to reflect all changes\n\n* Improve coverage_autofix_python.md documentation clarity\n\n- Add explanation for why archlinux_netsnmp_5.9-latest image is used\n- Add comment explaining MALLOC_CHECK_/MALLOC_PERTURB_ settings\n- Add comment explaining the /tmp/gh-aw/agent/ venv path convention\n- Recompile .lock.yml\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "57abea231d8f67c792eae6a01e6837362a527368"
+      ],
+      "tree_sha": "b82f7982e61d051a1db9d76b417edf1db3074638",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/ad583164ceacecb2d3fa9002e666121c30bd146d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/coverage_autofix_python.md",
+          "commit_sha": "ad583164ceacecb2d3fa9002e666121c30bd146d",
+          "committed_at": "2026-07-12T01:23:09Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 53,
+          "file_deletions": 8,
+          "file_changes": 61,
+          "file_patch": "@@ -26,7 +26,7 @@ engine:\n   id: copilot\n   model: claude-sonnet-4.6\n network:\n-  allowed: [defaults, python]\n+  allowed: [defaults, python, containers]\n tools:\n   edit:\n   bash: true\n@@ -42,18 +42,63 @@ propose and implement minimal, safe fixes that improve coverage and reliability.\n - Focus only on this repository.\n - Keep changes scoped and low-risk.\n - Prefer tests first when improving coverage.\n-- Run coverage checks in native environment.\n+- Run coverage checks inside a Docker container (the ezsnmp package requires\n+  net-snmp C libraries to build its native C++ extension, which are only\n+  available in the pre-built Docker test images).\n - Do not open a new pull request if an open automation PR already exists for\n   branch `automation/coverage-autofix-python`.\n - If no meaningful change is needed, make no file edits and end cleanly.\n \n ## Coverage Check Procedure\n \n-1. Prepare Python dependencies and run Python tests with coverage:\n-   - `python -m pip install --upgrade pip`\n-   - `python -m pip install -r python_tests/requirements.txt`\n-   - `python -m pip install .`\n-   - `pytest -v -s -n auto --dist loadfile --junitxml=test-results.xml --cov=ezsnmp --cov-report=term-missing --cov-report=xml:coverage.xml --cov-config=.coveragerc python_tests/`\n+1. Run Python tests with coverage inside a pre-built Docker container that has\n+   net-snmp libraries included. The ezsnmp package cannot be installed in the\n+   native runner environment because its C++ extension requires `libsnmp-dev` /\n+   `net-snmp-devel`, which are only available in the Docker test images.\n+\n+   The `archlinux_netsnmp_5.9-latest` image is used here because it is the\n+   same distribution and net-snmp version used throughout the repository's CI\n+   test matrix; it always refers to the latest published build of that image.\n+\n+   a. Pull the test image (try Docker Hub first, fall back to GHCR):\n+      ```\n+      docker pull carlkidcrypto/ezsnmp_test_images:archlinux_netsnmp_5.9-latest || \\\n+        docker pull ghcr.io/carlkidcrypto/ezsnmp_test_images:archlinux_netsnmp_5.9-latest\n+      ```\n+\n+   b. Run tests inside the container with the repository bind-mounted at\n+      `/ezsnmp`. This starts `snmpd` in the background, installs the package,\n+      and runs pytest with coverage. Coverage output files are written back to\n+      the host working directory via the bind mount:\n+      ```\n+      docker run --rm \\\n+        -v \"$(pwd):/ezsnmp\" \\\n+        carlkidcrypto/ezsnmp_test_images:archlinux_netsnmp_5.9-latest \\\n+        bash -c \"\n+          export PATH=/usr/local/bin:$PATH\n+          export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64\n+          # Disable glibc malloc checking to avoid false positives with Net-SNMP\n+          # (mirrors the same setting in docker/DockerEntry.sh)\n+          export MALLOC_CHECK_=0\n+          export MALLOC_PERTURB_=0\n+          mkdir -p /etc/snmp\n+          cp /ezsnmp/configs/snmpd.conf /etc/snmp/snmpd.conf\n+          snmpd -C -c /etc/snmp/snmpd.conf &\n+          sleep 2\n+          # /tmp/gh-aw/agent/ is the recommended temp root for agent-generated\n+          # files in gh-aw (its contents are uploaded as a run artifact)\n+          python3 -m venv /tmp/gh-aw/agent/venv\n+          /tmp/gh-aw/agent/venv/bin/pip install -q -r /ezsnmp/python_tests/requirements.txt\n+          cd /ezsnmp && /tmp/gh-aw/agent/venv/bin/pip install -q .\n+          /tmp/gh-aw/agent/venv/bin/pytest -v -s -n auto --dist loadfile \\\n+            --junitxml=/ezsnmp/test-results.xml \\\n+            --cov=ezsnmp --cov-report=term-missing \\\n+            --cov-report=xml:/ezsnmp/coverage.xml \\\n+            --cov-config=/ezsnmp/.coveragerc \\\n+            /ezsnmp/python_tests/\n+        \"\n+      ```\n+\n    - Read coverage from `coverage.xml` when available.\n \n 2. Determine if action is needed:\n@@ -99,7 +144,7 @@ When changes exist, create exactly one PR using this fixed branch name:\n - Base: `main`\n - Title style: `[coverage-autofix-py] <short summary>`\n - PR body must include:\n-  - Native Python coverage before/after (if measurable)\n+  - Docker-based Python coverage before/after (if measurable)\n   - Summary of tests added/updated\n   - Any limitations or follow-up recommendations\n ",
+          "snapshot_ref": "ad583164ceacecb2d3fa9002e666121c30bd146d",
+          "snapshot_blob_sha": "c31f16a2cf0328ecf253ef711869bc86636b5c7a",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__ad583164ceacecb2d3fa9002e666121c30bd146d__coverage_autofix_python.md",
+          "snapshot_bytes": 5749,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/coverage_autofix_python.lock.yml\",\"generated_workflow_file\":\"coverage_autofix_python.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/coverage_autofix_python.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+      "source_full_name": "carlkidcrypto/ezsnmp",
+      "md_path": ".github/workflows/coverage_autofix_python.md",
+      "commit_sha": "a7873ec548926a1fe2b145f2860d56f332f5eef6",
+      "authored_at": "2026-07-14T04:12:04Z",
+      "committed_at": "2026-07-14T04:12:04Z",
+      "author_name": "Carlos",
+      "author_email": "27721404+carlkidcrypto@users.noreply.github.com",
+      "author_login": "carlkidcrypto",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: update coverage autofix workflows to use Codecov polling and hu… (#1123)\n\n* feat: update coverage autofix workflows to use Codecov polling and human verification\n\n* chore: update agentic workflow lock files\n\n---------\n\nCo-authored-by: Clawbot <clawbot@openclaw.ai>",
+      "parent_shas": [
+        "1db38206fa5308a780bf0b1f4c18e0be2602c49a"
+      ],
+      "tree_sha": "9aeeb76f924a463221d85b7aaa981ac224156fe7",
+      "html_url": "https://github.com/carlkidcrypto/ezsnmp/commit/a7873ec548926a1fe2b145f2860d56f332f5eef6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "carlkidcrypto/ezsnmp:.github/workflows/coverage_autofix_python.md",
+          "source_full_name": "carlkidcrypto/ezsnmp",
+          "md_path": ".github/workflows/coverage_autofix_python.md",
+          "commit_sha": "a7873ec548926a1fe2b145f2860d56f332f5eef6",
+          "committed_at": "2026-07-14T04:12:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 12,
+          "file_deletions": 53,
+          "file_changes": 65,
+          "file_patch": "@@ -42,64 +42,16 @@ propose and implement minimal, safe fixes that improve coverage and reliability.\n - Focus only on this repository.\n - Keep changes scoped and low-risk.\n - Prefer tests first when improving coverage.\n-- Run coverage checks inside a Docker container (the ezsnmp package requires\n-  net-snmp C libraries to build its native C++ extension, which are only\n-  available in the pre-built Docker test images).\n - Do not open a new pull request if an open automation PR already exists for\n   branch `automation/coverage-autofix-python`.\n - If no meaningful change is needed, make no file edits and end cleanly.\n \n ## Coverage Check Procedure\n \n-1. Run Python tests with coverage inside a pre-built Docker container that has\n-   net-snmp libraries included. The ezsnmp package cannot be installed in the\n-   native runner environment because its C++ extension requires `libsnmp-dev` /\n-   `net-snmp-devel`, which are only available in the Docker test images.\n-\n-   The `archlinux_netsnmp_5.9-latest` image is used here because it is the\n-   same distribution and net-snmp version used throughout the repository's CI\n-   test matrix; it always refers to the latest published build of that image.\n-\n-   a. Pull the test image (try Docker Hub first, fall back to GHCR):\n-      ```\n-      docker pull carlkidcrypto/ezsnmp_test_images:archlinux_netsnmp_5.9-latest || \\\n-        docker pull ghcr.io/carlkidcrypto/ezsnmp_test_images:archlinux_netsnmp_5.9-latest\n-      ```\n-\n-   b. Run tests inside the container with the repository bind-mounted at\n-      `/ezsnmp`. This starts `snmpd` in the background, installs the package,\n-      and runs pytest with coverage. Coverage output files are written back to\n-      the host working directory via the bind mount:\n-      ```\n-      docker run --rm \\\n-        -v \"$(pwd):/ezsnmp\" \\\n-        carlkidcrypto/ezsnmp_test_images:archlinux_netsnmp_5.9-latest \\\n-        bash -c \"\n-          export PATH=/usr/local/bin:$PATH\n-          export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64\n-          # Disable glibc malloc checking to avoid false positives with Net-SNMP\n-          # (mirrors the same setting in docker/DockerEntry.sh)\n-          export MALLOC_CHECK_=0\n-          export MALLOC_PERTURB_=0\n-          mkdir -p /etc/snmp\n-          cp /ezsnmp/configs/snmpd.conf /etc/snmp/snmpd.conf\n-          snmpd -C -c /etc/snmp/snmpd.conf &\n-          sleep 2\n-          # /tmp/gh-aw/agent/ is the recommended temp root for agent-generated\n-          # files in gh-aw (its contents are uploaded as a run artifact)\n-          python3 -m venv /tmp/gh-aw/agent/venv\n-          /tmp/gh-aw/agent/venv/bin/pip install -q -r /ezsnmp/python_tests/requirements.txt\n-          cd /ezsnmp && /tmp/gh-aw/agent/venv/bin/pip install -q .\n-          /tmp/gh-aw/agent/venv/bin/pytest -v -s -n auto --dist loadfile \\\n-            --junitxml=/ezsnmp/test-results.xml \\\n-            --cov=ezsnmp --cov-report=term-missing \\\n-            --cov-report=xml:/ezsnmp/coverage.xml \\\n-            --cov-config=/ezsnmp/.coveragerc \\\n-            /ezsnmp/python_tests/\n-        \"\n-      ```\n-\n-   - Read coverage from `coverage.xml` when available.\n+1. Use Codecov to identify coverage gaps.\n+   - Visit https://app.codecov.io/gh/carlkidcrypto/ezsnmp to view the current\n+     coverage reports for the `main` branch.\n+   - Analyze the Python files to find uncovered lines or branches.\n \n 2. Determine if action is needed:\n    - If Python coverage is below 99%, or tests reveal clear reliability\n@@ -144,10 +96,17 @@ When changes exist, create exactly one PR using this fixed branch name:\n - Base: `main`\n - Title style: `[coverage-autofix-py] <short summary>`\n - PR body must include:\n-  - Docker-based Python coverage before/after (if measurable)\n   - Summary of tests added/updated\n+  - A note that coverage verification must be performed by the reviewer via Codecov/CI.\n   - Any limitations or follow-up recommendations\n \n+### Human Verification Task\n+\n+Since local Docker-based verification is unavailable, you MUST create a task\n+in the PR (e.g., as a checklist item or a comment) explicitly requesting the\n+human reviewer to verify that the coverage has actually increased in the\n+resulting CI run before merging.\n+\n After creating the PR, attempt a best-effort follow-up label step:\n \n - Add supplemental labels to the created PR when possible: `coverage`, `tests`,",
+          "snapshot_ref": "a7873ec548926a1fe2b145f2860d56f332f5eef6",
+          "snapshot_blob_sha": "e020ea9288a4c52fc4033ee21c0537cb5e540d6b",
+          "snapshot_file": "snapshots/ezsnmp__carlkidcrypto__a7873ec548926a1fe2b145f2860d56f332f5eef6__coverage_autofix_python.md",
+          "snapshot_bytes": 3632,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"carlkidcrypto/ezsnmp\",\"generated_owner\":\"carlkidcrypto\",\"generated_repo\":\"ezsnmp\",\"generated_workflow_path\":\".github/workflows/coverage_autofix_python.lock.yml\",\"generated_workflow_file\":\"coverage_autofix_python.lock.yml\",\"generated_html_url\":\"https://github.com/carlkidcrypto/ezsnmp/blob/7629a3cfa132b1b86a401474c35de2e261c85739/.github/workflows/coverage_autofix_python.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

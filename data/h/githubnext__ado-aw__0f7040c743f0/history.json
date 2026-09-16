@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/review-security.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/review-security.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/review-security.lock.yml",
+      "generated_workflow_file": "review-security.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-security.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:54+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-security.md",
+      "commit_sha": "603279af578e112f6987e2bbc50a6322e93eeab6",
+      "authored_at": "2026-07-31T20:01:52Z",
+      "committed_at": "2026-07-31T20:01:52Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): overhaul PR review workflows around /review (#1758)\n\nReplaces the two near-duplicate Rust reviewers with a five-way `/review`\nfan-out modelled on githubnext/gh-aw, and adds a sous-chef loop that keeps\nopen PRs moving.\n\nThe old pair (`rust-pr-reviewer.md` on every push, `rust-review-command.md`\non `/rust-review`) shared ~95% of their prompt, covered only Rust, and posted\nsummary comments. Reviews are now inline line comments.\n\nNew reviewers, each owning a distinct concern so comments do not overlap:\n\n  - review-rust               Rust engineering quality\n  - review-typescript         scripts/ado-script/ quality\n  - review-tests              test quality beyond coverage\n  - review-compiler-contract  ado-aw domain contracts and drift\n  - review-security           diff-scoped security regressions\n\n`review-rust` and `review-typescript` are deliberately language-generic; all\nado-aw-specific invariants live in `review-compiler-contract`, which also\ndetects ncc bundle drift — a gap nothing else in the repo covers, since\nado-script.yml rebuilds the bundles but never diffs them.\n\nOnly the two code-quality reviewers re-run on every push. All five carry\n`draft: false` so pushes to drafts cost nothing, and gh-aw's generated\nper-PR `cancel-in-progress` concurrency supersedes runs on rapid pushes.\n\nShared components:\n\n  - shared/pr-review-base.md      tools, network and review safe-outputs\n  - shared/pr-diff-data-fetch.md  pre-agent-steps diff/meta/comment prefetch\n  - pr-data-prefetch.yml          engine-less cache warmer\n\n`submit-pull-request-review` pins `allowed-events: [COMMENT, REQUEST_CHANGES]`\nin the shared base: the Actions actor cannot approve a PR, so permitting it\nwould only fail at runtime. `supersede-older-reviews` keeps repeated pushes\nfrom stacking stale REQUEST_CHANGES reviews, and the prefetched\n`pr-review-comments.json` lets each reviewer skip feedback it already gave.\n\n`pr-sous-chef.md` runs every 15 minutes and on `/souschef`, posting one\nmarker'd `@copilot` nudge per PR listing unresolved threads and failed\nchecks, resolving answered threads, dismissing stale bot reviews and pushing\n`cargo fmt --all` fixes. It does not rebuild the TypeScript bundles — that\nneeds `npm ci` plus two `cargo run` invocations, far too costly at 96\nruns/day — so bundle drift is reported by review-compiler-contract instead.\n\nCommand changes:\n\n  - `/rust-review` is replaced by `/review`\n  - `/change-risk` is renamed to `/risk` (change-risk.md -> risk.md)\n  - `/scout`, `/plan` and `/risk` move to `strategy: centralized`\n\nAll four commands now route through the generated `agentic_commands.yml`,\nresolving the advisory `gh aw validate` was emitting.\n\n`gh aw compile` reports 27 workflows, 0 errors; every added bash body passes\nshellcheck. agentics-maintenance.yml is a v0.84.0 regeneration artefact.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 475bd62b-12cb-41aa-88b6-39a3d75e3c50",
+      "parent_shas": [
+        "e550cb5d893d567d8a21832f244564e9a145b7b2"
+      ],
+      "tree_sha": "fde5b768dc8d01b40b0856d8e11112b8c4679476",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/603279af578e112f6987e2bbc50a6322e93eeab6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-security.md",
+          "commit_sha": "603279af578e112f6987e2bbc50a6322e93eeab6",
+          "committed_at": "2026-07-31T20:01:52Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 168,
+          "file_deletions": 0,
+          "file_changes": 168,
+          "file_patch": "@@ -0,0 +1,168 @@\n+---\n+name: PR Security Reviewer\n+emoji: \"🔒\"\n+description: Diff-scoped security review of pull requests — injection, path traversal, token scope and network allowlist changes\n+on:\n+  pull_request:\n+    types: [ready_for_review]\n+    draft: false\n+  slash_command:\n+    strategy: centralized\n+    name: review\n+    events: [pull_request_comment, pull_request_review_comment]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  copilot-requests: write\n+imports:\n+  - uses: shared/pr-review-base.md\n+    with:\n+      min-integrity: approved\n+  - shared/pr-diff-data-fetch.md\n+cache:\n+  key: pr-prefetch-${{ github.event.pull_request.head.sha || github.event.issue.number }}\n+  path: /tmp/gh-aw/agent\n+  restore-keys:\n+    - pr-prefetch-${{ github.event.pull_request.number || github.event.issue.number }}-\n+safe-outputs:\n+  messages:\n+    footer: \"> 🔒 *Security review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"\n+    run-started: \"🔒 [{workflow_name}]({run_url}) is reviewing this {event_type} for security implications...\"\n+    run-success: \"✅ [{workflow_name}]({run_url}) completed the security review.\"\n+    run-failure: \"⚠️ [{workflow_name}]({run_url}) {status} during the security review.\"\n+evals:\n+  - id: review_submitted\n+    question: Did the agent submit a pull request review?\n+  - id: findings_concrete\n+    question: Does the agent output describe specific security concerns tied to the pull request diff rather than generic security advice?\n+---\n+\n+# PR Security Reviewer 🔒\n+\n+You review **this pull request's diff** for security regressions in **ado-aw**.\n+\n+This is deliberately narrow. A scheduled workflow (`red-team-security.md`)\n+already hunts for exploitable vulnerabilities across the whole codebase\n+CTF-style. You are not that. Your question is only:\n+\n+> **Does this diff weaken the security posture compared to the code it replaces?**\n+\n+If a weakness already existed on `main` and this PR merely moves it, that is not\n+your finding.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Pull request**: #${{ github.event.issue.number || github.event.pull_request.number }}\n+- **Triggered by**: @${{ github.actor }}\n+\n+## The threat model you are defending\n+\n+`ado-aw` compiles **untrusted markdown** into Azure DevOps pipeline YAML, and\n+that YAML runs on build agents holding real credentials. The compiler is a\n+trust boundary. Downstream, the three-stage pipeline model is the other\n+boundary: the Agent stage (Stage 1) runs the AI in a network-isolated AWF\n+sandbox with a **read-only** ADO token and may only *propose* safe outputs;\n+Stage 2 screens those proposals; Stage 3 applies them with a **write-capable**\n+token that the agent never sees.\n+\n+Anything in a diff that erodes either boundary is a high-severity finding.\n+\n+## Step 1 — Load the data\n+\n+Read `/tmp/gh-aw/agent/pr-diff.patch`, `/tmp/gh-aw/agent/pr-meta.json` and\n+`/tmp/gh-aw/agent/pr-review-comments.json` in one parallel turn.\n+\n+## Step 2 — What to look for\n+\n+### Injection into generated pipelines\n+\n+The compiler emits YAML that a build agent executes. A user-controlled value\n+reaching any of these unescaped is a command-execution vulnerability:\n+\n+- a generated `bash:` step body;\n+- an ADO logging command — `##vso[...]` — where injected content can set\n+  variables, upload artefacts or alter the build;\n+- an ADO template expression or runtime macro — `$(...)` and the\n+  `$`-brace-brace template form — in a field the author controls;\n+- a step `name`, `displayName` or `condition` built by string concatenation.\n+\n+Check that new values pass through `src/sanitize.rs` / `src/validate.rs` before\n+being embedded, and that quoting is correct — `\"$VAR\"` not `$VAR`.\n+\n+### Weakened validation\n+\n+Treat any of these as high severity:\n+\n+- a check removed or loosened in `src/validate.rs` or `src/sanitize.rs`;\n+- a validated newtype from `src/secure.rs` (`RelativeSafePath`,\n+  `StrictRelativePath`, `GitRefName`, `CommitSha`, `ArtifactName`) replaced by a\n+  raw `String`, or a new path/ref/identifier field introduced as a raw `String`.\n+  Those newtypes run their validators at deserialisation time, so downgrading to\n+  `String` silently deletes the check;\n+- a regex or allowlist widened without an explanation in the PR body.\n+\n+### Path traversal\n+\n+Any new file operation taking a caller-supplied path: does it reject `..`,\n+absolute paths and (on Windows) drive-qualified and UNC paths? Symlink\n+following in an extract or copy path is equally exploitable.\n+\n+### Token scope and projection\n+\n+`src/compile/ado_bundle.rs` is the single chokepoint that projects\n+`SYSTEM_ACCESSTOKEN` into bundle steps, and `token_source_for()` decides between\n+`System.AccessToken` and `SC_WRITE_TOKEN`. Flag:\n+\n+- a write-capable token reaching a Stage 1 (Agent) step;\n+- a token projected into a step that does not make REST calls;\n+- a secret that could be echoed into a log, an error message or a step summary;\n+- a new `github-token:` / service-connection reference that widens scope;\n+- credentials in TypeScript (`scripts/ado-script/src/shared/auth.ts`,\n+  `ado-client.ts`) that can surface in a thrown `Error`.\n+\n+### Network boundary\n+\n+`src/allowed_hosts.rs` and `src/ecosystem_domains.rs` define the AWF L7\n+allowlist for the sandboxed agent. Any added domain needs a justification —\n+wildcards, and anything that could proxy arbitrary traffic, are findings.\n+\n+Remember the scope rule: AWF wraps **only** the agent's engine command. Other\n+pipeline steps run outside the sandbox with normal network access, so a domain\n+added purely for a download step does not belong in the allowlist.\n+\n+### Safe-output integrity\n+\n+- A new safe output that performs a write must be applied in Stage 3, never\n+  directly by the agent.\n+- Sanitisation must not be bypassed for agent-authored content.\n+- `ado-aw-debug:` features (`skip-integrity`) must not become reachable from a\n+  normal, non-debug workflow.\n+\n+### Prompt injection\n+\n+Content fetched from work items, PR comments or external pages is untrusted. If\n+this diff routes such content into a prompt without neutralisation, or lets it\n+influence which tools the agent may call, flag it.\n+\n+## Step 3 — Report\n+\n+Post findings with `create-pull-request-review-comment` on lines in the diff.\n+Budget of 10, prioritised: exploitable injection or token exposure first,\n+weakened validation second, hardening suggestions last.\n+\n+For each finding give **severity** (`critical`/`high`/`medium`/`low`) and\n+**confidence** (`high`/`medium`/`low`) in the visible sentence, then the attack\n+path and the fix inside a `<details>` block. State the concrete attack — who\n+controls the input, how it reaches the sink, and what they gain. A finding you\n+cannot trace end to end is speculation: either mark it low confidence or drop it.\n+\n+Skip anything already raised in `pr-review-comments.json`.\n+\n+Call `submit-pull-request-review` once. Use `REQUEST_CHANGES` only for a\n+`high`-or-`critical` finding you can trace end to end, or for a deletion of an\n+existing security control. Otherwise `COMMENT`.\n+\n+**False positives are expensive.** They train the team to ignore you. If the\n+diff is security-neutral, say so in one line and submit a `COMMENT` review.",
+          "snapshot_ref": "603279af578e112f6987e2bbc50a6322e93eeab6",
+          "snapshot_blob_sha": "b04c632a2a7d2b03f2fad952670a3ff24b956fd5",
+          "snapshot_file": "snapshots/ado-aw__githubnext__603279af578e112f6987e2bbc50a6322e93eeab6__review-security.md",
+          "snapshot_bytes": 7134,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-security.lock.yml\",\"generated_workflow_file\":\"review-security.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-security.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-security.md",
+      "commit_sha": "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+      "authored_at": "2026-08-02T15:52:37Z",
+      "committed_at": "2026-08-02T15:52:37Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): resolve PR number from aw_context in /review reviewers (#1779)\n\nThe `/review` fan-out dispatched all five reviewers correctly, but every one\nof them silently reviewed nothing.\n\nUnder `slash_command.strategy: centralized`, the generated\n`agentic_commands.yml` router dispatches each reviewer via `workflow_dispatch`,\nso the payload carries neither `github.event.pull_request.number` nor\n`github.event.issue.number` — the PR identity arrives only in the `aw_context`\ninput as `{item_type: \"pull_request\", item_number: \"<N>\"}`.\n\nAs a result, in `shared/pr-diff-data-fetch.md`:\n\n  * `PR_NUMBER` resolved empty, so the step wrote empty pre-fetch files and\n    exited 0. The agent then reported a successful run with \"No review\n    performed: pre-fetched PR data files were empty\".\n  * The cache key collapsed to the constant `pr-prefetch-`, so all five\n    reviewers restored the same 349-byte poisoned entry.\n\nFixes:\n\n  * `PR_NUMBER` gains an `aw_context` fallback, guarded by\n    `item_type == 'pull_request'` as required by gh-aw ADR-31820 —\n    `item_number` is shared across entity kinds, so an issue-routed run must\n    not populate the PR number slot. The raw `fromJSON(...)` form is used\n    because `github.aw.context.*` is a prompt-only virtual namespace and is\n    not transformed inside step `env:`.\n  * Cache keys are re-scoped to `pr-prefetch-<pr-number>-<sha>` so the\n    `restore-keys` prefix still matches when a dispatch run knows the PR\n    number but not the head SHA. `pr-data-head-sha.txt` continues to reject\n    stale entries.\n  * The unresolved-PR path now fails loudly instead of reporting a successful\n    empty review. That fail-open behaviour is what hid this.\n  * Reviewer prompt bodies now defer to `pull-request-number` in gh-aw's\n    builtin `<github-context>` block, which already carries the `aw_context`\n    fallback, rather than hand-rolling the expression.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 9cc16936-10fe-4069-9a37-0d2d1335b6e5",
+      "parent_shas": [
+        "da9fa76fe29de3b8b6112b4124ff90393879ba65"
+      ],
+      "tree_sha": "e67a6f78dd4fe09e6c39a4b2a96caa7ee5e5f678",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-security.md",
+          "commit_sha": "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+          "committed_at": "2026-08-02T15:52:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -21,10 +21,10 @@ imports:\n       min-integrity: approved\n   - shared/pr-diff-data-fetch.md\n cache:\n-  key: pr-prefetch-${{ github.event.pull_request.head.sha || github.event.issue.number }}\n+  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n   path: /tmp/gh-aw/agent\n   restore-keys:\n-    - pr-prefetch-${{ github.event.pull_request.number || github.event.issue.number }}-\n+    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-\n safe-outputs:\n   messages:\n     footer: \"> 🔒 *Security review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"\n@@ -54,7 +54,7 @@ your finding.\n ## Context\n \n - **Repository**: ${{ github.repository }}\n-- **Pull request**: #${{ github.event.issue.number || github.event.pull_request.number }}\n+- **Pull request**: see `pull-request-number` in the `<github-context>` block above — it is populated for both native PR events and centralized `/review` dispatches\n - **Triggered by**: @${{ github.actor }}\n \n ## The threat model you are defending",
+          "snapshot_ref": "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+          "snapshot_blob_sha": "27792042c1c7f709ce1eae25317d7f24f6682ce8",
+          "snapshot_file": "snapshots/ado-aw__githubnext__b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5__review-security.md",
+          "snapshot_bytes": 7338,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-security.lock.yml\",\"generated_workflow_file\":\"review-security.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-security.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-security.md",
+      "commit_sha": "53890d653f8f2331fc221e742cf0a5c0ad798a22",
+      "authored_at": "2026-08-02T17:48:39Z",
+      "committed_at": "2026-08-02T17:48:39Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): harden reviewer PR-number resolution for /review dispatches (#1781)\n\nAlign the shared pre-fetch component with gh-aw's canonical aw_context expansion (transformAwContextExpression), which also reads github.event.client_payload.aw_context for repository_dispatch hops, and add a branch-based fallback: the centralized router always dispatches on the PR head ref, so gh pr list --head recovers the PR even if the context payload changes shape again.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 7f20ec70-8eca-4449-b5df-6abc5b23e821",
+      "parent_shas": [
+        "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5"
+      ],
+      "tree_sha": "b50bcf6d97577abb78e49e4d38a17c84ec5edf61",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/53890d653f8f2331fc221e742cf0a5c0ad798a22",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-security.md",
+          "commit_sha": "53890d653f8f2331fc221e742cf0a5c0ad798a22",
+          "committed_at": "2026-08-02T17:48:39Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -21,10 +21,10 @@ imports:\n       min-integrity: approved\n   - shared/pr-diff-data-fetch.md\n cache:\n-  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n+  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n   path: /tmp/gh-aw/agent\n   restore-keys:\n-    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-\n+    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-\n safe-outputs:\n   messages:\n     footer: \"> 🔒 *Security review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"",
+          "snapshot_ref": "53890d653f8f2331fc221e742cf0a5c0ad798a22",
+          "snapshot_blob_sha": "a7d4ece676b4e82becee395fea432a9eab67240c",
+          "snapshot_file": "snapshots/ado-aw__githubnext__53890d653f8f2331fc221e742cf0a5c0ad798a22__review-security.md",
+          "snapshot_bytes": 7422,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-security.lock.yml\",\"generated_workflow_file\":\"review-security.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-security.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-security.md",
+      "commit_sha": "08be5ec6645644717f2bf2691fd923380cf8d607",
+      "authored_at": "2026-08-03T09:34:18Z",
+      "committed_at": "2026-08-03T09:34:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): scope reviewer auto-triggers by changed-file subsets (#1787)\n\n* chore(workflows): scope reviewer auto-triggers by changed files\n\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>\n\n* chore(workflows): regenerate reviewer lock files\n\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: jamesadevine <4742697+jamesadevine@users.noreply.github.com>",
+      "parent_shas": [
+        "0942c61e58a78fe75821249ad92a77c045517f3f"
+      ],
+      "tree_sha": "9227844286b0fbaf245fd0901fcfa61f908bdf34",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/08be5ec6645644717f2bf2691fd923380cf8d607",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-security.md",
+          "commit_sha": "08be5ec6645644717f2bf2691fd923380cf8d607",
+          "committed_at": "2026-08-03T09:34:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 0,
+          "file_changes": 8,
+          "file_patch": "@@ -6,6 +6,14 @@ on:\n   pull_request:\n     types: [ready_for_review]\n     draft: false\n+    paths:\n+      - \"src/**\"\n+      - \"ado-aw-derive/**\"\n+      - \"Cargo.toml\"\n+      - \"scripts/ado-script/src/**\"\n+      - \"scripts/ado-script/package.json\"\n+      - \"scripts/ado-script/package-lock.json\"\n+      - \".github/workflows/**\"\n   slash_command:\n     strategy: centralized\n     name: review",
+          "snapshot_ref": "08be5ec6645644717f2bf2691fd923380cf8d607",
+          "snapshot_blob_sha": "0aca9f75356a81155405ef79386a8fefdbba1de1",
+          "snapshot_file": "snapshots/ado-aw__githubnext__08be5ec6645644717f2bf2691fd923380cf8d607__review-security.md",
+          "snapshot_bytes": 7654,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-security.lock.yml\",\"generated_workflow_file\":\"review-security.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-security.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-security.md",
+      "commit_sha": "d19e021d854286176976d107a6d1422a1c2c188f",
+      "authored_at": "2026-08-03T13:18:54Z",
+      "committed_at": "2026-08-03T13:18:54Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): give reviewers the complete PR diff (#1792)\n\nRemove the repository-owned 3,000-line truncation from both PR diff fetch paths and version the cache namespace so existing truncated entries cannot be restored.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: af5a1369-fd26-4781-a5b6-1bcd77e89a77",
+      "parent_shas": [
+        "769dd0e526c3c9b9c36790c199a607f238a80d35"
+      ],
+      "tree_sha": "cdbc1c63ebfaab3b261d9f1e7250d0295f7e6a8a",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/d19e021d854286176976d107a6d1422a1c2c188f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-security.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-security.md",
+          "commit_sha": "d19e021d854286176976d107a6d1422a1c2c188f",
+          "committed_at": "2026-08-03T13:18:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -29,10 +29,10 @@ imports:\n       min-integrity: approved\n   - shared/pr-diff-data-fetch.md\n cache:\n-  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n+  key: pr-prefetch-full-v1-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n   path: /tmp/gh-aw/agent\n   restore-keys:\n-    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-\n+    - pr-prefetch-full-v1-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-\n safe-outputs:\n   messages:\n     footer: \"> 🔒 *Security review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"",
+          "snapshot_ref": "d19e021d854286176976d107a6d1422a1c2c188f",
+          "snapshot_blob_sha": "e811a4d558ec7b0c838f8858777b9b96a074a0b3",
+          "snapshot_file": "snapshots/ado-aw__githubnext__d19e021d854286176976d107a6d1422a1c2c188f__review-security.md",
+          "snapshot_bytes": 7670,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-security.lock.yml\",\"generated_workflow_file\":\"review-security.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-security.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

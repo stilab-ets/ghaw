@@ -1,0 +1,162 @@
+---
+inlined-imports: true
+name: "Agent Suggestions"
+description: "Suggest new agent workflows based on repo needs and downstream activity"
+imports:
+  - gh-aw-fragments/elastic-tools.md
+  - gh-aw-fragments/runtime-setup.md
+  - gh-aw-fragments/formatting.md
+  - gh-aw-fragments/rigor.md
+  - gh-aw-fragments/mcp-pagination.md
+  - gh-aw-fragments/messages-footer.md
+  - gh-aw-fragments/safe-output-create-issue.md
+  - gh-aw-fragments/previous-findings.md
+  - gh-aw-fragments/pick-three-keep-one.md
+  - gh-aw-fragments/scheduled-audit.md
+  - gh-aw-fragments/network-ecosystems.md
+engine:
+  id: copilot
+  model: ${{ inputs.model }}
+on:
+  workflow_call:
+    inputs:
+      model:
+        description: "AI model to use"
+        type: string
+        required: false
+        default: "gpt-5.3-codex"
+      additional-instructions:
+        description: "Repo-specific instructions appended to the agent prompt"
+        type: string
+        required: false
+        default: ""
+      setup-commands:
+        description: "Shell commands to run before the agent starts (dependency install, build, etc.)"
+        type: string
+        required: false
+        default: ""
+      allowed-bot-users:
+        description: "Allowed bot actor usernames (comma-separated)"
+        type: string
+        required: false
+        default: "github-actions[bot]"
+      messages-footer:
+        description: "Footer appended to all agent comments and reviews"
+        type: string
+        required: false
+        default: ""
+      title-prefix:
+        description: "Title prefix for created issues (e.g. '[agent-suggestions]')"
+        type: string
+        required: false
+        default: "[agent-suggestions]"
+    secrets:
+      COPILOT_GITHUB_TOKEN:
+        required: true
+  roles: [admin, maintainer, write]
+  bots:
+    - "${{ inputs.allowed-bot-users }}"
+concurrency:
+  group: ${{ github.workflow }}-agent-suggestions
+  cancel-in-progress: true
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+tools:
+  github:
+    toolsets: [repos, issues, pull_requests, search]
+  bash: true
+  web-fetch:
+strict: false
+safe-outputs:
+  activation-comments: false
+  noop:
+  create-issue:
+    max: 1
+    title-prefix: "${{ inputs.title-prefix }} "
+    close-older-key: "${{ inputs.title-prefix }}"
+    close-older-issues: false
+    expires: 7d
+timeout-minutes: 90
+steps:
+  - name: Repo-specific setup
+    if: ${{ inputs.setup-commands != '' }}
+    env:
+      SETUP_COMMANDS: ${{ inputs.setup-commands }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    run: eval "$SETUP_COMMANDS"
+---
+
+Suggest new agent workflows that would materially improve software development for this repository and its downstream users.
+
+## Report Assignment
+
+### Data Gathering
+
+1. **Inventory existing workflows**
+   - Read `README.md` and `gh-agent-workflows/README.md` to list current workflows, triggers, and scopes.
+   - Skim `gh-agent-workflows/` directory names to confirm what already exists.
+
+2. **Check for duplicates or in-flight work**
+   - Search open issues for existing requests: `repo:{owner}/{repo} is:issue is:open (agent OR workflow OR automation)`.
+   - Search open PRs for new workflows: `repo:{owner}/{repo} is:pr is:open (agent OR workflow)`.
+   - Search past reports: `repo:{owner}/{repo} is:issue in:title "${{ inputs.title-prefix }}"`.
+
+3. Use the **Pick Three, Keep One** pattern for the data gathering phase: spawn 3 `general-purpose` sub-agents, each investigating from a different angle (e.g., different workflow categories, different improvement types such as new workflows vs. enhancements vs. integrations, different downstream repo segments). Include the existing workflow inventory, repo conventions, and the full "What to Suggest" criteria in each sub-agent prompt. Each sub-agent should return its best candidate suggestion with evidence or recommend `noop`.
+
+4. **Evaluate software development needs in this repo**
+   - Review open issues and PRs updated in the last 30 days for recurring work patterns (maintenance, docs, testing, releases, dependency updates).
+   - Identify any recurring tasks that are not already covered by existing agents.
+
+5. **Evaluate downstream activity**
+   - Discover downstream repos using these workflows:
+     `github-search_code: query="org:elastic elastic/ai-github-actions/.github/workflows/gh-aw- language:yaml"`.
+   - For 3-5 active downstream repos, review open issues and PRs updated in the last 30 days.
+   - Look for recurring needs that could be automated by a new agent workflow.
+
+### What to Suggest
+
+- Propose **1–3** new workflows only when there is strong evidence of a gap.
+- Each suggestion must include:
+  - **Proposed workflow name**
+  - **Trigger** (schedule, issue/PR events, slash command)
+  - **Purpose and scope**
+  - **Proposed safe outputs** (issue, PR, comment)
+  - **Evidence** (links to issues/PRs or downstream repo activity)
+  - **Why it is not already covered** by existing workflows
+
+### Noop
+
+If no strong, actionable gaps are found, call `noop` with:
+"Agent suggestions skipped — no clear, actionable gaps found in current workflows or downstream needs".
+
+### Issue Format
+
+**Issue title:** Agent suggestions - YYYY-MM-DD
+
+**Issue body:**
+
+> ## Agent Suggestions
+> **Date:** YYYY-MM-DD
+>
+> ### 1. [Proposed workflow name]
+> **Trigger:** [event or schedule]
+> **Purpose:** [what it does and why it helps]
+> **Proposed safe outputs:** [create-issue/create-pull-request/add-comment]
+> **Evidence:** [links]
+> **Why not covered already:** [short explanation]
+>
+> ### 2. [Next suggestion if any]
+>
+> ## Duplicate Checks
+> - [Links to open issues/PRs reviewed]
+>
+> ## Downstream Signals
+> - [Repo + issue/PR links]
+>
+> ## Suggested Next Steps
+> - [ ] [Actionable follow-up]
+
+${{ inputs.additional-instructions }}

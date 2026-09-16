@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+    "source_full_name": "microsoft/agent-framework-go",
+    "source_owner": "microsoft",
+    "source_repo": "agent-framework-go",
+    "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/agent-framework-go/blob/HEAD/.github/workflows/dotnet-port-fixes-nightly.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/agent-framework-go",
+      "generated_owner": "microsoft",
+      "generated_repo": "agent-framework-go",
+      "generated_workflow_path": ".github/workflows/dotnet-port-fixes-nightly.lock.yml",
+      "generated_workflow_file": "dotnet-port-fixes-nightly.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/agent-framework-go/blob/5987506b9b8fe4ad9fe8825e9c8c675a9a046d25/.github/workflows/dotnet-port-fixes-nightly.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:58:15+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+      "source_full_name": "microsoft/agent-framework-go",
+      "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+      "commit_sha": "c2b8900381dde7c51044618292c73596165cf50e",
+      "authored_at": "2026-06-25T08:21:38Z",
+      "committed_at": "2026-06-25T08:21:38Z",
+      "author_name": "Michelle Clayton",
+      "author_email": "mclayton+github@microsoft.com",
+      "author_login": "michelle-clayton-work",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Split dotnet-port nightly workflow into API and fixes agents (#358)\n\nReplace dotnet-port-nightly with two scoped nightly porting agents:\n\n- dotnet-port-api-nightly ([dotnet-port-api]): new or changed public API and feature parity (may add surface).\n\n- dotnet-port-fixes-nightly ([dotnet-port-fixes]): bug fixes, behavior alignment, and tests with no public API changes.\n\nEach carries a symmetric exported-symbol litmus test so every candidate routes to exactly one workflow. Lock files compiled with gh aw v0.79.8; actions-lock.json adds the actions/github-script v9.0.0 pin the new locks require.",
+      "parent_shas": [
+        "f5f0af21eaea9ef111b3bb9d6acf6cb3965469ff"
+      ],
+      "tree_sha": "5cbf55240de25c45587423d304ef4935cacdb308",
+      "html_url": "https://github.com/microsoft/agent-framework-go/commit/c2b8900381dde7c51044618292c73596165cf50e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+          "source_full_name": "microsoft/agent-framework-go",
+          "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+          "commit_sha": "c2b8900381dde7c51044618292c73596165cf50e",
+          "committed_at": "2026-06-25T08:21:38Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 203,
+          "file_deletions": 0,
+          "file_changes": 203,
+          "file_patch": "@@ -0,0 +1,203 @@\n+---\n+description: Nightly agent that ports .NET Agent Framework bug fixes and test parity into the Go SDK without changing public API, and opens a PR\n+tracker-id: dotnet-port-fixes-nightly\n+engine:\n+   id: copilot\n+   model: \"gpt-5.5\"\n+max-ai-credits: 2000\n+network:\n+   allowed:\n+      - defaults\n+      - go\n+on:\n+   schedule:\n+   - cron: daily\n+   workflow_dispatch:\n+checkout:\n+   fetch-depth: 0\n+permissions:\n+   contents: read\n+   pull-requests: read\n+   issues: read\n+   copilot-requests: write\n+tools:\n+   edit:\n+   bash:\n+      - \"git:*\"\n+      - \"go:*\"\n+      - gofmt\n+      - rg\n+      - find\n+      - sed\n+      - awk\n+      - grep\n+      - cat\n+      - ls\n+      - pwd\n+      - date\n+      - head\n+      - tail\n+      - sort\n+      - uniq\n+      - wc\n+   github:\n+      toolsets: [context, repos, issues, pull_requests]\n+safe-outputs:\n+   max-patch-size: 4096\n+   noop:\n+      report-as-issue: false\n+   create-pull-request:\n+      title-prefix: \"[dotnet-port-fixes] \"\n+      draft: true\n+      base-branch: main\n+      auto-close-issue: true\n+      if-no-changes: ignore\n+      protected-files: allowed\n+timeout-minutes: 90\n+---\n+\n+# .NET to Go Fixes and Test Porting Agent\n+\n+You are a nightly porting agent for the Go SDK in `microsoft/agent-framework-go`.\n+\n+Your job is to keep the Go SDK's behavior aligned with the upstream .NET Agent Framework implementation under `microsoft/agent-framework/dotnet` by porting bug fixes, behavior corrections, and test parity without changing the public Go API.\n+\n+Litmus test: a change is in scope only if it can be ported without adding or modifying any exported Go symbol; if a correct port requires an exported-symbol change, defer to `[dotnet-port-api]`.\n+\n+## Workspace Layout\n+\n+- Go SDK checkout: `${{ github.workspace }}`\n+- Upstream Agent Framework remote: `upstream-agent-framework` -> `https://github.com/microsoft/agent-framework.git`\n+- Upstream .NET subtree: `dotnet/` on `upstream-agent-framework/main`\n+\n+Always work from the Go SDK checkout before editing or testing:\n+\n+```bash\n+cd ${{ github.workspace }}\n+```\n+\n+Before inspecting upstream .NET commits, make sure the upstream remote is available and current:\n+\n+```bash\n+git remote get-url upstream-agent-framework || git remote add upstream-agent-framework https://github.com/microsoft/agent-framework.git\n+git fetch --prune upstream-agent-framework +refs/heads/main:refs/remotes/upstream-agent-framework/main\n+```\n+\n+Use `upstream-agent-framework/main` as the upstream reference. For example, inspect `.NET` commits with `git log upstream-agent-framework/main -- dotnet`, and inspect upstream files with `git show upstream-agent-framework/main:dotnet/<path>`.\n+\n+Inspect recent upstream .NET commits and merged upstream PRs from a practical recent window. Use the commits themselves as the source of truth for choosing the inspection scope.\n+\n+Before doing new work, check for existing open Go SDK PRs created by the porting workflows with the `[dotnet-port-fixes]` or `[dotnet-port-api]` title prefix. If an open PR already covers the same upstream commit range or the same misalignment, do not create a duplicate PR; call `noop` with a concise explanation and include the existing PR link.\n+\n+## Decision Process\n+\n+Prefer small, easy-to-review tasks over broad ports. The best nightly PRs port an upstream .NET bug fix, behavior correction, or test that the Go SDK is missing or implements incorrectly, without changing the public Go API. Favor narrow, test-backed behavior alignments over large new surface area. New or changed public API and features belong to the companion `[dotnet-port-api]` workflow.\n+\n+1. Use the `port-candidate-selector` sub-agent to inspect recent upstream commits that touch `dotnet/` on `upstream-agent-framework/main` and select the best small port candidate. This broad scan is context-heavy; delegate it before doing your own detailed source inspection.\n+2. Ask the sub-agent to handle candidate validation, prioritization, applicability filtering, no-change fallback analysis, and PR sizing decisions. Do not redo that broad evaluation in the main agent.\n+3. Ask the sub-agent for a compact selection report with the upstream commit range inspected, associated .NET PRs when available, selected upstream behavior or no-change recommendation, evidence files, skipped alternatives, and uncertainty to verify. Do not ask it to decide implementation details, API design, tests, or examples.\n+4. Implement only the selected upstream behavior from the sub-agent report. Do targeted source inspection as needed to apply the Go fix, add tests, and verify the chosen change; do not rescan or re-rank the upstream candidate set.\n+\n+Use these existing local references when evaluating parity:\n+\n+- `docs/dotnet-go-sdk-feature-comparison.md`\n+- Existing examples under `examples/`\n+- Existing tests near the affected packages\n+- Prior sync decisions if present in repository history\n+\n+## Implementation Requirements\n+\n+When you make a change:\n+\n+- Port relevant behavior fixes, tests, and examples together when they belong to the same upstream change.\n+- Follow idiomatic Go and the style of nearby files rather than transliterating .NET code mechanically.\n+- Keep API naming semantically aligned with .NET while respecting Go conventions.\n+- Add or update tests for behavior changes. Port upstream .NET test intent into Go tests when applicable.\n+- Add or update examples when the upstream change introduces or changes a user-facing scenario that should exist in Go.\n+- Run `gofmt` on edited Go files.\n+- Use the `go` command directly for Go toolchain checks, builds, and tests. Do not invoke absolute Go binary paths such as `/usr/bin/go` or `/usr/local/go/bin/go`.\n+- Run targeted `go test` packages for changed code. Run broader `go test ./...` when the change touches shared runtime behavior.\n+- Do not edit `.github/`, governance files, or agent workflow files as part of porting work.\n+- Update `docs/dotnet-go-sdk-feature-comparison.md` when you port a behavior that changes the comparison status, or when you detect a misalignment that requires updating the doc to reflect the current state accurately.\n+\n+Do not change the public Go API. Fixing a bug may correct internal behavior, but it must not alter exported signatures, types, or contracts; if a correct fix requires a public API change, call `noop` and defer to the `[dotnet-port-api]` workflow.\n+\n+## PR Requirements\n+\n+If you changed code, tests, examples, or docs, call the `create_pull_request` safe-output tool exactly once for the selected narrow PR-sized change set.\n+\n+Create at most one PR per run. Do not bundle unrelated ports; if the sub-agent reports other plausible opportunities, implement only the selected narrow change set and mention the others in `## Notes` only when helpful.\n+\n+The PR title should be short and concrete, for example:\n+\n+- `[dotnet-port-fixes] Align workflow request routing with .NET`\n+- `[dotnet-port-fixes] Fix .NET skill resource behavior`\n+- `[dotnet-port-fixes] Realign agent response metadata`\n+\n+The PR body must include all of these sections:\n+\n+```markdown\n+## Summary\n+\n+Describe the Go changes made and why they were selected.\n+\n+## Ported .NET PRs\n+\n+- microsoft/agent-framework#1234 - short description\n+\n+If no specific .NET PR was ported, write `None` and explain whether this was a Go misalignment realignment instead.\n+\n+## Breaking Changes\n+\n+State `Yes` or `No`. If yes, describe the old behavior/API, the new behavior/API, and why the breaking change is acceptable for the beta Go SDK.\n+\n+## Tests and Examples\n+\n+List the tests run and any tests or examples added/updated.\n+\n+## Notes\n+\n+Mention skipped upstream changes, known follow-ups, or uncertainty that reviewers should check.\n+```\n+\n+In the PR body, include upstream commit SHAs and links when they materially explain the port. Mention every ported .NET PR you relied on. If no upstream .NET PR was ported, make that clear.\n+\n+## No-Change Requirement\n+\n+If no useful code, test, example, or doc change is found after both the upstream commit inspection and the Go misalignment pass, do not create a PR.\n+Call `noop` with a concise message explaining:\n+\n+- The upstream commit range inspected\n+- Why no commits were ported\n+- Which Go area was checked for misalignment\n+- The upstream head inspected\n+\n+## agent: `port-candidate-selector`\n+---\n+description: Selects a small .NET-to-Go bug-fix or test-parity port candidate from recent upstream commits\n+model: auto\n+---\n+You select one small, high-confidence .NET Agent Framework change that is a bug fix, behavior correction, or test worth porting to the Go SDK without changing the public API.\n+\n+Work from the Go SDK checkout. Ensure the `upstream-agent-framework` remote exists and is current, then inspect recent commits touching `dotnet/` on `upstream-agent-framework/main`. Use commits as the source of truth and identify associated upstream .NET PRs when possible.\n+\n+Prioritize bug fixes, behavior corrections, and test additions that map to existing Go SDK concepts and can become a narrow, test-backed PR: agents, messages, tools, providers, skills, compaction, hosting, or workflows. Skip changes that add or change public API or features (they belong to the `[dotnet-port-api]` workflow), .NET-only integrations, package metadata, unrelated docs, large feature work, and changes that appear intentionally omitted from the Go SDK.\n+\n+Own the full selection decision:\n+\n+- Validate candidate applicability with targeted inspection of the upstream .NET files and nearby Go implementation.\n+- When multiple relevant opportunities exist, choose the smallest coherent behavior-parity improvement in an existing Go implementation before larger work.\n+- If there is nothing new and relevant to port, inspect the Go SDK for one coherent misalignment with the current upstream .NET implementation and recommend that instead.\n+- Keep each recommended PR small enough to review. Prefer one behavior alignment, bug fix, or test parity improvement per PR.\n+- Avoid bundling unrelated ports even if they are nearby in the upstream commit range.\n+- Recommend exactly one narrow PR-sized change set. If multiple relevant opportunities exist, pick the smallest coherent one and list the others as skipped alternatives.\n+\n+Return a compact selection report only. Include:\n+\n+- Upstream head and recent commit range inspected\n+- Selected upstream behavior to port, or no-change recommendation, with commit SHA, PR number if known, and a one-sentence rationale\n+- Relevant upstream .NET files and nearby Go files used as evidence\n+- Notable alternatives skipped, with short reasons\n+- Any uncertainty the main agent should verify\n+\n+Do not decide the Go implementation, API design, tests, or examples. Do not implement code, edit files, create PRs, or return large diffs or file contents.",
+          "snapshot_ref": "c2b8900381dde7c51044618292c73596165cf50e",
+          "snapshot_blob_sha": "7a6499381943323c444f92cb8e8bddb3d00763c2",
+          "snapshot_file": "snapshots/agent-framework-go__microsoft__c2b8900381dde7c51044618292c73596165cf50e__dotnet-port-fixes-nightly.md",
+          "snapshot_bytes": 10667,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agent-framework-go\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agent-framework-go\",\"generated_workflow_path\":\".github/workflows/dotnet-port-fixes-nightly.lock.yml\",\"generated_workflow_file\":\"dotnet-port-fixes-nightly.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agent-framework-go/blob/5987506b9b8fe4ad9fe8825e9c8c675a9a046d25/.github/workflows/dotnet-port-fixes-nightly.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+      "source_full_name": "microsoft/agent-framework-go",
+      "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+      "commit_sha": "87526b84fcc15595783a7e3b7b616b9c95058d7c",
+      "authored_at": "2026-06-30T09:40:37Z",
+      "committed_at": "2026-06-30T09:40:37Z",
+      "author_name": "Michelle Clayton",
+      "author_email": "mclayton+github@microsoft.com",
+      "author_login": "michelle-clayton-work",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Reduce dotnet-port API/fixes overlap and skip weekends (#389)\n\n* Reduce dotnet-port API/fixes overlap and skip weekends\n\n- Restrict both nightly porting workflows to weekdays (Mon-Fri) so results do not pile up over the weekend; cron 19 5 * * 1-5 (api) and 22 2 * * 1-5 (fixes), preserving the prior scattered times.\n\n- Strengthen cross-workflow de-duplication: search existing issues AND pull requests (open and recently closed) from both prefixes, dedup by upstream commit/.NET PR/Go area, and cover the Go-misalignment fallback. These read-only workflows report results as prefixed tracking issues that link the proposed PR, so issues must be searched.\n\n- Clarify the test-ownership boundary so tests accompanying an upstream public-API change are ported only by [dotnet-port-api], not separately by [dotnet-port-fixes].\n\n* Restore Dependabot action pins in recompiled lock files\n\nThe v0.79.8 recompile reverted Dependabot's in-place pin bumps. Re-apply them so the executed actions match the repo standard: actions/checkout v7.0.0 (#337) and github/gh-aw-actions/setup v0.81.6 (#386). gh-aw-manifest left at its pre-bump SHAs to match the other workflow lock files on main. Compiler version unchanged (v0.79.8).",
+      "parent_shas": [
+        "595570b23a0b30b1d12eb05138b3d217b72dbf7c"
+      ],
+      "tree_sha": "88894432edaa9463d26da6965abe95489f4920a4",
+      "html_url": "https://github.com/microsoft/agent-framework-go/commit/87526b84fcc15595783a7e3b7b616b9c95058d7c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+          "source_full_name": "microsoft/agent-framework-go",
+          "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+          "commit_sha": "87526b84fcc15595783a7e3b7b616b9c95058d7c",
+          "committed_at": "2026-06-30T09:40:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 3,
+          "file_changes": 7,
+          "file_patch": "@@ -11,7 +11,7 @@ network:\n       - go\n on:\n    schedule:\n-   - cron: daily\n+   - cron: \"22 2 * * 1-5\"\n    workflow_dispatch:\n checkout:\n    fetch-depth: 0\n@@ -87,7 +87,7 @@ Use `upstream-agent-framework/main` as the upstream reference. For example, insp\n \n Inspect recent upstream .NET commits and merged upstream PRs from a practical recent window. Use the commits themselves as the source of truth for choosing the inspection scope.\n \n-Before doing new work, check for existing open Go SDK PRs created by the porting workflows with the `[dotnet-port-fixes]` or `[dotnet-port-api]` title prefix. If an open PR already covers the same upstream commit range or the same misalignment, do not create a duplicate PR; call `noop` with a concise explanation and include the existing PR link.\n+Before doing new work, check existing Go SDK issues and pull requests — both open and recently closed — created by the porting workflows with the `[dotnet-port-fixes]` or `[dotnet-port-api]` title prefix. These workflows run with read-only permissions and report results as tracking issues that link the proposed PR, so search issues (not only pull requests). If either workflow has already addressed the same upstream commit, the same .NET PR, or the same Go package or behavior — whether through an upstream port or a Go-misalignment fallback — do not duplicate it; select a different candidate or call `noop` with a concise explanation that links the existing issue or PR. When in doubt about whether a candidate belongs to this workflow or to `[dotnet-port-api]`, apply the litmus test above and defer rather than risk a duplicate.\n \n ## Decision Process\n \n@@ -181,11 +181,12 @@ You select one small, high-confidence .NET Agent Framework change that is a bug\n \n Work from the Go SDK checkout. Ensure the `upstream-agent-framework` remote exists and is current, then inspect recent commits touching `dotnet/` on `upstream-agent-framework/main`. Use commits as the source of truth and identify associated upstream .NET PRs when possible.\n \n-Prioritize bug fixes, behavior corrections, and test additions that map to existing Go SDK concepts and can become a narrow, test-backed PR: agents, messages, tools, providers, skills, compaction, hosting, or workflows. Skip changes that add or change public API or features (they belong to the `[dotnet-port-api]` workflow), .NET-only integrations, package metadata, unrelated docs, large feature work, and changes that appear intentionally omitted from the Go SDK.\n+Prioritize bug fixes, behavior corrections, and test additions that map to existing Go SDK concepts and can become a narrow, test-backed PR: agents, messages, tools, providers, skills, compaction, hosting, or workflows. Skip changes that add or change public API or features (they belong to the `[dotnet-port-api]` workflow), .NET-only integrations, package metadata, unrelated docs, large feature work, and changes that appear intentionally omitted from the Go SDK. When an upstream change adds or changes public API, its accompanying tests are ported together with that API by `[dotnet-port-api]`; do not port those tests separately — only port tests for upstream changes that are themselves pure bug fixes, behavior corrections, or test-only commits.\n \n Own the full selection decision:\n \n - Validate candidate applicability with targeted inspection of the upstream .NET files and nearby Go implementation.\n+- Deduplicate against the sibling `[dotnet-port-api]` workflow: skip any candidate — including a Go-misalignment fallback — already covered by an open or recently closed issue or PR from either porting workflow (results are reported as prefixed tracking issues, so search issues too), and prefer candidates that clearly fall on this workflow's side of the litmus test.\n - When multiple relevant opportunities exist, choose the smallest coherent behavior-parity improvement in an existing Go implementation before larger work.\n - If there is nothing new and relevant to port, inspect the Go SDK for one coherent misalignment with the current upstream .NET implementation and recommend that instead.\n - Keep each recommended PR small enough to review. Prefer one behavior alignment, bug fix, or test parity improvement per PR.",
+          "snapshot_ref": "87526b84fcc15595783a7e3b7b616b9c95058d7c",
+          "snapshot_blob_sha": "011dd8f42aec533c67802e911de3eebdd2638ff3",
+          "snapshot_file": "snapshots/agent-framework-go__microsoft__87526b84fcc15595783a7e3b7b616b9c95058d7c__dotnet-port-fixes-nightly.md",
+          "snapshot_bytes": 11834,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agent-framework-go\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agent-framework-go\",\"generated_workflow_path\":\".github/workflows/dotnet-port-fixes-nightly.lock.yml\",\"generated_workflow_file\":\"dotnet-port-fixes-nightly.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agent-framework-go/blob/5987506b9b8fe4ad9fe8825e9c8c675a9a046d25/.github/workflows/dotnet-port-fixes-nightly.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+      "source_full_name": "microsoft/agent-framework-go",
+      "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+      "commit_sha": "bd766f6f1185301705f3610145c0cfa66ca4f6b4",
+      "authored_at": "2026-07-01T18:47:45Z",
+      "committed_at": "2026-07-01T18:47:45Z",
+      "author_name": "Michelle Clayton",
+      "author_email": "mclayton+github@microsoft.com",
+      "author_login": "michelle-clayton-work",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Use gpt-4.4 for nightly .NET porting workflows to cut AI credit usage (#415)\n\nSwitch the main engine model and the port-candidate-selector sub-agent from gpt-5.5/auto to gpt-4.4 in both dotnet-port-api and dotnet-port-fixes, addressing the max-ai-credits guardrail trip (#411) at the source. Action pins re-applied to match main (checkout v7.0.0, gh-aw setup v0.82.0); compiler v0.79.8 and gh-aw-manifest unchanged.",
+      "parent_shas": [
+        "f945fc9b54cb98644469e97af8446718a71bfa02"
+      ],
+      "tree_sha": "dc8961fb0665bc71f885588e9d8f2f459be1ade9",
+      "html_url": "https://github.com/microsoft/agent-framework-go/commit/bd766f6f1185301705f3610145c0cfa66ca4f6b4",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+          "source_full_name": "microsoft/agent-framework-go",
+          "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+          "commit_sha": "bd766f6f1185301705f3610145c0cfa66ca4f6b4",
+          "committed_at": "2026-07-01T18:47:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -3,7 +3,7 @@ description: Nightly agent that ports .NET Agent Framework bug fixes and test pa\n tracker-id: dotnet-port-fixes-nightly\n engine:\n    id: copilot\n-   model: \"gpt-5.5\"\n+   model: \"gpt-4.4\"\n max-ai-credits: 2000\n network:\n    allowed:\n@@ -175,7 +175,7 @@ Call `noop` with a concise message explaining:\n ## agent: `port-candidate-selector`\n ---\n description: Selects a small .NET-to-Go bug-fix or test-parity port candidate from recent upstream commits\n-model: auto\n+model: gpt-4.4\n ---\n You select one small, high-confidence .NET Agent Framework change that is a bug fix, behavior correction, or test worth porting to the Go SDK without changing the public API.\n ",
+          "snapshot_ref": "bd766f6f1185301705f3610145c0cfa66ca4f6b4",
+          "snapshot_blob_sha": "3dfceca5939ae538c2c1c5d79a30897f19013ec2",
+          "snapshot_file": "snapshots/agent-framework-go__microsoft__bd766f6f1185301705f3610145c0cfa66ca4f6b4__dotnet-port-fixes-nightly.md",
+          "snapshot_bytes": 11837,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agent-framework-go\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agent-framework-go\",\"generated_workflow_path\":\".github/workflows/dotnet-port-fixes-nightly.lock.yml\",\"generated_workflow_file\":\"dotnet-port-fixes-nightly.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agent-framework-go/blob/5987506b9b8fe4ad9fe8825e9c8c675a9a046d25/.github/workflows/dotnet-port-fixes-nightly.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+      "source_full_name": "microsoft/agent-framework-go",
+      "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+      "commit_sha": "48bd0a39cb7d10f855b34264b0d3a21f515309c7",
+      "authored_at": "2026-07-02T16:05:24Z",
+      "committed_at": "2026-07-02T16:05:24Z",
+      "author_name": "Michelle Clayton",
+      "author_email": "mclayton+github@microsoft.com",
+      "author_login": "michelle-clayton-work",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix nightly porting workflow model: gpt-4.4 -> gpt-5.4 (#423)\n\ngpt-4.4 (merged in the prior model PR) is not a valid Copilot model and breaks the nightly runs. Switch the engine and port-candidate-selector sub-agent to gpt-5.4 in both dotnet-port-api and dotnet-port-fixes. Pins re-applied to match main (checkout v7.0.0, gh-aw setup v0.82.0); compiler v0.79.8 and gh-aw-manifest unchanged.",
+      "parent_shas": [
+        "54a5ed03ad9ba07a34920464e7f90b05b4e5ebab"
+      ],
+      "tree_sha": "1cc4d0fc47f0c60e53b75d98841b73e74e94c274",
+      "html_url": "https://github.com/microsoft/agent-framework-go/commit/48bd0a39cb7d10f855b34264b0d3a21f515309c7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+          "source_full_name": "microsoft/agent-framework-go",
+          "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+          "commit_sha": "48bd0a39cb7d10f855b34264b0d3a21f515309c7",
+          "committed_at": "2026-07-02T16:05:24Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -3,7 +3,7 @@ description: Nightly agent that ports .NET Agent Framework bug fixes and test pa\n tracker-id: dotnet-port-fixes-nightly\n engine:\n    id: copilot\n-   model: \"gpt-4.4\"\n+   model: \"gpt-5.4\"\n max-ai-credits: 2000\n network:\n    allowed:\n@@ -175,7 +175,7 @@ Call `noop` with a concise message explaining:\n ## agent: `port-candidate-selector`\n ---\n description: Selects a small .NET-to-Go bug-fix or test-parity port candidate from recent upstream commits\n-model: gpt-4.4\n+model: gpt-5.4\n ---\n You select one small, high-confidence .NET Agent Framework change that is a bug fix, behavior correction, or test worth porting to the Go SDK without changing the public API.\n ",
+          "snapshot_ref": "48bd0a39cb7d10f855b34264b0d3a21f515309c7",
+          "snapshot_blob_sha": "bb0109dec5facaa90f4a6e746f05d5f06e3c95c2",
+          "snapshot_file": "snapshots/agent-framework-go__microsoft__48bd0a39cb7d10f855b34264b0d3a21f515309c7__dotnet-port-fixes-nightly.md",
+          "snapshot_bytes": 11837,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agent-framework-go\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agent-framework-go\",\"generated_workflow_path\":\".github/workflows/dotnet-port-fixes-nightly.lock.yml\",\"generated_workflow_file\":\"dotnet-port-fixes-nightly.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agent-framework-go/blob/5987506b9b8fe4ad9fe8825e9c8c675a9a046d25/.github/workflows/dotnet-port-fixes-nightly.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+      "source_full_name": "microsoft/agent-framework-go",
+      "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+      "commit_sha": "a55fb3ec877409f92b3c0d1cffd0504ab95af354",
+      "authored_at": "2026-07-29T16:37:53Z",
+      "committed_at": "2026-07-29T16:37:53Z",
+      "author_name": "George Adams",
+      "author_email": "george.adams@microsoft.com",
+      "author_login": "gdams",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci(workflows): fix firewall awmg-mcpg denial + bump gh-aw to v0.83.4 (#762)\n\n* ci(workflows): fix firewall awmg-mcpg denial + bump gh-aw to v0.83.4\n\nWork around github/gh-aw#45915 in go-api-consistency-review: the Copilot\nengine's native HTTP MCP transport calls the internal awmg-mcpg gateway\n(http://awmg-mcpg:8080/mcp/...), which the firewall's Squid proxy denies\n(TCP_DENIED/403). The block report then recommends adding \"awmgmcpg\" to\nnetwork.allowed, but that single-label host is neither a valid ecosystem\nidentifier nor an FQDN, so `gh aw compile` rejects it.\n\nRoute GitHub tools (github.mode: gh-proxy) and Safe Outputs (tools.cli-proxy:\ntrue) through the CLI proxy instead of the native HTTP MCP endpoints, which\nremoves all traffic to awmg-mcpg and eliminates the denial and the bogus\nrecommendation. Revert network back to `defaults`.\n\nAlso includes `gh aw upgrade` output: bump setup-cli/version to v0.83.4,\nrefresh actions-lock.json and skill/agent docs, and recompile the dotnet-*\nnightly and go-api-consistency-review lock files.\n\n* cleanup",
+      "parent_shas": [
+        "2c2b41124048cb893f4b41e6f03ec7f3f45c724d"
+      ],
+      "tree_sha": "db9080119da9d66f53a59712fdb7e19f3c2ac122",
+      "html_url": "https://github.com/microsoft/agent-framework-go/commit/a55fb3ec877409f92b3c0d1cffd0504ab95af354",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/agent-framework-go:.github/workflows/dotnet-port-fixes-nightly.md",
+          "source_full_name": "microsoft/agent-framework-go",
+          "md_path": ".github/workflows/dotnet-port-fixes-nightly.md",
+          "commit_sha": "a55fb3ec877409f92b3c0d1cffd0504ab95af354",
+          "committed_at": "2026-07-29T16:37:53Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -1,9 +1,9 @@\n ---\n description: Nightly agent that ports .NET Agent Framework bug fixes and test parity into the Go SDK without changing public API, and opens a PR\n tracker-id: dotnet-port-fixes-nightly\n+model: \"gpt-5.4\"\n engine:\n    id: copilot\n-   model: \"gpt-5.4\"\n max-ai-credits: 2000\n network:\n    allowed:\n@@ -201,4 +201,4 @@ Return a compact selection report only. Include:\n - Notable alternatives skipped, with short reasons\n - Any uncertainty the main agent should verify\n \n-Do not decide the Go implementation, API design, tests, or examples. Do not implement code, edit files, create PRs, or return large diffs or file contents.\n+Do not decide the Go implementation, API design, tests, or examples. Do not implement code, edit files, create PRs, or return large diffs or file contents.\n\\ No newline at end of file",
+          "snapshot_ref": "a55fb3ec877409f92b3c0d1cffd0504ab95af354",
+          "snapshot_blob_sha": "1b5cfa0d379cebfce57d5818f55bbb76ffc78710",
+          "snapshot_file": "snapshots/agent-framework-go__microsoft__a55fb3ec877409f92b3c0d1cffd0504ab95af354__dotnet-port-fixes-nightly.md",
+          "snapshot_bytes": 11833,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/agent-framework-go\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"agent-framework-go\",\"generated_workflow_path\":\".github/workflows/dotnet-port-fixes-nightly.lock.yml\",\"generated_workflow_file\":\"dotnet-port-fixes-nightly.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/agent-framework-go/blob/5987506b9b8fe4ad9fe8825e9c8c675a9a046d25/.github/workflows/dotnet-port-fixes-nightly.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

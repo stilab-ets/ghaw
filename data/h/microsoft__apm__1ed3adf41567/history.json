@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/apm:.github/workflows/cli-consistency-checker.md",
+    "source_full_name": "microsoft/apm",
+    "source_owner": "microsoft",
+    "source_repo": "apm",
+    "md_path": ".github/workflows/cli-consistency-checker.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/apm/blob/HEAD/.github/workflows/cli-consistency-checker.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/apm",
+      "generated_owner": "microsoft",
+      "generated_repo": "apm",
+      "generated_workflow_path": ".github/workflows/cli-consistency-checker.lock.yml",
+      "generated_workflow_file": "cli-consistency-checker.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/apm/blob/d7a409d71a987ef4abfe3d0a2773164f1d862bb8/.github/workflows/cli-consistency-checker.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:58:20+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/apm:.github/workflows/cli-consistency-checker.md",
+      "source_full_name": "microsoft/apm",
+      "md_path": ".github/workflows/cli-consistency-checker.md",
+      "commit_sha": "febf4da8e6556487588818312ef4711c694f49b7",
+      "authored_at": "2026-02-24T23:14:51Z",
+      "committed_at": "2026-02-24T23:14:51Z",
+      "author_name": "danielmeppiel",
+      "author_email": "dmeppiel@microsoft.com",
+      "author_login": "danielmeppiel",
+      "author_account_type": "User",
+      "committer_name": "danielmeppiel",
+      "committer_email": "dmeppiel@microsoft.com",
+      "committer_login": "danielmeppiel",
+      "committer_account_type": "User",
+      "message": "feat: add GitHub Agentic Workflows for docs, testing, and CLI consistency\n\n- gh aw init: .gitattributes, agent dispatcher, vscode settings\n- gh aw add: daily-doc-updater from githubnext/agentics gallery\n- gh aw add: daily-test-improver from githubnext/agentics gallery\n  (fixed incompatible max fields in safe-outputs for current gh-aw version)\n- gh aw new + custom: cli-consistency-checker re-engineered for APM CLI\n- gh aw compile: all 3 workflows compiled with 0 errors, 0 warnings\n- Auto-generated agentics-maintenance.yml for expires field cleanup",
+      "parent_shas": [
+        "4e1fd0cc18676ed7d1b8e6ea6e6f38e6a7927aaf"
+      ],
+      "tree_sha": "a00ca8d3ddd4683eaaa04bc2a3d69eb6478302ee",
+      "html_url": "https://github.com/microsoft/apm/commit/febf4da8e6556487588818312ef4711c694f49b7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/apm:.github/workflows/cli-consistency-checker.md",
+          "source_full_name": "microsoft/apm",
+          "md_path": ".github/workflows/cli-consistency-checker.md",
+          "commit_sha": "febf4da8e6556487588818312ef4711c694f49b7",
+          "committed_at": "2026-02-24T23:14:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 248,
+          "file_deletions": 0,
+          "file_changes": 248,
+          "file_patch": "@@ -0,0 +1,248 @@\n+---\n+name: CLI Consistency Checker\n+description: Inspects the APM CLI to identify inconsistencies, typos, bugs, or documentation gaps by running commands and analyzing output\n+on:\n+  schedule:\n+    - cron: \"0 13 * * 1-5\"\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+safe-outputs:\n+  create-issue:\n+    expires: 2d\n+    title-prefix: \"[cli-consistency] \"\n+    labels: [automation, cli, documentation]\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  edit:\n+  bash: true\n+\n+network:\n+  allowed:\n+    - defaults\n+    - python\n+\n+timeout-minutes: 20\n+---\n+\n+# CLI Consistency Checker for APM\n+\n+You are a meticulous CLI quality inspector for **APM (Agent Package Manager)**, a Python CLI tool for managing AI agent configuration. Your job is to run every CLI command, inspect the output, cross-reference documentation, and report any inconsistencies, typos, bugs, or documentation gaps.\n+\n+> **CRITICAL**: You MUST run the actual CLI commands using bash. Do NOT guess or fabricate CLI output. Every finding must be backed by real command output.\n+\n+---\n+\n+## Step 1: Install and Verify APM CLI\n+\n+Install APM from source and confirm it works:\n+\n+```\n+cd $GITHUB_WORKSPACE && pip install -e .\n+```\n+\n+Then verify the installation:\n+\n+```\n+apm --version\n+```\n+\n+```\n+apm --help\n+```\n+\n+If installation fails, stop immediately and create an issue reporting the installation failure. Do not proceed with further checks.\n+\n+---\n+\n+## Step 2: Run --help for Every Command and Subcommand\n+\n+You MUST run `--help` for every single command and subcommand listed below. Save all output for analysis. Do not skip any command.\n+\n+### Top-level\n+```\n+apm --help\n+```\n+\n+### Core commands\n+```\n+apm init --help\n+apm install --help\n+apm uninstall --help\n+apm update --help\n+apm compile --help\n+apm run --help\n+```\n+\n+### Dependency management subcommands\n+```\n+apm deps --help\n+apm deps list --help\n+apm deps tree --help\n+apm deps info --help\n+apm deps clean --help\n+apm deps update --help\n+```\n+\n+### MCP subcommands\n+```\n+apm mcp --help\n+apm mcp search --help\n+apm mcp show --help\n+apm mcp install --help\n+```\n+\n+### Config subcommands\n+```\n+apm config --help\n+apm config set --help\n+apm config get --help\n+apm config list --help\n+```\n+\n+### Runtime subcommands\n+```\n+apm runtime --help\n+apm runtime setup --help\n+```\n+\n+Record the total number of commands inspected.\n+\n+---\n+\n+## Step 3: Check for Consistency Issues\n+\n+Analyze ALL collected help output for the following categories of issues. Be thorough but fair — only flag genuine problems.\n+\n+### 3.1 Help Text Consistency\n+- Do all commands follow the same structural pattern (Usage, Description, Options, Examples)?\n+- Are descriptions written in a consistent style (sentence case vs title case, imperative vs declarative)?\n+- Do commands that share flags (e.g., `--verbose`, `--dry-run`) describe them identically?\n+- Are option names consistent across commands (e.g., `--dry-run` everywhere, not `--dryrun` in some places)?\n+\n+### 3.2 Typos and Grammar\n+- Check all help text for spelling errors, grammatical issues, or awkward phrasing.\n+- Check for inconsistent punctuation (trailing periods, capitalization).\n+- Check for placeholder text or TODO markers left in help strings.\n+\n+### 3.3 Technical Accuracy\n+- Do documented required arguments match what the CLI actually expects?\n+- Are default values mentioned in help text accurate?\n+- Do any commands reference features, flags, or subcommands that don't exist?\n+\n+### 3.4 Documentation Cross-Reference\n+Read the documentation files:\n+\n+```\n+cat docs/cli-reference.md\n+```\n+\n+```\n+cat README.md\n+```\n+\n+Then compare:\n+- Every command documented in `docs/cli-reference.md` must exist in the actual CLI, and vice versa.\n+- Every command mentioned in `README.md` must exist in the actual CLI.\n+- Flag names, argument names, and descriptions should match between docs and CLI help.\n+- Usage examples in docs should be syntactically correct per the actual CLI interface.\n+- If docs mention commands or flags not present in the CLI (or vice versa), flag as **high severity**.\n+\n+### 3.5 Flag Consistency Audit\n+Check these common flags across all commands that support them:\n+- `--verbose` / `-v`: Present where expected? Consistent short flag?\n+- `--dry-run`: Present where expected? Consistent naming?\n+- `--help` / `-h`: Works on every command and subcommand?\n+- `--yes` / `-y`: Consistent where applicable?\n+\n+### 3.6 Exit Behavior\n+- Run a few commands with obviously invalid arguments and confirm they produce sensible error messages rather than stack traces.\n+- Example: `apm install --nonexistent-flag`, `apm deps info`, `apm config set`\n+\n+---\n+\n+## Step 4: Report Findings\n+\n+Classify every finding by severity:\n+\n+- **High**: Command doesn't exist but is documented (or vice versa), crash/traceback on valid input, flags that silently do nothing\n+- **Medium**: Typos in help text, inconsistent flag descriptions, missing examples, documentation drift\n+- **Low**: Minor style inconsistencies, capitalization differences, optional improvements\n+\n+### Issue Format\n+\n+If you find ANY issues (high, medium, or low), create a single consolidated GitHub issue with this structure:\n+\n+**Title**: `CLI Consistency Report — <DATE>`\n+\n+**Body**:\n+\n+```\n+## CLI Consistency Report\n+\n+**Date**: <today's date>\n+**APM Version**: <output of apm --version>\n+**Commands Inspected**: <total count>\n+\n+### Summary\n+\n+| Severity | Count |\n+|----------|-------|\n+| High | N |\n+| Medium | N |\n+| Low | N |\n+\n+---\n+\n+### High Severity\n+\n+#### <Issue Title>\n+- **Command**: `apm <command>`\n+- **Problem**: <description>\n+- **Evidence**: <exact CLI output or doc quote>\n+- **Suggested Fix**: <what should change>\n+\n+---\n+\n+### Medium Severity\n+\n+#### <Issue Title>\n+...\n+\n+---\n+\n+### Low Severity\n+\n+#### <Issue Title>\n+...\n+\n+---\n+\n+### Clean Areas\n+<List commands/areas that passed all checks>\n+```\n+\n+### Important Rules for Issue Creation\n+- Only create an issue if there are actual findings. Do NOT create an issue just to say \"everything looks good.\"\n+- One consolidated issue, not multiple issues.\n+- Every finding must include exact evidence (quoted CLI output or documentation text).\n+- Suggested fixes should be specific and actionable.\n+\n+---\n+\n+## Step 5: Summary\n+\n+After completing all checks, produce a brief summary:\n+\n+- Total commands and subcommands inspected\n+- Total findings by severity\n+- Clean areas that passed all checks\n+- Whether an issue was created or not (and why)\n+\n+If no issues were found, simply state that all checks passed and no issue was created.",
+          "snapshot_ref": "febf4da8e6556487588818312ef4711c694f49b7",
+          "snapshot_blob_sha": "bf26aab30c03237f81f673d1d11fa739d31cb8a5",
+          "snapshot_file": "snapshots/apm__microsoft__febf4da8e6556487588818312ef4711c694f49b7__cli-consistency-checker.md",
+          "snapshot_bytes": 6375,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/apm\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"apm\",\"generated_workflow_path\":\".github/workflows/cli-consistency-checker.lock.yml\",\"generated_workflow_file\":\"cli-consistency-checker.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/apm/blob/d7a409d71a987ef4abfe3d0a2773164f1d862bb8/.github/workflows/cli-consistency-checker.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/apm:.github/workflows/cli-consistency-checker.md",
+      "source_full_name": "microsoft/apm",
+      "md_path": ".github/workflows/cli-consistency-checker.md",
+      "commit_sha": "0b75ae2911fd01847c22608023e479b81ff836f0",
+      "authored_at": "2026-02-26T22:20:21Z",
+      "committed_at": "2026-02-26T22:20:21Z",
+      "author_name": "danielmeppiel",
+      "author_email": "dmeppiel@microsoft.com",
+      "author_login": "danielmeppiel",
+      "author_account_type": "User",
+      "committer_name": "danielmeppiel",
+      "committer_email": "dmeppiel@microsoft.com",
+      "committer_login": "danielmeppiel",
+      "committer_account_type": "User",
+      "message": "fix: sync agent file with upstream, use uv, enable auto-merge\n\n- Sync agentic-workflows.agent.md with upstream gh-aw main:\n  - Replace 'infer: false' with 'disable-model-invocation: true'\n  - Update all prompt URLs from v0.42.2 to main\n  - Add missing prompt routes: report, dependabot, test-coverage\n  - Add single-file output note\n- Replace pip install with uv sync in cli-consistency-checker.md\n- Add auto-merge: true and reviewers: [copilot] to daily-doc-updater.md\n- Recompile lock files",
+      "parent_shas": [
+        "3d33142c1525246d1df306993d394960fb719d7a"
+      ],
+      "tree_sha": "82773e651a9ccea6abf1db158934d927ebc1f71e",
+      "html_url": "https://github.com/microsoft/apm/commit/0b75ae2911fd01847c22608023e479b81ff836f0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/apm:.github/workflows/cli-consistency-checker.md",
+          "source_full_name": "microsoft/apm",
+          "md_path": ".github/workflows/cli-consistency-checker.md",
+          "commit_sha": "0b75ae2911fd01847c22608023e479b81ff836f0",
+          "committed_at": "2026-02-26T22:20:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -44,7 +44,7 @@ You are a meticulous CLI quality inspector for **APM (Agent Package Manager)**,\n Install APM from source and confirm it works:\n \n ```\n-cd $GITHUB_WORKSPACE && pip install -e .\n+cd $GITHUB_WORKSPACE && curl -LsSf https://astral.sh/uv/install.sh | sh && uv sync && source .venv/bin/activate\n ```\n \n Then verify the installation:",
+          "snapshot_ref": "0b75ae2911fd01847c22608023e479b81ff836f0",
+          "snapshot_blob_sha": "457c931537fae9ed7dacd1c0fc978a2435f00592",
+          "snapshot_file": "snapshots/apm__microsoft__0b75ae2911fd01847c22608023e479b81ff836f0__cli-consistency-checker.md",
+          "snapshot_bytes": 6446,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/apm\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"apm\",\"generated_workflow_path\":\".github/workflows/cli-consistency-checker.lock.yml\",\"generated_workflow_file\":\"cli-consistency-checker.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/apm/blob/d7a409d71a987ef4abfe3d0a2773164f1d862bb8/.github/workflows/cli-consistency-checker.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

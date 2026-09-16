@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/pylance-release:.github/workflows/issue-assignment.md",
+    "source_full_name": "microsoft/pylance-release",
+    "source_owner": "microsoft",
+    "source_repo": "pylance-release",
+    "md_path": ".github/workflows/issue-assignment.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/pylance-release/blob/HEAD/.github/workflows/issue-assignment.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/pylance-release",
+      "generated_owner": "microsoft",
+      "generated_repo": "pylance-release",
+      "generated_workflow_path": ".github/workflows/issue-assignment.lock.yml",
+      "generated_workflow_file": "issue-assignment.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/pylance-release/blob/e7943247c666c1032b6ef6460fe1ef07b9d3b54c/.github/workflows/issue-assignment.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:58:45+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/pylance-release:.github/workflows/issue-assignment.md",
+      "source_full_name": "microsoft/pylance-release",
+      "md_path": ".github/workflows/issue-assignment.md",
+      "commit_sha": "4e11c661fd9527fa8b000fc973a42bcfe5e951fb",
+      "authored_at": "2026-02-13T21:49:25Z",
+      "committed_at": "2026-02-13T21:49:25Z",
+      "author_name": "Rich Chiodo",
+      "author_email": "rchiodo@users.noreply.github.com",
+      "author_login": "rchiodo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Use agentic workflow for issue assignment (#7873)",
+      "parent_shas": [
+        "74ba5d1579e22d6e88a9b7387fa0f518ad761581"
+      ],
+      "tree_sha": "96d0ce38e861f9834d6eb4ad8449f3d8c7852d09",
+      "html_url": "https://github.com/microsoft/pylance-release/commit/4e11c661fd9527fa8b000fc973a42bcfe5e951fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/pylance-release:.github/workflows/issue-assignment.md",
+          "source_full_name": "microsoft/pylance-release",
+          "md_path": ".github/workflows/issue-assignment.md",
+          "commit_sha": "4e11c661fd9527fa8b000fc973a42bcfe5e951fb",
+          "committed_at": "2026-02-13T21:49:25Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 87,
+          "file_deletions": 0,
+          "file_changes": 87,
+          "file_patch": "@@ -0,0 +1,87 @@\n+---\n+description: Automatically assign newly opened issues to the next person in a team rotation and label them for reproduction.\n+on:\n+  issues:\n+    types: [opened]\n+roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    lockdown: false\n+    toolsets: [default]\n+safe-outputs:\n+  assign-to-user:\n+    allowed: [bschnurr, heejaechang, StellaHuang95, rchiodo]\n+    max: 2\n+    target: \"*\"\n+  unassign-from-user:\n+    allowed: [bschnurr, heejaechang, StellaHuang95, rchiodo]\n+    max: 1\n+    target: \"*\"\n+  add-labels:\n+    allowed: ['team needs to reproduce']\n+    max: 1\n+  noop:\n+---\n+\n+# Issue Assignment Rotation\n+\n+You are an AI agent responsible for assigning newly opened issues to the next person in a team rotation.\n+\n+## Context\n+\n+This repository uses a round-robin rotation to assign incoming issues. The rotation order is:\n+\n+1. `bschnurr`\n+2. `heejaechang`\n+3. `StellaHuang95`\n+4. `rchiodo`\n+\n+The current person in the rotation (i.e., who was last assigned) is tracked as the **assignee of issue #4462** in this repository.\n+\n+## Your Task\n+\n+When a new issue is opened, follow these steps **exactly**:\n+\n+### Step 1: Check for skip condition\n+\n+Read the labels on the newly opened issue (the triggering issue). If it has the label `skip-reassign`, call the `noop` safe output with the message \"Issue has 'skip-reassign' label, skipping assignment\" and stop. Do not proceed further.\n+\n+### Step 2: Find the current rotation owner\n+\n+Read issue #4462 in this repository using the GitHub tools. Look at the first assignee of that issue — this is the person who was **last assigned** an incoming issue.\n+\n+### Step 3: Compute the next person\n+\n+Using the rotation order listed above, find who comes **after** the current owner:\n+\n+- `bschnurr` → next is `heejaechang`\n+- `heejaechang` → next is `StellaHuang95`\n+- `StellaHuang95` → next is `rchiodo`\n+- `rchiodo` → next is `bschnurr` (wraps around)\n+\n+If issue #4462 has no assignees, or the assignee is not in the rotation list, default to `bschnurr`.\n+\n+### Step 4: Assign the new issue\n+\n+Use the `assign_to_user` safe output to assign the newly opened (triggering) issue to the next person computed in Step 3.\n+\n+### Step 5: Label the new issue\n+\n+Use the `add_labels` safe output to add the label `team needs to reproduce` to the triggering issue.\n+\n+### Step 6: Update the rotation state\n+\n+First, use the `unassign_from_user` safe output to remove the current assignee from issue #4462.\n+\n+Then, use the `assign_to_user` safe output to set the assignee of issue #4462 to the next person (the one you just assigned the new issue to in Step 4).\n+\n+## Important Notes\n+\n+- The rotation is strictly: `bschnurr` → `heejaechang` → `StellaHuang95` → `rchiodo` → `bschnurr` (wraps around).\n+- Only modify the assignees of issue #4462 — do NOT change its title, body, or labels.\n+- Only modify the assignees and labels of the triggering issue — do NOT change its title or body.\n+- If anything is unclear, default to assigning `bschnurr`.",
+          "snapshot_ref": "4e11c661fd9527fa8b000fc973a42bcfe5e951fb",
+          "snapshot_blob_sha": "cb0c2a0e80e733a295395b7a20a3af0f83d6cd96",
+          "snapshot_file": "snapshots/pylance-release__microsoft__4e11c661fd9527fa8b000fc973a42bcfe5e951fb__issue-assignment.md",
+          "snapshot_bytes": 2985,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/pylance-release\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"pylance-release\",\"generated_workflow_path\":\".github/workflows/issue-assignment.lock.yml\",\"generated_workflow_file\":\"issue-assignment.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/pylance-release/blob/e7943247c666c1032b6ef6460fe1ef07b9d3b54c/.github/workflows/issue-assignment.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

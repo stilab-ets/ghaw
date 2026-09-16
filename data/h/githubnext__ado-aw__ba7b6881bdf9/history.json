@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/review-rust.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/review-rust.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/review-rust.lock.yml",
+      "generated_workflow_file": "review-rust.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-rust.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:48:53+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-rust.md",
+      "commit_sha": "603279af578e112f6987e2bbc50a6322e93eeab6",
+      "authored_at": "2026-07-31T20:01:52Z",
+      "committed_at": "2026-07-31T20:01:52Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): overhaul PR review workflows around /review (#1758)\n\nReplaces the two near-duplicate Rust reviewers with a five-way `/review`\nfan-out modelled on githubnext/gh-aw, and adds a sous-chef loop that keeps\nopen PRs moving.\n\nThe old pair (`rust-pr-reviewer.md` on every push, `rust-review-command.md`\non `/rust-review`) shared ~95% of their prompt, covered only Rust, and posted\nsummary comments. Reviews are now inline line comments.\n\nNew reviewers, each owning a distinct concern so comments do not overlap:\n\n  - review-rust               Rust engineering quality\n  - review-typescript         scripts/ado-script/ quality\n  - review-tests              test quality beyond coverage\n  - review-compiler-contract  ado-aw domain contracts and drift\n  - review-security           diff-scoped security regressions\n\n`review-rust` and `review-typescript` are deliberately language-generic; all\nado-aw-specific invariants live in `review-compiler-contract`, which also\ndetects ncc bundle drift — a gap nothing else in the repo covers, since\nado-script.yml rebuilds the bundles but never diffs them.\n\nOnly the two code-quality reviewers re-run on every push. All five carry\n`draft: false` so pushes to drafts cost nothing, and gh-aw's generated\nper-PR `cancel-in-progress` concurrency supersedes runs on rapid pushes.\n\nShared components:\n\n  - shared/pr-review-base.md      tools, network and review safe-outputs\n  - shared/pr-diff-data-fetch.md  pre-agent-steps diff/meta/comment prefetch\n  - pr-data-prefetch.yml          engine-less cache warmer\n\n`submit-pull-request-review` pins `allowed-events: [COMMENT, REQUEST_CHANGES]`\nin the shared base: the Actions actor cannot approve a PR, so permitting it\nwould only fail at runtime. `supersede-older-reviews` keeps repeated pushes\nfrom stacking stale REQUEST_CHANGES reviews, and the prefetched\n`pr-review-comments.json` lets each reviewer skip feedback it already gave.\n\n`pr-sous-chef.md` runs every 15 minutes and on `/souschef`, posting one\nmarker'd `@copilot` nudge per PR listing unresolved threads and failed\nchecks, resolving answered threads, dismissing stale bot reviews and pushing\n`cargo fmt --all` fixes. It does not rebuild the TypeScript bundles — that\nneeds `npm ci` plus two `cargo run` invocations, far too costly at 96\nruns/day — so bundle drift is reported by review-compiler-contract instead.\n\nCommand changes:\n\n  - `/rust-review` is replaced by `/review`\n  - `/change-risk` is renamed to `/risk` (change-risk.md -> risk.md)\n  - `/scout`, `/plan` and `/risk` move to `strategy: centralized`\n\nAll four commands now route through the generated `agentic_commands.yml`,\nresolving the advisory `gh aw validate` was emitting.\n\n`gh aw compile` reports 27 workflows, 0 errors; every added bash body passes\nshellcheck. agentics-maintenance.yml is a v0.84.0 regeneration artefact.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 475bd62b-12cb-41aa-88b6-39a3d75e3c50",
+      "parent_shas": [
+        "e550cb5d893d567d8a21832f244564e9a145b7b2"
+      ],
+      "tree_sha": "fde5b768dc8d01b40b0856d8e11112b8c4679476",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/603279af578e112f6987e2bbc50a6322e93eeab6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-rust.md",
+          "commit_sha": "603279af578e112f6987e2bbc50a6322e93eeab6",
+          "committed_at": "2026-07-31T20:01:52Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 188,
+          "file_deletions": 0,
+          "file_changes": 188,
+          "file_patch": "@@ -0,0 +1,188 @@\n+---\n+name: Rust Code Quality Reviewer\n+emoji: \"🦀\"\n+description: Reviews Rust changes for correctness, error handling and maintainability, posting inline review comments\n+on:\n+  pull_request:\n+    types: [ready_for_review, synchronize]\n+    draft: false\n+    paths:\n+      - \"src/**\"\n+      - \"ado-aw-derive/**\"\n+      - \"tests/**\"\n+      - \"Cargo.toml\"\n+  slash_command:\n+    strategy: centralized\n+    name: review\n+    events: [pull_request_comment, pull_request_review_comment]\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  copilot-requests: write\n+imports:\n+  - uses: shared/pr-review-base.md\n+    with:\n+      min-integrity: approved\n+  - shared/pr-diff-data-fetch.md\n+cache:\n+  key: pr-prefetch-${{ github.event.pull_request.head.sha || github.event.issue.number }}\n+  path: /tmp/gh-aw/agent\n+  restore-keys:\n+    - pr-prefetch-${{ github.event.pull_request.number || github.event.issue.number }}-\n+safe-outputs:\n+  messages:\n+    footer: \"> 🦀 *Rust code quality review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"\n+    run-started: \"🦀 [{workflow_name}]({run_url}) is reviewing Rust code quality on this {event_type}...\"\n+    run-success: \"✅ [{workflow_name}]({run_url}) completed the Rust code quality review.\"\n+    run-failure: \"⚠️ [{workflow_name}]({run_url}) {status} during the Rust code quality review.\"\n+evals:\n+  - id: review_submitted\n+    question: Did the agent submit a pull request review?\n+  - id: findings_in_diff\n+    question: Does the agent output show that every posted comment targets a line that appears in the pull request diff rather than unchanged code?\n+---\n+\n+# Rust Code Quality Reviewer 🦀\n+\n+You are a senior Rust engineer reviewing a pull request in **ado-aw**, a CLI\n+compiler written in Rust (2024 edition).\n+\n+Your remit is **Rust engineering quality only**. Everything ado-aw-specific —\n+front-matter grammar, generated pipeline YAML, safe-output schemas, the typed\n+IR, bundle and codegen drift, documentation sync — belongs to the **Compiler\n+Contract Reviewer**, which runs alongside you. Do not review those concerns\n+here; you will only duplicate its comments.\n+\n+## Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Pull request**: #${{ github.event.issue.number || github.event.pull_request.number }}\n+- **Triggered by**: @${{ github.actor }}\n+\n+## Step 1 — Load the pre-fetched data and start the sub-agent\n+\n+In **one parallel turn**, read all three files:\n+\n+- `/tmp/gh-aw/agent/pr-diff.patch` — the diff you are reviewing\n+- `/tmp/gh-aw/agent/pr-meta.json` — PR metadata and the changed-file list\n+- `/tmp/gh-aw/agent/pr-review-comments.json` — comments already on this PR\n+\n+Restrict yourself to the Rust files in that diff: `src/**`, `ado-aw-derive/**`,\n+`tests/**`, and `Cargo.toml`. Ignore everything else — another reviewer owns it.\n+\n+**In the same turn**, start the `rust-critic` sub-agent in the background,\n+passing it the Rust portion of the diff.\n+\n+Sub-agent contract:\n+\n+- Start `rust-critic` exactly once, immediately, and let it work while you do\n+  your own pass in Step 2.\n+- It must return strict JSONL, one finding per line.\n+- Collect its output before Step 3. Make **one** attempt to read its result; if\n+  it has not answered, carry on without it.\n+- If its output is unparseable, discard it, continue with your own findings, and\n+  note the discard in the review body.\n+- Its findings are advisory, never authoritative.\n+\n+## Step 2 — Your own pass\n+\n+While `rust-critic` runs, analyse the changed lines yourself:\n+\n+**Error handling** — this codebase uses `anyhow` throughout.\n+\n+- Fallible functions return `anyhow::Result`, not a panic or a bare `Option`.\n+- Errors carry actionable context via `.context()` / `.with_context()` or\n+  `anyhow::bail!`. A bare `?` on an IO error that surfaces to the user as\n+  \"No such file or directory\" with no path is a real defect.\n+- No `unwrap()` / `expect()` on any path reachable from user input. In tests, or\n+  where a comment proves the invariant, they are fine.\n+- `?` rather than hand-rolled `match` on `Err`.\n+\n+**Correctness**\n+\n+- Off-by-one and boundary handling in slicing, indexing and range arithmetic.\n+- Silent truncation from `as` casts; lossy `usize`/`u32`/`i64` conversions.\n+- Cross-platform path handling — this project is developed on Windows and runs\n+  on Linux agents. String-concatenated paths, hardcoded `/`, and\n+  `to_str().unwrap()` on non-UTF-8 paths are all bugs.\n+- Iterator logic that silently swallows the empty case.\n+- `HashMap` iteration where output ordering matters (generated YAML must be\n+  deterministic).\n+\n+**Maintainability**\n+\n+- Functions that have grown a new responsibility instead of being split.\n+- Duplicated logic that should have reused an existing helper.\n+- Public items added without doc comments.\n+- `pub` visibility wider than needed.\n+- Newly introduced `clone()` in a hot path where a borrow would do.\n+\n+**Concurrency** — `tokio` is in use; look for blocking calls inside async\n+contexts, shared mutable state without synchronisation, and `.await` held across\n+a lock guard.\n+\n+## Step 3 — Adjudicate\n+\n+Collect `rust-critic`'s JSONL. Parse it, discarding malformed lines and anything\n+outside the changed lines. Then triage every candidate — its findings and your\n+own — as:\n+\n+- `KEEP` — real issue, worth a comment\n+- `HARDEN` — real but under-explained; strengthen the impact and rationale first\n+- `DROP` — wrong, not actionable, or outside the diff\n+\n+You may use compact tags such as `[KEEP:lossy-cast]` while reasoning privately.\n+Never publish them.\n+\n+## Step 4 — Post inline comments\n+\n+Post each `KEEP`/`HARDEN` finding with `create-pull-request-review-comment`,\n+using the file path and line number from the diff. Budget of 10 comments,\n+prioritised:\n+\n+1. Correctness, error-handling and concurrency defects — up to 6\n+2. Maintainability and testability concerns — up to 3\n+3. Naming or structure, only where it materially raises the risk of a future bug — up to 1\n+\n+Check `pr-review-comments.json` first and skip anything already raised.\n+\n+## Step 5 — Submit the review\n+\n+Call `submit-pull-request-review` once.\n+\n+Use `REQUEST_CHANGES` when any of the following hold:\n+\n+- a defect can cause a panic, data loss, incorrect compiler output, or a silent\n+  failure;\n+- three or more medium-severity issues are valid;\n+- error handling was weakened — a `Result` turned into an `unwrap`, or context\n+  stripped from an existing error path.\n+\n+Otherwise use `COMMENT`. Keep the body short: a verdict, one line of summary,\n+and the themes in a `<details>` block.\n+\n+## agent: `rust-critic`\n+---\n+description: Hostile first-pass Rust reviewer that mines merge-blocking defects from changed lines\n+model: small\n+---\n+You are a hostile senior Rust reviewer performing a first-pass audit.\n+\n+Rules:\n+\n+- Review **only** the changed lines in the diff you are given.\n+- Prioritise panics, lossy conversions, missing error context, `unwrap`/`expect`\n+  on user-reachable paths, non-deterministic iteration order, blocking calls in\n+  async code, and cross-platform path bugs.\n+- Ignore formatting and style — `cargo fmt` and `cargo clippy` already run in CI.\n+- Assume the code is wrong until the diff proves otherwise.\n+\n+Output format (strict):\n+\n+- JSONL only, one finding per line, no prose before or after.\n+- Fields: `path`, `line`, `severity`, `headline`, `impact`, `fix`.\n+- `path` is a repository-relative path taken from the diff.\n+- `line` is an integer line number inside a changed hunk.\n+- `severity` is one of `critical`, `high`, `medium`, `low`.\n+- `headline` is one sentence. `impact` and `fix` are concrete and brief.",
+          "snapshot_ref": "603279af578e112f6987e2bbc50a6322e93eeab6",
+          "snapshot_blob_sha": "635c00bd314aacb2b21b81c3df5eb56b21f957f3",
+          "snapshot_file": "snapshots/ado-aw__githubnext__603279af578e112f6987e2bbc50a6322e93eeab6__review-rust.md",
+          "snapshot_bytes": 7555,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-rust.lock.yml\",\"generated_workflow_file\":\"review-rust.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-rust.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-rust.md",
+      "commit_sha": "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+      "authored_at": "2026-08-02T15:52:37Z",
+      "committed_at": "2026-08-02T15:52:37Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): resolve PR number from aw_context in /review reviewers (#1779)\n\nThe `/review` fan-out dispatched all five reviewers correctly, but every one\nof them silently reviewed nothing.\n\nUnder `slash_command.strategy: centralized`, the generated\n`agentic_commands.yml` router dispatches each reviewer via `workflow_dispatch`,\nso the payload carries neither `github.event.pull_request.number` nor\n`github.event.issue.number` — the PR identity arrives only in the `aw_context`\ninput as `{item_type: \"pull_request\", item_number: \"<N>\"}`.\n\nAs a result, in `shared/pr-diff-data-fetch.md`:\n\n  * `PR_NUMBER` resolved empty, so the step wrote empty pre-fetch files and\n    exited 0. The agent then reported a successful run with \"No review\n    performed: pre-fetched PR data files were empty\".\n  * The cache key collapsed to the constant `pr-prefetch-`, so all five\n    reviewers restored the same 349-byte poisoned entry.\n\nFixes:\n\n  * `PR_NUMBER` gains an `aw_context` fallback, guarded by\n    `item_type == 'pull_request'` as required by gh-aw ADR-31820 —\n    `item_number` is shared across entity kinds, so an issue-routed run must\n    not populate the PR number slot. The raw `fromJSON(...)` form is used\n    because `github.aw.context.*` is a prompt-only virtual namespace and is\n    not transformed inside step `env:`.\n  * Cache keys are re-scoped to `pr-prefetch-<pr-number>-<sha>` so the\n    `restore-keys` prefix still matches when a dispatch run knows the PR\n    number but not the head SHA. `pr-data-head-sha.txt` continues to reject\n    stale entries.\n  * The unresolved-PR path now fails loudly instead of reporting a successful\n    empty review. That fail-open behaviour is what hid this.\n  * Reviewer prompt bodies now defer to `pull-request-number` in gh-aw's\n    builtin `<github-context>` block, which already carries the `aw_context`\n    fallback, rather than hand-rolling the expression.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 9cc16936-10fe-4069-9a37-0d2d1335b6e5",
+      "parent_shas": [
+        "da9fa76fe29de3b8b6112b4124ff90393879ba65"
+      ],
+      "tree_sha": "e67a6f78dd4fe09e6c39a4b2a96caa7ee5e5f678",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-rust.md",
+          "commit_sha": "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+          "committed_at": "2026-08-02T15:52:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -26,10 +26,10 @@ imports:\n       min-integrity: approved\n   - shared/pr-diff-data-fetch.md\n cache:\n-  key: pr-prefetch-${{ github.event.pull_request.head.sha || github.event.issue.number }}\n+  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n   path: /tmp/gh-aw/agent\n   restore-keys:\n-    - pr-prefetch-${{ github.event.pull_request.number || github.event.issue.number }}-\n+    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-\n safe-outputs:\n   messages:\n     footer: \"> 🦀 *Rust code quality review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"\n@@ -57,7 +57,7 @@ here; you will only duplicate its comments.\n ## Context\n \n - **Repository**: ${{ github.repository }}\n-- **Pull request**: #${{ github.event.issue.number || github.event.pull_request.number }}\n+- **Pull request**: see `pull-request-number` in the `<github-context>` block above — it is populated for both native PR events and centralized `/review` dispatches\n - **Triggered by**: @${{ github.actor }}\n \n ## Step 1 — Load the pre-fetched data and start the sub-agent",
+          "snapshot_ref": "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5",
+          "snapshot_blob_sha": "ed9cc1f067a1a4903816f07266a58e6cb657a34e",
+          "snapshot_file": "snapshots/ado-aw__githubnext__b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5__review-rust.md",
+          "snapshot_bytes": 7759,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-rust.lock.yml\",\"generated_workflow_file\":\"review-rust.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-rust.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-rust.md",
+      "commit_sha": "53890d653f8f2331fc221e742cf0a5c0ad798a22",
+      "authored_at": "2026-08-02T17:48:39Z",
+      "committed_at": "2026-08-02T17:48:39Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): harden reviewer PR-number resolution for /review dispatches (#1781)\n\nAlign the shared pre-fetch component with gh-aw's canonical aw_context expansion (transformAwContextExpression), which also reads github.event.client_payload.aw_context for repository_dispatch hops, and add a branch-based fallback: the centralized router always dispatches on the PR head ref, so gh pr list --head recovers the PR even if the context payload changes shape again.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 7f20ec70-8eca-4449-b5df-6abc5b23e821",
+      "parent_shas": [
+        "b8b4a1dc4b10bbb4454d65d477bf912d34bc4ba5"
+      ],
+      "tree_sha": "b50bcf6d97577abb78e49e4d38a17c84ec5edf61",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/53890d653f8f2331fc221e742cf0a5c0ad798a22",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-rust.md",
+          "commit_sha": "53890d653f8f2331fc221e742cf0a5c0ad798a22",
+          "committed_at": "2026-08-02T17:48:39Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -26,10 +26,10 @@ imports:\n       min-integrity: approved\n   - shared/pr-diff-data-fetch.md\n cache:\n-  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n+  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n   path: /tmp/gh-aw/agent\n   restore-keys:\n-    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || '{}').item_number }}-\n+    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-\n safe-outputs:\n   messages:\n     footer: \"> 🦀 *Rust code quality review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"",
+          "snapshot_ref": "53890d653f8f2331fc221e742cf0a5c0ad798a22",
+          "snapshot_blob_sha": "c2d8f8457ae25bd4de59b428bdecd9c20cc626c5",
+          "snapshot_file": "snapshots/ado-aw__githubnext__53890d653f8f2331fc221e742cf0a5c0ad798a22__review-rust.md",
+          "snapshot_bytes": 7843,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-rust.lock.yml\",\"generated_workflow_file\":\"review-rust.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-rust.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/review-rust.md",
+      "commit_sha": "d19e021d854286176976d107a6d1422a1c2c188f",
+      "authored_at": "2026-08-03T13:18:54Z",
+      "committed_at": "2026-08-03T13:18:54Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): give reviewers the complete PR diff (#1792)\n\nRemove the repository-owned 3,000-line truncation from both PR diff fetch paths and version the cache namespace so existing truncated entries cannot be restored.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: af5a1369-fd26-4781-a5b6-1bcd77e89a77",
+      "parent_shas": [
+        "769dd0e526c3c9b9c36790c199a607f238a80d35"
+      ],
+      "tree_sha": "cdbc1c63ebfaab3b261d9f1e7250d0295f7e6a8a",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/d19e021d854286176976d107a6d1422a1c2c188f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/review-rust.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/review-rust.md",
+          "commit_sha": "d19e021d854286176976d107a6d1422a1c2c188f",
+          "committed_at": "2026-08-03T13:18:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -26,10 +26,10 @@ imports:\n       min-integrity: approved\n   - shared/pr-diff-data-fetch.md\n cache:\n-  key: pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n+  key: pr-prefetch-full-v1-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-${{ github.event.pull_request.head.sha || github.run_id }}\n   path: /tmp/gh-aw/agent\n   restore-keys:\n-    - pr-prefetch-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-\n+    - pr-prefetch-full-v1-${{ github.event.pull_request.number || fromJSON(github.event.inputs.aw_context || github.event.client_payload.aw_context || '{}').item_number }}-\n safe-outputs:\n   messages:\n     footer: \"> 🦀 *Rust code quality review by [{workflow_name}]({run_url})*{ai_credits_suffix}{history_link}\"",
+          "snapshot_ref": "d19e021d854286176976d107a6d1422a1c2c188f",
+          "snapshot_blob_sha": "f9b2a9519f7b27547123ebd73fcb707bcbb08e68",
+          "snapshot_file": "snapshots/ado-aw__githubnext__d19e021d854286176976d107a6d1422a1c2c188f__review-rust.md",
+          "snapshot_bytes": 7859,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/review-rust.lock.yml\",\"generated_workflow_file\":\"review-rust.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/review-rust.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

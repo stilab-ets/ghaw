@@ -1,0 +1,296 @@
+[
+  {
+    "category": "TASK",
+    "question": "What substantive work is the agent asked to accomplish?",
+    "label": "TASK:Artifact Change",
+    "definition": "Creates, edits, repairs, removes, translates, or otherwise changes a durable project artifact.",
+    "exclude": "The unit only inspects an artifact, runs a check, or changes issue/PR metadata."
+  },
+  {
+    "category": "TASK",
+    "question": "What substantive work is the agent asked to accomplish?",
+    "label": "TASK:Artifact Review",
+    "definition": "Judges an existing artifact or proposal and returns findings, approval, or critique against criteria.",
+    "exclude": "The primary goal is root-cause discovery, fact gathering, test execution, or editing."
+  },
+  {
+    "category": "TASK",
+    "question": "What substantive work is the agent asked to accomplish?",
+    "label": "TASK:Evidence Investigation",
+    "definition": "Researches, diagnoses, compares, mines, triages analytically, or synthesizes evidence.",
+    "exclude": "Analysis merely supports another requested outcome and is not independently stated."
+  },
+  {
+    "category": "TASK",
+    "question": "What substantive work is the agent asked to accomplish?",
+    "label": "TASK:Executable Validation",
+    "definition": "Executes a test, build, benchmark, lint, protocol, or explicit behavioral check.",
+    "exclude": "Criteria are only used to review an artifact without executing a check."
+  },
+  {
+    "category": "TASK",
+    "question": "What substantive work is the agent asked to accomplish?",
+    "label": "TASK:Work Item Management",
+    "definition": "Changes work-item lifecycle, ownership, routing, or metadata.",
+    "exclude": "The unit merely sequences technical work or coordinates subagents."
+  },
+  {
+    "category": "CONSTRAINT",
+    "question": "What explicit boundary limits acceptable behavior?",
+    "label": "CONSTRAINT:Scope Boundary",
+    "definition": "Limits allowed files, repositories, actions, targets, change size, or writable surfaces.",
+    "exclude": "It only identifies the repository or event being processed."
+  },
+  {
+    "category": "CONSTRAINT",
+    "question": "What explicit boundary limits acceptable behavior?",
+    "label": "CONSTRAINT:Evidence Grounding",
+    "definition": "Requires claims to be supported by evidence or prohibits speculation.",
+    "exclude": "It asks the agent to evaluate source quality; use EVALUATION:Evidence Credibility."
+  },
+  {
+    "category": "CONSTRAINT",
+    "question": "What explicit boundary limits acceptable behavior?",
+    "label": "CONSTRAINT:Quality Standard",
+    "definition": "Prescribes clarity, precision, concision, formatting quality, or completeness.",
+    "exclude": "It assigns a social voice or audience; use COMMUNICATION:Audience Voice."
+  },
+  {
+    "category": "CONSTRAINT",
+    "question": "What explicit boundary limits acceptable behavior?",
+    "label": "CONSTRAINT:Resource Budget",
+    "definition": "Caps time, attempts, files, issues, tokens, cost, depth, or another consumable resource.",
+    "exclude": "A number describes input data but does not limit execution."
+  },
+  {
+    "category": "CONTEXT",
+    "question": "What background must the agent understand?",
+    "label": "CONTEXT:Repository Context",
+    "definition": "Supplies facts about a repository, PR, issue, release, commit, branch, or trigger.",
+    "exclude": "The unit directs use of GitHub tooling; use RESOURCE:GitHub Interface."
+  },
+  {
+    "category": "CONTEXT",
+    "question": "What background must the agent understand?",
+    "label": "CONTEXT:Domain Context",
+    "definition": "Supplies subject-matter knowledge, business rules, standards, protocols, or project concepts.",
+    "exclude": "The unit merely links to an external page to retrieve."
+  },
+  {
+    "category": "CONTEXT",
+    "question": "What background must the agent understand?",
+    "label": "CONTEXT:Execution Environment",
+    "definition": "Supplies runtime, operating-system, sandbox, path, software, or precomputed-input facts.",
+    "exclude": "It imposes an isolation or permission rule; use SAFETY:Execution Isolation."
+  },
+  {
+    "category": "CONTEXT",
+    "question": "What background must the agent understand?",
+    "label": "CONTEXT:Historical Context",
+    "definition": "Supplies prior runs, baselines, cached findings, releases, or earlier decisions.",
+    "exclude": "The unit directs saving or updating state; use PROCESS:Cross-Run Memory."
+  },
+  {
+    "category": "OUTPUT",
+    "question": "Where or how must the result be delivered?",
+    "label": "OUTPUT:Repository Change",
+    "definition": "Requires a persistent repository or release change, such as a commit, PR, merge, or release update.",
+    "exclude": "The requested file is only an analysis artifact and not a repository change."
+  },
+  {
+    "category": "OUTPUT",
+    "question": "Where or how must the result be delivered?",
+    "label": "OUTPUT:Existing Thread Response",
+    "definition": "Requires a response attached to an existing issue, PR, review, or discussion.",
+    "exclude": "The workflow creates a new issue or discussion."
+  },
+  {
+    "category": "OUTPUT",
+    "question": "Where or how must the result be delivered?",
+    "label": "OUTPUT:New Thread",
+    "definition": "Requires a newly created issue or discussion as the primary published result.",
+    "exclude": "The unit only comments on an existing thread."
+  },
+  {
+    "category": "OUTPUT",
+    "question": "Where or how must the result be delivered?",
+    "label": "OUTPUT:Standalone Artifact",
+    "definition": "Requires a standalone report, file, diagram, chart, archive, or upload.",
+    "exclude": "The content exists only as a new issue/discussion body; use New Thread."
+  },
+  {
+    "category": "OUTPUT",
+    "question": "Where or how must the result be delivered?",
+    "label": "OUTPUT:Control Signal",
+    "definition": "Requires a status-only or control result such as noop, label, close, approval, or dispatch.",
+    "exclude": "The action delivers substantive prose or a project artifact."
+  },
+  {
+    "category": "PROCESS",
+    "question": "How is execution controlled?",
+    "label": "PROCESS:Required Sequence",
+    "definition": "Defines a mandatory order of stages or prerequisites.",
+    "exclude": "A list is descriptive rather than procedural."
+  },
+  {
+    "category": "PROCESS",
+    "question": "How is execution controlled?",
+    "label": "PROCESS:Decision Branch",
+    "definition": "Defines a decision, gate, fallback, stopping condition, or error path.",
+    "exclude": "The unit merely states an allowed scope."
+  },
+  {
+    "category": "PROCESS",
+    "question": "How is execution controlled?",
+    "label": "PROCESS:Within-Run Iteration",
+    "definition": "Defines within-run loops, batches, retries, round-robin selection, or multiple passes.",
+    "exclude": "State is carried across runs without within-run repetition."
+  },
+  {
+    "category": "PROCESS",
+    "question": "How is execution controlled?",
+    "label": "PROCESS:Cross-Run Memory",
+    "definition": "Reads, writes, or advances persistent state across runs.",
+    "exclude": "Historical facts are background and are not managed."
+  },
+  {
+    "category": "PROCESS",
+    "question": "How is execution controlled?",
+    "label": "PROCESS:Work Delegation",
+    "definition": "Transfers substantive work to a subagent, worker, skill, handler, or dispatched workflow.",
+    "exclude": "One agent simply moves from one ordered phase to another."
+  },
+  {
+    "category": "EVALUATION",
+    "question": "What must be judged or checked?",
+    "label": "EVALUATION:Execution Check",
+    "definition": "Judges whether code builds, tests pass, a service responds, or a protocol behaves as expected.",
+    "exclude": "The body names a test tool without requiring a verdict."
+  },
+  {
+    "category": "EVALUATION",
+    "question": "What must be judged or checked?",
+    "label": "EVALUATION:Rule Conformance",
+    "definition": "Judges whether an artifact satisfies a rubric, specification, convention, or acceptance criterion.",
+    "exclude": "The unit only states a constraint to follow while creating the artifact."
+  },
+  {
+    "category": "EVALUATION",
+    "question": "What must be judged or checked?",
+    "label": "EVALUATION:Evidence Credibility",
+    "definition": "Judges the reliability, authority, completeness, or corroboration of evidence.",
+    "exclude": "It only prohibits unsupported claims; use CONSTRAINT:Evidence Grounding."
+  },
+  {
+    "category": "EVALUATION",
+    "question": "What must be judged or checked?",
+    "label": "EVALUATION:Risk Assessment",
+    "definition": "Judges severity, confidence, impact, exploitability, blast radius, or priority.",
+    "exclude": "Security merely names the subject without a risk judgment."
+  },
+  {
+    "category": "RESOURCE",
+    "question": "What must the agent use or consult?",
+    "label": "RESOURCE:GitHub Interface",
+    "definition": "Directs use of GitHub APIs, MCP tools, gh, repository search, or GitHub object data.",
+    "exclude": "GitHub facts are merely supplied as context."
+  },
+  {
+    "category": "RESOURCE",
+    "question": "What must the agent use or consult?",
+    "label": "RESOURCE:Web Retrieval",
+    "definition": "Directs use of websites, web search, feeds, provider documentation, or external services.",
+    "exclude": "External-domain facts are already included in the prompt."
+  },
+  {
+    "category": "RESOURCE",
+    "question": "What must the agent use or consult?",
+    "label": "RESOURCE:Local Workspace",
+    "definition": "Directs use of local files, shell commands, source, logs, scripts, or references.",
+    "exclude": "The command is specifically a build/test/lint operation; use Development Toolchain."
+  },
+  {
+    "category": "RESOURCE",
+    "question": "What must the agent use or consult?",
+    "label": "RESOURCE:Development Toolchain",
+    "definition": "Directs use of compilers, tests, linters, benchmarks, analyzers, or build systems.",
+    "exclude": "A generic shell command only reads or edits files."
+  },
+  {
+    "category": "RESOURCE",
+    "question": "What must the agent use or consult?",
+    "label": "RESOURCE:Agent Resource",
+    "definition": "Directs use of subagents, reusable skills, model calls, or agent/memory services.",
+    "exclude": "The unit only describes transfer of work; use PROCESS:Work Delegation."
+  },
+  {
+    "category": "COMMUNICATION",
+    "question": "What stance must the agent adopt?",
+    "label": "COMMUNICATION:Expert Role",
+    "definition": "Assigns a professional role or specialist identity that materially frames judgment.",
+    "exclude": "It merely says the system is an AI agent without relevant expertise."
+  },
+  {
+    "category": "COMMUNICATION",
+    "question": "What stance must the agent adopt?",
+    "label": "COMMUNICATION:Audience Voice",
+    "definition": "Specifies audience, language, tone, politeness, enthusiasm, or communication style.",
+    "exclude": "It only requires concise or well-formatted content; use CONSTRAINT:Quality Standard."
+  },
+  {
+    "category": "COMMUNICATION",
+    "question": "What stance must the agent adopt?",
+    "label": "COMMUNICATION:Automation Disclosure",
+    "definition": "Requires output to reveal automation, limitations, uncertainty, or a non-human role.",
+    "exclude": "The prompt merely identifies the agent internally."
+  },
+  {
+    "category": "EXAMPLE",
+    "question": "What demonstrative material is provided?",
+    "label": "EXAMPLE:Output Template",
+    "definition": "Provides a fill-in output skeleton, report schema, section layout, or response scaffold.",
+    "exclude": "Prose only lists required output fields without demonstrating arrangement."
+  },
+  {
+    "category": "EXAMPLE",
+    "question": "What demonstrative material is provided?",
+    "label": "EXAMPLE:Worked Case",
+    "definition": "Provides a worked positive, negative, edge, or counterexample illustrating a decision.",
+    "exclude": "The case is the actual input being processed."
+  },
+  {
+    "category": "EXAMPLE",
+    "question": "What demonstrative material is provided?",
+    "label": "EXAMPLE:Technical Snippet",
+    "definition": "Provides sample code, command, query, JSON, Mermaid, or configuration.",
+    "exclude": "The command is mandatory execution rather than illustrative material."
+  },
+  {
+    "category": "SAFETY",
+    "question": "What explicit harm boundary is imposed?",
+    "label": "SAFETY:Prompt Injection Defense",
+    "definition": "Addresses prompt injection, untrusted content, instruction hierarchy, or embedded instructions.",
+    "exclude": "Content is merely described as possibly inaccurate."
+  },
+  {
+    "category": "SAFETY",
+    "question": "What explicit harm boundary is imposed?",
+    "label": "SAFETY:Information Confidentiality",
+    "definition": "Addresses secrets, credentials, tokens, private data, or sensitive-information disclosure.",
+    "exclude": "A token is discussed only as a usage or cost metric."
+  },
+  {
+    "category": "SAFETY",
+    "question": "What explicit harm boundary is imposed?",
+    "label": "SAFETY:Execution Isolation",
+    "definition": "Addresses sandboxing, filesystem/network boundaries, permissions, or read-only execution.",
+    "exclude": "Ordinary task scope limits files for project reasons rather than containment."
+  },
+  {
+    "category": "SAFETY",
+    "question": "What explicit harm boundary is imposed?",
+    "label": "SAFETY:Vulnerability Handling",
+    "definition": "Addresses discovering, assessing, remediating, or reporting exploitable weaknesses.",
+    "exclude": "Safe means general correctness or conservative behavior."
+  }
+]

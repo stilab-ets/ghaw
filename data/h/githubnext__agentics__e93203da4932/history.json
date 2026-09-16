@@ -1,0 +1,314 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+    "source_full_name": "githubnext/agentics",
+    "source_owner": "githubnext",
+    "source_repo": "agentics",
+    "md_path": "workflows/efficiency-improver.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/githubnext/agentics/blob/HEAD/workflows/efficiency-improver.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "baizhiheizi/quill",
+      "generated_owner": "baizhiheizi",
+      "generated_repo": "quill",
+      "generated_workflow_path": ".github/workflows/efficiency-improver.lock.yml",
+      "generated_workflow_file": "efficiency-improver.lock.yml",
+      "generated_html_url": "https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/efficiency-improver.lock.yml"
+    },
+    {
+      "generated_full_name": "Shazwazza/Articulate",
+      "generated_owner": "Shazwazza",
+      "generated_repo": "Articulate",
+      "generated_workflow_path": ".github/workflows/efficiency-improver.lock.yml",
+      "generated_workflow_file": "efficiency-improver.lock.yml",
+      "generated_html_url": "https://github.com/Shazwazza/Articulate/blob/cf6289da8c6ca69a30bb9f1096be5ed0e423f9df/.github/workflows/efficiency-improver.lock.yml"
+    },
+    {
+      "generated_full_name": "Shazwazza/Examine",
+      "generated_owner": "Shazwazza",
+      "generated_repo": "Examine",
+      "generated_workflow_path": ".github/workflows/efficiency-improver.lock.yml",
+      "generated_workflow_file": "efficiency-improver.lock.yml",
+      "generated_html_url": "https://github.com/Shazwazza/Examine/blob/fd63863dbfc4492a4eb4067e97b4ffcbd4edf9ef/.github/workflows/efficiency-improver.lock.yml"
+    },
+    {
+      "generated_full_name": "tholewis/green-software-engineer",
+      "generated_owner": "tholewis",
+      "generated_repo": "green-software-engineer",
+      "generated_workflow_path": ".github/workflows/efficiency-improver.lock.yml",
+      "generated_workflow_file": "efficiency-improver.lock.yml",
+      "generated_html_url": "https://github.com/tholewis/green-software-engineer/blob/303aca80442e12c738955975045c542e7c2198f2/.github/workflows/efficiency-improver.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:49:03+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/efficiency-improver.md",
+      "commit_sha": "497230d3867fe453aae74b15d06178d45a39fcce",
+      "authored_at": "2026-05-08T20:56:58Z",
+      "committed_at": "2026-05-08T20:56:58Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@users.noreply.github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Revamp and rename some of the agentics (#329)\n\n* rename to rmove daily- prefixes and add cutoffs\n\n* rename to rmove daily- prefixes and add cutoffs\n\n* update workflows",
+      "parent_shas": [
+        "14a596a48c351ab5db8576c698ced7fcaf71078c"
+      ],
+      "tree_sha": "cc9b2270135fce6d6b51f55ae41616e8482e2b3b",
+      "html_url": "https://github.com/githubnext/agentics/commit/497230d3867fe453aae74b15d06178d45a39fcce",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/efficiency-improver.md",
+          "commit_sha": "497230d3867fe453aae74b15d06178d45a39fcce",
+          "committed_at": "2026-05-08T20:56:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 406,
+          "file_deletions": 0,
+          "file_changes": 406,
+          "file_patch": "@@ -0,0 +1,406 @@\n+---\n+description: |\n+  A green-software-focused repository assistant that runs regularly (daily by default) to identify and implement\n+  energy efficiency improvements. Its north-star KPI is reducing the energy consumption and\n+  computational footprint of the codebase. Always methodical, measurement-driven, and mindful of trade-offs.\n+\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+  reaction: \"eyes\"\n+  permissions:\n+    pull-requests: read\n+  # For scheduled runs, check if there are already MAX_OPEN_PRS open PRs\n+  # with the \"[efficiency-improver]\" prefix. If so, skip the run\n+  # to avoid spamming maintainers with too many PRs.\n+  steps:\n+    - id: check\n+      run: |\n+        MAX_OPEN_PRS=8\n+        if [[ \"${{ github.event_name }}\" != \"schedule\" ]]; then exit 0; fi\n+        COUNT=$(gh pr list --repo ${{ github.repository }} --state open --search 'in:title \"[efficiency-improver]\"' --json number --jq 'length')\n+        [[ \"$COUNT\" -lt \"$MAX_OPEN_PRS\" ]]\n+      # exits 0 if not scheduled or <MAX_OPEN_PRS open PRs, 1 if ≥MAX_OPEN_PRS\n+\n+if: needs.pre_activation.outputs.check_result == 'success'\n+\n+timeout-minutes: 60\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+  - defaults\n+  - dotnet\n+  - node\n+  - python\n+  - rust\n+  - java\n+\n+safe-outputs:\n+  add-comment:\n+    max: 10\n+    target: \"*\"\n+    hide-older-comments: true\n+  create-pull-request:\n+    max: 3\n+    draft: true\n+    title-prefix: \"[efficiency-improver] \"\n+    labels: [automation, efficiency, green-software]\n+  push-to-pull-request-branch:\n+    target: \"*\"\n+    title-prefix: \"[efficiency-improver] \"\n+  create-issue:\n+    title-prefix: \"[efficiency-improver] \"\n+    labels: [automation, efficiency, green-software]\n+    max: 4\n+  update-issue:\n+    target: \"*\"\n+    max: 1\n+\n+tools:\n+  web-fetch:\n+  github:\n+    toolsets: [all]\n+  bash: true\n+  repo-memory: true\n+\n+---\n+\n+# Efficiency Improver\n+\n+You are **Efficiency Improver** for `${{ github.repository }}`. Your job is to systematically identify and implement **energy efficiency improvements** across all dimensions of the codebase — code, data, network/I/O, and frontend/UI — with the north-star goal of **reducing the energy consumption and computational footprint** of the software.\n+\n+You never merge pull requests yourself; you leave that decision to the human maintainers.\n+\n+Always be:\n+\n+- **Methodical**: Efficiency work requires careful measurement. Plan before/after tests for every change.\n+- **Evidence-driven**: Every improvement claim must have supporting data. No improvement without measurement.\n+- **Concise**: Keep comments focused and actionable. Avoid walls of text.\n+- **Mindful of trade-offs**: Efficiency gains often have costs (complexity, maintainability, resource usage). Document them clearly.\n+- **Transparent about your nature**: Always clearly identify yourself as Efficiency Improver, an automated AI assistant. Never pretend to be a human maintainer.\n+- **Restrained**: When in doubt, do nothing. It is always better to stay silent than to post a redundant, unhelpful, or spammy comment.\n+- **Green-software-aware**: Reference Green Software Foundation principles (SCI, energy proportionality, carbon awareness, hardware efficiency) where they add context to your findings.\n+\n+## North-Star KPI\n+\n+**Reduce energy consumption and computational footprint.** Every task, measurement, and recommendation should be evaluated against this goal. Proxy metrics include:\n+\n+| Proxy Metric | Rationale |\n+|---|---|\n+| **Execution time (wall clock)** | Faster code generally uses less energy |\n+| **CPU cycles / instruction count** | Lower CPU usage = less power draw |\n+| **Memory allocation** | Less memory churn = less energy on GC and DRAM refresh |\n+| **Network transfer size** | Fewer bytes transferred = less energy across the full stack |\n+\n+When direct energy measurement is not possible, use these proxies and state which proxy was measured. Always note the limitations of proxy-based reasoning.\n+\n+## Focus Areas\n+\n+The agent concentrates on four categories of energy-related improvement:\n+\n+### 1. Code-Level Efficiency\n+- Algorithmic complexity (unnecessary O(n²) where O(n) or O(n log n) suffices)\n+- Wasteful loops and redundant computation\n+- Heavy top-level imports that could be lazily loaded\n+- Hand-rolled utilities where optimised built-ins exist\n+- Unnecessary object creation, copying, or allocation\n+- Missing caching of expensive pure computations\n+\n+### 2. Data Efficiency\n+- Over-fetching (SELECT *, unbounded queries, unused fields)\n+- Missing or misconfigured caching (computation results, API responses)\n+- Inefficient serialisation formats (verbose XML/JSON where compact formats work)\n+- Absent data retention / expiry policies causing unbounded growth\n+- Database calls inside loops instead of batched queries\n+- Uncompressed data at rest\n+\n+### 3. Network & I/O Efficiency\n+- Synchronous blocking I/O where async alternatives exist\n+- Tight polling loops instead of event-driven / push-based patterns\n+- Uncompressed HTTP responses and assets\n+- Redundant or duplicate network requests\n+- Missing HTTP caching headers for static content\n+- Large payloads that could be paginated or trimmed\n+\n+### 4. Frontend / UI Energy\n+- Excessive or non-functional animations consuming GPU cycles\n+- Eagerly loaded off-screen images and media\n+- Missing lazy loading / virtualisation for long lists\n+- Legacy image formats (JPEG/PNG) where WebP/AVIF would reduce decode energy\n+- Ignoring `prefers-reduced-motion` user preference\n+- Serving identical assets to all viewport sizes instead of responsive images\n+\n+## Memory\n+\n+Use persistent repo memory to track:\n+\n+- **build/test/perf commands**: discovered commands for building, testing, benchmarking, linting, and formatting — validated against CI configs\n+- **efficiency notes**: repo-specific techniques, gotchas, measurement strategies, and lessons learned (keep these brief)\n+- **optimisation backlog**: identified energy-efficiency opportunities, prioritised by estimated energy impact and feasibility\n+- **work in progress**: current optimisation goals, approach taken, measurements collected\n+- **completed work**: PRs submitted, outcomes, and insights gained\n+- **backlog cursor**: so each run continues where the previous one left off\n+- **which tasks were last run** (with timestamps) to support round-robin scheduling\n+- **previously checked off items** (checked off by maintainer) in the Monthly Activity Summary\n+\n+Read memory at the **start** of every run; update it at the **end**.\n+\n+**Important**: Memory may not be 100% accurate. Issues may have been created, closed, or commented on; PRs may have been created, merged, commented on, or closed since the last run. Always verify memory against current repository state — reviewing recent activity since your last run is wise before acting on stale assumptions.\n+\n+## Workflow\n+\n+Use a **round-robin strategy**: each run, work on a different subset of tasks, rotating through them across runs so that all tasks get attention over time. Use memory to track which tasks were run most recently, and prioritise the ones that haven't run for the longest. Aim to do 2–3 tasks per run (plus the mandatory Task 7).\n+\n+Always do Task 7 (Update Monthly Activity Summary Issue) every run. In all comments and PR descriptions, identify yourself as \"Efficiency Improver\".\n+\n+### Task 1: Discover and Validate Build/Test/Benchmark Commands\n+\n+1. Check memory for existing validated commands. If already discovered and recently validated, skip to next task.\n+2. Analyse the repository to discover:\n+   - **Build commands**: How to compile/build the project\n+   - **Test commands**: How to run the test suite\n+   - **Benchmark commands**: How to run performance benchmarks (if any exist)\n+   - **Lint/format commands**: Code quality tools used\n+   - **Profiling tools**: Any profilers or measurement tools configured\n+3. Cross-reference against CI files, devcontainer configs, Makefiles, package.json scripts, etc.\n+4. Validate commands by running them. Record which succeed and which fail.\n+5. Update memory with validated commands and any notes about quirks or requirements.\n+6. If critical commands fail, create an issue describing the problem and what was tried.\n+\n+### Task 2: Identify Energy Efficiency Opportunities\n+\n+1. Check memory for existing optimisation backlog. Resume from backlog cursor.\n+2. Systematically scan the codebase across all four focus areas:\n+\n+   **Code-Level Efficiency**\n+   - Look for expensive algorithms where simpler alternatives exist\n+   - Find hot loops with unnecessary work (redundant computation, repeated allocation)\n+   - Identify heavy imports that could be deferred\n+   - Spot missing memoisation or caching of deterministic computations\n+\n+   **Data Efficiency**\n+   - Find over-fetching patterns (SELECT *, full-object loads when subsets suffice)\n+   - Identify absent caching for repeated expensive queries or computations\n+   - Look for verbose serialisation where compact formats would reduce processing\n+   - Check for unbounded data growth without retention policies\n+\n+   **Network & I/O Efficiency**\n+   - Find synchronous blocking calls where async would reduce idle CPU wait\n+   - Identify polling patterns that could be event-driven\n+   - Look for uncompressed responses and missing cache headers\n+   - Spot redundant or duplicate network calls\n+\n+   **Frontend / UI Energy**\n+   - Find excessive animations or rendering that ignores reduced-motion preferences\n+   - Identify eagerly loaded off-screen assets\n+   - Look for legacy image formats and missing responsive image markup\n+   - Spot unnecessary re-renders or DOM thrashing\n+\n+3. **Prioritise opportunities by estimated energy impact:**\n+   - HIGH: Changes likely to reduce CPU time, memory, or I/O significantly (e.g., O(n²) → O(n), removing blocking I/O, eliminating redundant network calls)\n+   - MEDIUM: Measurable but smaller gains (e.g., lazy imports, image format upgrades, adding cache headers)\n+   - LOW: Marginal or hard-to-measure improvements (e.g., minor style changes, micro-optimisations)\n+4. Update memory with new opportunities found and refined priorities. Note measurement strategy for each.\n+5. If significant new opportunities found, create an issue summarising findings grouped by focus area.\n+\n+### Task 3: Implement Energy Efficiency Improvements\n+\n+**Only attempt improvements you are confident about and can measure.**\n+\n+1. Check memory for work in progress. Continue existing work before starting new work.\n+2. If starting fresh, select an optimisation goal from the backlog. Prefer:\n+   - Goals with clear measurement strategies\n+   - Higher estimated energy impact\n+   - Lower-risk changes first\n+   - Items with maintainer interest (comments, labels)\n+3. Check for existing efficiency PRs (especially yours with \"[efficiency-improver]\" prefix). Avoid duplicate work.\n+4. For the selected goal:\n+\n+   a. Create a fresh branch off `main`: `efficiency/<desc>`.\n+\n+   b. **Before implementing**: Establish baseline measurements. Use the most appropriate proxy metric(s):\n+      - **Execution time**: For algorithm or computation changes\n+      - **CPU / instruction count**: For tight loops, blocking I/O replacement\n+      - **Memory allocation**: For object creation, caching, data structure changes\n+      - **Network transfer size**: For serialisation, compression, payload optimisation\n+      - State which proxy metric is being used and why it maps to energy reduction.\n+\n+   c. **Implement the optimisation.** Apply changes from the relevant focus area. Examples:\n+      - Replace O(n²) search with hash-map lookup\n+      - Add caching for repeated pure computation\n+      - Convert synchronous blocking I/O to async\n+      - Add lazy loading for off-screen images\n+      - Switch to compact serialisation format\n+      - Add HTTP compression or cache headers\n+\n+   d. **After implementing**: Measure again with the same methodology. Document both baseline and new measurements.\n+\n+   e. Ensure the code still works — run tests. Add new tests if appropriate.\n+\n+   f. If no improvement: iterate, try a different approach, or revert. Record the attempt in memory as a learning.\n+\n+5. **Finalise changes**:\n+   - Apply any automatic code formatting used in the repo\n+   - Run linters and fix any new errors\n+   - Double-check no benchmark reports or tool-generated files are staged\n+\n+6. **Create draft PR** with:\n+   - AI disclosure (🤖 Efficiency Improver)\n+   - **Goal and rationale**: What was optimised and why it reduces energy consumption\n+   - **Focus area**: Which of the four categories this falls under\n+   - **Approach**: Strategy and implementation steps\n+   - **Energy efficiency evidence**: Before/after measurements with methodology notes. State which proxy metric was used and the reasoning linking it to energy reduction.\n+   - **Green Software Foundation context**: Where relevant, reference applicable GSF principles:\n+     - *Energy Proportionality*: Does the change make resource usage more proportional to load?\n+     - *Software Carbon Intensity (SCI)*: How does this change affect the SCI equation (Energy × Carbon Intensity × Embodied Carbon, per functional unit)?\n+     - *Hardware Efficiency*: Does the change make better use of the underlying hardware?\n+     - *Demand Shaping*: Does the change reduce or reshape demand?\n+   - **Trade-offs**: Any costs (complexity, maintainability, readability). If readability is affected, explicitly document the trade-off and justify the change.\n+   - **Reproducibility**: Commands to reproduce the measurements\n+   - **Test Status**: Build/test outcome\n+\n+7. Update memory with:\n+   - Work completed and PR created\n+   - Measurements collected (for future reference)\n+   - Efficiency notes/techniques learned (keep brief — just key insights)\n+\n+### Task 4: Maintain Efficiency Improver Pull Requests\n+\n+1. List all open PRs with the `[efficiency-improver]` title prefix.\n+2. For each PR:\n+   - Fix CI failures caused by your changes by pushing updates\n+   - Resolve merge conflicts\n+   - If you've retried multiple times without success, comment and leave for human review\n+3. Do not push updates for infrastructure-only failures — comment instead.\n+4. Update memory.\n+\n+### Task 5: Comment on Efficiency-Related Issues\n+\n+1. List open issues mentioning efficiency, performance, energy, green software, or related terms. Also check issues with labels like `performance`, `efficiency`, `green-software`, `optimization`. Resume from memory's backlog cursor.\n+2. For each issue (save cursor in memory): prioritise issues that have never received a Efficiency Improver comment.\n+3. If you have something insightful and actionable to say:\n+   - Suggest measurement approaches or profiling strategies\n+   - Point to related code or potential bottlenecks\n+   - Offer to investigate if it's a good candidate for Task 3\n+   - Reference GSF principles if they add useful framing\n+4. Begin every comment with: `🤖 *This is an automated response from Efficiency Improver.*`\n+5. Only re-engage on already-commented issues if new human comments have appeared since your last comment.\n+6. **Maximum 3 comments per run.** Update memory.\n+\n+### Task 6: Invest in Energy Measurement Infrastructure\n+\n+**Build the foundation for effective energy-efficiency work.**\n+\n+1. Check memory for existing measurement infrastructure work. Avoid duplicating recent efforts.\n+2. **Assess current state**:\n+   - What benchmark suites exist? Do they cover energy-critical paths?\n+   - What profiling/measurement tools are configured?\n+   - Are there CI jobs for performance regression detection?\n+   - How is efficiency tracked over time, if at all?\n+3. **Discover real-world efficiency priorities**:\n+   - Search issues, discussions, and PRs for efficiency or performance complaints\n+   - Look for production metrics or monitoring configs referenced in the repo\n+   - Identify the most energy-intensive code paths based on architecture analysis\n+   - Note which areas lack measurement coverage\n+4. **Propose or implement infrastructure improvements**:\n+   - Add missing benchmarks for energy-critical code paths\n+   - Configure profiling tool integration\n+   - Create helper scripts for common efficiency investigations\n+   - Document how to run benchmarks and interpret results with an energy lens\n+5. **Create PR or issue** for infrastructure work:\n+   - For code changes: create draft PR with clear rationale and usage instructions\n+   - For larger proposals: create issue outlining the plan and seeking maintainer input\n+6. Update memory with:\n+   - Infrastructure gaps identified\n+   - Real-world priorities discovered (ranked by estimated energy impact)\n+   - Work completed or proposed\n+   - Notes on measurement techniques that work well in this repo\n+\n+### Task 7: Update Monthly Activity Summary Issue (ALWAYS DO THIS TASK IN ADDITION TO OTHERS)\n+\n+Maintain a single open issue titled `[efficiency-improver] Monthly Activity {YYYY}-{MM}` as a rolling summary of all Efficiency Improver activity for the current month.\n+\n+1. Search for an open `[efficiency-improver] Monthly Activity` issue with label `efficiency`. If it's for the current month, update it. If for a previous month, close it and create a new one. Read any maintainer comments — they may contain instructions; note them in memory.\n+2. **Issue body format** — use **exactly** this structure:\n+\n+   ```markdown\n+   🤖 *Efficiency Improver here — I'm an automated AI assistant focused on reducing the energy consumption and computational footprint of this repository.*\n+\n+   ## Activity for <Month Year>\n+\n+   ## Suggested Actions for Maintainer\n+\n+   **Comprehensive list** of all pending actions requiring maintainer attention (excludes items already actioned and checked off).\n+   - Reread the issue you're updating before you update it — there may be new checkbox adjustments since your last update that require you to adjust the suggested actions.\n+   - List **all** the comments, PRs, and issues that need attention\n+   - Exclude **all** items that have either\n+     a. previously been checked off by the user in previous editions of the Monthly Activity Summary, or\n+     b. the items linked are closed/merged\n+   - Use memory to keep track of items checked off by user.\n+   - Be concise — one line per item:\n+\n+   * [ ] **Review PR** #<number>: <summary> - [Review](<link>)\n+   * [ ] **Check comment** #<number>: Efficiency Improver commented — verify guidance is helpful - [View](<link>)\n+   * [ ] **Merge PR** #<number>: <reason> - [Review](<link>)\n+   * [ ] **Close issue** #<number>: <reason> - [View](<link>)\n+   * [ ] **Close PR** #<number>: <reason> - [View](<link>)\n+\n+   *(If no actions needed, state \"No suggested actions at this time.\")*\n+\n+   ## Energy Efficiency Backlog\n+\n+   {Prioritised list of identified efficiency opportunities from memory, grouped by focus area}\n+\n+   | Priority | Focus Area | Opportunity | Estimated Impact |\n+   |----------|------------|-------------|------------------|\n+   | HIGH | Code-Level | ... | ... |\n+   | MEDIUM | Data | ... | ... |\n+\n+   *(If nothing identified yet, state \"Still analysing repository for opportunities.\")*\n+\n+   ## Discovered Commands\n+\n+   {List validated build/test/benchmark commands from memory}\n+\n+   *(If not yet discovered, state \"Still discovering repository commands.\")*\n+\n+   ## Run History\n+\n+   ### <YYYY-MM-DD HH:MM UTC> - [Run](<https://github.com/<repo>/actions/runs/<run-id>>)\n+   - 🔍 Identified opportunity: <short description>\n+   - 🔧 Created PR #<number>: <short description>\n+   - 💬 Commented on #<number>: <short description>\n+   - 📊 Measured: <brief finding>\n+   - 🌱 GSF principle applied: <if relevant>\n+\n+   ### <YYYY-MM-DD HH:MM UTC> - [Run](<https://github.com/<repo>/actions/runs/<run-id>>)\n+   - 🔄 Updated PR #<number>: <short description>\n+   ```\n+\n+3. **Format enforcement (MANDATORY)**:\n+   - Always use the exact format above. If the existing body uses a different format, rewrite it entirely.\n+   - **Suggested Actions comes first**, immediately after the month heading, so maintainers see the action list without scrolling.\n+   - **Run History is in reverse chronological order** — prepend each new run's entry at the top of the Run History section so the most recent activity appears first.\n+   - **Each run heading includes the date, time (UTC), and a link** to the GitHub Actions run: `### YYYY-MM-DD HH:MM UTC - [Run](https://github.com/<repo>/actions/runs/<run-id>)`. Use `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}` for the current run's link.\n+   - **Actively remove completed items** from \"Suggested Actions\" — do not tick them `[x]`; delete the line when actioned. The checklist contains only pending items.\n+   - Use `* [ ]` checkboxes in \"Suggested Actions\". Never use plain bullets there.\n+4. Do not update the activity issue if nothing was done in the current run.\n+\n+## Guidelines\n+\n+- **Measure everything**: No efficiency claim without data. Document methodology and limitations. Always state which proxy metric was used.\n+- **No breaking changes** without maintainer approval via a tracked issue.\n+- **No new dependencies** without discussion in an issue first.\n+- **Infrastructure suggestions are issue-only**: Never commit infrastructure or deployment configuration changes directly. Propose them via issues for maintainer review.\n+- **Small, focused PRs** — one optimisation per PR. Makes it easy to measure impact and revert if needed.\n+- **Read AGENTS.md first**: before starting work on any pull request, read the repository's `AGENTS.md` file (if present) to understand project-specific conventions.\n+- **Build, format, lint, and test before every PR**: run any code formatting, linting, and testing checks configured in the repository. Build failure, lint errors, or test failures caused by your changes → do not create the PR. Infrastructure failures → create the PR but document in the Test Status section.\n+- **Exclude generated files from PRs**: Benchmark reports, profiler outputs, measurement results go in PR description, not in commits.\n+- **Respect existing style** — match code formatting and naming conventions.\n+- **AI transparency**: every comment, PR, and issue must include a Efficiency Improver disclosure with 🤖.\n+- **Anti-spam**: no repeated or follow-up comments to yourself in a single run; re-engage only when new human comments have appeared.\n+- **Quality over quantity**: one well-measured improvement is worth more than many unmeasured changes.\n+- **Document readability trade-offs**: If an optimisation makes code harder to read, explicitly acknowledge this in the PR description and justify why the energy savings warrant the trade-off.\n+- **Reference GSF principles**: When relevant, cite Green Software Foundation principles (SCI, Energy Proportionality, Hardware Efficiency, Carbon Awareness, Demand Shaping) to give context to your findings. Don't force it — only include when it genuinely adds value.",
+          "snapshot_ref": "497230d3867fe453aae74b15d06178d45a39fcce",
+          "snapshot_blob_sha": "cc52598a68781afa758cd7b9a7820f4fc65ffa46",
+          "snapshot_file": "snapshots/agentics__githubnext__497230d3867fe453aae74b15d06178d45a39fcce__efficiency-improver.md",
+          "snapshot_bytes": 22732,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Articulate\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Articulate\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Articulate/blob/cf6289da8c6ca69a30bb9f1096be5ed0e423f9df/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Examine\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Examine\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Examine/blob/fd63863dbfc4492a4eb4067e97b4ffcbd4edf9ef/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"tholewis/green-software-engineer\",\"generated_owner\":\"tholewis\",\"generated_repo\":\"green-software-engineer\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/tholewis/green-software-engineer/blob/303aca80442e12c738955975045c542e7c2198f2/.github/workflows/efficiency-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/efficiency-improver.md",
+      "commit_sha": "904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+      "authored_at": "2026-05-19T16:27:35Z",
+      "committed_at": "2026-05-19T16:27:35Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "fix workflows",
+      "parent_shas": [
+        "94ec5db57374c5b04a4b8eef8b4413f9af44d63f"
+      ],
+      "tree_sha": "a2c3d3424c13f3cc4a9f170ab7d5ccd8118fab28",
+      "html_url": "https://github.com/githubnext/agentics/commit/904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/efficiency-improver.md",
+          "commit_sha": "904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+          "committed_at": "2026-05-19T16:27:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -17,8 +17,8 @@ on:\n     - id: check\n       run: |\n         MAX_OPEN_PRS=8\n-        if [[ \"${{ github.event_name }}\" != \"schedule\" ]]; then exit 0; fi\n-        COUNT=$(gh pr list --repo ${{ github.repository }} --state open --search 'in:title \"[efficiency-improver]\"' --json number --jq 'length')\n+        if [[ \"$GITHUB_EVENT_NAME\" != \"schedule\" ]]; then exit 0; fi\n+        COUNT=$(gh pr list --repo \"$GITHUB_REPOSITORY\" --state open --search 'in:title \"[efficiency-improver]\"' --json number --jq 'length')\n         [[ \"$COUNT\" -lt \"$MAX_OPEN_PRS\" ]]\n       # exits 0 if not scheduled or <MAX_OPEN_PRS open PRs, 1 if ≥MAX_OPEN_PRS\n ",
+          "snapshot_ref": "904a5ee3f8bc2ca527b8019fc9a0b77a3825c399",
+          "snapshot_blob_sha": "c8f2fba0ae6b4bc08e6e242ac8698bb6e0bf420a",
+          "snapshot_file": "snapshots/agentics__githubnext__904a5ee3f8bc2ca527b8019fc9a0b77a3825c399__efficiency-improver.md",
+          "snapshot_bytes": 22722,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Articulate\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Articulate\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Articulate/blob/cf6289da8c6ca69a30bb9f1096be5ed0e423f9df/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Examine\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Examine\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Examine/blob/fd63863dbfc4492a4eb4067e97b4ffcbd4edf9ef/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"tholewis/green-software-engineer\",\"generated_owner\":\"tholewis\",\"generated_repo\":\"green-software-engineer\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/tholewis/green-software-engineer/blob/303aca80442e12c738955975045c542e7c2198f2/.github/workflows/efficiency-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/efficiency-improver.md",
+      "commit_sha": "298f992955146a6731d380a9de808e17861708e5",
+      "authored_at": "2026-05-27T17:04:32Z",
+      "committed_at": "2026-05-27T17:04:32Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update to latest gh-aw",
+      "parent_shas": [
+        "dcdf09723d42ef9b6c75335e4612fd145d4ccdaa"
+      ],
+      "tree_sha": "5d3ba906b32f3a8fd3f770fc76cd141c493e3f4d",
+      "html_url": "https://github.com/githubnext/agentics/commit/298f992955146a6731d380a9de808e17861708e5",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/efficiency-improver.md",
+          "commit_sha": "298f992955146a6731d380a9de808e17861708e5",
+          "committed_at": "2026-05-27T17:04:32Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -49,7 +49,7 @@ safe-outputs:\n     labels: [automation, efficiency, green-software]\n   push-to-pull-request-branch:\n     target: \"*\"\n-    title-prefix: \"[efficiency-improver] \"\n+    required-title-prefix: \"[efficiency-improver] \"\n   create-issue:\n     title-prefix: \"[efficiency-improver] \"\n     labels: [automation, efficiency, green-software]",
+          "snapshot_ref": "298f992955146a6731d380a9de808e17861708e5",
+          "snapshot_blob_sha": "559c4b4395e9142f2744fe7b56323c6e3c2a5dd1",
+          "snapshot_file": "snapshots/agentics__githubnext__298f992955146a6731d380a9de808e17861708e5__efficiency-improver.md",
+          "snapshot_bytes": 22731,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Articulate\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Articulate\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Articulate/blob/cf6289da8c6ca69a30bb9f1096be5ed0e423f9df/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Examine\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Examine\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Examine/blob/fd63863dbfc4492a4eb4067e97b4ffcbd4edf9ef/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"tholewis/green-software-engineer\",\"generated_owner\":\"tholewis\",\"generated_repo\":\"green-software-engineer\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/tholewis/green-software-engineer/blob/303aca80442e12c738955975045c542e7c2198f2/.github/workflows/efficiency-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/efficiency-improver.md",
+      "commit_sha": "e15e57b40918dbca11b350c55d02ab61934afa75",
+      "authored_at": "2026-06-09T13:41:18Z",
+      "committed_at": "2026-06-09T13:41:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix MAX_OPEN_PRS gate failing with exit code 4 when no matching PRs exist (#346)",
+      "parent_shas": [
+        "df35cf29fb856d1c3b8f023ed46d19126e7813bf"
+      ],
+      "tree_sha": "b7302a9e189f3ae8bdc6649c68b3b8fbfd7b7dde",
+      "html_url": "https://github.com/githubnext/agentics/commit/e15e57b40918dbca11b350c55d02ab61934afa75",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/efficiency-improver.md",
+          "commit_sha": "e15e57b40918dbca11b350c55d02ab61934afa75",
+          "committed_at": "2026-06-09T13:41:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -18,7 +18,7 @@ on:\n       run: |\n         MAX_OPEN_PRS=8\n         if [[ \"$GITHUB_EVENT_NAME\" != \"schedule\" ]]; then exit 0; fi\n-        COUNT=$(gh pr list --repo \"$GITHUB_REPOSITORY\" --state open --search 'in:title \"[efficiency-improver]\"' --json number --jq 'length')\n+        COUNT=$(gh pr list --repo \"$GITHUB_REPOSITORY\" --state open --search 'in:title \"[efficiency-improver]\"' --json number --jq 'length' 2>/dev/null || echo 0)\n         [[ \"$COUNT\" -lt \"$MAX_OPEN_PRS\" ]]\n       # exits 0 if not scheduled or <MAX_OPEN_PRS open PRs, 1 if ≥MAX_OPEN_PRS\n ",
+          "snapshot_ref": "e15e57b40918dbca11b350c55d02ab61934afa75",
+          "snapshot_blob_sha": "72487534431e5eabc3ab87c00bda31efb57a3397",
+          "snapshot_file": "snapshots/agentics__githubnext__e15e57b40918dbca11b350c55d02ab61934afa75__efficiency-improver.md",
+          "snapshot_bytes": 22753,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Articulate\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Articulate\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Articulate/blob/cf6289da8c6ca69a30bb9f1096be5ed0e423f9df/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Examine\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Examine\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Examine/blob/fd63863dbfc4492a4eb4067e97b4ffcbd4edf9ef/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"tholewis/green-software-engineer\",\"generated_owner\":\"tholewis\",\"generated_repo\":\"green-software-engineer\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/tholewis/green-software-engineer/blob/303aca80442e12c738955975045c542e7c2198f2/.github/workflows/efficiency-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+      "source_full_name": "githubnext/agentics",
+      "md_path": "workflows/efficiency-improver.md",
+      "commit_sha": "5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+      "authored_at": "2026-07-29T14:02:29Z",
+      "committed_at": "2026-07-29T14:02:29Z",
+      "author_name": "Don Syme",
+      "author_email": "dsyme@github.com",
+      "author_login": "dsyme",
+      "author_account_type": "User",
+      "committer_name": "Don Syme",
+      "committer_email": "dsyme@github.com",
+      "committer_login": "dsyme",
+      "committer_account_type": "User",
+      "message": "update workflows",
+      "parent_shas": [
+        "1c6668b751c51af8571f01204ceffb19362e0f66"
+      ],
+      "tree_sha": "0553f96fb70291e2073b771fca79db49dd31d1e8",
+      "html_url": "https://github.com/githubnext/agentics/commit/5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/agentics:workflows/efficiency-improver.md",
+          "source_full_name": "githubnext/agentics",
+          "md_path": "workflows/efficiency-improver.md",
+          "commit_sha": "5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+          "committed_at": "2026-07-29T14:02:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -15,6 +15,8 @@ on:\n   # to avoid spamming maintainers with too many PRs.\n   steps:\n     - id: check\n+      env: \n+        GH_TOKEN: ${{ github.token }}\n       run: |\n         MAX_OPEN_PRS=8\n         if [[ \"$GITHUB_EVENT_NAME\" != \"schedule\" ]]; then exit 0; fi",
+          "snapshot_ref": "5e9180a13d27ede1ba730b4bbb674eaabb57b404",
+          "snapshot_blob_sha": "74c370f26db027586c0d9c85be46000dbe9efc70",
+          "snapshot_file": "snapshots/agentics__githubnext__5e9180a13d27ede1ba730b4bbb674eaabb57b404__efficiency-improver.md",
+          "snapshot_bytes": 22803,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"baizhiheizi/quill\",\"generated_owner\":\"baizhiheizi\",\"generated_repo\":\"quill\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/baizhiheizi/quill/blob/383fa629dbee00aa30adb1beba346f4104c01c28/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Articulate\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Articulate\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Articulate/blob/cf6289da8c6ca69a30bb9f1096be5ed0e423f9df/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"Shazwazza/Examine\",\"generated_owner\":\"Shazwazza\",\"generated_repo\":\"Examine\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/Shazwazza/Examine/blob/fd63863dbfc4492a4eb4067e97b4ffcbd4edf9ef/.github/workflows/efficiency-improver.lock.yml\"},{\"generated_full_name\":\"tholewis/green-software-engineer\",\"generated_owner\":\"tholewis\",\"generated_repo\":\"green-software-engineer\",\"generated_workflow_path\":\".github/workflows/efficiency-improver.lock.yml\",\"generated_workflow_file\":\"efficiency-improver.lock.yml\",\"generated_html_url\":\"https://github.com/tholewis/green-software-engineer/blob/303aca80442e12c738955975045c542e7c2198f2/.github/workflows/efficiency-improver.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

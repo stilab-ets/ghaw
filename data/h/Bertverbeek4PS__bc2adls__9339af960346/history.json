@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Bertverbeek4PS/bc2adls:.github/workflows/weekly-issue-summary.md",
+    "source_full_name": "Bertverbeek4PS/bc2adls",
+    "source_owner": "Bertverbeek4PS",
+    "source_repo": "bc2adls",
+    "md_path": ".github/workflows/weekly-issue-summary.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Bertverbeek4PS/bc2adls/blob/HEAD/.github/workflows/weekly-issue-summary.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Bertverbeek4PS/bc2adls",
+      "generated_owner": "Bertverbeek4PS",
+      "generated_repo": "bc2adls",
+      "generated_workflow_path": ".github/workflows/weekly-issue-summary.lock.yml",
+      "generated_workflow_file": "weekly-issue-summary.lock.yml",
+      "generated_html_url": "https://github.com/Bertverbeek4PS/bc2adls/blob/a9a434445befcd68e82522cb8335256ac2696876/.github/workflows/weekly-issue-summary.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:51+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Bertverbeek4PS/bc2adls:.github/workflows/weekly-issue-summary.md",
+      "source_full_name": "Bertverbeek4PS/bc2adls",
+      "md_path": ".github/workflows/weekly-issue-summary.md",
+      "commit_sha": "b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+      "authored_at": "2026-03-30T14:34:35Z",
+      "committed_at": "2026-03-30T14:34:35Z",
+      "author_name": "Bert Verbeek",
+      "author_email": "bverbeek@4ps.nl",
+      "author_login": "Bertverbeek4PS",
+      "author_account_type": "User",
+      "committer_name": "Bert Verbeek",
+      "committer_email": "bverbeek@4ps.nl",
+      "committer_login": "Bertverbeek4PS",
+      "committer_account_type": "User",
+      "message": "Add ai-moderator, pr-triage-agent, and weekly-issue-summary workflows\n\nThree additional gh-aw agentic workflows:\n\n- ai-moderator: Detects spam, link-spam, and AI-generated content on\n  issues, comments, and PRs. Triggers on opened events; skips admins,\n  maintainers, and bots. Engine changed from codex to copilot to use\n  COPILOT_GITHUB_TOKEN. New labels created: spam, ai-generated,\n  link-spam, ai-inspected.\n\n- pr-triage-agent: Categorizes and risk-assesses all open PRs every 6h.\n  Adapted from agent-PR-only to cover all contributors. Includes\n  bc2adls-specific risk rules (AL code = medium-high risk).\n\n- weekly-issue-summary: Monday 3PM UTC summary with trend charts,\n  resolution time analysis, and backlog health report posted as a\n  GitHub Discussion.\n\nAlso adds shared/trends.md and shared/python-dataviz.md imports\nrequired by weekly-issue-summary.\n\nAll workflows compiled with gh-aw v0.64.4 (0 errors).\nRequires COPILOT_GITHUB_TOKEN repository secret.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c79861a7249927a1192a4a39de5421a04a0cd751"
+      ],
+      "tree_sha": "88674a2dee2e63d6fb6540f6ed83181ef26f788a",
+      "html_url": "https://github.com/Bertverbeek4PS/bc2adls/commit/b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Bertverbeek4PS/bc2adls:.github/workflows/weekly-issue-summary.md",
+          "source_full_name": "Bertverbeek4PS/bc2adls",
+          "md_path": ".github/workflows/weekly-issue-summary.md",
+          "commit_sha": "b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+          "committed_at": "2026-03-30T14:34:35Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 121,
+          "file_deletions": 0,
+          "file_changes": 121,
+          "file_patch": "@@ -0,0 +1,121 @@\n+---\n+description: Creates weekly summary of issue activity including trends, charts, and insights every Monday\n+timeout-minutes: 20\n+strict: true\n+on:\n+  schedule:\n+    - cron: \"0 15 * * 1\"  # Weekly on Mondays at 3 PM UTC\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+tracker-id: weekly-issue-summary\n+engine: copilot\n+network:\n+  allowed:\n+    - defaults\n+    - python\n+    - node\n+sandbox:\n+  agent: awf\n+tools:\n+  edit:\n+  bash:\n+    - \"*\"\n+  github:\n+    lockdown: true\n+    toolsets:\n+      - issues\n+safe-outputs:\n+  upload-asset:\n+  create-discussion:\n+    title-prefix: \"[Weekly Summary] \"\n+    category: \"audits\"\n+    close-older-discussions: true\n+imports:\n+  - shared/mood.md\n+  - shared/reporting.md\n+  - shared/trends.md\n+---\n+\n+# Weekly Issue Summary\n+\n+## 📊 Trend Charts Requirement\n+\n+**IMPORTANT**: Generate exactly 2 trend charts that showcase issue activity patterns over time.\n+\n+### Chart Generation Process\n+\n+**Phase 1: Data Collection**\n+\n+Collect data for the past 30 days using GitHub API for the **bc2adls** repository:\n+\n+1. **Issue Activity Data**:\n+   - Count of issues opened per day\n+   - Count of issues closed per day\n+   - Running count of open issues\n+\n+2. **Issue Resolution Data**:\n+   - Average time to close issues (in days)\n+   - Distribution of issue lifespans\n+\n+**Phase 2: Data Preparation**\n+\n+Create CSV files in `/tmp/gh-aw/python/data/`:\n+- `issue_activity.csv` - Daily opened/closed counts and open count\n+- `issue_resolution.csv` - Resolution time statistics\n+\n+**Phase 3: Chart Generation**\n+\n+Generate exactly **2 high-quality trend charts**:\n+\n+**Chart 1: Issue Activity Trends**\n+- Multi-line chart: issues opened/closed per week, running total of open issues\n+- X-axis: Last 12 weeks, Y-axis: Count\n+- Save as: `/tmp/gh-aw/python/charts/issue_activity_trends.png`\n+\n+**Chart 2: Issue Resolution Time Trends**\n+- Line chart: average + median time to close (in days), 7-day moving average\n+- X-axis: Last 30 days, Y-axis: Days to resolution\n+- Save as: `/tmp/gh-aw/python/charts/issue_resolution_trends.png`\n+\n+**Chart Quality Requirements**:\n+- DPI: 300 minimum, Figure size: 12x7 inches\n+- Use seaborn styling with professional color palette\n+- Include grid lines, clear labels and legend\n+- Title with context\n+\n+**Phase 4: Upload & Embed Charts**\n+\n+Upload both charts using `upload asset` tool, then embed URLs in the discussion.\n+\n+---\n+\n+## 📝 Report Formatting Guidelines\n+\n+Use h3 (###) or lower for all headers. The discussion title serves as h1.\n+\n+Your report structure:\n+1. **### Weekly Overview** (always visible): 1-2 paragraph summary of the week's issue activity\n+2. **### 📈 Issue Activity Trends**: Chart 1 + 2-3 sentence analysis\n+3. **### Key Trends** (always visible): Notable patterns, common issue types, emerging topics\n+4. **### Summary Statistics** (always visible): Total counts, comparison to previous week, breakdown by label\n+5. **### Detailed Issue Breakdown** (in `<details>` tags): Full list of issues with titles, numbers, authors, labels\n+6. **### Recommendations** (always visible): Actionable suggestions for the upcoming week\n+\n+---\n+\n+## Weekly Analysis\n+\n+Analyze all issues opened in the **bc2adls** repository (${{ github.repository }}) over the last 7 days.\n+\n+Create a comprehensive summary that includes:\n+- Total number of issues opened and closed\n+- List of issue titles with their numbers, authors, and labels\n+- Any notable patterns (BC-related bugs, Azure/Fabric feature requests, docs needs, etc.)\n+- Backlog health (growing or shrinking?)\n+- Issues needing attention (unlabeled, unanswered, stale)\n+\n+Follow the **Report Formatting Guidelines** above to structure your report with:\n+- h3 (###) for main section headers\n+- Detailed issue lists wrapped in `<details>` tags\n+- Critical information (overview, trends, statistics, recommendations) always visible",
+          "snapshot_ref": "b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c",
+          "snapshot_blob_sha": "55a8b9017e7bb60355614b61e8e3465ea978d538",
+          "snapshot_file": "snapshots/bc2adls__Bertverbeek4PS__b7a7387e87f4ab3f2a6582f968828d9d1b7d7d6c__weekly-issue-summary.md",
+          "snapshot_bytes": 3759,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Bertverbeek4PS/bc2adls\",\"generated_owner\":\"Bertverbeek4PS\",\"generated_repo\":\"bc2adls\",\"generated_workflow_path\":\".github/workflows/weekly-issue-summary.lock.yml\",\"generated_workflow_file\":\"weekly-issue-summary.lock.yml\",\"generated_html_url\":\"https://github.com/Bertverbeek4PS/bc2adls/blob/a9a434445befcd68e82522cb8335256ac2696876/.github/workflows/weekly-issue-summary.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

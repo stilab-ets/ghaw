@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/ci-failure-analysis.md",
+    "source_full_name": "benbalter/wordpress-static-site-exporter",
+    "source_owner": "benbalter",
+    "source_repo": "wordpress-static-site-exporter",
+    "md_path": ".github/workflows/ci-failure-analysis.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/benbalter/wordpress-static-site-exporter/blob/HEAD/.github/workflows/ci-failure-analysis.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "benbalter/wordpress-static-site-exporter",
+      "generated_owner": "benbalter",
+      "generated_repo": "wordpress-static-site-exporter",
+      "generated_workflow_path": ".github/workflows/ci-failure-analysis.lock.yml",
+      "generated_workflow_file": "ci-failure-analysis.lock.yml",
+      "generated_html_url": "https://github.com/benbalter/wordpress-static-site-exporter/blob/718a2c3a32d79546d58090d67f44bb8094775fb4/.github/workflows/ci-failure-analysis.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/ci-failure-analysis.md",
+      "source_full_name": "benbalter/wordpress-static-site-exporter",
+      "md_path": ".github/workflows/ci-failure-analysis.md",
+      "commit_sha": "dda26858f6617bebe4475ad4c961fdbd6e87e289",
+      "authored_at": "2026-03-17T21:01:29Z",
+      "committed_at": "2026-03-17T21:01:29Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add four GitHub Agentic Workflows for issue triage, PR review, CI failure analysis, and release notes\n\nCo-authored-by: benbalter <282759+benbalter@users.noreply.github.com>",
+      "parent_shas": [
+        "8ad94da81d5df1b5cf7602c482cb3cf97ff2d131"
+      ],
+      "tree_sha": "2bdd2453f18fc715a8c75876de0352347b4b71db",
+      "html_url": "https://github.com/benbalter/wordpress-static-site-exporter/commit/dda26858f6617bebe4475ad4c961fdbd6e87e289",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/ci-failure-analysis.md",
+          "source_full_name": "benbalter/wordpress-static-site-exporter",
+          "md_path": ".github/workflows/ci-failure-analysis.md",
+          "commit_sha": "dda26858f6617bebe4475ad4c961fdbd6e87e289",
+          "committed_at": "2026-03-17T21:01:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 51,
+          "file_deletions": 0,
+          "file_changes": 51,
+          "file_patch": "@@ -0,0 +1,51 @@\n+---\n+description: Analyze CI failures and post helpful diagnostics on pull requests\n+on:\n+  workflow_run:\n+    workflows: [\"CI\"]\n+    types: [completed]\n+permissions:\n+  contents: read\n+  actions: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [pull_requests, actions]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+---\n+\n+# CI Failure Analysis Agent\n+\n+You are a CI diagnostics agent for the **WordPress Static Site Exporter** plugin. When the CI workflow completes with a failure on a pull request, you analyze the logs and help the contributor understand what went wrong.\n+\n+## When the CI workflow completes\n+\n+1. **Check** if the workflow run conclusion is `failure`. If it succeeded, do nothing.\n+2. **Check** if the workflow run is associated with a pull request. If not, do nothing.\n+3. **Retrieve and analyze** the failed job logs. The CI pipeline has two main jobs:\n+   - **phpunit** — Runs PHPUnit tests across multiple PHP versions (8.3, 8.4) and WordPress versions (6.7, 6.9, latest), including multisite. Failures here typically indicate:\n+     - Test assertions failing due to code changes.\n+     - PHP errors, warnings, or deprecation notices.\n+     - WordPress compatibility issues across versions.\n+     - Database-related test failures.\n+   - **phpcs** — Runs PHP CodeSniffer with WordPress Coding Standards. Failures here typically indicate:\n+     - Coding style violations (spacing, naming, brace placement).\n+     - Missing or incorrect PHPDoc blocks.\n+     - WordPress-specific standard violations (Yoda conditions, proper escaping/sanitization).\n+\n+4. **Post a comment** on the pull request with:\n+   - Which job(s) failed and on which PHP/WordPress version matrix entry.\n+   - A clear explanation of the root cause of each failure.\n+   - Specific file names and line numbers where errors occurred, if available.\n+   - Actionable suggestions for fixing the issues. For PHPCS violations, mention that `script/fmt` can auto-fix many style issues.\n+   - If tests failed, explain what the test was checking and why the assertion failed.\n+\n+## Tips for contributors\n+\n+When suggesting fixes, keep in mind:\n+- `script/fmt` auto-fixes most WordPress Coding Standards violations.\n+- `script/cibuild-phpcs` runs the same PHPCS check locally.\n+- `script/cibuild-phpunit` runs the same PHPUnit tests locally (requires MySQL and WordPress test environment via `script/setup`).\n+- Tests must pass on both single-site and multisite WordPress installations.",
+          "snapshot_ref": "dda26858f6617bebe4475ad4c961fdbd6e87e289",
+          "snapshot_blob_sha": "3324bc7d653c54e80213a2b2aa8aad2a12f5bd76",
+          "snapshot_file": "snapshots/wordpress-static-site-exporter__benbalter__dda26858f6617bebe4475ad4c961fdbd6e87e289__ci-failure-analysis.md",
+          "snapshot_bytes": 2433,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"benbalter/wordpress-static-site-exporter\",\"generated_owner\":\"benbalter\",\"generated_repo\":\"wordpress-static-site-exporter\",\"generated_workflow_path\":\".github/workflows/ci-failure-analysis.lock.yml\",\"generated_workflow_file\":\"ci-failure-analysis.lock.yml\",\"generated_html_url\":\"https://github.com/benbalter/wordpress-static-site-exporter/blob/718a2c3a32d79546d58090d67f44bb8094775fb4/.github/workflows/ci-failure-analysis.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/ci-failure-analysis.md",
+      "source_full_name": "benbalter/wordpress-static-site-exporter",
+      "md_path": ".github/workflows/ci-failure-analysis.md",
+      "commit_sha": "cc4f082439eecd611f7418accdfbc28b2c08fc47",
+      "authored_at": "2026-03-17T21:18:10Z",
+      "committed_at": "2026-03-17T21:18:10Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Compile agentic workflows and fix validation issues\n\n- Fix pr-review.md: replace invalid 'files' toolset with 'repos'\n- Fix ci-failure-analysis.md: add branch restriction to workflow_run trigger\n- Fix release-notes.md: add missing issues/pull-requests read permissions\n- Add compiled .lock.yml files for all four agentic workflows\n\nCo-authored-by: benbalter <282759+benbalter@users.noreply.github.com>",
+      "parent_shas": [
+        "dda26858f6617bebe4475ad4c961fdbd6e87e289"
+      ],
+      "tree_sha": "54cd6b9ad06608b51e974cb65dc0713868d2a442",
+      "html_url": "https://github.com/benbalter/wordpress-static-site-exporter/commit/cc4f082439eecd611f7418accdfbc28b2c08fc47",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/ci-failure-analysis.md",
+          "source_full_name": "benbalter/wordpress-static-site-exporter",
+          "md_path": ".github/workflows/ci-failure-analysis.md",
+          "commit_sha": "cc4f082439eecd611f7418accdfbc28b2c08fc47",
+          "committed_at": "2026-03-17T21:18:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -4,6 +4,7 @@ on:\n   workflow_run:\n     workflows: [\"CI\"]\n     types: [completed]\n+    branches: [master]\n permissions:\n   contents: read\n   actions: read",
+          "snapshot_ref": "cc4f082439eecd611f7418accdfbc28b2c08fc47",
+          "snapshot_blob_sha": "87fa26d9d64abbafb3fedde235b5436c3105d506",
+          "snapshot_file": "snapshots/wordpress-static-site-exporter__benbalter__cc4f082439eecd611f7418accdfbc28b2c08fc47__ci-failure-analysis.md",
+          "snapshot_bytes": 2456,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"benbalter/wordpress-static-site-exporter\",\"generated_owner\":\"benbalter\",\"generated_repo\":\"wordpress-static-site-exporter\",\"generated_workflow_path\":\".github/workflows/ci-failure-analysis.lock.yml\",\"generated_workflow_file\":\"ci-failure-analysis.lock.yml\",\"generated_html_url\":\"https://github.com/benbalter/wordpress-static-site-exporter/blob/718a2c3a32d79546d58090d67f44bb8094775fb4/.github/workflows/ci-failure-analysis.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

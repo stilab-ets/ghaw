@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/tptp-benchmark.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/tptp-benchmark.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/tptp-benchmark.lock.yml",
+      "generated_workflow_file": "tptp-benchmark.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tptp-benchmark.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:46+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tptp-benchmark.md",
+      "commit_sha": "6dfb5ab44fb64849235c22d51772d35758a9269e",
+      "authored_at": "2026-05-13T10:05:08Z",
+      "committed_at": "2026-05-13T10:05:08Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add weekly TPTP front-end benchmark workflow (#9523)\n\n- [x] Understand TPTP frontend (z3 -tptp flag, TPTP env var for\nincludes, SZS status output)\n- [x] Study existing benchmark workflow patterns (ostrich-benchmark.md,\nqf-s-benchmark.md)\n- [x] Create `.github/workflows/tptp-benchmark.md` workflow file\n- [x] Compile to `.github/workflows/tptp-benchmark.lock.yml`\n- [x] Address code review feedback (comment accuracy: timeout buffer 3s,\nclarify `-T:` is seconds, clarify `date +%s%3N` unit)\n- [x] Move Z3 build steps (install deps, cmake, ninja) to YAML preamble\nso they run before the agent loads; agent Phase 1 now just verifies the\npre-built binary\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: NikolajBjorner <3085284+NikolajBjorner@users.noreply.github.com>",
+      "parent_shas": [
+        "36fffb3a2fb9c7b6aba44a23851f67ce6978801a"
+      ],
+      "tree_sha": "55d671f0ddb3c68abb24e19881922ebc6c25f31e",
+      "html_url": "https://github.com/Z3Prover/z3/commit/6dfb5ab44fb64849235c22d51772d35758a9269e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tptp-benchmark.md",
+          "commit_sha": "6dfb5ab44fb64849235c22d51772d35758a9269e",
+          "committed_at": "2026-05-13T10:05:08Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 546,
+          "file_deletions": 0,
+          "file_changes": 546,
+          "file_patch": "@@ -0,0 +1,546 @@\n+---\n+description: >\n+  Weekly benchmark of Z3's TPTP front-end against 500 random TPTP problems.\n+  Downloads TPTP benchmarks from tptp.org, resolves axiom dependencies,\n+  skips large problems, runs each with a 5-second timeout, and posts a\n+  discrepancy/crash report as a GitHub discussion.\n+\n+on:\n+  schedule:\n+    - cron: \"0 6 * * 1\"\n+  workflow_dispatch:\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - tptp.org\n+\n+tools:\n+  bash: true\n+  github:\n+    toolsets: [default]\n+\n+safe-outputs:\n+  create-discussion:\n+    title-prefix: \"[TPTP Benchmark] \"\n+    category: \"Agentic Workflows\"\n+    close-older-discussions: true\n+    expires: 14d\n+  missing-tool:\n+    create-issue: true\n+  noop:\n+    report-as-issue: false\n+\n+timeout-minutes: 300\n+\n+steps:\n+  - name: Checkout repository\n+    uses: actions/checkout@v6.0.2\n+    with:\n+      persist-credentials: false\n+\n+  - name: Install build dependencies\n+    run: |\n+      sudo apt-get update -y -q\n+      sudo apt-get install -y cmake ninja-build python3 wget curl bc\n+\n+  - name: Build Z3\n+    run: |\n+      mkdir -p /tmp/z3-build\n+      cd /tmp/z3-build\n+      cmake \"$GITHUB_WORKSPACE\" \\\n+        -G Ninja \\\n+        -DCMAKE_BUILD_TYPE=Release \\\n+        -DZ3_BUILD_TEST_EXECUTABLES=OFF\n+      ninja -j$(nproc) z3\n+      ./z3 --version\n+\n+---\n+\n+# TPTP Front-End Benchmark\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. You are an expert testing engineer for the Z3 theorem prover. Your task is to:\n+\n+1. Verify the Z3 binary built by the pre-flight step is available\n+2. Download the TPTP benchmark library from tptp.org\n+3. Select 500 random small-to-medium problems (with their axiom dependencies)\n+4. Run each problem through Z3's TPTP front-end with a 5-second timeout\n+5. Compare Z3's output against the expected SZS status declared in each problem file\n+6. Post a detailed report as a GitHub Discussion summarising discrepancies and crashes\n+\n+**Repository**: ${{ github.repository }}\n+**Workspace**: ${{ github.workspace }}\n+\n+## Phase 1: Verify Z3 Binary\n+\n+Z3 was built by the workflow pre-flight step and is available at `/tmp/z3-build/z3`.\n+Confirm the binary is present and functional:\n+\n+```bash\n+/tmp/z3-build/z3 --version\n+```\n+\n+If the binary is missing or returns an error, call the `noop` safe-output with a message describing the problem and stop.\n+\n+Once confirmed, call `noop` with `\"Z3 binary verified. Downloading TPTP benchmark library — this may take a few minutes.\"` to keep the safe-output session alive.\n+\n+## Phase 2: Download the TPTP Problem Library\n+\n+Find the latest TPTP release and download the full archive.\n+\n+```bash\n+# Find the latest TPTP distribution version by fetching the directory listing\n+TPTP_DIST_URL=\"https://tptp.org/TPTP/Distribution/\"\n+LATEST_TGZ=$(curl -sL \"$TPTP_DIST_URL\" \\\n+  | grep -oP 'TPTP-v[0-9]+\\.[0-9]+\\.[0-9]+\\.tgz' \\\n+  | sort -V | tail -1)\n+\n+if [ -z \"$LATEST_TGZ\" ]; then\n+  echo \"ERROR: Could not determine latest TPTP version from $TPTP_DIST_URL\"\n+  # Fall back to a known stable version\n+  LATEST_TGZ=\"TPTP-v9.0.0.tgz\"\n+fi\n+\n+echo \"Downloading $LATEST_TGZ ...\"\n+mkdir -p /tmp/tptp_download\n+wget -q --show-progress \\\n+  \"${TPTP_DIST_URL}${LATEST_TGZ}\" \\\n+  -O /tmp/tptp_download/tptp.tgz\n+\n+echo \"Extracting TPTP library...\"\n+mkdir -p /tmp/tptp\n+tar -xzf /tmp/tptp_download/tptp.tgz -C /tmp/tptp --strip-components=1 2>&1 | tail -5\n+\n+# Verify extraction\n+if [ ! -d /tmp/tptp/Problems ] || [ ! -d /tmp/tptp/Axioms ]; then\n+  echo \"ERROR: TPTP extraction failed — Problems/ or Axioms/ directory not found\"\n+  ls /tmp/tptp/\n+  exit 1\n+fi\n+\n+TPTP_ROOT=/tmp/tptp\n+echo \"TPTP library extracted to $TPTP_ROOT\"\n+echo \"Problem domains available:\"\n+ls \"$TPTP_ROOT/Problems/\" | wc -l\n+echo \"Axiom files available:\"\n+ls \"$TPTP_ROOT/Axioms/\" | wc -l\n+```\n+\n+If the download or extraction fails, call `noop` with the error details and stop.\n+\n+Call `noop` with `\"TPTP library downloaded and extracted. Selecting 500 benchmark problems — filtering by size.\"` to keep the session alive.\n+\n+## Phase 3: Select 500 Benchmark Problems\n+\n+Filter out large problems and problems that depend on large axiom files, then take a random sample of 500.\n+\n+Save this script to `/tmp/select_benchmarks.py` and run it:\n+\n+```python\n+#!/usr/bin/env python3\n+\"\"\"\n+Select 500 random TPTP problems that:\n+  - Have a known, conclusive expected status (Theorem, Unsatisfiable,\n+    CounterSatisfiable, Satisfiable) OR Unknown/Open status.\n+  - Are not \"large\" (problem file <= 50 KB).\n+  - Do not include any axiom file larger than 100 KB.\n+\"\"\"\n+import os\n+import re\n+import random\n+import sys\n+\n+TPTP_ROOT = \"/tmp/tptp\"\n+PROBLEMS_DIR = os.path.join(TPTP_ROOT, \"Problems\")\n+AXIOMS_DIR = os.path.join(TPTP_ROOT, \"Axioms\")\n+MAX_PROBLEM_SIZE = 50 * 1024      # 50 KB\n+MAX_AXIOM_SIZE   = 100 * 1024     # 100 KB\n+SAMPLE_SIZE = 500\n+OUTPUT_FILE = \"/tmp/selected_benchmarks.txt\"\n+\n+include_re = re.compile(r\"include\\s*\\(\\s*['\\\"]([^'\\\"]+)['\\\"]\", re.IGNORECASE)\n+status_re  = re.compile(r\"%\\s*Status\\s*:\\s*(\\S+)\", re.IGNORECASE)\n+\n+def axiom_sizes_ok(problem_path):\n+    \"\"\"Return True if all included axiom files exist and are <= MAX_AXIOM_SIZE.\"\"\"\n+    try:\n+        with open(problem_path, encoding=\"utf-8\", errors=\"replace\") as f:\n+            content = f.read(4096)   # header is in first few KB\n+    except OSError:\n+        return False\n+    for m in include_re.finditer(content):\n+        axiom_rel = m.group(1)        # e.g. \"Axioms/AGT001+0.ax\"\n+        axiom_path = os.path.join(TPTP_ROOT, axiom_rel)\n+        if not os.path.exists(axiom_path):\n+            return False              # axiom missing — skip\n+        if os.path.getsize(axiom_path) > MAX_AXIOM_SIZE:\n+            return False              # axiom too large — skip\n+    return True\n+\n+candidates = []\n+skipped_size = 0\n+skipped_axiom = 0\n+\n+for domain in sorted(os.listdir(PROBLEMS_DIR)):\n+    domain_dir = os.path.join(PROBLEMS_DIR, domain)\n+    if not os.path.isdir(domain_dir):\n+        continue\n+    for fname in os.listdir(domain_dir):\n+        if not fname.endswith(\".p\"):\n+            continue\n+        fpath = os.path.join(domain_dir, fname)\n+        size = os.path.getsize(fpath)\n+        if size > MAX_PROBLEM_SIZE:\n+            skipped_size += 1\n+            continue\n+        if not axiom_sizes_ok(fpath):\n+            skipped_axiom += 1\n+            continue\n+        candidates.append(fpath)\n+\n+print(f\"Total candidates (after filtering): {len(candidates)}\", flush=True)\n+print(f\"  Skipped — problem too large : {skipped_size}\", flush=True)\n+print(f\"  Skipped — axiom too large   : {skipped_axiom}\", flush=True)\n+\n+if len(candidates) == 0:\n+    print(\"ERROR: No suitable benchmark problems found.\", file=sys.stderr)\n+    sys.exit(1)\n+\n+if len(candidates) > SAMPLE_SIZE:\n+    random.seed(42)\n+    selected = random.sample(candidates, SAMPLE_SIZE)\n+else:\n+    selected = candidates\n+\n+selected.sort()\n+with open(OUTPUT_FILE, \"w\") as f:\n+    f.write(\"\\n\".join(selected) + \"\\n\")\n+\n+print(f\"Selected {len(selected)} problems → {OUTPUT_FILE}\", flush=True)\n+```\n+\n+Run the script:\n+\n+```bash\n+python3 /tmp/select_benchmarks.py\n+SELECTED=$(wc -l < /tmp/selected_benchmarks.txt)\n+echo \"Benchmark set: $SELECTED problems\"\n+```\n+\n+If no problems are found, call `noop` with an error message and stop.\n+\n+Call `noop` with `\"$SELECTED problems selected. Starting benchmark run with 5-second timeout per problem — this will take approximately $(( SELECTED * 7 / 60 )) minutes.\"` to keep the session alive.\n+\n+## Phase 4: Run Benchmarks\n+\n+Save the following script to `/tmp/run_tptp_benchmarks.sh`, make it executable, and run it.\n+\n+```bash\n+#!/usr/bin/env bash\n+set -euo pipefail\n+\n+Z3=/tmp/z3-build/z3\n+TPTP_ROOT=/tmp/tptp\n+TIMEOUT_HARD=8        # outer OS-level guard (seconds; 3 s beyond Z3's -T:5)\n+Z3_TIMEOUT=5          # Z3 internal timeout: -T:N sets N-second limit (uppercase -T is seconds)\n+\n+RESULTS=/tmp/tptp_results.tsv\n+PROBLEM_LIST=/tmp/selected_benchmarks.txt\n+\n+echo -e \"file\\texpected\\tactual\\ttime_s\\tnotes\" > \"$RESULTS\"\n+\n+# Helper: extract the expected SZS status from the TPTP problem header.\n+get_expected_status() {\n+    local file=\"$1\"\n+    # Look for lines like: \"% Status   : Theorem\"\n+    grep -m1 -iP '%\\s*Status\\s*:\\s*\\K\\S+' \"$file\" 2>/dev/null || echo \"Unknown\"\n+}\n+\n+# Helper: run z3 on a single TPTP problem with timeout.\n+run_benchmark() {\n+    local file=\"$1\"\n+    local start end elapsed output exit_code verdict\n+\n+    start=$(date +%s%3N)    # milliseconds since epoch\n+    output=$(TPTP=\"$TPTP_ROOT\" timeout \"$TIMEOUT_HARD\" \\\n+        \"$Z3\" -tptp -T:\"$Z3_TIMEOUT\" \"$file\" 2>&1) || exit_code=$?\n+    exit_code=${exit_code:-0}\n+    end=$(date +%s%3N)\n+    elapsed=$(echo \"scale=3; ($end - $start) / 1000\" | bc)\n+\n+    # Extract SZS status line from output\n+    szs_line=$(echo \"$output\" | grep -m1 \"% SZS status\" || true)\n+\n+    if [ -n \"$szs_line\" ]; then\n+        # Parse the status keyword (e.g. \"Theorem\", \"CounterSatisfiable\", \"GaveUp\")\n+        verdict=$(echo \"$szs_line\" | grep -oP '% SZS status \\K\\S+' || echo \"Unknown\")\n+    elif [ \"$exit_code\" -eq 124 ]; then\n+        verdict=\"Timeout\"\n+    elif [ \"$exit_code\" -ne 0 ]; then\n+        verdict=\"Crash\"\n+    else\n+        verdict=\"NoOutput\"\n+    fi\n+\n+    echo \"$verdict $elapsed\"\n+}\n+\n+COUNTER=0\n+TOTAL=$(wc -l < \"$PROBLEM_LIST\")\n+\n+while IFS= read -r problem_file; do\n+    COUNTER=$((COUNTER + 1))\n+\n+    expected=$(get_expected_status \"$problem_file\")\n+    result_line=$(run_benchmark \"$problem_file\")\n+    actual=$(echo \"$result_line\" | cut -d' ' -f1)\n+    elapsed=$(echo \"$result_line\" | cut -d' ' -f2)\n+    fname=$(basename \"$problem_file\")\n+\n+    # Classify notes\n+    notes=\"\"\n+    # Soundness discrepancy: both answers are conclusive but conflict\n+    conclusive_expected=false\n+    conclusive_actual=false\n+    case \"$expected\" in\n+        Theorem|Unsatisfiable)     conclusive_expected=true ;;\n+        Satisfiable|CounterSatisfiable) conclusive_expected=true ;;\n+    esac\n+    case \"$actual\" in\n+        Theorem|Unsatisfiable)     conclusive_actual=true ;;\n+        Satisfiable|CounterSatisfiable) conclusive_actual=true ;;\n+    esac\n+\n+    if $conclusive_expected && $conclusive_actual; then\n+        # Map expected to the Z3 output equivalents for comparison\n+        # Theorem (has-conjecture unsat) matches \"Theorem\"\n+        # Unsatisfiable (no-conjecture unsat) matches \"Unsatisfiable\"\n+        # Satisfiable (no-conjecture sat) matches \"Satisfiable\"\n+        # CounterSatisfiable (has-conjecture sat) matches \"CounterSatisfiable\"\n+        if [ \"$expected\" != \"$actual\" ]; then\n+            # Check for sat/unsat polarity conflict\n+            sat_expected=false; sat_actual=false\n+            case \"$expected\" in Satisfiable|CounterSatisfiable) sat_expected=true ;; esac\n+            case \"$actual\"   in Satisfiable|CounterSatisfiable) sat_actual=true   ;; esac\n+            if [ \"$sat_expected\" != \"$sat_actual\" ]; then\n+                notes=\"SOUNDNESS_ERROR\"\n+            else\n+                notes=\"STATUS_MISMATCH\"\n+            fi\n+        fi\n+    fi\n+\n+    if [ \"$actual\" = \"Crash\" ]; then\n+        notes=\"CRASH\"\n+    fi\n+\n+    echo -e \"$fname\\t$expected\\t$actual\\t$elapsed\\t$notes\" >> \"$RESULTS\"\n+\n+    if [ -n \"$notes\" ]; then\n+        echo \"[$COUNTER/$TOTAL] $fname  expected=$expected  actual=$actual  time=${elapsed}s  *** $notes ***\"\n+    elif [ $((COUNTER % 50)) -eq 0 ]; then\n+        echo \"[$COUNTER/$TOTAL] Progress checkpoint  last=$fname  actual=$actual  time=${elapsed}s\"\n+    fi\n+\n+done < \"$PROBLEM_LIST\"\n+\n+echo \"Benchmark run complete: $COUNTER problems processed. Results → $RESULTS\"\n+```\n+\n+Run it:\n+\n+```bash\n+chmod +x /tmp/run_tptp_benchmarks.sh\n+/tmp/run_tptp_benchmarks.sh\n+```\n+\n+Do not skip any file in the list.\n+\n+## Phase 5: Analyze Results\n+\n+Save the following script to `/tmp/analyze_tptp.py` and run it:\n+\n+```python\n+#!/usr/bin/env python3\n+\"\"\"Compute summary statistics from the TPTP benchmark TSV.\"\"\"\n+import csv\n+\n+RESULTS_FILE = \"/tmp/tptp_results.tsv\"\n+\n+rows = []\n+with open(RESULTS_FILE, newline=\"\") as f:\n+    reader = csv.DictReader(f, delimiter=\"\\t\")\n+    for row in reader:\n+        rows.append(row)\n+\n+total = len(rows)\n+\n+# Verdict counts\n+from collections import Counter, defaultdict\n+actual_counts = Counter(r[\"actual\"] for r in rows)\n+expected_counts = Counter(r[\"expected\"] for r in rows)\n+\n+# Flagged rows\n+soundness_errors = [r for r in rows if r[\"notes\"] == \"SOUNDNESS_ERROR\"]\n+status_mismatches = [r for r in rows if r[\"notes\"] == \"STATUS_MISMATCH\"]\n+crashes           = [r for r in rows if r[\"notes\"] == \"CRASH\"]\n+timeouts          = [r for r in rows if r[\"actual\"] == \"Timeout\"]\n+gave_up           = [r for r in rows if r[\"actual\"] == \"GaveUp\"]\n+\n+# Solved correctly (expected matches actual for conclusive verdicts)\n+conclusive_expected = {\"Theorem\", \"Unsatisfiable\", \"Satisfiable\", \"CounterSatisfiable\"}\n+correct = [r for r in rows\n+           if r[\"expected\"] in conclusive_expected\n+           and r[\"actual\"] == r[\"expected\"]]\n+\n+print(f\"TOTAL={total}\")\n+print(f\"CORRECT={len(correct)}\")\n+print(f\"TIMEOUTS={len(timeouts)}\")\n+print(f\"GAVE_UP={len(gave_up)}\")\n+print(f\"CRASHES={len(crashes)}\")\n+print(f\"SOUNDNESS_ERRORS={len(soundness_errors)}\")\n+print(f\"STATUS_MISMATCHES={len(status_mismatches)}\")\n+\n+print(\"\\n--- Actual verdict breakdown ---\")\n+for v, c in sorted(actual_counts.items()):\n+    print(f\"  {v}: {c}\")\n+\n+print(\"\\n--- Expected status breakdown ---\")\n+for v, c in sorted(expected_counts.items()):\n+    print(f\"  {v}: {c}\")\n+\n+if soundness_errors:\n+    print(f\"\\n--- SOUNDNESS ERRORS ({len(soundness_errors)}) ---\")\n+    for r in soundness_errors:\n+        print(f\"  {r['file']}  expected={r['expected']}  actual={r['actual']}\")\n+\n+if crashes:\n+    print(f\"\\n--- CRASHES ({len(crashes)}) ---\")\n+    for r in crashes:\n+        print(f\"  {r['file']}  expected={r['expected']}\")\n+\n+if status_mismatches:\n+    print(f\"\\n--- STATUS MISMATCHES ({len(status_mismatches)}) ---\")\n+    for r in status_mismatches[:20]:\n+        print(f\"  {r['file']}  expected={r['expected']}  actual={r['actual']}\")\n+```\n+\n+Run the analysis:\n+\n+```bash\n+python3 /tmp/analyze_tptp.py\n+```\n+\n+## Phase 6: Generate and Post the Discussion Report\n+\n+Read the TSV at `/tmp/tptp_results.tsv` and the analysis output, then compose a Markdown report and call `create_discussion`.\n+\n+The report should use `###` or lower for all headers (never `#` or `##`). Use collapsible `<details>` sections for large tables.\n+\n+Use this structure:\n+\n+```markdown\n+**Date**: <today's date>\n+**Branch**: master\n+**Commit**: `<short SHA>` (run `git rev-parse --short HEAD` in ${{ github.workspace }} to get the SHA)\n+**Workflow Run**: [${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n+**TPTP version**: <downloaded version>\n+**Problems benchmarked**: <N> (random sample, timeout 5 s per problem)\n+\n+---\n+\n+### Summary\n+\n+| Metric | Count |\n+|--------|-------|\n+| Total problems run | N |\n+| Correct (expected = actual) | N |\n+| Timeouts | N |\n+| GaveUp (within time budget) | N |\n+| Crashes / errors | N |\n+| Soundness errors (sat↔unsat conflict) | N |\n+| Status mismatches (Theorem vs Unsatisfiable etc.) | N |\n+\n+### Expected Status Distribution\n+\n+| Expected Status | Count |\n+|----------------|-------|\n+| Theorem | N |\n+| Unsatisfiable | N |\n+| Satisfiable | N |\n+| CounterSatisfiable | N |\n+| Unknown / Open | N |\n+\n+---\n+\n+### ⚠️ Critical: Soundness Errors\n+\n+[List ALL files where Z3 returned a conclusive answer that contradicts the expected answer\n+(e.g., expected Theorem but got CounterSatisfiable). If none, write \"None detected.\"]\n+\n+### 💥 Crashes\n+\n+[List ALL files where Z3 crashed (non-zero exit, no SZS output, not a timeout).\n+Include filename and expected status. If none, write \"None detected.\"]\n+\n+### Status Mismatches\n+\n+[Files where both answers are conclusive but differ in Theorem vs Unsatisfiable polarity\n+(e.g., expected Theorem but actual Unsatisfiable). These may indicate conjecture-handling\n+differences rather than soundness bugs. If none, write \"None detected.\"]\n+\n+---\n+\n+<details>\n+<summary>View all Timeouts (problems where Z3 exceeded the 5-second limit)</summary>\n+\n+| # | File | Expected Status |\n+|---|------|----------------|\n+[First 100 timeout rows]\n+\n+</details>\n+\n+<details>\n+<summary>View full per-problem results table</summary>\n+\n+| # | File | Expected | Actual | Time (s) | Notes |\n+|---|------|----------|--------|----------|-------|\n+[All rows, or first 500 if over limit]\n+\n+</details>\n+\n+---\n+\n+### Recommendations\n+\n+[Based on the findings, list actionable items. E.g.: investigate soundness errors,\n+file crash bugs, note domains where Z3 consistently times out.]\n+```\n+\n+Post the discussion using the `create_discussion` safe output. The title should be\n+`[TPTP Benchmark] master — <date>`.\n+\n+## Safe Output Guarantee\n+\n+You **MUST** call either `create_discussion` or `noop` before the workflow ends:\n+\n+- **Full success**: Call `create_discussion` with the complete report.\n+- **Partial results** (some problems ran): Call `create_discussion` with whatever results are available and a note about incomplete execution.\n+- **Download failure**: Call `noop` with the download error details.\n+- **No problems selected**: Call `noop` explaining why no problems were found.\n+- **Binary missing**: If `/tmp/z3-build/z3` is unexpectedly absent, call `noop` with that detail and stop.\n+\n+## Important Notes\n+\n+- **Build failure handling**: Z3 was built before the agent loaded. If the binary is missing or non-functional, call `noop` with the error and stop.\n+- **TPTP environment variable**: Set `TPTP=/tmp/tptp` when invoking `z3 -tptp` so that `include()` directives in problem files resolve correctly against the downloaded Axioms directory.\n+- **Timeout detection**: Use `timeout 8` as the outer OS-level guard (3 seconds beyond Z3's `-T:5`) to allow Z3 to exit cleanly before the shell kills it. If the exit code from `timeout` is 124, record the verdict as `Timeout`.\n+- **Crash detection**: A crash is a non-zero exit code with no `% SZS status` line in the output and no timeout. Record it separately from `GaveUp`.\n+- **SZS status semantics**: Z3 outputs `Theorem` (not `Unsatisfiable`) when it proves a conjecture; `CounterSatisfiable` (not `Satisfiable`) when it finds a counterexample to a conjecture. A status mismatch between `Theorem` and `Unsatisfiable` for the same problem may be innocuous and depends on whether the problem file uses a conjecture formula.\n+- **Report soundness bugs prominently**: Any case where the polarity of the answer conflicts (expected Theorem/Unsatisfiable but got CounterSatisfiable/Satisfiable, or vice versa) is a potential soundness bug and must be highlighted as critical.\n+- **Keep progress log**: Print a line for every flagged result and every 50th problem so the workflow log shows progress.\n+- **Close older discussions**: Configured via `close-older-discussions: true`. Only the latest weekly report remains open.",
+          "snapshot_ref": "6dfb5ab44fb64849235c22d51772d35758a9269e",
+          "snapshot_blob_sha": "fe3f7d5b2cae641bd6094a66d405c7a5cf41c104",
+          "snapshot_file": "snapshots/z3__Z3Prover__6dfb5ab44fb64849235c22d51772d35758a9269e__tptp-benchmark.md",
+          "snapshot_bytes": 18503,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tptp-benchmark.lock.yml\",\"generated_workflow_file\":\"tptp-benchmark.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tptp-benchmark.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tptp-benchmark.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tptp-benchmark.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -23,6 +23,7 @@ tools:\n     toolsets: [default]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-discussion:\n     title-prefix: \"[TPTP Benchmark] \"\n     category: \"Agentic Workflows\"",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "d12252c98c33f2db3f9b1fcfd124e5617e04034c",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__tptp-benchmark.md",
+          "snapshot_bytes": 18536,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tptp-benchmark.lock.yml\",\"generated_workflow_file\":\"tptp-benchmark.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tptp-benchmark.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/tptp-benchmark.md",
+      "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "authored_at": "2026-07-28T09:22:11Z",
+      "committed_at": "2026-07-28T09:22:11Z",
+      "author_name": "Nikolaj Bjorner",
+      "author_email": "nbjorner@microsoft.com",
+      "author_login": "NikolajBjorner",
+      "author_account_type": "User",
+      "committer_name": "Nikolaj Bjorner",
+      "committer_email": "nbjorner@microsoft.com",
+      "committer_login": "NikolajBjorner",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow auth by using Actions token-based Copilot inference\n\nThe COPILOT_GITHUB_TOKEN PAT secret expired, causing HTTP 401 auth\nfailures in all agentic workflows that referenced it. Switch these\nworkflows to GitHub Actions token-based Copilot inference by adding\n'copilot-requests: write' to their permissions (matching the already-\nworking code-simplifier and release-notes-updater workflows), so the\nengine uses the ephemeral github.token instead of the expired PAT.\n\nRecompiled with gh-aw v0.81.6 (repo's pinned version) to keep the diff\nminimal. Affected: api-coherence-checker, issue-backlog-processor,\nmemory-safety-report, academic-citation-tracker, smtlib-benchmark-finder,\nworkflow-suggestion-agent, specbot-crash-analyzer, tptp-benchmark.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 57b9b87e-950a-49ea-bbb3-ed585646a5a9",
+      "parent_shas": [
+        "18d8d7a7bd437cc25a532e3903a560f7c9a4b787"
+      ],
+      "tree_sha": "281bc4545bd45a13a519164dfb8873e3dd7f3e15",
+      "html_url": "https://github.com/Z3Prover/z3/commit/b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/tptp-benchmark.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/tptp-benchmark.md",
+          "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "committed_at": "2026-07-28T09:22:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 1,
+          "file_changes": 6,
+          "file_patch": "@@ -10,7 +10,11 @@ on:\n     - cron: \"0 6 * * 1\"\n   workflow_dispatch:\n \n-permissions: read-all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n \n network:\n   allowed:",
+          "snapshot_ref": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "snapshot_blob_sha": "134d0e7009f427ee9e1d256e72a5fddbbc017516",
+          "snapshot_file": "snapshots/z3__Z3Prover__b1168b48680a7b35d639f0243cf5b8c8a3ff0277__tptp-benchmark.md",
+          "snapshot_bytes": 18607,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/tptp-benchmark.lock.yml\",\"generated_workflow_file\":\"tptp-benchmark.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/tptp-benchmark.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

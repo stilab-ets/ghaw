@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/smtlib-benchmark-finder.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/smtlib-benchmark-finder.lock.yml",
+      "generated_workflow_file": "smtlib-benchmark-finder.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/smtlib-benchmark-finder.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:45+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+      "commit_sha": "29c4e539f6f56d30b4464e9f40bf22b54d881d89",
+      "authored_at": "2026-05-26T22:28:11Z",
+      "committed_at": "2026-05-26T22:28:11Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add smtlib-benchmark-finder agentic workflow (#9629)\n\nMonthly agentic workflow that discovers community-contributed SMT-LIB\nbenchmark repositories on GitHub, excluding official distributions from\nsmtlib.org and Zenodo, and posts a categorised summary as a GitHub\nDiscussion.\n\n## Workflow steps\n\n- **Exclusion list** — scrapes `smtlib.cs.uiowa.edu` + paginates the\n[Zenodo SMT-LIB community](https://zenodo.org/communities/smt-lib/) (up\nto 300 records) to extract official repo URLs; hard-excludes `SMT-LIB/*`\nand `SMT-Competition/*` orgs\n- **GitHub search** — 7 search strategies (topic tags\n`smtlib`/`smt-lib`/`smt2`, filename/path patterns, README mentions)\nscoped to repos pushed since the last run (90-day window on first run)\n- **Filter + classify** — removes official sets and noise (homework\nrepos, empty repos); categorises survivors into: solver evaluation,\nverification, security/CTF, theory/logic, tool output, education, other\n- **Discussion report** — posts `[SMT-LIB Benchmarks] Community\nBenchmark Repository Survey — [Month YYYY]`; older discussions\nauto-closed after 90 days\n- **Cache** — stores classified repo sets and run date so subsequent\nruns are incremental\n\n## Files\n\n- `.github/workflows/smtlib-benchmark-finder.md` — workflow definition\n- `.github/workflows/smtlib-benchmark-finder.lock.yml` — compiled GitHub\nActions YAML (`gh aw compile`)\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c3f5365a95a7eac2419a2f95ff240909f275cc08"
+      ],
+      "tree_sha": "d8fc1935d882721f85f8c53c56c1f289f6eea872",
+      "html_url": "https://github.com/Z3Prover/z3/commit/29c4e539f6f56d30b4464e9f40bf22b54d881d89",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+          "commit_sha": "29c4e539f6f56d30b4464e9f40bf22b54d881d89",
+          "committed_at": "2026-05-26T22:28:11Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 342,
+          "file_deletions": 0,
+          "file_changes": 342,
+          "file_patch": "@@ -0,0 +1,342 @@\n+---\n+description: >\n+  Monthly SMTLIB Benchmark Finder.\n+  Searches GitHub for repositories containing SMT-LIB benchmarks (.smt2 files),\n+  excludes repositories that belong to the official SMT-LIB benchmark sets\n+  (linked from smtlib.org and hosted on Zenodo), and posts a curated summary\n+  of community-contributed benchmark links as a GitHub Discussion.\n+\n+on:\n+  schedule:\n+    - cron: \"0 8 1 * *\"\n+  workflow_dispatch:\n+\n+timeout-minutes: 60\n+\n+permissions: read-all\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - smtlib.cs.uiowa.edu\n+    - zenodo.org\n+\n+tools:\n+  cache-memory: true\n+  web-fetch: {}\n+  github:\n+    toolsets: [default, repos]\n+  bash: [\":*\"]\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  max-bot-mentions: 1\n+  create-discussion:\n+    title-prefix: \"[SMT-LIB Benchmarks] \"\n+    category: \"Agentic Workflows\"\n+    close-older-discussions: true\n+    expires: 90d\n+  missing-tool:\n+    create-issue: true\n+  noop:\n+    report-as-issue: false\n+\n+---\n+\n+# SMTLIB Benchmark Finder\n+\n+## Job Description\n+\n+Your name is ${{ github.workflow }}. You are a research analyst for the Z3 theorem\n+prover repository `${{ github.repository }}`. Your mission is to discover GitHub\n+repositories that host SMT-LIB benchmarks, exclude the ones that are already part\n+of the official SMT-LIB benchmark distribution (linked from smtlib.org and published\n+on Zenodo), and post a curated summary of community-contributed benchmark links as a\n+GitHub Discussion.\n+\n+## Step 1: Load Cache and Determine Run Mode\n+\n+Check cache memory for:\n+- `official_repos`: set of GitHub repository full names (`owner/repo`) and Zenodo\n+  record IDs already identified as official SMT-LIB benchmark sets\n+- `known_community_repos`: set of repo full names already listed in a previous report\n+- `last_run_date`: ISO-8601 date string of the previous run\n+\n+Use the cache to skip repos already classified. On the very first run (no cache),\n+perform a full discovery pass. On subsequent runs focus on repos pushed or created\n+since `last_run_date`.\n+\n+## Step 2: Collect Official SMT-LIB Benchmark Sets to Exclude\n+\n+### 2.1 Scrape smtlib.org\n+\n+Fetch the SMT-LIB benchmarks page and extract all linked Zenodo DOIs and GitHub URLs:\n+\n+```bash\n+curl -s \"https://smtlib.cs.uiowa.edu/benchmarks.shtml\" -o /tmp/smtlib-benchmarks.html\n+# Also try the main page and any mirror\n+curl -s \"https://smtlib.cs.uiowa.edu/\" -o /tmp/smtlib-home.html\n+```\n+\n+Parse both files for:\n+- Zenodo DOI links (`doi.org/10.5281/zenodo.*` or `zenodo.org/record/*`)\n+- GitHub repository URLs (`github.com/...`)\n+- Any other hosted benchmark archive links\n+\n+### 2.2 Enumerate Zenodo SMT-LIB Community Records\n+\n+Query the Zenodo API for all records in the SMT-LIB community:\n+\n+```bash\n+curl -s \"https://zenodo.org/api/records?communities=smt-lib&size=100&page=1\" \\\n+  -o /tmp/zenodo-smtlib-page1.json\n+\n+# Check if there are more pages (paginate until empty)\n+curl -s \"https://zenodo.org/api/records?communities=smt-lib&size=100&page=2\" \\\n+  -o /tmp/zenodo-smtlib-page2.json 2>/dev/null || true\n+\n+curl -s \"https://zenodo.org/api/records?communities=smt-lib&size=100&page=3\" \\\n+  -o /tmp/zenodo-smtlib-page3.json 2>/dev/null || true\n+```\n+\n+For each Zenodo record extract:\n+- Record ID (e.g. `5827900`)\n+- Title\n+- Any GitHub repository URLs listed in the description or related identifiers\n+\n+```bash\n+python3 - <<'PYEOF'\n+import json, re\n+\n+def extract_github_repos(text):\n+    pattern = r'github\\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)'\n+    return set(re.findall(pattern, text or ''))\n+\n+official_repos = set()\n+official_zenodo_ids = set()\n+\n+for fname in ['/tmp/zenodo-smtlib-page1.json', '/tmp/zenodo-smtlib-page2.json',\n+              '/tmp/zenodo-smtlib-page3.json']:\n+    try:\n+        data = json.load(open(fname))\n+    except Exception:\n+        continue\n+    for hit in data.get('hits', {}).get('hits', []):\n+        rid = str(hit.get('id', ''))\n+        official_zenodo_ids.add(rid)\n+        metadata = hit.get('metadata', {})\n+        description = metadata.get('description', '')\n+        related = ' '.join(\n+            r.get('identifier', '')\n+            for r in metadata.get('related_identifiers', [])\n+        )\n+        title = metadata.get('title', '')\n+        for repo in extract_github_repos(description + ' ' + related + ' ' + title):\n+            official_repos.add(repo.lower().rstrip('.'))\n+\n+with open('/tmp/smtlib-benchmarks.html') as f:\n+    html = f.read()\n+for repo in extract_github_repos(html):\n+    official_repos.add(repo.lower().rstrip('.'))\n+\n+print(\"OFFICIAL_ZENODO_IDS:\", ','.join(sorted(official_zenodo_ids)) or '(none)')\n+print(\"OFFICIAL_GITHUB_REPOS:\", ','.join(sorted(official_repos)) or '(none)')\n+PYEOF\n+```\n+\n+### 2.3 Well-Known Official Repository Patterns\n+\n+Regardless of the above scrape, always exclude:\n+- Any repo under the `SMT-LIB` GitHub organization (`SMT-LIB/*`)\n+- Any repo whose name matches `smt-comp-*` that is under `SMT-Competition` org\n+- The Z3 repo itself (`Z3Prover/z3`) and its forks\n+\n+Combine all official sources into a single exclusion set stored at\n+`/tmp/official_exclusions.txt` (one `owner/repo` pattern per line, lowercase).\n+\n+## Step 3: Search GitHub for Community SMT-LIB Benchmark Repositories\n+\n+Use multiple GitHub search strategies to find repos containing `.smt2` benchmark\n+files that are NOT part of the official distribution. Search for repos updated\n+since the last run date (or the last 90 days for the initial run).\n+\n+Compute the cutoff date first:\n+```bash\n+CUTOFF=$(date -d \"90 days ago\" +%Y-%m-%d 2>/dev/null || date -v-90d +%Y-%m-%d)\n+echo \"Using cutoff date: $CUTOFF\"\n+```\n+\n+### Search Strategies\n+\n+Use the GitHub MCP server tools to run these searches:\n+\n+1. **Topic search**: `topic:smtlib pushed:>$CUTOFF`\n+2. **Topic search variant**: `topic:smt-lib pushed:>$CUTOFF`\n+3. **Topic search variant**: `topic:smt2 pushed:>$CUTOFF`\n+4. **Benchmark filename pattern**: `filename:*.smt2 pushed:>$CUTOFF` (limit to top results)\n+5. **Benchmarks directory pattern**: `path:benchmarks *.smt2 in:path pushed:>$CUTOFF`\n+6. **README mention**: `SMT-LIB benchmarks in:readme stars:>2 pushed:>$CUTOFF`\n+7. **Organization-level search**: repos under `SMT-Competition` org, if any are not already excluded\n+\n+For each search, collect: `full_name`, `html_url`, `description`, `stargazers_count`,\n+`updated_at`, `pushed_at`, `default_branch`, `topics`.\n+\n+Deduplicate by `full_name`. Limit to 200 total candidates before filtering.\n+\n+## Step 4: Filter Out Official Benchmark Sets\n+\n+For each candidate repo:\n+\n+1. Check if `full_name.lower()` is in the exclusion set from Step 2.\n+2. Check if the repo is owned by `SMT-LIB` or `SMT-Competition` org (case-insensitive).\n+3. Check if the repo is a fork of a known official repo (if `fork: true` and parent is\n+   in the exclusion set).\n+\n+Discard repos that match any of the above. Keep the rest as community benchmarks.\n+\n+Also apply quality filters to reduce noise — skip repos that:\n+- Have 0 stars and fewer than 3 `.smt2` files (likely a student homework or test repo\n+  with minimal public value); use your judgement — if the repo description clearly\n+  describes a research benchmark, keep it regardless of star count.\n+- Were created but never pushed after creation (empty repos).\n+- Have names that are clearly course assignment repositories\n+  (e.g. contain `homework`, `assignment`, `hw[0-9]`, `cs[0-9]{3}`).\n+\n+## Step 5: Classify Remaining Repos\n+\n+For each repo that survives filtering, classify it into one of these categories:\n+\n+| Category | Description |\n+|----------|-------------|\n+| **Solver evaluation** | Benchmarks used to evaluate or compare SMT solvers |\n+| **Verification** | Benchmarks from program verification or model checking |\n+| **Security / CTF** | Benchmarks from security research or CTF challenges |\n+| **Theory / logic** | Benchmarks exploring specific SMT theories or logics |\n+| **Tool output** | Benchmarks generated by another tool (e.g. a compiler, fuzzer) |\n+| **Education** | Course materials or tutorials with benchmark examples |\n+| **Other / unknown** | Does not fit another category |\n+\n+Base the classification on: repo description, README (fetch if web-fetch is available),\n+topics, and directory structure. A single brief `web-fetch` of the repo's README is\n+sufficient; do not fetch individual `.smt2` files.\n+\n+Note the dominant SMT logic(s) present, if discernible from the description or topics\n+(e.g. QF_BV, QF_LIA, QF_S, NIA, …).\n+\n+## Step 6: Generate the Discussion Report\n+\n+Create a GitHub Discussion. Use heading level 3 or deeper (`###`, `####`, …) for all\n+section headers; never use `##` or `#` in the body.\n+Wrap long tables in `<details>` tags to keep the report scannable.\n+\n+Title: `[SMT-LIB Benchmarks] Community Benchmark Repository Survey — [Month YYYY]`\n+\n+Structure the report as follows:\n+\n+```markdown\n+**Period covered**: [cutoff date] – [today's date]\n+**Repositories found**: N community repos (after excluding M official sets)\n+**New this run**: N (not listed in previous report)\n+\n+### Overview\n+\n+1–2 sentences summarising the breadth of community SMT-LIB benchmarks found.\n+\n+### Community Benchmark Repositories\n+\n+Use `###` for category headers. Within each category, list repos as a markdown table.\n+For each repo include:\n+- Repo link (`[owner/repo](html_url)`)\n+- Stars\n+- Last pushed date\n+- Dominant logic(s) (if known)\n+- Brief description (from repo description or README, max 120 chars)\n+\n+#### Solver Evaluation\n+\n+| Repository | ⭐ | Last pushed | Logic(s) | Description |\n+|------------|-----|------------|---------|-------------|\n+| [owner/repo](url) | N | YYYY-MM-DD | QF_BV, QF_LIA | … |\n+\n+#### Verification\n+\n+[same table structure]\n+\n+#### Security / CTF\n+\n+[same table structure]\n+\n+#### Theory / Logic\n+\n+[same table structure]\n+\n+#### Tool Output\n+\n+[same table structure]\n+\n+#### Education\n+\n+[same table structure]\n+\n+#### Other / Unknown\n+\n+[same table structure]\n+\n+---\n+\n+### Exclusions Applied\n+\n+<details>\n+<summary>Official SMT-LIB sets excluded from this report</summary>\n+\n+List Zenodo record IDs and GitHub repos identified as official distributions.\n+\n+| Source | Identifier | Notes |\n+|--------|-----------|-------|\n+| Zenodo | [10.5281/zenodo.XXXXXXX](https://zenodo.org/record/XXXXXXX) | Official QF_BV benchmark set |\n+| GitHub | [SMT-LIB/benchmarks-non-incremental](https://github.com/SMT-LIB/benchmarks-non-incremental) | |\n+\n+</details>\n+\n+---\n+\n+### Methodology\n+\n+Brief note on search queries used, cutoff date, and any quality filters applied.\n+```\n+\n+## Step 7: Update Cache Memory\n+\n+After posting the discussion, update cache memory with:\n+- `official_repos`: updated exclusion set (union of previous + newly found)\n+- `known_community_repos`: union of previous + repos listed in this report\n+- `last_run_date`: today's ISO-8601 date\n+- `report_url`: URL of the GitHub Discussion created\n+\n+## Guidelines\n+\n+- **Be conservative with exclusions**: when in doubt whether a repo is \"official\",\n+  keep it in the community list rather than silently dropping it.\n+- **Be accurate**: only include repos that genuinely contain SMT-LIB `.smt2` files\n+  or clearly describe themselves as SMT-LIB benchmark collections.\n+- **Avoid noise**: student homework repos and trivially small repos add clutter;\n+  apply the quality filters from Step 4 judiciously.\n+- **No source code changes**: DO NOT create pull requests or modify any source files.\n+- **No copyrighted content**: DO NOT reproduce benchmark file contents; only post\n+  links and metadata.\n+- **Always cite sources**: include the full GitHub URL for every listed repository.\n+- **Use cache**: skip repos already classified in a previous run to keep runtime short.\n+- **Fail gracefully**: if GitHub search rate-limits the workflow, post whatever was\n+  collected so far with a note that the search was incomplete.\n+\n+## Important Notes\n+\n+- DO NOT create pull requests or modify source files.\n+- DO close older SMT-LIB Benchmarks discussions automatically (configured).\n+- DO always call `create_discussion` or `noop` before the workflow ends.\n+  Failing to produce any safe output triggers an automatic failure issue.\n+- DO use cache memory to avoid re-processing repos already surveyed.\n+- DO limit individual `web-fetch` calls (README fetches) to repos where the\n+  description alone is insufficient for classification.",
+          "snapshot_ref": "29c4e539f6f56d30b4464e9f40bf22b54d881d89",
+          "snapshot_blob_sha": "19c6154931b6be7250cfd2d01422edba461e740d",
+          "snapshot_file": "snapshots/z3__Z3Prover__29c4e539f6f56d30b4464e9f40bf22b54d881d89__smtlib-benchmark-finder.md",
+          "snapshot_bytes": 12114,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/smtlib-benchmark-finder.lock.yml\",\"generated_workflow_file\":\"smtlib-benchmark-finder.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/smtlib-benchmark-finder.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -30,6 +30,7 @@ tools:\n   bash: [\":*\"]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   mentions: false\n   allowed-github-references: []\n   max-bot-mentions: 1",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "7b773af06434d7878541ccd65df08c9bc9d8c977",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__smtlib-benchmark-finder.md",
+          "snapshot_bytes": 12147,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/smtlib-benchmark-finder.lock.yml\",\"generated_workflow_file\":\"smtlib-benchmark-finder.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/smtlib-benchmark-finder.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+      "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "authored_at": "2026-07-28T09:22:11Z",
+      "committed_at": "2026-07-28T09:22:11Z",
+      "author_name": "Nikolaj Bjorner",
+      "author_email": "nbjorner@microsoft.com",
+      "author_login": "NikolajBjorner",
+      "author_account_type": "User",
+      "committer_name": "Nikolaj Bjorner",
+      "committer_email": "nbjorner@microsoft.com",
+      "committer_login": "NikolajBjorner",
+      "committer_account_type": "User",
+      "message": "Fix agentic workflow auth by using Actions token-based Copilot inference\n\nThe COPILOT_GITHUB_TOKEN PAT secret expired, causing HTTP 401 auth\nfailures in all agentic workflows that referenced it. Switch these\nworkflows to GitHub Actions token-based Copilot inference by adding\n'copilot-requests: write' to their permissions (matching the already-\nworking code-simplifier and release-notes-updater workflows), so the\nengine uses the ephemeral github.token instead of the expired PAT.\n\nRecompiled with gh-aw v0.81.6 (repo's pinned version) to keep the diff\nminimal. Affected: api-coherence-checker, issue-backlog-processor,\nmemory-safety-report, academic-citation-tracker, smtlib-benchmark-finder,\nworkflow-suggestion-agent, specbot-crash-analyzer, tptp-benchmark.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 57b9b87e-950a-49ea-bbb3-ed585646a5a9",
+      "parent_shas": [
+        "18d8d7a7bd437cc25a532e3903a560f7c9a4b787"
+      ],
+      "tree_sha": "281bc4545bd45a13a519164dfb8873e3dd7f3e15",
+      "html_url": "https://github.com/Z3Prover/z3/commit/b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/smtlib-benchmark-finder.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/smtlib-benchmark-finder.md",
+          "commit_sha": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "committed_at": "2026-07-28T09:22:11Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 1,
+          "file_changes": 6,
+          "file_patch": "@@ -13,7 +13,11 @@ on:\n \n timeout-minutes: 60\n \n-permissions: read-all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n \n network:\n   allowed:",
+          "snapshot_ref": "b1168b48680a7b35d639f0243cf5b8c8a3ff0277",
+          "snapshot_blob_sha": "17848205b1fdadd08fb9e5d8d1f8a62e1b70c22e",
+          "snapshot_file": "snapshots/z3__Z3Prover__b1168b48680a7b35d639f0243cf5b8c8a3ff0277__smtlib-benchmark-finder.md",
+          "snapshot_bytes": 12218,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/smtlib-benchmark-finder.lock.yml\",\"generated_workflow_file\":\"smtlib-benchmark-finder.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/smtlib-benchmark-finder.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

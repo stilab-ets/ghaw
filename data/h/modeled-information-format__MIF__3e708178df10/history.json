@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "modeled-information-format/MIF:.github/workflows/daily-docs-review.md",
+    "source_full_name": "modeled-information-format/MIF",
+    "source_owner": "modeled-information-format",
+    "source_repo": "MIF",
+    "md_path": ".github/workflows/daily-docs-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/modeled-information-format/MIF/blob/HEAD/.github/workflows/daily-docs-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "modeled-information-format/MIF",
+      "generated_owner": "modeled-information-format",
+      "generated_repo": "MIF",
+      "generated_workflow_path": ".github/workflows/daily-docs-review.lock.yml",
+      "generated_workflow_file": "daily-docs-review.lock.yml",
+      "generated_html_url": "https://github.com/modeled-information-format/MIF/blob/4a036dfb5d18ccf510c52e48a71aa41da95c3f5f/.github/workflows/daily-docs-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:42:55+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "modeled-information-format/MIF:.github/workflows/daily-docs-review.md",
+      "source_full_name": "modeled-information-format/MIF",
+      "md_path": ".github/workflows/daily-docs-review.md",
+      "commit_sha": "7d74e7d03b46968fc287a5fce7f9510c6ff33f8c",
+      "authored_at": "2026-02-23T04:45:37Z",
+      "committed_at": "2026-02-23T04:45:37Z",
+      "author_name": "Robert Allen",
+      "author_email": "zircote@gmail.com",
+      "author_login": "zircote",
+      "author_account_type": "User",
+      "committer_name": "Robert Allen",
+      "committer_email": "zircote@gmail.com",
+      "committer_login": "zircote",
+      "committer_account_type": "User",
+      "message": "Deploy daily-docs-review workflow",
+      "parent_shas": [
+        "7b643b41c7b4e2871a91ad7b85f3175c97c4bb66"
+      ],
+      "tree_sha": "e1c0b9f931d7b644146d0ac68e82e436ef18797a",
+      "html_url": "https://github.com/modeled-information-format/MIF/commit/7d74e7d03b46968fc287a5fce7f9510c6ff33f8c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "modeled-information-format/MIF:.github/workflows/daily-docs-review.md",
+          "source_full_name": "modeled-information-format/MIF",
+          "md_path": ".github/workflows/daily-docs-review.md",
+          "commit_sha": "7d74e7d03b46968fc287a5fce7f9510c6ff33f8c",
+          "committed_at": "2026-02-23T04:45:37Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 65,
+          "file_deletions": 0,
+          "file_changes": 65,
+          "file_patch": "@@ -0,0 +1,65 @@\n+---\n+name: Daily Documentation Review\n+description: |\n+  Daily review of repository documentation validity against github.com, githubnext.com, and gh-aw resources.\n+on:\n+  schedule:\n+    - cron: 'daily'\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+network:\n+  firewall: true\n+  allowed:\n+    - \"*.github.com\"\n+    - \"github.com\"\n+    - \"*.githubnext.com\"\n+    - \"githubnext.com\"\n+    - \"api.github.com\"\n+    - \"github.blog\"\n+\n+engine:\n+  id: copilot\n+\n+timeout-minutes: 60\n+\n+tools:\n+  bash:\n+    - ls\n+    - find\n+    - grep\n+    - cat\n+  edit: {}\n+  web-fetch: {}\n+  memory: cache-memory\n+\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"docs: \"\n+    draft: false\n+---\n+\n+# Daily Documentation Review\n+\n+## Context\n+This workflow performs a daily review of the repository's documentation to ensure accuracy and freshness. It validates content against authoritative external sources.\n+\n+## Instructions\n+1. **Initialize**: Read from your memory to see which files and links were checked recently.\n+2. **Scan Documentation**: Read through the `docs/` directory and `README.md`.\n+3. **Verify Claims**: For each key technical claim or feature description:\n+   - **Skip** if verified successfully within the last 3 days (check memory).\n+   - otherwise use `web-fetch` to check `github.com` and `githubnext.com` pages for the latest information.\n+   - Check the `github/gh-aw` project for updates if relevant.\n+4. **Report Findings**:\n+   - If inaccuracies are found, **edit the files** to correct them.\n+   - Create a **Pull Request** with the fixes. Use the `create-pull-request` tool.\n+   - If all documentation is up-to-date, output a summary of checks performed.\n+5. **Update Memory**: Record the current date for the files/claims verified in this run.\n+\n+## External Verification\n+Use `web-fetch` to confirm details. Prioritize official GitHub sources.\n+If you need to check a specific URL, use `web-fetch`.",
+          "snapshot_ref": "7d74e7d03b46968fc287a5fce7f9510c6ff33f8c",
+          "snapshot_blob_sha": "9330fd6188f03bb2a49588a59239a45c634b71c9",
+          "snapshot_file": "snapshots/MIF__modeled-information-format__7d74e7d03b46968fc287a5fce7f9510c6ff33f8c__daily-docs-review.md",
+          "snapshot_bytes": 1887,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"modeled-information-format/MIF\",\"generated_owner\":\"modeled-information-format\",\"generated_repo\":\"MIF\",\"generated_workflow_path\":\".github/workflows/daily-docs-review.lock.yml\",\"generated_workflow_file\":\"daily-docs-review.lock.yml\",\"generated_html_url\":\"https://github.com/modeled-information-format/MIF/blob/4a036dfb5d18ccf510c52e48a71aa41da95c3f5f/.github/workflows/daily-docs-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "modeled-information-format/MIF:.github/workflows/daily-docs-review.md",
+      "source_full_name": "modeled-information-format/MIF",
+      "md_path": ".github/workflows/daily-docs-review.md",
+      "commit_sha": "1c61f015a789935ba9752ad0dc23a0cd71fd2345",
+      "authored_at": "2026-06-29T22:27:30Z",
+      "committed_at": "2026-06-29T22:27:30Z",
+      "author_name": "Robert Allen",
+      "author_email": "zircote@gmail.com",
+      "author_login": "zircote",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(gh-aw): upgrade gh-aw and recompile daily-docs-review (closes #101) (#185)\n\n* chore(gh-aw): upgrade gh-aw and migrate daily-docs-review workflow\n\nRan `gh aw upgrade` (gh-aw v0.79.6):\n\n- daily-docs-review.md: migrate deprecated `network.firewall: true` ->\n  `sandbox.agent: awf`, and `tools.memory: cache-memory` -> `tools.cache-memory:`\n  (the schema moved `memory` under sandbox/agent and promoted cache-memory to a\n  first-class tool). Recompiled daily-docs-review.lock.yml. `gh aw compile`: 0 errors.\n- Add gh-aw scaffolding generated by the upgrade: .github/agents/agentic-workflows.md,\n  .github/skills/agentic-workflows/SKILL.md, .github/aw/actions-lock.json, .gitattributes,\n  and the generated agentics-maintenance.yml + copilot-setup-steps.yml workflows.\n\n* ci(copilot-setup): add top-level least-privilege permissions (Checkov CKV2_GHA_1)\n\ncopilot-setup-steps.yml set permissions only at the job level; add an explicit\ntop-level 'permissions: contents: read' so the workflow doesn't inherit the\nrepo default (CKV2_GHA_1, code-scanning alert #654). The job keeps its own\ncontents: read.\n\n* ci(copilot-setup): SHA-pin actions/checkout (pin-check)\n\nPin actions/checkout@v6 -> df4cb1c069e1874edd31b4311f1884172cec0e10 (v6.0.3),\nmatching the org SHA-pin requirement enforced by pin-check. SHA resolved from\nthe actions/checkout v6 ref via the GitHub API.\n\n* chore(gh-aw): refresh actions-lock.json to drop stale container pins\n\ngh aw compile --force-refresh-action-pins removed the leftover old-stack\ncontainer cache (gh-aw-firewall 0.20.2, mcpg v0.1.4, github-mcp-server v0.30.3)\nthat no longer matched the recompiled manifest (0.27.11 / v0.3.30 / v1.4.0).\nThe current gh-aw embeds digest-pinned container refs directly in\ndaily-docs-review.lock.yml (21 @sha256 pins), so the separate container cache\nwas stale and redundant; removing it eliminates the drift risk.\n\n* ci(actionlint): scope-ignore gh-aw generator quirks (concurrency.queue, empty choice)\n\nThe org actionlint check failed on gh-aw-generated output that gh aw lint/validate\naccept: concurrency.queue extension in daily-docs-review.lock.yml and an\nintentional empty-string default in agentics-maintenance.yml's workflow_dispatch\nchoice. Scope the ignores to those generated files, matching the existing\npre_activation/shellcheck handling. actionlint now exits 0.",
+      "parent_shas": [
+        "f3532680a9123a930fcc63476901e14df7473f10"
+      ],
+      "tree_sha": "c541c7e0e8f4d55e4dda90195a40412a0bd0c4e9",
+      "html_url": "https://github.com/modeled-information-format/MIF/commit/1c61f015a789935ba9752ad0dc23a0cd71fd2345",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "modeled-information-format/MIF:.github/workflows/daily-docs-review.md",
+          "source_full_name": "modeled-information-format/MIF",
+          "md_path": ".github/workflows/daily-docs-review.md",
+          "commit_sha": "1c61f015a789935ba9752ad0dc23a0cd71fd2345",
+          "committed_at": "2026-06-29T22:27:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 3,
+          "file_changes": 7,
+          "file_patch": "@@ -12,7 +12,6 @@ permissions:\n   issues: read\n \n network:\n-  firewall: true\n   allowed:\n     - \"*.github.com\"\n     - \"github.com\"\n@@ -21,6 +20,8 @@ network:\n     - \"api.github.com\"\n     - \"github.blog\"\n \n+sandbox:\n+  agent: awf  # Migrated from deprecated network setting\n engine:\n   id: copilot\n \n@@ -34,7 +35,7 @@ tools:\n     - cat\n   edit: {}\n   web-fetch: {}\n-  memory: cache-memory\n+  cache-memory:\n \n safe-outputs:\n   create-pull-request:\n@@ -62,4 +63,4 @@ This workflow performs a daily review of the repository's documentation to ensur\n \n ## External Verification\n Use `web-fetch` to confirm details. Prioritize official GitHub sources.\n-If you need to check a specific URL, use `web-fetch`.\n+If you need to check a specific URL, use `web-fetch`.\n\\ No newline at end of file",
+          "snapshot_ref": "1c61f015a789935ba9752ad0dc23a0cd71fd2345",
+          "snapshot_blob_sha": "0ae4d1c3418af49aa6785ec9a97103114c7d8740",
+          "snapshot_file": "snapshots/MIF__modeled-information-format__1c61f015a789935ba9752ad0dc23a0cd71fd2345__daily-docs-review.md",
+          "snapshot_bytes": 1928,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"modeled-information-format/MIF\",\"generated_owner\":\"modeled-information-format\",\"generated_repo\":\"MIF\",\"generated_workflow_path\":\".github/workflows/daily-docs-review.lock.yml\",\"generated_workflow_file\":\"daily-docs-review.lock.yml\",\"generated_html_url\":\"https://github.com/modeled-information-format/MIF/blob/4a036dfb5d18ccf510c52e48a71aa41da95c3f5f/.github/workflows/daily-docs-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

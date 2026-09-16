@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/risk.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/risk.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/risk.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/risk.lock.yml",
+      "generated_workflow_file": "risk.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/risk.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:48:52+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/risk.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/risk.md",
+      "commit_sha": "603279af578e112f6987e2bbc50a6322e93eeab6",
+      "authored_at": "2026-07-31T20:01:52Z",
+      "committed_at": "2026-07-31T20:01:52Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): overhaul PR review workflows around /review (#1758)\n\nReplaces the two near-duplicate Rust reviewers with a five-way `/review`\nfan-out modelled on githubnext/gh-aw, and adds a sous-chef loop that keeps\nopen PRs moving.\n\nThe old pair (`rust-pr-reviewer.md` on every push, `rust-review-command.md`\non `/rust-review`) shared ~95% of their prompt, covered only Rust, and posted\nsummary comments. Reviews are now inline line comments.\n\nNew reviewers, each owning a distinct concern so comments do not overlap:\n\n  - review-rust               Rust engineering quality\n  - review-typescript         scripts/ado-script/ quality\n  - review-tests              test quality beyond coverage\n  - review-compiler-contract  ado-aw domain contracts and drift\n  - review-security           diff-scoped security regressions\n\n`review-rust` and `review-typescript` are deliberately language-generic; all\nado-aw-specific invariants live in `review-compiler-contract`, which also\ndetects ncc bundle drift — a gap nothing else in the repo covers, since\nado-script.yml rebuilds the bundles but never diffs them.\n\nOnly the two code-quality reviewers re-run on every push. All five carry\n`draft: false` so pushes to drafts cost nothing, and gh-aw's generated\nper-PR `cancel-in-progress` concurrency supersedes runs on rapid pushes.\n\nShared components:\n\n  - shared/pr-review-base.md      tools, network and review safe-outputs\n  - shared/pr-diff-data-fetch.md  pre-agent-steps diff/meta/comment prefetch\n  - pr-data-prefetch.yml          engine-less cache warmer\n\n`submit-pull-request-review` pins `allowed-events: [COMMENT, REQUEST_CHANGES]`\nin the shared base: the Actions actor cannot approve a PR, so permitting it\nwould only fail at runtime. `supersede-older-reviews` keeps repeated pushes\nfrom stacking stale REQUEST_CHANGES reviews, and the prefetched\n`pr-review-comments.json` lets each reviewer skip feedback it already gave.\n\n`pr-sous-chef.md` runs every 15 minutes and on `/souschef`, posting one\nmarker'd `@copilot` nudge per PR listing unresolved threads and failed\nchecks, resolving answered threads, dismissing stale bot reviews and pushing\n`cargo fmt --all` fixes. It does not rebuild the TypeScript bundles — that\nneeds `npm ci` plus two `cargo run` invocations, far too costly at 96\nruns/day — so bundle drift is reported by review-compiler-contract instead.\n\nCommand changes:\n\n  - `/rust-review` is replaced by `/review`\n  - `/change-risk` is renamed to `/risk` (change-risk.md -> risk.md)\n  - `/scout`, `/plan` and `/risk` move to `strategy: centralized`\n\nAll four commands now route through the generated `agentic_commands.yml`,\nresolving the advisory `gh aw validate` was emitting.\n\n`gh aw compile` reports 27 workflows, 0 errors; every added bash body passes\nshellcheck. agentics-maintenance.yml is a v0.84.0 regeneration artefact.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 475bd62b-12cb-41aa-88b6-39a3d75e3c50",
+      "parent_shas": [
+        "e550cb5d893d567d8a21832f244564e9a145b7b2"
+      ],
+      "tree_sha": "fde5b768dc8d01b40b0856d8e11112b8c4679476",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/603279af578e112f6987e2bbc50a6322e93eeab6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/risk.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/risk.md",
+          "commit_sha": "603279af578e112f6987e2bbc50a6322e93eeab6",
+          "committed_at": "2026-07-31T20:01:52Z",
+          "event_status": "renamed",
+          "previous_path": ".github/workflows/change-risk.md",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -1,7 +1,8 @@\n ---\n on:\n   slash_command:\n-    name: change-risk\n+    strategy: centralized\n+    name: risk\n     events: [pull_request, pull_request_comment]\n description: Assesses PRs for breaking change risk and approves or requests changes\n permissions:\n@@ -26,7 +27,7 @@ max-daily-ai-credits: -1\n \n # Change Risk Assessor\n \n-You are a senior engineer performing a **breaking-change risk assessment** on this pull request. The user invoked `/change-risk` on this PR. Context: \"${{ steps.sanitized.outputs.text }}\"\n+You are a senior engineer performing a **breaking-change risk assessment** on this pull request. The user invoked `/risk` on this PR. Context: \"${{ steps.sanitized.outputs.text }}\"\n \n ## Your Mission\n ",
+          "snapshot_ref": "603279af578e112f6987e2bbc50a6322e93eeab6",
+          "snapshot_blob_sha": "d798e0f0fd6664e71df1cfcbe6caf897e18b734c",
+          "snapshot_file": "snapshots/ado-aw__githubnext__603279af578e112f6987e2bbc50a6322e93eeab6__risk.md",
+          "snapshot_bytes": 3884,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/risk.lock.yml\",\"generated_workflow_file\":\"risk.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/risk.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

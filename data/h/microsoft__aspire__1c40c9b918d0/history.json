@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+    "source_full_name": "microsoft/aspire",
+    "source_owner": "microsoft",
+    "source_repo": "aspire",
+    "md_path": ".github/workflows/release-update-support-mdx.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/aspire/blob/HEAD/.github/workflows/release-update-support-mdx.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/aspire",
+      "generated_owner": "microsoft",
+      "generated_repo": "aspire",
+      "generated_workflow_path": ".github/workflows/release-update-support-mdx.lock.yml",
+      "generated_workflow_file": "release-update-support-mdx.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/aspire/blob/afb4351bf9361bc8804619f2797848840213bc85/.github/workflows/release-update-support-mdx.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:58:28+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+      "source_full_name": "microsoft/aspire",
+      "md_path": ".github/workflows/release-update-support-mdx.md",
+      "commit_sha": "aa1e960ef6c7e9388bb2163913a0d3d03e076007",
+      "authored_at": "2026-05-07T20:05:39Z",
+      "committed_at": "2026-05-07T20:05:39Z",
+      "author_name": "David Pine",
+      "author_email": "david.pine@microsoft.com",
+      "author_login": "IEvangelist",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add release-driven support.mdx workflow + pr-docs-check fixes (drafted-PR link, SME reviewer) (#16778)\n\n* Add gh aw workflow to draft aspire.dev support.mdx PR on each release\n\nWhen a stable Aspire release publishes in microsoft/aspire, this workflow\ndrafts a pull request in microsoft/aspire.dev that updates the support\npolicy page (src/frontend/src/content/docs/support.mdx). It handles three\nrelease shapes:\n\n- Patch on the currently supported version: update the Supported row's\n  Latest patch version, Patch release date, and the date badge.\n- Major or minor bump: demote the previously supported row to the top of\n  the Out of support versions table (preserving its patch info, setting\n  End of support to the new release date), replace the Supported row with\n  the new version, and update the badge.\n- Backport servicing patch on an out-of-support version: update the\n  matching Out of support row's Latest patch version and Patch release\n  date, and update the badge.\n\nModeled on pr-docs-check.md: same aspire-bot GitHub App, mirrored\nmicrosoft/aspire.dev checkout, and safe-outputs.create-pull-request flow.\n\nHardening (from rubber-duck design pass):\n\n- Strict github.repository == 'microsoft/aspire' guard plus prerelease /\n  draft filtering for release events.\n- workflow_dispatch.tag_name is required so manual runs always carry the\n  data the agent needs.\n- Concurrency group serializes near-simultaneous releases.\n- Agent prompt instructs a stale-state reconciliation step against any\n  open [support] PR (no-op if it already matches; fail-closed otherwise).\n- Fail-closed structural validation of support.mdx headers and tables\n  before any edit; UTC date policy codified.\n- Idempotency check (no-op if the workspace diff is empty after the edit).\n- allowed-base-branches locked to [main]; fallback-as-issue disabled.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* pr-docs-check: link drafted PR in source-PR comment and request SME as reviewer\n\nUpdates the pr-docs-check gh-aw workflow so that:\n\n1. The status comment posted on the merged microsoft/aspire PR includes a\n   working link to the drafted documentation PR on microsoft/aspire.dev.\n   Previously the agent crafted the comment from a separate add-comment safe\n   output and could not reliably reference the freshly created PR (the gh-aw\n   temporary-id substitution requires camelCase number/repo fields that\n   create_pull_request does not emit), so the link was either missing or\n   invalid.\n\n2. The drafted aspire.dev PR is reviewed by the subject-matter expert from the\n   source PR (the most recent approver), not the original PR author. The\n   previous static reviewers expression always pointed at github.event.pull_request.user.login,\n   which is the wrong human in almost every case.\n\nImplementation:\n\n- Removed the framework safe-outputs.add-comment block.\n- Removed the static reviewers field from create-pull-request.\n- Added a custom safe-outputs.jobs.notify-source-pr job declaring\n  needs: [safe_outputs] so it runs after the safe_outputs job and can read\n  needs.safe_outputs.outputs.created_pr_url and created_pr_number. The job:\n    * Mints two aspire-bot tokens (microsoft/aspire and microsoft/aspire.dev).\n    * Posts a status comment on the source PR with the real drafted PR URL,\n      handling three states: drafted+URL (success), drafted+no URL (failure\n      surfaced explicitly), and skipped (no docs needed). Older comments\n      carrying our marker are minimised via GraphQL minimizeComment for clean\n      re-runs.\n    * Best-effort calls pulls.requestReviewers on the drafted PR with the\n      agent-discovered SME login. Wrapped in try/catch so a 422 (user not\n      assignable) does not break the comment-posting step.\n- Added a new agent step (Step 2) that walks PR reviews, collapses by\n  reviewer, prefers the most recent APPROVED reviewer, with fallbacks to a\n  CHANGES_REQUESTED reviewer and CODEOWNERS as a hint. The agent emits a\n  single notify_source_pr safe-output item carrying source_pr_number, result,\n  sme_login, target_branch, and a length-bounded summary. The agent is\n  explicitly forbidden from composing the drafted PR URL itself or calling\n  add_comment.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* pr-docs-check: identify human originator for Copilot-authored source PRs\n\nWhen the source microsoft/aspire PR was authored by GitHub Copilot Coding\nAgent (user.type == 'Bot' and login matches 'Copilot' / 'copilot-swe-agent'),\nthe SME for the drafted aspire.dev PR is the human who initiated the Copilot\nsession, not whoever happened to approve the bot's output. That originator\nis recorded in pull_request.assignees[] alongside the Copilot bot itself.\n\nStep 2 of the agent prompt is restructured into:\n- Step 2a: Copilot-author short-circuit. Filter assignees[] for non-bot logins\n  and pick the human originator. If multiple humans, prefer the approver,\n  fall back to assignee order.\n- Step 2b: Existing review-collapse algorithm, used for human-authored PRs and\n  as a fallback when Step 2a finds no human.\n\nNo lock-file or actions-lock.json change: gh-aw only re-emits the lock when\nthe frontmatter hash changes, and this is a prompt-body-only edit.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "0c09b125c6bb05105f0adefb7fb62151def7e894"
+      ],
+      "tree_sha": "d7be2dca9dd3b84d4761294f0e90f6ab970a5874",
+      "html_url": "https://github.com/microsoft/aspire/commit/aa1e960ef6c7e9388bb2163913a0d3d03e076007",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+          "source_full_name": "microsoft/aspire",
+          "md_path": ".github/workflows/release-update-support-mdx.md",
+          "commit_sha": "aa1e960ef6c7e9388bb2163913a0d3d03e076007",
+          "committed_at": "2026-05-07T20:05:39Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 325,
+          "file_deletions": 0,
+          "file_changes": 325,
+          "file_patch": "@@ -0,0 +1,325 @@\n+---\n+description: |\n+  When a stable Aspire release is published in `microsoft/aspire`, draft a pull\n+  request in `microsoft/aspire.dev` that updates the support policy page\n+  (`src/frontend/src/content/docs/support.mdx`). Patch releases on the\n+  currently supported version update the row in the \"Supported versions\"\n+  table; major or minor releases demote the previously supported version into\n+  the \"Out of support versions\" table and replace the supported row; backport\n+  servicing patches on already-out-of-support versions update the matching\n+  out-of-support row. The \"Last updated\" date badge at the top of the file is\n+  refreshed in all three cases.\n+\n+on:\n+  release:\n+    types: [released]\n+  workflow_dispatch:\n+    inputs:\n+      tag_name:\n+        description: \"Release tag to process (e.g. v13.2.4). Required for manual runs.\"\n+        required: true\n+        type: string\n+  stale-check: false\n+\n+if: >-\n+  github.repository == 'microsoft/aspire'\n+  && (\n+    (github.event_name == 'release' && github.event.release.prerelease == false && github.event.release.draft == false)\n+    || github.event_name == 'workflow_dispatch'\n+  )\n+\n+# Serialize runs so two near-simultaneous releases (for example a patch followed\n+# minutes later by a minor) cannot open conflicting support-page PRs at once.\n+# The agent prompt also reconciles against any open `[support]` automation PR\n+# at runtime; concurrency alone is not sufficient.\n+concurrency:\n+  group: release-update-support-mdx\n+  cancel-in-progress: false\n+\n+checkout:\n+  # Use aspire.dev as the current workspace because that is where the\n+  # support.mdx edit lives, and keep a mirrored checkout under _repos so the\n+  # safeoutputs create_pull_request handler can reliably rediscover the target\n+  # repo in multi-repo mode. Mirrors the pattern used by pr-docs-check.md.\n+  - repository: microsoft/aspire.dev\n+    github-app:\n+      app-id: ${{ secrets.ASPIRE_BOT_APP_ID }}\n+      private-key: ${{ secrets.ASPIRE_BOT_PRIVATE_KEY }}\n+      owner: \"microsoft\"\n+      repositories: [\"aspire.dev\"]\n+    current: true\n+  - repository: microsoft/aspire.dev\n+    path: _repos/aspire.dev\n+    github-app:\n+      app-id: ${{ secrets.ASPIRE_BOT_APP_ID }}\n+      private-key: ${{ secrets.ASPIRE_BOT_PRIVATE_KEY }}\n+      owner: \"microsoft\"\n+      repositories: [\"aspire.dev\"]\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests]\n+    # Keep the guard policy explicit so gh-aw does not inject a separate\n+    # auto-lockdown github-script step with an independently resolved action\n+    # pin. Mirrors pr-docs-check.md.\n+    min-integrity: approved\n+    allowed-repos:\n+      - microsoft/*\n+    github-app:\n+      app-id: ${{ secrets.ASPIRE_BOT_APP_ID }}\n+      private-key: ${{ secrets.ASPIRE_BOT_PRIVATE_KEY }}\n+      owner: \"microsoft\"\n+      repositories: [\"aspire.dev\", \"aspire\"]\n+\n+safe-outputs:\n+  github-app:\n+    app-id: ${{ secrets.ASPIRE_BOT_APP_ID }}\n+    private-key: ${{ secrets.ASPIRE_BOT_PRIVATE_KEY }}\n+    owner: \"microsoft\"\n+    repositories: [\"aspire.dev\", \"aspire\"]\n+  steps:\n+    - name: Mirror target repo checkout\n+      if: contains(needs.agent.outputs.output_types, 'create_pull_request')\n+      uses: actions/checkout@v6.0.2\n+      with:\n+        repository: microsoft/aspire.dev\n+        ref: main\n+        token: ${{ steps.safe-outputs-app-token.outputs.token }}\n+        persist-credentials: false\n+        path: _repos/aspire.dev\n+        fetch-depth: 1\n+    - name: Configure mirrored target repo Git credentials\n+      if: contains(needs.agent.outputs.output_types, 'create_pull_request')\n+      working-directory: _repos/aspire.dev\n+      env:\n+        REPO_NAME: \"microsoft/aspire.dev\"\n+        SERVER_URL: ${{ github.server_url }}\n+        GIT_TOKEN: ${{ steps.safe-outputs-app-token.outputs.token }}\n+      run: |\n+        git config --global user.email \"github-actions[bot]@users.noreply.github.com\"\n+        git config --global user.name \"github-actions[bot]\"\n+        git config --global am.keepcr true\n+        SERVER_URL_STRIPPED=\"${SERVER_URL#https://}\"\n+        git remote set-url origin \"https://x-access-token:${GIT_TOKEN}@${SERVER_URL_STRIPPED}/${REPO_NAME}.git\"\n+        echo \"Mirrored checkout configured with standard GitHub Actions identity\"\n+  create-pull-request:\n+    title-prefix: \"[support] \"\n+    labels: [docs-from-code]\n+    reviewers: \"IEvangelist\"\n+    draft: true\n+    base-branch: main\n+    # support.mdx only lives on aspire.dev's main branch, so disallow\n+    # release/* base overrides.\n+    allowed-base-branches:\n+      - main\n+    target-repo: \"microsoft/aspire.dev\"\n+    protected-files: blocked\n+    # Keep failures quiet on aspire.dev. Diagnostics for fail-closed paths\n+    # surface in the workflow run summary; a maintainer can re-run via\n+    # workflow_dispatch with the tag.\n+    fallback-as-issue: false\n+\n+timeout-minutes: 15\n+---\n+\n+# Update aspire.dev support page for a new Aspire release\n+\n+Update `src/frontend/src/content/docs/support.mdx` on `microsoft/aspire.dev`\n+to reflect the Aspire release that triggered this run, and open a draft\n+pull request with the change.\n+\n+## Context\n+\n+- **Source repository**: `microsoft/aspire`\n+- **Trigger event**: `${{ github.event_name }}`\n+- **Release tag**: `${{ github.event.release.tag_name || github.event.inputs.tag_name }}`\n+- **Release name**: `${{ github.event.release.name }}`\n+\n+The release's `published_at` timestamp and `html_url` are not interpolated\n+into this prompt — fetch them in Step 1 using the GitHub API\n+(`GET /repos/microsoft/aspire/releases/tags/<tag>`).\n+\n+> [!NOTE]\n+> The agent runs with `microsoft/aspire.dev` as the current workspace and also\n+> has a mirrored checkout at `_repos/aspire.dev`. Use GitHub tools for any\n+> cross-repo lookups (release metadata on `microsoft/aspire`, open PRs on\n+> `microsoft/aspire.dev`).\n+>\n+> For security, this workflow only auto-activates for stable, non-prerelease\n+> releases on `microsoft/aspire`. Manual `workflow_dispatch` runs require a\n+> `tag_name` input.\n+\n+## Step 1: Resolve release context\n+\n+Determine the tag this run is processing:\n+\n+- If `github.event_name == 'release'`, the tag is in\n+  `${{ github.event.release.tag_name }}`.\n+- If `github.event_name == 'workflow_dispatch'`, the tag is in\n+  `${{ github.event.inputs.tag_name }}`.\n+\n+Then call the GitHub API for `microsoft/aspire` to fetch the full release\n+record by tag (`GET /repos/microsoft/aspire/releases/tags/<tag>`). Read its\n+`tag_name`, `name`, `published_at` (ISO 8601 UTC), `html_url`, `draft`, and\n+`prerelease` fields from the API response — do **not** rely on event-payload\n+fields beyond `tag_name` and `name`.\n+\n+**Fail closed** (stop and write a diagnostic to the run summary) if any of\n+these are true:\n+\n+- The release is not found.\n+- `release.draft == true`.\n+- `release.prerelease == true`.\n+\n+Validate the tag against the regex `^v\\d+\\.\\d+\\.\\d+$`. If it doesn't match,\n+fail closed.\n+\n+Parse the version: strip the leading `v` and split into `MAJOR.MINOR.PATCH`.\n+\n+Convert `release.published_at` (ISO 8601 UTC) into a calendar date string in\n+the en-US format `Month DD, YYYY` (for example, `April 22, 2026`). Use the\n+**UTC** calendar date — not local or Pacific time. This is the codified\n+policy for determinism. Note: the day of the month must not be zero-padded\n+(use `April 9, 2026`, not `April 09, 2026`); month name is the full English\n+name.\n+\n+## Step 2: Read and structurally validate `support.mdx`\n+\n+In the current `microsoft/aspire.dev` workspace, open\n+`src/frontend/src/content/docs/support.mdx` and confirm all of the following:\n+\n+1. There is exactly one `<Badge text=\"📆 Last updated: <date>\" variant=\"tip\" size=\"large\" />` line.\n+2. There is a `## Supported versions` section heading followed by exactly one\n+   markdown table whose header row reads\n+   `| Version | Original release date | Latest patch version | Patch release date | End of support |`\n+   (column widths/padding may vary; the **column titles** must match exactly)\n+   and whose body has **exactly one** data row.\n+3. There is a `## Out of support versions` section heading followed by exactly\n+   one markdown table with the same five-column header.\n+\n+If any of these structural assumptions fail, **fail closed**: write a clear\n+diagnostic to the run summary explaining what was found and what was expected,\n+and stop. Do not attempt to repair the file or guess; a human reviewer should\n+look.\n+\n+## Step 3: Classify the release\n+\n+From the single supported row, parse the `MAJOR.MINOR` of the currently\n+supported version (for example, `Aspire 13.2` → `13.2`).\n+\n+Compare numerically against the new release's `MAJOR.MINOR`:\n+\n+- **Same `MAJOR.MINOR`** → **patch-on-supported** path.\n+- **New `MAJOR.MINOR` is greater** (lexicographically by `(MAJOR, MINOR)`\n+  tuple) → **major/minor bump** path.\n+- **New `MAJOR.MINOR` is less** → **backport servicing patch** path.\n+\n+For the **backport servicing patch** path, locate the matching `Aspire X.Y`\n+row in the Out of support versions table. If no matching row exists, **fail\n+closed** with a diagnostic.\n+\n+## Step 4: Reconcile against any open automation PR (stale-state guard)\n+\n+Before applying any edit, search `microsoft/aspire.dev` for **open** pull\n+requests whose title starts with `[support] ` and which modify\n+`src/frontend/src/content/docs/support.mdx`.\n+\n+- If **zero** such PRs are open, proceed to Step 5.\n+- If **exactly one** such PR is open:\n+  - Fetch its head ref's version of `support.mdx`. If that file already\n+    reflects the target release state (badge date and table rows match what\n+    you would produce in Step 5), this run is a duplicate. **No-op**: write\n+    \"support.mdx already reflects Aspire `<version>` on the open PR\n+    `<url>`\" to the run summary and stop without emitting a safe output.\n+  - Otherwise the existing PR represents a different (likely earlier) release\n+    that has not been merged yet. **Fail closed**: write a diagnostic naming\n+    the open PR and the new release, and stop. A maintainer should reconcile\n+    manually — applying this run's edits on top of stale `main` could demote\n+    the wrong supported version.\n+- If **more than one** such PR is open, **fail closed** with a diagnostic\n+  listing all of them.\n+\n+## Step 5: Apply the edit in the workspace\n+\n+Apply exactly one of the three edit shapes below. In every case, also update\n+the `<Badge text=\"📆 Last updated: <pubdate>\" .../>` line so the badge text\n+shows the new release date.\n+\n+Preserve the existing column padding (number of spaces) in every table row\n+you touch so the diff stays minimal and the table stays visually aligned.\n+\n+### 5a. Patch-on-supported path\n+\n+Rewrite **only** the `Latest patch version` and `Patch release date` cells\n+of the single Supported row. Set `Latest patch version` to the new full\n+version (for example `13.2.4`) and `Patch release date` to the formatted\n+release date.\n+\n+### 5b. Major/minor bump path\n+\n+1. Read the current Supported row verbatim (including its `Latest patch\n+   version` and `Patch release date` cells, which represent the last patch\n+   shipped before this bump).\n+2. Insert that row at the **top** of the data rows in the Out of support\n+   versions table. Carry over its `Version`, `Original release date`,\n+   `Latest patch version`, and `Patch release date` cells unchanged. Set its\n+   `End of support` cell to the formatted release date of the new release.\n+3. Replace the Supported row with the new release. The cells are:\n+   - `Version`: `Aspire MAJOR.MINOR` (no patch)\n+   - `Original release date`: the formatted release date\n+   - `Latest patch version`: `MAJOR.MINOR.PATCH` (the full new version)\n+   - `Patch release date`: the formatted release date\n+   - `End of support`: `When next major or minor version is released.`\n+   (note the trailing period)\n+\n+### 5c. Backport servicing patch path\n+\n+Rewrite **only** the `Latest patch version` and `Patch release date` cells\n+of the matching `Aspire X.Y` row in the Out of support versions table. Set\n+`Latest patch version` to the new full version and `Patch release date` to\n+the formatted release date. Leave its `End of support` cell unchanged.\n+\n+## Step 6: Idempotency check\n+\n+After applying the edit, diff the workspace against the base branch (`main`).\n+\n+- If there are **no** changes, write\n+  \"support.mdx already reflects Aspire `<version>`; no PR\" to the run summary\n+  and stop without emitting a safe output.\n+- Otherwise continue to Step 7.\n+\n+## Step 7: Open the draft PR\n+\n+Emit a `create_pull_request` safe output with:\n+\n+- **Title** (the `[support] ` prefix is added automatically):\n+  `Update support page for Aspire <full-version> release`\n+  (for example, `Update support page for Aspire 13.2.4 release`).\n+- **Base branch**: `main`.\n+- **Body** with:\n+  - A prominent link to the source release:\n+    `Drafts the support-page update for [microsoft/aspire@<tag>](<release_url>).`\n+  - One line classifying the release: `Patch on supported version`,\n+    `Major/minor bump (demoting Aspire X.Y to out-of-support)`, or\n+    `Backport servicing patch (Aspire X.Y is already out of support)`.\n+  - The note: `Dates resolved from the GitHub release `published_at`\n+    timestamp interpreted in **UTC**.`\n+  - A bullet listing the modified file (`src/frontend/src/content/docs/support.mdx`).\n+  - A reviewer checklist:\n+    - Confirm the badge date matches the release date.\n+    - Confirm the table rows reflect the intended classification.\n+    - Confirm column alignment is preserved.\n+\n+The `safe-outputs.create-pull-request` configuration sets `draft: true`,\n+`reviewers: IEvangelist`, the `[support] ` title prefix, the `docs-from-code`\n+label, and locks the base to `main`. You only need to supply the title and\n+body content.",
+          "snapshot_ref": "aa1e960ef6c7e9388bb2163913a0d3d03e076007",
+          "snapshot_blob_sha": "748c01af9889a6edf9cedcf8cb50d248edc0181a",
+          "snapshot_file": "snapshots/aspire__microsoft__aa1e960ef6c7e9388bb2163913a0d3d03e076007__release-update-support-mdx.md",
+          "snapshot_bytes": 13608,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/aspire\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"aspire\",\"generated_workflow_path\":\".github/workflows/release-update-support-mdx.lock.yml\",\"generated_workflow_file\":\"release-update-support-mdx.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/aspire/blob/afb4351bf9361bc8804619f2797848840213bc85/.github/workflows/release-update-support-mdx.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+      "source_full_name": "microsoft/aspire",
+      "md_path": ".github/workflows/release-update-support-mdx.md",
+      "commit_sha": "897acb2055b50448c0fe1d072ddbcd15ad12c854",
+      "authored_at": "2026-05-20T21:37:47Z",
+      "committed_at": "2026-05-20T21:37:47Z",
+      "author_name": "David Pine",
+      "author_email": "david.pine@microsoft.com",
+      "author_login": "IEvangelist",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix support workflow release trigger (#17322)\n\nListen for the GitHub release published action so stable releases trigger the support page update workflow.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "d7050265058aafec1e83f64071685181d07f2881"
+      ],
+      "tree_sha": "ab056e575d73fbc5e0c70e2a7044c393f0d29938",
+      "html_url": "https://github.com/microsoft/aspire/commit/897acb2055b50448c0fe1d072ddbcd15ad12c854",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+          "source_full_name": "microsoft/aspire",
+          "md_path": ".github/workflows/release-update-support-mdx.md",
+          "commit_sha": "897acb2055b50448c0fe1d072ddbcd15ad12c854",
+          "committed_at": "2026-05-20T21:37:47Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -12,7 +12,7 @@ description: |\n \n on:\n   release:\n-    types: [released]\n+    types: [published]\n   workflow_dispatch:\n     inputs:\n       tag_name:",
+          "snapshot_ref": "897acb2055b50448c0fe1d072ddbcd15ad12c854",
+          "snapshot_blob_sha": "236cdc7d453eed8849d21f89f26b7d891ddce4f2",
+          "snapshot_file": "snapshots/aspire__microsoft__897acb2055b50448c0fe1d072ddbcd15ad12c854__release-update-support-mdx.md",
+          "snapshot_bytes": 13609,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/aspire\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"aspire\",\"generated_workflow_path\":\".github/workflows/release-update-support-mdx.lock.yml\",\"generated_workflow_file\":\"release-update-support-mdx.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/aspire/blob/afb4351bf9361bc8804619f2797848840213bc85/.github/workflows/release-update-support-mdx.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+      "source_full_name": "microsoft/aspire",
+      "md_path": ".github/workflows/release-update-support-mdx.md",
+      "commit_sha": "c8f0e8cb52e1dd786975a88fdd4b65d8ba23dd3e",
+      "authored_at": "2026-06-03T21:01:50Z",
+      "committed_at": "2026-06-03T21:01:50Z",
+      "author_name": "David Pine",
+      "author_email": "david.pine@microsoft.com",
+      "author_login": "IEvangelist",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Allow release gh-aw workflows for bot events (#17869)\n\nAllow the Aspire release bot to activate the release-triggered gh-aw workflows so bot-authored stable releases run the release notes and aspire.dev support-page automation instead of stopping after pre-activation.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "a46c26086f886ae5f1210787c812649b01eb416a"
+      ],
+      "tree_sha": "a566a6babca20dc1fcb927820522bae765ac8414",
+      "html_url": "https://github.com/microsoft/aspire/commit/c8f0e8cb52e1dd786975a88fdd4b65d8ba23dd3e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+          "source_full_name": "microsoft/aspire",
+          "md_path": ".github/workflows/release-update-support-mdx.md",
+          "commit_sha": "c8f0e8cb52e1dd786975a88fdd4b65d8ba23dd3e",
+          "committed_at": "2026-06-03T21:01:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -20,6 +20,11 @@ on:\n         required: true\n         type: string\n   stale-check: false\n+  # Stable releases are published by the `aspire-repo-bot` GitHub App. gh-aw's\n+  # activation gate checks the triggering actor's repo permission and GitHub\n+  # Apps do not appear as collaborators, so allow-list the App the same way as\n+  # other bot-triggered gh-aw workflows in this repo.\n+  bots: [aspire-repo-bot]\n \n if: >-\n   github.repository == 'microsoft/aspire'",
+          "snapshot_ref": "c8f0e8cb52e1dd786975a88fdd4b65d8ba23dd3e",
+          "snapshot_blob_sha": "834bf98a4ddcf9b5ab94b2da76eb58713380ec74",
+          "snapshot_file": "snapshots/aspire__microsoft__c8f0e8cb52e1dd786975a88fdd4b65d8ba23dd3e__release-update-support-mdx.md",
+          "snapshot_bytes": 13924,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/aspire\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"aspire\",\"generated_workflow_path\":\".github/workflows/release-update-support-mdx.lock.yml\",\"generated_workflow_file\":\"release-update-support-mdx.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/aspire/blob/afb4351bf9361bc8804619f2797848840213bc85/.github/workflows/release-update-support-mdx.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+      "source_full_name": "microsoft/aspire",
+      "md_path": ".github/workflows/release-update-support-mdx.md",
+      "commit_sha": "8c56807460d809300bddea9bf700ce76147d6e5c",
+      "authored_at": "2026-06-17T23:19:15Z",
+      "committed_at": "2026-06-17T23:19:15Z",
+      "author_name": "Jose Perez Rodriguez",
+      "author_email": "joperezr@microsoft.com",
+      "author_login": "joperezr",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Bill agentic workflow inference to the org instead of a PAT (#18281)\n\nAdds `copilot-requests: write` to all 7 gh-aw workflow frontmatters and recompiles the lock files so Copilot model inference uses the built-in GITHUB_TOKEN (billed to the org) instead of the COPILOT_GITHUB_TOKEN personal access token.\n\nSee https://github.blog/changelog/2026-06-11-agentic-workflows-no-longer-need-a-personal-access-token/\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c7650a8840e746c1732a16cfc9b6e4d72fdfc156"
+      ],
+      "tree_sha": "a553d948c1b5ad05d92b0c18d566f51117edd95c",
+      "html_url": "https://github.com/microsoft/aspire/commit/8c56807460d809300bddea9bf700ce76147d6e5c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+          "source_full_name": "microsoft/aspire",
+          "md_path": ".github/workflows/release-update-support-mdx.md",
+          "commit_sha": "8c56807460d809300bddea9bf700ce76147d6e5c",
+          "committed_at": "2026-06-17T23:19:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -64,6 +64,7 @@ checkout:\n permissions:\n   contents: read\n   pull-requests: read\n+  copilot-requests: write\n \n network:\n   allowed:",
+          "snapshot_ref": "8c56807460d809300bddea9bf700ce76147d6e5c",
+          "snapshot_blob_sha": "dbc8396905a94e53df910783ad91ee73b1cf27a1",
+          "snapshot_file": "snapshots/aspire__microsoft__8c56807460d809300bddea9bf700ce76147d6e5c__release-update-support-mdx.md",
+          "snapshot_bytes": 13950,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/aspire\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"aspire\",\"generated_workflow_path\":\".github/workflows/release-update-support-mdx.lock.yml\",\"generated_workflow_file\":\"release-update-support-mdx.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/aspire/blob/afb4351bf9361bc8804619f2797848840213bc85/.github/workflows/release-update-support-mdx.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+      "source_full_name": "microsoft/aspire",
+      "md_path": ".github/workflows/release-update-support-mdx.md",
+      "commit_sha": "cd699602c68cc6157075562abdc15871ff8f3437",
+      "authored_at": "2026-06-18T02:43:47Z",
+      "committed_at": "2026-06-18T02:43:47Z",
+      "author_name": "Jose Perez Rodriguez",
+      "author_email": "joperezr@microsoft.com",
+      "author_login": "joperezr",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Disable daily AI credits guardrail for agentic workflows (#18307)\n\nSet max-daily-ai-credits: -1 on all 7 agentic workflows to remove the\n5K daily credit limit that was blocking workflow runs (issue #18301).\n\nFixes #18301\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "0318bd73ff007e29cee2a551142f9ffb7960c163"
+      ],
+      "tree_sha": "272cdb79283f7d8791bdacea2fac4f8e4258d820",
+      "html_url": "https://github.com/microsoft/aspire/commit/cd699602c68cc6157075562abdc15871ff8f3437",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/aspire:.github/workflows/release-update-support-mdx.md",
+          "source_full_name": "microsoft/aspire",
+          "md_path": ".github/workflows/release-update-support-mdx.md",
+          "commit_sha": "cd699602c68cc6157075562abdc15871ff8f3437",
+          "committed_at": "2026-06-18T02:43:47Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -10,6 +10,8 @@ description: |\n   out-of-support row. The \"Last updated\" date badge at the top of the file is\n   refreshed in all three cases.\n \n+max-daily-ai-credits: -1\n+\n on:\n   release:\n     types: [published]",
+          "snapshot_ref": "cd699602c68cc6157075562abdc15871ff8f3437",
+          "snapshot_blob_sha": "15f2273308263dfb632b6f87ff997e914a30295a",
+          "snapshot_file": "snapshots/aspire__microsoft__cd699602c68cc6157075562abdc15871ff8f3437__release-update-support-mdx.md",
+          "snapshot_bytes": 13976,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/aspire\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"aspire\",\"generated_workflow_path\":\".github/workflows/release-update-support-mdx.lock.yml\",\"generated_workflow_file\":\"release-update-support-mdx.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/aspire/blob/afb4351bf9361bc8804619f2797848840213bc85/.github/workflows/release-update-support-mdx.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

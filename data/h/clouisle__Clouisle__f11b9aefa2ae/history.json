@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+    "source_full_name": "clouisle/Clouisle",
+    "source_owner": "clouisle",
+    "source_repo": "Clouisle",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/clouisle/Clouisle/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "clouisle/Clouisle",
+      "generated_owner": "clouisle",
+      "generated_repo": "Clouisle",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/clouisle/Clouisle/blob/2f194b9bf58a2a7f84dfab27403364cbe2cbf8c4/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:25:07+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+      "source_full_name": "clouisle/Clouisle",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "235e46bb4df395515ab3f7965b161164d66aca99",
+      "authored_at": "2026-05-02T17:12:16Z",
+      "committed_at": "2026-05-02T17:12:16Z",
+      "author_name": "YunHai",
+      "author_email": "yunhai@yhnotes.com",
+      "author_login": "yunhai-dev",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add GitHub agent automation workflows (#109)\n\n* feat(workflows): add GitHub agent automation\n\nAdd tag-based release creation and daily Agentic Workflows for repository reports, issue triage, and documentation sync so automation runs from GitHub instead of manual maintenance.\n\n* docs(workflows): address automation review feedback\n\nClarify release tag wording, document the DeepSeek secret requirement, and avoid a custom merge driver for generated workflow lock files.",
+      "parent_shas": [
+        "29d9dc6a4662319f29ffd03816d33dfb81652da5"
+      ],
+      "tree_sha": "5d8686b933b6b695bcf8be6a9cdc1e81282ce8d3",
+      "html_url": "https://github.com/clouisle/Clouisle/commit/235e46bb4df395515ab3f7965b161164d66aca99",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+          "source_full_name": "clouisle/Clouisle",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "235e46bb4df395515ab3f7965b161164d66aca99",
+          "committed_at": "2026-05-02T17:12:16Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 115,
+          "file_deletions": 0,
+          "file_changes": 115,
+          "file_patch": "@@ -0,0 +1,115 @@\n+---\n+on:\n+  issues:\n+    types: [opened, edited, reopened]\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+engine:\n+  id: codex\n+  model: deepseek-v4-pro\n+  env:\n+    OPENAI_BASE_URL: https://api.deepseek.com\n+    OPENAI_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}\n+network:\n+  allowed:\n+    - defaults\n+    - api.deepseek.com\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  add-labels:\n+    allowed:\n+      - bug\n+      - documentation\n+      - duplicate\n+      - enhancement\n+      - help wanted\n+      - invalid\n+      - question\n+      - priority:high\n+      - priority:medium\n+      - priority:low\n+    max: 4\n+    target: triggering\n+  add-comment:\n+    max: 1\n+    target: triggering\n+  assign-to-user:\n+    allowed: [yunhai-dev]\n+    max: 1\n+    target: triggering\n+---\n+# Issue Triage\n+\n+Triage the triggering issue in `${{ github.repository }}`.\n+\n+Use GitHub tools to inspect the issue body, labels, comments, and recent related issues. Do not mutate GitHub directly. Apply all changes through safe-output tools only.\n+\n+## Goals\n+\n+1. Label the issue by type.\n+2. Label the issue by priority.\n+3. Identify likely duplicates.\n+4. Ask clarifying questions when the issue is unclear or missing key details.\n+5. Assign the issue to the right team member when there is enough signal.\n+\n+## Type labels\n+\n+Choose at most one primary type label unless the issue clearly needs more:\n+\n+- `bug`: broken behavior, regression, error, crash, failed workflow, incorrect result.\n+- `enhancement`: new feature request or meaningful improvement to existing behavior.\n+- `documentation`: docs, README, examples, deployment instructions, or copy-only improvements.\n+- `question`: support request, usage question, unclear intent, or missing requirements.\n+- `invalid`: not actionable for this repository, spam, or clearly outside project scope.\n+- `duplicate`: substantially the same as an existing open or closed issue.\n+- `help wanted`: issue is actionable but needs maintainer attention or community help.\n+\n+## Priority labels\n+\n+Choose exactly one priority label when possible:\n+\n+- `priority:high`: blocks release/deployment, causes data loss, breaks core user flows, security-sensitive, or affects many users.\n+- `priority:medium`: important bug or feature with clear impact but not blocking critical paths.\n+- `priority:low`: minor polish, small docs improvement, exploratory request, or low-impact enhancement.\n+\n+If priority is impossible to infer, do not guess; ask a clarifying question instead.\n+\n+## Duplicate detection\n+\n+Search existing issues for matching error messages, feature names, affected components, and user intent.\n+\n+When you find a likely duplicate:\n+\n+- Add the `duplicate` label.\n+- Add a short comment linking the most likely duplicate issue number.\n+- Do not close the issue.\n+\n+## Clarifying questions\n+\n+If the issue lacks enough detail to act, add the `question` label and ask one concise comment with the missing information. Prefer concrete questions, for example:\n+\n+- Steps to reproduce.\n+- Expected vs actual behavior.\n+- Screenshots, logs, or error messages.\n+- Environment details.\n+- Which route, API, workflow, or deployment mode is affected.\n+\n+## Assignment\n+\n+Assign only when the owner is obvious from repository context or issue content. The current allowed assignee is:\n+\n+- `yunhai-dev`: default maintainer for this repository.\n+\n+If the right owner is unclear, do not assign.\n+\n+## Safe-output requirements\n+\n+- Use `add_labels` to apply labels.\n+- Use `add_comment` to ask clarifying questions or note likely duplicates.\n+- Use `assign_to_user` to assign the issue when appropriate.\n+- If no GitHub action is needed, call `noop` with a short explanation.\n+- Never use direct GitHub mutation APIs or `gh issue edit`.",
+          "snapshot_ref": "235e46bb4df395515ab3f7965b161164d66aca99",
+          "snapshot_blob_sha": "414538ea39a63ed768b8f5e081513319767cf11e",
+          "snapshot_file": "snapshots/Clouisle__clouisle__235e46bb4df395515ab3f7965b161164d66aca99__issue-triage.md",
+          "snapshot_bytes": 3684,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"clouisle/Clouisle\",\"generated_owner\":\"clouisle\",\"generated_repo\":\"Clouisle\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/clouisle/Clouisle/blob/2f194b9bf58a2a7f84dfab27403364cbe2cbf8c4/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+      "source_full_name": "clouisle/Clouisle",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "ea1fbadc8ebae8e00d202b441474247913ef291f",
+      "authored_at": "2026-05-02T17:43:38Z",
+      "committed_at": "2026-05-02T17:43:38Z",
+      "author_name": "YunHai",
+      "author_email": "yunhai@yhnotes.com",
+      "author_login": "yunhai-dev",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): use DeepSeek Copilot provider (#113)\n\nSwitch Agentic Workflows from the Codex OpenAI responses adapter to Copilot's Anthropic-compatible provider configuration for DeepSeek.",
+      "parent_shas": [
+        "235e46bb4df395515ab3f7965b161164d66aca99"
+      ],
+      "tree_sha": "5bb1b16da187071b645c071123bec3b6e1d58f0f",
+      "html_url": "https://github.com/clouisle/Clouisle/commit/ea1fbadc8ebae8e00d202b441474247913ef291f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+          "source_full_name": "clouisle/Clouisle",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "ea1fbadc8ebae8e00d202b441474247913ef291f",
+          "committed_at": "2026-05-02T17:43:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 3,
+          "file_changes": 11,
+          "file_patch": "@@ -7,11 +7,16 @@ permissions:\n   issues: read\n   pull-requests: read\n engine:\n-  id: codex\n+  id: copilot\n   model: deepseek-v4-pro\n   env:\n-    OPENAI_BASE_URL: https://api.deepseek.com\n-    OPENAI_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}\n+    COPILOT_PROVIDER_TYPE: anthropic\n+    COPILOT_PROVIDER_BASE_URL: https://api.deepseek.com/anthropic\n+    COPILOT_MODEL: deepseek-v4-pro\n+secrets:\n+  COPILOT_PROVIDER_API_KEY:\n+    value: ${{ secrets.DEEPSEEK_API_KEY }}\n+    description: DeepSeek API key for the Copilot provider\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "ea1fbadc8ebae8e00d202b441474247913ef291f",
+          "snapshot_blob_sha": "b0abf875020adec9ca43e78a589b8f9c5527e271",
+          "snapshot_file": "snapshots/Clouisle__clouisle__ea1fbadc8ebae8e00d202b441474247913ef291f__issue-triage.md",
+          "snapshot_bytes": 3865,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"clouisle/Clouisle\",\"generated_owner\":\"clouisle\",\"generated_repo\":\"Clouisle\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/clouisle/Clouisle/blob/2f194b9bf58a2a7f84dfab27403364cbe2cbf8c4/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+      "source_full_name": "clouisle/Clouisle",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "39460fed77fc56890a384c73b794119b1bd84c34",
+      "authored_at": "2026-05-02T18:02:46Z",
+      "committed_at": "2026-05-02T18:02:46Z",
+      "author_name": "YunHai",
+      "author_email": "yunhai@yhnotes.com",
+      "author_login": "yunhai-dev",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(workflows): route Claude engine through DeepSeek (#114)\n\nUse the Claude engine with DeepSeek's Anthropic-compatible endpoint so Agentic Workflows no longer require the Copilot token while keeping the DeepSeek model and secret.",
+      "parent_shas": [
+        "ea1fbadc8ebae8e00d202b441474247913ef291f"
+      ],
+      "tree_sha": "c82985000143cc5a4f85c346fb9438fde9379de4",
+      "html_url": "https://github.com/clouisle/Clouisle/commit/39460fed77fc56890a384c73b794119b1bd84c34",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "clouisle/Clouisle:.github/workflows/issue-triage.md",
+          "source_full_name": "clouisle/Clouisle",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "39460fed77fc56890a384c73b794119b1bd84c34",
+          "committed_at": "2026-05-02T18:02:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 6,
+          "file_changes": 11,
+          "file_patch": "@@ -7,16 +7,15 @@ permissions:\n   issues: read\n   pull-requests: read\n engine:\n-  id: copilot\n+  id: claude\n   model: deepseek-v4-pro\n   env:\n-    COPILOT_PROVIDER_TYPE: anthropic\n-    COPILOT_PROVIDER_BASE_URL: https://api.deepseek.com/anthropic\n-    COPILOT_MODEL: deepseek-v4-pro\n+    ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic\n+  api-target: api.deepseek.com\n secrets:\n-  COPILOT_PROVIDER_API_KEY:\n+  ANTHROPIC_API_KEY:\n     value: ${{ secrets.DEEPSEEK_API_KEY }}\n-    description: DeepSeek API key for the Copilot provider\n+    description: DeepSeek API key for the Anthropic-compatible Claude engine endpoint\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "39460fed77fc56890a384c73b794119b1bd84c34",
+          "snapshot_blob_sha": "cfec190cd774be1418db4a392e1011f2c8fa155a",
+          "snapshot_file": "snapshots/Clouisle__clouisle__39460fed77fc56890a384c73b794119b1bd84c34__issue-triage.md",
+          "snapshot_bytes": 3836,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"clouisle/Clouisle\",\"generated_owner\":\"clouisle\",\"generated_repo\":\"Clouisle\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/clouisle/Clouisle/blob/2f194b9bf58a2a7f84dfab27403364cbe2cbf8c4/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

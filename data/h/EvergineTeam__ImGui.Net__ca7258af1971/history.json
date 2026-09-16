@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "EvergineTeam/ImGui.Net:.github/workflows/binding-updater.md",
+    "source_full_name": "EvergineTeam/ImGui.Net",
+    "source_owner": "EvergineTeam",
+    "source_repo": "ImGui.Net",
+    "md_path": ".github/workflows/binding-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/EvergineTeam/ImGui.Net/blob/HEAD/.github/workflows/binding-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "EvergineTeam/ImGui.Net",
+      "generated_owner": "EvergineTeam",
+      "generated_repo": "ImGui.Net",
+      "generated_workflow_path": ".github/workflows/binding-updater.lock.yml",
+      "generated_workflow_file": "binding-updater.lock.yml",
+      "generated_html_url": "https://github.com/EvergineTeam/ImGui.Net/blob/18fc8a5815723a04b065dfc9b9fabb573f6a4ee1/.github/workflows/binding-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "excluded_bot": 1
+    },
+    "collected_at_utc": "2026-08-04T11:26:57+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "EvergineTeam/ImGui.Net:.github/workflows/binding-updater.md",
+      "source_full_name": "EvergineTeam/ImGui.Net",
+      "md_path": ".github/workflows/binding-updater.md",
+      "commit_sha": "99ff2006dff9bfbbb6f296b5b44715f5188df1f5",
+      "authored_at": "2026-08-03T16:28:20Z",
+      "committed_at": "2026-08-03T16:28:20Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: run the ci-doctor and binding-updater agents (#19)\n\n* feat: run the ci-doctor and binding-updater agents\n\nBrings ImGui.Net into the same regime as the other five: both agents, the nine agent:*\nlabels, the weekly toolbox updater, and the API gate.\n\nThe gate carries native-coherence and the submodule checkout it needs, so a pull request\nhere is measured on all three axes rather than only the managed surface: which public\nsymbols moved, whether every P/Invoke resolves in the seven shipped libraries, and\nwhether each library is built for the architecture its RID promises. All three found\nreal faults in this repository today.\n\nauto-merge stays off. Everything above was written today and the pipeline that produces\nthese pull requests has completed once.\n\n* chore: re-run the gate against toolbox v1.16.1",
+      "parent_shas": [
+        "71ee9d65a8f1fa7b0c158204978dae4ecf83cca8"
+      ],
+      "tree_sha": "71f4c6e9f46450d8bca9f0d060447ceccb991b5e",
+      "html_url": "https://github.com/EvergineTeam/ImGui.Net/commit/99ff2006dff9bfbbb6f296b5b44715f5188df1f5",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/ImGui.Net:.github/workflows/binding-updater.md",
+          "source_full_name": "EvergineTeam/ImGui.Net",
+          "md_path": ".github/workflows/binding-updater.md",
+          "commit_sha": "99ff2006dff9bfbbb6f296b5b44715f5188df1f5",
+          "committed_at": "2026-08-03T16:28:20Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 132,
+          "file_deletions": 0,
+          "file_changes": 132,
+          "file_patch": "@@ -0,0 +1,132 @@\n+---\n+emoji: 🔄\n+name: Binding Updater\n+description: Keeps a binding current with its upstream specification, fixing the generator when a new construct breaks it.\n+labels: [bindings, maintenance, scheduled]\n+on:\n+  schedule:\n+    - cron: \"0 2 1 * *\"\n+  workflow_dispatch:\n+  issues:\n+    types: [labeled]\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+model: claude-sonnet-5\n+max-turns: 60\n+timeout-minutes: 40\n+max-ai-credits: 600\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+env:\n+  # The dotnet CLI phones home to dc.services.visualstudio.com, which the firewall\n+  # blocks and then reports as a failed request the agent has to reason about.\n+  # Opting out is cleaner than widening the allow-list for telemetry.\n+  DOTNET_CLI_TELEMETRY_OPTOUT: \"1\"\n+  DOTNET_NOLOGO: \"1\"\n+steps:\n+  # The agent has to run the generator and build the binding, so the SDK must be\n+  # present before it starts. Without this the agent reaches the build, finds no\n+  # `dotnet`, and reports a broken generator that is not broken.\n+  # Every binding in the fleet currently targets net10.0; a repository on a\n+  # different framework overrides this by editing its installed copy, which\n+  # `gh aw update` preserves through its three-way merge.\n+  - name: Set up .NET\n+    uses: actions/setup-dotnet@v5\n+    with:\n+      dotnet-version: \"10.x\"\n+  # Fetching the specification and deciding whether it moved is a byte comparison,\n+  # not a judgement call. The first pilot run spent 29 bash turns doing it by hand\n+  # and the audit flagged 93% of its turns as data-gathering. Doing it here costs\n+  # nothing and leaves the agent to start where the thinking actually begins.\n+  - name: Fetch upstream sources\n+    id: upstream\n+    uses: EvergineTeam/Evergine.Bindings/.github/actions/binding-fetch-upstream@v1\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+  bash: [\":*\"]\n+  edit:\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"chore(binding): \"\n+    labels: [agent:binding-update]\n+    allowed-labels: [agent:binding-update, needs-human-review]\n+    draft: false\n+    if-no-changes: \"ignore\"\n+  create-issue:\n+    title-prefix: \"Binding update: \"\n+    labels: [agent:needs-human]\n+    allowed-labels: [agent:needs-human, agent:upstream-break]\n+    deduplicate-by-title: true\n+    max: 1\n+source: EvergineTeam/Evergine.Bindings@d59b6b98d80145932d36f6a0043f0828ca6c3266\n+---\n+\n+# Binding Updater\n+\n+Keep this binding in step with the specification it is generated from.\n+\n+You run in one of two situations, and they differ only in urgency:\n+\n+- **On schedule or on demand** — routine. Most months upstream has not moved and you will finish in seconds having spent nothing.\n+- **Because an issue was labelled `agent:needs-regen`** — the CI doctor found something it cannot fix and handed it to you. Read that issue first: it contains the failing construct and the compiler error, and it is the whole reason you were woken.\n+\n+If you were triggered by a label that is not `agent:needs-regen`, call `noop` immediately and stop.\n+\n+## Step 1 — read the manifest\n+\n+`binding.yml` at the repository root is your only source of truth for where things live. It tells you the upstream sources and how to fetch them, which paths are generated output, where the generator project is, and what the package publishes.\n+\n+Do not infer paths from the directory layout. Do not hardcode a URL you saw in a workflow file. If `binding.yml` is missing or does not validate, stop and open an issue saying so — everything below depends on it.\n+\n+Manifests carry a `NOTE` comment where the repository has a hazard: a pinned ref that must not move, native binaries that must be rebuilt alongside a header, an upstream we maintain ourselves. **Read those notes and obey them.** They exist because someone already thought about this repository and reached a conclusion you are not being asked to revisit.\n+\n+## Step 2 — read the upstream report\n+\n+**The fetching is already done.** A deterministic step ran before you, pulled every source declared in the manifest using the right adapter, wrote the new content into the working tree, and left a report at `/tmp/gh-aw/agent/upstream-report.md`.\n+\n+Read that file. It is one screen long and it tells you which sources moved.\n+\n+**If it says nothing changed: call `noop` and stop immediately.** Do not re-download anything to check. Do not open the registry to look for yourself. The comparison was a byte-for-byte hash and it is not improved by a second opinion. This is the expected outcome most months and it is what keeps this workflow nearly free to run.\n+\n+If the report is missing, the step failed — say so and stop, rather than fetching by hand.\n+\n+**For `git-submodule` repositories the report only tells you the pointer is behind; nothing has been checked out.** That is deliberate. Bumping a submodule in KTX.NET means rebuilding native binaries, and in ImGui.Net it means moving four interdependent modules as a compatible set. Report the gap and stop unless the manifest explicitly says otherwise.\n+\n+## Step 3 — regenerate and build\n+\n+The new sources are already on disk. Run the generator, build the binding.\n+\n+**If it builds**, open a pull request. Describe the API delta in terms a reader can act on — extensions, enums, structures and commands added, removed or changed, and the upstream version if the manifest says how to determine it. Not a diff dump: the point is to let a reviewer see whether anything alarming happened.\n+\n+**If it fails to build**, the generator does not understand something new in the specification. This is the interesting case and the reason this workflow uses a strong model.\n+\n+Diagnose it. Fix the generator so it handles the new construct properly — not so it skips it, not so it special-cases the one symbol that broke, unless narrowness is genuinely correct. Then regenerate and build again.\n+\n+When you have touched anything under the generator project, label the pull request **`needs-human-review`**. Generator changes affect every symbol produced from that point on, and a subtle mistake surfaces as a runtime crash in someone's renderer months later, not as a red build. That label is not a formality.\n+\n+## Step 4 — when you cannot finish\n+\n+Open an issue with `agent:needs-human` and stop, if:\n+\n+- The upstream change is not absorbable by regenerating — label it `agent:upstream-break` as well.\n+- The fix belongs upstream rather than here. Several manifests point at wrappers we maintain ourselves (`CesiumC`, `JoltPhysicsC`); when the C layer is missing something, the right change is a pull request there, not a workaround in the generator. Say so instead of papering over it.\n+- The manifest's notes forbid what would otherwise be the fix — a frozen ref, a submodule bump requiring a native rebuild, several interdependent submodules that must move as a compatible set.\n+- You are not confident. A wrong regeneration compiles cleanly and corrupts memory at runtime. Stopping is cheap; that is not.\n+\n+State clearly what you tried and where you stopped. Leaving the issue's `agent:needs-regen` label in place is correct — the work is not done.\n+\n+## Rules\n+\n+- **Never touch the default branch.** Everything goes through a pull request.\n+- **Never bump a pinned ref on your own initiative.** Where the manifest pins a tag it is because header and shipped binary must match; moving it without rebuilding the native side produces a managed layer that does not match the binary it loads. You may *report* that a newer upstream release exists.\n+- **Do not re-label the issue that woke you.** That is how loops start.\n+- **Generated output is yours; hand-written code is not.** The manifest's `generator.output` lists exactly which paths you may rewrite. Files outside those paths — even inside the same project directory — are hand-written and must be left alone.\n+- **One pull request per concern.** A specification update and a generator fix that enables it belong together. A specification update and an unrelated refactor do not.",
+          "snapshot_ref": "99ff2006dff9bfbbb6f296b5b44715f5188df1f5",
+          "snapshot_blob_sha": "15b663e389b1968ae0d34b28278169ca53d6deeb",
+          "snapshot_file": "snapshots/ImGui.Net__EvergineTeam__99ff2006dff9bfbbb6f296b5b44715f5188df1f5__binding-updater.md",
+          "snapshot_bytes": 7999,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/ImGui.Net\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"ImGui.Net\",\"generated_workflow_path\":\".github/workflows/binding-updater.lock.yml\",\"generated_workflow_file\":\"binding-updater.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/ImGui.Net/blob/18fc8a5815723a04b065dfc9b9fabb573f6a4ee1/.github/workflows/binding-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/ImGui.Net:.github/workflows/binding-updater.md",
+      "source_full_name": "EvergineTeam/ImGui.Net",
+      "md_path": ".github/workflows/binding-updater.md",
+      "commit_sha": "3b7e983636b023108b1f45cc20b58cba1af81aaa",
+      "authored_at": "2026-08-03T16:41:59Z",
+      "committed_at": "2026-08-03T16:41:59Z",
+      "author_name": "evergine-bindings-automation[bot]",
+      "author_email": "312213894+evergine-bindings-automation[bot]@users.noreply.github.com",
+      "author_login": "evergine-bindings-automation[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to the current toolbox release (#20)\n\nRepins the installed agentic workflows from\nd59b6b98d80145932d36f6a0043f0828ca6c3266 to\nd70d06b5525a011b293f81d5de14fd329eb36832 and recompiles.\n\nCo-authored-by: jcant0n <1783366+jcant0n@users.noreply.github.com>",
+      "parent_shas": [
+        "99ff2006dff9bfbbb6f296b5b44715f5188df1f5"
+      ],
+      "tree_sha": "c2d1d8addc0724043d0b3edcd899108c38a90dda",
+      "html_url": "https://github.com/EvergineTeam/ImGui.Net/commit/3b7e983636b023108b1f45cc20b58cba1af81aaa",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:evergine-bindings-automation[bot];312213894+evergine-bindings-automation[bot]@users.noreply.github.com;evergine-bindings-automation[bot]",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/ImGui.Net:.github/workflows/binding-updater.md",
+          "source_full_name": "EvergineTeam/ImGui.Net",
+          "md_path": ".github/workflows/binding-updater.md",
+          "commit_sha": "3b7e983636b023108b1f45cc20b58cba1af81aaa",
+          "committed_at": "2026-08-03T16:41:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -66,7 +66,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-human, agent:upstream-break]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@d59b6b98d80145932d36f6a0043f0828ca6c3266\n+source: EvergineTeam/Evergine.Bindings@d70d06b5525a011b293f81d5de14fd329eb36832\n ---\n \n # Binding Updater",
+          "snapshot_ref": "3b7e983636b023108b1f45cc20b58cba1af81aaa",
+          "snapshot_blob_sha": "336d167c43679e18430ecad89e32aaf53fbe36db",
+          "snapshot_file": "snapshots/ImGui.Net__EvergineTeam__3b7e983636b023108b1f45cc20b58cba1af81aaa__binding-updater.md",
+          "snapshot_bytes": 7999,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/ImGui.Net\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"ImGui.Net\",\"generated_workflow_path\":\".github/workflows/binding-updater.lock.yml\",\"generated_workflow_file\":\"binding-updater.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/ImGui.Net/blob/18fc8a5815723a04b065dfc9b9fabb573f6a4ee1/.github/workflows/binding-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

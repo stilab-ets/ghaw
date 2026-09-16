@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github-dev-club/GitHub-copilot-dev-days-canada:.github/workflows/validate-proposal.md",
+    "source_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+    "source_owner": "github-dev-club",
+    "source_repo": "GitHub-copilot-dev-days-canada",
+    "md_path": ".github/workflows/validate-proposal.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/blob/HEAD/.github/workflows/validate-proposal.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+      "generated_owner": "github-dev-club",
+      "generated_repo": "GitHub-copilot-dev-days-canada",
+      "generated_workflow_path": ".github/workflows/validate-proposal.lock.yml",
+      "generated_workflow_file": "validate-proposal.lock.yml",
+      "generated_html_url": "https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/blob/6aa1d1a91ee51f8987084300444bea5c5053489f/.github/workflows/validate-proposal.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:27:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github-dev-club/GitHub-copilot-dev-days-canada:.github/workflows/validate-proposal.md",
+      "source_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+      "md_path": ".github/workflows/validate-proposal.md",
+      "commit_sha": "d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+      "authored_at": "2026-02-15T17:23:17Z",
+      "committed_at": "2026-02-15T17:23:17Z",
+      "author_name": "Ve Sharma",
+      "author_email": "62218708+VeVarunSharma@users.noreply.github.com",
+      "author_login": "VeVarunSharma",
+      "author_account_type": "User",
+      "committer_name": "Ve Sharma",
+      "committer_email": "62218708+VeVarunSharma@users.noreply.github.com",
+      "committer_login": "VeVarunSharma",
+      "committer_account_type": "User",
+      "message": "feat: create talk proposal workflows",
+      "parent_shas": [
+        "dea9a2044664cb2b84866159c77b69b1b1966afb"
+      ],
+      "tree_sha": "a0e75a1a7986b35f2da47496dea9421ac754e1bc",
+      "html_url": "https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/commit/d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github-dev-club/GitHub-copilot-dev-days-canada:.github/workflows/validate-proposal.md",
+          "source_full_name": "github-dev-club/GitHub-copilot-dev-days-canada",
+          "md_path": ".github/workflows/validate-proposal.md",
+          "commit_sha": "d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+          "committed_at": "2026-02-15T17:23:17Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 85,
+          "file_deletions": 0,
+          "file_changes": 85,
+          "file_patch": "@@ -0,0 +1,85 @@\n+---\n+description: Validate talk and demo proposals for completeness and prompt submitters to fill in missing fields.\n+on:\n+  issues:\n+    types: [opened, edited]\n+roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+  update-issue:\n+    max: 1\n+  noop:\n+---\n+\n+# Validate Talk & Demo Proposal Completeness\n+\n+You are an AI agent that checks whether a new or edited talk/demo proposal has all required fields filled in.\n+\n+## Your Task\n+\n+When an issue with the `Talk` or `Demo` label is opened or edited, inspect the issue body for completeness.\n+\n+### Required Fields for Talk Proposals (label: `Talk`)\n+\n+| Field        | How to detect it's filled in                      |\n+| ------------ | ------------------------------------------------- |\n+| City Chapter | `**City Chapter:**` followed by a non-empty value |\n+| Draft Title  | `**Draft Title:**` followed by a non-empty value  |\n+| Length       | `**Length:**` followed by a non-empty value       |\n+| Speaker Name | `**Name:**` followed by a non-empty value         |\n+| Mini-bio     | `**Mini-bio:**` followed by a non-empty value     |\n+\n+### Required Fields for Demo Proposals (label: `Demo`)\n+\n+| Field        | How to detect it's filled in                      |\n+| ------------ | ------------------------------------------------- |\n+| City Chapter | `**City Chapter:**` followed by a non-empty value |\n+| Draft Title  | `**Draft Title:**` followed by a non-empty value  |\n+| Length       | `**Length:**` followed by a non-empty value       |\n+\n+Speaker bio fields are optional for demos.\n+\n+### If Fields Are Missing\n+\n+1. Add the label `needs-info` to the issue via `update-issue`.\n+2. Post a single comment listing the missing fields:\n+\n+```\n+⚠️ **Some fields in your proposal appear incomplete.** Please edit your issue to fill them in:\n+\n+- [ ] **Field Name 1**\n+- [ ] **Field Name 2**\n+\n+Once updated, this check will run again automatically. Thanks!\n+```\n+\n+Only list the fields that are actually missing — do not include fields that are already filled in.\n+\n+### If All Fields Are Present\n+\n+1. If the issue currently has the `needs-info` label, remove it via `update-issue`.\n+2. Call `noop` with the message: \"All required fields are present — proposal is complete.\"\n+\n+## Guidelines\n+\n+- Only process issues that have either the `Talk` or `Demo` label.\n+- If the issue does not have a `Talk` or `Demo` label, call the `noop` safe output with the message: \"Issue is not a talk or demo proposal — skipping.\"\n+- A field is considered \"filled in\" if there is non-placeholder text after the bold field name. Template placeholder text like \"(5 min lightning talk, or 10-20 min full presentation)\" does NOT count as filled in.\n+- The text \"Please replace this sentence with a short summary\" is placeholder text and should not count as a filled summary.\n+- Be lenient: if the user provided any meaningful content for a field, consider it filled.\n+- Do **not** comment if there are no missing fields and the issue does not have `needs-info`.\n+- When an issue is edited and all fields become complete, remove the `needs-info` label.\n+\n+## Safe Outputs\n+\n+- Use `update-issue` to add or remove the `needs-info` label.\n+- Use `add-comment` to post the missing fields checklist.\n+- Use `noop` if the issue is complete or not a proposal.",
+          "snapshot_ref": "d3dfc8350b4bbf693e272869b5ee70b65d2f6713",
+          "snapshot_blob_sha": "c93bffa0517da92a5ca577bad17fc93425c5d803",
+          "snapshot_file": "snapshots/GitHub-copilot-dev-days-canada__github-dev-club__d3dfc8350b4bbf693e272869b5ee70b65d2f6713__validate-proposal.md",
+          "snapshot_bytes": 3340,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github-dev-club/GitHub-copilot-dev-days-canada\",\"generated_owner\":\"github-dev-club\",\"generated_repo\":\"GitHub-copilot-dev-days-canada\",\"generated_workflow_path\":\".github/workflows/validate-proposal.lock.yml\",\"generated_workflow_file\":\"validate-proposal.lock.yml\",\"generated_html_url\":\"https://github.com/github-dev-club/GitHub-copilot-dev-days-canada/blob/6aa1d1a91ee51f8987084300444bea5c5053489f/.github/workflows/validate-proposal.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

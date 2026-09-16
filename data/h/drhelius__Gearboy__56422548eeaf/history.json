@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+    "source_full_name": "drhelius/Gearboy",
+    "source_owner": "drhelius",
+    "source_repo": "Gearboy",
+    "md_path": ".github/workflows/controller-database-watcher.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/drhelius/Gearboy/blob/HEAD/.github/workflows/controller-database-watcher.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "drhelius/Gearboy",
+      "generated_owner": "drhelius",
+      "generated_repo": "Gearboy",
+      "generated_workflow_path": ".github/workflows/controller-database-watcher.lock.yml",
+      "generated_workflow_file": "controller-database-watcher.lock.yml",
+      "generated_html_url": "https://github.com/drhelius/Gearboy/blob/960bbd766dbb433a954aacabca6d3b8c6bb733cf/.github/workflows/controller-database-watcher.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:25:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+      "source_full_name": "drhelius/Gearboy",
+      "md_path": ".github/workflows/controller-database-watcher.md",
+      "commit_sha": "a57669bf820c5d2718054aad98ecf19a5c46294f",
+      "authored_at": "2026-06-20T23:31:18Z",
+      "committed_at": "2026-06-20T23:31:18Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "0fb151da73ac7861649139e2cf4777c5684007ce"
+      ],
+      "tree_sha": "b80654e371172db5fb35ed73db971e3abf9efcf3",
+      "html_url": "https://github.com/drhelius/Gearboy/commit/a57669bf820c5d2718054aad98ecf19a5c46294f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+          "source_full_name": "drhelius/Gearboy",
+          "md_path": ".github/workflows/controller-database-watcher.md",
+          "commit_sha": "a57669bf820c5d2718054aad98ecf19a5c46294f",
+          "committed_at": "2026-06-20T23:31:18Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 89,
+          "file_deletions": 0,
+          "file_changes": 89,
+          "file_patch": "@@ -0,0 +1,89 @@\n+---\n+name: Controller Database Watcher\n+description: Check upstream SDL controller mappings and open a PR when gamecontrollerdb.txt changes.\n+on:\n+  schedule: every 2w\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [repos, pull_requests]\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  create-pull-request:\n+    title-prefix: \"Update gamecontrollerdb: \"\n+    branch-prefix: \"update-gamecontrollerdb/\"\n+    labels: [agentic workflows]\n+    draft: false\n+    max: 1\n+    if-no-changes: ignore\n+    fallback-as-issue: false\n+    auto-close-issue: false\n+    allowed-files:\n+      - platforms/shared/gamecontrollerdb.txt\n+---\n+\n+# Controller Database Watcher\n+\n+## Task\n+\n+Check whether Gearboy's `platforms/shared/gamecontrollerdb.txt` differs from the latest upstream SDL controller database and open a pull request when an update is available.\n+\n+Use this upstream source exactly:\n+\n+```text\n+https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt\n+```\n+\n+## Procedure\n+\n+### Phase 1: Preconditions\n+\n+1. Work in the repository root.\n+2. Confirm `platforms/shared/gamecontrollerdb.txt` exists exactly at that path.\n+3. Check for existing open pull requests that update `platforms/shared/gamecontrollerdb.txt` or whose title starts with `Update gamecontrollerdb:`. If one already exists, call `noop` with a short explanation.\n+4. Do not modify any other file.\n+\n+### Phase 2: Fetch Upstream\n+\n+1. Download the upstream `gamecontrollerdb.txt` from `mdqinc/SDL_GameControllerDB` `master`.\n+2. Validate that the downloaded file is non-empty and looks like SDL controller mappings, with many comma-separated mapping lines.\n+3. Stop with `noop` if the download fails or the file does not look valid. Do not create a PR with an empty or suspicious file.\n+\n+### Phase 3: Compare And Update\n+\n+1. Compare the downloaded file with `platforms/shared/gamecontrollerdb.txt`.\n+2. If there is no difference, call `noop` with a short explanation.\n+3. If there is a difference, replace only `platforms/shared/gamecontrollerdb.txt` with the downloaded content.\n+4. Validate that the diff touches only `platforms/shared/gamecontrollerdb.txt`.\n+\n+### Phase 4: Pull Request\n+\n+Use the configured `create-pull-request` safe output. Do not commit or push manually.\n+\n+Use a concise PR title after the configured prefix, for example `latest upstream mappings`.\n+\n+Write the PR body with:\n+\n+### Summary\n+\n+- Updated `platforms/shared/gamecontrollerdb.txt` from `mdqinc/SDL_GameControllerDB` `master`.\n+\n+### Validation\n+\n+- Confirmed the downloaded file was non-empty and mapping-like.\n+- Confirmed only `platforms/shared/gamecontrollerdb.txt` changed.\n+\n+## Style\n+\n+Keep the PR body factual, neutral, and explicitly automated. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs.\n\\ No newline at end of file",
+          "snapshot_ref": "a57669bf820c5d2718054aad98ecf19a5c46294f",
+          "snapshot_blob_sha": "e01b21930ab205e6f1cbe3a7d1a9c103e57f24af",
+          "snapshot_file": "snapshots/Gearboy__drhelius__a57669bf820c5d2718054aad98ecf19a5c46294f__controller-database-watcher.md",
+          "snapshot_bytes": 2941,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearboy\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearboy\",\"generated_workflow_path\":\".github/workflows/controller-database-watcher.lock.yml\",\"generated_workflow_file\":\"controller-database-watcher.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearboy/blob/960bbd766dbb433a954aacabca6d3b8c6bb733cf/.github/workflows/controller-database-watcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+      "source_full_name": "drhelius/Gearboy",
+      "md_path": ".github/workflows/controller-database-watcher.md",
+      "commit_sha": "eaf4353b589afe67de8d223af15c29d9841a124e",
+      "authored_at": "2026-06-22T21:50:43Z",
+      "committed_at": "2026-06-22T21:50:43Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "3567503a9d63d603de511616c3749408b6dff544"
+      ],
+      "tree_sha": "5ecda06479702a1d912d5c5875c1378e21179b87",
+      "html_url": "https://github.com/drhelius/Gearboy/commit/eaf4353b589afe67de8d223af15c29d9841a124e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+          "source_full_name": "drhelius/Gearboy",
+          "md_path": ".github/workflows/controller-database-watcher.md",
+          "commit_sha": "eaf4353b589afe67de8d223af15c29d9841a124e",
+          "committed_at": "2026-06-22T21:50:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -18,6 +18,8 @@ tools:\n     mode: gh-proxy\n     toolsets: [repos, pull_requests]\n safe-outputs:\n+  messages:\n+    footer: \"Generated by [{workflow_name}]({run_url})\"\n   mentions: false\n   allowed-github-references: []\n   create-pull-request:",
+          "snapshot_ref": "eaf4353b589afe67de8d223af15c29d9841a124e",
+          "snapshot_blob_sha": "2edca5c733860729495df93fc623fb72711adf10",
+          "snapshot_file": "snapshots/Gearboy__drhelius__eaf4353b589afe67de8d223af15c29d9841a124e__controller-database-watcher.md",
+          "snapshot_bytes": 3009,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearboy\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearboy\",\"generated_workflow_path\":\".github/workflows/controller-database-watcher.lock.yml\",\"generated_workflow_file\":\"controller-database-watcher.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearboy/blob/960bbd766dbb433a954aacabca6d3b8c6bb733cf/.github/workflows/controller-database-watcher.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+      "source_full_name": "drhelius/Gearboy",
+      "md_path": ".github/workflows/controller-database-watcher.md",
+      "commit_sha": "d3042b5fc1ae6d4528cdd386470bdb833250c007",
+      "authored_at": "2026-06-29T15:42:07Z",
+      "committed_at": "2026-06-29T15:42:44Z",
+      "author_name": "Ignacio Sanchez Gines",
+      "author_email": "863613+drhelius@users.noreply.github.com",
+      "author_login": "drhelius",
+      "author_account_type": "User",
+      "committer_name": "Ignacio Sanchez Gines",
+      "committer_email": "863613+drhelius@users.noreply.github.com",
+      "committer_login": "drhelius",
+      "committer_account_type": "User",
+      "message": "Agentic Workflows",
+      "parent_shas": [
+        "c6a1712183c766eebd8c2a9d1d9a68d6d866c64e"
+      ],
+      "tree_sha": "951558854bd9154724a656ff3e3c0a74c9f99e31",
+      "html_url": "https://github.com/drhelius/Gearboy/commit/d3042b5fc1ae6d4528cdd386470bdb833250c007",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drhelius/Gearboy:.github/workflows/controller-database-watcher.md",
+          "source_full_name": "drhelius/Gearboy",
+          "md_path": ".github/workflows/controller-database-watcher.md",
+          "commit_sha": "d3042b5fc1ae6d4528cdd386470bdb833250c007",
+          "committed_at": "2026-06-29T15:42:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -88,4 +88,4 @@ Write the PR body with:\n \n ## Style\n \n-Keep the PR body factual, neutral, and explicitly automated. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs.\n\\ No newline at end of file\n+Keep the PR body factual and neutral. Do not use first person, apologies, thanks, conversational warmth, or human-like sign-offs. Do not add your own automated or \"generated by\" disclaimer; the workflow footer already attributes the run.\n\\ No newline at end of file",
+          "snapshot_ref": "d3042b5fc1ae6d4528cdd386470bdb833250c007",
+          "snapshot_blob_sha": "98a8a725ddd24c1070b1021bbe559f181c7981d0",
+          "snapshot_file": "snapshots/Gearboy__drhelius__d3042b5fc1ae6d4528cdd386470bdb833250c007__controller-database-watcher.md",
+          "snapshot_bytes": 3094,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drhelius/Gearboy\",\"generated_owner\":\"drhelius\",\"generated_repo\":\"Gearboy\",\"generated_workflow_path\":\".github/workflows/controller-database-watcher.lock.yml\",\"generated_workflow_file\":\"controller-database-watcher.lock.yml\",\"generated_html_url\":\"https://github.com/drhelius/Gearboy/blob/960bbd766dbb433a954aacabca6d3b8c6bb733cf/.github/workflows/controller-database-watcher.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

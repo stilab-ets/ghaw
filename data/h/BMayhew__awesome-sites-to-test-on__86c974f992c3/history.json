@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "BMayhew/awesome-sites-to-test-on:.github/workflows/issue-site-submission.md",
+    "source_full_name": "BMayhew/awesome-sites-to-test-on",
+    "source_owner": "BMayhew",
+    "source_repo": "awesome-sites-to-test-on",
+    "md_path": ".github/workflows/issue-site-submission.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/BMayhew/awesome-sites-to-test-on/blob/HEAD/.github/workflows/issue-site-submission.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "BMayhew/awesome-sites-to-test-on",
+      "generated_owner": "BMayhew",
+      "generated_repo": "awesome-sites-to-test-on",
+      "generated_workflow_path": ".github/workflows/issue-site-submission.lock.yml",
+      "generated_workflow_file": "issue-site-submission.lock.yml",
+      "generated_html_url": "https://github.com/BMayhew/awesome-sites-to-test-on/blob/9657f8a1cdb9b626f3edced8444db748b958a7e6/.github/workflows/issue-site-submission.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:52+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "BMayhew/awesome-sites-to-test-on:.github/workflows/issue-site-submission.md",
+      "source_full_name": "BMayhew/awesome-sites-to-test-on",
+      "md_path": ".github/workflows/issue-site-submission.md",
+      "commit_sha": "7c6bb1c2deef5651455685a94b248aee1fac7e91",
+      "authored_at": "2026-03-02T06:17:29Z",
+      "committed_at": "2026-03-02T06:17:29Z",
+      "author_name": "Butch Mayhew",
+      "author_email": "utchbe@gmail.com",
+      "author_login": "BMayhew",
+      "author_account_type": "User",
+      "committer_name": "Butch Mayhew",
+      "committer_email": "utchbe@gmail.com",
+      "committer_login": "BMayhew",
+      "committer_account_type": "User",
+      "message": "feat: add agentic workflow for issue site submissions",
+      "parent_shas": [
+        "b4733aa3b5dcc6b1b831972794b3be3977afed82"
+      ],
+      "tree_sha": "29fa9335326b579d121279215b1858902baf271e",
+      "html_url": "https://github.com/BMayhew/awesome-sites-to-test-on/commit/7c6bb1c2deef5651455685a94b248aee1fac7e91",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "BMayhew/awesome-sites-to-test-on:.github/workflows/issue-site-submission.md",
+          "source_full_name": "BMayhew/awesome-sites-to-test-on",
+          "md_path": ".github/workflows/issue-site-submission.md",
+          "commit_sha": "7c6bb1c2deef5651455685a94b248aee1fac7e91",
+          "committed_at": "2026-03-02T06:17:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 161,
+          "file_deletions": 0,
+          "file_changes": 161,
+          "file_patch": "@@ -0,0 +1,161 @@\n+---\n+description: Processes new issue submissions containing links to testing sites. Validates the site, adds it to README.md, runs link checks, and creates a PR.\n+on:\n+  issues:\n+    types: [opened, edited]\n+  issue_comment:\n+    types: [created]\n+  roles: all\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  playwright:\n+  web-fetch:\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+    - \"*\"\n+safe-outputs:\n+  add-comment:\n+    max: 5\n+  create-pull-request:\n+    max: 1\n+  update-issue:\n+    max: 2\n+  close-issue:\n+    max: 1\n+  noop:\n+---\n+\n+# Issue Site Submission Processor\n+\n+You are an AI agent that processes new issues submitted to the awesome-sites-to-test-on repository. Your job is to evaluate submitted links to determine if they are legitimate testing/practice sites, and if so, add them to the README.md in the correct category and create a pull request.\n+\n+## Context\n+\n+This repository maintains a curated list of websites for QA professionals to practice testing. The README.md is the single source of truth. Sites are organized into these categories:\n+\n+| Category | What belongs here |\n+|---|---|\n+| Security Testing | Vulnerable apps, OWASP targets, pentesting playgrounds |\n+| Mobile Testing | iOS/Android vulnerable or demo apps |\n+| Web Testing | Demo storefronts, intentionally buggy apps, exploratory testing targets |\n+| Performance Testing | Load testing targets, benchmark apps |\n+| Test Automation | Sites with rich UI elements, login/CRUD workflows, automation frameworks |\n+| API Testing | REST, GraphQL, gRPC, WebSocket practice endpoints |\n+\n+Entry format:\n+```markdown\n+- [Site Name](URL) - Brief description of testing value.\n+```\n+\n+## Your Task\n+\n+### Step 1: Extract the Link\n+\n+1. Read the issue title and body to find any URLs.\n+2. If triggered by an `issue_comment` event, read the comment body for URLs.\n+3. Also check all existing comments on the issue for URLs that may have been added after the original submission.\n+\n+**If NO link is found anywhere** (issue body, title, or any comments):\n+- Add a comment on the issue with this message:\n+\n+  > Thanks for your submission! To add a site to our list, please provide a URL to the testing site you'd like to suggest. You can either:\n+  > - Edit this issue to include the link\n+  > - Add a comment with the link\n+  >\n+  > Once a link is provided, I'll review the site and process it automatically.\n+\n+- Then stop processing (use `noop` safe output).\n+\n+### Step 2: Check for Duplicates\n+\n+1. Read the full contents of `README.md`.\n+2. Search for the submitted URL (or variations of it - with/without trailing slash, http vs https, www vs non-www).\n+3. If the URL already exists in README.md:\n+   - Add a comment: \"This site is already listed in our README. Closing this issue as a duplicate.\"\n+   - Close the issue.\n+   - Stop processing.\n+\n+### Step 3: Explore and Validate the Site\n+\n+1. Use Playwright to navigate to the submitted URL.\n+2. Take a snapshot of the page to understand what the site is about.\n+3. Evaluate whether this is a legitimate site meant for testing practice. Look for indicators like:\n+   - The site describes itself as a practice/demo/testing site\n+   - It contains intentional bugs, vulnerabilities, or test scenarios\n+   - It provides APIs for testing (REST, GraphQL, gRPC, WebSocket)\n+   - It's a demo e-commerce store, bank, or other application for QA practice\n+   - It has automation-friendly elements or challenges\n+   - It's an open-source vulnerable application for security testing\n+\n+4. If the site does NOT appear to be meant for testing practice:\n+   - Add a comment explaining why the site doesn't fit the repository's purpose.\n+   - Close the issue.\n+   - Stop processing.\n+\n+5. If the site IS a valid testing site, determine:\n+   - The best **category** from the table above\n+   - A concise **description** that explains the testing value (not just what the site is)\n+   - The proper **site name** to use\n+\n+### Step 4: Add the Site to README.md\n+\n+1. Open `README.md` for editing.\n+2. Find the correct category section.\n+3. Add the new entry at the end of that category section (before the next `##` heading), using the format:\n+   ```\n+   - [Site Name](URL) - Description of testing value.\n+   ```\n+4. Make sure the description explains the *testing value* of the site, not just what the site is.\n+5. Do NOT add affiliate or referral links.\n+\n+### Step 5: Run the Link Checker\n+\n+1. Install dependencies: `npm install`\n+2. Run the link checker: `npm run link-checker`\n+3. If the link checker fails for the newly added URL:\n+   - Check if the failure is because the URL requires authentication or has known issues (like LinkedIn, GraphQL introspection endpoints).\n+   - If the URL is inherently problematic but valid, add it to the `skip` array in `linkinator.config.json` instead of removing it.\n+   - Re-run the link checker to confirm it passes.\n+4. If the link checker still fails after adjustments, add a comment explaining the issue and close the issue.\n+\n+### Step 6: Create a Pull Request\n+\n+1. Create a new branch named `add-site/<sanitized-site-name>` (use kebab-case, lowercase).\n+2. Commit the changes to `README.md` (and `linkinator.config.json` if modified).\n+3. Create a pull request with:\n+   - **Title**: `feat: add [Site Name] to [Category] section`\n+   - **Body**: Include:\n+     - What site was added and to which category\n+     - A brief description of the site's testing value\n+     - `Closes #<issue-number>` to automatically link and close the issue when the PR is merged\n+   - **Assignee**: Assign the PR to `BMayhew` (Butch Mayhew)\n+\n+### Step 7: Update the Issue\n+\n+1. Add a comment on the issue linking to the created PR:\n+   > I've reviewed the site and it looks like a great addition! I've created PR #[PR-number] to add it to the [Category] section. The PR has been assigned to @BMayhew for review.\n+\n+## Guidelines\n+\n+- Always be polite and helpful in comments.\n+- If the issue contains multiple links, process only the first valid one and mention the others in a comment.\n+- Descriptions must explain *testing value*, not just what the site is.\n+- Do not add sites that require paid accounts to access core functionality.\n+- URLs must be publicly accessible without authentication.\n+- No affiliate or referral links.\n+- When in doubt about categorization, choose the most relevant category based on the site's primary purpose.\n+\n+## Safe Outputs\n+\n+- Use `add-comment` to communicate with the issue author.\n+- Use `create-pull-request` to submit the README change with assignee `BMayhew` and `Closes #<issue-number>` in the body.\n+- Use `update-issue` if you need to add labels.\n+- Use `close-issue` if the submission is invalid or a duplicate.\n+- Use `noop` if no link was found and you've already asked for one, or if no action is needed.",
+          "snapshot_ref": "7c6bb1c2deef5651455685a94b248aee1fac7e91",
+          "snapshot_blob_sha": "c1dea020516631e539090ff9b9dcc397af0ee6f7",
+          "snapshot_file": "snapshots/awesome-sites-to-test-on__BMayhew__7c6bb1c2deef5651455685a94b248aee1fac7e91__issue-site-submission.md",
+          "snapshot_bytes": 6725,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"BMayhew/awesome-sites-to-test-on\",\"generated_owner\":\"BMayhew\",\"generated_repo\":\"awesome-sites-to-test-on\",\"generated_workflow_path\":\".github/workflows/issue-site-submission.lock.yml\",\"generated_workflow_file\":\"issue-site-submission.lock.yml\",\"generated_html_url\":\"https://github.com/BMayhew/awesome-sites-to-test-on/blob/9657f8a1cdb9b626f3edced8444db748b958a7e6/.github/workflows/issue-site-submission.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "BMayhew/awesome-sites-to-test-on:.github/workflows/issue-site-submission.md",
+      "source_full_name": "BMayhew/awesome-sites-to-test-on",
+      "md_path": ".github/workflows/issue-site-submission.md",
+      "commit_sha": "8ea1dd8d4b91e0912eb032ecd967041825264445",
+      "authored_at": "2026-03-02T06:45:06Z",
+      "committed_at": "2026-03-02T06:45:06Z",
+      "author_name": "Butch Mayhew",
+      "author_email": "utchbe@gmail.com",
+      "author_login": "BMayhew",
+      "author_account_type": "User",
+      "committer_name": "Butch Mayhew",
+      "committer_email": "utchbe@gmail.com",
+      "committer_login": "BMayhew",
+      "committer_account_type": "User",
+      "message": "updating workflow",
+      "parent_shas": [
+        "bb5475588d53426eebbb04c76884dd8ad4deb95e"
+      ],
+      "tree_sha": "0c7dede0a7740a41abb5415d16b495d5a32a71ac",
+      "html_url": "https://github.com/BMayhew/awesome-sites-to-test-on/commit/8ea1dd8d4b91e0912eb032ecd967041825264445",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "BMayhew/awesome-sites-to-test-on:.github/workflows/issue-site-submission.md",
+          "source_full_name": "BMayhew/awesome-sites-to-test-on",
+          "md_path": ".github/workflows/issue-site-submission.md",
+          "commit_sha": "8ea1dd8d4b91e0912eb032ecd967041825264445",
+          "committed_at": "2026-03-02T06:45:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 8,
+          "file_changes": 16,
+          "file_patch": "@@ -13,13 +13,11 @@ permissions:\n tools:\n   github:\n     toolsets: [default]\n-  playwright:\n   web-fetch:\n network:\n   allowed:\n     - defaults\n     - node\n-    - \"*\"\n safe-outputs:\n   add-comment:\n     max: 5\n@@ -82,24 +80,26 @@ Entry format:\n    - Close the issue.\n    - Stop processing.\n \n-### Step 3: Explore and Validate the Site\n+### Step 3: Research and Validate the Site\n \n-1. Use Playwright to navigate to the submitted URL.\n-2. Take a snapshot of the page to understand what the site is about.\n-3. Evaluate whether this is a legitimate site meant for testing practice. Look for indicators like:\n+1. Use `web-fetch` to retrieve the page content at the submitted URL.\n+2. Analyze the page content (title, headings, meta descriptions, body text) to understand what the site is about.\n+3. Also consider any description the issue author provided about the site.\n+4. Evaluate whether this is a legitimate site meant for testing practice. Look for indicators like:\n    - The site describes itself as a practice/demo/testing site\n    - It contains intentional bugs, vulnerabilities, or test scenarios\n    - It provides APIs for testing (REST, GraphQL, gRPC, WebSocket)\n    - It's a demo e-commerce store, bank, or other application for QA practice\n    - It has automation-friendly elements or challenges\n    - It's an open-source vulnerable application for security testing\n+   - It appears in lists of QA/testing practice resources\n \n-4. If the site does NOT appear to be meant for testing practice:\n+5. If the site does NOT appear to be meant for testing practice:\n    - Add a comment explaining why the site doesn't fit the repository's purpose.\n    - Close the issue.\n    - Stop processing.\n \n-5. If the site IS a valid testing site, determine:\n+6. If the site IS a valid testing site, determine:\n    - The best **category** from the table above\n    - A concise **description** that explains the testing value (not just what the site is)\n    - The proper **site name** to use",
+          "snapshot_ref": "8ea1dd8d4b91e0912eb032ecd967041825264445",
+          "snapshot_blob_sha": "e4df040b7c5315f7f397464e62e4ae06702b67e6",
+          "snapshot_file": "snapshots/awesome-sites-to-test-on__BMayhew__8ea1dd8d4b91e0912eb032ecd967041825264445__issue-site-submission.md",
+          "snapshot_bytes": 6898,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"BMayhew/awesome-sites-to-test-on\",\"generated_owner\":\"BMayhew\",\"generated_repo\":\"awesome-sites-to-test-on\",\"generated_workflow_path\":\".github/workflows/issue-site-submission.lock.yml\",\"generated_workflow_file\":\"issue-site-submission.lock.yml\",\"generated_html_url\":\"https://github.com/BMayhew/awesome-sites-to-test-on/blob/9657f8a1cdb9b626f3edced8444db748b958a7e6/.github/workflows/issue-site-submission.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

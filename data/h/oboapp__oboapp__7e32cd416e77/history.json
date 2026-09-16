@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "oboapp/oboapp:.github/workflows/ci-failure-fix.md",
+    "source_full_name": "oboapp/oboapp",
+    "source_owner": "oboapp",
+    "source_repo": "oboapp",
+    "md_path": ".github/workflows/ci-failure-fix.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/oboapp/oboapp/blob/HEAD/.github/workflows/ci-failure-fix.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "oboapp/oboapp",
+      "generated_owner": "oboapp",
+      "generated_repo": "oboapp",
+      "generated_workflow_path": ".github/workflows/ci-failure-fix.lock.yml",
+      "generated_workflow_file": "ci-failure-fix.lock.yml",
+      "generated_html_url": "https://github.com/oboapp/oboapp/blob/7332969d8e4e4435bf62e247d91203b475b62cd5/.github/workflows/ci-failure-fix.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:04+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "oboapp/oboapp:.github/workflows/ci-failure-fix.md",
+      "source_full_name": "oboapp/oboapp",
+      "md_path": ".github/workflows/ci-failure-fix.md",
+      "commit_sha": "73ad2f40238bac9c526f7399c4f7dcb3a95a20b7",
+      "authored_at": "2026-04-17T16:13:54Z",
+      "committed_at": "2026-04-17T16:13:54Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Replace legacy CI failure workflow with GitHub Agentic Workflow (#398)\n\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: vbuch <5102057+vbuch@users.noreply.github.com>\nCo-authored-by: Valery Buchinsky <valery.buchinsky@gmail.com>\nCo-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "3e71747842560c7d54679e04cfcc66a8fc551527"
+      ],
+      "tree_sha": "32fd2d17bdd6347e57ad4ef19773c4aca835576f",
+      "html_url": "https://github.com/oboapp/oboapp/commit/73ad2f40238bac9c526f7399c4f7dcb3a95a20b7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "oboapp/oboapp:.github/workflows/ci-failure-fix.md",
+          "source_full_name": "oboapp/oboapp",
+          "md_path": ".github/workflows/ci-failure-fix.md",
+          "commit_sha": "73ad2f40238bac9c526f7399c4f7dcb3a95a20b7",
+          "committed_at": "2026-04-17T16:13:54Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 63,
+          "file_deletions": 0,
+          "file_changes": 63,
+          "file_patch": "@@ -0,0 +1,63 @@\n+---\n+name: CI Failure Fix\n+description: Creates a GitHub issue and assigns Copilot to fix it whenever CI fails on main.\n+\n+on:\n+  workflow_run:\n+    workflows: [\"CI/CD Pipeline\"]\n+    types: [completed]\n+    branches: [main]\n+  skip-bots: [copilot-swe-agent, github-actions]\n+\n+if: >\n+  github.event.workflow_run.conclusion != 'success' &&\n+  github.event.workflow_run.event == 'push'\n+\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+\n+checkout: false\n+\n+tools:\n+  github:\n+    toolsets: [default, actions]\n+\n+safe-outputs:\n+  create_issue:\n+    labels: [ci-failure, copilot]\n+    assignees: [copilot]\n+    max: 1\n+    close-older-issues: true\n+---\n+\n+# CI Failure Fix Agent\n+\n+A CI/CD Pipeline run on `main` has failed. Your task is to investigate the failure and create a GitHub issue so Copilot can fix it.\n+\n+## Context\n+\n+- **Workflow run**: __GH_AW_GITHUB_EVENT_WORKFLOW_RUN_HTML_URL__\n+- **Run ID**: __GH_AW_GITHUB_EVENT_WORKFLOW_RUN_ID__\n+- **Commit**: `__GH_AW_GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA__`\n+- **Conclusion**: `__GH_AW_GITHUB_EVENT_WORKFLOW_RUN_CONCLUSION__`\n+\n+## Instructions\n+\n+1. Use the GitHub `actions` tools to fetch the jobs and logs for the failed workflow run (run ID: `__GH_AW_GITHUB_EVENT_WORKFLOW_RUN_ID__`).\n+2. Identify which jobs failed and what errors occurred. Look at the log output for each failed step.\n+3. Summarize the root cause concisely.\n+4. Create **one** GitHub issue (via `create_issue` safe-output) with:\n+   - **Title**: `[CI Fix] <short description of the failure> on main (<first 7 chars of commit SHA>)`\n+   - **Body** containing:\n+     - A brief summary of what failed and why.\n+     - The relevant log snippets (trimmed to the most useful lines, wrapped in a code block).\n+     - A link to the workflow run.\n+     - A clear task description for Copilot:\n+       1. Read the failure details above and identify the root cause.\n+       2. Implement the minimal fix (follow coding conventions in `AGENTS.md`).\n+       3. Ensure `pnpm lint:all` and `pnpm test:all` pass from the repository root after the fix.\n+       4. Ensure TypeScript type-checking passes in all relevant workspaces (`pnpm --dir <workspace> exec tsc --noEmit`).\n+       5. Open a pull request targeting `main` with the fix.",
+          "snapshot_ref": "73ad2f40238bac9c526f7399c4f7dcb3a95a20b7",
+          "snapshot_blob_sha": "7c25694f4aca6631d584fd5ca7185891abe3cfad",
+          "snapshot_file": "snapshots/oboapp__oboapp__73ad2f40238bac9c526f7399c4f7dcb3a95a20b7__ci-failure-fix.md",
+          "snapshot_bytes": 2223,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"oboapp/oboapp\",\"generated_owner\":\"oboapp\",\"generated_repo\":\"oboapp\",\"generated_workflow_path\":\".github/workflows/ci-failure-fix.lock.yml\",\"generated_workflow_file\":\"ci-failure-fix.lock.yml\",\"generated_html_url\":\"https://github.com/oboapp/oboapp/blob/7332969d8e4e4435bf62e247d91203b475b62cd5/.github/workflows/ci-failure-fix.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

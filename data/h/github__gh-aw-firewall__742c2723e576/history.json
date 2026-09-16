@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/self-hosted-runner-doctor-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/self-hosted-runner-doctor-updater.lock.yml",
+      "generated_workflow_file": "self-hosted-runner-doctor-updater.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/self-hosted-runner-doctor-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:48:17+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+      "commit_sha": "6d26488e70c8b7eb10e5d9b2dffc7ae08d52d045",
+      "authored_at": "2026-06-23T23:57:26Z",
+      "committed_at": "2026-06-23T23:57:26Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add Self-Hosted Runner Doctor workflow for ARC/DinD and enterprise AWF triage (#5460)\n\n* Initial plan\n\n* feat: add self-hosted runner doctor workflow\n\n* test: fix runner doctor assertions\n\n* feat: add daily Runner Doctor Updater workflow\n\nAdd a scheduled agentic workflow that reviews self-hosted, ARC/DinD,\nGHEC, and GHES issues and PRs updated since the previous run and proposes\nknowledge-base updates for the Self-Hosted Runner Doctor as a single new\nissue. Includes a compiled lock file and a config test.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: Landon Cox <landon.cox@microsoft.com>\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b0c2a799b8dae547c74c889b49cf43f5f8c9a6ec"
+      ],
+      "tree_sha": "557f21ffd1883b6fc290627cae2ae28c35d53b9f",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/6d26488e70c8b7eb10e5d9b2dffc7ae08d52d045",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+          "commit_sha": "6d26488e70c8b7eb10e5d9b2dffc7ae08d52d045",
+          "committed_at": "2026-06-23T23:57:26Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 116,
+          "file_deletions": 0,
+          "file_changes": 116,
+          "file_patch": "@@ -0,0 +1,116 @@\n+---\n+name: Runner Doctor Updater\n+description: Daily workflow that reviews new self-hosted, ARC/DinD, GHEC, and GHES issues and PRs since the previous run and proposes updates to keep the Self-Hosted Runner Doctor knowledge base current.\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+  skip-if-match:\n+    query: 'is:issue is:open label:runner-doctor'\n+    max: 1\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+imports:\n+  - shared/self-hosted-failure-modes.md\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash: true\n+  cache-memory: true\n+sandbox:\n+  agent:\n+    id: awf\n+network:\n+  allowed:\n+    - github\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+  create-issue:\n+    title-prefix: \"🩺 Runner Doctor Update\"\n+    labels: [runner-doctor, automated]\n+    max: 1\n+    expires: 30d\n+timeout-minutes: 20\n+steps:\n+  - name: Compute scan window\n+    id: window\n+    run: |\n+      # Look back two days so a missed daily run does not create a coverage gap.\n+      # Overlap is de-duplicated by checking existing knowledge-base citations.\n+      SINCE=$(date -u -d '2 days ago' +%Y-%m-%d)\n+      echo \"since=$SINCE\" >> \"$GITHUB_OUTPUT\"\n+      echo \"Scanning for self-hosted runner lessons updated since $SINCE\"\n+---\n+\n+# Runner Doctor Updater\n+\n+You are the maintenance agent for the **Self-Hosted Runner Doctor**. Each day you review newly updated issues and pull requests that relate to AWF on non-GitHub-hosted environments — self-hosted runners, ARC + DinD, GHEC (`*.ghe.com`), GHES, and enterprise runners — and you propose concrete updates so the doctor's knowledge base stays current.\n+\n+You do **not** edit files yourself. Your only output is a single proposed-changes issue (or a `noop`).\n+\n+## Scan window\n+\n+- **Repository:** ${{ github.repository }}\n+- **Since (UTC date):** `${{ steps.window.outputs.since }}`\n+\n+Consider issues and pull requests **updated on or after** the scan window. The window deliberately overlaps the previous daily run, so de-duplicate against lessons that are already captured.\n+\n+## Step 1 — Find relevant issues and PRs\n+\n+Search this repository for items updated since the scan window that involve non-hosted runner environments. Combine the date qualifier `updated:>=${{ steps.window.outputs.since }}` with these signals (search several; do not assume one query is enough):\n+\n+`ARC`, `DinD`, `self-hosted`, `GHES`, `GHEC`, `ghe.com`, `DOCKER_HOST`, `docker-host-path-prefix`, `chroot`, `musl`, `Alpine`, `IPv6`, `corporate proxy`, `cache_peer`, `GH_HOST`, `resolv.conf`, `toolcache`, `_tool`, `one-shot-token`, `capsh`, `passwd`.\n+\n+Include **both open and closed** items — closed issues and merged PRs usually carry the actual fix and the citation numbers worth recording. Read the body and key comments of each candidate to confirm it is a genuine non-hosted-runner lesson (ignore unrelated CI flakes, refactors, and GitHub-hosted-only reports).\n+\n+## Step 2 — Extract the lesson\n+\n+For each relevant item, capture: the observable symptom / error string, the affected platform(s), the root cause, the fix (AWF flag, config field, env var, or version bump), and a read-only diagnostic the doctor could run.\n+\n+## Step 3 — Compare against the current doctor\n+\n+The current failure-mode catalog is imported below. Also read the live files to propose precise edits:\n+\n+```bash\n+cat .github/workflows/shared/self-hosted-failure-modes.md\n+cat .github/workflows/self-hosted-runner-doctor.md\n+```\n+\n+Classify each lesson as one of:\n+\n+- **Already covered** — its citation issue/PR numbers already appear in the catalog ⇒ skip.\n+- **New failure mode** — assign the next free ID in the correct category (`A` = ARC/DinD, `B` = self-hosted, `C` = GHES/GHEC/data-residency, `D` = runtimes/network) and propose a new table row.\n+- **Update to an existing mode** — add a new citation, flip a status (e.g. open → fixed), or improve the fix/probe wording.\n+- **New error-string lookup entry** — a recognizable error string that should map to a mode in the doctor's quick-lookup.\n+\n+## Step 4 — Avoid duplicate proposals\n+\n+Before creating an issue, search existing open issues labelled `runner-doctor`. If an open proposal already covers the same lessons, call `noop` instead of stacking another issue.\n+\n+## Output\n+\n+If you found concrete, not-yet-captured updates, call `create-issue` **once** with this structure:\n+\n+### Summary\n+- scan window and number of items reviewed\n+- number of genuinely new lessons\n+\n+### Proposed knowledge-base changes\n+For `.github/workflows/shared/self-hosted-failure-modes.md`: the exact table row(s) to add or modify, including the failure-mode ID, category, and citation numbers.\n+\n+### Proposed doctor changes\n+For `.github/workflows/self-hosted-runner-doctor.md`: any playbook or error-string lookup additions.\n+\n+### Source issues and PRs\n+Every proposed change must cite the issue/PR number(s) it derives from, with links.\n+\n+If there are **no** new lessons, call `noop` with a one-line explanation. Do not open an empty or speculative issue.\n+\n+## Guardrails\n+\n+- Propose knowledge/documentation edits only — never modify code, never open a pull request.\n+- Keep existing failure-mode IDs stable; only append new IDs.\n+- Prefer the narrowest change; do not restructure entries that already work.\n+- Skip anything whose citation numbers are already present in the catalog.",
+          "snapshot_ref": "6d26488e70c8b7eb10e5d9b2dffc7ae08d52d045",
+          "snapshot_blob_sha": "5cb908541534c31c34047150b290a401c2f243a4",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__6d26488e70c8b7eb10e5d9b2dffc7ae08d52d045__self-hosted-runner-doctor-updater.md",
+          "snapshot_bytes": 5293,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/self-hosted-runner-doctor-updater.lock.yml\",\"generated_workflow_file\":\"self-hosted-runner-doctor-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/self-hosted-runner-doctor-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+      "commit_sha": "75ab26ca896b053ffcbead5e6a0f0bb77e1deebf",
+      "authored_at": "2026-06-24T23:47:48Z",
+      "committed_at": "2026-06-24T23:47:48Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add portable self-hosted runner doctor agent (#5504)\n\nAdd a self-contained, loadable doctor agent so users can debug AWF\nfailures on self-hosted/ARC/DinD/GHEC/GHES runners without cloning\nthe repo.\n\n- Add .github/agents/self-hosted-runner-doctor.md: embeds the full\n  failure-mode catalog and diagnostic playbook inline (no gh-aw\n  imports or workflow-only frontmatter), loadable via raw URL into\n  any coding agent.\n- Update self-hosted-runner-doctor-updater.md to keep the portable\n  agent in sync: it now reviews the agent file and proposes matching\n  edits whenever the shared catalog or doctor playbook changes.\n- Recompile all workflows with gh-aw v0.81.2 (setup v0.81.2,\n  firewall 0.27.9, mcpg v0.3.29) and run smoke post-processing.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "9d1b99b868510fff4ca7c464c324ad61079a2d1d"
+      ],
+      "tree_sha": "2b3df466eb5ce3344d9a6c51b47a717da1932f86",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/75ab26ca896b053ffcbead5e6a0f0bb77e1deebf",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+          "commit_sha": "75ab26ca896b053ffcbead5e6a0f0bb77e1deebf",
+          "committed_at": "2026-06-24T23:47:48Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 0,
+          "file_changes": 6,
+          "file_patch": "@@ -76,8 +76,11 @@ The current failure-mode catalog is imported below. Also read the live files to\n ```bash\n cat .github/workflows/shared/self-hosted-failure-modes.md\n cat .github/workflows/self-hosted-runner-doctor.md\n+cat .github/agents/self-hosted-runner-doctor.md\n ```\n \n+`.github/agents/self-hosted-runner-doctor.md` is the **portable, self-contained doctor agent** that users load directly into their own coding agent (without cloning the repo). It embeds a copy of the failure-mode catalog and the diagnostic playbook. Whenever you propose a change to `shared/self-hosted-failure-modes.md` (catalog rows, error-string lookup, or known-unresolved items) or to the playbook in `self-hosted-runner-doctor.md`, you **must** propose the matching edit to the embedded copy in the portable agent so the two stay in sync.\n+\n Classify each lesson as one of:\n \n - **Already covered** — its citation issue/PR numbers already appear in the catalog ⇒ skip.\n@@ -103,6 +106,9 @@ For `.github/workflows/shared/self-hosted-failure-modes.md`: the exact table row\n ### Proposed doctor changes\n For `.github/workflows/self-hosted-runner-doctor.md`: any playbook or error-string lookup additions.\n \n+### Proposed portable agent changes\n+For `.github/agents/self-hosted-runner-doctor.md`: the matching edits to its embedded catalog and playbook so the portable agent stays in sync with the two files above. Every catalog or playbook change proposed for the workflow/shared files must have a corresponding edit here.\n+\n ### Source issues and PRs\n Every proposed change must cite the issue/PR number(s) it derives from, with links.\n ",
+          "snapshot_ref": "75ab26ca896b053ffcbead5e6a0f0bb77e1deebf",
+          "snapshot_blob_sha": "534f2fcd6b478b80d9ac268ecce9d3ba5b2a6a18",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__75ab26ca896b053ffcbead5e6a0f0bb77e1deebf__self-hosted-runner-doctor-updater.md",
+          "snapshot_bytes": 6202,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/self-hosted-runner-doctor-updater.lock.yml\",\"generated_workflow_file\":\"self-hosted-runner-doctor-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/self-hosted-runner-doctor-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+      "commit_sha": "5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+      "authored_at": "2026-07-24T15:43:30Z",
+      "committed_at": "2026-07-24T15:43:30Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): migrate copilot workflows to copilot-requests auth (#6570)\n\nCOPILOT_GITHUB_TOKEN was removed from the repo, so copilot-engine\nworkflows relying on that PAT fail Copilot auth (HTTP 401 through the\napi-proxy sidecar, e.g. issue #6561 refactoring-scanner).\n\n- Add `copilot-requests: write` to the 15 default-copilot workflows\n  that were missing it, so Copilot inference uses the GitHub Actions\n  token (S2STOKENS) with central org billing instead of the PAT.\n- Delete smoke-copilot-pat (its sole purpose was testing the now-removed\n  COPILOT_GITHUB_TOKEN PAT path).\n- Recompile all workflows and run smoke post-processing. Compiled locks\n  now wire the agent to github.token and drop the hard\n  Validate COPILOT_GITHUB_TOKEN step. Recompile also picked up routine\n  toolchain/image version bumps (agent 0.27.37->0.27.41, mcpg\n  v0.4.3->v0.4.5, setup action v0.83.1->v0.83.2).\n\nNon-copilot engines (Claude/Codex/Gemini) are unchanged.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 0f60b144-4aef-4dd3-8db6-0b2e6f4924b7",
+      "parent_shas": [
+        "2fe4120f020cb87c7be17c1eafed3c1df1e631af"
+      ],
+      "tree_sha": "a7ce02a248998ab3ee475a2739b057b5dc75996b",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+          "commit_sha": "5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+          "committed_at": "2026-07-24T15:43:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -8,6 +8,7 @@ on:\n     query: 'is:issue is:open label:runner-doctor'\n     max: 1\n permissions:\n+  copilot-requests: write\n   contents: read\n   issues: read\n   pull-requests: read",
+          "snapshot_ref": "5e5ae7bf4013bc439776e5a4e819908a076e4d3e",
+          "snapshot_blob_sha": "144adb1573b7953ee41a553f0c15e3c342c21fbe",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__5e5ae7bf4013bc439776e5a4e819908a076e4d3e__self-hosted-runner-doctor-updater.md",
+          "snapshot_bytes": 6228,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/self-hosted-runner-doctor-updater.lock.yml\",\"generated_workflow_file\":\"self-hosted-runner-doctor-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/self-hosted-runner-doctor-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+      "commit_sha": "f89d63e56e0c82eba6bad7207d96d703cac530ef",
+      "authored_at": "2026-07-29T15:40:41Z",
+      "committed_at": "2026-07-29T15:40:41Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: upgrade gh-aw to v0.83.5 pre-release and recompile workflows (#6718)\n\n* chore: upgrade gh-aw to v0.83.5 pre-release and recompile workflows\n\n- Upgrade gh-aw extension from v0.83.4 to v0.83.5\n- Fix 15 workflows with steps-output-in-prompt validation errors:\n  - Migrate step outputs ($GITHUB_OUTPUT) to file-based data passing\n    (/tmp/gh-aw/agent/) for all smoke-data workflows\n  - Fix refactoring-scanner, security-guard, self-hosted-runner-doctor-updater,\n    test-coverage-improver, and test-coverage-reporter workflows\n- Recompile all 58 workflows (0 errors)\n- Update tests to match new file-based data passing pattern\n- Update default model reference (claude-sonnet-4.6 → claude-sonnet-5)\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix: address test-coverage workflow review feedback\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "3d029b973ac0bdbb3937a974ee4171c08acfa101"
+      ],
+      "tree_sha": "a4a5a35ac7fbb1d765029c7a55d1140e86402c52",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/f89d63e56e0c82eba6bad7207d96d703cac530ef",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/self-hosted-runner-doctor-updater.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/self-hosted-runner-doctor-updater.md",
+          "commit_sha": "f89d63e56e0c82eba6bad7207d96d703cac530ef",
+          "committed_at": "2026-07-29T15:40:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 4,
+          "file_changes": 8,
+          "file_patch": "",
+          "snapshot_ref": "f89d63e56e0c82eba6bad7207d96d703cac530ef",
+          "snapshot_blob_sha": "1ba40db8834575d090159d94a1fc871b032b5a50",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__f89d63e56e0c82eba6bad7207d96d703cac530ef__self-hosted-runner-doctor-updater.md",
+          "snapshot_bytes": 6358,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/self-hosted-runner-doctor-updater.lock.yml\",\"generated_workflow_file\":\"self-hosted-runner-doctor-updater.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/self-hosted-runner-doctor-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

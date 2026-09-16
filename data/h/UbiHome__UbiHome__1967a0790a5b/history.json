@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+    "source_full_name": "UbiHome/UbiHome",
+    "source_owner": "UbiHome",
+    "source_repo": "UbiHome",
+    "md_path": ".github/workflows/pr-documentation-check.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/UbiHome/UbiHome/blob/HEAD/.github/workflows/pr-documentation-check.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "UbiHome/UbiHome",
+      "generated_owner": "UbiHome",
+      "generated_repo": "UbiHome",
+      "generated_workflow_path": ".github/workflows/pr-documentation-check.lock.yml",
+      "generated_workflow_file": "pr-documentation-check.lock.yml",
+      "generated_html_url": "https://github.com/UbiHome/UbiHome/blob/4366ae6c239ba8dd1311ec91fe6176ab1c1b03ea/.github/workflows/pr-documentation-check.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1,
+      "agent": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:40+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+      "source_full_name": "UbiHome/UbiHome",
+      "md_path": ".github/workflows/pr-documentation-check.md",
+      "commit_sha": "42353b70c3f775fd8b190b2da0071a3fad167e06",
+      "authored_at": "2026-05-16T23:06:57Z",
+      "committed_at": "2026-05-16T23:06:57Z",
+      "author_name": "DanielHabenicht",
+      "author_email": "daniel-habenicht@outlook.de",
+      "author_login": "DanielHabenicht",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(ci): PR documentation check workflow (gh-aw) (#135)\n\n## Summary\n\nAdds a **GitHub Agentic Workflow** (gh-aw) that checks whether pull\nrequests introducing user-facing code changes also update the\ndocumentation site. It posts a comment only when updates are missing —\nstaying completely silent otherwise.\n\n### What it checks\n\nThe workflow compares code changes against the documentation site\n(`documentation/`):\n\n- Determines if changes in `src/` or `components/` are **user-facing**\n(new CLI commands, new config options, new platform components, changed\nintegration points)\n- If user-facing changes exist AND `documentation/` was **not** updated\n→ posts a comment\n- If nothing is missing → calls `noop`, no comment is posted\n\n### Files added / changed\n\n- `.github/workflows/pr-documentation-check.md` — Workflow definition\n(frontmatter + AI instructions)\n- `.github/workflows/pr-documentation-check.lock.yml` — Compiled GitHub\nActions workflow (gh-aw v0.68.1)\n- `CONTRIBUTING.md` — New **PR Automation** section documenting the\nworkflow\n\n### Trigger\n\n`pull_request` on `opened`, `synchronize`, `reopened` — runs on the PR\nbranch, no secret exposure risk from forks.\n\n---\n\n## ⚠️ Setup required before this workflow will run\n\n### 1. Add the `COPILOT_GITHUB_TOKEN` secret\n\n> Repository → Settings → Secrets and variables → Actions → New\nrepository secret\n> - **Name**: `COPILOT_GITHUB_TOKEN`\n> - **Value**: fine-grained PAT with **Copilot Requests** permission\n\nSee:\nhttps://github.github.com/gh-aw/reference/engines/#github-copilot-default\n\n### 2. Regenerate the lock file after merging\n\nThe `frontmatter_hash` in the lock file is a placeholder\n(`RECOMPILE_REQUIRED`) — this causes a warning in the workflow log but\ndoes **not** abort the run.\n\nTo fix after merging:\n\n```bash\ngh extension install github/gh-aw\ngh aw compile .github/workflows/pr-documentation-check.md\ngit add .github/workflows/pr-documentation-check.lock.yml\ngit commit -m \"chore(ci): regenerate pr-documentation-check lock file\"\n```\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "114557e35c140b7aaf22a5bec95252e96c781772"
+      ],
+      "tree_sha": "265404631e8a4048d0414128e8121ddfac3ba4d2",
+      "html_url": "https://github.com/UbiHome/UbiHome/commit/42353b70c3f775fd8b190b2da0071a3fad167e06",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+          "source_full_name": "UbiHome/UbiHome",
+          "md_path": ".github/workflows/pr-documentation-check.md",
+          "commit_sha": "42353b70c3f775fd8b190b2da0071a3fad167e06",
+          "committed_at": "2026-05-16T23:06:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 114,
+          "file_deletions": 0,
+          "file_changes": 114,
+          "file_patch": "@@ -0,0 +1,114 @@\n+---\n+description: |\n+  Checks whether pull requests that introduce user-facing code changes also\n+  update the documentation site. Posts a comment only when documentation\n+  site updates are missing; stays silent otherwise.\n+\n+on:\n+  pull_request:\n+    types: [opened, synchronize, reopened]\n+\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+tools:\n+  github:\n+    toolsets: [repos, pull_requests]\n+    min-integrity: approved\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  add-comment:\n+    max: 1\n+    hide-older-comments: true\n+---\n+\n+# PR Documentation Check\n+\n+You are a documentation quality reviewer for the UbiHome Rust monorepo. Your job\n+is to determine whether code changes in a pull request introduce user-facing\n+behaviour that should be reflected in the documentation site, and whether the\n+documentation site was actually updated.\n+\n+**Only post a comment if the documentation site is missing updates. If everything\n+looks fine, call `noop` — do NOT post any comment.**\n+\n+## Repository Structure\n+\n+UbiHome is a Rust workspace with:\n+\n+- Root binary crate (`src/`) — CLI entrypoint and runtime orchestration\n+- Platform component crates (`components/*/`) — each is a separate Rust crate\n+- Shared core crate (`components/core/`) — traits, macros, common types\n+- Documentation site (`documentation/`) — MkDocs Material, built with Dagger\n+\n+## Step 1: Inspect the Pull Request\n+\n+Use the GitHub tools to:\n+\n+1. Get the list of files changed in the PR\n+2. Get the PR diff to see the exact code changes\n+\n+## Step 2: Determine whether the code changes are user-facing\n+\n+Examine what changed in `src/` and `components/`. Consider the changes\n+**user-facing** if they introduce or modify ANY of the following:\n+\n+- A new or renamed CLI command or subcommand\n+- New or changed configuration options (new fields in config structs in\n+  `src/config.rs` or any component config)\n+- A new platform component (new directory under `components/`)\n+- A new or changed public integration point (MQTT topics, API endpoints,\n+  event names, etc.)\n+- Changed default behaviour of an existing feature\n+\n+**Not user-facing** (do not flag these):\n+\n+- Internal refactors with no behaviour change\n+- Test-only changes (`#[cfg(test)]`, files under `tests/`)\n+- CI/build changes (`.github/`, `build.rs`, `Makefile`, `Cargo.toml` only)\n+- Documentation-only changes\n+- Bug fixes that restore previously documented behaviour\n+\n+## Step 3: Check whether `documentation/` was updated\n+\n+Look at the list of changed files. Were any files inside `documentation/`\n+modified, added, or deleted in this PR?\n+\n+## Step 4: Decide and act\n+\n+| Condition | Action |\n+|-----------|--------|\n+| No user-facing code changes | Call `noop` — do nothing |\n+| User-facing code changes AND `documentation/` was updated | Call `noop` — do nothing |\n+| User-facing code changes AND `documentation/` was **not** updated | Post a comment |\n+\n+## Comment format (only when posting)\n+\n+```markdown\n+## 📋 Documentation needed\n+\n+The following code changes in this PR introduce user-facing behaviour that\n+should be reflected in the [documentation site](documentation/):\n+\n+- [List each specific change that needs documentation, e.g.,\n+  `components/mqtt/` — new platform component, needs a page in the docs]\n+\n+**How to fix**: update or add the relevant pages under `documentation/` to\n+reflect these changes. See the [docs README](documentation/README.md) for\n+how to build and preview the documentation locally.\n+\n+---\n+\n+> 🤖 _Automated check by [{workflow_name}]({run_url})._\n+> _If this check is incorrect, please add a comment explaining why._\n+```\n+\n+## Guidelines\n+\n+- Be specific: name the exact files or features that need documentation\n+- Only flag things that genuinely need a documentation site page — not\n+  internal implementation details\n+- If in doubt, call `noop` rather than posting a comment",
+          "snapshot_ref": "42353b70c3f775fd8b190b2da0071a3fad167e06",
+          "snapshot_blob_sha": "5d5687d0389673ee14feb503461505f84ff05ed1",
+          "snapshot_file": "snapshots/UbiHome__UbiHome__42353b70c3f775fd8b190b2da0071a3fad167e06__pr-documentation-check.md",
+          "snapshot_bytes": 3823,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"UbiHome/UbiHome\",\"generated_owner\":\"UbiHome\",\"generated_repo\":\"UbiHome\",\"generated_workflow_path\":\".github/workflows/pr-documentation-check.lock.yml\",\"generated_workflow_file\":\"pr-documentation-check.lock.yml\",\"generated_html_url\":\"https://github.com/UbiHome/UbiHome/blob/4366ae6c239ba8dd1311ec91fe6176ab1c1b03ea/.github/workflows/pr-documentation-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+      "source_full_name": "UbiHome/UbiHome",
+      "md_path": ".github/workflows/pr-documentation-check.md",
+      "commit_sha": "68a5bf7b557e11ceeb6808fa6a3b6ccc7ea0935d",
+      "authored_at": "2026-05-23T21:52:31Z",
+      "committed_at": "2026-05-23T21:52:31Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: New Docs (#144)\n\nDocs validation/build currently re-applies the full docs directory in a\nway that can invalidate or replace installed dependencies, causing `npm\nci` to rerun unnecessarily. This change keeps the expensive install\nlayer cacheable on lockfile changes while still applying the latest\ndocumentation source.\n\n- **Dependency install layer isolation**\n- Introduced a dedicated docs dependency container that installs with\nonly `documentation/package.json` and `documentation/package-lock.json`.\n  - Keeps `npm ci` invalidation scoped to manifest changes.\n\n- **Source application without dependency replacement**\n- Replaced full docs mount with a directory copy step that excludes\n`node_modules`.\n- Prevents source sync from overwriting `/docs/node_modules` produced by\nthe cached install layer.\n\n- **Resulting docs pipeline behavior**\n  - Docs check/build/preview continue to run against full docs content.\n- Dependency reuse is preserved across non-manifest documentation edits.\n\n```ts\nreturn this.docsDependenciesContainer(source).withDirectory(\"/docs\", docsDir, {\n  exclude: [\"node_modules\", \"node_modules/**\"],\n});\n```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: DanielHabenicht <13590797+DanielHabenicht@users.noreply.github.com>\nCo-authored-by: DanielHabenicht <daniel-habenicht@outlook.de>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "2c2a6c63dc189a6590d45c27292b713f9f495fd0"
+      ],
+      "tree_sha": "241d88aebdbd9f74d843d03db7329a31bec1f63c",
+      "html_url": "https://github.com/UbiHome/UbiHome/commit/68a5bf7b557e11ceeb6808fa6a3b6ccc7ea0935d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+          "source_full_name": "UbiHome/UbiHome",
+          "md_path": ".github/workflows/pr-documentation-check.md",
+          "commit_sha": "68a5bf7b557e11ceeb6808fa6a3b6ccc7ea0935d",
+          "committed_at": "2026-05-23T21:52:31Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -42,7 +42,7 @@ UbiHome is a Rust workspace with:\n - Root binary crate (`src/`) — CLI entrypoint and runtime orchestration\n - Platform component crates (`components/*/`) — each is a separate Rust crate\n - Shared core crate (`components/core/`) — traits, macros, common types\n-- Documentation site (`documentation/`) — MkDocs Material, built with Dagger\n+- Documentation site (`documentation/`) — Astro Starlight, built with Dagger\n \n ## Step 1: Inspect the Pull Request\n ",
+          "snapshot_ref": "68a5bf7b557e11ceeb6808fa6a3b6ccc7ea0935d",
+          "snapshot_blob_sha": "d1ca11524ab1488cc41b76cdb0cf523598113345",
+          "snapshot_file": "snapshots/UbiHome__UbiHome__68a5bf7b557e11ceeb6808fa6a3b6ccc7ea0935d__pr-documentation-check.md",
+          "snapshot_bytes": 3823,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"UbiHome/UbiHome\",\"generated_owner\":\"UbiHome\",\"generated_repo\":\"UbiHome\",\"generated_workflow_path\":\".github/workflows/pr-documentation-check.lock.yml\",\"generated_workflow_file\":\"pr-documentation-check.lock.yml\",\"generated_html_url\":\"https://github.com/UbiHome/UbiHome/blob/4366ae6c239ba8dd1311ec91fe6176ab1c1b03ea/.github/workflows/pr-documentation-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+      "source_full_name": "UbiHome/UbiHome",
+      "md_path": ".github/workflows/pr-documentation-check.md",
+      "commit_sha": "2ef2dd1b34baea56f1789fc9d0f18778159bdac1",
+      "authored_at": "2026-07-15T20:49:41Z",
+      "committed_at": "2026-07-15T20:49:41Z",
+      "author_name": "DanielHabenicht",
+      "author_email": "daniel-habenicht@outlook.de",
+      "author_login": "DanielHabenicht",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: ci fixes (#157)\n\nCo-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+      "parent_shas": [
+        "4e8048cc44a944d7672ec673a184103c037ddd15"
+      ],
+      "tree_sha": "81acf1d315fb0116fe9fcea5796939076908f720",
+      "html_url": "https://github.com/UbiHome/UbiHome/commit/2ef2dd1b34baea56f1789fc9d0f18778159bdac1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "UbiHome/UbiHome:.github/workflows/pr-documentation-check.md",
+          "source_full_name": "UbiHome/UbiHome",
+          "md_path": ".github/workflows/pr-documentation-check.md",
+          "commit_sha": "2ef2dd1b34baea56f1789fc9d0f18778159bdac1",
+          "committed_at": "2026-07-15T20:49:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 2,
+          "file_changes": 7,
+          "file_patch": "@@ -5,8 +5,11 @@ description: |\n   site updates are missing; stays silent otherwise.\n \n on:\n-  pull_request:\n-    types: [opened, synchronize, reopened]\n+  # Temporarily disabled while the Copilot agentic engine is failing (models API 403).\n+  # Re-enable by restoring the pull_request trigger below.\n+  # pull_request:\n+  #   types: [opened, synchronize, reopened]\n+  workflow_dispatch:\n \n permissions:\n   contents: read",
+          "snapshot_ref": "2ef2dd1b34baea56f1789fc9d0f18778159bdac1",
+          "snapshot_blob_sha": "61c61d3a3f25c868d08f84d0fc222bb0a7c300c1",
+          "snapshot_file": "snapshots/UbiHome__UbiHome__2ef2dd1b34baea56f1789fc9d0f18778159bdac1__pr-documentation-check.md",
+          "snapshot_bytes": 3994,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"UbiHome/UbiHome\",\"generated_owner\":\"UbiHome\",\"generated_repo\":\"UbiHome\",\"generated_workflow_path\":\".github/workflows/pr-documentation-check.lock.yml\",\"generated_workflow_file\":\"pr-documentation-check.lock.yml\",\"generated_html_url\":\"https://github.com/UbiHome/UbiHome/blob/4366ae6c239ba8dd1311ec91fe6176ab1c1b03ea/.github/workflows/pr-documentation-check.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

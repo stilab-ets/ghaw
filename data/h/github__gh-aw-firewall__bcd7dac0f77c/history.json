@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries-gvisor.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/smoke-bounded-queries-gvisor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/smoke-bounded-queries-gvisor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/smoke-bounded-queries-gvisor.lock.yml",
+      "generated_workflow_file": "smoke-bounded-queries-gvisor.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries-gvisor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:48:17+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries-gvisor.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-bounded-queries-gvisor.md",
+      "commit_sha": "ba41aa297dd77d083611aad4f237617d244e487c",
+      "authored_at": "2026-07-31T16:42:42Z",
+      "committed_at": "2026-07-31T16:42:42Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: add bounded query runtime smoke workflows (#6799)\n\n* ci: add bounded query runtime smoke workflows\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* ci: use glob to exclude smoke-bounded-queries md files\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90",
+      "parent_shas": [
+        "717a1b733c33ffec1da2d9d77162f80a1ed2af3c"
+      ],
+      "tree_sha": "ae300ef4e180905b2d7327d47ee1c162a6c76dbe",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/ba41aa297dd77d083611aad4f237617d244e487c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries-gvisor.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-bounded-queries-gvisor.md",
+          "commit_sha": "ba41aa297dd77d083611aad4f237617d244e487c",
+          "committed_at": "2026-07-31T16:42:42Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 168,
+          "file_deletions": 0,
+          "file_changes": 168,
+          "file_patch": "@@ -0,0 +1,168 @@\n+---\n+name: Smoke Bounded Queries gVisor\n+description: End-to-end smoke test for bounded queries in fresh gVisor sandboxes\n+on:\n+  schedule: every 12h\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  copilot-requests: write\n+env:\n+  GH_TOKEN: ${{ github.token }}\n+engine:\n+  id: copilot\n+  version: 1.0.34\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  github:\n+    toolsets: [context]\n+    allowed: []\n+    bounded-queries:\n+      private-repos:\n+        - repo: github/gh-aw\n+          sensitivity: internal\n+      runtime: gvisor\n+      memory-limit: 2g\n+      interpreter: python3\n+sandbox:\n+  agent:\n+    id: awf\n+    version: v0.28.0\n+    runtime: gvisor\n+    sudo: true\n+    args:\n+      - --build-local\n+steps:\n+  - name: Build unreleased AWF\n+    run: |\n+      npm ci\n+      npm run build\n+pre-agent-steps:\n+  - name: Replace release bootstrap with current AWF build\n+    run: |\n+      mkdir -p \"$HOME/.local/bin\"\n+      printf '#!/bin/bash\\nexec \"%s\" \"%s/dist/cli.js\" \"$@\"\\n' \\\n+        \"$(command -v node)\" \"$GITHUB_WORKSPACE\" > \"$HOME/.local/bin/awf\"\n+      chmod +x \"$HOME/.local/bin/awf\"\n+safe-outputs:\n+  threat-detection:\n+    enabled: false\n+timeout-minutes: 15\n+strict: false\n+concurrency:\n+  group: smoke-bounded-queries-gvisor\n+  cancel-in-progress: false\n+jobs:\n+  verify_budget_matrix:\n+    name: Verify gVisor confidentiality budgets\n+    runs-on: ubuntu-latest\n+    timeout-minutes: 30\n+    permissions:\n+      contents: read\n+    steps:\n+      - name: Checkout repository\n+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1\n+        with:\n+          persist-credentials: false\n+      - name: Install gVisor\n+        run: |\n+          set -euo pipefail\n+          arch=\"$(uname -m)\"\n+          url=\"https://storage.googleapis.com/gvisor/releases/release/20250707.0/${arch}\"\n+          curl -fsSL \"${url}/runsc\" -o /tmp/runsc\n+          curl -fsSL \"${url}/runsc.sha512\" -o /tmp/runsc.sha512\n+          (cd /tmp && sha512sum -c runsc.sha512)\n+          curl -fsSL \"${url}/containerd-shim-runsc-v1\" -o /tmp/containerd-shim-runsc-v1\n+          curl -fsSL \"${url}/containerd-shim-runsc-v1.sha512\" -o /tmp/containerd-shim-runsc-v1.sha512\n+          (cd /tmp && sha512sum -c containerd-shim-runsc-v1.sha512)\n+          sudo install -m 755 /tmp/runsc /usr/local/bin/runsc\n+          sudo install -m 755 /tmp/containerd-shim-runsc-v1 /usr/local/bin/containerd-shim-runsc-v1\n+          sudo runsc install\n+          sudo systemctl restart docker\n+          docker info --format '{{json .Runtimes}}' | grep -F '\"runsc\"'\n+      - name: Setup Node.js\n+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0\n+        with:\n+          node-version: \"24\"\n+          package-manager-cache: false\n+      - name: Build AWF\n+        run: |\n+          npm ci\n+          npm run build\n+          sudo tee /usr/local/bin/awf > /dev/null <<EOF\n+          #!/bin/bash\n+          exec \"$(command -v node)\" \"${GITHUB_WORKSPACE}/dist/cli.js\" \"\\$@\"\n+          EOF\n+          sudo chmod +x /usr/local/bin/awf\n+      - name: Exercise gVisor confidentiality budgets\n+        env:\n+          GH_TOKEN: ${{ github.token }}\n+          SMOKE_QUERY_RUNTIME: gvisor\n+        run: scripts/ci/smoke-bounded-queries.sh\n+post-steps:\n+  - name: Validate gVisor bounded-query invocation\n+    if: always()\n+    env:\n+      AUDIT_LOG: /tmp/gh-aw/sandbox/firewall/audit/bounded-query.jsonl\n+      TELEMETRY_LOG: /tmp/gh-aw/sandbox/firewall/audit/runtime-telemetry.jsonl\n+      OUTPUTS_FILE: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS }}\n+    run: |\n+      node - \"$AUDIT_LOG\" \"$TELEMETRY_LOG\" \"$OUTPUTS_FILE\" <<'NODE'\n+      const fs = require(\"fs\");\n+      const [auditPath, telemetryPath, outputsPath] = process.argv.slice(2);\n+      const readJsonLines = (path) => fs.readFileSync(path, \"utf8\")\n+        .trim()\n+        .split(\"\\n\")\n+        .filter(Boolean)\n+        .map((line) => JSON.parse(line));\n+\n+      const invocations = readJsonLines(auditPath).filter(\n+        (record) => record.kind === \"invocation\" &&\n+          record.repo === \"github/gh-aw\" &&\n+          record.sensitivity === \"internal\"\n+      );\n+      if (invocations.length !== 1) {\n+        throw new Error(`expected one successful bounded query, found ${invocations.length}`);\n+      }\n+\n+      const successfulQueries = readJsonLines(telemetryPath).filter(\n+        (record) => record.primaryBackend === \"gvisor\" &&\n+          record.queryBackend === \"gvisor\" &&\n+          record.lifecycleClass === \"query\" &&\n+          record.capabilityState === \"supported\" &&\n+          record.category === \"success\"\n+      );\n+      if (successfulQueries.length !== 1) {\n+        throw new Error(`expected one successful gVisor query telemetry record, found ${successfulQueries.length}`);\n+      }\n+\n+      const outputs = fs.readFileSync(outputsPath, \"utf8\");\n+      if (!outputs.includes('\"noop\"') || !outputs.includes(\"PASS\")) {\n+        throw new Error(\"agent did not report a bounded-query PASS through noop\");\n+      }\n+      NODE\n+---\n+\n+# Smoke Test: gVisor Bounded Queries\n+\n+Use the generated `bounded-query` skill to answer exactly one finite question about\n+`github/gh-aw`: does the repository root contain a `go.mod` file?\n+\n+The query must:\n+\n+1. Use a boolean JSON schema.\n+2. Run a Python script inside the bounded-query environment that checks\n+   `/query/repo/go.mod`.\n+3. Return `true`.\n+\n+No GitHub API tools are available to the agent. Do not use network requests or\n+the current checkout to answer the question. The test passes only when the\n+query runs in a fresh gVisor sandbox, succeeds, and returns `true`.\n+\n+Call `noop` with a concise PASS result that includes the returned boolean only\n+when the query returns `true`. If the skill is unavailable, call\n+`safeoutputs-missing_tool`. If the query fails or returns anything other than\n+`true`, call `safeoutputs-missing_data`. Never report FAIL through `noop`.",
+          "snapshot_ref": "ba41aa297dd77d083611aad4f237617d244e487c",
+          "snapshot_blob_sha": "814821d9011aef3f67c6d0528cfe8db7262f01a9",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__ba41aa297dd77d083611aad4f237617d244e487c__smoke-bounded-queries-gvisor.md",
+          "snapshot_bytes": 5808,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-bounded-queries-gvisor.lock.yml\",\"generated_workflow_file\":\"smoke-bounded-queries-gvisor.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries-gvisor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries-gvisor.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/smoke-bounded-queries-gvisor.md",
+      "commit_sha": "07c69bce06f9570ff884bcc15ef08263d85d5242",
+      "authored_at": "2026-07-31T20:37:28Z",
+      "committed_at": "2026-07-31T20:37:28Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: diagnose bounded query runtime smokes (#6801)\n\n* fix: diagnose bounded query runtime smokes\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: bound gvisor runtime capability output\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* test: diagnose bounded query socket transport\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* test: surface bounded query runtime telemetry\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* test: keep gvisor smoke runtime-focused\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: isolate only gvisor bounded queries\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: avoid malformed bounded query probe\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* test: trace gvisor query wrapper failures\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: provision runsc for gvisor agent smoke\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: await gvisor confidentiality timing bucket\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n* fix: preserve completed final timing bucket\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90\n\n---------\n\nCopilot-Session: 6923ed6e-0ce2-4fa9-aee9-ccff99b90b90",
+      "parent_shas": [
+        "73fb707ba7f2fd9a35bed9dbe4cb61ec62506e75"
+      ],
+      "tree_sha": "807de3e0e446734c8b268893becc4800b113d063",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/07c69bce06f9570ff884bcc15ef08263d85d5242",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/smoke-bounded-queries-gvisor.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/smoke-bounded-queries-gvisor.md",
+          "commit_sha": "07c69bce06f9570ff884bcc15ef08263d85d5242",
+          "committed_at": "2026-07-31T20:37:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 21,
+          "file_deletions": 4,
+          "file_changes": 25,
+          "file_patch": "@@ -31,8 +31,6 @@ sandbox:\n   agent:\n     id: awf\n     version: v0.28.0\n-    runtime: gvisor\n-    sudo: true\n     args:\n       - --build-local\n steps:\n@@ -41,6 +39,22 @@ steps:\n       npm ci\n       npm run build\n pre-agent-steps:\n+  - name: Install gVisor\n+    run: |\n+      set -euo pipefail\n+      arch=\"$(uname -m)\"\n+      url=\"https://storage.googleapis.com/gvisor/releases/release/20250707.0/${arch}\"\n+      curl -fsSL \"${url}/runsc\" -o /tmp/runsc\n+      curl -fsSL \"${url}/runsc.sha512\" -o /tmp/runsc.sha512\n+      (cd /tmp && sha512sum -c runsc.sha512)\n+      curl -fsSL \"${url}/containerd-shim-runsc-v1\" -o /tmp/containerd-shim-runsc-v1\n+      curl -fsSL \"${url}/containerd-shim-runsc-v1.sha512\" -o /tmp/containerd-shim-runsc-v1.sha512\n+      (cd /tmp && sha512sum -c containerd-shim-runsc-v1.sha512)\n+      sudo install -m 755 /tmp/runsc /usr/local/bin/runsc\n+      sudo install -m 755 /tmp/containerd-shim-runsc-v1 /usr/local/bin/containerd-shim-runsc-v1\n+      sudo runsc install\n+      sudo systemctl restart docker\n+      docker info --format '{{json .Runtimes}}' | grep -F '\"runsc\"'\n   - name: Replace release bootstrap with current AWF build\n     run: |\n       mkdir -p \"$HOME/.local/bin\"\n@@ -50,7 +64,7 @@ pre-agent-steps:\n safe-outputs:\n   threat-detection:\n     enabled: false\n-timeout-minutes: 15\n+timeout-minutes: 30\n strict: false\n concurrency:\n   group: smoke-bounded-queries-gvisor\n@@ -129,7 +143,7 @@ post-steps:\n       }\n \n       const successfulQueries = readJsonLines(telemetryPath).filter(\n-        (record) => record.primaryBackend === \"gvisor\" &&\n+        (record) => record.primaryBackend === \"docker\" &&\n           record.queryBackend === \"gvisor\" &&\n           record.lifecycleClass === \"query\" &&\n           record.capabilityState === \"supported\" &&\n@@ -157,6 +171,9 @@ The query must:\n 2. Run a Python script inside the bounded-query environment that checks\n    `/query/repo/go.mod`.\n 3. Return `true`.\n+4. Wait for the command to finish without interrupting it. Internal queries\n+   intentionally return on a 10-minute confidentiality timing bucket, so this\n+   latency is expected and is not a hang.\n \n No GitHub API tools are available to the agent. Do not use network requests or\n the current checkout to answer the question. The test passes only when the",
+          "snapshot_ref": "07c69bce06f9570ff884bcc15ef08263d85d5242",
+          "snapshot_blob_sha": "e4556f45abba8a647442dbd69b1d844e41d1ec20",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__07c69bce06f9570ff884bcc15ef08263d85d5242__smoke-bounded-queries-gvisor.md",
+          "snapshot_bytes": 6820,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/smoke-bounded-queries-gvisor.lock.yml\",\"generated_workflow_file\":\"smoke-bounded-queries-gvisor.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/smoke-bounded-queries-gvisor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

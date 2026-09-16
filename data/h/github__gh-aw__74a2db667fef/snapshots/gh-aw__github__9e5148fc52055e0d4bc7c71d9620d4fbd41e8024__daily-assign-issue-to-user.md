@@ -1,0 +1,39 @@
+---
+timeout-minutes: 10
+strict: true
+on:
+  schedule: daily
+  workflow_dispatch:
+permissions:
+  issues: read
+  pull-requests: read
+  contents: read
+engine: copilot
+tools:
+  github:
+    toolsets: [issues, pull_requests, repos]
+safe-outputs:
+  assign-to-user:
+    target: "*"
+  add-comment:
+    target: "*"
+---
+
+{{#runtime-import? .github/shared-instructions.md}}
+
+# Auto-Assign Issue
+
+Find ONE open issue that:
+- Has no assignees
+- Does not have label `ai-generated`
+- Was not opened by `github-actions` or any bot
+
+Pick the oldest unassigned issue.
+
+Then list the 5 most recent contributors from merged PRs. Pick one who seems relevant based on the issue type.
+
+If you find a match:
+1. Use `assign-to-user` to assign the issue
+2. Use `add-comment` with a short explanation (1-2 sentences)
+
+If no unassigned issue exists, exit successfully without taking action.

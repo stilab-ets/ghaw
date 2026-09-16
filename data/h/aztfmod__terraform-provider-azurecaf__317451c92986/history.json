@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+    "source_full_name": "aztfmod/terraform-provider-azurecaf",
+    "source_owner": "aztfmod",
+    "source_repo": "terraform-provider-azurecaf",
+    "md_path": ".github/workflows/nightly-regression.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/HEAD/.github/workflows/nightly-regression.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "aztfmod/terraform-provider-azurecaf",
+      "generated_owner": "aztfmod",
+      "generated_repo": "terraform-provider-azurecaf",
+      "generated_workflow_path": ".github/workflows/nightly-regression.lock.yml",
+      "generated_workflow_file": "nightly-regression.lock.yml",
+      "generated_html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/nightly-regression.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:24:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/nightly-regression.md",
+      "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+      "authored_at": "2026-03-23T08:48:57Z",
+      "committed_at": "2026-03-23T08:48:57Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Add new skills and workflows for resource management and testing\n\n- Create e2e-test-runner skill for end-to-end testing procedures.\n- Add example-generator skill to generate Terraform example configurations.\n- Implement issue-to-resource-spec skill for parsing resource requests from GitHub issues.\n- Introduce naming-rules-drift-check skill to verify Azure naming rules against current definitions.\n- Develop pr-compliance-check skill to validate pull request compliance with project standards.\n- Establish pre-release-validation skill for comprehensive checks before release tagging.\n- Create readme-resource-table skill to update resource status in README.md.\n- Add regression-test-runner skill for running full CI test suite and reporting results.\n- Implement release-notes-generator skill for generating release notes from CHANGELOG.md.\n- Create resource-bulk-import skill for batch importing Azure resources into resourceDefinition.json.\n- Develop resource-completeness-check skill to compare resource definitions against existing resources.\n- Introduce resource-diff-report skill for comparing different versions of resourceDefinition.json.\n- Add semver-assessment skill to analyze changes and determine semantic version bumps.\n- Implement test-failure-diagnosis skill for diagnosing test failures and suggesting fixes.\n- Create workflows for contributor welcome, issue-to-PR automation, nightly regression testing, PR review, release validation, and weekly Azure sync.",
+      "parent_shas": [
+        "98993a22009e05fd03064fe6cd256f734dda1cc7"
+      ],
+      "tree_sha": "5e4a5255a5439a57cb125630c194b32024091487",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/575609f79f8432185b89444d13113fa40d7e9553",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/nightly-regression.md",
+          "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+          "committed_at": "2026-03-23T08:48:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 77,
+          "file_deletions": 0,
+          "file_changes": 77,
+          "file_patch": "@@ -0,0 +1,77 @@\n+---\n+description: |\n+  Nightly regression test workflow. Runs the full test suite and E2E tests\n+  on the main branch. Creates a GitHub issue if any tests fail, with\n+  detailed failure information for rapid diagnosis.\n+\n+on:\n+  schedule: \"0 3 * * *\"\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: write\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    lockdown: true\n+    toolsets: [issues]\n+  bash:\n+    - \"make *\"\n+    - \"go *\"\n+    - \"grep *\"\n+    - \"cat *\"\n+    - \"head *\"\n+    - \"tail *\"\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[nightly-regression] \"\n+    labels: [bug, automated, nightly]\n+    close-older-issues: true\n+\n+steps:\n+  - name: Build and test\n+    run: |\n+      echo \"🔨 Building provider...\"\n+      make build 2>&1 | tee /tmp/build-output.txt\n+      BUILD_EXIT=$?\n+\n+      echo \"🧪 Running CI tests...\"\n+      make test_ci 2>&1 | tee /tmp/test-ci-output.txt\n+      TEST_EXIT=$?\n+\n+      echo \"🔬 Running E2E quick tests...\"\n+      make test_e2e_quick 2>&1 | tee /tmp/e2e-output.txt\n+      E2E_EXIT=$?\n+\n+      echo \"BUILD_EXIT=$BUILD_EXIT\" >> /tmp/results.env\n+      echo \"TEST_EXIT=$TEST_EXIT\" >> /tmp/results.env\n+      echo \"E2E_EXIT=$E2E_EXIT\" >> /tmp/results.env\n+\n+      # Extract test summary lines\n+      grep -E \"^(ok|FAIL|---)\" /tmp/test-ci-output.txt > /tmp/test-summary.txt 2>/dev/null || true\n+      grep -E \"^(ok|FAIL|---)\" /tmp/e2e-output.txt >> /tmp/test-summary.txt 2>/dev/null || true\n+\n+source: local\n+engine: copilot\n+---\n+\n+# Nightly Regression\n+\n+Run nightly regression tests on the main branch and report failures.\n+\n+## Process\n+\n+1. Read the test results from `/tmp/results.env` and `/tmp/test-summary.txt`\n+2. If ALL exit codes are 0: no action needed, exit quietly\n+3. If ANY exit code is non-zero:\n+   - Analyze the failure output files (`/tmp/build-output.txt`, `/tmp/test-ci-output.txt`, `/tmp/e2e-output.txt`)\n+   - Identify which tests failed and extract error details\n+   - Create a GitHub issue with:\n+     - Title: `[nightly-regression] Test failures on main — <date>`\n+     - Failed test names and error messages\n+     - Suggested investigation steps\n+     - Links to relevant test files",
+          "snapshot_ref": "575609f79f8432185b89444d13113fa40d7e9553",
+          "snapshot_blob_sha": "0b84ef1f51ad45781450f12ab4cd38046bae2cc8",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__575609f79f8432185b89444d13113fa40d7e9553__nightly-regression.md",
+          "snapshot_bytes": 2108,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/nightly-regression.lock.yml\",\"generated_workflow_file\":\"nightly-regression.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/nightly-regression.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/nightly-regression.md",
+      "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+      "authored_at": "2026-05-14T01:19:22Z",
+      "committed_at": "2026-05-14T01:36:04Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "chore(workflows): recompile agentic workflows with gh-aw v0.72.1\n\n- regenerate all 10 .lock.yml files (was v0.61.0); add 6 missing lock files\n- migrate strict-mode permissions to safe-outputs in 3 workflows\n- replace deprecated tools.github.repos with allowed-repos\n- adopt fuzzy schedules and terraform ecosystem identifier\n\n🤖 - Generated by Copilot",
+      "parent_shas": [
+        "5345a4f1c60e9112d20ae7c7b6e9399318ce2d7a"
+      ],
+      "tree_sha": "8de1b8c85449891565dbd801ce496a93893c1eb1",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/76763b42c2a7a3489689f9f3ba318908329c2432",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/nightly-regression.md",
+          "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "committed_at": "2026-05-14T01:36:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -5,12 +5,12 @@ description: |\n   detailed failure information for rapid diagnosis.\n \n on:\n-  schedule: \"0 3 * * *\"\n+  schedule: daily\n   workflow_dispatch:\n \n permissions:\n   contents: read\n-  issues: write\n+  issues: read\n \n network: defaults\n ",
+          "snapshot_ref": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "snapshot_blob_sha": "d98f67cac996058c020ea9c4e171cbc56dca07b4",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__76763b42c2a7a3489689f9f3ba318908329c2432__nightly-regression.md",
+          "snapshot_bytes": 2101,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/nightly-regression.lock.yml\",\"generated_workflow_file\":\"nightly-regression.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/nightly-regression.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/nightly-regression.md",
+      "commit_sha": "a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+      "authored_at": "2026-05-14T03:42:05Z",
+      "committed_at": "2026-05-14T03:42:05Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "ci+docs: fix nightly regression, agentic workflow firewall paths, doc accuracy\n\nWorkflow fixes (resolves #462, #465, #468):\n\n- nightly-regression: add setup-go + setup-terraform pre-agent steps so make test_e2e_quick can find the terraform binary; rework run-script to use 'set -o pipefail' and capture per-suite exit codes through tee (assignment after tee was always seeing tee's $?, masking failures as exit 0). Step now always exits 0 so the agent can decide whether to file an issue.\n\n- issue-arborist: move pre-downloaded issues.json + issues-schema.json out of /tmp/gh-aw/issues-data/ (firewall-reserved by gh-aw v0.72.1) to ${GITHUB_WORKSPACE}/.gh-aw-data/, and update all path references in the agent prompt body.\n\n- weekly-azure-sync: move python3+curl resource-discovery work into a pre-agent step that writes pre-computed files to ${GITHUB_WORKSPACE}/.gh-aw-data/{supported,azurerm,missing,counts.env,caf-abbreviations.html}; tighten agent bash allowlist to read-only tools (cat/grep/head/tail/sort/comm/wc) since python3 is denied inside the firewall sandbox.\n\nAll 3 lock files recompiled with 'gh aw compile --approve' (v0.72.1) including the new hashicorp/setup-terraform@v4 action approval recorded in .github/aw/actions-lock.json. Compile output: 0 errors, 0 warnings.\n\nDocumentation accuracy + Doc-Ops pass:\n\n- README.md: fix 3 run-on regressions from PR #469's bulk substitution where missing newlines collapsed adjacent list items / fenced-code lines; replace broken 'make test_resource_constraints' references with 'make test_resource_matrix' (whose Makefile help string already covers constraint validation); add missing 'error_when_exceeding_max_length' parameter row that was on the schema but absent from the table.\n\n- TESTING.md: remove 2 references to integration test files that do not exist (integration_cross_resource_test.go, integration_naming_convention_types_test.go); add integration_all_resources_complete_test.go; soften 1 hedging phrase per writing-style instructions.\n\n- E2E_IMPLEMENTATION_SUMMARY.md, e2e/README.md: minor style fixes (hedging, dangling empty-body bullet).\n\n- docs/index.md, docs/resources/{azurecaf_name,azurecaf_naming_convention}.md, docs/data-sources/azurecaf_name.md, .github/CONTRIBUTING.md: align documented resource count from '400+' to actual '401' (verified via 'jq length resourceDefinition.json'); makes the line-44 CHANGELOG claim from PR #469 actually accurate.\n\n- .gitignore: exclude .copilot-tracking/ working notes from version control.\n\n- CHANGELOG.md: add [Unreleased] entries documenting all of the above.",
+      "parent_shas": [
+        "1a5641a12b57dc4e7b18cf99cac594a375a37e35"
+      ],
+      "tree_sha": "d3cc550330852bf0ef3103d24795836df8c7d0ca",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/nightly-regression.md",
+          "commit_sha": "a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+          "committed_at": "2026-05-14T03:42:05Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 39,
+          "file_deletions": 9,
+          "file_changes": 48,
+          "file_patch": "@@ -33,28 +33,58 @@ safe-outputs:\n     close-older-issues: true\n \n steps:\n+  - name: Set up Go\n+    uses: actions/setup-go@v6\n+    with:\n+      go-version-file: './go.mod'\n+      cache: true\n+\n+  - name: Setup Terraform\n+    uses: hashicorp/setup-terraform@v4\n+    with:\n+      terraform_version: \"~> 1.0\"\n+      terraform_wrapper: false\n+\n   - name: Build and test\n+    env:\n+      CHECKPOINT_DISABLE: \"1\"\n+      TF_IN_AUTOMATION: \"1\"\n+      TF_CLI_ARGS_init: \"-upgrade=false\"\n     run: |\n+      set -o pipefail\n+      : > /tmp/results.env\n+\n       echo \"🔨 Building provider...\"\n-      make build 2>&1 | tee /tmp/build-output.txt\n-      BUILD_EXIT=$?\n+      if make build 2>&1 | tee /tmp/build-output.txt; then\n+        BUILD_EXIT=0\n+      else\n+        BUILD_EXIT=$?\n+      fi\n+      echo \"BUILD_EXIT=$BUILD_EXIT\" >> /tmp/results.env\n \n       echo \"🧪 Running CI tests...\"\n-      make test_ci 2>&1 | tee /tmp/test-ci-output.txt\n-      TEST_EXIT=$?\n+      if make test_ci 2>&1 | tee /tmp/test-ci-output.txt; then\n+        TEST_EXIT=0\n+      else\n+        TEST_EXIT=$?\n+      fi\n+      echo \"TEST_EXIT=$TEST_EXIT\" >> /tmp/results.env\n \n       echo \"🔬 Running E2E quick tests...\"\n-      make test_e2e_quick 2>&1 | tee /tmp/e2e-output.txt\n-      E2E_EXIT=$?\n-\n-      echo \"BUILD_EXIT=$BUILD_EXIT\" >> /tmp/results.env\n-      echo \"TEST_EXIT=$TEST_EXIT\" >> /tmp/results.env\n+      if make test_e2e_quick 2>&1 | tee /tmp/e2e-output.txt; then\n+        E2E_EXIT=0\n+      else\n+        E2E_EXIT=$?\n+      fi\n       echo \"E2E_EXIT=$E2E_EXIT\" >> /tmp/results.env\n \n       # Extract test summary lines\n       grep -E \"^(ok|FAIL|---)\" /tmp/test-ci-output.txt > /tmp/test-summary.txt 2>/dev/null || true\n       grep -E \"^(ok|FAIL|---)\" /tmp/e2e-output.txt >> /tmp/test-summary.txt 2>/dev/null || true\n \n+      # Always exit 0 from this step so the agent can run and report failures.\n+      exit 0\n+\n source: local\n engine: copilot\n ---",
+          "snapshot_ref": "a59df36ab7592e4b88bc8b65b68edb1b008b8313",
+          "snapshot_blob_sha": "43aeaa793ca52aa1e269d9a6536b849b8662e069",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__a59df36ab7592e4b88bc8b65b68edb1b008b8313__nightly-regression.md",
+          "snapshot_bytes": 2758,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/nightly-regression.lock.yml\",\"generated_workflow_file\":\"nightly-regression.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/nightly-regression.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/nightly-regression.md",
+      "commit_sha": "8e30dcdffc957e3e6e5b610d02909abdb8ff24e7",
+      "authored_at": "2026-05-14T04:01:35Z",
+      "committed_at": "2026-05-14T04:01:35Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "fix(workflows): install tfproviderlint in nightly + lock down top-level permissions\n\n- Makefile: skip lint step with warning if tfproviderlint not on PATH\n- nightly-regression.md: install tfproviderlint after Set up Go\n- recompile nightly-regression.lock.yml via gh aw v0.72.1\n- codeql.yml + copilot-setup-steps.yml: add top-level permissions: contents: read (CKV2_GHA_1)\n\n🔒 - Generated by Copilot",
+      "parent_shas": [
+        "ed424bad2688ea64fcc095fbdc574cf116fec1cd"
+      ],
+      "tree_sha": "7a648d7feac49010ad6fb77474ecc6efd610cf08",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/8e30dcdffc957e3e6e5b610d02909abdb8ff24e7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/nightly-regression.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/nightly-regression.md",
+          "commit_sha": "8e30dcdffc957e3e6e5b610d02909abdb8ff24e7",
+          "committed_at": "2026-05-14T04:01:35Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 0,
+          "file_changes": 5,
+          "file_patch": "@@ -39,6 +39,11 @@ steps:\n       go-version-file: './go.mod'\n       cache: true\n \n+  - name: Install tfproviderlint\n+    run: |\n+      go install github.com/bflad/tfproviderlint/cmd/tfproviderlint@latest\n+      echo \"$(go env GOPATH)/bin\" >> \"$GITHUB_PATH\"\n+\n   - name: Setup Terraform\n     uses: hashicorp/setup-terraform@v4\n     with:",
+          "snapshot_ref": "8e30dcdffc957e3e6e5b610d02909abdb8ff24e7",
+          "snapshot_blob_sha": "4b7952451f1b7c629505f007fcedf8465d9dac2c",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__8e30dcdffc957e3e6e5b610d02909abdb8ff24e7__nightly-regression.md",
+          "snapshot_bytes": 2930,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/nightly-regression.lock.yml\",\"generated_workflow_file\":\"nightly-regression.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/nightly-regression.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

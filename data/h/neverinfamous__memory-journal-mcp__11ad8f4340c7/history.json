@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+    "source_full_name": "neverinfamous/memory-journal-mcp",
+    "source_owner": "neverinfamous",
+    "source_repo": "memory-journal-mcp",
+    "md_path": ".github/workflows/ci-health-monitor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/neverinfamous/memory-journal-mcp/blob/HEAD/.github/workflows/ci-health-monitor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "neverinfamous/memory-journal-mcp",
+      "generated_owner": "neverinfamous",
+      "generated_repo": "memory-journal-mcp",
+      "generated_workflow_path": ".github/workflows/ci-health-monitor.lock.yml",
+      "generated_workflow_file": "ci-health-monitor.lock.yml",
+      "generated_html_url": "https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/ci-health-monitor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:03+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+      "source_full_name": "neverinfamous/memory-journal-mcp",
+      "md_path": ".github/workflows/ci-health-monitor.md",
+      "commit_sha": "3bd1f642a56dbaa55ee536e8ca964d7a0160db9b",
+      "authored_at": "2026-03-12T12:39:35Z",
+      "committed_at": "2026-03-12T12:39:35Z",
+      "author_name": "Chris LeRoux",
+      "author_email": "writenotenow@gmail.com",
+      "author_login": "neverinfamous",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add agentic workflows - deps maintenance, docs drift, CI health (#238)\n\n* Modularize HTTP transport for dual-transport parity\n\nSplit monolithic src/transports/http.ts (638 lines) into src/transports/http/\ndirectory with types.ts, security.ts, handlers.ts, server.ts, index.ts.\n\nSecurity:\n- Built-in rate limiter replaces express-rate-limit dependency\n- Server timeouts (120s request / 65s keep-alive / 66s headers)\n- Wildcard CORS, Access-Control-Max-Age, Vary: Origin\n- trustProxy, maxBodySize, enableHSTS (config-driven)\n- Cache-Control: no-store, no-cache, must-revalidate\n\nBreaking: corsOrigin: string -> corsOrigins: string[]\nCLI --cors-origin now accepts comma-separated values\n\n738 unit tests, 47 E2E tests passing\n\n* feat: implement smart db path resolution and test-server orchestration\n\n* docs: promote Code Mode across README, DOCKER_README, wiki, and reference docs - Update tool counts 42→43 and group counts 9→10 across all docs - Add Code Mode section with sandbox security, code-only config, and disable instructions - Add codemode group to tool filtering tables and meta-group presets - Update test counts to 887 (840 unit + 47 E2E) - Add Code Mode entries to code-map.md and tool-reference.md - Add codemode handler and tests (security, sandbox, API, factory, handlers)\n\n* fix: resolve 4 Code Mode sandbox bugs - Fix outputSchema with z.unknown() causing structuredContent client crash - Fix double MessagePort transfer (workerData pattern, not postMessage) - Fix binding serialization for _topLevel function aliases - Fix microtaskMode: afterEvaluate preventing async promise resolution - Align worker-sandbox.ts and worker-script.ts with db-mcp patterns - Update README/DOCKER_README dates to March 11, 2026\n\n* feat: add payload contract E2E tests + rate limit env var\n\n- Add MCP_RATE_LIMIT_MAX=10000 to playwright.config.ts\n- Add shared E2E helpers (createClient, callToolAndParse, expectSuccess)\n- Add 7 payload spec files covering 24 tools:\n  - payloads-core: create_entry, get_recent_entries, get_entry_by_id,\n    create_entry_minimal, test_simple, list_tags\n  - payloads-search: search_entries, search_by_date_range,\n    semantic_search, get_vector_index_stats\n  - payloads-analytics: get_statistics, get_cross_project_insights\n  - payloads-relationships: link_entries, visualize_relationships\n  - payloads-admin: update_entry, delete_entry, merge_tags,\n    rebuild_vector_index, add_to_vector_index\n  - payloads-backup: backup_journal, list_backups, cleanup_backups\n  - payloads-export: export_entries (json + markdown)\n\nAll 71 E2E tests passing (47 existing + 24 new).\n\n* feat: OAuth 2.1 auth module + relaxedNumber() numeric coercion fix\n\nOAuth 2.1:\n- 10 new files in src/auth/: RFC 9728/8414 compliant OAuth\n- JWT validation via jose, JWKS caching, scope-based access control\n- 10 tool groups mapped to 3 scopes (read/write/admin)\n- AsyncLocalStorage per-request auth context\n- 5 CLI flags: --oauth-enabled, --oauth-issuer, etc.\n\nNumeric coercion fix:\n- Added relaxedNumber() helper (z.any()) to schemas.ts\n- Replaced z.number()/z.coerce.number() in relaxed MCP schemas\n- Non-numeric inputs now produce structured {success:false,error}\n  instead of raw MCP -32602 errors\n- 4 new relaxed schemas: GetEntryByIdSchemaMcp, DeleteEntrySchemaMcp,\n  TeamGetRecentSchemaMcp, TeamSearchSchemaMcp\n- Fixed scopes.ts comment parse error (pre-existing)\n\nUpdated: code-map.md (auth dir, relaxedNumber, OAuth pattern)\n\n* fix: forward timeout parameter to sandbox pool in Code Mode\n\nThe timeout parameter on mj_execute_code was parsed by the Zod schema\nbut never forwarded to the sandbox pool. All executions used the default\n30s timeout regardless of the user-specified value.\n\nAdded per-call timeoutMs override to ISandbox, ISandboxPool, and all\nsandbox/pool implementations. Handler now destructures timeout and\npasses it to pool.execute().\n\nFiles: codemode.ts, sandbox-factory.ts, worker-sandbox.ts, sandbox.ts,\nCHANGELOG.md, test-tools-codemode.md\n\n* feat: add get_copilot_reviews tool and Copilot review integration\n\n- New get_copilot_reviews tool (tool #44) with Copilot bot pattern matching\n- GitHubReview, GitHubReviewComment, CopilotReviewSummary types\n- getReviews(), getReviewComments(), getCopilotReviewSummary() API methods\n- BRIEFING_COPILOT_REVIEWS env var / --briefing-copilot CLI flag\n- Copilot Review Patterns section in server instructions\n- docs/COPILOT_SETUP.md for Copilot MCP bridge setup\n- Updated all tool counts 43->44, GitHub group 15->16\n\n* fix: shared.ts missing interface brace, ToolFilter.ts missing get_copilot_reviews, type assertion fix\n\n* fix: add missing type exports to barrel, revert unnecessary non-null assertion\n\n* fix: use non-null assertion for c.side per lint rule\n\n* fix: use nullish coalescing for c.side to satisfy both lint rules\n\n* fix: guard array index access for possibly-undefined latest review\n\n* test: update tool count assertions from 43 to 44\n\n* fix: remove hardcoded tool counts from code mode descriptions (future-proof)\n\n* feat: expose test-server to git, add .github/copilot-instructions.md, fix CONTRIBUTING.md\n\n* docs: add session context and briefing instructions to copilot-instructions.md\n\n* feat: add agentic workflows - deps maintenance, docs drift, CI health monitor\n\n* fix: CORS origin validation to prevent credential leak (CodeQL js/cors-misconfiguration-for-credentials)\n\n* fix: address all 9 Copilot review findings - param names, env vars, scopes, limits, auth exports\n\n* fix: resolve CodeQL CORS taint tracking and sensitive OAuth URI logging\n\n* fix: fully separate CORS exact/wildcard paths to resolve CodeQL taint tracking\n\n* fix: isolate wildcard CORS into separate function without credentials header\n\n* fix: revert to db-mcp CORS implementation to satisfy CodeQL origin taint heuristics\n\n* fix: use CodeQL-recognized 'origin in whitelist' sanitizer pattern for CORS credentials\n\n* fix: remove wildcard subdomain CORS fallback — last tainted origin flow flagged by CodeQL",
+      "parent_shas": [
+        "78ef35e341756eba84b8dfa7757b0fd17551caf8"
+      ],
+      "tree_sha": "206c849d401eb86dec0df7866fe678c76f7ac46e",
+      "html_url": "https://github.com/neverinfamous/memory-journal-mcp/commit/3bd1f642a56dbaa55ee536e8ca964d7a0160db9b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+          "source_full_name": "neverinfamous/memory-journal-mcp",
+          "md_path": ".github/workflows/ci-health-monitor.md",
+          "commit_sha": "3bd1f642a56dbaa55ee536e8ca964d7a0160db9b",
+          "committed_at": "2026-03-12T12:39:35Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 87,
+          "file_deletions": 0,
+          "file_changes": 87,
+          "file_patch": "@@ -0,0 +1,87 @@\n+---\n+description: \"Weekly audit of CI workflows for deprecations, outdated actions, and health issues\"\n+private: true\n+labels: [maintenance, ci-cd]\n+\n+on:\n+  schedule:\n+    - cron: \"0 14 * * 3\" # Every Wednesday at 14:00 UTC\n+  workflow_dispatch:\n+\n+engine:\n+  id: copilot\n+  model: claude-opus-4-20250514\n+\n+network:\n+  allowed:\n+    - defaults\n+    - node\n+\n+permissions: read-all\n+\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[ci-health] \"\n+    labels: [maintenance, ci-cd]\n+    max: 1\n+  noop:\n+    max: 1\n+\n+timeout-minutes: 15\n+concurrency: ci-health-monitor\n+---\n+\n+# CI Health Monitor\n+\n+You are auditing the CI/CD infrastructure for the **memory-journal-mcp** project. Your job is to check all GitHub Actions workflows for deprecations, outdated action versions, and health issues.\n+\n+## Important Rules\n+\n+- **Only report actionable findings.** Don't flag things that are working correctly.\n+- **If everything is healthy, report \"all clear\" via noop.** Do not create empty issues.\n+- **Be specific with fix suggestions.** Include the exact file, line, and replacement value.\n+\n+## Step 1: Audit Workflow Files\n+\n+List all `.yml` files in `.github/workflows/`. For each workflow file:\n+\n+1. **Check action versions** — for each `uses:` line, note the action name and version/tag. Check if a newer major or minor version exists by reading the action's releases.\n+2. **Check Node.js runtime** — look for `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24` workarounds or actions known to use deprecated Node.js versions (16, 18, 20). Flag any that will break after the June 2026 deadline.\n+3. **Check for deprecated features** — `set-output`, `save-state`, `::set-output::` commands, or other deprecated GitHub Actions features.\n+4. **Check Dependabot config** — read `dependabot.yml` and verify it covers all ecosystems in use (npm, GitHub Actions, Docker).\n+\n+## Step 2: Review Recent Workflow Runs\n+\n+Check recent workflow runs (last 7 days):\n+\n+1. Any workflows with consistent failures?\n+2. Any runs with annotations or warnings?\n+3. Any runs that are abnormally slow?\n+\n+## Step 3: Report\n+\n+Before creating a new issue, check if an existing open issue with the `[ci-health]` prefix already exists. If so, add a comment to that issue instead of creating a duplicate. Only create a new issue if none exists.\n+\n+### If issues are found:\n+\n+Create an issue via safe-output with this structure:\n+\n+```\n+## 🏥 CI Health Report — [DATE]\n+\n+### 🔴 Critical (blocks before June 2026)\n+- [action@version] in [workflow.yml] — needs update to [version] for Node.js 24\n+\n+### 🟡 Warnings\n+- [description of warning/deprecation]\n+\n+### 🟢 Healthy\n+- [list of workflows that passed all checks]\n+\n+### Suggested Fixes\n+1. [exact code change with file + line]\n+```\n+\n+### If everything is healthy:\n+\n+Use the noop tool with: \"✅ CI Health Check — all workflows healthy, no deprecations or issues found.\"",
+          "snapshot_ref": "3bd1f642a56dbaa55ee536e8ca964d7a0160db9b",
+          "snapshot_blob_sha": "2bde1bf0ea5c0263088d4e806477cd06b73ea5dc",
+          "snapshot_file": "snapshots/memory-journal-mcp__neverinfamous__3bd1f642a56dbaa55ee536e8ca964d7a0160db9b__ci-health-monitor.md",
+          "snapshot_bytes": 2831,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neverinfamous/memory-journal-mcp\",\"generated_owner\":\"neverinfamous\",\"generated_repo\":\"memory-journal-mcp\",\"generated_workflow_path\":\".github/workflows/ci-health-monitor.lock.yml\",\"generated_workflow_file\":\"ci-health-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/ci-health-monitor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+      "source_full_name": "neverinfamous/memory-journal-mcp",
+      "md_path": ".github/workflows/ci-health-monitor.md",
+      "commit_sha": "6ccb6c48c6d4eeacd235a33e499ebe6f6f757225",
+      "authored_at": "2026-03-14T10:11:25Z",
+      "committed_at": "2026-03-14T10:37:45Z",
+      "author_name": "Chris & Mike",
+      "author_email": "writenotenow@gmail.com",
+      "author_login": "neverinfamous",
+      "author_account_type": "User",
+      "committer_name": "Chris & Mike",
+      "committer_email": "writenotenow@gmail.com",
+      "committer_login": "neverinfamous",
+      "committer_account_type": "User",
+      "message": "v6.0.0 - Code Mode, OAuth 2.1, FTS5, architecture overhaul",
+      "parent_shas": [
+        "ea52774f8a830cdac44a857132bff6b29a5ac75f"
+      ],
+      "tree_sha": "e681f23fb0c2cf1d5df0e1d909c99107bd468c4a",
+      "html_url": "https://github.com/neverinfamous/memory-journal-mcp/commit/6ccb6c48c6d4eeacd235a33e499ebe6f6f757225",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+          "source_full_name": "neverinfamous/memory-journal-mcp",
+          "md_path": ".github/workflows/ci-health-monitor.md",
+          "commit_sha": "6ccb6c48c6d4eeacd235a33e499ebe6f6f757225",
+          "committed_at": "2026-03-14T10:37:45Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 3,
+          "file_changes": 6,
+          "file_patch": "@@ -1,11 +1,11 @@\n ---\n-description: \"Weekly audit of CI workflows for deprecations, outdated actions, and health issues\"\n+description: 'Weekly audit of CI workflows for deprecations, outdated actions, and health issues'\n private: true\n labels: [maintenance, ci-cd]\n \n on:\n   schedule:\n-    - cron: \"0 14 * * 3\" # Every Wednesday at 14:00 UTC\n+    - cron: '0 14 * * 3' # Every Wednesday at 14:00 UTC\n   workflow_dispatch:\n \n engine:\n@@ -21,7 +21,7 @@ permissions: read-all\n \n safe-outputs:\n   create-issue:\n-    title-prefix: \"[ci-health] \"\n+    title-prefix: '[ci-health] '\n     labels: [maintenance, ci-cd]\n     max: 1\n   noop:",
+          "snapshot_ref": "6ccb6c48c6d4eeacd235a33e499ebe6f6f757225",
+          "snapshot_blob_sha": "de2501ca7177c9cfacc5af48080054ece4d0af9d",
+          "snapshot_file": "snapshots/memory-journal-mcp__neverinfamous__6ccb6c48c6d4eeacd235a33e499ebe6f6f757225__ci-health-monitor.md",
+          "snapshot_bytes": 2831,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neverinfamous/memory-journal-mcp\",\"generated_owner\":\"neverinfamous\",\"generated_repo\":\"memory-journal-mcp\",\"generated_workflow_path\":\".github/workflows/ci-health-monitor.lock.yml\",\"generated_workflow_file\":\"ci-health-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/ci-health-monitor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+      "source_full_name": "neverinfamous/memory-journal-mcp",
+      "md_path": ".github/workflows/ci-health-monitor.md",
+      "commit_sha": "14d9c70ea17deb637cde33b8b45fa57063c9e217",
+      "authored_at": "2026-04-11T01:45:17Z",
+      "committed_at": "2026-04-11T01:45:17Z",
+      "author_name": "Chris LeRoux",
+      "author_email": "writenotenow@gmail.com",
+      "author_login": "neverinfamous",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Release v7.3.0 (#429)\n\n* chore: resolve unused variable warnings in test coverage and sync dockers README\n\n* chore: bump timeout for help-resource tests to prevent CPU starvation during parallel vitest runs\n\n* chore: relax ESLint test-specific constraints to allow mock patterns and assertions without global violation\n\n* chore: bump agent-skills package version to 1.0.7\n\n* chore: verify admin and backup via code mode\n\n* test: verify core CRUD via code mode (phase 20)\n\n* test: verify Code Mode error matrix (Phase 29)\n\n* test: verify Code Mode error matrix (Phase 29)\n\n* docs: verifiable GitHub tools tested cleanly via Code Mode\n\n* test(codemode): fix OS path-matching in IO interoperability tests and verify\n\n* test: verify phase 23 cross-group orchestration via code mode\n\n* chore(test): verify payload optimization via code mode\n\n* test(codemode): verify readonly sandbox enforcement\n\n* fix(relationships): enforce structured ResourceNotFoundError for nonexistent visualization targets\n\n* test: verify relationships and visualization in code mode\n\n* docs: log Phase 21 test pass in UNRELEASED.md\n\n* docs(changelog): certify team admin codemode verification\n\n* test: verify team tools via codemode (Phase 28.1-28.3)\n\n* docs: verify team vector and cross-tool error paths via Code Mode (Phase 28.9-28.10)\n\n* docs: add Phase 22 Code Mode multi-step workflow verification\n\n* Clean up test prompts after successful passes.\n\n* fix(github): always include openCount in milestone status resource summary\n\n* chore: verify IO tools via direct MCP tests\n\n* chore: verify relationships testing via direct calls\n\n* fix(search): apply metadata filters to vector and hybrid results\n\n* fix(error-handling): align validation codes, int coercion, prompt safety, success fields\n\n* test: update VALIDATION_FAILED assertions to VALIDATION_ERROR\n\n* fix(error-handling): unify validation code and update test assertions\n\n- Update E2E test assertions to use VALIDATION_ERROR instead of VALIDATION_FAILED\n- Increase timeout for rebuild_vector_index in E2E tests\n- Update UNRELEASED.md with Phase 11 results\n\n* fix(search): standardize schemas and improve semantic search recall\n\nStandardize success: true field for read-only tools across Analytics, Team and Vector modules.\n\nAdd oversampling to semantic_search to ensure metadata filtering behaves correctly without losing matches.\n\nEstablish personal and team semantic_search metadata parity.\n\n* fix(relationships): re-apply soft-deleted entry guard in link_entries\n\n* test: implement strict whitelist cleanup script and apply db purge\n\n* docs(test): document cleanup-seed-data script in index\n\n* fix(github): add error boundary to create_github_issue_with_entry output schema\n\n* chore(tests): verify Team Collaboration and integration tools\n\n* docs(changelog): log core tools Verification Suite completion\n\n* fix(github): add missing success flag to get_repo_insights\n\n* test: verify team tool group configuration error bounds and fallback capabilities\n\n* Cleaned up UNRELEASED.md.\n\n* Update readmes.\n\n* docs: format UNRELEASED.md per Keep a Changelog standards\n\n* v7.3.0 - Adaptive Context Verification\n\n* test(codemode): verify Admin, Backup, and Export features via Code Mode\n\n* test(codemode): verify API discoverability phase 17\n\n* chore(docs): code mode core crud verification\n\n* test(codemode): verify Phase 29 structured error matrix\n\n* test: verify GitHub integration tools via Code Mode\n\n* chore(docs): document Phase 26 Code Mode IO Verification\n\n* test(codemode): verify cross-group orchestration via phase 23\n\n* chore(test): verify codemode readonly mode restrictions\n\n* test: Phase 16 Sandbox Basics verification via Code Mode\n\n* docs: phase 21 code mode search and semantics verification\n\n* test: verify Phase 19 Code Mode Error Handling & Security\n\n* test(codemode): verify team admin operations via code mode bridge\n\n* chore: verify Phase 28.1-28.3 Team CRUD & Date Range Search via Code Mode\n\n* chore: document phase 28 verification of team vector and cross-tool errors in changelog\n\n* docs: verify multi-step workflows via code mode\n\n* docs(changelog): record Phase 2 CRUD tool verification pass\n\n* chore(testing): verify core infrastructure tools\n\n* docs: trace Phase 10 verification of automated scheduler\n\n* chore: document Phase 3 text search verification\n\n* test(search): complete semantic search and analytics native verification\n\n* docs: add Phase 2 GitHub tools testing verification matrix to UNRELEASED.md\n\n* docs(changelog): log Backup & Export tools verification\n\n* chore(test): verify core tool group via direct mapping\n\n* Clean out UNRELEASED.md.\n\n* Clean up changelog.",
+      "parent_shas": [
+        "172f2210a4e53e790327b92dc4335138485d795f"
+      ],
+      "tree_sha": "5de415859fafa033d5d75a04747e4223902fca50",
+      "html_url": "https://github.com/neverinfamous/memory-journal-mcp/commit/14d9c70ea17deb637cde33b8b45fa57063c9e217",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neverinfamous/memory-journal-mcp:.github/workflows/ci-health-monitor.md",
+          "source_full_name": "neverinfamous/memory-journal-mcp",
+          "md_path": ".github/workflows/ci-health-monitor.md",
+          "commit_sha": "14d9c70ea17deb637cde33b8b45fa57063c9e217",
+          "committed_at": "2026-04-11T01:45:17Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -20,6 +20,7 @@ network:\n permissions: read-all\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-issue:\n     title-prefix: '[ci-health] '\n     labels: [maintenance, ci-cd]",
+          "snapshot_ref": "14d9c70ea17deb637cde33b8b45fa57063c9e217",
+          "snapshot_blob_sha": "7c67970b2e464d154e80c42b8e86ce4e5921c237",
+          "snapshot_file": "snapshots/memory-journal-mcp__neverinfamous__14d9c70ea17deb637cde33b8b45fa57063c9e217__ci-health-monitor.md",
+          "snapshot_bytes": 2864,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neverinfamous/memory-journal-mcp\",\"generated_owner\":\"neverinfamous\",\"generated_repo\":\"memory-journal-mcp\",\"generated_workflow_path\":\".github/workflows/ci-health-monitor.lock.yml\",\"generated_workflow_file\":\"ci-health-monitor.lock.yml\",\"generated_html_url\":\"https://github.com/neverinfamous/memory-journal-mcp/blob/f58eb155ec1761a69138f7e1e034b85e95b89f27/.github/workflows/ci-health-monitor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

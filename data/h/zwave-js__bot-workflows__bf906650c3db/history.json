@@ -1,0 +1,247 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+    "source_full_name": "zwave-js/bot-workflows",
+    "source_owner": "zwave-js",
+    "source_repo": "bot-workflows",
+    "md_path": "workflows/answer-from-docs.md",
+    "discovery_method": "explicit_source_header",
+    "github_url": "https://github.com/zwave-js/bot-workflows/blob/HEAD/workflows/answer-from-docs.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "zwave-js/zwave-js",
+      "generated_owner": "zwave-js",
+      "generated_repo": "zwave-js",
+      "generated_workflow_path": ".github/workflows/answer-from-docs.lock.yml",
+      "generated_workflow_file": "answer-from-docs.lock.yml",
+      "generated_html_url": "https://github.com/zwave-js/zwave-js/blob/3c88fb4b87e1215deefe13fa5e9d430885a308b5/.github/workflows/answer-from-docs.lock.yml"
+    },
+    {
+      "generated_full_name": "zwave-js/zwave-js-ui",
+      "generated_owner": "zwave-js",
+      "generated_repo": "zwave-js-ui",
+      "generated_workflow_path": ".github/workflows/answer-from-docs.lock.yml",
+      "generated_workflow_file": "answer-from-docs.lock.yml",
+      "generated_html_url": "https://github.com/zwave-js/zwave-js-ui/blob/0edab73ed7a7df99688defacacf2e4c4a122461c/.github/workflows/answer-from-docs.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:43:48+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+      "source_full_name": "zwave-js/bot-workflows",
+      "md_path": "workflows/answer-from-docs.md",
+      "commit_sha": "b3c30db5a3fad54cda1634a4a708f7178d6497ee",
+      "authored_at": "2026-08-01T15:53:36Z",
+      "committed_at": "2026-08-01T15:53:36Z",
+      "author_name": "zwave-js-bot",
+      "author_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "author_login": "zwave-js-bot",
+      "author_account_type": "User",
+      "committer_name": "zwave-js-bot",
+      "committer_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "committer_login": "zwave-js-bot",
+      "committer_account_type": "User",
+      "message": "feat: add the agentic workflow layer\n\n- four agentic workflows in workflows/ with shared hardening, judge and\n  log-analysis components imported via absolute pinned refs\n- classify scripts moved from zwave-js-ui into bot-scripts/classify\n- aw.yml package manifest, compile-drift CI job, consumer install docs",
+      "parent_shas": [
+        "c9aa3534e0559fd377863a0afce9940f813bb6d7"
+      ],
+      "tree_sha": "1ba5d1a6967e8fdd95dad25b46725ae2273c19a6",
+      "html_url": "https://github.com/zwave-js/bot-workflows/commit/b3c30db5a3fad54cda1634a4a708f7178d6497ee",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+          "source_full_name": "zwave-js/bot-workflows",
+          "md_path": "workflows/answer-from-docs.md",
+          "commit_sha": "b3c30db5a3fad54cda1634a4a708f7178d6497ee",
+          "committed_at": "2026-08-01T15:53:36Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 176,
+          "file_deletions": 0,
+          "file_changes": 176,
+          "file_patch": "@@ -0,0 +1,176 @@\n+---\n+description: Answer questions in issues and discussions based on the documentation\n+\n+on:\n+  issues:\n+    types: [opened, edited]\n+  discussion:\n+    types: [created, edited]\n+  # Questions come from regular users; gating happens via the\n+  # deterministic retrieval pipeline below, not via repo roles\n+  roles: all\n+  reaction: none\n+  steps:\n+    - name: Checkout repository\n+      uses: actions/checkout@v6\n+      with:\n+        # This job runs npm ci and third-party packages alongside a github-script\n+        # step holding BOT_TOKEN; don't also persist the workflow token in .git\n+        persist-credentials: false\n+\n+    # The artifact fallback assumes the embeddings callers are named\n+    # docs-embeddings.yml / posts-embeddings.yml; pass producer-workflow\n+    # here if this repo names them differently\n+    - name: Restore docs index\n+      id: docs-index\n+      uses: zwave-js/bot-workflows/actions/restore-bot-index@v1\n+      with:\n+        index: docs\n+        github-token: ${{ github.token }}\n+\n+    - name: Restore posts index\n+      id: posts-index\n+      uses: zwave-js/bot-workflows/actions/restore-bot-index@v1\n+      with:\n+        index: posts\n+        github-token: ${{ github.token }}\n+\n+    # Downvoted answers collected by the docs-embeddings workflow.\n+    # A missing cache just means no suppression is applied, so unlike the\n+    # indexes this one deliberately has no artifact fallback.\n+    - name: Restore answer feedback\n+      uses: actions/cache/restore@v6\n+      with:\n+        path: .docs-feedback/feedback.json\n+        key: docs-feedback-v2-\n+        restore-keys: |\n+          docs-feedback-v2-\n+\n+    # One missing index still answers, just worse - say so instead of\n+    # letting a half-working bot look healthy\n+    - name: Warn about a partial outage\n+      if: |\n+        (steps.docs-index.outputs.found == 'true') !=\n+        (steps.posts-index.outputs.found == 'true')\n+      env:\n+        DOCS_FOUND: ${{ steps.docs-index.outputs.found }}\n+        POSTS_FOUND: ${{ steps.posts-index.outputs.found }}\n+      run: |\n+        echo \"::warning::Only one of the two indexes was restored (docs: $DOCS_FOUND, posts: $POSTS_FOUND) - answers will be degraded\"\n+\n+    # This workflow is triggered by whoever opened the issue or discussion, so\n+    # a failed run notifies them, not the maintainers. Route the outage to the\n+    # tracking issue instead, and let a later healthy run close it again. The\n+    # shared action owns the issue title and the degraded/healthy predicate, so\n+    # this reporter and the scheduled self-check cannot disagree and flap it.\n+    - name: Report index status\n+      if: always()\n+      uses: zwave-js/bot-workflows/actions/report-index-status@v1\n+      with:\n+        docs: ${{ steps.docs-index.outputs.found }}\n+        posts: ${{ steps.posts-index.outputs.found }}\n+        docs-status: ${{ steps.docs-index.outputs.status }}\n+        posts-status: ${{ steps.posts-index.outputs.status }}\n+        docs-age-days: ${{ steps.docs-index.outputs.age-days }}\n+        posts-age-days: ${{ steps.posts-index.outputs.age-days }}\n+        docs-source: ${{ steps.docs-index.outputs.source }}\n+        posts-source: ${{ steps.posts-index.outputs.source }}\n+        github-token: ${{ secrets.BOT_TOKEN }}\n+        # Fires once per new issue or discussion, so an open outage must not\n+        # collect a comment every time\n+        quiet: 'true'\n+\n+    - name: Fail if neither index is available\n+      # Both the cache entry and the newest unexpired artifact would have to be\n+      # missing for this to fire. Failing the job keeps a permanently broken\n+      # bot from reporting green run after run.\n+      if: steps.docs-index.outputs.found != 'true' && steps.posts-index.outputs.found != 'true'\n+      run: |\n+        echo \"::error::Neither the docs index nor the posts index could be restored, from cache or from artifacts - the answer bot cannot run\"\n+        exit 1\n+\n+    # Installs the shared bot-scripts dependencies (including the local\n+    # embedding model cache) and exports BOT_SCRIPTS_DIR\n+    - name: Setup bot\n+      uses: zwave-js/bot-workflows/actions/setup-bot@v1\n+\n+    # Applies all gates (excluded users, categories, config requests,\n+    # existing answers), retrieves documentation excerpts, and posts\n+    # related-posts-only comments directly. The agentic judge below only\n+    # runs when doc excerpts need to be judged.\n+    - name: Prepare docs answer\n+      id: prepare\n+      uses: actions/github-script@v9\n+      env:\n+        DOCS_INDEX_PATH: .docs-index/index.json\n+        POSTS_INDEX_PATH: .posts-index/index.json\n+        DOCS_FEEDBACK_PATH: .docs-feedback/feedback.json\n+        DOCS_HANDOFF_PATH: /tmp/docs-answer/handoff.json\n+      with:\n+        github-token: ${{ secrets.BOT_TOKEN }}\n+        script: |\n+          const bot = require(`${process.env.BOT_SCRIPTS_DIR}/index.cjs`);\n+          const shouldContinue = await bot.prepareDocsAnswer({github, context});\n+          core.setOutput(\"shouldContinue\", shouldContinue ? \"true\" : \"false\");\n+\n+    - name: Upload handoff for the judge\n+      if: steps.prepare.outputs.shouldContinue == 'true'\n+      uses: actions/upload-artifact@v7\n+      with:\n+        name: docs-answer-handoff\n+        path: /tmp/docs-answer/\n+        # Deliberate: lets \"Re-run all jobs\" replace the artifact. An\n+        # attacker-substituted artifact would need actions: write, which\n+        # no job in this workflow has.\n+        overwrite: true\n+        # Long enough to re-run the post job days later\n+        retention-days: 7\n+\n+    # The step outcome (success vs. skipped) is exposed as a pre-activation\n+    # output and gates the agent job below\n+    - name: Gate agentic judge\n+      id: gate\n+      if: steps.prepare.outputs.shouldContinue == 'true'\n+      run: \"true\"\n+  permissions:\n+    actions: read\n+    contents: read\n+    # report-index-status maintains the outage tracking issue with the\n+    # workflow token\n+    issues: write\n+    discussions: read\n+\n+# Only run the (expensive) agentic judge when the retrieval pipeline\n+# found documentation excerpts worth judging\n+if: needs.pre_activation.outputs.gate_result == 'success'\n+\n+permissions:\n+  contents: read\n+\n+# The retrieval pipeline in the pre-activation job needs a full runner\n+# image for npm and the local embedding model\n+runs-on-slim: ubuntu-latest\n+\n+# The task is: read one JSON file, call one tool. Single digits of\n+# turns suffice, and the cap bounds what a prompt injection can burn.\n+# Root-level: gh aw compile rejects engine.max-turns without engine.id,\n+# and engine.id comes from the hardening import.\n+max-turns: 5\n+\n+imports:\n+  - zwave-js/bot-workflows/workflows/shared/hardening.md@main\n+  - zwave-js/bot-workflows/workflows/shared/docs-answer-judge.md@main\n+\n+steps:\n+  - name: Download handoff\n+    uses: actions/download-artifact@v8\n+    with:\n+      name: docs-answer-handoff\n+      path: /tmp/gh-aw/agent/\n+\n+network: {}\n+\n+timeout-minutes: 15\n+---\n+\n+Follow the Documentation Answer Judge instructions below.",
+          "snapshot_ref": "b3c30db5a3fad54cda1634a4a708f7178d6497ee",
+          "snapshot_blob_sha": "bc05cda5f5ea93e89158aca6c5cf158eb66f6de1",
+          "snapshot_file": "snapshots/bot-workflows__zwave-js__b3c30db5a3fad54cda1634a4a708f7178d6497ee__answer-from-docs.md",
+          "snapshot_bytes": 6887,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"zwave-js/zwave-js\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js/blob/3c88fb4b87e1215deefe13fa5e9d430885a308b5/.github/workflows/answer-from-docs.lock.yml\"},{\"generated_full_name\":\"zwave-js/zwave-js-ui\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js-ui\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js-ui/blob/0edab73ed7a7df99688defacacf2e4c4a122461c/.github/workflows/answer-from-docs.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+      "source_full_name": "zwave-js/bot-workflows",
+      "md_path": "workflows/answer-from-docs.md",
+      "commit_sha": "d0de475bbe438b313321e0b1a22cbcbc8b3634a9",
+      "authored_at": "2026-08-01T16:23:44Z",
+      "committed_at": "2026-08-01T16:23:44Z",
+      "author_name": "zwave-js-bot",
+      "author_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "author_login": "zwave-js-bot",
+      "author_account_type": "User",
+      "committer_name": "zwave-js-bot",
+      "committer_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "committer_login": "zwave-js-bot",
+      "committer_account_type": "User",
+      "message": "fix: restore per-workflow engine blocks and the judge job timeout\n\n- hardening.md no longer declares engine: gh-aw allows one engine spec\n  across a workflow and its imports, and max-turns differs per workflow\n- answer-from-docs and classify-issue-repo set max-turns under engine\n  again: a root-level max-turns doubles as the firewall's hard run cap,\n  where a retried turn would abort the job mid-run\n- answer-from-docs restates safe-outputs.timeout-minutes from the judge\n  import: the compiler only merges an imported block's jobs",
+      "parent_shas": [
+        "3dd7955f4d8730d34e92dc624fdae9566d6bface"
+      ],
+      "tree_sha": "39810a99197aafbe5ebcfbf2c247fd2ae5c8b4bb",
+      "html_url": "https://github.com/zwave-js/bot-workflows/commit/d0de475bbe438b313321e0b1a22cbcbc8b3634a9",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+          "source_full_name": "zwave-js/bot-workflows",
+          "md_path": "workflows/answer-from-docs.md",
+          "commit_sha": "d0de475bbe438b313321e0b1a22cbcbc8b3634a9",
+          "committed_at": "2026-08-01T16:23:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 11,
+          "file_deletions": 3,
+          "file_changes": 14,
+          "file_patch": "@@ -153,9 +153,17 @@ runs-on-slim: ubuntu-latest\n \n # The task is: read one JSON file, call one tool. Single digits of\n # turns suffice, and the cap bounds what a prompt injection can burn.\n-# Root-level: gh aw compile rejects engine.max-turns without engine.id,\n-# and engine.id comes from the hardening import.\n-max-turns: 5\n+# Declared under engine (with the id restated from the hardening import):\n+# a root-level max-turns additionally becomes the firewall's hard run cap,\n+# where a retried turn would abort the job mid-run.\n+engine:\n+  id: copilot\n+  max-turns: 5\n+\n+# Restated from the docs-answer-judge import: the compiler only merges the\n+# jobs of an imported safe-outputs block, not its scalar timeout\n+safe-outputs:\n+  timeout-minutes: 10\n \n imports:\n   - zwave-js/bot-workflows/workflows/shared/hardening.md@main",
+          "snapshot_ref": "d0de475bbe438b313321e0b1a22cbcbc8b3634a9",
+          "snapshot_blob_sha": "56d2e5e3875ce962d7d596287392935592592c22",
+          "snapshot_file": "snapshots/bot-workflows__zwave-js__d0de475bbe438b313321e0b1a22cbcbc8b3634a9__answer-from-docs.md",
+          "snapshot_bytes": 7168,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"zwave-js/zwave-js\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js/blob/3c88fb4b87e1215deefe13fa5e9d430885a308b5/.github/workflows/answer-from-docs.lock.yml\"},{\"generated_full_name\":\"zwave-js/zwave-js-ui\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js-ui\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js-ui/blob/0edab73ed7a7df99688defacacf2e4c4a122461c/.github/workflows/answer-from-docs.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+      "source_full_name": "zwave-js/bot-workflows",
+      "md_path": "workflows/answer-from-docs.md",
+      "commit_sha": "79bf914044d6d648bee4f297b63f4f4a5562ea5c",
+      "authored_at": "2026-08-03T08:26:49Z",
+      "committed_at": "2026-08-03T08:26:49Z",
+      "author_name": "zwave-js-bot",
+      "author_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "author_login": "zwave-js-bot",
+      "author_account_type": "User",
+      "committer_name": "zwave-js-bot",
+      "committer_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "committer_login": "zwave-js-bot",
+      "committer_account_type": "User",
+      "message": "fix: pin shared component imports to a commit SHA\n\n@main imports made consumer recompiles non-deterministic and could\nsilently change the safety baseline (zwave-js#9037 review)",
+      "parent_shas": [
+        "75148e07b701ca92e052212a9b7710864068ef6e"
+      ],
+      "tree_sha": "0639c3539f1216038d541a97252ad5f8d107f215",
+      "html_url": "https://github.com/zwave-js/bot-workflows/commit/79bf914044d6d648bee4f297b63f4f4a5562ea5c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+          "source_full_name": "zwave-js/bot-workflows",
+          "md_path": "workflows/answer-from-docs.md",
+          "commit_sha": "79bf914044d6d648bee4f297b63f4f4a5562ea5c",
+          "committed_at": "2026-08-03T08:26:49Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -166,8 +166,8 @@ safe-outputs:\n   timeout-minutes: 10\n \n imports:\n-  - zwave-js/bot-workflows/workflows/shared/hardening.md@main\n-  - zwave-js/bot-workflows/workflows/shared/docs-answer-judge.md@main\n+  - zwave-js/bot-workflows/workflows/shared/hardening.md@75148e07b701ca92e052212a9b7710864068ef6e\n+  - zwave-js/bot-workflows/workflows/shared/docs-answer-judge.md@75148e07b701ca92e052212a9b7710864068ef6e\n \n steps:\n   - name: Download handoff",
+          "snapshot_ref": "79bf914044d6d648bee4f297b63f4f4a5562ea5c",
+          "snapshot_blob_sha": "2cb5d784bf71900e2b2f9454b218b001edabd6de",
+          "snapshot_file": "snapshots/bot-workflows__zwave-js__79bf914044d6d648bee4f297b63f4f4a5562ea5c__answer-from-docs.md",
+          "snapshot_bytes": 7240,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"zwave-js/zwave-js\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js/blob/3c88fb4b87e1215deefe13fa5e9d430885a308b5/.github/workflows/answer-from-docs.lock.yml\"},{\"generated_full_name\":\"zwave-js/zwave-js-ui\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js-ui\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js-ui/blob/0edab73ed7a7df99688defacacf2e4c4a122461c/.github/workflows/answer-from-docs.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+      "source_full_name": "zwave-js/bot-workflows",
+      "md_path": "workflows/answer-from-docs.md",
+      "commit_sha": "af08eadd9af802c4d28ba310867710d0b266328e",
+      "authored_at": "2026-08-03T18:19:28Z",
+      "committed_at": "2026-08-03T18:19:47Z",
+      "author_name": "zwave-js-bot",
+      "author_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "author_login": "zwave-js-bot",
+      "author_account_type": "User",
+      "committer_name": "zwave-js-bot",
+      "committer_email": "76957017+zwave-js-bot@users.noreply.github.com",
+      "committer_login": "zwave-js-bot",
+      "committer_account_type": "User",
+      "message": "fix: harden classify checkouts and drop the PAT from status reporting\n\n- persist-credentials: false on both classify-issue-repo checkouts\n- report-index-status in answer-from-docs uses the workflow token, which\n  its permissions grant already covers (zwave-js-ui#4772 review)",
+      "parent_shas": [
+        "bb324b62a0e6b629d59a081bbf0391bb851c8c1d"
+      ],
+      "tree_sha": "bf6760fbc15e1eb18e034e3693ceccfda1f17aaf",
+      "html_url": "https://github.com/zwave-js/bot-workflows/commit/af08eadd9af802c4d28ba310867710d0b266328e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "zwave-js/bot-workflows:workflows/answer-from-docs.md",
+          "source_full_name": "zwave-js/bot-workflows",
+          "md_path": "workflows/answer-from-docs.md",
+          "commit_sha": "af08eadd9af802c4d28ba310867710d0b266328e",
+          "committed_at": "2026-08-03T18:19:47Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 1,
+          "file_changes": 4,
+          "file_patch": "@@ -75,7 +75,9 @@ on:\n         posts-age-days: ${{ steps.posts-index.outputs.age-days }}\n         docs-source: ${{ steps.docs-index.outputs.source }}\n         posts-source: ${{ steps.posts-index.outputs.source }}\n-        github-token: ${{ secrets.BOT_TOKEN }}\n+        # The job's issues:write grant covers the tracking issue; keep the\n+        # org PAT out of a job that also runs third-party npm code\n+        github-token: ${{ github.token }}\n         # Fires once per new issue or discussion, so an open outage must not\n         # collect a comment every time\n         quiet: 'true'",
+          "snapshot_ref": "af08eadd9af802c4d28ba310867710d0b266328e",
+          "snapshot_blob_sha": "8c209a4b1fac6620a9235c5e9ad5825c48b70ec9",
+          "snapshot_file": "snapshots/bot-workflows__zwave-js__af08eadd9af802c4d28ba310867710d0b266328e__answer-from-docs.md",
+          "snapshot_bytes": 7377,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"zwave-js/zwave-js\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js/blob/3c88fb4b87e1215deefe13fa5e9d430885a308b5/.github/workflows/answer-from-docs.lock.yml\"},{\"generated_full_name\":\"zwave-js/zwave-js-ui\",\"generated_owner\":\"zwave-js\",\"generated_repo\":\"zwave-js-ui\",\"generated_workflow_path\":\".github/workflows/answer-from-docs.lock.yml\",\"generated_workflow_file\":\"answer-from-docs.lock.yml\",\"generated_html_url\":\"https://github.com/zwave-js/zwave-js-ui/blob/0edab73ed7a7df99688defacacf2e4c4a122461c/.github/workflows/answer-from-docs.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

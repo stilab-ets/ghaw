@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+    "source_full_name": "Azure/azure-sdk-for-js",
+    "source_owner": "Azure",
+    "source_repo": "azure-sdk-for-js",
+    "md_path": ".github/workflows/agent-observability.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/azure-sdk-for-js/blob/HEAD/.github/workflows/agent-observability.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/azure-sdk-for-js",
+      "generated_owner": "Azure",
+      "generated_repo": "azure-sdk-for-js",
+      "generated_workflow_path": ".github/workflows/agent-observability.lock.yml",
+      "generated_workflow_file": "agent-observability.lock.yml",
+      "generated_html_url": "https://github.com/Azure/azure-sdk-for-js/blob/7f102cf2e8d1ceb8d80cc13e2d07233bab92c319/.github/workflows/agent-observability.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:42+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+      "source_full_name": "Azure/azure-sdk-for-js",
+      "md_path": ".github/workflows/agent-observability.md",
+      "commit_sha": "3030b931235d7379e1c3fd1e2375fcecc79a1d58",
+      "authored_at": "2026-06-15T18:51:55Z",
+      "committed_at": "2026-06-15T18:51:55Z",
+      "author_name": "Maor Leger",
+      "author_email": "maorleger@users.noreply.github.com",
+      "author_login": "maorleger",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[engSys] Add weekly agent-observability workflow (#38929)\n\nAdds a weekly **agent observability** workflow for this repo. It's a\ncompanion to the eval framework (#38890) and docs consolidation\n(#38927), but where those are about tests, this is about **real\nmeasurements trended over time** — the Tier-1 \"leading indicators\" from\nthe AI-Forward Starter Kit, plus a way to track Copilot Code Review\n(CCR) quality.\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "7f45c49ebfd699e206ff07af6c836fe8269667a2"
+      ],
+      "tree_sha": "30d1a5503c33c255c74a75ec43bd1dc1e9286665",
+      "html_url": "https://github.com/Azure/azure-sdk-for-js/commit/3030b931235d7379e1c3fd1e2375fcecc79a1d58",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+          "source_full_name": "Azure/azure-sdk-for-js",
+          "md_path": ".github/workflows/agent-observability.md",
+          "commit_sha": "3030b931235d7379e1c3fd1e2375fcecc79a1d58",
+          "committed_at": "2026-06-15T18:51:55Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 202,
+          "file_deletions": 0,
+          "file_changes": 202,
+          "file_patch": "@@ -0,0 +1,202 @@\n+---\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      window_days:\n+        description: How many days back to measure (default 7)\n+        required: false\n+        default: \"7\"\n+        type: string\n+  # Phased rollout: this is intended to run weekly (Monday). The\n+  # schedule is intentionally left off for the initial rollout so we\n+  # run it a few times on demand (workflow_dispatch) and confirm the\n+  # output is stable before enabling automation. To turn on the weekly\n+  # cadence, uncomment:\n+  #   schedule:\n+  #     - cron: \"weekly on monday\"\n+description: |\n+  Weekly agent observability report for this repository. Posts a\n+  structured comment on a long-lived tracking issue (its number is set\n+  in the add-comment safe-output below). Measures Tier 1 (leading\n+  indicators) from the AI-Forward Starter Kit plus Copilot Code Review\n+  reaction quality. Follows the gh-aw DataOps pattern: all data is\n+  gathered by an authenticated shell step (zero AI tokens,\n+  deterministic), and the agent only reads the pre-computed JSON and\n+  writes the narrative.\n+permissions:\n+  contents: read\n+  actions: read\n+  pull-requests: read\n+  issues: read\n+# DataOps: collect every metric in a deterministic, authenticated shell\n+# step (GH_TOKEN → 5000 req/hr, runs outside the agent sandbox). The\n+# agent never makes API calls; it only reads /tmp/gh-aw/agent/*.json.\n+#\n+# The collection logic lives in a committed sibling script,\n+# agent-observability-collect.sh, rather than inline here — so it gets\n+# shellcheck, editor highlighting, LSP, and clean diffs. In production\n+# the agent job sparse-checks-out `.github` before this step, so the\n+# script is on disk and `bash .github/workflows/...sh` resolves.\n+#\n+# KNOWN LIMITATION (for future us): `gh aw trial` CANNOT exercise this\n+# script. In trial mode the agent job checks out the --logical-repo\n+# (the simulated target), not this branch, so the unmerged script is\n+# absent and the step fails with \"No such file\". This is a trial\n+# limitation, not a production bug. To validate pre-merge: run the\n+# script standalone (it is shellcheck-clean and takes REPO/WINDOW_DAYS/\n+# OUTDIR env), and rely on the fact that the identical logic passed a\n+# full `gh aw trial` while it was still inline. Once merged to the\n+# default branch, the normal workflow_dispatch run exercises it for real.\n+steps:\n+  - name: Collect observability data\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+      # The repository the workflow runs in. In trial mode, gh aw's\n+      # --logical-repo sets this to the simulated target, so the same\n+      # value works for both production and trials.\n+      REPO: ${{ github.repository }}\n+      WINDOW_DAYS: ${{ github.event.inputs.window_days || '7' }}\n+      OUTDIR: /tmp/gh-aw/agent\n+    run: bash .github/workflows/agent-observability-collect.sh\n+tools:\n+  bash: true\n+safe-outputs:\n+  # Report hygiene (gh-aw report best practices): no @mentions (the\n+  # tracking issue is assigned to the owner, who is already subscribed),\n+  # and no bare #NNN references (they would backlink onto every cited PR\n+  # each week). Use full markdown links for PRs instead.\n+  mentions: false\n+  allowed-github-references: []\n+  add-comment:\n+    max: 1\n+    # The long-lived tracking issue this report comments on each week.\n+    # NOTE: gh-aw requires a literal issue number here (a ${{ vars.* }}\n+    # expression silently disables fixed-target mode and breaks posting),\n+    # so this is a per-deployment constant rather than a repo variable.\n+    # To deploy in another repo, create a tracking issue and put its\n+    # number here.\n+    target: \"38930\"\n+    hide-older-comments: true\n+    footer: false\n+---\n+\n+# Agent observability report\n+\n+You are writing the weekly agent-observability report for this\n+repository, posted as a single comment on the tracking issue.\n+**All measurement has already been done for you** by a deterministic\n+shell step — your only job is to read the pre-computed JSON and write a\n+clear, well-structured narrative. Do not fetch data, do not call APIs,\n+do not open PRs or files. Read JSON, write Markdown.\n+\n+## Where the data is\n+\n+Every file lives in `/tmp/gh-aw/agent/`. Read them with `cat`:\n+\n+| File | Contents |\n+|---|---|\n+| `meta.json` | `{window_days, since, until, prior_since}` — the measurement window (UTC). |\n+| `ccr.json` | `{current, prior, pages_fetched}`. Each of current/prior: `{comments, plus, minus, with_reaction, prs[]}` — Copilot review-comment counts and inline 👍/👎 totals. |\n+| `context.json` | array of `{path, present, age_days}` for AGENTS.md, the copilot-instructions stub, every skill, and every reviewer instruction file. |\n+| `ci.json` | `{merged_prs, count, median_s, p95_s}` — `js - pullrequest` durations across **all** merged PRs in the window (`count` = umbrella runs measured). |\n+| `hygiene.json` | `{eslint_directives, eslint_files, skip, only}` — counts under `sdk/`. |\n+| `docs.json` | `{total, stale_count, top[], taste}` — `documentation/` staleness (>30d) and the `taste/` folder check. |\n+\n+A `null` value means that metric could not be collected this run; render\n+it as `n/a` and mention it in **Notes** at the end. Never invent numbers.\n+\n+## Deriving the few computed values\n+\n+- **Helpful rate** = `plus / (plus + minus)` — `n/a` if `plus+minus == 0`.\n+- **Coverage** = `with_reaction / comments` — `n/a` if `comments == 0`.\n+- **Deltas (Δ)** = current − prior, for helpful rate and CCR volume.\n+  Show direction (e.g. `↓ 10 pp`, `+3`).\n+- **Durations**: convert `median_s` / `p95_s` to minutes (1 dp) for display.\n+\n+## Report format (follow gh-aw report style exactly)\n+\n+- Use **`###`** for the main sections and **`####`** for any subsection.\n+  Never use `#` or `##` (reserved for titles).\n+- For status, use GitHub alerts, **not** emoji: `> [!NOTE]` (healthy /\n+  neutral), `> [!WARNING]` (needs attention), `> [!CAUTION]`\n+  (problem / regression). Do not use ✅ ⚠️ ❌.\n+- Refer to PRs with full markdown links — `[#38913](https://github.com/Azure/azure-sdk-for-js/pull/38913)`\n+  — never a bare `#38913` (it would backlink the PR every week).\n+- Put the long context-layer table inside a `<details>` block; keep the\n+  headline stats and any failures visible.\n+\n+Produce exactly this structure:\n+\n+```markdown\n+<!-- gh-aw-workflow-id: agent-observability -->\n+### Week of <until date> — agent observability\n+\n+_Window: <since> → <until> (<window_days>d). Prior window starts <prior_since>._\n+\n+### CCR review-comment reactions\n+- <comments> Copilot review comments across <prs|length> PRs\n+- <plus> 👍 / <minus> 👎 logged\n+- **Helpful rate: <P>%** (Δ <…> vs prior)\n+- **Coverage: <C>%** of CCR comments got a reaction\n+\n+> [!NOTE|WARNING|CAUTION] one-line read on CCR signal quality (e.g. low coverage = needs team diligence).\n+\n+### Tier 1 — are we set up?\n+\n+#### Context layer health\n+<headline: N files tracked; X within 14d, Y at 14–30d, Z over 30d or missing>\n+\n+> [!NOTE|WARNING|CAUTION] verdict naming the worst offenders.\n+\n+<details>\n+<summary>Per-file freshness</summary>\n+\n+| File | Present | Days since last commit |\n+|---|---|---|\n+| … one row per context.json entry … |\n+\n+</details>\n+\n+#### CI speed — `js - pullrequest` (Azure Pipelines)\n+- Median: <median_min> min\n+- p95: <p95_min> min\n+- Measured: <count> umbrella runs across <merged_prs> merged PRs\n+\n+> [!NOTE|WARNING|CAUTION] verdict.\n+\n+#### Codebase hygiene\n+- `eslint-disable` directives under `sdk/**/src/**`: <eslint_directives> across <eslint_files> files\n+- `.skip(` under `sdk/**/test/**`: <skip>\n+- `.only(` under `sdk/**/test/**`: <only>\n+\n+> [!NOTE|WARNING|CAUTION] verdict — committed `.only(` is the highest-signal item if > 0.\n+\n+#### Stale documentation (>30d)\n+- <stale_count> of <total> files in `documentation/` are stale\n+- `taste/` folder: <present + age, or \"missing — gap\">\n+\n+> [!NOTE|WARNING|CAUTION] verdict; cite 1–2 of the oldest files from docs.json `top`.\n+\n+### What I'm noticing\n+<3–5 sentences naming the single most interesting signal this week. Be\n+specific: cite percentages, the oldest doc, the worst-stale context file,\n+PR links where relevant. Do not restate every number; do not speculate\n+beyond the data.>\n+\n+### Notes\n+<Only if any metric was n/a or partial — say which and why. Omit this\n+section entirely if everything was collected.>\n+```\n+\n+## Process\n+\n+1. `cat` each JSON file in `/tmp/gh-aw/agent/`.\n+2. Derive the few computed values above.\n+3. Write the comment in the exact structure shown.\n+4. Emit it via `safe-outputs.add-comment` exactly once. That is your only output.\n+\n+**Important — do not set a target on the comment.** Provide **only** the\n+`body`. Do **not** include an `item_number`, issue number, or any target\n+field in the `add-comment` call. The comment is automatically routed to\n+the preconfigured tracking issue. If you supply your own number you will\n+misroute the report to the wrong issue.",
+          "snapshot_ref": "3030b931235d7379e1c3fd1e2375fcecc79a1d58",
+          "snapshot_blob_sha": "44008ae2a1796ed535695ad128c8a608049d9dd4",
+          "snapshot_file": "snapshots/azure-sdk-for-js__Azure__3030b931235d7379e1c3fd1e2375fcecc79a1d58__agent-observability.md",
+          "snapshot_bytes": 8792,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-js\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-js\",\"generated_workflow_path\":\".github/workflows/agent-observability.lock.yml\",\"generated_workflow_file\":\"agent-observability.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-js/blob/7f102cf2e8d1ceb8d80cc13e2d07233bab92c319/.github/workflows/agent-observability.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+      "source_full_name": "Azure/azure-sdk-for-js",
+      "md_path": ".github/workflows/agent-observability.md",
+      "commit_sha": "33a4c7d3a81083b855f8e936541cecc21a24791e",
+      "authored_at": "2026-06-24T22:56:27Z",
+      "committed_at": "2026-06-24T22:56:27Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Updating permissions for agentic workflows (#39071)\n\n## Updating permissions for agentic workflows\n\nAdds the `copilot-requests: write` permission to the GitHub Agentic\nWorkflow definitions and recompiles their generated lock files.\n\n### What changed\n- Added `copilot-requests: write` under `permissions:` in each agentic\nworkflow `.md` source file.\n- Recompiled every corresponding `.lock.yml` via `gh aw compile` so the\ngenerated output matches the source.\n\nAs a result of recompiling, the workflows now rely on the\n`copilot-requests: write` permission instead of the\n`COPILOT_GITHUB_TOKEN` secret, so the lock files drop the\n`COPILOT_GITHUB_TOKEN` secret reference and its validation step.\n\n### Affected workflows\n- agent-observability\n- archie\n- dash\n- dexter\n- docs-consistency-check\n- fix-test-failures\n- issue-triage\n- mgmt-guidance\n- mgmt-review\n- scribe\n- sentinel\n- tester\n- upgrade-agentic-workflows\n\n### Checklist\n- [x] Add `copilot-requests: write` permission to workflow `.md` sources\n- [x] Recompile `.lock.yml` files from their `.md` counterparts\n- [x] Add PR description\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: xirzec <639216+xirzec@users.noreply.github.com>",
+      "parent_shas": [
+        "a5cdd18b24553a0886bd59964bd9fad58bddb435"
+      ],
+      "tree_sha": "e40c23a43022e18d5a9a47954a13b5143a69e484",
+      "html_url": "https://github.com/Azure/azure-sdk-for-js/commit/33a4c7d3a81083b855f8e936541cecc21a24791e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+          "source_full_name": "Azure/azure-sdk-for-js",
+          "md_path": ".github/workflows/agent-observability.md",
+          "commit_sha": "33a4c7d3a81083b855f8e936541cecc21a24791e",
+          "committed_at": "2026-06-24T22:56:27Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -28,6 +28,7 @@ permissions:\n   actions: read\n   pull-requests: read\n   issues: read\n+  copilot-requests: write\n # DataOps: collect every metric in a deterministic, authenticated shell\n # step (GH_TOKEN → 5000 req/hr, runs outside the agent sandbox). The\n # agent never makes API calls; it only reads /tmp/gh-aw/agent/*.json.",
+          "snapshot_ref": "33a4c7d3a81083b855f8e936541cecc21a24791e",
+          "snapshot_blob_sha": "0e0b56afe2f77c38a3454c430960e52581000858",
+          "snapshot_file": "snapshots/azure-sdk-for-js__Azure__33a4c7d3a81083b855f8e936541cecc21a24791e__agent-observability.md",
+          "snapshot_bytes": 8818,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-js\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-js\",\"generated_workflow_path\":\".github/workflows/agent-observability.lock.yml\",\"generated_workflow_file\":\"agent-observability.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-js/blob/7f102cf2e8d1ceb8d80cc13e2d07233bab92c319/.github/workflows/agent-observability.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+      "source_full_name": "Azure/azure-sdk-for-js",
+      "md_path": ".github/workflows/agent-observability.md",
+      "commit_sha": "d17730f06025840abc538f96c52508f3760b62f7",
+      "authored_at": "2026-06-24T23:27:22Z",
+      "committed_at": "2026-06-24T23:27:22Z",
+      "author_name": "Jeff Fisher",
+      "author_email": "jeffish@microsoft.com",
+      "author_login": "xirzec",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Revert \"Updating permissions for agentic workflows\" (#39073)\n\nReverts Azure/azure-sdk-for-js#39071\n\nsame error as last time `400 400 checking server-to-server token: bad\nrequest: GitHub App Server-To-Server Tokens are not supported for this\nendpoint`",
+      "parent_shas": [
+        "33a4c7d3a81083b855f8e936541cecc21a24791e"
+      ],
+      "tree_sha": "a83ace139babcfdf0df903f4a42302c9cecd0b58",
+      "html_url": "https://github.com/Azure/azure-sdk-for-js/commit/d17730f06025840abc538f96c52508f3760b62f7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+          "source_full_name": "Azure/azure-sdk-for-js",
+          "md_path": ".github/workflows/agent-observability.md",
+          "commit_sha": "d17730f06025840abc538f96c52508f3760b62f7",
+          "committed_at": "2026-06-24T23:27:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -28,7 +28,6 @@ permissions:\n   actions: read\n   pull-requests: read\n   issues: read\n-  copilot-requests: write\n # DataOps: collect every metric in a deterministic, authenticated shell\n # step (GH_TOKEN → 5000 req/hr, runs outside the agent sandbox). The\n # agent never makes API calls; it only reads /tmp/gh-aw/agent/*.json.",
+          "snapshot_ref": "d17730f06025840abc538f96c52508f3760b62f7",
+          "snapshot_blob_sha": "44008ae2a1796ed535695ad128c8a608049d9dd4",
+          "snapshot_file": "snapshots/azure-sdk-for-js__Azure__d17730f06025840abc538f96c52508f3760b62f7__agent-observability.md",
+          "snapshot_bytes": 8792,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-js\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-js\",\"generated_workflow_path\":\".github/workflows/agent-observability.lock.yml\",\"generated_workflow_file\":\"agent-observability.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-js/blob/7f102cf2e8d1ceb8d80cc13e2d07233bab92c319/.github/workflows/agent-observability.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+      "source_full_name": "Azure/azure-sdk-for-js",
+      "md_path": ".github/workflows/agent-observability.md",
+      "commit_sha": "b7ba38c46bfa135a5590f5445aced1c6a5dc38d9",
+      "authored_at": "2026-06-25T20:11:44Z",
+      "committed_at": "2026-06-25T20:11:44Z",
+      "author_name": "Jeff Fisher",
+      "author_email": "jeffish@microsoft.com",
+      "author_login": "xirzec",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "[engsys] Update gh-aw to latest version and enable new billing option (#39089)\n\nThis PR updates gh-aw to the latest version (0.81.3) and updates our\npermissions to use the new `copilot-requests: write` permission per\nhttps://github.github.com/gh-aw/reference/auth/#copilot-requests-write-permission\n\nPrevious attempts at this failed because the version was outdated.\nDuring my efforts to upgrade this, I also noticed that gh-aw's MCP\nserver does not seem to work with copilot (fails to initialize) so I\nhave removed that entry from mcp.json.\n\nAs proof that this *actually* works this time (unlike in #39071 and\n#38944) I was able to run a successful agent against the PR branch:\nhttps://github.com/Azure/azure-sdk-for-js/actions/runs/28194833437/job/83518875360",
+      "parent_shas": [
+        "c010cd95d20d7888ba26fc450c944d1bd852b0ed"
+      ],
+      "tree_sha": "0576415a34f11df077ed09c09df6e3a42970ad45",
+      "html_url": "https://github.com/Azure/azure-sdk-for-js/commit/b7ba38c46bfa135a5590f5445aced1c6a5dc38d9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-js:.github/workflows/agent-observability.md",
+          "source_full_name": "Azure/azure-sdk-for-js",
+          "md_path": ".github/workflows/agent-observability.md",
+          "commit_sha": "b7ba38c46bfa135a5590f5445aced1c6a5dc38d9",
+          "committed_at": "2026-06-25T20:11:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -28,6 +28,7 @@ permissions:\n   actions: read\n   pull-requests: read\n   issues: read\n+  copilot-requests: write\n # DataOps: collect every metric in a deterministic, authenticated shell\n # step (GH_TOKEN → 5000 req/hr, runs outside the agent sandbox). The\n # agent never makes API calls; it only reads /tmp/gh-aw/agent/*.json.",
+          "snapshot_ref": "b7ba38c46bfa135a5590f5445aced1c6a5dc38d9",
+          "snapshot_blob_sha": "0e0b56afe2f77c38a3454c430960e52581000858",
+          "snapshot_file": "snapshots/azure-sdk-for-js__Azure__b7ba38c46bfa135a5590f5445aced1c6a5dc38d9__agent-observability.md",
+          "snapshot_bytes": 8818,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-js\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-js\",\"generated_workflow_path\":\".github/workflows/agent-observability.lock.yml\",\"generated_workflow_file\":\"agent-observability.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-js/blob/7f102cf2e8d1ceb8d80cc13e2d07233bab92c319/.github/workflows/agent-observability.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

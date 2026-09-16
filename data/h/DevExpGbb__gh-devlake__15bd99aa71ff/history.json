@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "DevExpGbb/gh-devlake:.github/workflows/docs-sync.md",
+    "source_full_name": "DevExpGbb/gh-devlake",
+    "source_owner": "DevExpGbb",
+    "source_repo": "gh-devlake",
+    "md_path": ".github/workflows/docs-sync.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/DevExpGbb/gh-devlake/blob/HEAD/.github/workflows/docs-sync.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "DevExpGbb/gh-devlake",
+      "generated_owner": "DevExpGbb",
+      "generated_repo": "gh-devlake",
+      "generated_workflow_path": ".github/workflows/docs-sync.lock.yml",
+      "generated_workflow_file": "docs-sync.lock.yml",
+      "generated_html_url": "https://github.com/DevExpGbb/gh-devlake/blob/8d41177e59b027d71846901b00c943520eb5ed62/.github/workflows/docs-sync.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:25:10+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "DevExpGbb/gh-devlake:.github/workflows/docs-sync.md",
+      "source_full_name": "DevExpGbb/gh-devlake",
+      "md_path": ".github/workflows/docs-sync.md",
+      "commit_sha": "663597361deba1f2223a2d36579f4ee398f26223",
+      "authored_at": "2026-03-11T22:30:31Z",
+      "committed_at": "2026-03-11T22:30:31Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add workflow for daily documentation updates (#132)\n\n* Initial plan\n\n* Add daily docs-sync agentic workflow\n\nCreates a GitHub Agentic Workflow that runs daily on weekdays\nto identify documentation files that have drifted from recent\ncode changes and opens a pull request with the necessary updates.\n\nUses Copilot engine with GitHub MCP tools, bash, and edit tools.\nRead-only permissions with safe-outputs for PR creation.\n\nCo-authored-by: ewega <26189114+ewega@users.noreply.github.com>\n\n* Restrict docs-sync workflow tools and paths for safety\n\n- Restrict bash to specific safe commands (git, cat, grep, find, ls,\n  head, tail, wc) instead of bash: true — eliminates --allow-all-tools\n- Add engine.args --allow-paths to restrict file edits to README.md\n  and docs/** only\n- Remove AGENTS.md from editable targets (compiler protects it)\n- Update prompt to clarify AGENTS.md is read-only\n\nCo-authored-by: ewega <26189114+ewega@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: ewega <26189114+ewega@users.noreply.github.com>",
+      "parent_shas": [
+        "fddf04c0a0abb22bb17e5b390f6ac8b2037c24a5"
+      ],
+      "tree_sha": "6a8775ac69eebe747c339a80a9782d70e2ffe3a6",
+      "html_url": "https://github.com/DevExpGbb/gh-devlake/commit/663597361deba1f2223a2d36579f4ee398f26223",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "DevExpGbb/gh-devlake:.github/workflows/docs-sync.md",
+          "source_full_name": "DevExpGbb/gh-devlake",
+          "md_path": ".github/workflows/docs-sync.md",
+          "commit_sha": "663597361deba1f2223a2d36579f4ee398f26223",
+          "committed_at": "2026-03-11T22:30:31Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 88,
+          "file_deletions": 0,
+          "file_changes": 88,
+          "file_patch": "@@ -0,0 +1,88 @@\n+---\n+name: Documentation Sync\n+description: >\n+  Identifies documentation files that are out of sync with recent code changes\n+  and opens a pull request with the necessary updates.\n+on:\n+  schedule: daily on weekdays\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+engine:\n+  id: copilot\n+  model: gpt-4.1\n+  args: [\"--allow-paths\", \"README.md,docs/**\"]\n+tools:\n+  github:\n+    mode: remote\n+    toolsets: [default]\n+  bash: [\"git\", \"cat\", \"grep\", \"find\", \"ls\", \"head\", \"tail\", \"wc\"]\n+  edit:\n+network:\n+  allowed:\n+    - go\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[docs-sync] \"\n+    labels: [documentation]\n+    draft: false\n+    expires: 7\n+---\n+\n+# Documentation Sync\n+\n+You are a documentation maintenance agent for the `gh-devlake` repository — a GitHub CLI extension built with Go + Cobra that automates Apache DevLake deployment, configuration, and monitoring.\n+\n+## Your Task\n+\n+Identify documentation files that have drifted from the current codebase and open a **single pull request** with all necessary updates.\n+\n+## Step 1 — Gather Context\n+\n+1. Use `git log --since=\"7 days ago\" --name-only --pretty=format:\"\"` to list files changed in the last 7 days.\n+2. Filter to changes in `cmd/` and `internal/` (the Go source directories).\n+3. Read the repository's `README.md`, `AGENTS.md`, and every file under `docs/`.\n+\n+> **Note:** `AGENTS.md` is read-only — the safe-outputs handler protects it from PR changes. Use it as a reference only.\n+\n+## Step 2 — Identify Stale Documentation\n+\n+Compare the current code with the documentation. Look for:\n+\n+| Signal | Example |\n+|--------|---------|\n+| **New or renamed commands** | A `newXxxCmd()` was added or renamed but the Command Reference table in `README.md` is missing it |\n+| **Changed flags** | A flag was added, removed, or renamed in a Cobra command but `docs/*.md` still shows the old flag |\n+| **Changed default values** | A default endpoint, port, or env-var name changed in code but docs reference the old value |\n+| **New plugins** | A `ConnectionDef` was added to `connectionRegistry` in `cmd/connection_types.go` but the Supported Plugins table in `README.md` is missing it |\n+| **Removed features** | Code was deleted but docs still reference it |\n+| **Outdated examples** | CLI examples in docs no longer match actual command syntax |\n+\n+Do **not** rewrite prose style or reformat sections that are already accurate.\n+\n+## Step 3 — Apply Fixes\n+\n+For every stale section you find:\n+\n+1. Edit the relevant documentation file (`README.md` or the appropriate `docs/*.md`).\n+2. Keep edits minimal and surgical — change only what is out of date.\n+3. Preserve existing formatting, heading levels, and Markdown conventions.\n+\n+## Step 4 — Open a Pull Request\n+\n+If you made any edits, create a pull request with:\n+- **Title**: A concise summary such as \"Sync docs with recent code changes\"\n+- **Body**: A bulleted list of every documentation change and why it was needed, referencing the code change that caused the drift.\n+\n+If no documentation is stale, do **not** create a pull request. Instead, output a short summary confirming all docs are up to date.\n+\n+## Guidelines\n+\n+- The Command Reference table in `README.md` must list every user-facing command. Cross-check against `cmd/` constructors (`newXxxCmd()`).\n+- The Supported Plugins table in `README.md` must match `connectionRegistry` entries in `cmd/connection_types.go`.\n+- Flag documentation in `docs/` files must match the flags registered in each command's constructor.\n+- `AGENTS.md` architecture section must match the actual directory tree under `internal/`. If it has drifted, note it in the PR body but do not edit `AGENTS.md` directly — it is a protected file.\n+- Do not add new documentation files — only update existing ones.\n+- Do not modify Go source code — this workflow is documentation-only.",
+          "snapshot_ref": "663597361deba1f2223a2d36579f4ee398f26223",
+          "snapshot_blob_sha": "3024427596beefdc06ac42f9c2720f1b67b10bbc",
+          "snapshot_file": "snapshots/gh-devlake__DevExpGbb__663597361deba1f2223a2d36579f4ee398f26223__docs-sync.md",
+          "snapshot_bytes": 3836,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"DevExpGbb/gh-devlake\",\"generated_owner\":\"DevExpGbb\",\"generated_repo\":\"gh-devlake\",\"generated_workflow_path\":\".github/workflows/docs-sync.lock.yml\",\"generated_workflow_file\":\"docs-sync.lock.yml\",\"generated_html_url\":\"https://github.com/DevExpGbb/gh-devlake/blob/8d41177e59b027d71846901b00c943520eb5ed62/.github/workflows/docs-sync.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/esm-module-validation.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/esm-module-validation.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/esm-module-validation.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/esm-module-validation.lock.yml",
+      "generated_workflow_file": "esm-module-validation.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/esm-module-validation.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/esm-module-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/esm-module-validation.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/esm-module-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/esm-module-validation.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 230,
+          "file_deletions": 0,
+          "file_changes": 230,
+          "file_patch": "@@ -0,0 +1,230 @@\n+---\n+name: 'ESM Module Validation'\n+description: 'Enforces strict ESM compliance: .js extensions, no CommonJS patterns, package.json type module, and compiled output verification'\n+on:\n+  pull_request:\n+    paths:\n+      - 'src/**/*.ts'\n+      - 'tests/**/*.ts'\n+      - 'package.json'\n+      - 'tsconfig.json'\n+  push:\n+    branches:\n+      - main\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+  pull-requests: read\n+safe-outputs:\n+  create-issue:\n+    title-prefix: '[esm-validation]'\n+  add-comment:\n+tools:\n+  bash: true\n+  github:\n+    toolsets: [issues, pull_requests]\n+---\n+\n+# ESM Module Validation\n+\n+You enforce strict ESM (ECMAScript Module) compliance across the entire codebase. This project is pure ESM — no CommonJS is allowed.\n+\n+## Context\n+\n+The mcp-adr-analysis-server is a **pure ESM project**:\n+\n+- `package.json` declares `\"type\": \"module\"`\n+- TypeScript targets ES2022 with ESNext module resolution\n+- All relative imports must use `.js` extensions (even for `.ts` source files)\n+- No `require()`, `module.exports`, or `__dirname` allowed\n+- Directory resolution uses `import.meta.url` via the `getCurrentDirCompat()` helper from `src/utils/directory-compat.ts`\n+\n+## Validation Steps\n+\n+### Step 1: Verify package.json ESM Configuration\n+\n+```bash\n+if ! grep -q '\"type\": \"module\"' package.json; then\n+  echo \"package.json must have type: module\"\n+  exit 1\n+fi\n+echo \"package.json correctly configured for ESM\"\n+```\n+\n+### Step 2: Validate Import Extensions\n+\n+Check that all relative imports in `src/` use `.js` extensions:\n+\n+```bash\n+# Check for imports without .js extension in src/\n+missing_ext=$(find src -name \"*.ts\" -type f -exec grep -H \"from ['\\\"]\\..*[^.js]['\\\"]\" {} \\; | grep -v \".json\" || true)\n+\n+if [ ! -z \"$missing_ext\" ]; then\n+  echo \"Found imports without .js extension:\"\n+  echo \"$missing_ext\"\n+  echo \"\"\n+  echo \"All relative imports must use .js extension for ESM compatibility\"\n+  exit 1\n+fi\n+\n+echo \"All imports use correct .js extensions\"\n+```\n+\n+### Step 3: Check for CommonJS Patterns\n+\n+Scan the source code for forbidden CommonJS patterns:\n+\n+```bash\n+# Check for require() calls (excluding comments and test mocks)\n+if git grep -n \"require(\" -- \"src/**/*.ts\" | grep -v \"// \" | grep -v \"/\\*\" | grep -v \"mock\" | grep -v \"jest\" | head -n 10; then\n+  echo \"Found require() calls in source code\"\n+  echo \"Use ES6 import statements instead\"\n+  exit 1\n+fi\n+\n+# Check for module.exports\n+if git grep -n \"module\\.exports\" -- \"src/**/*.ts\" | grep -v \"// \" | grep -v \"/\\*\" | head -n 10; then\n+  echo \"Found module.exports in source code\"\n+  echo \"Use ES6 export statements instead\"\n+  exit 1\n+fi\n+\n+# Check for __dirname usage (should use getCurrentDirCompat)\n+if git grep -n \"__dirname\" -- \"src/**/*.ts\" | grep -v \"// \" | grep -v \"/\\*\" | grep -v \"getCurrentDirCompat\" | head -n 10; then\n+  echo \"Found __dirname usage in source code\"\n+  echo \"Use import.meta.url or getCurrentDirCompat() instead\"\n+  exit 1\n+fi\n+\n+echo \"No CommonJS patterns found\"\n+```\n+\n+### Step 4: Verify ESM Output\n+\n+Build the project and verify the compiled output can be imported as ESM:\n+\n+```bash\n+node -e \"\n+  import { promises as fs } from 'fs';\n+  import path from 'path';\n+\n+  const distFiles = await fs.readdir('./dist/src');\n+  console.log('Compiled files:', distFiles);\n+\n+  // Try importing main entry point\n+  try {\n+    await import('./dist/src/index.js');\n+    console.log('Main entry point imports successfully');\n+  } catch (e) {\n+    console.error('Failed to import main entry point:', e.message);\n+    process.exit(1);\n+  }\n+\"\n+```\n+\n+### Step 5: Test ESM Module Loading\n+\n+Run the utility tests to verify runtime ESM behavior:\n+\n+```bash\n+npm test -- --testPathPattern=\"utils\" --maxWorkers=2\n+```\n+\n+### Step 6: Validate import.meta.url Helper\n+\n+Verify the `getCurrentDirCompat()` helper works correctly:\n+\n+```bash\n+node -e \"\n+  import { getCurrentDirCompat } from './dist/src/utils/directory-compat.js';\n+  import path from 'path';\n+\n+  const dir = getCurrentDirCompat(import.meta.url);\n+\n+  if (!dir || !path.isAbsolute(dir)) {\n+    console.error('getCurrentDirCompat() returned invalid path:', dir);\n+    process.exit(1);\n+  }\n+\n+  console.log('import.meta.url helper working correctly');\n+  console.log('Current directory:', dir);\n+\"\n+```\n+\n+## On Failure\n+\n+If any step fails:\n+\n+1. **For PR events**: Add a comment to the PR with:\n+   - Which ESM rule was violated\n+   - The specific file(s) and line(s) with violations\n+   - The correct ESM pattern to use instead\n+   - Example: \"Change `import { foo } from './bar'` to `import { foo } from './bar.js'`\"\n+\n+2. **For push/dispatch events**: Create an issue:\n+\n+**Title**: `[esm-validation] {violation type} in {file count} file(s)`\n+\n+**Body**:\n+\n+````markdown\n+## ESM Module Validation Failure\n+\n+### Violations Found\n+\n+| Type                  | Count   | Files   |\n+| --------------------- | ------- | ------- |\n+| Missing .js extension | {count} | {files} |\n+| require() usage       | {count} | {files} |\n+| module.exports usage  | {count} | {files} |\n+| \\_\\_dirname usage     | {count} | {files} |\n+\n+### Detailed Findings\n+\n+{list each violation with file path, line number, and the offending code}\n+\n+### How to Fix\n+\n+**Missing .js extension**:\n+\n+```typescript\n+// Wrong\n+import { foo } from './bar';\n+// Correct\n+import { foo } from './bar.js';\n+```\n+````\n+\n+**require() → import**:\n+\n+```typescript\n+// Wrong\n+const fs = require('fs');\n+// Correct\n+import fs from 'fs';\n+```\n+\n+**\\_\\_dirname → import.meta.url**:\n+\n+```typescript\n+// Wrong\n+const dir = __dirname;\n+// Correct\n+import { getCurrentDirCompat } from './utils/directory-compat.js';\n+const dir = getCurrentDirCompat(import.meta.url);\n+```\n+\n+---\n+\n+_Generated by ESM Module Validation agentic workflow_\n+\n+```\n+\n+## On Success\n+\n+- **For PR events**: Add a comment confirming ESM compliance: all imports use `.js` extensions, no CommonJS patterns detected\n+- **For push/dispatch events**: No issue needed\n+\n+---\n+*Replaces: .github/agents/esm-module-validation.yml*\n+```",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "ba7e1035cdc360845f97c36c1f1d1aa6ad066072",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__esm-module-validation.md",
+          "snapshot_bytes": 5819,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/esm-module-validation.lock.yml\",\"generated_workflow_file\":\"esm-module-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/esm-module-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/esm-module-validation.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/esm-module-validation.md",
+      "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "authored_at": "2026-03-16T17:48:59Z",
+      "committed_at": "2026-03-16T17:48:59Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "fix: add node ecosystem to gh-aw network allowlist for agentic workflows\n\nAll agentic workflows that run `npm ci` were failing because the gh-aw\nsandbox firewall blocked `nodejs.org`, preventing node-gyp from\ndownloading Node.js headers needed to compile tree-sitter native modules.\n\nAdd `network: allowed: [defaults, node]` to 7 workflow frontmatters:\n- deployment-pattern-validation.md\n- mcp-server-validation.md\n- esm-module-validation.md\n- knowledge-graph-validation.md\n- docs-noob-tester.md\n- mcp-tool-checker.md\n- ai-executor-integration.md\n\nThe `node` ecosystem identifier adds nodejs.org, npmjs.org, yarnpkg.com,\ndeno.land, bun.sh, and related domains to the firewall allowlist.\nRecompiled all lock files via `gh aw compile`.\n\nFixes #632\n\nMade-with: Cursor",
+      "parent_shas": [
+        "2877451dca32cd49ad472fd7ef99825c028fe121"
+      ],
+      "tree_sha": "c6f58323d5517991601c231a1f6edcda0c151d60",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/esm-module-validation.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/esm-module-validation.md",
+          "commit_sha": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "committed_at": "2026-03-16T17:48:59Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -23,6 +23,10 @@ tools:\n   bash: true\n   github:\n     toolsets: [issues, pull_requests]\n+network:\n+  allowed:\n+    - defaults\n+    - node\n ---\n \n # ESM Module Validation",
+          "snapshot_ref": "72f88fa814801e4acb65e1eaf7f4f0437de3fdef",
+          "snapshot_blob_sha": "b616e45b742f36ae5220d3d92aa9235b30abd934",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__72f88fa814801e4acb65e1eaf7f4f0437de3fdef__esm-module-validation.md",
+          "snapshot_bytes": 5865,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/esm-module-validation.lock.yml\",\"generated_workflow_file\":\"esm-module-validation.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/esm-module-validation.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

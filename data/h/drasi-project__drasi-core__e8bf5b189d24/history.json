@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+    "source_full_name": "drasi-project/drasi-core",
+    "source_owner": "drasi-project",
+    "source_repo": "drasi-core",
+    "md_path": ".github/workflows/pr-testing-reviewer.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/drasi-project/drasi-core/blob/HEAD/.github/workflows/pr-testing-reviewer.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "drasi-project/drasi-core",
+      "generated_owner": "drasi-project",
+      "generated_repo": "drasi-core",
+      "generated_workflow_path": ".github/workflows/pr-testing-reviewer.lock.yml",
+      "generated_workflow_file": "pr-testing-reviewer.lock.yml",
+      "generated_html_url": "https://github.com/drasi-project/drasi-core/blob/c15de8a1fbc45db5286dec09e3a39844c34e2ae2/.github/workflows/pr-testing-reviewer.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:33+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+      "source_full_name": "drasi-project/drasi-core",
+      "md_path": ".github/workflows/pr-testing-reviewer.md",
+      "commit_sha": "1d0f7989126aa03da66ed81f120e1a2e9d188840",
+      "authored_at": "2026-05-06T23:14:18Z",
+      "committed_at": "2026-05-06T23:14:18Z",
+      "author_name": "Ruokun (Tommy) Niu",
+      "author_email": "ruokunniu@microsoft.com",
+      "author_login": "ruokun-niu",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Drasi core reviewers (#438)\n\n* PR reviewers for drasi-core\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* num\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* test\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* concurrency test\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* testing new workflow\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* nit\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* branch\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* configure review all\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* configure review all\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n---------\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>",
+      "parent_shas": [
+        "9de691cd70f80b0c88a2cfc854df1dfe04224007"
+      ],
+      "tree_sha": "bd164c5ae0ab469f8db58bdaf3f49eb43d799a13",
+      "html_url": "https://github.com/drasi-project/drasi-core/commit/1d0f7989126aa03da66ed81f120e1a2e9d188840",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+          "source_full_name": "drasi-project/drasi-core",
+          "md_path": ".github/workflows/pr-testing-reviewer.md",
+          "commit_sha": "1d0f7989126aa03da66ed81f120e1a2e9d188840",
+          "committed_at": "2026-05-06T23:14:18Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 169,
+          "file_deletions": 0,
+          "file_changes": 169,
+          "file_patch": "@@ -0,0 +1,169 @@\n+---\n+on:\n+  workflow_call:\n+    inputs:\n+      pr_url:\n+        description: \"Full URL of the PR to review\"\n+        required: true\n+        type: string\n+  workflow_dispatch:\n+    inputs:\n+      pr_url:\n+        description: \"Full URL of the PR to review (e.g. https://github.com/drasi-project/drasi-core/pull/42)\"\n+        required: true\n+        type: string\n+  pull_request:\n+    types: [labeled]\n+if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event.label.name == 'review:testing'\n+concurrency:\n+  group: pr-reviewers-${{ github.event.pull_request.number || github.event.inputs.pr_url }}\n+  cancel-in-progress: false\n+permissions:\n+  contents: read\n+  pull-requests: read\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - \"drasi.io\"\n+tools:\n+  github:\n+    toolsets: [context, repos, pull_requests]\n+  web-fetch:\n+safe-outputs:\n+  github-app:\n+    app-id: ${{ vars.DRASI_REVIEWER_APP_ID }}\n+    private-key: ${{ secrets.DRASI_REVIEWER_APP_PRIVATE_KEY }}\n+    repositories: [\"*\"]\n+  create-pull-request-review-comment:\n+    max: 10\n+    side: \"RIGHT\"\n+    target: \"*\"\n+    target-repo: \"drasi-project/drasi-core\"\n+  submit-pull-request-review:\n+    max: 1\n+    target: \"*\"\n+    target-repo: \"drasi-project/drasi-core\"\n+    allowed-events: [COMMENT]\n+    footer: \"if-body\"\n+---\n+\n+# pr-testing-reviewer\n+\n+You are pr-testing-reviewer, a software testing specialist review agent for the Drasi project.\n+\n+## Trigger context\n+\n+This workflow is triggered either via `workflow_dispatch` (with an explicit `pr_url` input) or via `pull_request_target` when the `review:testing` label is added to a PR. The `review:all` label is handled by the `pr-all-reviewers` orchestrator workflow, which dispatches this reviewer via `workflow_dispatch`.\n+\n+The PR URL to review is: \"${{ inputs.pr_url }}${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}\" (use the `inputs.pr_url` value if present, otherwise the constructed URL). Fetch and review the PR at that URL.\n+\n+## Pre-review setup\n+\n+Complete ALL steps before writing your review:\n+\n+1. Load the Drasi domain context from: https://drasi.io/drasi-context.yaml\n+   Confirm the context loaded. If it fails, try: https://raw.githubusercontent.com/drasi-project/docs/refs/heads/main/docs/static/drasi-context.yaml\n+2. Fetch the PR details: title, description, and list of changed files.\n+3. Read the full diff to understand what changed.\n+4. Identify which files are production code and which are test files.\n+5. For each changed production file, look for corresponding test files. Read them in full.\n+6. Understand the existing test patterns and frameworks used in the codebase (e.g., `#[cfg(test)]` modules in Rust, `_test.go` files in Go, Jest/Vitest for TypeScript).\n+\n+Do not begin writing the review until all setup steps are complete.\n+\n+## Review focus\n+\n+You review the **test coverage and test quality** of the changes. You evaluate whether the changes are adequately tested and whether the tests themselves are well-written.\n+\n+### Coverage assessment\n+- Are there tests for the new or changed functionality?\n+- Are important code paths covered? Identify specific untested paths.\n+- Are edge cases tested? (empty inputs, boundary values, error conditions, concurrent access)\n+- Are failure modes tested? (network errors, invalid input, resource exhaustion, timeout)\n+\n+### Test quality\n+- Do tests actually verify behavior, or are they just exercising code without meaningful assertions?\n+- Are tests deterministic? Could they flake due to timing, ordering, or external dependencies?\n+- Are test names descriptive of what they verify?\n+- Is test setup/teardown clean? Are there shared mutable state issues between tests?\n+- Are mocks and stubs used appropriately? Do they test real behavior or just mirror the implementation?\n+- Are tests using sleep or other timing-based mechanisms that could lead to flaky tests?\n+\n+### Test patterns\n+- For code with external dependencies (databases, APIs, message queues), are testcontainers or appropriate test doubles used?\n+- For async code, are tests properly awaiting results and handling timeouts?\n+- Are integration tests present where unit tests alone are insufficient?\n+- Do tests follow the existing patterns and frameworks used in the codebase?\n+- Are tests organized and located in appropriate directories according to the project's conventions?\n+\n+### Regression coverage\n+- If this PR fixes a bug, is there a test that would have caught the bug?\n+- Could the changes break existing behavior? Are there tests that verify backward compatibility?\n+\n+## What NOT to review\n+\n+Do not comment on:\n+- Code correctness in production code (that is the correctness reviewer's job)\n+- Security concerns (that is the security reviewer's job)\n+- Design or architecture (that is the design reviewer's job)\n+- Documentation (that is the docs reviewer's job)\n+\n+## Output rules\n+\n+- Be concise and direct. No preambles, no praise, no filler.\n+- Only report findings. If test coverage is adequate, say so in one sentence.\n+- Tag each finding: 🔴 Blocker — critical untested path or broken test. 🟡 Should-Fix — missing coverage for important edge case or flaky test. 🔵 Nit — test quality improvement.\n+- For missing tests, describe specifically what should be tested and suggest a test approach (not full test code, just the scenario).\n+\n+## Output\n+\n+Parse the PR URL (\"${{ inputs.pr_url }}\") to extract `owner/repo` and the PR number, and use them in every tool call below.\n+\n+Submit your review as a GitHub PR review with inline comments on specific lines. Do this in two steps:\n+\n+### Step 1 — Inline comments on specific lines (REQUIRED when possible)\n+\n+**You MUST anchor every finding to a specific changed line in the diff whenever possible.** Only put a finding in the summary (Step 2) if it genuinely cannot be tied to any line in the diff (e.g. \"this whole new module has zero tests\"). For each finding, pick the most representative changed line — the new function lacking a test, the untested branch, the modified test that no longer covers the case.\n+\n+**Pre-flight: validate each line against the diff.** Before calling `create_pull_request_review_comment`:\n+1. Use the PR diff (already fetched in pre-review setup) to enumerate the hunks for each changed file.\n+2. A comment is valid **only** if `(path, line, side)` falls inside a hunk:\n+   - `side: \"RIGHT\"` → `line` must be an added (`+`) or unchanged context line in the new file's hunk range.\n+   - `side: \"LEFT\"` → `line` must be a removed (`-`) or unchanged context line in the old file's hunk range.\n+   - For multi-line ranges, both `start_line` and `line` must be in the **same hunk** on the **same side**, with `start_line < line`.\n+3. If a finding cannot be anchored to a valid in-diff line, do NOT create an inline comment — include it as a bullet in the top-level summary body in Step 2 instead.\n+4. Never post duplicate comments on the same `(path, line, side)`.\n+\n+For every finding, call `create_pull_request_review_comment` with:\n+- `repo`: `\"<owner>/<repo>\"` parsed from the PR URL\n+- `pull_request_number`: PR number parsed from the PR URL\n+- `path`: file path relative to repo root\n+- `line`: the line number on the **right side** of the diff (the new code). The line MUST be a line that appears in the PR diff (added or part of the diff hunk context) — lines outside the diff will be rejected. For multi-line ranges, also set `start_line`.\n+- `side`: `\"RIGHT\"`\n+- `body`: a markdown-formatted comment with the severity tag (🔴/🟡/🔵), a one-line description, and a concrete suggested test scenario.\n+\n+You may post up to 10 inline comments per review. Prioritize Blockers, then Should-Fix, then Nits.\n+\n+### Step 2 — Submit the review with a top-level summary\n+\n+After posting all inline comments, call `submit_pull_request_review` exactly once with:\n+- `repo`: `\"<owner>/<repo>\"`\n+- `pull_request_number`: PR number\n+- `event`: `\"COMMENT\"`\n+- `body`: a top-level summary that MUST start with:\n+\n+  ```\n+  ## 🧪 Testing Review\n+  ```\n+\n+  Followed by:\n+  - A one-paragraph summary of overall test coverage.\n+  - A bulleted list of ONLY findings that genuinely cannot be anchored to any line in the diff (e.g. \"this whole new module has zero tests\"). Each tagged with 🔴/🟡/🔵. Do NOT repeat findings already posted as inline comments.\n+  - If there are no findings at all, the body should simply state: \"Test coverage is adequate.\"\n+\n+If no findings exist anywhere, you must still call `submit_pull_request_review` once with the \"Test coverage is adequate.\" body so the workflow has output.\n+\n+References:\n+- Drasi GitHub Organization: https://github.com/drasi-project\n+- Drasi Context: https://drasi.io/drasi-context.yaml",
+          "snapshot_ref": "1d0f7989126aa03da66ed81f120e1a2e9d188840",
+          "snapshot_blob_sha": "6dcaa996e1c5785c87e57ec2fba5d1398e79f24a",
+          "snapshot_file": "snapshots/drasi-core__drasi-project__1d0f7989126aa03da66ed81f120e1a2e9d188840__pr-testing-reviewer.md",
+          "snapshot_bytes": 8669,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drasi-project/drasi-core\",\"generated_owner\":\"drasi-project\",\"generated_repo\":\"drasi-core\",\"generated_workflow_path\":\".github/workflows/pr-testing-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-testing-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/drasi-project/drasi-core/blob/c15de8a1fbc45db5286dec09e3a39844c34e2ae2/.github/workflows/pr-testing-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+      "source_full_name": "drasi-project/drasi-core",
+      "md_path": ".github/workflows/pr-testing-reviewer.md",
+      "commit_sha": "37198da456937a2ff3454f4adefc67d5cdc3c8d2",
+      "authored_at": "2026-05-06T23:33:23Z",
+      "committed_at": "2026-05-06T23:33:23Z",
+      "author_name": "Ruokun (Tommy) Niu",
+      "author_email": "ruokunniu@microsoft.com",
+      "author_login": "ruokun-niu",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Updated reviewer workflows to use pull_request_target instead of pull_request (#439)\n\npull request target update\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>",
+      "parent_shas": [
+        "1d0f7989126aa03da66ed81f120e1a2e9d188840"
+      ],
+      "tree_sha": "89f25266536d8ffb95e08f18970846f2541a2c03",
+      "html_url": "https://github.com/drasi-project/drasi-core/commit/37198da456937a2ff3454f4adefc67d5cdc3c8d2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+          "source_full_name": "drasi-project/drasi-core",
+          "md_path": ".github/workflows/pr-testing-reviewer.md",
+          "commit_sha": "37198da456937a2ff3454f4adefc67d5cdc3c8d2",
+          "committed_at": "2026-05-06T23:33:23Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 4,
+          "file_changes": 6,
+          "file_patch": "@@ -12,15 +12,13 @@ on:\n         description: \"Full URL of the PR to review (e.g. https://github.com/drasi-project/drasi-core/pull/42)\"\n         required: true\n         type: string\n-  pull_request:\n+  pull_request_target:\n     types: [labeled]\n if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event.label.name == 'review:testing'\n-concurrency:\n-  group: pr-reviewers-${{ github.event.pull_request.number || github.event.inputs.pr_url }}\n-  cancel-in-progress: false\n permissions:\n   contents: read\n   pull-requests: read\n+checkout: false\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "37198da456937a2ff3454f4adefc67d5cdc3c8d2",
+          "snapshot_blob_sha": "91ea57bce463c0cbf90b5ffe38f422462eab43c9",
+          "snapshot_file": "snapshots/drasi-core__drasi-project__37198da456937a2ff3454f4adefc67d5cdc3c8d2__pr-testing-reviewer.md",
+          "snapshot_bytes": 8559,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drasi-project/drasi-core\",\"generated_owner\":\"drasi-project\",\"generated_repo\":\"drasi-core\",\"generated_workflow_path\":\".github/workflows/pr-testing-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-testing-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/drasi-project/drasi-core/blob/c15de8a1fbc45db5286dec09e3a39844c34e2ae2/.github/workflows/pr-testing-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+      "source_full_name": "drasi-project/drasi-core",
+      "md_path": ".github/workflows/pr-testing-reviewer.md",
+      "commit_sha": "f8c9c8266a222505f1f479d9da6e057295e5a506",
+      "authored_at": "2026-05-06T23:49:18Z",
+      "committed_at": "2026-05-06T23:49:18Z",
+      "author_name": "Ruokun (Tommy) Niu",
+      "author_email": "ruokunniu@microsoft.com",
+      "author_login": "ruokun-niu",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "removed checkout:false in agentic workflow reviewers (#441)\n\nremoved checkout:false\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>",
+      "parent_shas": [
+        "37198da456937a2ff3454f4adefc67d5cdc3c8d2"
+      ],
+      "tree_sha": "a655de7b50a09d023de5ff423d41bb97e7692c75",
+      "html_url": "https://github.com/drasi-project/drasi-core/commit/f8c9c8266a222505f1f479d9da6e057295e5a506",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+          "source_full_name": "drasi-project/drasi-core",
+          "md_path": ".github/workflows/pr-testing-reviewer.md",
+          "commit_sha": "f8c9c8266a222505f1f479d9da6e057295e5a506",
+          "committed_at": "2026-05-06T23:49:18Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -18,7 +18,6 @@ if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_c\n permissions:\n   contents: read\n   pull-requests: read\n-checkout: false\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "f8c9c8266a222505f1f479d9da6e057295e5a506",
+          "snapshot_blob_sha": "d637c194cd9cbe40ba7be0b0426f9ae86f0bec09",
+          "snapshot_file": "snapshots/drasi-core__drasi-project__f8c9c8266a222505f1f479d9da6e057295e5a506__pr-testing-reviewer.md",
+          "snapshot_bytes": 8543,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drasi-project/drasi-core\",\"generated_owner\":\"drasi-project\",\"generated_repo\":\"drasi-core\",\"generated_workflow_path\":\".github/workflows/pr-testing-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-testing-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/drasi-project/drasi-core/blob/c15de8a1fbc45db5286dec09e3a39844c34e2ae2/.github/workflows/pr-testing-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+      "source_full_name": "drasi-project/drasi-core",
+      "md_path": ".github/workflows/pr-testing-reviewer.md",
+      "commit_sha": "3a584bc98acf961698e6fe6161cc557d161e66be",
+      "authored_at": "2026-05-07T01:13:51Z",
+      "committed_at": "2026-05-07T01:13:51Z",
+      "author_name": "Ruokun (Tommy) Niu",
+      "author_email": "ruokunniu@microsoft.com",
+      "author_login": "ruokun-niu",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "All reviewer fix (#442)\n\n* quick fix for all reviewer workflow\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n* guard update\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>\n\n---------\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>",
+      "parent_shas": [
+        "f8c9c8266a222505f1f479d9da6e057295e5a506"
+      ],
+      "tree_sha": "c255aa54ff9d31cf8b2fb1909a5e7c26119971e5",
+      "html_url": "https://github.com/drasi-project/drasi-core/commit/3a584bc98acf961698e6fe6161cc557d161e66be",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+          "source_full_name": "drasi-project/drasi-core",
+          "md_path": ".github/workflows/pr-testing-reviewer.md",
+          "commit_sha": "3a584bc98acf961698e6fe6161cc557d161e66be",
+          "committed_at": "2026-05-07T01:13:51Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -14,7 +14,7 @@ on:\n         type: string\n   pull_request_target:\n     types: [labeled]\n-if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event.label.name == 'review:testing'\n+if: github.event_name == 'workflow_call' || github.event.label.name == 'review:testing'\n permissions:\n   contents: read\n   pull-requests: read",
+          "snapshot_ref": "3a584bc98acf961698e6fe6161cc557d161e66be",
+          "snapshot_blob_sha": "e3b68b4b2e71122ab07064918ae113947417c28c",
+          "snapshot_file": "snapshots/drasi-core__drasi-project__3a584bc98acf961698e6fe6161cc557d161e66be__pr-testing-reviewer.md",
+          "snapshot_bytes": 8499,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drasi-project/drasi-core\",\"generated_owner\":\"drasi-project\",\"generated_repo\":\"drasi-core\",\"generated_workflow_path\":\".github/workflows/pr-testing-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-testing-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/drasi-project/drasi-core/blob/c15de8a1fbc45db5286dec09e3a39844c34e2ae2/.github/workflows/pr-testing-reviewer.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+      "source_full_name": "drasi-project/drasi-core",
+      "md_path": ".github/workflows/pr-testing-reviewer.md",
+      "commit_sha": "d3a066b884a3d5fe097a310932135e1f4deb6007",
+      "authored_at": "2026-05-07T01:18:55Z",
+      "committed_at": "2026-05-07T01:18:55Z",
+      "author_name": "Ruokun (Tommy) Niu",
+      "author_email": "ruokunniu@microsoft.com",
+      "author_login": "ruokun-niu",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "guard reviewers on inputs.pr_url for workflow_call invocations (#443)\n\nSigned-off-by: ruokun-niu <ruokunniu@gmail.com>",
+      "parent_shas": [
+        "3a584bc98acf961698e6fe6161cc557d161e66be"
+      ],
+      "tree_sha": "b8f6e75cefa6002d5c430e46696a0726a22cab10",
+      "html_url": "https://github.com/drasi-project/drasi-core/commit/d3a066b884a3d5fe097a310932135e1f4deb6007",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "drasi-project/drasi-core:.github/workflows/pr-testing-reviewer.md",
+          "source_full_name": "drasi-project/drasi-core",
+          "md_path": ".github/workflows/pr-testing-reviewer.md",
+          "commit_sha": "d3a066b884a3d5fe097a310932135e1f4deb6007",
+          "committed_at": "2026-05-07T01:18:55Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -14,7 +14,7 @@ on:\n         type: string\n   pull_request_target:\n     types: [labeled]\n-if: github.event_name == 'workflow_call' || github.event.label.name == 'review:testing'\n+if: inputs.pr_url != '' || github.event.label.name == 'review:testing'\n permissions:\n   contents: read\n   pull-requests: read",
+          "snapshot_ref": "d3a066b884a3d5fe097a310932135e1f4deb6007",
+          "snapshot_blob_sha": "7eb18294744ccbdf90922fc12da557365ece5084",
+          "snapshot_file": "snapshots/drasi-core__drasi-project__d3a066b884a3d5fe097a310932135e1f4deb6007__pr-testing-reviewer.md",
+          "snapshot_bytes": 8482,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"drasi-project/drasi-core\",\"generated_owner\":\"drasi-project\",\"generated_repo\":\"drasi-core\",\"generated_workflow_path\":\".github/workflows/pr-testing-reviewer.lock.yml\",\"generated_workflow_file\":\"pr-testing-reviewer.lock.yml\",\"generated_html_url\":\"https://github.com/drasi-project/drasi-core/blob/c15de8a1fbc45db5286dec09e3a39844c34e2ae2/.github/workflows/pr-testing-reviewer.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/issue-triage.md",
+    "source_full_name": "benbalter/wordpress-static-site-exporter",
+    "source_owner": "benbalter",
+    "source_repo": "wordpress-static-site-exporter",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/benbalter/wordpress-static-site-exporter/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "benbalter/wordpress-static-site-exporter",
+      "generated_owner": "benbalter",
+      "generated_repo": "wordpress-static-site-exporter",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/benbalter/wordpress-static-site-exporter/blob/718a2c3a32d79546d58090d67f44bb8094775fb4/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/issue-triage.md",
+      "source_full_name": "benbalter/wordpress-static-site-exporter",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "dda26858f6617bebe4475ad4c961fdbd6e87e289",
+      "authored_at": "2026-03-17T21:01:29Z",
+      "committed_at": "2026-03-17T21:01:29Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add four GitHub Agentic Workflows for issue triage, PR review, CI failure analysis, and release notes\n\nCo-authored-by: benbalter <282759+benbalter@users.noreply.github.com>",
+      "parent_shas": [
+        "8ad94da81d5df1b5cf7602c482cb3cf97ff2d131"
+      ],
+      "tree_sha": "2bdd2453f18fc715a8c75876de0352347b4b71db",
+      "html_url": "https://github.com/benbalter/wordpress-static-site-exporter/commit/dda26858f6617bebe4475ad4c961fdbd6e87e289",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "benbalter/wordpress-static-site-exporter:.github/workflows/issue-triage.md",
+          "source_full_name": "benbalter/wordpress-static-site-exporter",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "dda26858f6617bebe4475ad4c961fdbd6e87e289",
+          "committed_at": "2026-03-17T21:01:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 44,
+          "file_deletions": 0,
+          "file_changes": 44,
+          "file_patch": "@@ -0,0 +1,44 @@\n+---\n+description: Automatically triage and label new issues\n+on:\n+  issues:\n+    types: [opened]\n+permissions:\n+  contents: read\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+safe-outputs:\n+  add-labels:\n+    allowed: [bug, feature, help wanted, good first issue, more-information-needed]\n+    max: 2\n+  add-comment:\n+    max: 1\n+---\n+\n+# Issue Triage Agent\n+\n+You are an issue triage agent for the **WordPress Static Site Exporter** plugin, which converts WordPress content to Markdown and YAML for Jekyll, Hugo, and other static site generators.\n+\n+## When a new issue is opened\n+\n+1. **Read** the issue title and body carefully.\n+2. **Classify** the issue into one of these categories:\n+   - **bug** — Something is broken or not working as documented (e.g., export failures, malformed Markdown output, YAML front matter issues, PHP errors, WordPress compatibility problems).\n+   - **feature** — A request for new functionality (e.g., support for a new post type, new front matter fields, additional static site generator support, new CLI options).\n+   - **more-information-needed** — The issue lacks enough detail to reproduce or understand the problem. The reporter did not fill out the issue template adequately.\n+3. **Optionally add a second label** if appropriate:\n+   - **good first issue** — The issue is well-scoped, straightforward to fix, and a good entry point for new contributors. Typically small bug fixes, documentation improvements, or simple enhancements.\n+   - **help wanted** — The issue is valid and well-described, but may require community contribution to resolve.\n+4. **Add a comment** explaining:\n+   - Which label(s) you applied and why.\n+   - If labeled `more-information-needed`, politely ask the reporter for specific missing details (e.g., WordPress version, PHP version, error messages, steps to reproduce).\n+   - If labeled `bug` or `feature`, briefly acknowledge the report and mention that a maintainer will review it.\n+\n+## Important context\n+\n+- The plugin's main class is `Jekyll_Export` in `jekyll-exporter.php`.\n+- It supports both WordPress admin UI export and WP-CLI (`wp jekyll-export`).\n+- Key dependencies: `league/html-to-markdown` for HTML conversion, `symfony/yaml` for YAML generation.\n+- Common issue topics: export failures on large sites, specific HTML elements not converting properly, missing metadata in front matter, PHP version compatibility.",
+          "snapshot_ref": "dda26858f6617bebe4475ad4c961fdbd6e87e289",
+          "snapshot_blob_sha": "6ddc2b889f0b0447841a32d9849f75a3fa2aff3c",
+          "snapshot_file": "snapshots/wordpress-static-site-exporter__benbalter__dda26858f6617bebe4475ad4c961fdbd6e87e289__issue-triage.md",
+          "snapshot_bytes": 2389,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"benbalter/wordpress-static-site-exporter\",\"generated_owner\":\"benbalter\",\"generated_repo\":\"wordpress-static-site-exporter\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/benbalter/wordpress-static-site-exporter/blob/718a2c3a32d79546d58090d67f44bb8094775fb4/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

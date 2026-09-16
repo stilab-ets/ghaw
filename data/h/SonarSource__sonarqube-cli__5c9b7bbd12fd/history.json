@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "SonarSource/sonarqube-cli:.github/workflows/ci-failure-triage-agent.md",
+    "source_full_name": "SonarSource/sonarqube-cli",
+    "source_owner": "SonarSource",
+    "source_repo": "sonarqube-cli",
+    "md_path": ".github/workflows/ci-failure-triage-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/SonarSource/sonarqube-cli/blob/HEAD/.github/workflows/ci-failure-triage-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "SonarSource/sonarqube-cli",
+      "generated_owner": "SonarSource",
+      "generated_repo": "sonarqube-cli",
+      "generated_workflow_path": ".github/workflows/ci-failure-triage-agent.lock.yml",
+      "generated_workflow_file": "ci-failure-triage-agent.lock.yml",
+      "generated_html_url": "https://github.com/SonarSource/sonarqube-cli/blob/3eea7be6696ca11f6428c060b208970ff8af85c3/.github/workflows/ci-failure-triage-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:43:29+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "SonarSource/sonarqube-cli:.github/workflows/ci-failure-triage-agent.md",
+      "source_full_name": "SonarSource/sonarqube-cli",
+      "md_path": ".github/workflows/ci-failure-triage-agent.md",
+      "commit_sha": "c4a4f8c7ea14ab2b284f7ed940fdbe9a53ae05a0",
+      "authored_at": "2026-05-27T17:47:51Z",
+      "committed_at": "2026-05-27T17:47:51Z",
+      "author_name": "Dam",
+      "author_email": "64742703+damien-urruty-sonarsource@users.noreply.github.com",
+      "author_login": "damien-urruty-sonarsource",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "CLI-535 Try Agentic Workflows (#325)\n\nTry Agentic Workflows",
+      "parent_shas": [
+        "bd1247f6c4714b457bdf926929ecb4ac0470c735"
+      ],
+      "tree_sha": "f775f2360d5e1803165cd0f84650b42b89960748",
+      "html_url": "https://github.com/SonarSource/sonarqube-cli/commit/c4a4f8c7ea14ab2b284f7ed940fdbe9a53ae05a0",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SonarSource/sonarqube-cli:.github/workflows/ci-failure-triage-agent.md",
+          "source_full_name": "SonarSource/sonarqube-cli",
+          "md_path": ".github/workflows/ci-failure-triage-agent.md",
+          "commit_sha": "c4a4f8c7ea14ab2b284f7ed940fdbe9a53ae05a0",
+          "committed_at": "2026-05-27T17:47:51Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 232,
+          "file_deletions": 0,
+          "file_changes": 232,
+          "file_patch": "@@ -0,0 +1,232 @@\n+---\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      workflow_conclusion:\n+        description: 'Conclusion of the failed workflow run'\n+        default: 'failure'\n+      head_branch:\n+        description: 'Head branch of the failed workflow run'\n+  workflow_run:\n+    workflows: [\"*\"]\n+    types: [completed]\n+    branches:\n+      - 'task/dam/enable-ci-failure-triager'\n+      - 'master'\n+\n+concurrency: ci-triage-${{ github.run_id }}\n+\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+\n+checkout:\n+  - fetch-depth: 0\n+\n+tools:\n+  github:\n+    toolsets: [context, repos, issues, pull_requests, actions]\n+\n+env:\n+  WORKFLOW_CONCLUSION: ${{ inputs.workflow_conclusion || github.event.workflow_run.conclusion }}\n+  HEAD_BRANCH: ${{ inputs.head_branch || github.event.workflow_run.head_branch }}\n+\n+safe-outputs:\n+  noop: false\n+  create-pull-request:\n+    draft: true\n+    title-prefix: \"[ci-fix] \"\n+    labels: [ci-fix, automated]\n+    protected-files: allowed\n+    base-branch: ${{ env.HEAD_BRANCH }}\n+  jobs:\n+    slack-notify:\n+      needs: safe_outputs\n+      description: \"Send a CI failure triage message to Slack\"\n+      runs-on: ubuntu-latest\n+      permissions:\n+        id-token: write\n+      inputs:\n+        message:\n+          description: \"The triage message to send\"\n+          required: true\n+          type: string\n+      steps:\n+        - name: Extract message from agent output\n+          id: extract\n+          run: |\n+            if [ -f \"$GH_AW_AGENT_OUTPUT\" ]; then\n+              MESSAGE=$(cat \"$GH_AW_AGENT_OUTPUT\" | jq -r '.items[] | select(.type == \"slack_notify\") | .message')\n+              DELIMITER=$(openssl rand -hex 16)\n+              echo \"message<<$DELIMITER\" >> \"$GITHUB_OUTPUT\"\n+              echo \"$MESSAGE\" >> \"$GITHUB_OUTPUT\"\n+              echo \"$DELIMITER\" >> \"$GITHUB_OUTPUT\"\n+            else\n+              echo \"::error::No agent output found at $GH_AW_AGENT_OUTPUT\"\n+              exit 1\n+            fi\n+          env:\n+            GH_AW_AGENT_OUTPUT: ${{ runner.temp }}/gh-aw/safe-jobs/agent_output.json\n+        - name: Get Slack token from Vault\n+          id: secrets\n+          uses: SonarSource/vault-action-wrapper@c154b4a417b51cb98dd71137f49bf20e77c56820\n+          with:\n+            secrets: |\n+              development/kv/data/slack token | SLACK_BOT_TOKEN;\n+        - name: Post to Slack\n+          uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e\n+          env:\n+            SLACK_BOT_TOKEN: ${{ fromJSON(steps.secrets.outputs.vault).SLACK_BOT_TOKEN }}\n+          with:\n+            channel-id: squad-integration-on-call\n+            slack-message: ${{ steps.extract.outputs.message }}\n+\n+---\n+\n+# CI Failure Triage Agent\n+\n+## Instructions\n+\n+1. Check the `$WORKFLOW_CONCLUSION` environment variable. If it is not `failure`, stop immediately and do nothing.\n+2. Follow the triage skill instructions below.\n+\n+---\n+\n+# CI Failure Triage Skill\n+\n+You are a CI failure triage agent. When a workflow run fails on `master`\n+(or a `task/dam/enable-ci-failure-triager` development branch), you diagnose the failure,\n+post a proposed remediation to Slack, and — when you have high confidence\n+in a mechanical fix — open a PR with the fix automatically.\n+\n+---\n+\n+## 1. Extract context\n+\n+Use the GitHub MCP to read the workflow run that triggered this agent. Extract:\n+\n+- **Run ID**\n+- **Workflow name** and a direct URL to the run\n+- **Branch** (head branch)\n+- **Commit SHA** (head SHA)\n+- **Commit author** and **short commit message** (first line)\n+\n+---\n+\n+## 2. Loop guard\n+\n+Use the GitHub MCP to list previous runs of the `ci-failure-triage-agent`\n+workflow that share the same commit SHA.\n+\n+- If any previous run **completed successfully**, exit silently — a Slack\n+  message has already been posted for this commit.\n+- If no successful prior run exists, continue.\n+\n+---\n+\n+## 3. Fetch failure logs\n+\n+Use the GitHub MCP to get the failed jobs for the run and their log output.\n+\n+Parse the output to identify:\n+- Which job(s) failed\n+- Which step(s) failed\n+- The exact error messages and stack traces\n+\n+---\n+\n+## 4. Diagnose the failure\n+\n+Categorise the root cause:\n+\n+| Category | Signals |\n+|----------|---------|\n+| **Flaky / transient** | \"connection refused\", \"timeout\", \"rate limit\", \"502\", intermittent network errors, `SIGKILL` with no code context |\n+| **Build error** | Compilation errors, missing imports, type errors |\n+| **Test failure** | Assertion errors, test assertion mismatches |\n+| **Lint / format** | Style violations, formatter diffs |\n+| **Code quality** | SonarCloud issues on changed files |\n+| **Dependency** | Lock file out of sync, missing package, version conflict |\n+| **Infrastructure** | Runner OOM, disk full, missing secret/env var |\n+\n+Use the GitHub MCP to read the relevant source files referenced in the error\n+output to confirm the root cause before formulating a remediation.\n+\n+---\n+\n+## 5. Formulate a proposed remediation\n+\n+Write a concrete next step — what a human (or a future write-enabled agent)\n+should do. Tailor it to the category:\n+\n+| Category | Proposed remediation |\n+|----------|----------------------|\n+| Flaky / transient | Re-run the failed jobs |\n+| Build / test / lint | \"Investigate `<file:line>` — the error suggests `<hypothesis>`\" |\n+| Code quality | \"Submit `sonar remediate --project <project-key> --issues <key1>,<key2>`\" |\n+| Dependency | \"Regenerate the lockfile via `<command>`\" |\n+| Infrastructure | \"Check runner capacity / verify secret `<name>` is set\" |\n+| Uncertain | \"Manual investigation needed — error at `<file:line>` does not match a known pattern\" |\n+\n+---\n+\n+## 5b. Auto-fix (conditional)\n+\n+After diagnosing and formulating a remediation, assess your confidence in the fix:\n+\n+- **High confidence**: the fix is mechanical or deterministic — formatting, missing import,\n+  lockfile regeneration, simple typo, straightforward test assertion update.\n+- **Low confidence**: the fix requires design decisions, affects multiple systems, the root\n+  cause is uncertain, or the change is non-trivial.\n+\n+**If confidence is high:**\n+\n+1. Use the GitHub MCP to search for open PRs with `[ci-fix]` in the title that touch the\n+   same file(s). If one already exists, skip PR creation.\n+2. Apply the fix. You **must** create a branch before committing — the framework\n+   bundles your changes by branch ref, and without a `refs/heads/*` entry the\n+   bundle will fail to apply.\n+   ```bash\n+   # 1. Create a branch (any ci-fix/ name works)\n+   git checkout -b ci-fix/<descriptive-name>\n+   # 2. Make the code changes to the file(s)\n+   # 3. Stage ALL changed files explicitly\n+   git add <file1> <file2> ...\n+   # 4. Verify there are staged changes\n+   git status\n+   # 5. Commit\n+   git commit -m \"<category>: <short description of the fix>\"\n+   ```\n+3. Open a PR via the `create-pull-request` safe output. In the PR description include:\n+  - The diagnosis category and root cause summary\n+  - A link to the failed workflow run\n+  - The exact error that was fixed\n+4. Note the PR URL for inclusion in the Slack message.\n+\n+**If confidence is low:** skip PR creation entirely and proceed to Slack notification.\n+\n+---\n+\n+## 6. Notify Slack\n+\n+Emit a `slack_notify` safe output with:\n+\n+- `message`: a structured message containing:\n+  - **Workflow**: `{workflow-name}` — link to the run\n+  - **Branch**: `{head-branch}`\n+  - **Commit**: `{short-sha}` by `{author}` — `{commit-subject}`\n+  - **Diagnosis**: `{category}` — 1–2 sentences explaining the root cause\n+  - **Proposed remediation**: the concrete next step from §5\n+  - **Fix PR**: if a PR was created in §5b, include the PR URL\n+\n+---\n+\n+## Rules\n+\n+- Post **at most one** Slack message per failed commit (loop guard in §2).\n+- Only create a PR when confidence in the fix is high and no existing `[ci-fix]` PR addresses the same issue.\n+- Only modify files when creating a high-confidence fix PR. Never open issues.\n+- If the failure category is uncertain, still post to Slack — include the raw error\n+  excerpt and flag the diagnosis as \"uncertain\".",
+          "snapshot_ref": "c4a4f8c7ea14ab2b284f7ed940fdbe9a53ae05a0",
+          "snapshot_blob_sha": "9697825f3c95ef98a6ae3c4a035f9c3b5bdd0959",
+          "snapshot_file": "snapshots/sonarqube-cli__SonarSource__c4a4f8c7ea14ab2b284f7ed940fdbe9a53ae05a0__ci-failure-triage-agent.md",
+          "snapshot_bytes": 7918,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SonarSource/sonarqube-cli\",\"generated_owner\":\"SonarSource\",\"generated_repo\":\"sonarqube-cli\",\"generated_workflow_path\":\".github/workflows/ci-failure-triage-agent.lock.yml\",\"generated_workflow_file\":\"ci-failure-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/SonarSource/sonarqube-cli/blob/3eea7be6696ca11f6428c060b208970ff8af85c3/.github/workflows/ci-failure-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "SonarSource/sonarqube-cli:.github/workflows/ci-failure-triage-agent.md",
+      "source_full_name": "SonarSource/sonarqube-cli",
+      "md_path": ".github/workflows/ci-failure-triage-agent.md",
+      "commit_sha": "596ae691a2ce79413c449eacf99f57701ed9bc30",
+      "authored_at": "2026-06-08T08:30:19Z",
+      "committed_at": "2026-06-08T08:30:19Z",
+      "author_name": "Dam",
+      "author_email": "64742703+damien-urruty-sonarsource@users.noreply.github.com",
+      "author_login": "damien-urruty-sonarsource",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "CLI-612 Use the shared workflow for CI failure triage agent (#402)\n\nUse the shared workflow for CI failure triage agent",
+      "parent_shas": [
+        "0b8b160aa4b322f7f606fb23d50f7cb158569a01"
+      ],
+      "tree_sha": "268a43b9c7dcb3e47566458bfb9a085b676e71d5",
+      "html_url": "https://github.com/SonarSource/sonarqube-cli/commit/596ae691a2ce79413c449eacf99f57701ed9bc30",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "SonarSource/sonarqube-cli:.github/workflows/ci-failure-triage-agent.md",
+          "source_full_name": "SonarSource/sonarqube-cli",
+          "md_path": ".github/workflows/ci-failure-triage-agent.md",
+          "commit_sha": "596ae691a2ce79413c449eacf99f57701ed9bc30",
+          "committed_at": "2026-06-08T08:30:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 15,
+          "file_deletions": 213,
+          "file_changes": 228,
+          "file_patch": "@@ -1,232 +1,34 @@\n ---\n on:\n+  workflow_run:\n+    workflows: [\"*\"]\n+    types: [completed]\n+    branches:\n+      - 'ci-triage-test/**'\n+      - master\n   workflow_dispatch:\n     inputs:\n       workflow_conclusion:\n         description: 'Conclusion of the failed workflow run'\n         default: 'failure'\n       head_branch:\n         description: 'Head branch of the failed workflow run'\n-  workflow_run:\n-    workflows: [\"*\"]\n-    types: [completed]\n-    branches:\n-      - 'task/dam/enable-ci-failure-triager'\n-      - 'master'\n-\n-concurrency: ci-triage-${{ github.run_id }}\n \n permissions:\n   contents: read\n   actions: read\n   issues: read\n   pull-requests: read\n \n-checkout:\n-  - fetch-depth: 0\n-\n-tools:\n-  github:\n-    toolsets: [context, repos, issues, pull_requests, actions]\n-\n-env:\n-  WORKFLOW_CONCLUSION: ${{ inputs.workflow_conclusion || github.event.workflow_run.conclusion }}\n-  HEAD_BRANCH: ${{ inputs.head_branch || github.event.workflow_run.head_branch }}\n-\n-safe-outputs:\n-  noop: false\n-  create-pull-request:\n-    draft: true\n-    title-prefix: \"[ci-fix] \"\n-    labels: [ci-fix, automated]\n-    protected-files: allowed\n-    base-branch: ${{ env.HEAD_BRANCH }}\n-  jobs:\n-    slack-notify:\n-      needs: safe_outputs\n-      description: \"Send a CI failure triage message to Slack\"\n-      runs-on: ubuntu-latest\n-      permissions:\n-        id-token: write\n-      inputs:\n-        message:\n-          description: \"The triage message to send\"\n-          required: true\n-          type: string\n-      steps:\n-        - name: Extract message from agent output\n-          id: extract\n-          run: |\n-            if [ -f \"$GH_AW_AGENT_OUTPUT\" ]; then\n-              MESSAGE=$(cat \"$GH_AW_AGENT_OUTPUT\" | jq -r '.items[] | select(.type == \"slack_notify\") | .message')\n-              DELIMITER=$(openssl rand -hex 16)\n-              echo \"message<<$DELIMITER\" >> \"$GITHUB_OUTPUT\"\n-              echo \"$MESSAGE\" >> \"$GITHUB_OUTPUT\"\n-              echo \"$DELIMITER\" >> \"$GITHUB_OUTPUT\"\n-            else\n-              echo \"::error::No agent output found at $GH_AW_AGENT_OUTPUT\"\n-              exit 1\n-            fi\n-          env:\n-            GH_AW_AGENT_OUTPUT: ${{ runner.temp }}/gh-aw/safe-jobs/agent_output.json\n-        - name: Get Slack token from Vault\n-          id: secrets\n-          uses: SonarSource/vault-action-wrapper@c154b4a417b51cb98dd71137f49bf20e77c56820\n-          with:\n-            secrets: |\n-              development/kv/data/slack token | SLACK_BOT_TOKEN;\n-        - name: Post to Slack\n-          uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e\n-          env:\n-            SLACK_BOT_TOKEN: ${{ fromJSON(steps.secrets.outputs.vault).SLACK_BOT_TOKEN }}\n-          with:\n-            channel-id: squad-integration-on-call\n-            slack-message: ${{ steps.extract.outputs.message }}\n-\n----\n-\n-# CI Failure Triage Agent\n-\n-## Instructions\n-\n-1. Check the `$WORKFLOW_CONCLUSION` environment variable. If it is not `failure`, stop immediately and do nothing.\n-2. Follow the triage skill instructions below.\n-\n----\n-\n-# CI Failure Triage Skill\n-\n-You are a CI failure triage agent. When a workflow run fails on `master`\n-(or a `task/dam/enable-ci-failure-triager` development branch), you diagnose the failure,\n-post a proposed remediation to Slack, and — when you have high confidence\n-in a mechanical fix — open a PR with the fix automatically.\n-\n----\n-\n-## 1. Extract context\n-\n-Use the GitHub MCP to read the workflow run that triggered this agent. Extract:\n-\n-- **Run ID**\n-- **Workflow name** and a direct URL to the run\n-- **Branch** (head branch)\n-- **Commit SHA** (head SHA)\n-- **Commit author** and **short commit message** (first line)\n-\n----\n-\n-## 2. Loop guard\n-\n-Use the GitHub MCP to list previous runs of the `ci-failure-triage-agent`\n-workflow that share the same commit SHA.\n-\n-- If any previous run **completed successfully**, exit silently — a Slack\n-  message has already been posted for this commit.\n-- If no successful prior run exists, continue.\n-\n----\n-\n-## 3. Fetch failure logs\n-\n-Use the GitHub MCP to get the failed jobs for the run and their log output.\n-\n-Parse the output to identify:\n-- Which job(s) failed\n-- Which step(s) failed\n-- The exact error messages and stack traces\n-\n----\n-\n-## 4. Diagnose the failure\n-\n-Categorise the root cause:\n-\n-| Category | Signals |\n-|----------|---------|\n-| **Flaky / transient** | \"connection refused\", \"timeout\", \"rate limit\", \"502\", intermittent network errors, `SIGKILL` with no code context |\n-| **Build error** | Compilation errors, missing imports, type errors |\n-| **Test failure** | Assertion errors, test assertion mismatches |\n-| **Lint / format** | Style violations, formatter diffs |\n-| **Code quality** | SonarCloud issues on changed files |\n-| **Dependency** | Lock file out of sync, missing package, version conflict |\n-| **Infrastructure** | Runner OOM, disk full, missing secret/env var |\n-\n-Use the GitHub MCP to read the relevant source files referenced in the error\n-output to confirm the root cause before formulating a remediation.\n-\n----\n-\n-## 5. Formulate a proposed remediation\n-\n-Write a concrete next step — what a human (or a future write-enabled agent)\n-should do. Tailor it to the category:\n-\n-| Category | Proposed remediation |\n-|----------|----------------------|\n-| Flaky / transient | Re-run the failed jobs |\n-| Build / test / lint | \"Investigate `<file:line>` — the error suggests `<hypothesis>`\" |\n-| Code quality | \"Submit `sonar remediate --project <project-key> --issues <key1>,<key2>`\" |\n-| Dependency | \"Regenerate the lockfile via `<command>`\" |\n-| Infrastructure | \"Check runner capacity / verify secret `<name>` is set\" |\n-| Uncertain | \"Manual investigation needed — error at `<file:line>` does not match a known pattern\" |\n-\n----\n-\n-## 5b. Auto-fix (conditional)\n-\n-After diagnosing and formulating a remediation, assess your confidence in the fix:\n-\n-- **High confidence**: the fix is mechanical or deterministic — formatting, missing import,\n-  lockfile regeneration, simple typo, straightforward test assertion update.\n-- **Low confidence**: the fix requires design decisions, affects multiple systems, the root\n-  cause is uncertain, or the change is non-trivial.\n-\n-**If confidence is high:**\n-\n-1. Use the GitHub MCP to search for open PRs with `[ci-fix]` in the title that touch the\n-   same file(s). If one already exists, skip PR creation.\n-2. Apply the fix. You **must** create a branch before committing — the framework\n-   bundles your changes by branch ref, and without a `refs/heads/*` entry the\n-   bundle will fail to apply.\n-   ```bash\n-   # 1. Create a branch (any ci-fix/ name works)\n-   git checkout -b ci-fix/<descriptive-name>\n-   # 2. Make the code changes to the file(s)\n-   # 3. Stage ALL changed files explicitly\n-   git add <file1> <file2> ...\n-   # 4. Verify there are staged changes\n-   git status\n-   # 5. Commit\n-   git commit -m \"<category>: <short description of the fix>\"\n-   ```\n-3. Open a PR via the `create-pull-request` safe output. In the PR description include:\n-  - The diagnosis category and root cause summary\n-  - A link to the failed workflow run\n-  - The exact error that was fixed\n-4. Note the PR URL for inclusion in the Slack message.\n-\n-**If confidence is low:** skip PR creation entirely and proceed to Slack notification.\n-\n----\n-\n-## 6. Notify Slack\n-\n-Emit a `slack_notify` safe output with:\n-\n-- `message`: a structured message containing:\n-  - **Workflow**: `{workflow-name}` — link to the run\n-  - **Branch**: `{head-branch}`\n-  - **Commit**: `{short-sha}` by `{author}` — `{commit-subject}`\n-  - **Diagnosis**: `{category}` — 1–2 sentences explaining the root cause\n-  - **Proposed remediation**: the concrete next step from §5\n-  - **Fix PR**: if a PR was created in §5b, include the PR URL\n+if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure'\n+concurrency: ci-triage-${{ github.run_id }}\n \n+imports:\n+  - uses: SonarSource/awesome-ai/workflows/ci-failure-triage-agent.md@ci-failure-triage-agent-1.0.1\n+    with:\n+      workflow_conclusion: ${{ inputs.workflow_conclusion || github.event.workflow_run.conclusion }}\n+      head_branch: ${{ inputs.head_branch || github.event.workflow_run.head_branch }}\n+      slack_channel: squad-devex-flow-interrupts\n ---\n \n-## Rules\n-\n-- Post **at most one** Slack message per failed commit (loop guard in §2).\n-- Only create a PR when confidence in the fix is high and no existing `[ci-fix]` PR addresses the same issue.\n-- Only modify files when creating a high-confidence fix PR. Never open issues.\n-- If the failure category is uncertain, still post to Slack — include the raw error\n-  excerpt and flag the diagnosis as \"uncertain\".\n+Triage CI failures for sonarqube-cli.",
+          "snapshot_ref": "596ae691a2ce79413c449eacf99f57701ed9bc30",
+          "snapshot_blob_sha": "982f79380fcd10a93ce1e01e19a6da455a33bd16",
+          "snapshot_file": "snapshots/sonarqube-cli__SonarSource__596ae691a2ce79413c449eacf99f57701ed9bc30__ci-failure-triage-agent.md",
+          "snapshot_bytes": 980,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"SonarSource/sonarqube-cli\",\"generated_owner\":\"SonarSource\",\"generated_repo\":\"sonarqube-cli\",\"generated_workflow_path\":\".github/workflows/ci-failure-triage-agent.lock.yml\",\"generated_workflow_file\":\"ci-failure-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/SonarSource/sonarqube-cli/blob/3eea7be6696ca11f6428c060b208970ff8af85c3/.github/workflows/ci-failure-triage-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

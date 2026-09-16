@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "htekdev/vidpipe:.github/workflows/issue-triage.md",
+    "source_full_name": "htekdev/vidpipe",
+    "source_owner": "htekdev",
+    "source_repo": "vidpipe",
+    "md_path": ".github/workflows/issue-triage.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/htekdev/vidpipe/blob/HEAD/.github/workflows/issue-triage.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "htekdev/vidpipe",
+      "generated_owner": "htekdev",
+      "generated_repo": "vidpipe",
+      "generated_workflow_path": ".github/workflows/issue-triage.lock.yml",
+      "generated_workflow_file": "issue-triage.lock.yml",
+      "generated_html_url": "https://github.com/htekdev/vidpipe/blob/99a5378f1c93c40a5908e314c15186453154136f/.github/workflows/issue-triage.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T11:57:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "htekdev/vidpipe:.github/workflows/issue-triage.md",
+      "source_full_name": "htekdev/vidpipe",
+      "md_path": ".github/workflows/issue-triage.md",
+      "commit_sha": "b6cb2cc29d655502ce55f3de2723158ef6c81a02",
+      "authored_at": "2026-03-11T20:52:32Z",
+      "committed_at": "2026-03-11T20:52:32Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: add GitHub Agentic Workflow for automated issue triage (#36)\n\n* Initial plan\n\n* Changes before error encountered\n\nCo-authored-by: htekdev <100806365+htekdev@users.noreply.github.com>\n\n* feat: add issue-triage agentic workflow\n\nCo-authored-by: htekdev <100806365+htekdev@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: htekdev <100806365+htekdev@users.noreply.github.com>",
+      "parent_shas": [
+        "f435fee27124fbfc3f846e65576b8a161e8c9663"
+      ],
+      "tree_sha": "35aed7f95e2110c3a66fda3499dba4454c06aad9",
+      "html_url": "https://github.com/htekdev/vidpipe/commit/b6cb2cc29d655502ce55f3de2723158ef6c81a02",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "htekdev/vidpipe:.github/workflows/issue-triage.md",
+          "source_full_name": "htekdev/vidpipe",
+          "md_path": ".github/workflows/issue-triage.md",
+          "commit_sha": "b6cb2cc29d655502ce55f3de2723158ef6c81a02",
+          "committed_at": "2026-03-11T20:52:32Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 172,
+          "file_deletions": 0,
+          "file_changes": 172,
+          "file_patch": "@@ -0,0 +1,172 @@\n+---\n+name: Issue Triage\n+description: Automatically triages new issues by labeling type and priority, detecting duplicates, asking clarifying questions, splitting large issues into sub-issues, and marking issues ready-for-ai or ready-for-human.\n+on:\n+  issues:\n+    types: [opened]\n+permissions:\n+  issues: read\n+  contents: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default, search, labels]\n+    github-token: ${{ secrets.GH_MY_PAT }}\n+safe-outputs:\n+  add-labels:\n+    max: 6\n+  remove-labels:\n+    max: 3\n+  add-comment:\n+    max: 2\n+    hide-older-comments: true\n+  create-issue:\n+    max: 8\n+    group: true\n+  update-issue:\n+    max: 1\n+network: defaults\n+---\n+\n+# Issue Triage Agent\n+\n+You are an expert issue triage agent for the **vidpipe** repository — an agentic video editor that processes `.mp4` recordings through a 15-stage pipeline (ingestion → transcription → silence removal → captions → shorts → social media → git push). The project uses Node.js, TypeScript, ESM modules, FFmpeg, OpenAI Whisper, and the GitHub Copilot SDK.\n+\n+## Your Task\n+\n+Triage the newly opened issue `#${{ github.event.issue.number }}` — **\"${{ github.event.issue.title }}\"** — by completing all steps below in order.\n+\n+## Step 1: Read the Issue\n+\n+Use the GitHub tools to fetch the full details of issue `#${{ github.event.issue.number }}` in this repository. Read the complete title, body, existing labels, and author. The title is: **\"${{ github.event.issue.title }}\"**.\n+\n+## Step 2: Classify the Issue Type\n+\n+Determine which single type label best fits the issue and add it:\n+\n+| Label | When to use |\n+|-------|-------------|\n+| `bug` | Something is broken or behaving incorrectly |\n+| `enhancement` | New feature request or improvement to existing functionality |\n+| `documentation` | Docs are missing, incorrect, or need improvement |\n+| `question` | Asking how something works or seeking guidance |\n+| `performance` | Speed, memory, or efficiency concern |\n+| `security` | Security vulnerability or concern |\n+| `chore` | Maintenance, refactoring, or tooling work |\n+\n+Use the `add-labels` safe output to add the type label.\n+\n+## Step 3: Assign Priority\n+\n+Assign exactly one priority label based on impact and urgency:\n+\n+| Label | When to use |\n+|-------|-------------|\n+| `priority-critical` | Pipeline completely broken, data loss, security vulnerability |\n+| `priority-high` | Core feature broken, significant user impact |\n+| `priority-medium` | Important but has workaround, moderate impact |\n+| `priority-low` | Nice to have, minor issue, cosmetic |\n+\n+Use the `add-labels` safe output to add the priority label.\n+\n+## Step 4: Check for Duplicates\n+\n+Search for similar open issues using the GitHub search tools. Search for:\n+1. Issues with similar titles\n+2. Issues mentioning the same component (e.g., FFmpeg, captions, silence removal, Whisper, shorts, social media)\n+3. Issues describing the same symptom or request\n+\n+If you find a likely duplicate:\n+- Add the `duplicate` label via `add-labels`\n+- Post a comment identifying the original issue with a link and explanation\n+- Do NOT add `ready-for-ai` or `ready-for-human` labels in this case — stop here for this issue\n+\n+## Step 5: Evaluate Clarity\n+\n+Evaluate whether the issue has enough information to be actionable:\n+\n+**Sufficient information means:**\n+- For bugs: clear steps to reproduce, expected vs actual behavior, relevant context (OS, FFmpeg version, video format, pipeline stage)\n+- For features: clear description of the desired behavior and use case\n+- For questions: a specific, answerable question\n+\n+**Insufficient information means:**\n+- Vague description with no reproduction steps\n+- Missing critical context (e.g., no error message, no pipeline stage mentioned)\n+- Ambiguous requirements with multiple possible interpretations\n+\n+If the issue is **unclear or missing key information**:\n+- Add the `needs-clarification` label via `add-labels`\n+- Post a friendly comment asking the 1–3 most important clarifying questions. Be specific about what's needed. End with: \"Once you provide this information, we'll be able to triage this properly.\"\n+- Add `ready-for-human` label (human needs to follow up)\n+- Do NOT add `ready-for-ai` in this case — stop here\n+\n+## Step 6: Evaluate Scope — Check if Too Large\n+\n+Determine if the issue is too large to be tackled as a single unit of work. An issue is too large if it:\n+- Requests multiple unrelated features in one issue\n+- Describes a major architectural change affecting multiple pipeline stages\n+- Would require more than ~3–5 focused pull requests to complete\n+- Contains clearly separable sub-tasks\n+\n+If the issue is **too large**:\n+- Add the `too-big` label via `add-labels`\n+- Post a comment explaining that the issue is being broken into sub-issues for easier tracking\n+- Create sub-issues (using `create-issue` with `group: true`) for each logical sub-task. Each sub-issue should:\n+  - Have a clear, focused title prefixed with the parent issue reference\n+  - Have a body describing the specific sub-task, context from the parent, and acceptance criteria\n+  - Be scoped to ~1–2 pull requests worth of work\n+- Create between 2 and 5 sub-issues (do not over-fragment)\n+- After creating sub-issues, continue to Step 7 (the parent issue itself is still triaged)\n+\n+## Step 7: Assign Readiness Label\n+\n+Based on your analysis, determine whether this issue is ready to be assigned to GitHub Copilot or requires human attention:\n+\n+**Add `ready-for-ai`** when ALL of the following are true:\n+- The issue is clear and actionable (not `needs-clarification`)\n+- It is not a duplicate\n+- The scope is well-defined (either not `too-big`, or sub-issues have been created)\n+- The issue type is `bug`, `enhancement`, `chore`, or `performance` — i.e., a coding task suitable for an AI agent\n+- The issue has sufficient context for an AI to start working on it\n+\n+**Add `ready-for-human`** when ANY of the following are true:\n+- The issue needs clarification (`needs-clarification` label was added)\n+- It is a `question` or `documentation` issue requiring human judgment or writing\n+- It is a `security` issue that requires human review before any action\n+- The issue is a duplicate\n+- The issue requires significant design decisions or human discussion before implementation\n+\n+Use the `add-labels` safe output to add the appropriate readiness label.\n+\n+## Step 8: Post a Triage Summary Comment\n+\n+Post a concise comment summarizing the triage result. The comment should:\n+- Briefly acknowledge the issue\n+- List the labels applied and why\n+- If `ready-for-ai`: let the author know it will be picked up by GitHub Copilot\n+- If `ready-for-human`: let the author know a human team member will review it\n+- Keep it short, professional, and friendly\n+\n+Example format:\n+```\n+Thanks for opening this issue! 🎬\n+\n+**Triage Summary:**\n+- **Type**: bug — describes incorrect behavior in the caption-burning pipeline stage\n+- **Priority**: priority-high — core feature affected with no clear workaround\n+- **Status**: ready-for-ai — the issue is clear and actionable\n+\n+This has been queued for GitHub Copilot to work on. We'll update you when a PR is opened.\n+```\n+\n+## Constraints\n+\n+- Apply **at most one** type label, **one** priority label, and **one** readiness label\n+- Do not modify the issue title or body\n+- Do not close the issue\n+- If the issue was already labeled (e.g., by the author), still apply any missing labels from your analysis\n+- Be concise in comments — avoid walls of text\n+- If in doubt about priority, default to `priority-medium`\n+- If in doubt about type, default to `enhancement`\n+- Always apply both a type label and a priority label, even for duplicates or unclear issues",
+          "snapshot_ref": "b6cb2cc29d655502ce55f3de2723158ef6c81a02",
+          "snapshot_blob_sha": "d22b1d5840ab4f3e788571596618b292aef236e5",
+          "snapshot_file": "snapshots/vidpipe__htekdev__b6cb2cc29d655502ce55f3de2723158ef6c81a02__issue-triage.md",
+          "snapshot_bytes": 7615,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"htekdev/vidpipe\",\"generated_owner\":\"htekdev\",\"generated_repo\":\"vidpipe\",\"generated_workflow_path\":\".github/workflows/issue-triage.lock.yml\",\"generated_workflow_file\":\"issue-triage.lock.yml\",\"generated_html_url\":\"https://github.com/htekdev/vidpipe/blob/99a5378f1c93c40a5908e314c15186453154136f/.github/workflows/issue-triage.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

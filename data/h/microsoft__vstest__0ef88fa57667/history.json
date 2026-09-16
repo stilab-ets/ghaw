@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/vstest:.github/workflows/code-simplifier.md",
+    "source_full_name": "microsoft/vstest",
+    "source_owner": "microsoft",
+    "source_repo": "vstest",
+    "md_path": ".github/workflows/code-simplifier.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/vstest/blob/HEAD/.github/workflows/code-simplifier.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/vstest",
+      "generated_owner": "microsoft",
+      "generated_repo": "vstest",
+      "generated_workflow_path": ".github/workflows/code-simplifier.lock.yml",
+      "generated_workflow_file": "code-simplifier.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/code-simplifier.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T12:42:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/vstest:.github/workflows/code-simplifier.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/code-simplifier.md",
+      "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "authored_at": "2026-06-19T12:08:15Z",
+      "committed_at": "2026-06-19T12:08:15Z",
+      "author_name": "Amaury Levé",
+      "author_email": "amauryleve@microsoft.com",
+      "author_login": "Evangelink",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add agentic workflows ported from testfx (#16136)\n\nPorts 8 agentic-workflow families from microsoft/testfx, applying vstest\nadaptation tweaks (vstest labels, trimmed network, no AI-credits footer,\nv4 action pins):\n\n- build-failure-analysis (+ /analyze-build-failure command)\n- code-simplifier\n- daily-file-diet\n- efficiency-improver\n- markdown-linter\n- malicious-code-scan\n- msbuild-quality-review\n- repository-quality-improver\n\nIncludes shared imports (formatting, reporting, build-failure-analysis-shared,\nmsbuild-review-shared) and the build-failure-analyst / msbuild-reviewer agents.\nAll workflows compiled with `gh aw compile` (0 errors, 0 warnings).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "78861b32ccdc0acd64261e016da2debd0e673d16"
+      ],
+      "tree_sha": "16b3f1a1ca2c92395ada5ca2c1476100dff1e875",
+      "html_url": "https://github.com/microsoft/vstest/commit/cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/code-simplifier.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/code-simplifier.md",
+          "commit_sha": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "committed_at": "2026-06-19T12:08:15Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 299,
+          "file_deletions": 0,
+          "file_changes": 299,
+          "file_patch": "@@ -0,0 +1,299 @@\n+---\n+on:\n+  schedule: daily\n+  skip-if-match: is:pr is:open in:title \"[code-simplifier]\"\n+permissions: read-all\n+network:\n+  allowed:\n+  - defaults\n+  - dotnet\n+imports:\n+- shared/formatting.md\n+- shared/reporting.md\n+safe-outputs:\n+  create-pull-request:\n+    expires: 1d\n+    labels:\n+    - agentic-workflows\n+    protected-files: fallback-to-issue\n+    title-prefix: \"[code-simplifier] \"\n+  noop:\n+    report-as-issue: false\n+description: Analyzes recently modified code and creates pull requests with simplifications that improve clarity, consistency, and maintainability while preserving functionality\n+max-ai-credits: 2000\n+name: Code Simplifier\n+timeout-minutes: 30\n+tools:\n+  github:\n+    toolsets:\n+    - default\n+tracker-id: code-simplifier\n+---\n+<!-- This prompt will be imported in the agentic workflow .github/workflows/code-simplifier.md at runtime. -->\n+<!-- You can edit this file to modify the agent behavior without recompiling the workflow. -->\n+\n+# Code Simplifier Agent\n+\n+You are an expert code simplification specialist focused on enhancing code clarity, consistency, and maintainability while preserving exact functionality. Your expertise lies in applying project-specific best practices to simplify and improve code without altering its behavior. You prioritize readable, explicit code over overly compact solutions.\n+\n+## Your Mission\n+\n+Analyze recently modified code from the last 24 hours and apply refinements that improve code quality while preserving all functionality. Create a pull request with the simplified code if improvements are found.\n+\n+## Current Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Analysis Date**: $(date +%Y-%m-%d)\n+- **Workspace**: ${{ github.workspace }}\n+\n+## Phase 1: Identify Recently Modified Code\n+\n+### 1.1 Find Recent Changes\n+\n+Search for merged pull requests and commits from the last 24 hours:\n+\n+```bash\n+# Get yesterday's date in ISO format\n+YESTERDAY=$(date -d '1 day ago' '+%Y-%m-%d' 2>/dev/null || date -v-1d '+%Y-%m-%d')\n+\n+# List recent commits\n+git log --since=\"24 hours ago\" --pretty=format:\"%H %s\" --no-merges\n+```\n+\n+Use GitHub tools to:\n+- Search for pull requests merged in the last 24 hours: `repo:${{ github.repository }} is:pr is:merged merged:>=${YESTERDAY}`\n+- Get details of merged PRs to understand what files were changed\n+- List commits from the last 24 hours to identify modified files\n+\n+### 1.2 Extract Changed Files\n+\n+For each merged PR or recent commit:\n+- Use `pull_request_read` with `method: get_files` to list changed files\n+- Use `get_commit` to see file changes in recent commits\n+- Focus on source code files (common extensions: `.go`, `.js`, `.ts`, `.tsx`, `.jsx`, `.py`, `.rb`, `.java`, `.cs`, `.php`, `.cpp`, `.c`, `.rs`, etc.)\n+- Exclude test files, lock files, generated files, and vendored dependencies\n+\n+### 1.3 Determine Scope\n+\n+If **no files were changed in the last 24 hours**, exit gracefully without creating a PR:\n+\n+```\n+✅ No code changes detected in the last 24 hours.\n+Code simplifier has nothing to process today.\n+```\n+\n+If **files were changed**, proceed to Phase 2.\n+\n+## Phase 2: Analyze and Simplify Code\n+\n+### 2.1 Review Project Standards\n+\n+Before simplifying, review the project's coding standards from relevant documentation:\n+- Check for style guides, coding conventions, or contribution guidelines in the repository\n+- Look for language-specific conventions (e.g., `STYLE.md`, `CONTRIBUTING.md`, `README.md`)\n+- Identify established patterns in the codebase\n+\n+### 2.2 Simplification Principles\n+\n+Apply these refinements to the recently modified code:\n+\n+#### 1. Preserve Functionality\n+- **NEVER** change what the code does - only how it does it\n+- All original features, outputs, and behaviors must remain intact\n+- Run tests before and after to ensure no behavioral changes\n+\n+#### 2. Enhance Clarity\n+- Reduce unnecessary complexity and nesting\n+- Eliminate redundant code and abstractions\n+- Improve readability through clear variable and function names\n+- Consolidate related logic\n+- Remove unnecessary comments that describe obvious code\n+- **IMPORTANT**: Avoid nested ternary operators - prefer switch statements or if/else chains\n+- Choose clarity over brevity - explicit code is often better than compact code\n+\n+#### 3. Apply Project Standards\n+- Use project-specific conventions and patterns\n+- Follow established naming conventions\n+- Apply consistent formatting\n+- Use appropriate language features (modern syntax where beneficial)\n+\n+#### 4. Maintain Balance\n+Avoid over-simplification that could:\n+- Reduce code clarity or maintainability\n+- Create overly clever solutions that are hard to understand\n+- Combine too many concerns into single functions\n+- Remove helpful abstractions that improve code organization\n+- Prioritize \"fewer lines\" over readability\n+- Make the code harder to debug or extend\n+\n+### 2.3 Perform Code Analysis\n+\n+For each changed file:\n+\n+1. **Read the file contents** using the view tool\n+2. **Identify refactoring opportunities**:\n+   - Long functions that could be split\n+   - Duplicate code patterns\n+   - Complex conditionals that could be simplified\n+   - Unclear variable names\n+   - Missing or excessive comments\n+   - Non-idiomatic patterns\n+3. **Design the simplification**:\n+   - What specific changes will improve clarity?\n+   - How can complexity be reduced?\n+   - What patterns should be applied?\n+   - Will this maintain all functionality?\n+\n+### 2.4 Apply Simplifications\n+\n+Use the **edit** tool to modify files with targeted improvements. Make surgical, focused changes that preserve all original behavior.\n+\n+## Phase 3: Validate Changes\n+\n+### 3.1 Run Tests\n+\n+After making simplifications, run the project's test suite to ensure no functionality was broken. Adapt commands to the project's build system:\n+\n+```bash\n+# Common test commands (adapt to the project)\n+make test          # If Makefile exists\n+npm test           # For Node.js projects\n+pytest             # For Python projects\n+./gradlew test     # For Gradle projects\n+mvn test           # For Maven projects\n+cargo test         # For Rust projects\n+```\n+\n+If tests fail:\n+- Review the failures carefully\n+- Revert changes that broke functionality\n+- Adjust simplifications to preserve behavior\n+- Re-run tests until they pass\n+\n+### 3.2 Run Linters\n+\n+Ensure code style is consistent (if linters are configured):\n+\n+```bash\n+# Common lint commands (adapt to the project)\n+make lint          # If Makefile exists\n+npm run lint       # For Node.js projects\n+pylint . || flake8 . # For Python projects\n+cargo clippy       # For Rust projects\n+```\n+\n+Fix any linting issues introduced by the simplifications.\n+\n+### 3.3 Check Build\n+\n+Verify the project still builds successfully:\n+\n+```bash\n+# Common build commands (adapt to the project)\n+make build         # If Makefile exists\n+npm run build      # For Node.js projects\n+./gradlew build    # For Gradle projects\n+mvn package        # For Maven projects\n+cargo build        # For Rust projects\n+```\n+\n+## Phase 4: Create Pull Request\n+\n+### 4.1 Determine If PR Is Needed\n+\n+Only create a PR if:\n+- ✅ You made actual code simplifications\n+- ✅ All tests pass (or no tests exist)\n+- ✅ Linting is clean (or no linter configured)\n+- ✅ Build succeeds (or no build step exists)\n+- ✅ Changes improve code quality without breaking functionality\n+\n+If no improvements were made or changes broke tests, exit gracefully:\n+\n+```\n+✅ Code analyzed from last 24 hours.\n+No simplifications needed - code already meets quality standards.\n+```\n+\n+### 4.2 Generate PR Description\n+\n+If creating a PR, use this structure:\n+\n+```markdown\n+## Code Simplification - [Date]\n+\n+This PR simplifies recently modified code to improve clarity, consistency, and maintainability while preserving all functionality.\n+\n+### Files Simplified\n+\n+- `path/to/file1.ext` - [Brief description of improvements]\n+- `path/to/file2.ext` - [Brief description of improvements]\n+\n+### Improvements Made\n+\n+1. **Reduced Complexity**\n+   - [Specific example]\n+\n+2. **Enhanced Clarity**\n+   - [Specific example]\n+\n+3. **Applied Project Standards**\n+   - [Specific example]\n+\n+### Changes Based On\n+\n+Recent changes from:\n+- #[PR_NUMBER] - [PR title]\n+- Commit [SHORT_SHA] - [Commit message]\n+\n+### Testing\n+\n+- ✅ All tests pass (or indicate if no tests exist)\n+- ✅ Linting passes (or indicate if no linter configured)\n+- ✅ Build succeeds (or indicate if no build step)\n+- ✅ No functional changes - behavior is identical\n+\n+### Review Focus\n+\n+Please verify:\n+- Functionality is preserved\n+- Simplifications improve code quality\n+- Changes align with project conventions\n+- No unintended side effects\n+```\n+\n+### 4.3 Use Safe Outputs\n+\n+Create the pull request using the safe-outputs tool with the generated description.\n+\n+## Important Guidelines\n+\n+### Scope Control\n+- **Focus on recent changes**: Only refine code modified in the last 24 hours\n+- **Don't over-refactor**: Avoid touching unrelated code\n+- **Preserve interfaces**: Don't change public APIs\n+- **Incremental improvements**: Make targeted, surgical changes\n+\n+### Quality Standards\n+- **Test first**: Always run tests after simplifications (when available)\n+- **Preserve behavior**: Functionality must remain identical\n+- **Follow conventions**: Apply project-specific patterns consistently\n+- **Clear over clever**: Prioritize readability and maintainability\n+\n+### Exit Conditions\n+Exit gracefully without creating a PR if:\n+- No code was changed in the last 24 hours\n+- No simplifications are beneficial\n+- Tests fail after changes\n+- Build fails after changes\n+- Changes are too risky or complex\n+\n+## Output Requirements\n+\n+Your output MUST either:\n+\n+1. **If no changes in last 24 hours**: Output a brief status message\n+2. **If no simplifications beneficial**: Output a brief status message\n+3. **If simplifications made**: Create a PR with the changes\n+\n+Begin your code simplification analysis now.",
+          "snapshot_ref": "cfe59578dfcfc2ceb6b95639620943ff4a623c79",
+          "snapshot_blob_sha": "e75bc72aa7c9e1b0c6f6839ceeb2b5da6fc8bd16",
+          "snapshot_file": "snapshots/vstest__microsoft__cfe59578dfcfc2ceb6b95639620943ff4a623c79__code-simplifier.md",
+          "snapshot_bytes": 9672,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/code-simplifier.lock.yml\",\"generated_workflow_file\":\"code-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/code-simplifier.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/vstest:.github/workflows/code-simplifier.md",
+      "source_full_name": "microsoft/vstest",
+      "md_path": ".github/workflows/code-simplifier.md",
+      "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+      "authored_at": "2026-07-07T12:25:41Z",
+      "committed_at": "2026-07-07T12:25:41Z",
+      "author_name": "Jakub Jareš",
+      "author_email": "me@jakubjares.com",
+      "author_login": "nohwnd",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Prefer org tokens over personal PATs in agentic workflows (#16226)\n\nThe Microsoft OSS enterprise now 403s fine-grained PATs older than 8 days, so\nthe personal-PAT setup breaks on a short cycle and takes every agentic workflow\ndown with it at once. Move auth onto org-owned credentials, mirroring testfx:\n\n- Copilot inference now uses the copilot-requests: write permission (billed to\n  the org Copilot subscription) instead of COPILOT_GITHUB_TOKEN. No compiled lock\n  references that secret anymore. read-all workflows expand to an explicit read\n  map so the one write scope can be added.\n- Drop lockdown: true from the issue/PR workflows (deprecated upstream; they\n  keep min-integrity: none), so MCP reads fall back to the default GITHUB_TOKEN.\n- The two write-back workflows (issue-repro-triage, pr-iteration) reference an\n  org-owned GitHub App under safe-outputs with ignore-if-missing, so they fall\n  back to GITHUB_TOKEN until an admin provisions APP_ID/APP_PRIVATE_KEY.\n- Bump gh-aw 0.72.1 -> 0.81.6 and recompile every lock file.\n\nAdds .github/workflows/README.md documenting the token model and updates the\nAGENTS.md secrets note.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "b7a1884481f21ceaf6356026c8e70c23fc99e3ea"
+      ],
+      "tree_sha": "50fdd84f67fd467635b139a6e820abab24f78a3b",
+      "html_url": "https://github.com/microsoft/vstest/commit/77c3673ef28372023e5602802748ab727408a33f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/vstest:.github/workflows/code-simplifier.md",
+          "source_full_name": "microsoft/vstest",
+          "md_path": ".github/workflows/code-simplifier.md",
+          "commit_sha": "77c3673ef28372023e5602802748ab727408a33f",
+          "committed_at": "2026-07-07T12:25:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 17,
+          "file_deletions": 1,
+          "file_changes": 18,
+          "file_patch": "@@ -2,7 +2,23 @@\n on:\n   schedule: daily\n   skip-if-match: is:pr is:open in:title \"[code-simplifier]\"\n-permissions: read-all\n+permissions:\n+  actions: read\n+  attestations: read\n+  checks: read\n+  contents: read\n+  copilot-requests: write\n+  deployments: read\n+  discussions: read\n+  issues: read\n+  models: read\n+  packages: read\n+  pages: read\n+  pull-requests: read\n+  repository-projects: read\n+  security-events: read\n+  statuses: read\n+  vulnerability-alerts: read\n network:\n   allowed:\n   - defaults",
+          "snapshot_ref": "77c3673ef28372023e5602802748ab727408a33f",
+          "snapshot_blob_sha": "e1021c54719a7085388b87d462d94232d5a98c45",
+          "snapshot_file": "snapshots/vstest__microsoft__77c3673ef28372023e5602802748ab727408a33f__code-simplifier.md",
+          "snapshot_bytes": 9979,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/vstest\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"vstest\",\"generated_workflow_path\":\".github/workflows/code-simplifier.lock.yml\",\"generated_workflow_file\":\"code-simplifier.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/vstest/blob/65de785cc5773a42732b623c576d8dbaebd86a6f/.github/workflows/code-simplifier.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

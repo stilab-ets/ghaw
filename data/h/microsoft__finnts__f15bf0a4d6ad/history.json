@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+    "source_full_name": "microsoft/finnts",
+    "source_owner": "microsoft",
+    "source_repo": "finnts",
+    "md_path": ".github/workflows/repo-improver.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/finnts/blob/HEAD/.github/workflows/repo-improver.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/finnts",
+      "generated_owner": "microsoft",
+      "generated_repo": "finnts",
+      "generated_workflow_path": ".github/workflows/repo-improver.lock.yml",
+      "generated_workflow_file": "repo-improver.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/finnts/blob/53908f7d75ea2f37ccf269afada8bc62e99bc5c7/.github/workflows/repo-improver.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T11:58:31+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+      "source_full_name": "microsoft/finnts",
+      "md_path": ".github/workflows/repo-improver.md",
+      "commit_sha": "4036317bdc0d85eddc8e25b0fc39c7189ec5d6e1",
+      "authored_at": "2026-04-29T21:00:24Z",
+      "committed_at": "2026-04-29T21:00:24Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add daily repo improvement agentic workflow\n\nAgent-Logs-Url: https://github.com/microsoft/finnts/sessions/8eaf5bd0-99fc-435e-905e-34966af972e0\n\nCo-authored-by: mitokic <16709433+mitokic@users.noreply.github.com>",
+      "parent_shas": [
+        "66034150e3e672e3a896b7740f5aed96386dc9ef"
+      ],
+      "tree_sha": "576bd11d016c32473908df88604b99f33514bf3b",
+      "html_url": "https://github.com/microsoft/finnts/commit/4036317bdc0d85eddc8e25b0fc39c7189ec5d6e1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+          "source_full_name": "microsoft/finnts",
+          "md_path": ".github/workflows/repo-improver.md",
+          "commit_sha": "4036317bdc0d85eddc8e25b0fc39c7189ec5d6e1",
+          "committed_at": "2026-04-29T21:00:24Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 155,
+          "file_deletions": 0,
+          "file_changes": 155,
+          "file_patch": "@@ -0,0 +1,155 @@\n+---\n+description: Daily automated repository improvement workflow that cycles through improvement categories and creates PRs with recommendations\n+on:\n+  schedule:\n+    - cron: \"0 12 * * *\"\n+  workflow_dispatch:\n+  skip-if-match: 'is:pr is:open in:title \"[repo-improver]\"'\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  issues: read\n+  actions: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  cache-memory: true\n+network:\n+  allowed:\n+    - defaults\n+    - r\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+  noop:\n+    max: 1\n+---\n+\n+# Repository Improver\n+\n+You are an expert R package developer and ML engineer working on `finnts`, the Microsoft Finance Time Series Forecasting Framework. Your job is to systematically improve this R package by cycling through improvement categories one at a time.\n+\n+## Improvement Categories\n+\n+The categories to cycle through (in order) are:\n+\n+1. **code-quality** — Code quality & best practices (R idioms, tidyverse conventions, function design, error handling, code clarity)\n+2. **security** — Security (input validation, safe file handling, credential handling, dependency vulnerabilities)\n+3. **performance** — Performance optimizations (vectorization, memory efficiency, algorithm improvements, parallel processing)\n+4. **documentation** — Documentation & docstrings (roxygen2 comments, vignettes, README, examples, parameter descriptions)\n+5. **test-coverage** — Test coverage gaps (missing unit tests, edge cases, integration tests, regression tests)\n+6. **ml-forecasting** — ML Forecasting (model selection, feature engineering, cross-validation, interpretability, metrics)\n+\n+## Round-Robin Category Selection\n+\n+Before starting, read the cache-memory file to determine which category to work on next:\n+\n+1. Check `/tmp/gh-aw/cache-memory/improver-state.json` for the last processed category\n+2. Select the **next** category in the list above (wrapping back to `code-quality` after `ml-forecasting`)\n+3. If no state file exists, start with `code-quality`\n+\n+The state file format:\n+```json\n+{\n+  \"last_category\": \"code-quality\",\n+  \"last_run\": \"2026-04-29-12-00-00\",\n+  \"history\": [\"code-quality\", \"security\"]\n+}\n+```\n+\n+## Workflow Steps\n+\n+### Step 1: Read the Repository\n+\n+Thoroughly read through the repository to understand the current state:\n+\n+- Read the `DESCRIPTION` file for package metadata and dependencies\n+- Read `R/` directory for all source files\n+- Read `tests/testthat/` for existing tests\n+- Read `man/` for documentation\n+- Read `vignettes/` for long-form documentation\n+- Read `NEWS.md` for recent changes\n+- Read `AGENTS.md` and `CLAUDE.md` for coding conventions\n+\n+### Step 2: Analyze the Selected Category\n+\n+Based on the selected improvement category, perform a focused analysis:\n+\n+- **code-quality**: Look for non-idiomatic R code, inconsistent style, overly complex functions, missing error messages, deprecated function usage, unnecessary dependencies\n+- **security**: Look for unsanitized inputs, unsafe file operations, hardcoded paths, missing input validation, unsafe URL handling, credential exposure risks\n+- **performance**: Look for non-vectorized loops, unnecessary data copies, inefficient joins, missing parallelization opportunities, memory-heavy operations on large datasets\n+- **documentation**: Look for missing or incomplete roxygen2 documentation, undocumented parameters, missing return value descriptions, missing examples, outdated vignettes\n+- **test-coverage**: Look for untested functions, missing edge case tests, functions with complex logic but no tests, missing error condition tests\n+- **ml-forecasting**: Look for opportunities to improve model selection heuristics, feature engineering pipelines, cross-validation strategies, forecast accuracy metrics, model interpretability, ensemble methods\n+\n+### Step 3: Identify Improvements\n+\n+Come up with 1-3 concrete, focused improvements for the selected category. Prioritize changes that:\n+\n+- Are self-contained and won't break existing functionality\n+- Have clear, measurable impact\n+- Follow R package best practices\n+- Are consistent with the existing code style in the repo\n+- Are small enough to review in a single PR\n+\n+### Step 4: Create a Branch and Implement\n+\n+Create a new branch following the naming convention:\n+\n+```\n+agent/review/{category}-improvements\n+```\n+\n+Where `{category}` is one of: `code-quality`, `security`, `performance`, `documentation`, `test-coverage`, `ml-forecasting`.\n+\n+Implement the identified improvements:\n+\n+- Make minimal, focused changes\n+- Follow existing code style and conventions\n+- Do NOT add new package dependencies without noting it prominently\n+- Do NOT delete or weaken existing tests\n+- Do NOT edit `NAMESPACE` or `man/*.Rd` files by hand (roxygen2 generates these)\n+- Run `devtools::document()` if you modify roxygen2 comments\n+- Update `NEWS.md` with a bullet describing the change\n+\n+### Step 5: Run Tests\n+\n+Run the package tests to verify your changes don't break anything:\n+\n+```bash\n+cd /home/runner/work/finnts/finnts\n+Rscript -e 'devtools::test()'\n+```\n+\n+If tests fail, fix the issues before proceeding. If you cannot fix a test failure caused by your changes, revert those specific changes.\n+\n+### Step 6: Submit PR\n+\n+If tests pass, create a pull request with:\n+\n+- **Title**: `[repo-improver] {Category}: {Brief description of improvements}`\n+- **Body**: A clear description of:\n+  - Which improvement category was addressed\n+  - What specific changes were made and why\n+  - Any trade-offs or considerations for reviewers\n+  - Test results summary\n+\n+Use the `create-pull-request` safe output to submit the PR.\n+\n+### Step 7: Update Cache Memory\n+\n+After completing your work (whether you created a PR or not), update the cache-memory state file at `/tmp/gh-aw/cache-memory/improver-state.json` with:\n+\n+- The category you just processed as `last_category`\n+- Current timestamp as `last_run` (use format `YYYY-MM-DD-HH-MM-SS`, no colons)\n+- Append the category to the `history` array\n+\n+## Important Guidelines\n+\n+- **One category per run**: Focus deeply on ONE category rather than making shallow changes across many\n+- **Quality over quantity**: A single well-implemented improvement is better than many half-baked ones\n+- **Don't break things**: Always verify tests pass before submitting\n+- **Respect conventions**: Follow the coding conventions in `AGENTS.md`\n+- **Be conservative**: When in doubt, make the safer choice\n+- **Use noop when appropriate**: If you analyze a category and determine no meaningful improvements can be made right now, call the `noop` safe output with an explanation. This is perfectly acceptable and shows you did the work.\n+- **Branch cleanup**: Use the branch naming convention exactly as specified so maintainers can easily identify automated improvement PRs",
+          "snapshot_ref": "4036317bdc0d85eddc8e25b0fc39c7189ec5d6e1",
+          "snapshot_blob_sha": "c4f04f580fb88de1f6377573fb3675a4291f5b73",
+          "snapshot_file": "snapshots/finnts__microsoft__4036317bdc0d85eddc8e25b0fc39c7189ec5d6e1__repo-improver.md",
+          "snapshot_bytes": 6693,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/finnts\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"finnts\",\"generated_workflow_path\":\".github/workflows/repo-improver.lock.yml\",\"generated_workflow_file\":\"repo-improver.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/finnts/blob/53908f7d75ea2f37ccf269afada8bc62e99bc5c7/.github/workflows/repo-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+      "source_full_name": "microsoft/finnts",
+      "md_path": ".github/workflows/repo-improver.md",
+      "commit_sha": "b85be9d127b22295b100548b44cebc37d0d9a911",
+      "authored_at": "2026-04-29T21:04:07Z",
+      "committed_at": "2026-04-29T21:04:07Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update branch naming to include date: agent/{date}/{category}-improvements\n\nAgent-Logs-Url: https://github.com/microsoft/finnts/sessions/bf897c4d-de44-4ad6-b863-9572bec4852b\n\nCo-authored-by: mitokic <16709433+mitokic@users.noreply.github.com>",
+      "parent_shas": [
+        "4036317bdc0d85eddc8e25b0fc39c7189ec5d6e1"
+      ],
+      "tree_sha": "6dc05e42e4043ac98b049b6c95efd5ab7b2bd117",
+      "html_url": "https://github.com/microsoft/finnts/commit/b85be9d127b22295b100548b44cebc37d0d9a911",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+          "source_full_name": "microsoft/finnts",
+          "md_path": ".github/workflows/repo-improver.md",
+          "commit_sha": "b85be9d127b22295b100548b44cebc37d0d9a911",
+          "committed_at": "2026-04-29T21:04:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 2,
+          "file_changes": 6,
+          "file_patch": "@@ -97,10 +97,12 @@ Come up with 1-3 concrete, focused improvements for the selected category. Prior\n Create a new branch following the naming convention:\n \n ```\n-agent/review/{category}-improvements\n+agent/{YYYY-MM-DD}/{category}-improvements\n ```\n \n-Where `{category}` is one of: `code-quality`, `security`, `performance`, `documentation`, `test-coverage`, `ml-forecasting`.\n+Where `{YYYY-MM-DD}` is today's date (e.g., `2026-04-29`) and `{category}` is one of: `code-quality`, `security`, `performance`, `documentation`, `test-coverage`, `ml-forecasting`.\n+\n+For example: `agent/2026-04-29/code-quality-improvements`\n \n Implement the identified improvements:\n ",
+          "snapshot_ref": "b85be9d127b22295b100548b44cebc37d0d9a911",
+          "snapshot_blob_sha": "baf35df2252055bb01f0f16060e223049c75edc5",
+          "snapshot_file": "snapshots/finnts__microsoft__b85be9d127b22295b100548b44cebc37d0d9a911__repo-improver.md",
+          "snapshot_bytes": 6814,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/finnts\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"finnts\",\"generated_workflow_path\":\".github/workflows/repo-improver.lock.yml\",\"generated_workflow_file\":\"repo-improver.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/finnts/blob/53908f7d75ea2f37ccf269afada8bc62e99bc5c7/.github/workflows/repo-improver.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+      "source_full_name": "microsoft/finnts",
+      "md_path": ".github/workflows/repo-improver.md",
+      "commit_sha": "ba304986845ade0234cba00317c6e553d34bc7f7",
+      "authored_at": "2026-04-29T21:08:06Z",
+      "committed_at": "2026-04-29T21:08:06Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Expand ml-forecasting to include new model algorithms; add dependency minimization guidance\n\nAgent-Logs-Url: https://github.com/microsoft/finnts/sessions/72846ce7-a2f6-4eeb-8df0-78bf824ffc16\n\nCo-authored-by: mitokic <16709433+mitokic@users.noreply.github.com>",
+      "parent_shas": [
+        "b85be9d127b22295b100548b44cebc37d0d9a911"
+      ],
+      "tree_sha": "ccc858275084a803af3b73071128740fc20107bd",
+      "html_url": "https://github.com/microsoft/finnts/commit/ba304986845ade0234cba00317c6e553d34bc7f7",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "microsoft/finnts:.github/workflows/repo-improver.md",
+          "source_full_name": "microsoft/finnts",
+          "md_path": ".github/workflows/repo-improver.md",
+          "commit_sha": "ba304986845ade0234cba00317c6e553d34bc7f7",
+          "committed_at": "2026-04-29T21:08:06Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -38,7 +38,7 @@ The categories to cycle through (in order) are:\n 3. **performance** — Performance optimizations (vectorization, memory efficiency, algorithm improvements, parallel processing)\n 4. **documentation** — Documentation & docstrings (roxygen2 comments, vignettes, README, examples, parameter descriptions)\n 5. **test-coverage** — Test coverage gaps (missing unit tests, edge cases, integration tests, regression tests)\n-6. **ml-forecasting** — ML Forecasting (model selection, feature engineering, cross-validation, interpretability, metrics)\n+6. **ml-forecasting** — ML Forecasting (new model algorithms, model selection, feature engineering, cross-validation, interpretability, metrics)\n \n ## Round-Robin Category Selection\n \n@@ -80,7 +80,7 @@ Based on the selected improvement category, perform a focused analysis:\n - **performance**: Look for non-vectorized loops, unnecessary data copies, inefficient joins, missing parallelization opportunities, memory-heavy operations on large datasets\n - **documentation**: Look for missing or incomplete roxygen2 documentation, undocumented parameters, missing return value descriptions, missing examples, outdated vignettes\n - **test-coverage**: Look for untested functions, missing edge case tests, functions with complex logic but no tests, missing error condition tests\n-- **ml-forecasting**: Look for opportunities to improve model selection heuristics, feature engineering pipelines, cross-validation strategies, forecast accuracy metrics, model interpretability, ensemble methods\n+- **ml-forecasting**: Look for opportunities to add new forecasting model algorithms, improve model selection heuristics, feature engineering pipelines, cross-validation strategies, forecast accuracy metrics, model interpretability, ensemble methods\n \n ### Step 3: Identify Improvements\n \n@@ -155,3 +155,4 @@ After completing your work (whether you created a PR or not), update the cache-m\n - **Be conservative**: When in doubt, make the safer choice\n - **Use noop when appropriate**: If you analyze a category and determine no meaningful improvements can be made right now, call the `noop` safe output with an explanation. This is perfectly acceptable and shows you did the work.\n - **Branch cleanup**: Use the branch naming convention exactly as specified so maintainers can easily identify automated improvement PRs\n+- **Minimize dependencies**: Keep new package dependencies to a minimum. Only add a new dependency if it is truly required to implement the improvement and there is no reasonable way to achieve the same result with existing dependencies or base R",
+          "snapshot_ref": "ba304986845ade0234cba00317c6e553d34bc7f7",
+          "snapshot_blob_sha": "5ebf08f1a95a7d82aafd8fe258c6477a1ea73185",
+          "snapshot_file": "snapshots/finnts__microsoft__ba304986845ade0234cba00317c6e553d34bc7f7__repo-improver.md",
+          "snapshot_bytes": 7121,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/finnts\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"finnts\",\"generated_workflow_path\":\".github/workflows/repo-improver.lock.yml\",\"generated_workflow_file\":\"repo-improver.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/finnts/blob/53908f7d75ea2f37ccf269afada8bc62e99bc5c7/.github/workflows/repo-improver.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+    "source_full_name": "chrizbo/agentics-beyond-code",
+    "source_owner": "chrizbo",
+    "source_repo": "agentics-beyond-code",
+    "md_path": ".github/workflows/slack-context-processor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/chrizbo/agentics-beyond-code/blob/HEAD/.github/workflows/slack-context-processor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "chrizbo/agentics-beyond-code",
+      "generated_owner": "chrizbo",
+      "generated_repo": "agentics-beyond-code",
+      "generated_workflow_path": ".github/workflows/slack-context-processor.lock.yml",
+      "generated_workflow_file": "slack-context-processor.lock.yml",
+      "generated_html_url": "https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-context-processor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:25:04+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-context-processor.md",
+      "commit_sha": "e4211a88b1b31b6e5753546c9395686e48b88194",
+      "authored_at": "2026-06-01T18:59:24Z",
+      "committed_at": "2026-06-01T18:59:24Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add fixture-first Slack context workflow (#208)\n\n* Add fixture-first Slack context workflow\n\n* Recompile sample data simulator workflow",
+      "parent_shas": [
+        "9effe29eeb5ba289cb1650fed151bd606f4e51ab"
+      ],
+      "tree_sha": "6153596d8e7716cdfd376a3a1bb6ae96c81eec2c",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/e4211a88b1b31b6e5753546c9395686e48b88194",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-context-processor.md",
+          "commit_sha": "e4211a88b1b31b6e5753546c9395686e48b88194",
+          "committed_at": "2026-06-01T18:59:24Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 295,
+          "file_deletions": 0,
+          "file_changes": 295,
+          "file_patch": "@@ -0,0 +1,295 @@\n+---\n+description: |\n+  Slack context processor workflow. In the MVP, processes synthetic Slack\n+  fixture JSON files from /slack-fixtures/, matches messages and threads to\n+  GitHub artifacts, and posts concise issue comments with summaries, copied\n+  context, and Slack permalinks.\n+\n+engine:\n+  id: codex\n+  model: gpt-5-mini\n+\n+on:\n+  push:\n+    branches: [main]\n+    paths:\n+      - 'slack-fixtures/**/*.json'\n+      - 'slack-fixtures/*.json'\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+strict: true\n+timeout-minutes: 20\n+\n+network:\n+  allowed: [defaults, github]\n+\n+steps:\n+  - name: Fetch launch data\n+    id: launch-data\n+    env:\n+      LAUNCH_DATA_TOKEN: ${{ secrets.AW_TOKEN }}\n+      LAUNCH_PROJECT_OWNER: ${{ vars.LAUNCH_PROJECT_OWNER || github.repository_owner }}\n+      LAUNCH_PROJECT_NUMBER: ${{ vars.LAUNCH_PROJECT_NUMBER || '1' }}\n+    run: |\n+      chmod +x .github/scripts/fetch-launch-data.sh\n+      ./.github/scripts/fetch-launch-data.sh \"$LAUNCH_PROJECT_OWNER\" \"$LAUNCH_PROJECT_NUMBER\" launch-data.json\n+      echo \"path=launch-data.json\" >> \"$GITHUB_OUTPUT\"\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default, issues]\n+    lockdown: false\n+    min-integrity: none\n+\n+safe-outputs:\n+  mentions: false\n+  allowed-github-references: []\n+  add-comment:\n+    max: 20\n+  add-labels:\n+    allowed:\n+      - from-slack\n+    max: 20\n+  noop:\n+---\n+\n+# Slack Context Processor\n+\n+You are a Slack context analyst for the repository ${{ github.repository }}.\n+Your job is to process Slack-shaped fixture files dropped into\n+`/slack-fixtures/`, identify messages that relate to open GitHub issues, and\n+post concise issue comments with Slack-derived context.\n+\n+This MVP is fixture-first. Do **not** call the Slack API. Do **not** require\n+Slack credentials. Treat `slack-fixtures/*.json` as the only Slack input.\n+\n+## Pre-Fetched Data\n+\n+A deterministic pre-step has already fetched all project data:\n+\n+- **`launch-data-summary.json`** — Read this first with\n+  `cat launch-data-summary.json`.\n+- **`launch-data.json`** — Full data with issue bodies. Use `jq` to extract only\n+  what you need.\n+\n+Token efficiency matters. Read `launch-data-summary.json` once. Read targeted\n+sections of `launch-data.json` only when a match needs issue-body detail.\n+\n+## Process\n+\n+### Step 1: Identify Slack Fixture Files\n+\n+Determine which fixture files triggered this run.\n+\n+If triggered by push:\n+\n+```bash\n+git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^slack-fixtures/.*\\.json$' || echo \"No Slack fixture files in diff\"\n+```\n+\n+If triggered by `workflow_dispatch`, process all fixture files:\n+\n+```bash\n+find slack-fixtures -name '*.json' 2>/dev/null\n+```\n+\n+If no fixture files exist, call `noop` with:\n+\n+```text\n+Skipped - no Slack fixture files found.\n+```\n+\n+Then stop.\n+\n+### Step 2: Read Fixture Files\n+\n+For each fixture file, read the JSON:\n+\n+```bash\n+cat <fixture-file>\n+```\n+\n+Expected shapes are documented in `docs/slack-integration-plan.md`. Fixtures may\n+contain top-level `messages`, `events`, or channel/thread groupings. Extract any\n+objects that look like Slack messages with these fields when present:\n+\n+- `channel_id`\n+- `channel_name`\n+- `thread_ts`\n+- `message_ts`\n+- `permalink`\n+- `author_id`\n+- `author_name`\n+- `created_at`\n+- `text`\n+- `reactions`\n+- `matched_by`\n+\n+Ignore reaction events except as supporting signal for the related message.\n+This workflow does not create intake issues; Slack Reaction Intake will handle\n+that separately.\n+\n+### Step 3: Load Issue Context\n+\n+Load the issue landscape:\n+\n+```bash\n+cat launch-data-summary.json\n+```\n+\n+Build a compact reference map of open issues:\n+\n+```bash\n+jq '[.launches[] | select(.state == \"OPEN\") | {number, title, url, state, type: \"launch\"},\n+  (.subIssues[]? | select(.state == \"OPEN\") | {number, title, url, state, type: \"epic\"}),\n+  (.subIssues[]?.subIssues[]? | select(.state == \"OPEN\") | {number, title, url, state, type: \"task\"})]' launch-data-summary.json\n+```\n+\n+Also detect issue references inside Slack text and permalinks:\n+\n+- `#123`\n+- `issue 123`\n+- `ticket 123`\n+- full GitHub issue URLs such as\n+  `https://github.com/${{ github.repository }}/issues/123`\n+- exact or near-exact issue titles\n+\n+### Step 4: Match Slack Messages to Issues\n+\n+For each Slack message or thread, determine whether it relates to an open issue.\n+\n+Matching confidence:\n+\n+- **High:** Explicit GitHub issue URL, `#123`, `issue 123`, or exact title.\n+- **Medium:** Strong title/keyword overlap plus a relevant reaction such as\n+  `memo`, `pushpin`, `warning`, or `white_check_mark`.\n+- **Low:** Loose keyword overlap, generic project terms, or unclear references.\n+\n+Only post comments for **High** and **Medium** confidence matches. Skip Low\n+confidence matches.\n+\n+Group messages by target issue. If multiple messages from the same fixture\n+match one issue, post one consolidated comment for that issue.\n+\n+### Step 5: Classify the Context\n+\n+For each matched issue, classify the Slack context:\n+\n+- **Summary context:** General status, clarifications, or background.\n+- **Decision:** The team chose an option, changed scope, or confirmed direction.\n+- **Action item:** Someone committed to do something, especially with owner/date.\n+- **Blocker/risk:** Something is blocked, delayed, at risk, or needs escalation.\n+- **Done signal:** Someone says work shipped, was verified, or is complete.\n+- **Open question:** A decision or answer is still needed.\n+\n+If the context contains decisions, action items, blockers, or open questions,\n+use the \"Decision/Action-Oriented\" comment format. Otherwise use the default\n+\"Compact Evidence Note\" format.\n+\n+### Step 6: Avoid Duplicate Comments\n+\n+Before posting to an issue, check recent comments:\n+\n+```bash\n+gh issue view <number> --repo ${{ github.repository }} --json comments \\\n+  --jq '.comments[] | {body: .body, createdAt: .createdAt, author: .author.login}'\n+```\n+\n+Do not post if an existing comment with `<!-- slack-context -->` already\n+contains the same fixture filename or the same Slack permalink.\n+\n+### Step 7: Post GitHub Comments\n+\n+For each matched issue, post one comment. The comment must start with:\n+\n+```markdown\n+<!-- slack-context -->\n+```\n+\n+Use this default format for general context:\n+\n+```markdown\n+<!-- slack-context -->\n+## Slack Context - YYYY-MM-DD\n+\n+**Source:** `#channel-name`, N messages, M threads\n+**Fixture:** `slack-fixtures/<filename>.json`\n+**Confidence:** High or Medium\n+\n+### Summary\n+\n+- <1-3 concise bullets describing what Slack added to the issue context.>\n+\n+### Evidence\n+\n+- [Slack thread](<permalink>) - <why this source matters>\n+- [Slack message](<permalink>) - <why this source matters>\n+\n+<details>\n+<summary>Copied Slack context</summary>\n+\n+- <author_name>: \"<short copied message excerpt>\"\n+- <author_name>: \"<short copied message excerpt>\"\n+\n+</details>\n+```\n+\n+Use this format when Slack contains decisions, action items, blockers, or open\n+questions:\n+\n+```markdown\n+<!-- slack-context -->\n+## Slack Update - YYYY-MM-DD\n+\n+**Source:** `#channel-name`\n+**Fixture:** `slack-fixtures/<filename>.json`\n+\n+### Decisions\n+\n+- <Decision, if any.>\n+\n+### Action Items\n+\n+- <Owner/action/date, if any.>\n+\n+### Blockers\n+\n+- <Blocker or risk, if any.>\n+\n+### Open Questions\n+\n+- <Question, if any.>\n+\n+### Evidence\n+\n+- [Slack thread](<permalink>) - <why this source matters>\n+\n+<details>\n+<summary>Copied Slack context</summary>\n+\n+- <author_name>: \"<short copied message excerpt>\"\n+\n+</details>\n+```\n+\n+Omit empty sections in the Decision/Action-Oriented format.\n+\n+Keep copied Slack excerpts short. Prefer paraphrased summaries plus permalinks\n+over copying long message history.\n+\n+After posting the comment, add the `from-slack` label to the issue.\n+\n+### Step 8: No Matches\n+\n+If fixture files were processed but no High or Medium confidence issue matches\n+were found, call `noop` with:\n+\n+```text\n+No Slack fixture messages matched open GitHub issues.\n+```",
+          "snapshot_ref": "e4211a88b1b31b6e5753546c9395686e48b88194",
+          "snapshot_blob_sha": "6d0699556fc0edadd1bc580a722b0d5d43432cf3",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__e4211a88b1b31b6e5753546c9395686e48b88194__slack-context-processor.md",
+          "snapshot_bytes": 7736,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-context-processor.lock.yml\",\"generated_workflow_file\":\"slack-context-processor.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-context-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-context-processor.md",
+      "commit_sha": "d9038c7732a3bcd4b9dd19106e860b99957fa207",
+      "authored_at": "2026-06-01T19:48:30Z",
+      "committed_at": "2026-06-01T19:48:30Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Fix Slack explicit issue matching (#214)",
+      "parent_shas": [
+        "a26fdb4480e999192a86ac88dfd580edeafcea10"
+      ],
+      "tree_sha": "7dc19e494a4f22ef12f57e95e6d87f00e4359248",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/d9038c7732a3bcd4b9dd19106e860b99957fa207",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-context-processor.md",
+          "commit_sha": "d9038c7732a3bcd4b9dd19106e860b99957fa207",
+          "committed_at": "2026-06-01T19:48:30Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 18,
+          "file_deletions": 2,
+          "file_changes": 20,
+          "file_patch": "@@ -151,7 +151,8 @@ jq '[.launches[] | select(.state == \"OPEN\") | {number, title, url, state, type:\n   (.subIssues[]?.subIssues[]? | select(.state == \"OPEN\") | {number, title, url, state, type: \"task\"})]' launch-data-summary.json\n ```\n \n-Also detect issue references inside Slack text and permalinks:\n+Then detect explicit issue references inside Slack text and permalinks before\n+doing title or keyword matching:\n \n - `#123`\n - `issue 123`\n@@ -160,13 +161,28 @@ Also detect issue references inside Slack text and permalinks:\n   `https://github.com/${{ github.repository }}/issues/123`\n - exact or near-exact issue titles\n \n+Explicit same-repository issue references are authoritative. If a Slack message\n+contains `https://github.com/${{ github.repository }}/issues/123`, `#123`,\n+`issue 123`, or `ticket 123`, verify the issue directly even when it is absent\n+from `launch-data-summary.json`:\n+\n+```bash\n+gh issue view <number> --repo ${{ github.repository }} \\\n+  --json number,title,state,url,labels\n+```\n+\n+Only post for verified open issues. Skip closed issues. Use the launch data as\n+context and as the source for title/keyword matching, but do not use it as a\n+gate that can exclude an explicit same-repository issue reference.\n+\n ### Step 4: Match Slack Messages to Issues\n \n For each Slack message or thread, determine whether it relates to an open issue.\n \n Matching confidence:\n \n-- **High:** Explicit GitHub issue URL, `#123`, `issue 123`, or exact title.\n+- **High:** Verified explicit same-repository GitHub issue URL, `#123`,\n+  `issue 123`, `ticket 123`, or exact title.\n - **Medium:** Strong title/keyword overlap plus a relevant reaction such as\n   `memo`, `pushpin`, `warning`, or `white_check_mark`.\n - **Low:** Loose keyword overlap, generic project terms, or unclear references.",
+          "snapshot_ref": "d9038c7732a3bcd4b9dd19106e860b99957fa207",
+          "snapshot_blob_sha": "7062ec2b338c03fb51254fbfc6c2d02f9cd6ffd2",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__d9038c7732a3bcd4b9dd19106e860b99957fa207__slack-context-processor.md",
+          "snapshot_bytes": 8426,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-context-processor.lock.yml\",\"generated_workflow_file\":\"slack-context-processor.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-context-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-context-processor.md",
+      "commit_sha": "8b1db369d62333f659ec8d32699d77575fa93103",
+      "authored_at": "2026-06-01T20:03:10Z",
+      "committed_at": "2026-06-01T20:03:10Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Harden Slack context duplicate detection (#220)",
+      "parent_shas": [
+        "c73b371efada64b009e2e43bf2304a2ed63493f5"
+      ],
+      "tree_sha": "d422fa174c6fea7e9317dbbb67601fa7c8036dbc",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/8b1db369d62333f659ec8d32699d77575fa93103",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-context-processor.md",
+          "commit_sha": "8b1db369d62333f659ec8d32699d77575fa93103",
+          "committed_at": "2026-06-01T20:03:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 13,
+          "file_deletions": 2,
+          "file_changes": 15,
+          "file_patch": "@@ -217,8 +217,10 @@ gh issue view <number> --repo ${{ github.repository }} --json comments \\\n   --jq '.comments[] | {body: .body, createdAt: .createdAt, author: .author.login}'\n ```\n \n-Do not post if an existing comment with `<!-- slack-context -->` already\n-contains the same fixture filename or the same Slack permalink.\n+Do not post if any existing comment contains the same fixture filename or the\n+same Slack permalink. Prefer the `<!-- slack-context -->` marker when present,\n+but do not require it for duplicate detection because downstream comment\n+sanitization may omit hidden markers.\n \n ### Step 7: Post GitHub Comments\n \n@@ -228,6 +230,10 @@ For each matched issue, post one comment. The comment must start with:\n <!-- slack-context -->\n ```\n \n+If the hidden marker is removed by downstream processing, the visible\n+`Slack Context` or `Slack Update` heading plus the fixture filename is still the\n+durable duplicate key.\n+\n Use this default format for general context:\n \n ```markdown\n@@ -296,6 +302,11 @@ questions:\n \n Omit empty sections in the Decision/Action-Oriented format.\n \n+For evidence links, use the raw `permalink` value from the fixture exactly when\n+it starts with `http://` or `https://`. If the permalink is missing or has been\n+redacted, write plain text such as `Slack thread - fixture permalink unavailable`\n+instead of creating a markdown link.\n+\n Keep copied Slack excerpts short. Prefer paraphrased summaries plus permalinks\n over copying long message history.\n ",
+          "snapshot_ref": "8b1db369d62333f659ec8d32699d77575fa93103",
+          "snapshot_blob_sha": "4284a0e83a40a1fffd3477d4c669afc6117beb79",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__8b1db369d62333f659ec8d32699d77575fa93103__slack-context-processor.md",
+          "snapshot_bytes": 9012,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-context-processor.lock.yml\",\"generated_workflow_file\":\"slack-context-processor.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-context-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-context-processor.md",
+      "commit_sha": "dd9956cfc9fcf195ff7ef48e868a784172957745",
+      "authored_at": "2026-06-01T20:10:50Z",
+      "committed_at": "2026-06-01T20:10:50Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Use friendly Slack author fallbacks (#221)",
+      "parent_shas": [
+        "8b1db369d62333f659ec8d32699d77575fa93103"
+      ],
+      "tree_sha": "5e1d509c0ef1775f8356550cba8ed282dc8d03d1",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/dd9956cfc9fcf195ff7ef48e868a784172957745",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-context-processor.md",
+          "commit_sha": "dd9956cfc9fcf195ff7ef48e868a784172957745",
+          "committed_at": "2026-06-01T20:10:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 9,
+          "file_deletions": 3,
+          "file_changes": 12,
+          "file_patch": "@@ -256,8 +256,8 @@ Use this default format for general context:\n <details>\n <summary>Copied Slack context</summary>\n \n-- <author_name>: \"<short copied message excerpt>\"\n-- <author_name>: \"<short copied message excerpt>\"\n+- <readable author>: \"<short copied message excerpt>\"\n+- <readable author>: \"<short copied message excerpt>\"\n \n </details>\n ```\n@@ -295,13 +295,19 @@ questions:\n <details>\n <summary>Copied Slack context</summary>\n \n-- <author_name>: \"<short copied message excerpt>\"\n+- <readable author>: \"<short copied message excerpt>\"\n \n </details>\n ```\n \n Omit empty sections in the Decision/Action-Oriented format.\n \n+For copied Slack context author labels, prefer `author_name` only when it is a\n+human-readable display name. If `author_name` is missing, `unknown`, or looks\n+like a Slack ID such as `U123...`, `W123...`, or `B123...`, use a neutral label\n+such as `Slack participant` or `Slack app`. Do not expose raw Slack user IDs in\n+GitHub comments.\n+\n For evidence links, use the raw `permalink` value from the fixture exactly when\n it starts with `http://` or `https://`. If the permalink is missing or has been\n redacted, write plain text such as `Slack thread - fixture permalink unavailable`",
+          "snapshot_ref": "dd9956cfc9fcf195ff7ef48e868a784172957745",
+          "snapshot_blob_sha": "c8baad64c4f33a91ccec4e025de989d867cfeb69",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__dd9956cfc9fcf195ff7ef48e868a784172957745__slack-context-processor.md",
+          "snapshot_bytes": 9359,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-context-processor.lock.yml\",\"generated_workflow_file\":\"slack-context-processor.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-context-processor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+      "source_full_name": "chrizbo/agentics-beyond-code",
+      "md_path": ".github/workflows/slack-context-processor.md",
+      "commit_sha": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+      "authored_at": "2026-06-11T23:15:04Z",
+      "committed_at": "2026-06-11T23:15:04Z",
+      "author_name": "Chris Butler",
+      "author_email": "chrizbo@gmail.com",
+      "author_login": "chrizbo",
+      "author_account_type": "User",
+      "committer_name": "Chris Butler",
+      "committer_email": "chrizbo@gmail.com",
+      "committer_login": "chrizbo",
+      "committer_account_type": "User",
+      "message": "Align agentic workflows with public preview",
+      "parent_shas": [
+        "a24608637f521950641e8d29c56af54210f3a36b"
+      ],
+      "tree_sha": "661559c203ddf131009f00dc7bba3bd3042f8418",
+      "html_url": "https://github.com/chrizbo/agentics-beyond-code/commit/f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "chrizbo/agentics-beyond-code:.github/workflows/slack-context-processor.md",
+          "source_full_name": "chrizbo/agentics-beyond-code",
+          "md_path": ".github/workflows/slack-context-processor.md",
+          "commit_sha": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+          "committed_at": "2026-06-11T23:15:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "",
+          "snapshot_ref": "f2f40e1eb40456327ac1afd92f6a54229d6d278e",
+          "snapshot_blob_sha": "c1a455f9a6da68702662c3a1762f10dde6cb153d",
+          "snapshot_file": "snapshots/agentics-beyond-code__chrizbo__f2f40e1eb40456327ac1afd92f6a54229d6d278e__slack-context-processor.md",
+          "snapshot_bytes": 9380,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"chrizbo/agentics-beyond-code\",\"generated_owner\":\"chrizbo\",\"generated_repo\":\"agentics-beyond-code\",\"generated_workflow_path\":\".github/workflows/slack-context-processor.lock.yml\",\"generated_workflow_file\":\"slack-context-processor.lock.yml\",\"generated_html_url\":\"https://github.com/chrizbo/agentics-beyond-code/blob/f8175b23bfa2f917c1f0bad7f798daf4c1e7a4da/.github/workflows/slack-context-processor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

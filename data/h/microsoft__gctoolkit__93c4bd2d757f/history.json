@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+    "source_full_name": "microsoft/gctoolkit",
+    "source_owner": "microsoft",
+    "source_repo": "gctoolkit",
+    "md_path": ".github/workflows/relevance-check.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/microsoft/gctoolkit/blob/HEAD/.github/workflows/relevance-check.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "microsoft/gctoolkit",
+      "generated_owner": "microsoft",
+      "generated_repo": "gctoolkit",
+      "generated_workflow_path": ".github/workflows/relevance-check.lock.yml",
+      "generated_workflow_file": "relevance-check.lock.yml",
+      "generated_html_url": "https://github.com/microsoft/gctoolkit/blob/2daacd65912abf969d729549363573a63493b54e/.github/workflows/relevance-check.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:58:36+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+      "source_full_name": "microsoft/gctoolkit",
+      "md_path": ".github/workflows/relevance-check.md",
+      "commit_sha": "208f51a87dd2d4eb4dd71cd7c869c632a6dc76bb",
+      "authored_at": "2026-02-26T14:16:58Z",
+      "committed_at": "2026-02-26T14:16:58Z",
+      "author_name": "Bruno Borges",
+      "author_email": "brborges@microsoft.com",
+      "author_login": "brunoborges",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Enable Agentic Workflows (#486)\n\n* Enable Agentic Workflows\n\n* Add relevance-check slash command workflow\n\nAdds an agentic workflow triggered by /relevance-check on issues and PRs.\nThe agent evaluates whether the item is still relevant, citing evidence\nfrom the codebase, recent commits, and related issues.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "57dada6d81b52f151bdb5760f66cb52a11a548c3"
+      ],
+      "tree_sha": "dd54dd5f9a62125b1b8e9580391d41db1474fe96",
+      "html_url": "https://github.com/microsoft/gctoolkit/commit/208f51a87dd2d4eb4dd71cd7c869c632a6dc76bb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+          "source_full_name": "microsoft/gctoolkit",
+          "md_path": ".github/workflows/relevance-check.md",
+          "commit_sha": "208f51a87dd2d4eb4dd71cd7c869c632a6dc76bb",
+          "committed_at": "2026-02-26T14:16:58Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 63,
+          "file_deletions": 0,
+          "file_changes": 63,
+          "file_patch": "@@ -0,0 +1,63 @@\n+---\n+description: \"Slash command to evaluate whether an issue or pull request is still relevant to the project\"\n+on:\n+  slash_command:\n+    name: relevance-check\n+engine:\n+  id: copilot\n+  model: claude-opus-4.6\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+---\n+\n+# Relevance Check Agent\n+\n+You are a relevance evaluator for the **${{ github.repository }}** repository. A maintainer has invoked `/relevance-check` on an issue or pull request and your job is to determine whether it is still relevant, actionable, and worth keeping open.\n+\n+## Context\n+\n+The triggering content is:\n+\n+\"${{ needs.activation.outputs.text }}\"\n+\n+## Instructions\n+\n+### 1. Gather Information\n+\n+- Read the full issue or pull request details, including the title, body, all comments, and any linked items.\n+- Look at the current state of the codebase — check if the files, classes, or packages mentioned still exist and whether the problem described has already been addressed.\n+- Review recent commits and pull requests to see if related changes have been merged.\n+- Check if there are duplicate or related issues that cover the same topic.\n+\n+### 2. Evaluate Relevance\n+\n+Consider these factors:\n+\n+- **Still applicable?** Does the described bug, feature request, or change still apply to the current codebase?\n+- **Already resolved?** Has the issue been fixed or the feature implemented in a subsequent commit or PR, even if this item was never explicitly closed?\n+- **Superseded?** Has a newer issue or PR replaced this one?\n+- **Stale context?** Are the referenced APIs, dependencies, or architectural patterns still in use, or has the project moved on?\n+- **Actionability?** Is there enough information to act on this item, or is it too vague or outdated to be useful?\n+\n+### 3. Provide Your Analysis\n+\n+Post a single comment with your analysis using this structure:\n+\n+**Relevance Assessment: [Still Relevant | Likely Outdated | Needs Discussion]**\n+\n+- **Summary**: A 1-2 sentence verdict.\n+- **Evidence**: Bullet points with concrete findings (e.g., \"The class `XYZParser` referenced in the issue was removed in commit abc1234\" or \"This feature was implemented in PR #42\").\n+- **Recommendation**: One of:\n+  - ✅ **Keep open** — the item is still valid and actionable.\n+  - 🗄️ **Consider closing** — the item appears resolved or no longer applicable. Explain why.\n+  - 💬 **Needs maintainer input** — you found mixed signals and a human should decide.\n+\n+Be concise, factual, and cite specific commits, PRs, files, or code when possible. Do not make changes to the repository — your only action is to comment with your analysis.",
+          "snapshot_ref": "208f51a87dd2d4eb4dd71cd7c869c632a6dc76bb",
+          "snapshot_blob_sha": "71fa7118b426221074d4797afe61f56c56d0d919",
+          "snapshot_file": "snapshots/gctoolkit__microsoft__208f51a87dd2d4eb4dd71cd7c869c632a6dc76bb__relevance-check.md",
+          "snapshot_bytes": 2686,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/gctoolkit\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"gctoolkit\",\"generated_workflow_path\":\".github/workflows/relevance-check.lock.yml\",\"generated_workflow_file\":\"relevance-check.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/gctoolkit/blob/2daacd65912abf969d729549363573a63493b54e/.github/workflows/relevance-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+      "source_full_name": "microsoft/gctoolkit",
+      "md_path": ".github/workflows/relevance-check.md",
+      "commit_sha": "7e86099416fa4f071e284d59e176c020f258c800",
+      "authored_at": "2026-02-26T14:38:07Z",
+      "committed_at": "2026-02-26T14:38:07Z",
+      "author_name": "Bruno Borges",
+      "author_email": "brborges@microsoft.com",
+      "author_login": "brunoborges",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix workflow (#487)",
+      "parent_shas": [
+        "208f51a87dd2d4eb4dd71cd7c869c632a6dc76bb"
+      ],
+      "tree_sha": "5f63ce160805bdcfc7e21a4773875addc0345a68",
+      "html_url": "https://github.com/microsoft/gctoolkit/commit/7e86099416fa4f071e284d59e176c020f258c800",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+          "source_full_name": "microsoft/gctoolkit",
+          "md_path": ".github/workflows/relevance-check.md",
+          "commit_sha": "7e86099416fa4f071e284d59e176c020f258c800",
+          "committed_at": "2026-02-26T14:38:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -26,7 +26,7 @@ You are a relevance evaluator for the **${{ github.repository }}** repository. A\n \n The triggering content is:\n \n-\"${{ needs.activation.outputs.text }}\"\n+\"${{ steps.sanitized.outputs.text }}\"\n \n ## Instructions\n ",
+          "snapshot_ref": "7e86099416fa4f071e284d59e176c020f258c800",
+          "snapshot_blob_sha": "001985f6251cad36480a25793a835dab82484d09",
+          "snapshot_file": "snapshots/gctoolkit__microsoft__7e86099416fa4f071e284d59e176c020f258c800__relevance-check.md",
+          "snapshot_bytes": 2685,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/gctoolkit\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"gctoolkit\",\"generated_workflow_path\":\".github/workflows/relevance-check.lock.yml\",\"generated_workflow_file\":\"relevance-check.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/gctoolkit/blob/2daacd65912abf969d729549363573a63493b54e/.github/workflows/relevance-check.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+      "source_full_name": "microsoft/gctoolkit",
+      "md_path": ".github/workflows/relevance-check.md",
+      "commit_sha": "edaf4c27f290c7444fe4487113e637a5a25dff47",
+      "authored_at": "2026-02-26T15:50:07Z",
+      "committed_at": "2026-02-26T15:50:07Z",
+      "author_name": "Bruno Borges",
+      "author_email": "brborges@microsoft.com",
+      "author_login": "brunoborges",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Restrict /relevance-check slash command to admin, maintainer, and write roles (#489)\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "7e86099416fa4f071e284d59e176c020f258c800"
+      ],
+      "tree_sha": "fd1e97b8e38816f922435b8c6d54ed717db26ad5",
+      "html_url": "https://github.com/microsoft/gctoolkit/commit/edaf4c27f290c7444fe4487113e637a5a25dff47",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "microsoft/gctoolkit:.github/workflows/relevance-check.md",
+          "source_full_name": "microsoft/gctoolkit",
+          "md_path": ".github/workflows/relevance-check.md",
+          "commit_sha": "edaf4c27f290c7444fe4487113e637a5a25dff47",
+          "committed_at": "2026-02-26T15:50:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -3,6 +3,7 @@ description: \"Slash command to evaluate whether an issue or pull request is stil\n on:\n   slash_command:\n     name: relevance-check\n+  roles: [admin, maintainer, write]\n engine:\n   id: copilot\n   model: claude-opus-4.6",
+          "snapshot_ref": "edaf4c27f290c7444fe4487113e637a5a25dff47",
+          "snapshot_blob_sha": "d1e608a4bfad9fb6ce1aef3640ff0d0c5ab2f413",
+          "snapshot_file": "snapshots/gctoolkit__microsoft__edaf4c27f290c7444fe4487113e637a5a25dff47__relevance-check.md",
+          "snapshot_bytes": 2721,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"microsoft/gctoolkit\",\"generated_owner\":\"microsoft\",\"generated_repo\":\"gctoolkit\",\"generated_workflow_path\":\".github/workflows/relevance-check.lock.yml\",\"generated_workflow_file\":\"relevance-check.lock.yml\",\"generated_html_url\":\"https://github.com/microsoft/gctoolkit/blob/2daacd65912abf969d729549363573a63493b54e/.github/workflows/relevance-check.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

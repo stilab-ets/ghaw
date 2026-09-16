@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+    "source_full_name": "aztfmod/terraform-provider-azurecaf",
+    "source_owner": "aztfmod",
+    "source_repo": "terraform-provider-azurecaf",
+    "md_path": ".github/workflows/release-validation.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/HEAD/.github/workflows/release-validation.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "aztfmod/terraform-provider-azurecaf",
+      "generated_owner": "aztfmod",
+      "generated_repo": "terraform-provider-azurecaf",
+      "generated_workflow_path": ".github/workflows/release-validation.lock.yml",
+      "generated_workflow_file": "release-validation.lock.yml",
+      "generated_html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-validation.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 4,
+    "event_count": 4,
+    "snapshot_count": 4,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T11:24:41+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-validation.md",
+      "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+      "authored_at": "2026-03-23T08:48:57Z",
+      "committed_at": "2026-03-23T08:48:57Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "Add new skills and workflows for resource management and testing\n\n- Create e2e-test-runner skill for end-to-end testing procedures.\n- Add example-generator skill to generate Terraform example configurations.\n- Implement issue-to-resource-spec skill for parsing resource requests from GitHub issues.\n- Introduce naming-rules-drift-check skill to verify Azure naming rules against current definitions.\n- Develop pr-compliance-check skill to validate pull request compliance with project standards.\n- Establish pre-release-validation skill for comprehensive checks before release tagging.\n- Create readme-resource-table skill to update resource status in README.md.\n- Add regression-test-runner skill for running full CI test suite and reporting results.\n- Implement release-notes-generator skill for generating release notes from CHANGELOG.md.\n- Create resource-bulk-import skill for batch importing Azure resources into resourceDefinition.json.\n- Develop resource-completeness-check skill to compare resource definitions against existing resources.\n- Introduce resource-diff-report skill for comparing different versions of resourceDefinition.json.\n- Add semver-assessment skill to analyze changes and determine semantic version bumps.\n- Implement test-failure-diagnosis skill for diagnosing test failures and suggesting fixes.\n- Create workflows for contributor welcome, issue-to-PR automation, nightly regression testing, PR review, release validation, and weekly Azure sync.",
+      "parent_shas": [
+        "98993a22009e05fd03064fe6cd256f734dda1cc7"
+      ],
+      "tree_sha": "5e4a5255a5439a57cb125630c194b32024091487",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/575609f79f8432185b89444d13113fa40d7e9553",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-validation.md",
+          "commit_sha": "575609f79f8432185b89444d13113fa40d7e9553",
+          "committed_at": "2026-03-23T08:48:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 64,
+          "file_deletions": 0,
+          "file_changes": 64,
+          "file_patch": "@@ -0,0 +1,64 @@\n+---\n+description: |\n+  Release validation workflow that runs comprehensive checks when a\n+  version tag is pushed. Posts validation results as a comment on the\n+  associated GitHub Release.\n+\n+on:\n+  push:\n+    tags: [\"v*\"]\n+\n+permissions:\n+  contents: read\n+\n+network: defaults\n+\n+tools:\n+  github:\n+    lockdown: true\n+    toolsets: [pull_requests]\n+  bash:\n+    - \"make *\"\n+    - \"go *\"\n+    - \"grep *\"\n+    - \"cat *\"\n+\n+safe-outputs:\n+  add-comment: {}\n+\n+source: local\n+engine: copilot\n+---\n+\n+# Release Validation\n+\n+When a version tag is pushed, run the full validation suite and report results.\n+\n+## Process\n+\n+### 1. Build and test\n+- Run `make build` to verify compilation\n+- Run `make test_ci` for the full test suite\n+- Run `make test_e2e` for E2E validation\n+- Run `make test_coverage` for coverage check\n+\n+### 2. Verify CHANGELOG\n+- Check that the tag version appears in `CHANGELOG.md`\n+- Verify the version section has entries\n+\n+### 3. Report\n+Create a summary of all validation results. If all checks pass, the release is validated. If any fail, flag the issues for immediate attention.\n+\n+```markdown\n+### 🏷️ Release Validation: vX.Y.Z\n+\n+| Check | Status |\n+|-------|--------|\n+| Build | ✅ / ❌ |\n+| Unit tests | ✅ / ❌ |\n+| E2E tests | ✅ / ❌ |\n+| Coverage | ✅ <percentage>% / ❌ <percentage>% |\n+| CHANGELOG entry | ✅ / ❌ |\n+\n+Overall: **VALIDATED** / **ISSUES FOUND**\n+```",
+          "snapshot_ref": "575609f79f8432185b89444d13113fa40d7e9553",
+          "snapshot_blob_sha": "6ccb61447ce6a025ea5e55d97687494009bd91f3",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__575609f79f8432185b89444d13113fa40d7e9553__release-validation.md",
+          "snapshot_bytes": 1355,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-validation.lock.yml\",\"generated_workflow_file\":\"release-validation.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-validation.md",
+      "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+      "authored_at": "2026-05-14T01:19:22Z",
+      "committed_at": "2026-05-14T01:36:04Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "chore(workflows): recompile agentic workflows with gh-aw v0.72.1\n\n- regenerate all 10 .lock.yml files (was v0.61.0); add 6 missing lock files\n- migrate strict-mode permissions to safe-outputs in 3 workflows\n- replace deprecated tools.github.repos with allowed-repos\n- adopt fuzzy schedules and terraform ecosystem identifier\n\n🤖 - Generated by Copilot",
+      "parent_shas": [
+        "5345a4f1c60e9112d20ae7c7b6e9399318ce2d7a"
+      ],
+      "tree_sha": "8de1b8c85449891565dbd801ce496a93893c1eb1",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/76763b42c2a7a3489689f9f3ba318908329c2432",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-validation.md",
+          "commit_sha": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "committed_at": "2026-05-14T01:36:04Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -10,6 +10,7 @@ on:\n \n permissions:\n   contents: read\n+  pull-requests: read\n \n network: defaults\n ",
+          "snapshot_ref": "76763b42c2a7a3489689f9f3ba318908329c2432",
+          "snapshot_blob_sha": "89ad604a60c7f2b172a3551dd9ad60209036e992",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__76763b42c2a7a3489689f9f3ba318908329c2432__release-validation.md",
+          "snapshot_bytes": 1377,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-validation.lock.yml\",\"generated_workflow_file\":\"release-validation.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-validation.md",
+      "commit_sha": "b5d8158bf0c5335f6f7715799bbf5de3a00aad06",
+      "authored_at": "2026-05-14T04:59:22Z",
+      "committed_at": "2026-05-14T04:59:22Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(ci/release-validation): move build/test to host runner (#480)\n\nAdd a hashicorp/setup-terraform@v4 + actions/setup-go@v6 pre-agent step\nblock to .github/workflows/release-validation.md, plus an\n'Install tfproviderlint' step and a host-side run-script that builds the\nprovider and runs make test_ci, make test_e2e, make test_coverage, and the\nCHANGELOG.md tag-section check. Exit codes, the parsed coverage percentage,\nand matched CHANGELOG headings are written to /tmp/results.env /\n/tmp/changelog-entry.txt, and full logs to\n/tmp/{build,test-ci,e2e,coverage}-output.txt.\n\nRemove 'make *' and 'go *' from the agent's allowed bash toolset; the\nagent now only consumes pre-computed files with cat/grep/head/tail.\n\nPreviously the agent failed every tagged release with:\n  - 'bash command execution is blocked by security policy'\n  - 'Go toolchain (go, make) commands are blocked by runner security policy'\nbecause the gh-aw firewall sandbox lacks a Go toolchain and denies shell\ncommand execution. Same fix pattern that PR #475 applied to\nnightly-regression.md.\n\nRecompile release-validation.lock.yml with gh aw v0.72.1; approve the new\nhashicorp/setup-terraform@v4 action pin\n(dfe3c3f87815947d99a8997f908cb6525fc44e9e).\n\nCloses #478.\n\n📦 - Generated by Copilot",
+      "parent_shas": [
+        "d7abf5def0592191b92b2a6ce529a8170ccf1c55"
+      ],
+      "tree_sha": "3ec4a6ab0d8f8bf411d369d91678ab873238c25e",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/b5d8158bf0c5335f6f7715799bbf5de3a00aad06",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-validation.md",
+          "commit_sha": "b5d8158bf0c5335f6f7715799bbf5de3a00aad06",
+          "committed_at": "2026-05-14T04:59:22Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 122,
+          "file_deletions": 17,
+          "file_changes": 139,
+          "file_patch": "@@ -19,47 +19,152 @@ tools:\n     lockdown: true\n     toolsets: [pull_requests]\n   bash:\n-    - \"make *\"\n-    - \"go *\"\n-    - \"grep *\"\n     - \"cat *\"\n+    - \"grep *\"\n+    - \"head *\"\n+    - \"tail *\"\n \n safe-outputs:\n   add-comment: {}\n \n+steps:\n+  - name: Set up Go\n+    uses: actions/setup-go@v6\n+    with:\n+      go-version-file: './go.mod'\n+      cache: true\n+\n+  - name: Install tfproviderlint\n+    run: |\n+      go install github.com/bflad/tfproviderlint/cmd/tfproviderlint@latest\n+      echo \"$(go env GOPATH)/bin\" >> \"$GITHUB_PATH\"\n+\n+  - name: Setup Terraform\n+    uses: hashicorp/setup-terraform@v4\n+    with:\n+      terraform_version: \"~> 1.0\"\n+      terraform_wrapper: false\n+\n+  - name: Build, test, and validate\n+    env:\n+      CHECKPOINT_DISABLE: \"1\"\n+      TF_IN_AUTOMATION: \"1\"\n+      TF_CLI_ARGS_init: \"-upgrade=false\"\n+    run: |\n+      set -o pipefail\n+      : > /tmp/results.env\n+\n+      TAG_NAME=\"${GITHUB_REF_NAME:-${GITHUB_REF##*/}}\"\n+      echo \"TAG_NAME=${TAG_NAME}\" >> /tmp/results.env\n+\n+      echo \"🔨 Building provider...\"\n+      if make build 2>&1 | tee /tmp/build-output.txt; then\n+        BUILD_EXIT=0\n+      else\n+        BUILD_EXIT=$?\n+      fi\n+      echo \"BUILD_EXIT=$BUILD_EXIT\" >> /tmp/results.env\n+\n+      echo \"🧪 Running CI tests...\"\n+      if make test_ci 2>&1 | tee /tmp/test-ci-output.txt; then\n+        TEST_EXIT=0\n+      else\n+        TEST_EXIT=$?\n+      fi\n+      echo \"TEST_EXIT=$TEST_EXIT\" >> /tmp/results.env\n+\n+      echo \"🔬 Running E2E tests...\"\n+      if make test_e2e 2>&1 | tee /tmp/e2e-output.txt; then\n+        E2E_EXIT=0\n+      else\n+        E2E_EXIT=$?\n+      fi\n+      echo \"E2E_EXIT=$E2E_EXIT\" >> /tmp/results.env\n+\n+      echo \"📊 Running coverage...\"\n+      if make test_coverage 2>&1 | tee /tmp/coverage-output.txt; then\n+        COV_EXIT=0\n+      else\n+        COV_EXIT=$?\n+      fi\n+      echo \"COV_EXIT=$COV_EXIT\" >> /tmp/results.env\n+\n+      # Extract overall coverage percentage from the \"total:\" line (go tool cover output).\n+      COV_PCT=$(grep -E \"^total:\" /tmp/coverage-output.txt | awk '{print $NF}' | tail -n 1)\n+      if [ -z \"$COV_PCT\" ]; then\n+        COV_PCT=$(grep -Eo \"coverage: [0-9.]+% of statements\" /tmp/coverage-output.txt | awk '{print $2}' | tail -n 1)\n+      fi\n+      echo \"COV_PCT=${COV_PCT:-unknown}\" >> /tmp/results.env\n+\n+      # Check CHANGELOG for the tag version (strip leading \"v\" for the version-only match too).\n+      VERSION_NO_V=\"${TAG_NAME#v}\"\n+      if grep -qE \"^## \\[?${VERSION_NO_V}\\]?\" CHANGELOG.md 2>/dev/null \\\n+         || grep -qE \"^## \\[?${TAG_NAME}\\]?\" CHANGELOG.md 2>/dev/null; then\n+        CHANGELOG_EXIT=0\n+        grep -nE \"^## \\[?(${VERSION_NO_V}|${TAG_NAME})\\]?\" CHANGELOG.md > /tmp/changelog-entry.txt 2>/dev/null || true\n+      else\n+        CHANGELOG_EXIT=1\n+        echo \"No section matching ${TAG_NAME} or ${VERSION_NO_V} found in CHANGELOG.md\" > /tmp/changelog-entry.txt\n+      fi\n+      echo \"CHANGELOG_EXIT=$CHANGELOG_EXIT\" >> /tmp/results.env\n+\n+      # Extract test summary lines for the agent to consume.\n+      {\n+        grep -E \"^(ok|FAIL|---)\" /tmp/test-ci-output.txt 2>/dev/null || true\n+        grep -E \"^(ok|FAIL|---)\" /tmp/e2e-output.txt 2>/dev/null || true\n+      } > /tmp/test-summary.txt\n+\n+      # Always exit 0 so the agent runs and reports the results.\n+      exit 0\n+\n source: local\n engine: copilot\n ---\n \n # Release Validation\n \n-When a version tag is pushed, run the full validation suite and report results.\n+When a version tag is pushed, the pre-agent host steps build the provider,\n+run the full unit + E2E test suites, compute coverage, and verify the tag is\n+present in `CHANGELOG.md`. This agent reads the precomputed results and posts\n+a single summary comment on the release.\n \n-## Process\n+## Inputs (precomputed by host steps)\n+\n+- `/tmp/results.env` — `TAG_NAME`, `BUILD_EXIT`, `TEST_EXIT`, `E2E_EXIT`,\n+  `COV_EXIT`, `COV_PCT`, `CHANGELOG_EXIT`.\n+- `/tmp/build-output.txt` — full `make build` log.\n+- `/tmp/test-ci-output.txt` — full `make test_ci` log.\n+- `/tmp/e2e-output.txt` — full `make test_e2e` log.\n+- `/tmp/coverage-output.txt` — full `make test_coverage` log.\n+- `/tmp/test-summary.txt` — `ok` / `FAIL` / `---` lines from test runs.\n+- `/tmp/changelog-entry.txt` — matched `CHANGELOG.md` heading(s) or a\n+  \"not found\" message.\n \n-### 1. Build and test\n-- Run `make build` to verify compilation\n-- Run `make test_ci` for the full test suite\n-- Run `make test_e2e` for E2E validation\n-- Run `make test_coverage` for coverage check\n+## Process\n \n-### 2. Verify CHANGELOG\n-- Check that the tag version appears in `CHANGELOG.md`\n-- Verify the version section has entries\n+1. `cat /tmp/results.env` to load the exit codes, tag name, and coverage\n+   percentage. Use these — do NOT try to run `make`, `go`, or `bash` commands;\n+   they are unavailable in this agent.\n+2. For each non-zero exit code, `head -200 /tmp/<step>-output.txt` to extract\n+   error context.\n+3. Build the validation summary using the table template below.\n+4. Post the summary as a single comment via the `add-comment` safe output.\n \n-### 3. Report\n-Create a summary of all validation results. If all checks pass, the release is validated. If any fail, flag the issues for immediate attention.\n+## Report template\n \n ```markdown\n-### 🏷️ Release Validation: vX.Y.Z\n+### 🏷️ Release Validation: <TAG_NAME>\n \n | Check | Status |\n |-------|--------|\n | Build | ✅ / ❌ |\n | Unit tests | ✅ / ❌ |\n | E2E tests | ✅ / ❌ |\n-| Coverage | ✅ <percentage>% / ❌ <percentage>% |\n+| Coverage | ✅ <COV_PCT> / ❌ <COV_PCT> |\n | CHANGELOG entry | ✅ / ❌ |\n \n Overall: **VALIDATED** / **ISSUES FOUND**\n ```\n+\n+If any check failed, append a short \"Failure details\" section under the table\n+with the first relevant error lines from the corresponding output file.",
+          "snapshot_ref": "b5d8158bf0c5335f6f7715799bbf5de3a00aad06",
+          "snapshot_blob_sha": "e1067cc529eb371ca409a6bc89dda3f91a632f7d",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__b5d8158bf0c5335f6f7715799bbf5de3a00aad06__release-validation.md",
+          "snapshot_bytes": 5246,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-validation.lock.yml\",\"generated_workflow_file\":\"release-validation.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-validation.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+      "source_full_name": "aztfmod/terraform-provider-azurecaf",
+      "md_path": ".github/workflows/release-validation.md",
+      "commit_sha": "7dd89ebc7aa019ef00ee011927d6067b5f6fdf28",
+      "authored_at": "2026-05-25T03:47:07Z",
+      "committed_at": "2026-05-25T03:47:07Z",
+      "author_name": "Arnaud Lheureux",
+      "author_email": "arnaudlh@users.noreply.github.com",
+      "author_login": "arnaudlh",
+      "author_account_type": "User",
+      "committer_name": "Arnaud Lheureux",
+      "committer_email": "arnaudlh@users.noreply.github.com",
+      "committer_login": "arnaudlh",
+      "committer_account_type": "User",
+      "message": "fix(release): make models_generated.go gofmt-clean to unblock GoReleaser\n\nThe v1.2.34 tag release failed at the 'Run GoReleaser' step with:\n\n    git is in a dirty state\n    Please check in your pipeline what can be changing the following files:\n     M azurecaf/models_generated.go\n\nRoot cause: the committed azurecaf/models_generated.go is not gofmt-clean\non current Go toolchains. The Go workflow's E2E tests (test_e2e_quick)\nshell out to 'make build', which runs 'go generate' then 'go fmt ./...'.\ngo fmt reformats the file's struct-literal field alignment (tabs +\ncolumn alignment + single space between fields), leaving the working tree\ndirty by the time GoReleaser inspects it.\n\nFix:\n- Regenerate and gofmt azurecaf/models_generated.go. No semantic change\n  (same 489 resource entries before/after); only struct-literal alignment.\n- Patch release-validation.md so the COV_PCT extraction does not abort the\n  agent script under 'bash -e' + 'set -o pipefail' when grep finds no\n  '^total:' line (make test_coverage outputs 'coverage: X%', not 'total:').\n  This is independent of the release blocker but explains why the\n  Release Validation pipeline also failed on the same tag push.\n\nVerified locally: 'make build' now leaves the working tree clean.",
+      "parent_shas": [
+        "a81347f52bb01da26ed343e4fb671d591f262fee"
+      ],
+      "tree_sha": "a0a86ff2b31d878e8c689a7ae4669fce65d46fba",
+      "html_url": "https://github.com/aztfmod/terraform-provider-azurecaf/commit/7dd89ebc7aa019ef00ee011927d6067b5f6fdf28",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "aztfmod/terraform-provider-azurecaf:.github/workflows/release-validation.md",
+          "source_full_name": "aztfmod/terraform-provider-azurecaf",
+          "md_path": ".github/workflows/release-validation.md",
+          "commit_sha": "7dd89ebc7aa019ef00ee011927d6067b5f6fdf28",
+          "committed_at": "2026-05-25T03:47:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 2,
+          "file_changes": 6,
+          "file_patch": "@@ -90,9 +90,11 @@ steps:\n       echo \"COV_EXIT=$COV_EXIT\" >> /tmp/results.env\n \n       # Extract overall coverage percentage from the \"total:\" line (go tool cover output).\n-      COV_PCT=$(grep -E \"^total:\" /tmp/coverage-output.txt | awk '{print $NF}' | tail -n 1)\n+      # `|| true` keeps the script alive when grep finds no match (script runs under `bash -e` +\n+      # `set -o pipefail`; a failing pipeline inside a command substitution would otherwise abort).\n+      COV_PCT=$(grep -E \"^total:\" /tmp/coverage-output.txt | awk '{print $NF}' | tail -n 1 || true)\n       if [ -z \"$COV_PCT\" ]; then\n-        COV_PCT=$(grep -Eo \"coverage: [0-9.]+% of statements\" /tmp/coverage-output.txt | awk '{print $2}' | tail -n 1)\n+        COV_PCT=$(grep -Eo \"coverage: [0-9.]+% of statements\" /tmp/coverage-output.txt | awk '{print $2}' | tail -n 1 || true)\n       fi\n       echo \"COV_PCT=${COV_PCT:-unknown}\" >> /tmp/results.env\n ",
+          "snapshot_ref": "7dd89ebc7aa019ef00ee011927d6067b5f6fdf28",
+          "snapshot_blob_sha": "0181c54be68682426a391239a44adaba9a5ca98c",
+          "snapshot_file": "snapshots/terraform-provider-azurecaf__aztfmod__7dd89ebc7aa019ef00ee011927d6067b5f6fdf28__release-validation.md",
+          "snapshot_bytes": 5459,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"aztfmod/terraform-provider-azurecaf\",\"generated_owner\":\"aztfmod\",\"generated_repo\":\"terraform-provider-azurecaf\",\"generated_workflow_path\":\".github/workflows/release-validation.lock.yml\",\"generated_workflow_file\":\"release-validation.lock.yml\",\"generated_html_url\":\"https://github.com/aztfmod/terraform-provider-azurecaf/blob/1f919e67910b30e33be98e7056626f634739e16f/.github/workflows/release-validation.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

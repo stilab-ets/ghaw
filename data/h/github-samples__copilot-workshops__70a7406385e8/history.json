@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+    "source_full_name": "github-samples/copilot-workshops",
+    "source_owner": "github-samples",
+    "source_repo": "copilot-workshops",
+    "md_path": ".github/workflows/content-alignment.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github-samples/copilot-workshops/blob/HEAD/.github/workflows/content-alignment.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github-samples/copilot-workshops",
+      "generated_owner": "github-samples",
+      "generated_repo": "copilot-workshops",
+      "generated_workflow_path": ".github/workflows/content-alignment.lock.yml",
+      "generated_workflow_file": "content-alignment.lock.yml",
+      "generated_html_url": "https://github.com/github-samples/copilot-workshops/blob/b543d2fe8cc7454d9118b094f168f7a0dd818b4a/.github/workflows/content-alignment.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:27:07+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+      "source_full_name": "github-samples/copilot-workshops",
+      "md_path": ".github/workflows/content-alignment.md",
+      "commit_sha": "d8fb69db08af8058cf86315c52cb5b8e8ec3bd64",
+      "authored_at": "2026-06-30T20:11:28Z",
+      "committed_at": "2026-06-30T20:11:28Z",
+      "author_name": "Christopher Harrison",
+      "author_email": "geektrainer@github.com",
+      "author_login": "GeekTrainer",
+      "author_account_type": "User",
+      "committer_name": "Christopher Harrison",
+      "committer_email": "geektrainer@github.com",
+      "committer_login": "GeekTrainer",
+      "committer_account_type": "User",
+      "message": "feat: add content-alignment skill and agentic workflow\n\nReplace the single-source-of-truth that partials provided with two drift\nguardrails for the now-duplicated prose.\n\n- check-content-alignment skill: scans a diff (staged/unstaged or branch\n  range) and reports other lessons that should change too -- formerly-shared\n  copies, the same concept across the cli/vscode/app/cloud harnesses, and\n  cross-references. Read-only and advisory.\n- content-alignment GitHub Agentic Workflow (gh-aw): runs the same analysis on\n  pull requests touching docs/src/content/docs/** and posts one advisory\n  comment via safe-outputs. Copilot engine, read-only permissions, never fails\n  CI. Includes the compiled .lock.yml, pinned actions-lock.json, and a\n  .gitattributes marking the lock as generated.\n\nNote: gh-aw is a technical preview and may need to be enabled on the repo/org\nbefore the workflow runs in CI.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "78c735252ed0810c153cc06999039d644026a583"
+      ],
+      "tree_sha": "95a72cfd43861dffb77c149e64cc548962a836a2",
+      "html_url": "https://github.com/github-samples/copilot-workshops/commit/d8fb69db08af8058cf86315c52cb5b8e8ec3bd64",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+          "source_full_name": "github-samples/copilot-workshops",
+          "md_path": ".github/workflows/content-alignment.md",
+          "commit_sha": "d8fb69db08af8058cf86315c52cb5b8e8ec3bd64",
+          "committed_at": "2026-06-30T20:11:28Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 74,
+          "file_deletions": 0,
+          "file_changes": 74,
+          "file_patch": "@@ -0,0 +1,74 @@\n+---\n+# Content-alignment check for the Agents in SDLC workshop.\n+#\n+# The workshop content is pure Markdown with prose duplicated inline across lessons\n+# (no partials / single-sourcing). When a PR edits one lesson, the other copies can\n+# silently drift. This workflow runs the same analysis as the `check-content-alignment`\n+# skill on every docs PR and posts ONE advisory comment listing other lessons that\n+# may need the same change. It is advisory only and never fails the build.\n+\n+# Trigger - only when published lesson content changes.\n+on:\n+  pull_request:\n+    types: [opened, synchronize, reopened]\n+    paths:\n+      - \"docs/src/content/docs/**\"\n+\n+# Engine - GitHub Copilot (the default agentic engine).\n+engine: copilot\n+\n+# Permissions - read-only. Writing the comment is handled by the safe-outputs job\n+# below, which runs with its own scoped permissions.\n+permissions:\n+  contents: read\n+  pull-requests: read\n+\n+# Tools - read-only GitHub API access for PR context plus the checked-out repo files.\n+tools:\n+  github:\n+    toolsets: [pull_requests, repos, context]\n+\n+# Network access - default allow-list is sufficient (analysis is repo-local).\n+network: defaults\n+\n+# Outputs - post a single advisory comment on the pull request.\n+safe-outputs:\n+  add-comment:\n+    max: 1\n+\n+---\n+\n+# Content alignment check\n+\n+You are reviewing a pull request that changes lesson content in the **Agents in SDLC** workshop, an Astro + Starlight docs site. The lessons live under `docs/src/content/docs/` and are **pure Markdown**. Conceptually shared prose is **duplicated inline** across lessons rather than single-sourced, so an edit to one lesson often needs to be mirrored in others. Your job is to find those other lessons and post one advisory comment. **Do not edit any files.**\n+\n+## What changed\n+\n+Inspect the pull request diff, restricted to `docs/src/content/docs/**`. For each changed lesson, identify what changed *in meaning* (not just formatting): corrected facts (versions, library names, counts, behavior, UI labels, the Tailspin Toys demo-app description), edited callouts or steps, renamed/retitled/added/removed lessons or headings, and changed links, lesson numbers, URLs, or image references. Ignore pure whitespace/wrapping changes.\n+\n+## Where it might need mirroring\n+\n+Search the rest of `docs/src/content/docs/**` for passages that should stay in sync with each change. Focus on three drift categories:\n+\n+1. **Formerly-shared copies.** Short callouts and steps that used to be shared partials are now copied verbatim into multiple lessons (for example, the Copilot CLI \"Allow all\" approval callout, and the \"Approve and run workflows\" step in `cloud/5-iterating.md` and `vscode/6-iterating.md`). Quote a distinctive phrase from the change and grep for it across all lessons.\n+2. **Parallel concepts across harnesses.** The same idea is taught once per harness in `cli/`, `vscode/`, `app/`, and `cloud/`. A conceptual change usually needs the same correction in the sibling lessons of the other harnesses.\n+3. **Cross-references and shared facts.** Reference-style links to a renamed/retitled lesson, lesson numbers in prose, the published URL shape, the `github.com/github-samples/tailspin-toys/...` demo-app URL, tool/library names, and shared screenshots.\n+\n+Exclude the files already changed in this PR from your candidate list.\n+\n+## What to post\n+\n+Post exactly one pull-request comment. Structure it as:\n+\n+- A one-line summary (for example, \"Content-alignment check: N lessons may need a matching update\").\n+- A short grouped list. For each candidate, give the **file** (and heading or approximate line range), **why** it's a candidate (which change it parallels + drift category), and a **suggested action** (mirror the edit, or \"review - may be intentionally harness-specific\").\n+- Lead with high-confidence verbatim duplicates; separate lower-confidence cross-harness suggestions.\n+\n+If you find no likely drift, post a brief comment saying the change looks self-contained and no other lessons appear to need updating.\n+\n+## Rules\n+\n+- This check is **advisory only**. Never fail the workflow and never block the PR.\n+- **Read-only.** Do not modify any files; your only output is the single advisory comment.\n+- Only reason about content under `docs/src/content/docs/**`. Do not flag instruction files, skills, or other repo docs.\n+- False positives are acceptable; clearly mark anything low-confidence so a human can decide.",
+          "snapshot_ref": "d8fb69db08af8058cf86315c52cb5b8e8ec3bd64",
+          "snapshot_blob_sha": "551a98085168264ec0f31a71ce4cbe3b2489ee7a",
+          "snapshot_file": "snapshots/copilot-workshops__github-samples__d8fb69db08af8058cf86315c52cb5b8e8ec3bd64__content-alignment.md",
+          "snapshot_bytes": 4398,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github-samples/copilot-workshops\",\"generated_owner\":\"github-samples\",\"generated_repo\":\"copilot-workshops\",\"generated_workflow_path\":\".github/workflows/content-alignment.lock.yml\",\"generated_workflow_file\":\"content-alignment.lock.yml\",\"generated_html_url\":\"https://github.com/github-samples/copilot-workshops/blob/b543d2fe8cc7454d9118b094f168f7a0dd818b4a/.github/workflows/content-alignment.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+      "source_full_name": "github-samples/copilot-workshops",
+      "md_path": ".github/workflows/content-alignment.md",
+      "commit_sha": "5066f5d0af64898ef865d235a1df44be33a4ddb2",
+      "authored_at": "2026-07-15T17:06:03Z",
+      "committed_at": "2026-07-15T17:06:03Z",
+      "author_name": "Christopher Harrison",
+      "author_email": "geektrainer@github.com",
+      "author_login": "GeekTrainer",
+      "author_account_type": "User",
+      "committer_name": "Christopher Harrison",
+      "committer_email": "geektrainer@github.com",
+      "committer_login": "GeekTrainer",
+      "committer_account_type": "User",
+      "message": "refactor: move workshop content to repo-root docs/, Astro tooling to website/\n\nRestructure to a content-first layout: lessons now live as plain Markdown at\nthe repo root under docs/ (browsable directly on github.com, no build), and the\nAstro + Starlight project moves to a sibling website/ folder as an optional\npublisher. The content loader sources lessons via base: '../docs', and the\nlanding page (docs/README.md) maps to the site home via slug: index.\n\n- Relocate app/cli/vscode/cloud lessons, 5 locale trees, and _images/ from\n  docs/src/content/docs/** up to docs/**.\n- Move Astro tooling (astro.config.mjs, package.json, public/, src/pages/,\n  content.config.ts, tsconfig.json, .gitignore) into website/.\n- Update CI (pages.yml), dependabot, .vscode, .gitignore, instruction files,\n  skills, and the content-alignment workflow to the new paths.\n- Remove dead MDX-era components.\n\nBuild verified: 217 workshop pages, translations render, lychee 0 errors.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 64357866-3a3f-4fd8-914b-77826de5be5a",
+      "parent_shas": [
+        "6ddaec532a9892bc819f97ee0f9573517bc0c87f"
+      ],
+      "tree_sha": "5288837eb5189f67ca65c1680b9d1fbc57883705",
+      "html_url": "https://github.com/github-samples/copilot-workshops/commit/5066f5d0af64898ef865d235a1df44be33a4ddb2",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+          "source_full_name": "github-samples/copilot-workshops",
+          "md_path": ".github/workflows/content-alignment.md",
+          "commit_sha": "5066f5d0af64898ef865d235a1df44be33a4ddb2",
+          "committed_at": "2026-07-15T17:06:03Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 5,
+          "file_changes": 10,
+          "file_patch": "@@ -12,7 +12,7 @@ on:\n   pull_request:\n     types: [opened, synchronize, reopened]\n     paths:\n-      - \"docs/src/content/docs/**\"\n+      - \"docs/**\"\n \n # Engine - GitHub Copilot (the default agentic engine).\n engine: copilot\n@@ -40,15 +40,15 @@ safe-outputs:\n \n # Content alignment check\n \n-You are reviewing a pull request that changes lesson content in the **Agents in SDLC** workshop, an Astro + Starlight docs site. The lessons live under `docs/src/content/docs/` and are **pure Markdown**. Conceptually shared prose is **duplicated inline** across lessons rather than single-sourced, so an edit to one lesson often needs to be mirrored in others. Your job is to find those other lessons and post one advisory comment. **Do not edit any files.**\n+You are reviewing a pull request that changes lesson content in the **Agents in SDLC** workshop, an Astro + Starlight docs site. The lessons live under `docs/` and are **pure Markdown**. Conceptually shared prose is **duplicated inline** across lessons rather than single-sourced, so an edit to one lesson often needs to be mirrored in others. Your job is to find those other lessons and post one advisory comment. **Do not edit any files.**\n \n ## What changed\n \n-Inspect the pull request diff, restricted to `docs/src/content/docs/**`. For each changed lesson, identify what changed *in meaning* (not just formatting): corrected facts (versions, library names, counts, behavior, UI labels, the Tailspin Toys demo-app description), edited callouts or steps, renamed/retitled/added/removed lessons or headings, and changed links, lesson numbers, URLs, or image references. Ignore pure whitespace/wrapping changes.\n+Inspect the pull request diff, restricted to `docs/**`. For each changed lesson, identify what changed *in meaning* (not just formatting): corrected facts (versions, library names, counts, behavior, UI labels, the Tailspin Toys demo-app description), edited callouts or steps, renamed/retitled/added/removed lessons or headings, and changed links, lesson numbers, URLs, or image references. Ignore pure whitespace/wrapping changes.\n \n ## Where it might need mirroring\n \n-Search the rest of `docs/src/content/docs/**` for passages that should stay in sync with each change. Focus on three drift categories:\n+Search the rest of `docs/**` for passages that should stay in sync with each change. Focus on three drift categories:\n \n 1. **Formerly-shared copies.** Short callouts and steps that used to be shared partials are now copied verbatim into multiple lessons (for example, the Copilot CLI \"Allow all\" approval callout, and the \"Approve and run workflows\" step in `cloud/5-iterating.md` and `vscode/6-iterating.md`). Quote a distinctive phrase from the change and grep for it across all lessons.\n 2. **Parallel concepts across harnesses.** The same idea is taught once per harness in `cli/`, `vscode/`, `app/`, and `cloud/`. A conceptual change usually needs the same correction in the sibling lessons of the other harnesses.\n@@ -70,5 +70,5 @@ If you find no likely drift, post a brief comment saying the change looks self-c\n \n - This check is **advisory only**. Never fail the workflow and never block the PR.\n - **Read-only.** Do not modify any files; your only output is the single advisory comment.\n-- Only reason about content under `docs/src/content/docs/**`. Do not flag instruction files, skills, or other repo docs.\n+- Only reason about content under `docs/**`. Do not flag instruction files, skills, or other repo docs.\n - False positives are acceptable; clearly mark anything low-confidence so a human can decide.",
+          "snapshot_ref": "5066f5d0af64898ef865d235a1df44be33a4ddb2",
+          "snapshot_blob_sha": "0427933d94656f9a092188e4e3b24a5b62078791",
+          "snapshot_file": "snapshots/copilot-workshops__github-samples__5066f5d0af64898ef865d235a1df44be33a4ddb2__content-alignment.md",
+          "snapshot_bytes": 4313,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github-samples/copilot-workshops\",\"generated_owner\":\"github-samples\",\"generated_repo\":\"copilot-workshops\",\"generated_workflow_path\":\".github/workflows/content-alignment.lock.yml\",\"generated_workflow_file\":\"content-alignment.lock.yml\",\"generated_html_url\":\"https://github.com/github-samples/copilot-workshops/blob/b543d2fe8cc7454d9118b094f168f7a0dd818b4a/.github/workflows/content-alignment.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+      "source_full_name": "github-samples/copilot-workshops",
+      "md_path": ".github/workflows/content-alignment.md",
+      "commit_sha": "6966d94c5310d8f9f0ef91ea353d5e8c457733e6",
+      "authored_at": "2026-07-15T17:39:28Z",
+      "committed_at": "2026-07-15T17:39:28Z",
+      "author_name": "Christopher Harrison",
+      "author_email": "geektrainer@github.com",
+      "author_login": "GeekTrainer",
+      "author_account_type": "User",
+      "committer_name": "Christopher Harrison",
+      "committer_email": "geektrainer@github.com",
+      "committer_login": "GeekTrainer",
+      "committer_account_type": "User",
+      "message": "docs: rename workshop from \"Agents in SDLC\" to \"Copilot Workshops\"\n\nUpdate the human-facing name across content and repo docs: the site title,\nthe landing-page H1 (English + all five locales, now the brand name with the\nSDLC descriptor dropped), the root README, AUTHORING, CONTRIBUTING,\ncopilot-instructions, the content-alignment workflow prose, and the three\nskill descriptions.\n\nThe repo URL slug (agents-in-sdlc) is intentionally left unchanged — the base\npath, GitHub Pages URL, edit links, clone URLs, CI symlink, and npm package\nname still resolve until the repository itself is renamed.\n\nBuild verified: 217 pages, titles updated, translations render, lychee 0 errors.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 64357866-3a3f-4fd8-914b-77826de5be5a",
+      "parent_shas": [
+        "cabaa8d4e9226211cc233e3c2d533dd252ec80f7"
+      ],
+      "tree_sha": "098ac40403f81b75a954cbb86b32f90fdf6b41d5",
+      "html_url": "https://github.com/github-samples/copilot-workshops/commit/6966d94c5310d8f9f0ef91ea353d5e8c457733e6",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github-samples/copilot-workshops:.github/workflows/content-alignment.md",
+          "source_full_name": "github-samples/copilot-workshops",
+          "md_path": ".github/workflows/content-alignment.md",
+          "commit_sha": "6966d94c5310d8f9f0ef91ea353d5e8c457733e6",
+          "committed_at": "2026-07-15T17:39:28Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -1,5 +1,5 @@\n ---\n-# Content-alignment check for the Agents in SDLC workshop.\n+# Content-alignment check for the Copilot Workshops content.\n #\n # The workshop content is pure Markdown with prose duplicated inline across lessons\n # (no partials / single-sourcing). When a PR edits one lesson, the other copies can\n@@ -40,7 +40,7 @@ safe-outputs:\n \n # Content alignment check\n \n-You are reviewing a pull request that changes lesson content in the **Agents in SDLC** workshop, an Astro + Starlight docs site. The lessons live under `docs/` and are **pure Markdown**. Conceptually shared prose is **duplicated inline** across lessons rather than single-sourced, so an edit to one lesson often needs to be mirrored in others. Your job is to find those other lessons and post one advisory comment. **Do not edit any files.**\n+You are reviewing a pull request that changes lesson content in **Copilot Workshops**, an Astro + Starlight docs site. The lessons live under `docs/` and are **pure Markdown**. Conceptually shared prose is **duplicated inline** across lessons rather than single-sourced, so an edit to one lesson often needs to be mirrored in others. Your job is to find those other lessons and post one advisory comment. **Do not edit any files.**\n \n ## What changed\n ",
+          "snapshot_ref": "6966d94c5310d8f9f0ef91ea353d5e8c457733e6",
+          "snapshot_blob_sha": "c53cd137714186fbd5d770ed9bd8332543439913",
+          "snapshot_file": "snapshots/copilot-workshops__github-samples__6966d94c5310d8f9f0ef91ea353d5e8c457733e6__content-alignment.md",
+          "snapshot_bytes": 4305,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github-samples/copilot-workshops\",\"generated_owner\":\"github-samples\",\"generated_repo\":\"copilot-workshops\",\"generated_workflow_path\":\".github/workflows/content-alignment.lock.yml\",\"generated_workflow_file\":\"content-alignment.lock.yml\",\"generated_html_url\":\"https://github.com/github-samples/copilot-workshops/blob/b543d2fe8cc7454d9118b094f168f7a0dd818b4a/.github/workflows/content-alignment.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

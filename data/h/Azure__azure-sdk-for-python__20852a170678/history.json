@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/azure-sdk-for-python:.github/workflows/pipeline-analysis-next-steps.md",
+    "source_full_name": "Azure/azure-sdk-for-python",
+    "source_owner": "Azure",
+    "source_repo": "azure-sdk-for-python",
+    "md_path": ".github/workflows/pipeline-analysis-next-steps.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/azure-sdk-for-python/blob/HEAD/.github/workflows/pipeline-analysis-next-steps.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/azure-sdk-for-python",
+      "generated_owner": "Azure",
+      "generated_repo": "azure-sdk-for-python",
+      "generated_workflow_path": ".github/workflows/pipeline-analysis-next-steps.lock.yml",
+      "generated_workflow_file": "pipeline-analysis-next-steps.lock.yml",
+      "generated_html_url": "https://github.com/Azure/azure-sdk-for-python/blob/eb64b22f6301bb63124dd3a802091c57deeeb1a8/.github/workflows/pipeline-analysis-next-steps.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:49+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/azure-sdk-for-python:.github/workflows/pipeline-analysis-next-steps.md",
+      "source_full_name": "Azure/azure-sdk-for-python",
+      "md_path": ".github/workflows/pipeline-analysis-next-steps.md",
+      "commit_sha": "cbc3f7f55b5b40ebd67ea62d1ff431a934f4866f",
+      "authored_at": "2026-07-20T20:53:42Z",
+      "committed_at": "2026-07-20T20:53:42Z",
+      "author_name": "ReilleyMilne",
+      "author_email": "91291100+ReilleyMilne@users.noreply.github.com",
+      "author_login": "ReilleyMilne",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add pipeline analysis next-steps workflow (#48154)\n\n* Adding a new github actions workflow to trigger on pipeline failures.\n\n* Updated copilot feedback.\n\n* Update .github/workflows/pipeline-analysis-next-steps.md\n\nCo-authored-by: Daniel Jurek <djurek@microsoft.com>\n\n* Updated with feedback.\n\n* Add temporary test pipeline for gh-aw trigger validation\n\n* Revert \"Add temporary test pipeline for gh-aw trigger validation\"\n\nThis reverts commit 12764edca7ea8cb7f4b123e502df9994ed16766b.\n\n* . (#48155)\n\n* Delete test-trigger-pipeline.yml\n\n* Removed manual runs from trigger. Updated comments\n\n---------\n\nCo-authored-by: Daniel Jurek <djurek@microsoft.com>",
+      "parent_shas": [
+        "5608fba3bed9385034f87099193df7763934f157"
+      ],
+      "tree_sha": "a195e28b44755a3a019b107c2605a3885cb07bc9",
+      "html_url": "https://github.com/Azure/azure-sdk-for-python/commit/cbc3f7f55b5b40ebd67ea62d1ff431a934f4866f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/azure-sdk-for-python:.github/workflows/pipeline-analysis-next-steps.md",
+          "source_full_name": "Azure/azure-sdk-for-python",
+          "md_path": ".github/workflows/pipeline-analysis-next-steps.md",
+          "commit_sha": "cbc3f7f55b5b40ebd67ea62d1ff431a934f4866f",
+          "committed_at": "2026-07-20T20:53:42Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 214,
+          "file_deletions": 0,
+          "file_changes": 214,
+          "file_patch": "@@ -0,0 +1,214 @@\n+---\n+# Pipeline Analysis - Next Steps (agentic workflow)\n+#\n+# When a pull request's Azure DevOps CI fails, `pipeline-analysis-next-steps-trigger.yml`\n+# dispatches this workflow with the PR number. A deterministic setup step runs the existing `azsdk ci analyze` tool to produce structured failure data; the Copilot\n+# agent then turns that into a concise, human-readable \"Pipeline Analysis Next Steps\" comment on the PR.\n+#\n+# Copilot runs on the built-in token via `copilot-requests: write` (billed to the org) # The agent job is read-only; the comment is posted by a separate\n+# gh-aw safe-outputs job.\n+#\n+# After editing this file, run 'gh aw compile pipeline-analysis-next-steps' to regenerate the\n+# lock file.\n+description: \"Analyze a pull request's failing Azure DevOps pipeline with the azsdk analyze tool and post a Copilot-authored 'Pipeline Analysis Next Steps' comment.\"\n+\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      pr_number:\n+        description: \"Pull request number whose failing pipeline should be analyzed\"\n+        required: true\n+        type: string\n+      ci_conclusion:\n+        description: \"Conclusion of the completed azure-pipelines PR-CI check run (e.g. failure) for CI-triggered runs\"\n+        required: false\n+        type: string\n+      ci_head_sha:\n+        description: \"Head SHA of the completed PR-CI check run, for stale-commit detection on CI-triggered runs\"\n+        required: false\n+        type: string\n+\n+# The workflow is always dispatched (by the trigger workflow or manually); never runs off the\n+# repository-associated PR of its own ref.\n+if: ${{ github.event_name == 'workflow_dispatch' }}\n+\n+engine: copilot\n+\n+# Agent job runs read-only; copilot-requests:write bills the Copilot CLI usage to the org. The\n+# separate safe-outputs job receives the pull-requests:write scope it needs to post the comment.\n+permissions:\n+  contents: read\n+  pull-requests: read\n+  actions: read\n+  checks: read\n+  copilot-requests: write\n+\n+# network.allowed also governs content sanitization: dev.azure.com and aka.ms must be allowed\n+# so the Azure DevOps build links and the CI-fix link in the analysis survive in the comment.\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - dev.azure.com\n+    - aka.ms\n+\n+checkout:\n+  sparse-checkout: |\n+    eng\n+\n+# Deterministic pre-agent steps: install the azsdk CLI (the analyze tool is a plain stdio MCP\n+# server that gh-aw's MCP Gateway cannot host, so we drive its CLI surface) and run the\n+# analysis into a workspace file for the agent to read.\n+steps:\n+  - name: Install azsdk CLI\n+    shell: pwsh\n+    run: |\n+      $dir = Join-Path $env:RUNNER_TEMP 'azsdk-cli'\n+      ./eng/common/mcp/azure-sdk-mcp.ps1 -InstallDirectory $dir\n+      Add-Content -Path $env:GITHUB_PATH -Value $dir\n+  - name: Analyze failing pipeline\n+    shell: bash\n+    env:\n+      GITHUB_TOKEN: ${{ github.token }}\n+      PR_URL: \"https://github.com/${{ github.repository }}/pull/${{ github.event.inputs.pr_number }}\"\n+    run: |\n+      set -uo pipefail\n+      # `azsdk ci analyze` exits non-zero both when it finds no failing builds (it sets a\n+      # \"No failed Azure Pipeline builds found ...\" response error) and on real auth/network/CLI\n+      # errors. Only the former is an acceptable no-op; every other non-zero exit must fail this\n+      # step so the run surfaces the problem instead of the agent silently treating an error as\n+      # \"nothing to report\" and finishing green.\n+      exit_code=0\n+      azsdk ci analyze \"$PR_URL\" > \"$GITHUB_WORKSPACE/pipeline-analysis.txt\" 2>&1 || exit_code=$?\n+      echo \"azsdk ci analyze exit code: $exit_code\"\n+      echo \"----- pipeline-analysis.txt -----\"\n+      # The file holds PR-controlled build output. Prefix any line that looks like a GitHub\n+      # Actions workflow command (starts with `::`) with a space so it is logged as plain text\n+      # instead of being interpreted.\n+      sed 's/^::/ ::/' \"$GITHUB_WORKSPACE/pipeline-analysis.txt\"\n+      if [ \"$exit_code\" -ne 0 ]; then\n+        if grep -qF \"No failed Azure Pipeline builds found\" \"$GITHUB_WORKSPACE/pipeline-analysis.txt\"; then\n+          echo \"No failing Azure Pipeline builds resolved for this PR; the agent will no-op.\"\n+        else\n+          echo \"::error::azsdk ci analyze failed (exit $exit_code) with an unexpected error; failing the step.\"\n+          exit \"$exit_code\"\n+        fi\n+      fi\n+\n+tools:\n+  github:\n+    toolsets: [context, repos, pull_requests, actions]\n+  # Read-only: the agent only needs to read the analysis file produced above.\n+  bash: [\"cat\", \"ls\", \"head\", \"tail\", \"wc\"]\n+\n+safe-outputs:\n+  # A single, self-updating \"Pipeline Analysis Next Steps\" comment on the PR. hide-older-comments\n+  # collapses this workflow's previous comments so only the latest analysis stays visible.\n+  add-comment:\n+    max: 1\n+    target: \"${{ github.event.inputs.pr_number }}\"\n+    hide-older-comments: true\n+  # Let the agent cleanly do nothing when the tool reports no failing builds. report-as-issue:\n+  # false stops gh-aw's default of opening/updating an \"[aw] No-Op Runs\" tracking issue on every\n+  # stale/no-failure run.\n+  noop:\n+    report-as-issue: false\n+  # Failures surface on the PR/run; do not open tracking issues.\n+  missing-tool:\n+    create-issue: false\n+  missing-data:\n+    create-issue: false\n+  report-incomplete:\n+    create-issue: false\n+  report-failure-as-issue: false\n+\n+timeout-minutes: 20\n+concurrency: pipeline-analysis-next-steps-${{ github.event.inputs.pr_number }}\n+---\n+\n+# Pipeline Analysis - Next Steps\n+\n+You are the Azure SDK Tools **pipeline next-steps** agent for `${{ github.repository }}`.\n+\n+A CI pipeline failed on pull request **#${{ github.event.inputs.pr_number }}**. A deterministic\n+setup step already ran the azsdk pipeline analyze tool\n+(`azsdk ci analyze <pr>`) and wrote its full output to **`pipeline-analysis.txt`** in the\n+workspace root. Your job is to turn that raw tool output into one concise, actionable\n+**\"Pipeline Analysis Next Steps\"** comment on the PR.\n+\n+## Step 0 - Read the analysis and validate\n+\n+1. Read `pipeline-analysis.txt` (it is in the current working directory).\n+2. If the file is empty, or contains `No failed Azure Pipeline builds found`, or otherwise\n+   shows no real pipeline/test failures, then there is nothing to report: use the `noop` safe\n+   output and stop. Do **not** post a comment in that case.\n+3. Stale-commit guard: if `${{ github.event.inputs.ci_head_sha }}` is non-empty, fetch\n+   the PR's current head SHA. If they differ, the completed run is for a superseded commit -\n+   use `noop` and stop rather than posting stale analysis.\n+\n+## Step 1 - Analyze the failures\n+\n+From the tool output, determine what failed and the most likely cause(s):\n+\n+- Group the failures (by pipeline/stage/job, failed build task, and/or failed tests).\n+- Categorize each failure as one of: **test** (assertion/test-case failure), **build**\n+  (compilation error), **validation** (lint/format/analyzer/spec violation), or\n+  **infrastructure** (network timeout, agent crash/disconnect, throttling, image/tooling\n+  outage). Note when several failures share one root cause.\n+- Identify concrete signals (compiler/build errors, failed test names, timeouts, missing\n+  files, lint/format violations, etc.). Rely **only** on what the tool output actually shows -\n+  do not invent failures or speculate beyond the evidence. If the cause is unclear, say so.\n+- For **infrastructure** failures, recommend re-running the pipeline rather than changing code;\n+  only recommend code changes for test/build/validation failures.\n+- Preserve any Azure DevOps build URLs from the output so reviewers can jump to the logs.\n+\n+## Step 2 - Compose the \"Pipeline Analysis Next Steps\" comment\n+\n+Post exactly one comment using the `add-comment` safe output, in this shape:\n+\n+````markdown\n+<details>\n+<summary><strong>[Pilot] PR Pipeline Failure Analysis</strong></summary>\n+\n+A CI pipeline failed on this pull request. Here is an automated analysis of what went wrong\n+and how to get the build green.\n+\n+### What failed\n+<one short paragraph or a few bullets: the failing pipeline(s)/stage(s) and the most likely\n+root cause, with Azure DevOps build links where available>\n+\n+### Recommended next steps\n+- <specific, actionable step tied to the failure above>\n+- <additional steps as needed>\n+- See the CI troubleshooting guide: https://aka.ms/ci-fix\n+- Push new commits to address the failures; this comment updates automatically on the next\n+  failing run.\n+\n+<details>\n+<summary>Raw pipeline analysis (azsdk ci analyze)</summary>\n+\n+```\n+<the relevant portion of pipeline-analysis.txt, trimmed if very long>\n+```\n+\n+</details>\n+\n+</details>\n+\n+> Copilot detected the failing pipeline and generated the analysis above. To have it attempt a\n+> fix automatically, reply with `@copilot please fix the failing pipeline on this PR`.\n+````\n+\n+## Constraints (non-negotiable)\n+\n+1. **Read-only.** Do not check out, build, run, or modify PR code. Your only external action is\n+   posting the single comment via the `add-comment` safe output. Do not use `gh`, the GitHub\n+   MCP write tools, or direct API calls to comment.\n+2. **One comment.** Emit at most one `add-comment`. Keep it concise and skimmable; put the raw\n+   tool output inside the collapsible `<details>` block, trimming it if it is very long.\n+3. **The `@copilot` line is an example only.** Write it in backticks exactly as shown so it does\n+   not ping anyone. Do not @-mention any real user.\n+4. **Ground every claim in the tool output.** If `pipeline-analysis.txt` does not support a\n+   conclusion, do not state it. When failures are ambiguous, point reviewers at the linked\n+   build logs instead of guessing.\n+5. If there is nothing meaningful to report (see Step 0), use `noop` and post nothing.",
+          "snapshot_ref": "cbc3f7f55b5b40ebd67ea62d1ff431a934f4866f",
+          "snapshot_blob_sha": "67749e59a8b521384860f8bf0681a75ba1978df3",
+          "snapshot_file": "snapshots/azure-sdk-for-python__Azure__cbc3f7f55b5b40ebd67ea62d1ff431a934f4866f__pipeline-analysis-next-steps.md",
+          "snapshot_bytes": 9615,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/azure-sdk-for-python\",\"generated_owner\":\"Azure\",\"generated_repo\":\"azure-sdk-for-python\",\"generated_workflow_path\":\".github/workflows/pipeline-analysis-next-steps.lock.yml\",\"generated_workflow_file\":\"pipeline-analysis-next-steps.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/azure-sdk-for-python/blob/eb64b22f6301bb63124dd3a802091c57deeeb1a8/.github/workflows/pipeline-analysis-next-steps.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

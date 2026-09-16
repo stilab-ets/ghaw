@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+    "source_full_name": "neurodesk/neurodesktop",
+    "source_owner": "neurodesk",
+    "source_repo": "neurodesktop",
+    "md_path": ".github/workflows/issue-investigator-review.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/neurodesk/neurodesktop/blob/HEAD/.github/workflows/issue-investigator-review.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "neurodesk/neurodesktop",
+      "generated_owner": "neurodesk",
+      "generated_repo": "neurodesktop",
+      "generated_workflow_path": ".github/workflows/issue-investigator-review.lock.yml",
+      "generated_workflow_file": "issue-investigator-review.lock.yml",
+      "generated_html_url": "https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/issue-investigator-review.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:42:58+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/issue-investigator-review.md",
+      "commit_sha": "4ecd194d3299627b8fd1bd977f6761360adafc72",
+      "authored_at": "2026-07-24T19:26:18Z",
+      "committed_at": "2026-07-28T06:35:34Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "add code rabbit to agentic workflow",
+      "parent_shas": [
+        "819da959b0757d2ff2e4d1f39e680571fb9238b7"
+      ],
+      "tree_sha": "eea2c32797d3ae0c162787feeb6867bca89e09db",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/4ecd194d3299627b8fd1bd977f6761360adafc72",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/issue-investigator-review.md",
+          "commit_sha": "4ecd194d3299627b8fd1bd977f6761360adafc72",
+          "committed_at": "2026-07-28T06:35:34Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 144,
+          "file_deletions": 0,
+          "file_changes": 144,
+          "file_patch": "@@ -0,0 +1,144 @@\n+---\n+name: Issue Investigator Review Loop\n+description: Apply CodeRabbit feedback to draft pull requests created by the issue investigator.\n+labels: [automation, issue-triage]\n+on:\n+  issue_comment:\n+    types: [created, edited]\n+  bots: [\"coderabbitai[bot]\"]\n+\n+if: >-\n+  github.event.issue.pull_request != null &&\n+  github.event.issue.state == 'open' &&\n+  github.event.issue.user.login == 'github-actions[bot]' &&\n+  contains(github.event.issue.labels.*.name, 'agentic-workflow') &&\n+  startsWith(github.event.issue.title, '[issue-investigator] ') &&\n+  contains(github.event.comment.body, 'summarize by coderabbit.ai')\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+\n+engine:\n+  id: codex\n+  model: ${{ vars.GH_AW_MODEL_AGENT_CODEX || vars.GH_AW_DEFAULT_MODEL_CODEX || 'neurodesk' }}\n+  env:\n+    OPENAI_BASE_URL: \"https://llm.neurodesk.org/openai\"\n+    OPENAI_API_KEY: ${{ secrets.CODEX_API_KEY || secrets.OPENAI_API_KEY }}\n+\n+models:\n+  providers:\n+    openai:\n+      models:\n+        neurodesk:\n+          cost:\n+            input: \"3e-06\"\n+            output: \"1.5e-05\"\n+\n+strict: true\n+# The runtime AIC catalog does not consume custom model pricing overlays yet.\n+# Retain the pricing above for reporting, but disable enforcement for this alias.\n+max-ai-credits: -1\n+max-turn-cache-misses: 2000\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - python\n+    - node\n+    - containers\n+    - linux-distros\n+    - llm.neurodesk.org\n+\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+\n+safe-outputs:\n+  threat-detection:\n+    engine: false\n+  push-to-pull-request-branch:\n+    target: triggering\n+    required-labels: [agentic-workflow]\n+    required-title-prefix: \"[issue-investigator] \"\n+    protected-files: fallback-to-issue\n+    max: 1\n+    allowed-files:\n+      - \"Dockerfile\"\n+      - \".codespellrc\"\n+      - \".dockerignore\"\n+      - \".trivyignore.yaml\"\n+      - \"AGENTS.md\"\n+      - \"CLAUDE.md\"\n+      - \"README.md\"\n+      - \"analyze_image_size.sh\"\n+      - \"build_and_run.bat\"\n+      - \"build_and_run.sh\"\n+      - \"neurodesk.yml\"\n+      - \"stop_and_clean.bat\"\n+      - \"stop_and_clean.sh\"\n+      - \".github/actions/**\"\n+      - \".github/containerscan/**\"\n+      - \".github/*_template.md\"\n+      - \"config/**\"\n+      - \"docs/**\"\n+      - \"extensions/**\"\n+      - \"scripts/**\"\n+      - \"tests/**\"\n+  reply-to-pull-request-review-comment:\n+    target: triggering\n+    required-labels: [agentic-workflow]\n+    required-title-prefix: \"[issue-investigator] \"\n+    max: 10\n+  add-comment:\n+    max: 1\n+    target: triggering\n+    issues: false\n+    pull-requests: true\n+  noop:\n+    report-as-issue: false\n+---\n+\n+# Issue Investigator Review Loop\n+\n+## Task\n+\n+Review the open issue-investigator pull request that triggered this run and keep\n+iterating on it until no active actionable CodeRabbit findings remain.\n+\n+Use `gh` through the GitHub tool to read the pull request metadata, diff, the\n+complete current CodeRabbit review, all CodeRabbit review comments, and the\n+state of their review threads. Do not treat the triggering comment as the complete review;\n+it is only the signal that CodeRabbit updated its review.\n+\n+Before changing anything, verify that the pull request is still open, is in this\n+repository, has the `agentic-workflow` label and `[issue-investigator] ` title\n+prefix, and was authored by the GitHub Actions bot (`github-actions[bot]`, also\n+shown as `app/github-actions` by some `gh` output). Call `noop` if any guard no\n+longer holds.\n+\n+## Review Iteration\n+\n+1. Collect every unresolved CodeRabbit finding from the latest completed review\n+   cycle, including findings summarized outside the diff.\n+2. Verify every finding against the current PR head. Fix only findings that are\n+   still valid. Reply to an invalid or already-fixed inline finding with concise\n+   evidence instead of changing code for it.\n+3. Add or update focused regression tests for valid findings when an appropriate\n+   test seam exists. Keep the changes within the original PR's scope and the\n+   configured allowed files.\n+4. Run the smallest relevant tests for the changed files. Do not push if those\n+   tests fail; instead add one PR comment that reports the exact failure and\n+   required follow-up.\n+5. Batch all validated fixes from the review cycle into one coherent commit and\n+   use `push-to-pull-request-branch` once.\n+6. After requesting the push, use `add-comment` with the body exactly\n+   `@coderabbitai review` so CodeRabbit performs the next incremental review even\n+   when the PR author is ignored for automatic reviews.\n+\n+If no active actionable findings remain, call `noop` with a concise reason. Do\n+not make speculative changes, request another review, mark the PR ready, approve\n+it, or merge it.",
+          "snapshot_ref": "4ecd194d3299627b8fd1bd977f6761360adafc72",
+          "snapshot_blob_sha": "9d0c9d8b639179bafe504564ff11d216fda32451",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__4ecd194d3299627b8fd1bd977f6761360adafc72__issue-investigator-review.md",
+          "snapshot_bytes": 4662,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/issue-investigator-review.lock.yml\",\"generated_workflow_file\":\"issue-investigator-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/issue-investigator-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/issue-investigator-review.md",
+      "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+      "authored_at": "2026-07-29T00:14:29Z",
+      "committed_at": "2026-07-29T00:14:29Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "fix maintenance workflows",
+      "parent_shas": [
+        "b523d75f2b32ff713db35b3ad0725a9806ff77a1"
+      ],
+      "tree_sha": "a55f6c043a53b1616f58930658aa41bd35b03cbf",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/2a1df33ef74729614931d791f5750f2366f7dab0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/issue-investigator-review.md",
+          "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "committed_at": "2026-07-29T00:14:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -42,6 +42,8 @@ strict: true\n # Retain the pricing above for reporting, but disable enforcement for this alias.\n max-ai-credits: -1\n max-turn-cache-misses: 2000\n+imports:\n+  - uses: .github/workflows/shared/agentic-models.md\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "snapshot_blob_sha": "1659ddcd507e34003216d87e509f912f2e62c5f8",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__2a1df33ef74729614931d791f5750f2366f7dab0__issue-investigator-review.md",
+          "snapshot_bytes": 4724,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/issue-investigator-review.lock.yml\",\"generated_workflow_file\":\"issue-investigator-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/issue-investigator-review.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/issue-investigator-review.md",
+      "commit_sha": "8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+      "authored_at": "2026-07-31T16:23:08Z",
+      "committed_at": "2026-07-31T16:23:08Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "cleanup",
+      "parent_shas": [
+        "ecbc756a716eaac113a2762f5328d57eb032c015"
+      ],
+      "tree_sha": "01a34d987da37abcc2afcd1a35630d4d627bf577",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/issue-investigator-review.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/issue-investigator-review.md",
+          "commit_sha": "8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+          "committed_at": "2026-07-31T16:23:08Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 1,
+          "file_changes": 1,
+          "file_patch": "@@ -76,7 +76,6 @@ safe-outputs:\n       - \"AGENTS.md\"\n       - \"CLAUDE.md\"\n       - \"README.md\"\n-      - \"analyze_image_size.sh\"\n       - \"build_and_run.bat\"\n       - \"build_and_run.sh\"\n       - \"neurodesk.yml\"",
+          "snapshot_ref": "8d63aa7f979e9ea0818308b1d868c5bd9e995894",
+          "snapshot_blob_sha": "186decf97493e4188e4c9b003e164cc291fa0ab8",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__8d63aa7f979e9ea0818308b1d868c5bd9e995894__issue-investigator-review.md",
+          "snapshot_bytes": 4692,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/issue-investigator-review.lock.yml\",\"generated_workflow_file\":\"issue-investigator-review.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/issue-investigator-review.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

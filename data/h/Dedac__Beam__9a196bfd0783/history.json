@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Dedac/Beam:.github/workflows/fix-top-improvement.md",
+    "source_full_name": "Dedac/Beam",
+    "source_owner": "Dedac",
+    "source_repo": "Beam",
+    "md_path": ".github/workflows/fix-top-improvement.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Dedac/Beam/blob/HEAD/.github/workflows/fix-top-improvement.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Dedac/Beam",
+      "generated_owner": "Dedac",
+      "generated_repo": "Beam",
+      "generated_workflow_path": ".github/workflows/fix-top-improvement.lock.yml",
+      "generated_workflow_file": "fix-top-improvement.lock.yml",
+      "generated_html_url": "https://github.com/Dedac/Beam/blob/e1e3af92829f13caf0f9b586518e782d82004f34/.github/workflows/fix-top-improvement.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:25:08+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Dedac/Beam:.github/workflows/fix-top-improvement.md",
+      "source_full_name": "Dedac/Beam",
+      "md_path": ".github/workflows/fix-top-improvement.md",
+      "commit_sha": "9806477d0f6e9a2a65be0cb49a590414f10d51c1",
+      "authored_at": "2026-04-22T14:47:40Z",
+      "committed_at": "2026-04-22T14:47:40Z",
+      "author_name": "Richard Goforth",
+      "author_email": "dedac@github.com",
+      "author_login": "Dedac",
+      "author_account_type": "User",
+      "committer_name": "Richard Goforth",
+      "committer_email": "dedac@github.com",
+      "committer_login": "Dedac",
+      "committer_account_type": "User",
+      "message": "Add agentic workflow to auto-fix top improvement\n\nTriggers when the weekly improvements issue is created, reads the #1\npriority item, implements it as code changes, and opens a draft PR.\nSkips non-code improvements with a comment explaining why.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "405e1d6d741a603a087da9d79fba9e7076aa226e"
+      ],
+      "tree_sha": "dbedd28445168cd84fc97caee7bd18b4afb80771",
+      "html_url": "https://github.com/Dedac/Beam/commit/9806477d0f6e9a2a65be0cb49a590414f10d51c1",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Dedac/Beam:.github/workflows/fix-top-improvement.md",
+          "source_full_name": "Dedac/Beam",
+          "md_path": ".github/workflows/fix-top-improvement.md",
+          "commit_sha": "9806477d0f6e9a2a65be0cb49a590414f10d51c1",
+          "committed_at": "2026-04-22T14:47:40Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 73,
+          "file_deletions": 0,
+          "file_changes": 73,
+          "file_patch": "@@ -0,0 +1,73 @@\n+---\n+description: Automatically implements the highest priority improvement from the weekly improvements report.\n+on:\n+  issues:\n+    types: [opened]\n+if: startsWith(github.event.issue.title, 'Weekly Improvements:')\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+timeout-minutes: 30\n+tools:\n+  github:\n+    toolsets: [default]\n+  edit:\n+  bash: true\n+network:\n+  allowed:\n+    - dotnet\n+safe-outputs:\n+  mentions: false\n+  max-bot-mentions: 1\n+  create-pull-request:\n+    title-prefix: \"[auto-fix] \"\n+    labels: [automation, improvement]\n+    draft: true\n+    max: 1\n+  add-comment:\n+    max: 1\n+---\n+\n+# Implement Top Priority Improvement\n+\n+You are a senior .NET/Blazor developer working on the **Beam** application — a Blazor WebAssembly social media app hosted in ASP.NET Core with a SQL Server backend, EF Core, and .NET.\n+\n+## Context\n+\n+This workflow is triggered when the weekly improvements report issue is created. Your job is to read the issue, extract the **#1 highest priority improvement**, and implement it as a pull request.\n+\n+The triggering issue number is: #${{ github.event.issue.number }}\n+\n+## Your Task\n+\n+1. **Read the triggering issue** — Use the GitHub tools to fetch issue #${{ github.event.issue.number }} and read its full body.\n+\n+2. **Extract the #1 improvement** — Find the section marked with 🥇 (the highest priority item). Understand what it asks for and the implementation guidance provided.\n+\n+3. **Assess feasibility** — Determine if this improvement can be safely implemented as an automated code change. Consider:\n+   - Is it a code change (vs. infrastructure/process change)?\n+   - Can it be done without breaking existing functionality?\n+   - Is the scope contained enough for a single PR?\n+\n+4. **If feasible, implement the improvement:**\n+   - Make the necessary code changes using the edit tool\n+   - Follow existing code conventions and patterns in the repository\n+   - Build the solution with `dotnet build Beam.sln` to verify your changes compile\n+   - Keep changes minimal and focused on the single improvement\n+\n+5. **Create a pull request** with your changes. In the PR body, include:\n+   - A clear description of what was changed and why\n+   - A reference to the weekly improvements issue\n+   - Any manual testing or review steps the maintainer should follow\n+\n+6. **Comment on the triggering issue** to confirm what action was taken — whether a PR was created or why the improvement was skipped.\n+\n+## Guidelines\n+\n+- **Only implement the #1 priority item** — do not attempt multiple improvements.\n+- **If the improvement is not a code change** (e.g., \"upgrade to .NET 8\", \"add CI pipeline\", \"restructure project\"), comment on the issue explaining it requires manual intervention and skip the PR.\n+- **If you're unsure about a change**, err on the side of caution — comment explaining why you couldn't implement it rather than making a risky change.\n+- **Always verify your changes compile** before creating the PR.\n+- **Do not modify test infrastructure** or CI configuration unless that is explicitly the improvement.\n+- **Use `###` or lower** for all headers in PR body and comments.",
+          "snapshot_ref": "9806477d0f6e9a2a65be0cb49a590414f10d51c1",
+          "snapshot_blob_sha": "eb063c5e53f4505ff3c0d5e294e488efd1a0eadf",
+          "snapshot_file": "snapshots/Beam__Dedac__9806477d0f6e9a2a65be0cb49a590414f10d51c1__fix-top-improvement.md",
+          "snapshot_bytes": 3110,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Dedac/Beam\",\"generated_owner\":\"Dedac\",\"generated_repo\":\"Beam\",\"generated_workflow_path\":\".github/workflows/fix-top-improvement.lock.yml\",\"generated_workflow_file\":\"fix-top-improvement.lock.yml\",\"generated_html_url\":\"https://github.com/Dedac/Beam/blob/e1e3af92829f13caf0f9b586518e782d82004f34/.github/workflows/fix-top-improvement.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Dedac/Beam:.github/workflows/fix-top-improvement.md",
+      "source_full_name": "Dedac/Beam",
+      "md_path": ".github/workflows/fix-top-improvement.md",
+      "commit_sha": "e1e3af92829f13caf0f9b586518e782d82004f34",
+      "authored_at": "2026-04-22T15:31:15Z",
+      "committed_at": "2026-04-22T15:31:15Z",
+      "author_name": "Richard Goforth",
+      "author_email": "dedac@github.com",
+      "author_login": "Dedac",
+      "author_account_type": "User",
+      "committer_name": "Richard Goforth",
+      "committer_email": "dedac@github.com",
+      "committer_login": "Dedac",
+      "committer_account_type": "User",
+      "message": "Add workflow_dispatch trigger and bot support to fix-top-improvement\n\nEnables manual triggering and allows github-actions[bot] to trigger\nthe workflow when the weekly improvements issue is created via\nsafe-outputs.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c74b7a01d2d65417b9bdcfb1f494352e15d96dd2"
+      ],
+      "tree_sha": "d6434e31303b509bd123bd1286b8b789c29386e3",
+      "html_url": "https://github.com/Dedac/Beam/commit/e1e3af92829f13caf0f9b586518e782d82004f34",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Dedac/Beam:.github/workflows/fix-top-improvement.md",
+          "source_full_name": "Dedac/Beam",
+          "md_path": ".github/workflows/fix-top-improvement.md",
+          "commit_sha": "e1e3af92829f13caf0f9b586518e782d82004f34",
+          "committed_at": "2026-04-22T15:31:15Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 6,
+          "file_deletions": 3,
+          "file_changes": 9,
+          "file_patch": "@@ -3,7 +3,9 @@ description: Automatically implements the highest priority improvement from the\n on:\n   issues:\n     types: [opened]\n-if: startsWith(github.event.issue.title, 'Weekly Improvements:')\n+  workflow_dispatch:\n+if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, 'Weekly Improvements:')\n+bots: [\"github-actions[bot]\"]\n permissions:\n   contents: read\n   issues: read\n@@ -35,9 +37,10 @@ You are a senior .NET/Blazor developer working on the **Beam** application — a\n \n ## Context\n \n-This workflow is triggered when the weekly improvements report issue is created. Your job is to read the issue, extract the **#1 highest priority improvement**, and implement it as a pull request.\n+This workflow is triggered when the weekly improvements report issue is created, or manually via workflow_dispatch. Your job is to find the latest weekly improvements issue, extract the **#1 highest priority improvement**, and implement it as a pull request.\n \n-The triggering issue number is: #${{ github.event.issue.number }}\n+If triggered by an issue event, the triggering issue number is: #${{ github.event.issue.number }}\n+If triggered manually, use the GitHub tools to search for the most recent open issue with the title prefix \"Weekly Improvements:\" and the label \"improvements\".\n \n ## Your Task\n ",
+          "snapshot_ref": "e1e3af92829f13caf0f9b586518e782d82004f34",
+          "snapshot_blob_sha": "2dd9c1ac13d34193aad57e4e31ffdeacc1437336",
+          "snapshot_file": "snapshots/Beam__Dedac__e1e3af92829f13caf0f9b586518e782d82004f34__fix-top-improvement.md",
+          "snapshot_bytes": 3459,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Dedac/Beam\",\"generated_owner\":\"Dedac\",\"generated_repo\":\"Beam\",\"generated_workflow_path\":\".github/workflows/fix-top-improvement.lock.yml\",\"generated_workflow_file\":\"fix-top-improvement.lock.yml\",\"generated_html_url\":\"https://github.com/Dedac/Beam/blob/e1e3af92829f13caf0f9b586518e782d82004f34/.github/workflows/fix-top-improvement.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

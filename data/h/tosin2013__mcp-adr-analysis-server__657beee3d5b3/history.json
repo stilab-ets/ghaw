@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-release-notes-agent.md",
+    "source_full_name": "tosin2013/mcp-adr-analysis-server",
+    "source_owner": "tosin2013",
+    "source_repo": "mcp-adr-analysis-server",
+    "md_path": ".github/workflows/ai-release-notes-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/HEAD/.github/workflows/ai-release-notes-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "tosin2013/mcp-adr-analysis-server",
+      "generated_owner": "tosin2013",
+      "generated_repo": "mcp-adr-analysis-server",
+      "generated_workflow_path": ".github/workflows/ai-release-notes-agent.lock.yml",
+      "generated_workflow_file": "ai-release-notes-agent.lock.yml",
+      "generated_html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/ai-release-notes-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1
+    },
+    "collected_at_utc": "2026-08-04T12:43:38+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-release-notes-agent.md",
+      "source_full_name": "tosin2013/mcp-adr-analysis-server",
+      "md_path": ".github/workflows/ai-release-notes-agent.md",
+      "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "authored_at": "2026-02-16T16:07:01Z",
+      "committed_at": "2026-02-16T16:07:01Z",
+      "author_name": "Tosin Akinosho",
+      "author_email": "tosin.akinosho@gmail.com",
+      "author_login": "tosin2013",
+      "author_account_type": "User",
+      "committer_name": "Tosin Akinosho",
+      "committer_email": "tosin.akinosho@gmail.com",
+      "committer_login": "tosin2013",
+      "committer_account_type": "User",
+      "message": "feat: adopt GitHub Agentic Workflows (gh-aw) for CI/CD automation\n\nReplace traditional AI/automation workflows and validation agents with\n11 Markdown-based agentic workflows powered by Copilot:\n\nNew workflows:\n- CI Doctor: deep CI failure diagnosis with MCP-specific patterns\n- Docs Noob Tester: documentation gap finder from new developer POV\n- Dependabot Bundler: groups Dependabot PRs into logical bundles\n- AI Release Notes Agent: categorized release notes (replaces OpenAI version)\n- MCP Tool Checker: audits all 27 tools for consistency\n\nMigrated from .github/agents/ to gh-aw:\n- MCP Server Validation\n- AI Executor Integration\n- Knowledge Graph Validation\n- Deployment Pattern Validation\n- ESM Module Validation\n- Tool Chain Orchestrator Validation\n\nIncludes copilot-setup-steps.yml foundation and compiled .lock.yml files.\nRemoves create-issue-on-failure.yml, ai-release-notes.yml, and all\n.github/agents/ YAML files.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+      "parent_shas": [
+        "b5d7fc525441886ca7015ce8fa977a92afa8fdee"
+      ],
+      "tree_sha": "94d9cedc1579f0347912a1a0bba0cd649e1ef68f",
+      "html_url": "https://github.com/tosin2013/mcp-adr-analysis-server/commit/24ff1b346378d00273797f78ac63d1f8ea3c5423",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "Claude Code",
+      "attribution_confidence": "high",
+      "attribution_evidence": "Claude Code:claude_anthropic_coauthor",
+      "md_changes": [
+        {
+          "source_key": "tosin2013/mcp-adr-analysis-server:.github/workflows/ai-release-notes-agent.md",
+          "source_full_name": "tosin2013/mcp-adr-analysis-server",
+          "md_path": ".github/workflows/ai-release-notes-agent.md",
+          "commit_sha": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "committed_at": "2026-02-16T16:07:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 166,
+          "file_deletions": 0,
+          "file_changes": 166,
+          "file_patch": "@@ -0,0 +1,166 @@\n+---\n+name: 'AI-Enhanced Release Notes Agent'\n+description: 'Generates comprehensive release notes by analyzing commits, PRs, and MCP-specific changes since the previous tag'\n+on:\n+  push:\n+    tags:\n+      - 'v*'\n+  workflow_dispatch:\n+    inputs:\n+      tag:\n+        description: 'Tag to generate release notes for (e.g., v2.1.28). Defaults to latest tag.'\n+        required: false\n+permissions:\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+  contents: read\n+safe-outputs:\n+  add-comment:\n+  update-issue:\n+tools:\n+  github:\n+    toolsets: [actions, pull_requests, issues]\n+  bash: true\n+  web-fetch:\n+post-steps:\n+  - uses: softprops/action-gh-release@v2\n+    with:\n+      tag_name: ${{ github.ref_name || inputs.tag }}\n+      body_path: ./release-notes.md\n+      draft: false\n+      generate_release_notes: false\n+---\n+\n+# AI-Enhanced Release Notes Agent\n+\n+You generate comprehensive, well-categorized release notes for the mcp-adr-analysis-server by analyzing all commits and changes since the previous release tag.\n+\n+## Context\n+\n+This is the **mcp-adr-analysis-server** — a Model Context Protocol server with 27 AI-powered tools. Release notes should be useful to:\n+\n+1. **Users** who install the npm package and want to know what changed\n+2. **Contributors** who want to understand the evolution of the codebase\n+3. **MCP ecosystem** users who care about protocol compatibility and new tools\n+\n+## Process\n+\n+### Step 1: Determine version range\n+\n+Using bash (git commands):\n+\n+1. If triggered by a tag push, use `$GITHUB_REF_NAME` as the current version\n+2. If triggered manually with a tag input, use that tag\n+3. Otherwise, use the latest tag: `git describe --tags --abbrev=0`\n+4. Find the previous tag: `git describe --tags --abbrev=0 HEAD^` (or `git tag --sort=-version:refname | sed -n '2p'`)\n+\n+### Step 2: Analyze changes\n+\n+Using bash, gather:\n+\n+1. **Commit log**: `git log --pretty=format:\"%h %s (%an)\" {prev_tag}..{current_tag}`\n+2. **Files changed**: `git diff --stat {prev_tag}..{current_tag}`\n+3. **Diff summary**: `git diff --shortstat {prev_tag}..{current_tag}`\n+4. **package.json version**: `cat package.json | grep version`\n+\n+Using the GitHub tool: 5. **Merged PRs**: List PRs merged between the two tags 6. **Related issues**: Issues closed by the merged PRs\n+\n+### Step 3: Categorize changes\n+\n+Categorize each commit/PR using these categories (matching the release-drafter.yml config):\n+\n+| Category         | Commit Prefixes / Indicators                   |\n+| ---------------- | ---------------------------------------------- |\n+| Features         | `feat:`, `feature:`, new files in `src/tools/` |\n+| Bug Fixes        | `fix:`, `bugfix:`, `bug:`                      |\n+| Tests            | `test:`, changes only in `tests/`              |\n+| Documentation    | `docs:`, changes only in `docs/` or `*.md`     |\n+| Maintenance      | `chore:`, `refactor:`, `ci:`, `build:`         |\n+| Architecture     | `adr:`, changes in `docs/adrs/`, `patterns/`   |\n+| Security         | `security:`, changes in security-related files |\n+| Dependencies     | `deps:`, `deps-dev:`, `bump`, Dependabot PRs   |\n+| Breaking Changes | `BREAKING:`, `breaking:`, or noted in PR body  |\n+\n+### Step 4: Highlight MCP-specific changes\n+\n+Specifically call out:\n+\n+1. **New or modified tools**: Any changes in `src/tools/` — list the tool name and what changed\n+2. **MCP SDK version changes**: If `@modelcontextprotocol/sdk` was updated, note the version change\n+3. **Pattern updates**: Changes to `patterns/infrastructure/*.yaml`\n+4. **Knowledge graph changes**: Updates to memory/state management\n+5. **Tool count changes**: If the total tool count changed from 27\n+\n+### Step 5: Write release notes\n+\n+Write the release notes to `release-notes.md` in the following format:\n+\n+````markdown\n+## What's Changed in {version}\n+\n+{1-2 sentence summary of the most important changes in this release}\n+\n+### Features\n+\n+- {description} (#{pr_number}) @{author}\n+\n+### Bug Fixes\n+\n+- {description} (#{pr_number}) @{author}\n+\n+### Tests\n+\n+- {description}\n+\n+### Documentation\n+\n+- {description}\n+\n+### Maintenance\n+\n+- {description}\n+\n+### Architecture\n+\n+- {description}\n+\n+### Security\n+\n+- {description}\n+\n+### Dependencies\n+\n+- {description}\n+\n+### MCP-Specific Changes\n+\n+- **Tools**: {new/modified/removed tools}\n+- **SDK**: {version change if any}\n+- **Patterns**: {pattern changes if any}\n+\n+### Release Statistics\n+\n+- **Commits**: {count}\n+- **Files changed**: {count}\n+- **Contributors**: {list of @authors}\n+\n+### Installation\n+\n+```bash\n+npm install -g mcp-adr-analysis-server@{version}\n+```\n+````\n+\n+**Full Changelog**: https://github.com/tosin2013/mcp-adr-analysis-server/compare/{prev_tag}...{current_tag}\n+\n+```\n+\n+Omit any category section that has no entries. Do not include empty sections.\n+\n+### Step 6: Verify\n+\n+- Ensure `release-notes.md` exists and is non-empty\n+- Ensure the version number appears in the file\n+- The post-step will use `softprops/action-gh-release@v2` to publish the release notes as the GitHub Release body\n+```",
+          "snapshot_ref": "24ff1b346378d00273797f78ac63d1f8ea3c5423",
+          "snapshot_blob_sha": "532b1ffb9a1d273aca2bdc4522ae1a328038daf4",
+          "snapshot_file": "snapshots/mcp-adr-analysis-server__tosin2013__24ff1b346378d00273797f78ac63d1f8ea3c5423__ai-release-notes-agent.md",
+          "snapshot_bytes": 4913,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"tosin2013/mcp-adr-analysis-server\",\"generated_owner\":\"tosin2013\",\"generated_repo\":\"mcp-adr-analysis-server\",\"generated_workflow_path\":\".github/workflows/ai-release-notes-agent.lock.yml\",\"generated_workflow_file\":\"ai-release-notes-agent.lock.yml\",\"generated_html_url\":\"https://github.com/tosin2013/mcp-adr-analysis-server/blob/6ef5c701748f99969487a009d025f00b0f16c3f9/.github/workflows/ai-release-notes-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

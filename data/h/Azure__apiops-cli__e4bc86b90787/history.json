@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/apiops-cli:.github/workflows/issue-go-yes.md",
+    "source_full_name": "Azure/apiops-cli",
+    "source_owner": "Azure",
+    "source_repo": "apiops-cli",
+    "md_path": ".github/workflows/issue-go-yes.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/apiops-cli/blob/HEAD/.github/workflows/issue-go-yes.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/apiops-cli",
+      "generated_owner": "Azure",
+      "generated_repo": "apiops-cli",
+      "generated_workflow_path": ".github/workflows/issue-go-yes.lock.yml",
+      "generated_workflow_file": "issue-go-yes.lock.yml",
+      "generated_html_url": "https://github.com/Azure/apiops-cli/blob/4cdd99ca09ac899c55b5ec582e251ca1f8143a8c/.github/workflows/issue-go-yes.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 1,
+    "event_count": 1,
+    "snapshot_count": 1,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 1
+    },
+    "collected_at_utc": "2026-08-04T11:24:39+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/apiops-cli:.github/workflows/issue-go-yes.md",
+      "source_full_name": "Azure/apiops-cli",
+      "md_path": ".github/workflows/issue-go-yes.md",
+      "commit_sha": "45c3345d0bc0c9f6f551ccbcbf0951a3391c94be",
+      "authored_at": "2026-07-02T18:23:31Z",
+      "committed_at": "2026-07-02T18:23:31Z",
+      "author_name": "Elizabeth Maher",
+      "author_email": "enewman@microsoft.com",
+      "author_login": "EMaher",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(squad): start coding-agent sessions for squad:copilot issues; rename go/no-go workflows (#219)\n\n* fix(squad): start coding-agent sessions for squad:copilot issues; rename go/no-go workflows\n\n\n\nAlso rename the issue go/no-go decision workflows for discoverability:\n- issue-nogo.yml   -> issue-go-no.yml      (\"Issue Go: No\")\n- issue-assign.md  -> issue-go-yes.md      (\"Issue Go: Yes\")\n- issue-clarify.md -> issue-go-clarify.md  (\"Issue Go: Clarify\")\nDisplay names set via gh-aw frontmatter `name:`; agentic .lock.yml recompiled.\n\nNOTE: requires a COPILOT_ASSIGN_TOKEN repo secret (a PAT that can assign the\ncoding agent) for the assignment step to succeed.\n\nRefs #194\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* docs(squad): link COPILOT_ASSIGN_TOKEN setup instructions in team.md\n\nAdd a \"Setting up COPILOT_ASSIGN_TOKEN\" note to the Coding Agent section\nwith links to fine-grained PAT creation, repository-secret setup, and the\nGitHub docs describing the exact token/permissions required to assign the\nCopilot coding agent. Docs-only; no workflow/code changes.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* feat(squad): nudge maintainer to assign Copilot when auto-assign is off\n\nAdd a deterministic post-check step to the \"Issue Go: Yes\" workflow that\nchecks whether the approved (go:yes, squad:copilot) issue is actually\nassigned to the Copilot coding agent. When the COPILOT_ASSIGN_TOKEN secret\nis not configured (so squad-heartbeat cannot auto-assign), it posts a\ncomment tagging the human assignee(s) explaining they must assign the issue\nto Copilot to start the work. When the token IS configured, the step is a\nno-op to avoid noise, since Ralph will auto-assign shortly.\n\nRuns in the injection-safe post-check job (not the agentic prompt), so the\nlogic is deterministic. Grants that job issues:write to post the comment.\n\nSecurity note: issue-go-yes.lock.yml now references the COPILOT_ASSIGN_TOKEN\nsecret only inside an expression (secrets.COPILOT_ASSIGN_TOKEN != '') to\ndetect presence; the secret value is never read, logged, or sent anywhere.\n\nRefs #194\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* refactor(squad): post Copilot-assignment nudge via agent, not post-check\n\nMove the \"assign this issue to Copilot\" nudge out of the deterministic\npost-check job (which required issues:write) into the agent's single\nassignment comment, posted through the existing add-comment safe output.\nThe post-check job is back to issues:read.\n\nBecause the agent cannot read secrets, the gating is computed\ndeterministically in the trusted \"Prepare assignment context\" shell step:\nNUDGE_NEEDED is true only when COPILOT_ASSIGN_TOKEN is absent (evaluated as\nthe boolean `secrets.COPILOT_ASSIGN_TOKEN != ''`, never the value) AND the\ncoding agent is not already an assignee. That result is injected into the\ntrusted system-policy.md so the agent includes or omits the\n\"### 🤖 Action needed\" section accordingly.\n\nSecurity note: the raw COPILOT_ASSIGN_TOKEN value is materialized in exactly\none place in the compiled lock — gh-aw's \"Redact secrets in logs\" step — so\nits value is scrubbed from agent logs and is never placed in the agent\ninference step or the prepare step (which only see the boolean).\n\nRefs #194\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* fix(squad): keep COPILOT_ASSIGN_TOKEN out of the posted issue comment\n\nThe Copilot-assignment nudge must not expose workflow internals in the\npublic issue thread. Remove the \".squad/team.md / COPILOT_ASSIGN_TOKEN\nsetup\" reference from the nudge the agent posts, and add explicit guards\n(system policy + comment-format template) instructing the agent to never\nmention COPILOT_ASSIGN_TOKEN, repository secrets, or workflow internals in\nthe comment. The nudge now simply asks the assignee to assign the issue to\nCopilot from the Assignees menu.\n\nRefs #194\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n* Potential fix for pull request finding\n\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "926f2f1af1232651fb60e45841c735f17fed9cac"
+      ],
+      "tree_sha": "9a3ed566bde97c218557c412be9119b941e5de6c",
+      "html_url": "https://github.com/Azure/apiops-cli/commit/45c3345d0bc0c9f6f551ccbcbf0951a3391c94be",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/apiops-cli:.github/workflows/issue-go-yes.md",
+          "source_full_name": "Azure/apiops-cli",
+          "md_path": ".github/workflows/issue-go-yes.md",
+          "commit_sha": "45c3345d0bc0c9f6f551ccbcbf0951a3391c94be",
+          "committed_at": "2026-07-02T18:23:31Z",
+          "event_status": "renamed",
+          "previous_path": ".github/workflows/issue-assign.md",
+          "file_additions": 37,
+          "file_deletions": 1,
+          "file_changes": 38,
+          "file_patch": "@@ -1,9 +1,12 @@\n ---\n+name: \"Issue Go: Yes\"\n description: >\n   Assign an approved issue (go:yes) to the maintainer who approved it and route it to\n   squad areas. Reads the prior triage analysis and the squad routing table, applies the\n   squad label plus matched squad:{member} labels (and squad:copilot to hand the issue\n-  off to the Copilot coding agent), and posts an assignment rationale comment.\n+  off to the Copilot coding agent), and posts an assignment rationale comment that,\n+  when auto-assign is not configured (no COPILOT_ASSIGN_TOKEN), also nudges the\n+  assignee to assign the Copilot coding agent so work can begin.\n \n on:\n   issues:\n@@ -44,6 +47,10 @@ steps:\n       ISSUE_TITLE: ${{ github.event.issue.title }}\n       GO_YES_SENDER: ${{ github.event.sender.login }}\n       GH_TOKEN: ${{ github.token }}\n+      # 'true' only when the repo secret is set — i.e. squad-heartbeat can\n+      # auto-assign the coding agent. The secret VALUE is never exposed; only\n+      # this boolean is placed in the environment.\n+      HAS_ASSIGN_TOKEN: ${{ secrets.COPILOT_ASSIGN_TOKEN != '' }}\n     run: |\n       mkdir -p /tmp/gh-aw/agent\n \n@@ -70,6 +77,22 @@ steps:\n         printf '%s\\n' '_No prior triage analysis comment found — route from the issue content alone._' >> \"$USER_FILE\"\n       fi\n \n+      # ---------------------------------------------------------------------\n+      # Copilot coding-agent hand-off status (deterministic, trusted context).\n+      # NUDGE_NEEDED is true only when auto-assign is unavailable AND the coding\n+      # agent is not already an assignee — so the agent should nudge the human.\n+      # ---------------------------------------------------------------------\n+      CURRENT_ASSIGNEES=$(gh issue view \"$ISSUE_NUMBER\" --repo \"$GITHUB_REPOSITORY\" --json assignees \\\n+        --jq '[.assignees[].login] | join(\",\")' 2>/dev/null | tr 'A-Z' 'a-z' || printf '')\n+      AGENT_ALREADY_ASSIGNED=false\n+      if printf ',%s,' \"$CURRENT_ASSIGNEES\" | grep -qE ',(copilot-swe-agent\\[bot\\]|copilot-swe-agent|copilot),'; then\n+        AGENT_ALREADY_ASSIGNED=true\n+      fi\n+      NUDGE_NEEDED=false\n+      if [ \"${HAS_ASSIGN_TOKEN:-false}\" != \"true\" ] && [ \"$AGENT_ALREADY_ASSIGNED\" != \"true\" ]; then\n+        NUDGE_NEEDED=true\n+      fi\n+\n       # ---------------------------------------------------------------------\n       # SYSTEM context (trusted): assignment policy + routing/team tables.\n       # Single-quoted printf args keep backticks/`$` literal (no expansion).\n@@ -85,6 +108,11 @@ steps:\n         printf '%s\\n' '- Apply one `squad:{member}` label for every squad area the issue touches, per the routing table below.'\n         printf '%s\\n' '- Apply the `squad:copilot` label to hand the issue off to the Copilot coding agent to begin implementation.'\n         printf '%s\\n' '- Never apply `go:*`, `priority:*`, `override:*`, or `type:*` labels.'\n+        if [ \"$NUDGE_NEEDED\" = \"true\" ]; then\n+          printf -- '- **Copilot hand-off nudge REQUIRED:** no coding agent is assigned to this issue yet. In your single assignment comment, add an `### 🤖 Action needed` section that @-mentions **@%s** and tells them to assign this issue to Copilot from the Assignees menu so implementation can begin. Do NOT mention COPILOT_ASSIGN_TOKEN, repository secrets, `.squad/team.md`, or any workflow internals in the comment.\\n' \"$GO_YES_SENDER\"\n+        else\n+          printf '%s\\n' '- **Copilot hand-off nudge:** NOT required — do not add any Copilot-assignment nudge to the comment (auto-assign is configured or the coding agent is already assigned).'\n+        fi\n         printf '\\n'\n       } > \"$SYS_FILE\"\n \n@@ -226,6 +254,9 @@ context — you do not decide the assignee yourself.\n      `squad` label, `squad:copilot`, and the most relevant matched member labels.\n 6. **Comment** exactly once with `add_comment`, explaining the assignee, the matched\n    squad areas, and the routing evidence (which routing-table entries matched and why).\n+   If the system policy says a **Copilot hand-off nudge** is REQUIRED, append the\n+   `### 🤖 Action needed` section (described in that policy) to this same comment. If it\n+   says the nudge is NOT required, omit that section entirely.\n \n ## Assignment comment format\n \n@@ -241,6 +272,11 @@ context — you do not decide the assignee yourself.\n \n #### Notes\n <Any routing uncertainty, or \"none\".>\n+\n+<!-- Include the section below ONLY when the system policy says a Copilot hand-off nudge is REQUIRED. Omit it otherwise. Never mention COPILOT_ASSIGN_TOKEN, secrets, or workflow internals here. -->\n+### 🤖 Action needed\n+@<assignee> — this issue is not assigned to the Copilot coding agent yet, so no agent\n+session has started. Please assign it to Copilot from the Assignees menu to begin work.\n ```\n \n ## Security Rules",
+          "snapshot_ref": "45c3345d0bc0c9f6f551ccbcbf0951a3391c94be",
+          "snapshot_blob_sha": "0fba62d66e2d86e28a55c8608789fc23a466fa67",
+          "snapshot_file": "snapshots/apiops-cli__Azure__45c3345d0bc0c9f6f551ccbcbf0951a3391c94be__issue-go-yes.md",
+          "snapshot_bytes": 13633,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/apiops-cli\",\"generated_owner\":\"Azure\",\"generated_repo\":\"apiops-cli\",\"generated_workflow_path\":\".github/workflows/issue-go-yes.lock.yml\",\"generated_workflow_file\":\"issue-go-yes.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/apiops-cli/blob/4cdd99ca09ac899c55b5ec582e251ca1f8143a8c/.github/workflows/issue-go-yes.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

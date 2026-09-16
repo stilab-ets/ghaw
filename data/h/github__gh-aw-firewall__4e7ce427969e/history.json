@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+    "source_full_name": "github/gh-aw-firewall",
+    "source_owner": "github",
+    "source_repo": "gh-aw-firewall",
+    "md_path": ".github/workflows/network-isolation-test.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/github/gh-aw-firewall/blob/HEAD/.github/workflows/network-isolation-test.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "github/gh-aw-firewall",
+      "generated_owner": "github",
+      "generated_repo": "gh-aw-firewall",
+      "generated_workflow_path": ".github/workflows/network-isolation-test.lock.yml",
+      "generated_workflow_file": "network-isolation-test.lock.yml",
+      "generated_html_url": "https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/network-isolation-test.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:48:11+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/network-isolation-test.md",
+      "commit_sha": "9d1b99b868510fff4ca7c464c324ad61079a2d1d",
+      "authored_at": "2026-06-24T16:07:11Z",
+      "committed_at": "2026-06-24T16:07:11Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "test: add manual network-isolation smoke workflow (#5492)\n\nMinimal workflow_dispatch test exercising the experimental AWF\nnetwork-isolation topology (sandbox.agent.network-isolation: true) with\nfirewall and gateway/mcpg images pinned to latest. Two curl egress checks:\nallowed github.com should succeed, non-allowed example.com should be blocked.\n\nAdds the v0.81.2 gh-aw-actions/setup pin to actions-lock.json (kept alongside\nthe v0.81.0 entries used by other locks) since network-isolation requires\ngh aw v0.81.2+.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "dabee9debf33b0e801e94e79e7fc4ac9072751f6"
+      ],
+      "tree_sha": "aa74e145810139c3f2a32d28df5e0b083470e271",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/9d1b99b868510fff4ca7c464c324ad61079a2d1d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/network-isolation-test.md",
+          "commit_sha": "9d1b99b868510fff4ca7c464c324ad61079a2d1d",
+          "committed_at": "2026-06-24T16:07:11Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 59,
+          "file_deletions": 0,
+          "file_changes": 59,
+          "file_patch": "@@ -0,0 +1,59 @@\n+---\n+description: Network Isolation Test - Minimal manual smoke test for the experimental AWF network-isolation topology\n+on:\n+  workflow_dispatch:\n+permissions:\n+  contents: read\n+engine:\n+  id: copilot\n+  model: claude-haiku-4-5\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+tools:\n+  bash:\n+    - \"*\"\n+sandbox:\n+  mcp:\n+    version: \"latest\"\n+  agent:\n+    network-isolation: true\n+    version: \"latest\"\n+strict: false\n+max-turns: 5\n+timeout-minutes: 10\n+---\n+\n+# Network Isolation Test\n+\n+This is a minimal, manually-triggered smoke test for the **experimental AWF\n+network-isolation topology** (`sandbox.agent.network-isolation: true`). It\n+confirms the Docker-network egress model still enforces the domain allowlist.\n+\n+Run the two checks below and report the results in your final message.\n+\n+## 1. Allowed domain is reachable\n+\n+`github.com` is on the allowlist, so this request should succeed:\n+\n+```bash\n+curl -sS -o /dev/null -w \"allowed=%{http_code}\\n\" https://api.github.com/zen\n+```\n+\n+## 2. Non-allowed domain is blocked\n+\n+`example.com` is **not** on the allowlist, so this request should fail\n+(non-zero exit / connection error / proxy denial):\n+\n+```bash\n+curl -sS -o /dev/null -w \"denied=%{http_code}\\n\" https://example.com && \\\n+  echo \"UNEXPECTED: example.com was reachable\" || \\\n+  echo \"OK: example.com was blocked\"\n+```\n+\n+## Report\n+\n+Summarize whether network isolation is enforcing the egress allowlist as\n+expected: the allowed domain should return an HTTP status code, and the\n+non-allowed domain should be blocked.",
+          "snapshot_ref": "9d1b99b868510fff4ca7c464c324ad61079a2d1d",
+          "snapshot_blob_sha": "f9217a42cc6e01c6c6bae472797a0f63af814b0e",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__9d1b99b868510fff4ca7c464c324ad61079a2d1d__network-isolation-test.md",
+          "snapshot_bytes": 1495,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/network-isolation-test.lock.yml\",\"generated_workflow_file\":\"network-isolation-test.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/network-isolation-test.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/network-isolation-test.md",
+      "commit_sha": "811958c8c44da29c401e578fad9240b46c3aa44b",
+      "authored_at": "2026-06-25T00:10:01Z",
+      "committed_at": "2026-06-25T00:10:01Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: pin network-isolation-test to concrete release tags (#5495)\n\n* fix: pin network-isolation-test to concrete release tags\n\nThe workflow pinned firewall and mcpg to \"latest\", but install_awf_binary.sh\ntreats the version as a literal release tag and builds\nreleases/download/latest/checksums.txt, which 404s (there is no GitHub release\ntagged \"latest\"). The run failed at the Install AWF binary step with curl exit\ncode 22.\n\nPin to concrete latest tags instead: firewall v0.27.10 and mcpg v0.3.30. The\nbinary download and all GHCR image tags (agent/api-proxy/squid 0.27.10,\ngh-aw-mcpg v0.3.30) were verified to resolve.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: raise network-isolation-test turn budget to avoid hard-cap 403\n\nRun 28112808921 failed: the Copilot api-proxy returned a non-retryable 403\non the agent's LLM call. Root cause was the maxRuns hard cap (derived from\nmax-turns) — api-proxy guards return 403 once AWF_MAX_RUNS is exceeded\n(containers/api-proxy/guards/common-guard-checks.js:84). With max-turns: 5 the\nagent exhausted its budget inspecting awf (which/--version/--help) before\nfinishing the two curl egress checks.\n\nRaise max-turns 5 -> 15 (maxRuns 15) and instruct the agent to run the two\ncurl commands directly without introspecting the awf binary.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* test: drop sudo from network-isolation lock (keep artifact-upload only)\n\nManual lock edit to validate rootless network-isolation: removes sudo from\nthe awf binary install (tee/chmod) and the awf invocation, keeping only the\nartifact-upload chmod. Note: regenerated by gh aw compile / postprocess.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* chore: recompile network-isolation-test lock with gh-aw main (rootless)\n\nRecompiled with `gh-aw compile --gh-aw-ref main`, producing a fully\nrootless lock: install_awf_binary.sh v0.27.10 --rootless (no sudo),\ndigest-pinned container images, and gh-aw-main setup action.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* chore: pin setup action to gh-aw rootless-install fix\n\nRecompile against gh-aw branch fix/rootless-awf-install-user-prefix\n(c2d22aa3ac) so the rootless install writes awf to a user-writable\n$HOME/.local prefix and exports it to $GITHUB_PATH, fixing the\n\"--rootless requires write access to /usr/local/lib/awf\" failure on\nstandard ubuntu-latest runners.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix: exclude network-isolation-test from postprocess (release-mode)\n\nThe network-isolation smoke test intentionally exercises the PUBLISHED awf\nbinary (rootless bundle install) and pinned GHCR container images. Postprocess\nwas rewriting --skip-pull -> --build-local, which the standalone awf bundle\nrejects (\"--build-local requires a full repository checkout\"). Add a\nrelease-mode exclusion set so this lock keeps the raw compiled output:\nrootless install + --skip-pull with pre-downloaded pinned images.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* ci: recompile network-isolation-test against gh-aw main\n\nRename frontmatter sandbox.agent.network-isolation to sudo:false (gh-aw\nrenamed the property; sudo:false enables the --network-isolation topology).\nSetup action now pins gh-aw main HEAD 919d05cc, which includes the merged\nrootless install fix (#41310). Lock retains --rootless --skip-pull, pinned\nreleased images, 0 sudo.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* ci: add build-test-network-isolation smoke workflow\n\nNetwork-isolation variant of the build-test matrix: sudo:false topology,\nlatest released firewall (0.27.10) and mcpg (v0.3.30) container images, no\nlocal builds (--rootless --skip-pull). Setup action pinned to gh-aw main\n(919d05cc, includes rootless install fix #41310). Added the lock to\nreleaseModeLockFiles so postprocess keeps the released bundle/images\ninstead of rewriting to --build-local.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "75ab26ca896b053ffcbead5e6a0f0bb77e1deebf"
+      ],
+      "tree_sha": "e7c75d4630a65211e6d600b9bc4743b48997ab16",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/811958c8c44da29c401e578fad9240b46c3aa44b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/network-isolation-test.md",
+          "commit_sha": "811958c8c44da29c401e578fad9240b46c3aa44b",
+          "committed_at": "2026-06-25T00:10:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 5,
+          "file_changes": 12,
+          "file_patch": "@@ -16,12 +16,12 @@ tools:\n     - \"*\"\n sandbox:\n   mcp:\n-    version: \"latest\"\n+    version: v0.3.30\n   agent:\n-    network-isolation: true\n-    version: \"latest\"\n+    sudo: false\n+    version: v0.27.10\n strict: false\n-max-turns: 5\n+max-turns: 15\n timeout-minutes: 10\n ---\n \n@@ -31,7 +31,9 @@ This is a minimal, manually-triggered smoke test for the **experimental AWF\n network-isolation topology** (`sandbox.agent.network-isolation: true`). It\n confirms the Docker-network egress model still enforces the domain allowlist.\n \n-Run the two checks below and report the results in your final message.\n+Run the two `curl` checks below directly and report the results in your final\n+message. Do not inspect the `awf` binary, its `--help`, or its version — just\n+run the two commands and summarize their output.\n \n ## 1. Allowed domain is reachable\n ",
+          "snapshot_ref": "811958c8c44da29c401e578fad9240b46c3aa44b",
+          "snapshot_blob_sha": "827d25a0297ddb001298e2df451edf8b04e7f077",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__811958c8c44da29c401e578fad9240b46c3aa44b__network-isolation-test.md",
+          "snapshot_bytes": 1619,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/network-isolation-test.lock.yml\",\"generated_workflow_file\":\"network-isolation-test.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/network-isolation-test.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/network-isolation-test.md",
+      "commit_sha": "3061640abd66a623567488a891f5a6ed307ab995",
+      "authored_at": "2026-07-20T20:20:10Z",
+      "committed_at": "2026-07-20T20:20:10Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: upgrade gh-aw extension to v0.82.14 pre-release (#6446)\n\n- Upgraded gh-aw from v0.82.13 to v0.82.14 via gh aw upgrade --pre-releases\n- Applied codemods (engine.model to top-level model)\n- Updated actions-lock.json with latest action versions\n- Recompiled all workflow lock files\n- Ran post-processing to apply local build patches for CI\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "c36473b10c23a326047923197b4ab64bfa37640e"
+      ],
+      "tree_sha": "db4f2e5c1730b9eb5fcad5f3462db36c6635ae64",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/3061640abd66a623567488a891f5a6ed307ab995",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/network-isolation-test.md",
+          "commit_sha": "3061640abd66a623567488a891f5a6ed307ab995",
+          "committed_at": "2026-07-20T20:20:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 2,
+          "file_changes": 4,
+          "file_patch": "@@ -4,9 +4,9 @@ on:\n   workflow_dispatch:\n permissions:\n   contents: read\n+model: claude-haiku-4-5\n engine:\n   id: copilot\n-  model: claude-haiku-4-5\n network:\n   allowed:\n     - defaults\n@@ -58,4 +58,4 @@ curl -sS -o /dev/null -w \"denied=%{http_code}\\n\" https://example.com && \\\n \n Summarize whether network isolation is enforcing the egress allowlist as\n expected: the allowed domain should return an HTTP status code, and the\n-non-allowed domain should be blocked.\n+non-allowed domain should be blocked.\n\\ No newline at end of file",
+          "snapshot_ref": "3061640abd66a623567488a891f5a6ed307ab995",
+          "snapshot_blob_sha": "08bf15b4df665887b5731887b3159aa334b25ef1",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__3061640abd66a623567488a891f5a6ed307ab995__network-isolation-test.md",
+          "snapshot_bytes": 1616,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/network-isolation-test.lock.yml\",\"generated_workflow_file\":\"network-isolation-test.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/network-isolation-test.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/network-isolation-test.md",
+      "commit_sha": "c2e79f2cd0637f016684acb926c420f007c02acd",
+      "authored_at": "2026-07-23T18:05:10Z",
+      "committed_at": "2026-07-23T18:05:10Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: add required supply-chain scan on every PR (#6530)\n\n* ci: add required supply-chain scan on every PR\n\nAdd a deterministic (non-agentic) workflow that runs\n`gh aw compile --strict --syft --grype --grant` on every pull request.\n\nThe Anchore scanners run via Docker against the container images recorded\nin the compiled `*.lock.yml` manifests:\n- --syft:  generate an SBOM per image\n- --grype: scan for known CVEs / insecure libraries\n- --grant: enforce the license allowlist in `.grant.yaml`\n\n`--strict` makes any finding or scan error fail the job so it acts as a\nreal gate. Add `.grant.yaml` at the repo root since `--grant` requires it.\n\nThe \"Compile + Syft/Grype/Grant\" check is added to the \"CI passes before\nmerging to main\" ruleset so it is required before merge.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 92b2407f-7d59-464d-afe7-bc21bd71bddb\n\n* ci: address PR review feedback on supply-chain-scan workflow and grant policy\n\n- Fix .grant.yaml: derive allowlist from actual syft scans of squid/agent/api-proxy\n  images; set require-known-license: false for Ubuntu's non-SPDX license strings\n- Fix workflow line 16: correct required-check context name to\n  'Supply Chain Scan / Compile + Syft/Grype/Grant'\n- Fix workflow line 38: update actions/checkout to v7.0.1 SHA\n  (3d3c42e5) matching the rest of the repo (was v6.0.2 SHA mislabelled as v4)\n- Fix workflow line 50: remove mutable --grype/--grant flags from gh aw compile;\n  replace with explicit Docker steps pinned to reviewed digests:\n  grype v0.116.0 (sha256:fd4ab4d1) and grant v0.6.8 (sha256:17246361)\n  with GHCR auth via docker login + packages: read permission\n\n* ci: don't fail supply-chain scan on strict mode; use local awf builds\n\nThe supply-chain-scan compile step used `gh aw compile --strict`, which\nforced repo-wide strict validation and rejected 24 workflows that pin\n`sandbox.mcp.version` (an internal implementation detail disallowed in\nstrict mode). The Syft/Grype/Grant scanners don't require strict, so drop\nthe flag: `gh aw compile --syft`.\n\nSeparately, make the smoke/build-test workflows build awf/firewall from\nthe repo's own source and use the compiler-default MCP gateway image:\n\n- Remove `sandbox.mcp.version` and `sandbox.agent.version` pins from 22\n  workflow .md files. Without the mcp pin the compiler uses its default\n  gateway (v0.4.3) instead of the stale pinned v0.3.x.\n- Empty the postprocess release-mode exclusion set so the\n  network-isolation variants also build locally (--build-local); the\n  injected full-repo checkout makes that valid everywhere.\n- Update the now-inaccurate \"no local builds\" note in\n  build-test-network-isolation.md.\n\nRecompiled all lock files and re-ran postprocess-smoke-workflows.ts.\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: 1076089d-35ad-4339-8143-58e140987894\n\n---------\n\nCo-authored-by: Copilot App <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCopilot-Session: 92b2407f-7d59-464d-afe7-bc21bd71bddb\nCopilot-Session: 1076089d-35ad-4339-8143-58e140987894",
+      "parent_shas": [
+        "dcdb3b497fda94667fa4496e463e65b9e8677aeb"
+      ],
+      "tree_sha": "00b464fe0dd7f7c3993cd617a7b93dd7dc64b678",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/c2e79f2cd0637f016684acb926c420f007c02acd",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/network-isolation-test.md",
+          "commit_sha": "c2e79f2cd0637f016684acb926c420f007c02acd",
+          "committed_at": "2026-07-23T18:05:10Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 0,
+          "file_deletions": 3,
+          "file_changes": 3,
+          "file_patch": "@@ -15,11 +15,8 @@ tools:\n   bash:\n     - \"*\"\n sandbox:\n-  mcp:\n-    version: v0.3.30\n   agent:\n     sudo: false\n-    version: v0.27.10\n strict: false\n max-turns: 15\n timeout-minutes: 10",
+          "snapshot_ref": "c2e79f2cd0637f016684acb926c420f007c02acd",
+          "snapshot_blob_sha": "a1f8db370539e6df7063422d75075adae8b01571",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__c2e79f2cd0637f016684acb926c420f007c02acd__network-isolation-test.md",
+          "snapshot_bytes": 1566,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/network-isolation-test.lock.yml\",\"generated_workflow_file\":\"network-isolation-test.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/network-isolation-test.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+      "source_full_name": "github/gh-aw-firewall",
+      "md_path": ".github/workflows/network-isolation-test.md",
+      "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "authored_at": "2026-07-23T23:02:50Z",
+      "committed_at": "2026-07-23T23:02:50Z",
+      "author_name": "Landon Cox",
+      "author_email": "landon.cox@microsoft.com",
+      "author_login": "lpcox",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci: use github.token for copilot-engine workflows (drop removed COPILOT_GITHUB_TOKEN secret) (#6556)\n\n* ci: add copilot-requests perm, use github.token for copilot engine\n\nThe COPILOT_GITHUB_TOKEN secret was removed from the repo, causing every\ncopilot-engine workflow that referenced secrets.COPILOT_GITHUB_TOKEN to\nsend an empty token to the api-proxy and get HTTP 401 from\napi.githubcopilot.com. Adding the copilot-requests: write permission lets\ngh-aw compile the built-in github.token as COPILOT_GITHUB_TOKEN instead,\nremoving the dependency on the deleted secret.\n\n* ci: fix BYOK copilot token source\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "9bfc72605e300278fe2ee93171b65db8ccaa9e6b"
+      ],
+      "tree_sha": "b4c8e557b01c145c68a8b3a54e0522567891ad4e",
+      "html_url": "https://github.com/github/gh-aw-firewall/commit/02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "github/gh-aw-firewall:.github/workflows/network-isolation-test.md",
+          "source_full_name": "github/gh-aw-firewall",
+          "md_path": ".github/workflows/network-isolation-test.md",
+          "commit_sha": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "committed_at": "2026-07-23T23:02:50Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -3,6 +3,7 @@ description: Network Isolation Test - Minimal manual smoke test for the experime\n on:\n   workflow_dispatch:\n permissions:\n+  copilot-requests: write\n   contents: read\n model: claude-haiku-4-5\n engine:",
+          "snapshot_ref": "02cb22631932cfbeae4d633edf8f0202dbbf6b5d",
+          "snapshot_blob_sha": "b3f617b299ede12fe87222f3879579e8bac125ca",
+          "snapshot_file": "snapshots/gh-aw-firewall__github__02cb22631932cfbeae4d633edf8f0202dbbf6b5d__network-isolation-test.md",
+          "snapshot_bytes": 1592,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"github/gh-aw-firewall\",\"generated_owner\":\"github\",\"generated_repo\":\"gh-aw-firewall\",\"generated_workflow_path\":\".github/workflows/network-isolation-test.lock.yml\",\"generated_workflow_file\":\"network-isolation-test.lock.yml\",\"generated_html_url\":\"https://github.com/github/gh-aw-firewall/blob/61d5f657eef5d32f5c231e064c7dee5c92882cf2/.github/workflows/network-isolation-test.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

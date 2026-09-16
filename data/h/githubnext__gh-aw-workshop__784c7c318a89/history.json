@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+    "source_full_name": "githubnext/gh-aw-workshop",
+    "source_owner": "githubnext",
+    "source_repo": "gh-aw-workshop",
+    "md_path": ".github/workflows/training-plan-research.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/gh-aw-workshop/blob/HEAD/.github/workflows/training-plan-research.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/gh-aw-workshop",
+      "generated_owner": "githubnext",
+      "generated_repo": "gh-aw-workshop",
+      "generated_workflow_path": ".github/workflows/training-plan-research.lock.yml",
+      "generated_workflow_file": "training-plan-research.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/training-plan-research.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 5
+    },
+    "collected_at_utc": "2026-08-04T11:49:18+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/training-plan-research.md",
+      "commit_sha": "97245c2a7fa62800f6c7cea9044ed655fa035564",
+      "authored_at": "2026-07-12T21:18:18Z",
+      "committed_at": "2026-07-12T21:18:18Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add research-driven training-plan workflow and workshop node with XML metadata (#505)",
+      "parent_shas": [
+        "477ff2e7e16c3c4d76529ca50a41989050ddd759"
+      ],
+      "tree_sha": "75705358317c9b86b86bdc7ad774499002db1383",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/97245c2a7fa62800f6c7cea9044ed655fa035564",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/training-plan-research.md",
+          "commit_sha": "97245c2a7fa62800f6c7cea9044ed655fa035564",
+          "committed_at": "2026-07-12T21:18:18Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 144,
+          "file_deletions": 0,
+          "file_changes": 144,
+          "file_patch": "@@ -0,0 +1,144 @@\n+---\n+emoji: 🧠\n+name: Training Plan Researcher\n+description: >\n+  Performs deep research on github/gh-aw (including downloading LLMs.txt),\n+  then proposes and authors one new workshop training node with research notes\n+  stored in XML comments.\n+on:\n+  workflow_dispatch:\n+    inputs:\n+      focus:\n+        description: \"Optional focus area for the new training node (e.g., mcp tools, safe outputs, workflow debugging)\"\n+        required: false\n+        type: string\n+  schedule: weekly\n+  skip-if-match: \"is:pr is:open label:training-plan\"\n+permissions:\n+  contents: read\n+  copilot-requests: write\n+  actions: read\n+  pull-requests: read\n+  issues: read\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+  agentic-workflows:\n+  bash: true\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"[training-plan] \"\n+    labels: [workshop, training-plan, documentation]\n+    draft: true\n+    allowed-files:\n+      - \"workshop/*.md\"\n+      - \"workshop/**/*.md\"\n+      - \".github/workflows/training-plan-research.md\"\n+      - \".github/workflows/training-plan-research.lock.yml\"\n+    if-no-changes: warn\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+timeout-minutes: 30\n+steps:\n+  - name: Download gh-aw LLMs manifest\n+    run: |\n+      set -euo pipefail\n+      mkdir -p /tmp/gh-aw/data\n+      target=/tmp/gh-aw/data/llms.txt\n+      # The canonical location may vary by repository branch/release; try known mirrors.\n+      urls=(\n+        \"https://raw.githubusercontent.com/github/gh-aw/main/LLMs.txt\"\n+        \"https://raw.githubusercontent.com/github/gh-aw/main/llms.txt\"\n+        \"https://github.github.com/gh-aw/llms.txt\"\n+      )\n+      downloaded=\"\"\n+      for url in \"${urls[@]}\"; do\n+        if curl -fsSL \"$url\" -o \"$target\"; then\n+          downloaded=\"$url\"\n+          break\n+        fi\n+      done\n+      if [ -z \"$downloaded\" ]; then\n+        echo \"Failed to download LLMs.txt from all known locations\" >&2\n+        exit 1\n+      fi\n+      jq -n --arg source \"$downloaded\" --arg path \"$target\" '{llms_source:$source,llms_path:$path}' > /tmp/gh-aw/data/research-inputs.json\n+      echo \"Downloaded LLMs.txt from $downloaded\"\n+---\n+\n+# Training Plan Researcher\n+\n+You are a senior technical curriculum designer for this workshop repository.\n+\n+Your job is to run deep research on `github/gh-aw` and convert that research into exactly one high-value new training node in `/workshop`.\n+\n+<!--\n+<research-intent>\n+  <primary-goal>Create one new workshop node grounded in current gh-aw documentation.</primary-goal>\n+  <required-artifact>/tmp/gh-aw/data/llms.txt</required-artifact>\n+  <secondary-goal>Store extra rationale in XML comments inside edited markdown.</secondary-goal>\n+</research-intent>\n+-->\n+\n+## Required inputs\n+\n+1. Read `/tmp/gh-aw/data/research-inputs.json`.\n+2. Read `/tmp/gh-aw/data/llms.txt`.\n+3. Read the current workshop curriculum from `workshop/README.md`.\n+4. Read `workshop/00-welcome.md`.\n+5. Read at least three relevant workshop step files before proposing a new node.\n+\n+## Research process\n+\n+1. Use `github` tooling to inspect `github/gh-aw` for current concepts, especially:\n+   - workflow syntax and frontmatter capabilities\n+   - `safe-outputs`\n+   - MCP tools and integrations\n+   - skills and reuse patterns\n+2. Use the downloaded `LLMs.txt` content to identify high-signal docs and pages to cite in your planning.\n+3. Compare findings against existing workshop coverage and identify one meaningful gap for learners.\n+\n+## Authoring task\n+\n+Create exactly one new workshop node file that fills the identified gap.\n+\n+Requirements:\n+\n+- Keep second-person voice, concise instructional style, and a `## ✅ Checkpoint` checklist.\n+- Do not number headers.\n+- Include one short \"why this matters\" framing paragraph.\n+- Include at least one actionable step that references a real gh-aw concept discovered during research.\n+- Include a `## 📚 See Also` section with links to relevant gh-aw docs.\n+- Add an XML comment block in the node file with:\n+  - the selected research focus,\n+  - top source URLs (including the LLMs.txt download source),\n+  - and a one-paragraph reasoning summary.\n+\n+## Curriculum updates\n+\n+After creating the new node file:\n+\n+1. Add it to the curriculum table in `workshop/README.md`.\n+2. If needed, adjust text in `workshop/00-welcome.md` so step counts stay accurate.\n+\n+## Pull request output\n+\n+Create a pull request only when files changed.\n+\n+- Title: `Add research-backed training node: <node title>`\n+- Body must summarize:\n+  - research focus,\n+  - what gap was filled,\n+  - which files were updated,\n+  - and where XML comment metadata was stored.\n+\n+<!--\n+<quality-bar>\n+  <must-be-true>Node is net-new and useful for learners.</must-be-true>\n+  <must-be-true>README curriculum includes the node.</must-be-true>\n+  <must-be-true>XML comment metadata exists in the new node.</must-be-true>\n+</quality-bar>\n+-->",
+          "snapshot_ref": "97245c2a7fa62800f6c7cea9044ed655fa035564",
+          "snapshot_blob_sha": "8637138936825c5eecf528760be36e22a944cb50",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__97245c2a7fa62800f6c7cea9044ed655fa035564__training-plan-research.md",
+          "snapshot_bytes": 4774,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/training-plan-research.lock.yml\",\"generated_workflow_file\":\"training-plan-research.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/training-plan-research.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/training-plan-research.md",
+      "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+      "authored_at": "2026-07-14T22:45:21Z",
+      "committed_at": "2026-07-14T22:45:21Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add `expires: 1d` to all agentic workflow safe-outputs (#1125)",
+      "parent_shas": [
+        "b4fd7e2d2ad27cd43d5764482c3fe5e06dd8112d"
+      ],
+      "tree_sha": "a141fde523b6534bacfbf9f0f444b5474b1ad009",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/964af15393f94c1cd7239080ac7e2207139848fb",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/training-plan-research.md",
+          "commit_sha": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "committed_at": "2026-07-14T22:45:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -37,6 +37,7 @@ safe-outputs:\n       - \".github/workflows/training-plan-research.md\"\n       - \".github/workflows/training-plan-research.lock.yml\"\n     if-no-changes: warn\n+    expires: 1d\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "964af15393f94c1cd7239080ac7e2207139848fb",
+          "snapshot_blob_sha": "28fb4d0cb138e668901a01a17ecb1551aedd01d7",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__964af15393f94c1cd7239080ac7e2207139848fb__training-plan-research.md",
+          "snapshot_bytes": 4790,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/training-plan-research.lock.yml\",\"generated_workflow_file\":\"training-plan-research.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/training-plan-research.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/training-plan-research.md",
+      "commit_sha": "a27fe717501615f4b265a2477ca889233417234e",
+      "authored_at": "2026-07-20T07:33:31Z",
+      "committed_at": "2026-07-20T07:33:31Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Remove banned See Also guidance from training-plan workflow (#1598)",
+      "parent_shas": [
+        "2dafc3f5768ec16f37f27c8bdd3aa427382434db"
+      ],
+      "tree_sha": "5bd4aec6d3d9a95d198524dcb63d9ee0ca9c281f",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/a27fe717501615f4b265a2477ca889233417234e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/training-plan-research.md",
+          "commit_sha": "a27fe717501615f4b265a2477ca889233417234e",
+          "committed_at": "2026-07-20T07:33:31Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -112,7 +112,7 @@ Requirements:\n - Do not number headers.\n - Include one short \"why this matters\" framing paragraph.\n - Include at least one actionable step that references a real gh-aw concept discovered during research.\n-- Include a `## 📚 See Also` section with links to relevant gh-aw docs.\n+- Link relevant gh-aw docs inline in the prose at the first mention of each concept instead of adding a dedicated \"See Also\" section.\n - Add an XML comment block in the node file with:\n   - the selected research focus,\n   - top source URLs (including the LLMs.txt download source),",
+          "snapshot_ref": "a27fe717501615f4b265a2477ca889233417234e",
+          "snapshot_blob_sha": "85f78a6edbf2bc903334a5b7061d765791a94ee6",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__a27fe717501615f4b265a2477ca889233417234e__training-plan-research.md",
+          "snapshot_bytes": 4850,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/training-plan-research.lock.yml\",\"generated_workflow_file\":\"training-plan-research.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/training-plan-research.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/training-plan-research.md",
+      "commit_sha": "c4c6efed3beaaa040fe2361a09814faa7983b7de",
+      "authored_at": "2026-07-20T14:07:42Z",
+      "committed_at": "2026-07-20T14:07:42Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Remove all For more details footers and add enforcement (#1633)\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "644ab9cfe7215fea2270ea5f316facb6b345a838"
+      ],
+      "tree_sha": "7eabeac801b4edf2825760cb3818bd3baf2c4778",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/c4c6efed3beaaa040fe2361a09814faa7983b7de",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/training-plan-research.md",
+          "commit_sha": "c4c6efed3beaaa040fe2361a09814faa7983b7de",
+          "committed_at": "2026-07-20T14:07:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -112,7 +112,7 @@ Requirements:\n - Do not number headers.\n - Include one short \"why this matters\" framing paragraph.\n - Include at least one actionable step that references a real gh-aw concept discovered during research.\n-- Link relevant gh-aw docs inline in the prose at the first mention of each concept instead of adding a dedicated \"See Also\" section.\n+- Link relevant gh-aw docs inline in the prose at the first mention of each concept instead of adding a dedicated \"See Also\" section or a \"For more details, see …\" footer line.\n - Add an XML comment block in the node file with:\n   - the selected research focus,\n   - top source URLs (including the LLMs.txt download source),",
+          "snapshot_ref": "c4c6efed3beaaa040fe2361a09814faa7983b7de",
+          "snapshot_blob_sha": "e48cf206720db56928b494d4a4f20bebeb1d37bb",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__c4c6efed3beaaa040fe2361a09814faa7983b7de__training-plan-research.md",
+          "snapshot_bytes": 4895,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/training-plan-research.lock.yml\",\"generated_workflow_file\":\"training-plan-research.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/training-plan-research.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+      "source_full_name": "githubnext/gh-aw-workshop",
+      "md_path": ".github/workflows/training-plan-research.md",
+      "commit_sha": "475fb0453b4473c751d08b5a1d5920698705ec93",
+      "authored_at": "2026-07-29T09:13:14Z",
+      "committed_at": "2026-07-29T09:13:14Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Replace raw emoji in workflow templates with GitHub colon-syntax emoticons (#2322)\n\n* fix: replace raw emoji in titles with GitHub colon-syntax emoticons\n\nReplace raw Unicode emoji characters (🎯 📋 ✅ 🔀) with GitHub colon-syntax\nemoticons (:dart: :clipboard: :white_check_mark: :twisted_rightwards_arrows:)\nin workflow template headings, section-name strings, and enforcement rules.\n\nThis aligns the workflow agent templates and tooling with how the actual\nworkshop/ content files already spell their section headings, and ensures\nthe workshop-order-review section-extraction code matches live files.\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n* fix: apply :clipboard: colon-syntax to Before You Start headings in workshop docs and regenerate lock files\n\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>\nCo-authored-by: pelikhan <4175913+pelikhan@users.noreply.github.com>\nCo-authored-by: Peli de Halleux <pelikhan@users.noreply.github.com>",
+      "parent_shas": [
+        "bcc8196f143d2f0181c762e3babe84458fee5085"
+      ],
+      "tree_sha": "87f10c134b702c9a95255299548accceecbcce16",
+      "html_url": "https://github.com/githubnext/gh-aw-workshop/commit/475fb0453b4473c751d08b5a1d5920698705ec93",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/gh-aw-workshop:.github/workflows/training-plan-research.md",
+          "source_full_name": "githubnext/gh-aw-workshop",
+          "md_path": ".github/workflows/training-plan-research.md",
+          "commit_sha": "475fb0453b4473c751d08b5a1d5920698705ec93",
+          "committed_at": "2026-07-29T09:13:14Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -108,7 +108,7 @@ Create exactly one new workshop node file that fills the identified gap.\n \n Requirements:\n \n-- Keep second-person voice, concise instructional style, and a `## ✅ Checkpoint` checklist.\n+- Keep second-person voice, concise instructional style, and a `## :white_check_mark: Checkpoint` checklist.\n - Do not number headers.\n - Include one short \"why this matters\" framing paragraph.\n - Include at least one actionable step that references a real gh-aw concept discovered during research.",
+          "snapshot_ref": "475fb0453b4473c751d08b5a1d5920698705ec93",
+          "snapshot_blob_sha": "b014f701dc79e1b45c60229fcadd9e8f002b0fb8",
+          "snapshot_file": "snapshots/gh-aw-workshop__githubnext__475fb0453b4473c751d08b5a1d5920698705ec93__training-plan-research.md",
+          "snapshot_bytes": 4910,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/gh-aw-workshop\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"gh-aw-workshop\",\"generated_workflow_path\":\".github/workflows/training-plan-research.lock.yml\",\"generated_workflow_file\":\"training-plan-research.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/gh-aw-workshop/blob/0ba36c34f6dfaed8e935e11191b971129db593f4/.github/workflows/training-plan-research.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

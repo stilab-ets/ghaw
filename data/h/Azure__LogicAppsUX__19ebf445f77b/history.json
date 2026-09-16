@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+    "source_full_name": "Azure/LogicAppsUX",
+    "source_owner": "Azure",
+    "source_repo": "LogicAppsUX",
+    "md_path": ".github/workflows/issue-triage-feedback.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Azure/LogicAppsUX/blob/HEAD/.github/workflows/issue-triage-feedback.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Azure/LogicAppsUX",
+      "generated_owner": "Azure",
+      "generated_repo": "LogicAppsUX",
+      "generated_workflow_path": ".github/workflows/issue-triage-feedback.lock.yml",
+      "generated_workflow_file": "issue-triage-feedback.lock.yml",
+      "generated_html_url": "https://github.com/Azure/LogicAppsUX/blob/64ecf3a33516ede2882b6f4c8100d41cb9eba4c1/.github/workflows/issue-triage-feedback.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:24:49+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+      "source_full_name": "Azure/LogicAppsUX",
+      "md_path": ".github/workflows/issue-triage-feedback.md",
+      "commit_sha": "4319679ca467115757b29fc10fd0992df40b4876",
+      "authored_at": "2026-04-01T20:57:27Z",
+      "committed_at": "2026-04-01T20:57:27Z",
+      "author_name": "Krrish Mittal",
+      "author_email": "11722204+takyyon@users.noreply.github.com",
+      "author_login": "takyyon",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(ci): Add AI issue triage agentic workflow (#8992)\n\n* feat(ci): add AI issue triage agentic workflow\n\nAdds a GitHub Agentic Workflow that automatically analyzes new issues\nwhen they are opened or reopened. The agent reads the structured issue\ntemplate fields, searches the codebase for relevant files, and posts\na triage comment with component identification, relevant code paths,\nroot cause hypothesis, and suggested next steps.\n\n- Triggers on issues: [opened, reopened]\n- Uses Copilot engine with read-only permissions\n- Safe outputs: add-labels (existing repo labels only) + add-comment\n- Handles both bug reports and feature requests with tailored analysis\n- Includes repo architecture map for accurate component mapping\n- Also recompiles daily-repo-status with gh-aw v0.65.3\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix(issue-triage-agent): address PR review comments\n\n- Add roles: all to allow external issue authors to trigger workflow\n- Fix label limit from 4 to 5 to match safe-output constraint\n- Revert daily-repo-status.lock.yml cron shift from recompilation\n- Recompile lock file without pre_activation gate\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* feat(ci): Add self-learning feedback loop for issue triage\n\nTier 1 - Self-Calibrating Triage Agent:\n- Add Step 0 (calibration) to triage agent prompt\n- Agent searches past triage comments before each new triage\n- Compares original labels vs current labels to detect developer corrections\n- Uses correction patterns as few-shot calibration for improved accuracy\n- Adds calibration stats to triage comment footer\n\nTier 2 - Feedback Collector Workflow:\n- New issue-triage-feedback.md triggered on issues.labeled/unlabeled\n- Default roles (admin/maintainer/write) prevent feedback loops with bot\n- Checks for AI triage marker before analyzing corrections\n- Posts structured 'Triage Feedback' comment with machine-readable format\n- hide-older-comments replaces previous feedback on same issue\n- Feedback consumed by triage agent's Step 0 calibration\n\nTogether these create a closed-loop learning system: triage agent triages →\ndeveloper corrects → feedback collector records → triage agent calibrates.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix(ci): Add path filters to vscode-e2e workflow\n\nSkip VS Code extension E2E tests when changes only touch files outside\nthe extension and its library dependencies. This avoids ~30min CI runs\non PRs that don't affect VS Code extension behavior.\n\nTriggers on changes to:\n- apps/vs-code-designer, apps/vs-code-react\n- libs/vscode-extension, designer, designer-ui, designer-v2\n- libs/logic-apps-shared, data-mapper-v2, data-mapper, chatbot\n- pnpm-lock.yaml, the workflow file itself\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* fix(vscode): exclude flaky phase 4.8d from vscode-e2e exit code\n\nPhase 4.8d (workspaceConversionYes) consistently fails in CI due to the\n'Yes'/'Open Workspace' button not being interactable under xvfb. This is\nenvironment-specific and has been failing on main for multiple consecutive\nruns.\n\nThe test still executes and logs its result, but no longer blocks the\nentire e2e suite. This unblocks all PRs currently gated on vscode-e2e.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "276b908b3c8951c872309b7267db0347626c3968"
+      ],
+      "tree_sha": "d647b6c91d69566c89e003a20e2ad2cfab10384e",
+      "html_url": "https://github.com/Azure/LogicAppsUX/commit/4319679ca467115757b29fc10fd0992df40b4876",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+          "source_full_name": "Azure/LogicAppsUX",
+          "md_path": ".github/workflows/issue-triage-feedback.md",
+          "commit_sha": "4319679ca467115757b29fc10fd0992df40b4876",
+          "committed_at": "2026-04-01T20:57:27Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 139,
+          "file_deletions": 0,
+          "file_changes": 139,
+          "file_patch": "@@ -0,0 +1,139 @@\n+---\n+description: |\n+  Monitors developer corrections to AI-triaged issues. When a team member changes\n+  labels on an agent-triaged issue, this workflow compares the current state with the\n+  original triage and posts a structured feedback comment. This feedback is consumed\n+  by the triage agent's self-calibration step to improve future accuracy.\n+\n+  Default roles (admin/maintainer/write) prevent bot-triggered label changes from\n+  activating this workflow, avoiding feedback loops with the triage agent.\n+\n+on:\n+  issues:\n+    types: [labeled, unlabeled]\n+\n+permissions:\n+  contents: read\n+  issues: read\n+\n+tools:\n+  github:\n+    toolsets: [issues, labels, search]\n+\n+safe-outputs:\n+  add-comment:\n+    hide-older-comments: true\n+\n+engine: copilot\n+---\n+\n+# Triage Feedback Collector\n+\n+You monitor developer corrections to AI-triaged issues and produce structured\n+feedback that the triage agent uses for self-calibration.\n+\n+## When to Act vs. When to Skip\n+\n+**Act** when ALL of these are true:\n+1. The triggering issue has a comment containing \"## AI Triage Analysis\" — this is\n+   the marker that the issue was triaged by the AI triage agent\n+2. The label change was made by a human developer (not a bot)\n+3. The label change represents a meaningful correction (not just adding an unrelated label)\n+\n+**Skip (noop)** when ANY of these are true:\n+- The issue has no AI triage comment → this issue was never triaged by the agent\n+- The label change is unrelated to the triage (e.g., adding a milestone label, sprint label)\n+- The issue was just opened moments ago and labels are still being applied by the triage agent\n+\n+## Your Process\n+\n+### Step 1: Check for AI Triage Comment\n+\n+Search the issue's comments for one containing \"## AI Triage Analysis\".\n+\n+If no such comment exists, use the `noop` output and stop — this issue was not\n+triaged by the agent, so there is no correction to record.\n+\n+### Step 2: Parse the Original Triage\n+\n+From the AI triage comment, extract:\n+- **Component** identified (from the \"Component:\" or \"Area:\" line)\n+- **Priority** assigned (from the \"Priority:\" line)\n+- **Labels the agent would have applied** (infer from the component and priority mentioned)\n+\n+### Step 3: Compare with Current State\n+\n+Read the issue's current labels. Compare with what the triage agent originally\n+recommended:\n+- **Labels removed**: A label the agent applied that a developer later removed\n+  → The agent was wrong about that classification\n+- **Labels added**: A label not applied by the agent that a developer added\n+  → The agent missed that signal\n+- **Labels unchanged**: Labels that match the original triage\n+  → The agent was correct about those\n+\n+Also check for any developer replies to the AI triage comment that contain\n+explicit corrections or feedback.\n+\n+### Step 4: Determine if This is a Meaningful Correction\n+\n+Not every label change is a triage correction. Skip (noop) if:\n+- The added/removed label is not in the triage agent's label set (e.g., sprint labels,\n+  milestone labels, custom workflow labels)\n+- The change is adding supplementary labels that don't contradict the triage\n+  (e.g., adding `Blocker` alongside the agent's labels)\n+\n+The triage agent's label set includes:\n+- **Components**: VSCode, Data Mapper, Connections, Templates, MCP, a11y, Monitoring,\n+  Code View, Custom Code, Custom Connectors, Agentic, Serialization, Integration Account,\n+  Performance, Consumption\n+- **Priority**: priority:high, priority:medium, priority:low\n+- **Classification**: bug, enhancement, regression, Needs More Info, duplicate, Cosmetic,\n+  error messaging, Good First Issue, Portal\n+\n+Only produce feedback when a label FROM THIS SET was added or removed.\n+\n+### Step 5: Post Structured Feedback\n+\n+Post a single comment using this exact format. This format is machine-readable and\n+consumed by the triage agent's self-calibration step.\n+\n+```\n+## Triage Feedback\n+\n+**Issue:** #[number] — [issue title]\n+**Original triage:** [component label] | [priority label] | [other labels from triage]\n+**Current labels:** [all current labels on the issue]\n+\n+### Corrections Detected\n+- [Label] removed → [what this means: agent misclassified component/priority/type]\n+- [Label] added → [what this means: agent missed this signal]\n+\n+### Developer Feedback\n+[If a developer replied to the triage comment with corrections, quote the relevant\n+parts here. If no developer feedback comments exist, write \"No explicit developer\n+feedback found — corrections inferred from label changes only.\"]\n+\n+### Lesson Learned\n+[One sentence summarizing the correction pattern. This is the key insight the\n+triage agent should internalize for future issues.]\n+\n+Examples of good lessons:\n+- \"Issues mentioning 'connection string' errors in Standard SKU are Connections issues, not Serialization.\"\n+- \"P3 issues affecting save/load workflows should be upgraded to priority:high.\"\n+- \"VS Code extension issues about webview rendering should use VSCode label, not the designer component.\"\n+\n+---\n+*Automated feedback by triage feedback collector. Consumed by triage agent calibration.*\n+```\n+\n+## Rules\n+\n+1. **Always check for the AI triage comment first.** If it does not exist, noop immediately.\n+2. **Only analyze labels in the triage agent's label set.** Ignore sprint, milestone, or custom labels.\n+3. **Post exactly one comment per correction event.** Use `hide-older-comments: true` to replace\n+   previous feedback if multiple corrections happen on the same issue.\n+4. **Be specific in the \"Lesson Learned\" section.** Vague lessons like \"be more careful\" are useless.\n+   Reference the specific signal the agent should look for next time.\n+5. **Never modify labels.** Your only output is a feedback comment.\n+6. **Keep the comment under 300 words.** The triage agent needs to parse many of these quickly.",
+          "snapshot_ref": "4319679ca467115757b29fc10fd0992df40b4876",
+          "snapshot_blob_sha": "7a44ac005ff564803098314e8d800aa5631f11f9",
+          "snapshot_file": "snapshots/LogicAppsUX__Azure__4319679ca467115757b29fc10fd0992df40b4876__issue-triage-feedback.md",
+          "snapshot_bytes": 5727,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/LogicAppsUX\",\"generated_owner\":\"Azure\",\"generated_repo\":\"LogicAppsUX\",\"generated_workflow_path\":\".github/workflows/issue-triage-feedback.lock.yml\",\"generated_workflow_file\":\"issue-triage-feedback.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/LogicAppsUX/blob/64ecf3a33516ede2882b6f4c8100d41cb9eba4c1/.github/workflows/issue-triage-feedback.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+      "source_full_name": "Azure/LogicAppsUX",
+      "md_path": ".github/workflows/issue-triage-feedback.md",
+      "commit_sha": "f6e674b63868666a307af4b48f35528735182e8f",
+      "authored_at": "2026-04-08T20:59:33Z",
+      "committed_at": "2026-04-08T20:59:33Z",
+      "author_name": "Riley Evans",
+      "author_email": "rllyy97@gmail.com",
+      "author_login": "rllyy97",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs(Automation): Improve issue triage agent accuracy and add lib descriptions (#9035)\n\nImprove issue triage agent accuracy and add lib descriptions\n\n- Add critical thinking rules to prevent parroting reporter claims\n- Require independent verification of regression and root cause assertions\n- Add confidence signaling language rules (reporter claims vs code search confirms)\n- Add Step 1.5 to read library descriptions before code search\n- Update regression label rule to require codebase evidence\n- Add 3 new rules (11-13) for independent analysis\n- Create .github/lib-descriptions/ with detailed descriptions for all 9 libs\n- Update triage feedback collector with root cause accuracy tracking\n- Update architecture table with missing entries (data-mapper v1, MCP, agent, copilot)",
+      "parent_shas": [
+        "80771a48a7073436d960cbae2dc042f1e2822ac0"
+      ],
+      "tree_sha": "ee9cb094b5300369a798e56f5341331751a075d8",
+      "html_url": "https://github.com/Azure/LogicAppsUX/commit/f6e674b63868666a307af4b48f35528735182e8f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+          "source_full_name": "Azure/LogicAppsUX",
+          "md_path": ".github/workflows/issue-triage-feedback.md",
+          "commit_sha": "f6e674b63868666a307af4b48f35528735182e8f",
+          "committed_at": "2026-04-08T20:59:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 9,
+          "file_deletions": 0,
+          "file_changes": 9,
+          "file_patch": "@@ -109,6 +109,13 @@ consumed by the triage agent's self-calibration step.\n - [Label] removed → [what this means: agent misclassified component/priority/type]\n - [Label] added → [what this means: agent missed this signal]\n \n+### Root Cause Accuracy\n+[Check if the triage comment's \"Probable Root Cause\" section merely restated the\n+reporter's own diagnosis without independent verification. If a developer corrected\n+the root cause analysis in a reply, note this. If the triage comment contained\n+phrases like \"code search confirms\" or \"verified in codebase\" alongside claims that\n+turned out to be wrong, flag this as a verification failure.]\n+\n ### Developer Feedback\n [If a developer replied to the triage comment with corrections, quote the relevant\n parts here. If no developer feedback comments exist, write \"No explicit developer\n@@ -122,6 +129,8 @@ Examples of good lessons:\n - \"Issues mentioning 'connection string' errors in Standard SKU are Connections issues, not Serialization.\"\n - \"P3 issues affecting save/load workflows should be upgraded to priority:high.\"\n - \"VS Code extension issues about webview rendering should use VSCode label, not the designer component.\"\n+- \"Agent parroted reporter's claim that this was a caching issue — actual root cause was a stale Redux selector.\"\n+- \"Reporter claimed regression but feature never worked this way — agent should have verified git history.\"\n \n ---\n *Automated feedback by triage feedback collector. Consumed by triage agent calibration.*",
+          "snapshot_ref": "f6e674b63868666a307af4b48f35528735182e8f",
+          "snapshot_blob_sha": "9a2198d940eb498d2d7d948bbf7c99ff0026bf21",
+          "snapshot_file": "snapshots/LogicAppsUX__Azure__f6e674b63868666a307af4b48f35528735182e8f__issue-triage-feedback.md",
+          "snapshot_bytes": 6368,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/LogicAppsUX\",\"generated_owner\":\"Azure\",\"generated_repo\":\"LogicAppsUX\",\"generated_workflow_path\":\".github/workflows/issue-triage-feedback.lock.yml\",\"generated_workflow_file\":\"issue-triage-feedback.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/LogicAppsUX/blob/64ecf3a33516ede2882b6f4c8100d41cb9eba4c1/.github/workflows/issue-triage-feedback.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+      "source_full_name": "Azure/LogicAppsUX",
+      "md_path": ".github/workflows/issue-triage-feedback.md",
+      "commit_sha": "4b65a82a99a397179c94ff0c8b7710bcbe36778f",
+      "authored_at": "2026-07-27T13:41:16Z",
+      "committed_at": "2026-07-27T13:41:16Z",
+      "author_name": "Krrish Mittal",
+      "author_email": "11722204+takyyon@users.noreply.github.com",
+      "author_login": "takyyon",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(ci): auth agentic workflows via built-in GITHUB_TOKEN + harden pr-ai-validation gate (#9450)\n\n* fix(ci): auth agentic workflows via built-in GITHUB_TOKEN instead of PAT\n\nThe issue-triage-agent, issue-triage-feedback, and daily-repo-status\nagentic (gh-aw) workflows authenticated Copilot through a\nCOPILOT_GITHUB_TOKEN PAT. That token expired, so every Copilot run\nfailed at \"No authentication information found\" / \"Authentication\nfailed\" and no agent has actually run since.\n\nAdd `copilot-requests: write` to each workflow and recompile. The\nCopilot engine now uses `${{ github.token }}` with S2STOKENS=true and\nskips the PAT validation step - the same built-in-token approach as\npr-ai-validation.yml. No PAT to rotate or expire.\n\nRecompiled with gh aw v0.83.1 (lock files + actions-lock.json).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: d893845d-d9ed-424e-975c-492d05ea11de\n\n* fix(ci): harden PR AI validation against intermittent Copilot CLI flake and make the gate deterministic\n\nThe Copilot CLI in pr-ai-validation.yml intermittently failed to start (exit 126,\n\"cannot execute\") because @github/copilot's npm loader fetches a platform-native\nbinary that a flaky install can leave missing/non-executable. When that happened the\nLogic App fallback decided the outcome non-deterministically: 502 was silently skipped\n(vacuous green) while 504 threw and posted a red \"PR Validation Error\" — so the same\ntransient infra hiccup produced either a false pass or a false failure, and the PR\ndescription was never actually evaluated.\n\nChanges:\n- Install: retry the CLI install up to 3x and verify the binary actually executes\n  (copilot --version) before use, directly addressing the exit-126 root cause.\n- Validate: retry the CLI on exec-failure codes (126/127) with backoff, and print the\n  captured output tail on failure instead of swallowing it (was undiagnosable before).\n- Fallback: treat all \"validator unavailable\" outcomes (any non-ok status or network\n  error) uniformly as a non-blocking skip. The check now fails only on a real negative\n  verdict, never on infra flakiness — removing the 502/504 asymmetry and the misleading\n  error comment.\n- Add a workflow_dispatch pr_number input (+ shared PR_NUMBER env) so the workflow can\n  be validated manually, since pull_request_target always runs the base-branch copy.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: d893845d-d9ed-424e-975c-492d05ea11de\n\n* fix(ci): stabilize Copilot CLI install in pr-ai-validation (pin + cache + cache-clean-on-retry)\n\nThe intermittent exit 126 comes from npm's best-effort install of @github/copilot's\nplatform-native optionalDependency: a transient registry/network blip can leave the\nbinary missing/non-executable while npm still exits 0. Reduce the flake rate by pinning\nthe version (1.0.72-0), caching ~/.npm keyed on that version so the happy path installs\noffline, and clearing the npm cache between retries so a poisoned artifact is not reused.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: d893845d-d9ed-424e-975c-492d05ea11de\n\n* fix(ci): pass validation prompt via stdin to fix exit-126 on large-diff PRs\n\nRoot cause of the deterministic exit 126: the prompt (system prompt + PR metadata +\ndiff sample) was passed as a single `-p \"$(...)\"` command-line argument. On Linux a\nsingle argv entry is capped at MAX_ARG_STRLEN (128 KB); large-diff PRs (e.g. lockfile\nrecompiles) push the combined prompt past that, so execve fails with E2BIG and the shell\nreports exit 126 with empty output — every run, not intermittently. `copilot --version`\nstill works because its args are tiny, which masked the real cause.\n\nPass the prompt on stdin instead (no argv size limit), so validation works for PRs of\nany diff size. Verified locally: a 150 KB prompt via stdin runs cleanly (exit 0), while\nthe same content via `-p` argv would E2BIG on Linux.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: d893845d-d9ed-424e-975c-492d05ea11de\n\n* fix(ci): byte-cap the diff sample in pr-ai-validation prompt\n\nhead -2000 bounds line count but not size; generated files with very long\nsingle lines can still bloat the prompt (token cost + latency). Add a\n100 KB byte cap so the prompt stays bounded regardless of line length.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCopilot-Session: d893845d-d9ed-424e-975c-492d05ea11de\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\nCo-authored-by: takyyon <takyyon@users.noreply.github.com>\nCopilot-Session: d893845d-d9ed-424e-975c-492d05ea11de",
+      "parent_shas": [
+        "722702c5bce43c5d56d19dc430218e51e1a65ecf"
+      ],
+      "tree_sha": "1f598b46fda59b7bdfd60874c201cec26570e36c",
+      "html_url": "https://github.com/Azure/LogicAppsUX/commit/4b65a82a99a397179c94ff0c8b7710bcbe36778f",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "Azure/LogicAppsUX:.github/workflows/issue-triage-feedback.md",
+          "source_full_name": "Azure/LogicAppsUX",
+          "md_path": ".github/workflows/issue-triage-feedback.md",
+          "commit_sha": "4b65a82a99a397179c94ff0c8b7710bcbe36778f",
+          "committed_at": "2026-07-27T13:41:16Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -15,6 +15,7 @@ on:\n permissions:\n   contents: read\n   issues: read\n+  copilot-requests: write\n \n tools:\n   github:",
+          "snapshot_ref": "4b65a82a99a397179c94ff0c8b7710bcbe36778f",
+          "snapshot_blob_sha": "a3df1d82c8607c40c62542c950ee70a3d3f6f489",
+          "snapshot_file": "snapshots/LogicAppsUX__Azure__4b65a82a99a397179c94ff0c8b7710bcbe36778f__issue-triage-feedback.md",
+          "snapshot_bytes": 6394,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Azure/LogicAppsUX\",\"generated_owner\":\"Azure\",\"generated_repo\":\"LogicAppsUX\",\"generated_workflow_path\":\".github/workflows/issue-triage-feedback.lock.yml\",\"generated_workflow_file\":\"issue-triage-feedback.lock.yml\",\"generated_html_url\":\"https://github.com/Azure/LogicAppsUX/blob/64ecf3a33516ede2882b6f4c8100d41cb9eba4c1/.github/workflows/issue-triage-feedback.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

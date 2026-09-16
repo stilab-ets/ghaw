@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+    "source_full_name": "fedixyz/fedi",
+    "source_owner": "fedixyz",
+    "source_repo": "fedi",
+    "md_path": ".github/workflows/weekly-doc-updater.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/fedixyz/fedi/blob/HEAD/.github/workflows/weekly-doc-updater.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "fedixyz/fedi",
+      "generated_owner": "fedixyz",
+      "generated_repo": "fedi",
+      "generated_workflow_path": ".github/workflows/weekly-doc-updater.lock.yml",
+      "generated_workflow_file": "weekly-doc-updater.lock.yml",
+      "generated_html_url": "https://github.com/fedixyz/fedi/blob/ca73813af396612318a7ecbc5aad96fc6cad11ba/.github/workflows/weekly-doc-updater.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T11:27:05+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+      "source_full_name": "fedixyz/fedi",
+      "md_path": ".github/workflows/weekly-doc-updater.md",
+      "commit_sha": "26f98cdef88610c976e5c707b55c8e1f42a6a5ff",
+      "authored_at": "2026-06-01T10:33:41Z",
+      "committed_at": "2026-06-01T10:41:35Z",
+      "author_name": "Fedi CI",
+      "author_email": "ci@fedi.xyz",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Fedi CI",
+      "committer_email": "ci@fedi.xyz",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "feat(e2): weekly workflow to check for documentation drift (#10933)\n\n* weekly workflow to update docs\n\n* Review all markdown docs in weekly updater\n\n* Fix weekly doc updater review findings\n\nsource commit: 08506c0a9c739596d4fa77dc77a6362332b03ce1",
+      "parent_shas": [
+        "17dd5f5b8bcbc8146e1c64cf94356381a9f1ed75"
+      ],
+      "tree_sha": "077d26ed1840d08f455d92e0dbc53b00b4d0d55f",
+      "html_url": "https://github.com/fedixyz/fedi/commit/26f98cdef88610c976e5c707b55c8e1f42a6a5ff",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+          "source_full_name": "fedixyz/fedi",
+          "md_path": ".github/workflows/weekly-doc-updater.md",
+          "commit_sha": "26f98cdef88610c976e5c707b55c8e1f42a6a5ff",
+          "committed_at": "2026-06-01T10:41:35Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 208,
+          "file_deletions": 0,
+          "file_changes": 208,
+          "file_patch": "@@ -0,0 +1,208 @@\n+---\n+on:\n+  workflow_dispatch:\n+  schedule: weekly on monday\n+\n+permissions:\n+  actions: read\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tracker-id: weekly-doc-updater\n+engine: codex\n+strict: true\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+\n+safe-outputs:\n+  create-pull-request:\n+    expires: 1d\n+    title-prefix: \"[docs] \"\n+    labels: [documentation, automation]\n+    draft: false\n+    auto-merge: false\n+    protected-files: allowed\n+    allowed-files:\n+      - \"*.md\"\n+      - \"**/*.md\"\n+  noop:\n+    report-as-issue: false\n+\n+tools:\n+  cache-memory: true\n+  github:\n+    toolsets: [default, actions]\n+  bash:\n+    - \"find\"\n+    - \"cat\"\n+    - \"sed\"\n+    - \"rg\"\n+    - \"git\"\n+\n+---\n+\n+# Weekly Documentation Updater\n+\n+You are an AI documentation maintenance agent for this repository.\n+\n+Your job is to review the repository documentation against the current codebase, update any outdated documents, and open a pull request with the fixes when changes are needed.\n+\n+Default to an incremental review based on repository changes since the last successful run of this workflow, in order to reduce token usage and limit unnecessary edits.\n+\n+## Mission\n+\n+Review every tracked Markdown file in the repository against the current repository state.\n+\n+Discover the documentation set at runtime instead of relying on a hard-coded file list. Use a structured command such as:\n+\n+```bash\n+git ls-files '*.md'\n+```\n+\n+Treat all returned Markdown files as managed documentation for this workflow, including root docs, package docs, generated-reference docs that are committed to the repository, and feature-specific docs under nested directories.\n+\n+Use the code, scripts, configs, and workflows in the repository as the source of truth.\n+\n+## Incremental Scope Policy\n+\n+By default, review only the Markdown files affected by changes since the last successful run of this workflow.\n+\n+Use GitHub tools to:\n+\n+1. Find the previous successful run of this workflow.\n+2. Determine the relevant comparison boundary using its completion time, commit SHA, or both.\n+3. Gather merged pull requests, commits, and changed files since that boundary.\n+4. Map the changed files to the tracked Markdown files they can affect.\n+\n+Examples of useful mappings:\n+\n+- `.github/workflows/**`, `scripts/ui/**`, release/build scripts:\n+  - `ui/native/docs/cicd.md`\n+- `ui/native/android/fastlane/Fastfile`:\n+  - `ui/native/android/fastlane/README.md`\n+- `ui/native/ios/fastlane/Fastfile`:\n+  - `ui/native/ios/fastlane/README.md`\n+- `scripts/bridge/**`, `bridge/**`:\n+  - `bridge/README.md`\n+  - `bridge/debugging.md`\n+  - `bridge/fedi-swift/README.md`\n+- `ui/common/utils/FederationUtils.ts`, `ui/common/types/fedimint.ts`, related tests:\n+  - `ui/docs/meta_fields/README.md`\n+  - relevant `ui/docs/meta_fields/*.md`\n+- `ui/web/src/pages/api/bug-report/**`, bug-report client code:\n+  - `ui/web/src/pages/api/bug-report/README.md`\n+- `ui/common/**`, `ui/native/**`, `ui/web/**`:\n+  - corresponding workspace docs when those files describe the changed behavior\n+\n+If the changed files clearly do not affect a tracked Markdown file, do not review that file.\n+\n+Fallback rules:\n+\n+- If there is no previous successful run, perform a full review of all tracked Markdown files.\n+- If run-history lookup fails or the changed-file mapping is too ambiguous, expand the review conservatively across the tracked Markdown inventory instead of blindly reviewing everything.\n+- If a single foundational file implies broad documentation drift, it is acceptable to expand beyond the minimal subset.\n+\n+## Requirements\n+\n+1. Inspect the current code and workflow implementation before editing docs.\n+2. Use incremental review since the last successful run unless a fallback rule applies.\n+3. Do not rely on previous audit reports as the source of truth.\n+4. Update only the documentation that is actually stale, misleading, or incomplete.\n+5. Preserve intentionally historical or deprecated docs when they are clearly marked as such.\n+6. When a referenced doc is missing but should exist, create it if the code clearly supports it.\n+7. Keep edits concise, repo-specific, and technically grounded.\n+8. Do not skip a tracked Markdown file solely because it was not part of a previous hard-coded documentation list.\n+9. Update `documentation-audit-report.md` to summarize what you reviewed, what was outdated, what you changed, and any remaining uncertain areas.\n+\n+## Review Process\n+\n+### 1. Determine review scope\n+\n+First, determine the incremental review scope.\n+\n+Use GitHub tools to identify:\n+\n+- the most recent successful run of this workflow before the current run\n+- the merged PRs, commits, and changed files since that point\n+- the tracked Markdown files potentially affected by those changes\n+\n+Record that scope in your working notes and in the final audit report.\n+\n+### 2. Inspect the repository\n+\n+Use GitHub tools and bash to inspect the current implementation. First inventory tracked Markdown files with `git ls-files '*.md'`. Then inspect the implementation files needed for the Markdown files in scope. Useful sources include:\n+\n+- repository layout\n+- `.github/workflows/`\n+- bridge build/debug scripts\n+- `ui/*/package.json` scripts\n+- native Fastlane `Fastfile`s\n+- `ui/common/utils/FederationUtils.ts`\n+- `ui/common/types/fedimint.ts`\n+- bug report API routes\n+- any other files needed to verify a specific doc claim\n+\n+Only inspect the files needed to validate the docs in scope.\n+\n+### 3. Compare docs to code\n+\n+For each Markdown file in scope:\n+\n+- decide whether it is accurate, partially outdated, outdated, or intentionally deprecated\n+- identify specific broken paths, stale commands, unsupported claims, missing sections, or misleading behavior descriptions\n+- determine whether a doc needs no change, a small correction, or a substantial rewrite\n+\n+### 4. Edit docs\n+\n+Use the edit tool to update the affected docs.\n+\n+Guidelines:\n+\n+- Prefer the smallest accurate change that fixes the problem\n+- Keep repo paths, commands, and workflow names exact\n+- Avoid speculative language when the code is clear\n+- If behavior is only partially enforced in code, say that clearly\n+- If a doc is deprecated by design, preserve that intent instead of rewriting it into a current guide\n+\n+### 5. Refresh the audit report\n+\n+Update `documentation-audit-report.md` with:\n+\n+- the review date\n+- whether the run was incremental or full-scope\n+- the change boundary you used\n+- the changed files or PRs that drove the scope\n+- the tracked Markdown inventory size and the Markdown files selected for review\n+- per-document status\n+- concise findings\n+- what was changed in this run\n+- any unresolved areas where the code was ambiguous\n+\n+### 6. Create a pull request\n+\n+If and only if you made documentation changes:\n+\n+- create a pull request using the safe-outputs `create_pull_request` tool\n+- do not script PR creation manually\n+- use a clear summary of the reviewed areas and changed files\n+\n+Use a PR title in the form:\n+\n+`[docs] Weekly documentation refresh`\n+\n+The PR description should include:\n+\n+- a short summary of the review scope\n+- whether the run was incremental or full-scope\n+- the main outdated areas fixed\n+- the files updated\n+- any notable unresolved questions\n+\n+## Exit Conditions\n+\n+- If no documentation changes are needed, exit without creating a PR.\n+- If you find uncertain or high-risk areas that cannot be validated from the repo, mention them in the updated audit report if you changed other docs. Otherwise exit without changes.",
+          "snapshot_ref": "26f98cdef88610c976e5c707b55c8e1f42a6a5ff",
+          "snapshot_blob_sha": "8f65af71816abf43faf28b01c3076084c923f67a",
+          "snapshot_file": "snapshots/fedi__fedixyz__26f98cdef88610c976e5c707b55c8e1f42a6a5ff__weekly-doc-updater.md",
+          "snapshot_bytes": 7364,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"fedixyz/fedi\",\"generated_owner\":\"fedixyz\",\"generated_repo\":\"fedi\",\"generated_workflow_path\":\".github/workflows/weekly-doc-updater.lock.yml\",\"generated_workflow_file\":\"weekly-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/fedixyz/fedi/blob/ca73813af396612318a7ecbc5aad96fc6cad11ba/.github/workflows/weekly-doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+      "source_full_name": "fedixyz/fedi",
+      "md_path": ".github/workflows/weekly-doc-updater.md",
+      "commit_sha": "2c306dd2300631742dec5359b524ecc34e3b2b0b",
+      "authored_at": "2026-06-09T20:21:24Z",
+      "committed_at": "2026-06-09T20:37:24Z",
+      "author_name": "Fedi CI",
+      "author_email": "ci@fedi.xyz",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Fedi CI",
+      "committer_email": "ci@fedi.xyz",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "build(doc-updater): allow generated PRs to edit .agents docs (#11497)\n\n- the weekly doc agent discovers its review set via `git ls-files\n  '*.md'`, which already includes .agents/skills/**/*.md, but its\n  create-pull-request safe-output blocks writes to top-level dot-folders,\n  so drift it finds in skill docs could never be fixed\n- switch protected-files to object form with `exclude: [.agents/]` to\n  opt that dir out of the dot-folder guard while .github/ and .claude/\n  stay protected. keep `policy: allowed` so README/CHANGELOG etc. remain\n  editable as before\n- add .agents/**/*.md to allowed-files since that allowlist is enforced\n  independently of the dot-folder guard, both must pass\n- lock.yml changes hand-applied (keys verified against `gh aw compile`\n  v0.74.8, which adds protected_dot_folder_excludes). cron/whitespace\n  left untouched to avoid non-deterministic recompile churn from a\n  mismatched local toolchain\n\nsource commit: f6e70dc146570fb52b07e97ae2a20ab5cbf0ae0c",
+      "parent_shas": [
+        "3671bcc9aceab946addb01ce2fe25305555e4d1f"
+      ],
+      "tree_sha": "158d6b66c08700d4798a6887a30922eb5874365b",
+      "html_url": "https://github.com/fedixyz/fedi/commit/2c306dd2300631742dec5359b524ecc34e3b2b0b",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+          "source_full_name": "fedixyz/fedi",
+          "md_path": ".github/workflows/weekly-doc-updater.md",
+          "commit_sha": "2c306dd2300631742dec5359b524ecc34e3b2b0b",
+          "committed_at": "2026-06-09T20:37:24Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 5,
+          "file_deletions": 1,
+          "file_changes": 6,
+          "file_patch": "@@ -25,10 +25,14 @@ safe-outputs:\n     labels: [documentation, automation]\n     draft: false\n     auto-merge: false\n-    protected-files: allowed\n+    protected-files:\n+      policy: allowed\n+      exclude:\n+        - .agents/\n     allowed-files:\n       - \"*.md\"\n       - \"**/*.md\"\n+      - \".agents/**/*.md\"\n   noop:\n     report-as-issue: false\n ",
+          "snapshot_ref": "2c306dd2300631742dec5359b524ecc34e3b2b0b",
+          "snapshot_blob_sha": "03113b471b0a0e4e29c9b94b17e93ae794344649",
+          "snapshot_file": "snapshots/fedi__fedixyz__2c306dd2300631742dec5359b524ecc34e3b2b0b__weekly-doc-updater.md",
+          "snapshot_bytes": 7438,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"fedixyz/fedi\",\"generated_owner\":\"fedixyz\",\"generated_repo\":\"fedi\",\"generated_workflow_path\":\".github/workflows/weekly-doc-updater.lock.yml\",\"generated_workflow_file\":\"weekly-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/fedixyz/fedi/blob/ca73813af396612318a7ecbc5aad96fc6cad11ba/.github/workflows/weekly-doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+      "source_full_name": "fedixyz/fedi",
+      "md_path": ".github/workflows/weekly-doc-updater.md",
+      "commit_sha": "1e866eee86ed0f3abc435a3732a0f4e4d6f4de14",
+      "authored_at": "2026-06-16T09:23:02Z",
+      "committed_at": "2026-06-16T09:42:46Z",
+      "author_name": "Fedi CI",
+      "author_email": "ci@fedi.xyz",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Fedi CI",
+      "committer_email": "ci@fedi.xyz",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "fix(docs): pin weekly doc updater codex model (#11557)\n\n## Summary\nWeekly documentation diff has been failing due to lack of pinned model:\n#11549 #11478\n- Pin the Weekly Documentation Updater Codex engine to `gpt-5-codex` so\nit does not fall through to an unsupported Responses API model.\n- Tighten the workflow prompt so missing run history falls back to a\nfull docs review and every no-change/incomplete exit emits a Safe\nOutput.\n- Regenerate the weekly doc updater lock file.\n#11549\n#11478\n\n## Verification\n- `gh aw compile weekly-doc-updater --no-check-update`\n- `gh aw compile weekly-doc-updater --no-check-update --no-emit`\n- `git diff --check`\n- Verified on fork:\nhttps://github.com/aljazceru/fedi/actions/runs/27556199177\n\nsource commit: a7d27972f56ee37c6a8d023fcfc2b39157e8ad05",
+      "parent_shas": [
+        "255ec1c8a9baae78c259e426f50523ff77940e0c"
+      ],
+      "tree_sha": "cdfac61d4311a97522dae88174f146fda1a65d6d",
+      "html_url": "https://github.com/fedixyz/fedi/commit/1e866eee86ed0f3abc435a3732a0f4e4d6f4de14",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+          "source_full_name": "fedixyz/fedi",
+          "md_path": ".github/workflows/weekly-doc-updater.md",
+          "commit_sha": "1e866eee86ed0f3abc435a3732a0f4e4d6f4de14",
+          "committed_at": "2026-06-16T09:42:46Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 4,
+          "file_changes": 14,
+          "file_patch": "@@ -10,7 +10,9 @@ permissions:\n   pull-requests: read\n \n tracker-id: weekly-doc-updater\n-engine: codex\n+engine:\n+  id: codex\n+  model: gpt-5-codex\n strict: true\n \n network:\n@@ -107,7 +109,8 @@ If the changed files clearly do not affect a tracked Markdown file, do not revie\n Fallback rules:\n \n - If there is no previous successful run, perform a full review of all tracked Markdown files.\n-- If run-history lookup fails or the changed-file mapping is too ambiguous, expand the review conservatively across the tracked Markdown inventory instead of blindly reviewing everything.\n+- If run-history lookup fails, perform a full review of all tracked Markdown files. Do not stop or report missing data just because the previous successful run cannot be found.\n+- If the changed-file mapping is too ambiguous, expand the review conservatively across the tracked Markdown inventory instead of blindly reviewing everything.\n - If a single foundational file implies broad documentation drift, it is acceptable to expand beyond the minimal subset.\n \n ## Requirements\n@@ -208,5 +211,8 @@ The PR description should include:\n \n ## Exit Conditions\n \n-- If no documentation changes are needed, exit without creating a PR.\n-- If you find uncertain or high-risk areas that cannot be validated from the repo, mention them in the updated audit report if you changed other docs. Otherwise exit without changes.\n+- Plain text final responses are invalid for this workflow. Before finishing, always invoke exactly one final safe-output tool.\n+- If documentation changes are needed, commit the changes and call the safe-outputs `create_pull_request` tool.\n+- If no documentation changes are needed, call the safe-outputs `noop` tool with a concise message that includes the review scope and why no PR was needed.\n+- If you cannot complete the review because required repository data or tooling is unavailable, call `missing_data`, `missing_tool`, or `report_incomplete` as appropriate. Do not describe the intended safe-output call in text without invoking it.\n+- If you find uncertain or high-risk areas that cannot be validated from the repo, mention them in the updated audit report if you changed other docs. If no docs changed, include the uncertainty in the `noop` message.",
+          "snapshot_ref": "1e866eee86ed0f3abc435a3732a0f4e4d6f4de14",
+          "snapshot_blob_sha": "7497226727182eb65f6ff36462d85e8c2c4a9de1",
+          "snapshot_file": "snapshots/fedi__fedixyz__1e866eee86ed0f3abc435a3732a0f4e4d6f4de14__weekly-doc-updater.md",
+          "snapshot_bytes": 8222,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"fedixyz/fedi\",\"generated_owner\":\"fedixyz\",\"generated_repo\":\"fedi\",\"generated_workflow_path\":\".github/workflows/weekly-doc-updater.lock.yml\",\"generated_workflow_file\":\"weekly-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/fedixyz/fedi/blob/ca73813af396612318a7ecbc5aad96fc6cad11ba/.github/workflows/weekly-doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+      "source_full_name": "fedixyz/fedi",
+      "md_path": ".github/workflows/weekly-doc-updater.md",
+      "commit_sha": "3a155addf92f418fdd583435e672f46361520116",
+      "authored_at": "2026-06-16T17:17:56Z",
+      "committed_at": "2026-06-16T17:39:08Z",
+      "author_name": "Fedi CI",
+      "author_email": "ci@fedi.xyz",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Fedi CI",
+      "committer_email": "ci@fedi.xyz",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "build(gh-aw): bump compiler to v0.79.8 for newer codex models (#11559)\n\n## Description\n\n- ref #11557 (stopgap-pinned the weekly doc updater to gpt-5-codex)\n- the weekly doc updater can't run on gpt-5.5, OpenAI's current\nrecommended coding model. on gh-aw v0.74.8 the agent aborts with no\noutput. bumping the compiler to v0.79.8 fixes it\n- recompiles only the weekly-doc-updater lock on v0.79.8 (firewall\n0.27.2, mcp-gateway v0.3.25, github-mcp-server v1.1.2) and pins it to\ngpt-5.5\n- daily-e2e-coverage-check stays on v0.74.8: its lock has hand-injected\naudit-context steps absent from the .md source, so any recompile drops\nthem and it doesn't need gpt-5.5. actions-lock.json keeps both setup\npins\n- the v0.79.8 compiler emits trailing whitespace the pre-commit hook\nrejects, so the lock is whitespace-stripped after compiling\n\n## Testing\n\n- dispatched the weekly updater on v0.79.8 + gpt-5.5, the run completed\nwhere v0.74.8 aborted with no output:\nhttps://github.com/aljazceru/fedi/actions/runs/27607865297\n- that run's create_pull_request hit a merge-base error from running on\na standalone fork branch with no base ref, not expected on a real\ndefault-branch run\n\nsource commit: 66f4f035e2fd9ec935a0b4f82f734b5ad26fa956",
+      "parent_shas": [
+        "d8248748266f9f94b5a6e0f4a10ab3c82117c986"
+      ],
+      "tree_sha": "a365c4a657e044cb2d07967d1b677a71fa2a95ca",
+      "html_url": "https://github.com/fedixyz/fedi/commit/3a155addf92f418fdd583435e672f46361520116",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+          "source_full_name": "fedixyz/fedi",
+          "md_path": ".github/workflows/weekly-doc-updater.md",
+          "commit_sha": "3a155addf92f418fdd583435e672f46361520116",
+          "committed_at": "2026-06-16T17:39:08Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -12,7 +12,7 @@ permissions:\n tracker-id: weekly-doc-updater\n engine:\n   id: codex\n-  model: gpt-5-codex\n+  model: gpt-5.5\n strict: true\n \n network:",
+          "snapshot_ref": "3a155addf92f418fdd583435e672f46361520116",
+          "snapshot_blob_sha": "73b6dcc115cb43a7bb8b003d3843cb0c7062e1c2",
+          "snapshot_file": "snapshots/fedi__fedixyz__3a155addf92f418fdd583435e672f46361520116__weekly-doc-updater.md",
+          "snapshot_bytes": 8218,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"fedixyz/fedi\",\"generated_owner\":\"fedixyz\",\"generated_repo\":\"fedi\",\"generated_workflow_path\":\".github/workflows/weekly-doc-updater.lock.yml\",\"generated_workflow_file\":\"weekly-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/fedixyz/fedi/blob/ca73813af396612318a7ecbc5aad96fc6cad11ba/.github/workflows/weekly-doc-updater.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+      "source_full_name": "fedixyz/fedi",
+      "md_path": ".github/workflows/weekly-doc-updater.md",
+      "commit_sha": "41241c113b3aa0a4983214f0c9833c77c1539e55",
+      "authored_at": "2026-07-27T07:51:50Z",
+      "committed_at": "2026-07-27T08:08:41Z",
+      "author_name": "Fedi CI",
+      "author_email": "ci@fedi.xyz",
+      "author_login": "",
+      "author_account_type": "",
+      "committer_name": "Fedi CI",
+      "committer_email": "ci@fedi.xyz",
+      "committer_login": "",
+      "committer_account_type": "",
+      "message": "fix(gh-aw): link github refs in the weekly doc audit report (#11797)\n\n## Description\n\n- every pull request, issue, workflow run and commit that the weekly doc\nupdater cites in `documentation-audit-report.md` is plain text you have\nto copy-paste to look up, see the refresh in #11796. github only\nautolinks a bare `#1234` inside pr and issue bodies, not inside a\nmarkdown file rendered from the repo\n- the prompt now asks for explicit markdown links and gives the url form\nfor each kind of reference. link text stays the plain number or sha, so\nthe report reads the same and every ref is clickable\n- no lock recompile needed. `weekly-doc-updater.lock.yml` pulls the\nprompt in with `{{#runtime-import}}` at run time instead of embedding\nit, so merging this is enough for monday's run\n\n## Testing\n\n- checked the premise against github's own renderer with `gh api\n/markdown -f mode=markdown`, the mode used for files in a repo. it\nleaves `#11683` as text and turns\n`[#11683](https://github.com/fedibtc/fedi/pull/11683)` into a link\n\nsource commit: 23e8ccfe11799f123243c7b0a9dbdeb2438809c1",
+      "parent_shas": [
+        "90edc0dced6acf02bb4817a55b8a6a290ff0971e"
+      ],
+      "tree_sha": "d2d9879dfe22774a53fd5cc35702cef7d3ccc8fd",
+      "html_url": "https://github.com/fedixyz/fedi/commit/41241c113b3aa0a4983214f0c9833c77c1539e55",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "fedixyz/fedi:.github/workflows/weekly-doc-updater.md",
+          "source_full_name": "fedixyz/fedi",
+          "md_path": ".github/workflows/weekly-doc-updater.md",
+          "commit_sha": "41241c113b3aa0a4983214f0c9833c77c1539e55",
+          "committed_at": "2026-07-27T08:08:41Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 10,
+          "file_deletions": 0,
+          "file_changes": 10,
+          "file_patch": "@@ -124,6 +124,7 @@ Fallback rules:\n 7. Keep edits concise, repo-specific, and technically grounded.\n 8. Do not skip a tracked Markdown file solely because it was not part of a previous hard-coded documentation list.\n 9. Update `documentation-audit-report.md` to summarize what you reviewed, what was outdated, what you changed, and any remaining uncertain areas.\n+10. Write every pull request, issue, workflow run, and commit reference in the audit report as a clickable Markdown link.\n \n ## Review Process\n \n@@ -189,6 +190,15 @@ Update `documentation-audit-report.md` with:\n - what was changed in this run\n - any unresolved areas where the code was ambiguous\n \n+GitHub does not autolink bare `#1234` references, run IDs, or commit SHAs inside a rendered Markdown file the way it does in a pull request body, so write them as explicit Markdown links. Build the URLs from the repository in the GitHub context:\n+\n+- pull request: `[#11683](https://github.com/OWNER/REPO/pull/11683)`\n+- issue: `[#11683](https://github.com/OWNER/REPO/issues/11683)`\n+- workflow run: `[29227493245](https://github.com/OWNER/REPO/actions/runs/29227493245)`\n+- commit: `[0c3b474fd8dfdff0eaef664d5f7ae9c618332257](https://github.com/OWNER/REPO/commit/0c3b474fd8dfdff0eaef664d5f7ae9c618332257)`\n+\n+Link every occurrence, including references inside the scope, findings, and per-document status sections. Keep the visible link text as the plain `#number`, run ID, or SHA so the report still reads the same.\n+\n ### 6. Create a pull request\n \n If and only if you made documentation changes:",
+          "snapshot_ref": "41241c113b3aa0a4983214f0c9833c77c1539e55",
+          "snapshot_blob_sha": "f0fcfbea24ddaafadb84561a47b666f7bb322e55",
+          "snapshot_file": "snapshots/fedi__fedixyz__41241c113b3aa0a4983214f0c9833c77c1539e55__weekly-doc-updater.md",
+          "snapshot_bytes": 9152,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"fedixyz/fedi\",\"generated_owner\":\"fedixyz\",\"generated_repo\":\"fedi\",\"generated_workflow_path\":\".github/workflows/weekly-doc-updater.lock.yml\",\"generated_workflow_file\":\"weekly-doc-updater.lock.yml\",\"generated_html_url\":\"https://github.com/fedixyz/fedi/blob/ca73813af396612318a7ecbc5aad96fc6cad11ba/.github/workflows/weekly-doc-updater.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

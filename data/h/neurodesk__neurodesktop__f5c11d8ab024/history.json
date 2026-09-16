@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+    "source_full_name": "neurodesk/neurodesktop",
+    "source_owner": "neurodesk",
+    "source_repo": "neurodesktop",
+    "md_path": ".github/workflows/maintenance-test-pruning.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/neurodesk/neurodesktop/blob/HEAD/.github/workflows/maintenance-test-pruning.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "neurodesk/neurodesktop",
+      "generated_owner": "neurodesk",
+      "generated_repo": "neurodesktop",
+      "generated_workflow_path": ".github/workflows/maintenance-test-pruning.lock.yml",
+      "generated_workflow_file": "maintenance-test-pruning.lock.yml",
+      "generated_html_url": "https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-test-pruning.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:00+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-test-pruning.md",
+      "commit_sha": "151736fc7a08dac82788ade9006df518dacea818",
+      "authored_at": "2026-07-28T06:33:19Z",
+      "committed_at": "2026-07-28T06:33:19Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "Add daily agentic maintenance workflows",
+      "parent_shas": [
+        "4c31374607600ec32b98766e001f38b6c72daa5c"
+      ],
+      "tree_sha": "bf95a9d76d7825416207ace7992eb577b504d917",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/151736fc7a08dac82788ade9006df518dacea818",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-test-pruning.md",
+          "commit_sha": "151736fc7a08dac82788ade9006df518dacea818",
+          "committed_at": "2026-07-28T06:33:19Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 59,
+          "file_deletions": 0,
+          "file_changes": 59,
+          "file_patch": "@@ -0,0 +1,59 @@\n+---\n+name: Daily Maintenance - Test Pruning\n+description: Remove redundant or obsolete tests without reducing behavioral protection.\n+labels: [automation, maintenance, tests]\n+on:\n+  schedule: daily\n+  workflow_dispatch:\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  actions: read\n+\n+engine:\n+  id: codex\n+  model: ${{ vars.GH_AW_MODEL_AGENT_CODEX || vars.GH_AW_DEFAULT_MODEL_CODEX || 'neurodesk' }}\n+  env:\n+    OPENAI_BASE_URL: \"https://llm.neurodesk.org/openai\"\n+    OPENAI_API_KEY: ${{ secrets.CODEX_API_KEY || secrets.OPENAI_API_KEY }}\n+\n+models:\n+  providers:\n+    openai:\n+      models:\n+        neurodesk:\n+          cost:\n+            input: \"3e-06\"\n+            output: \"1.5e-05\"\n+\n+strict: true\n+max-ai-credits: -1\n+max-daily-ai-credits: -1\n+max-turn-cache-misses: 2000\n+timeout-minutes: 30\n+\n+imports:\n+  - uses: .github/workflows/shared/maintenance-base.md\n+    with:\n+      category: test-pruning\n+---\n+\n+# Test Pruning\n+\n+Find one test or tightly related test group that is demonstrably redundant,\n+obsolete, or coupled only to an implementation detail, then remove or simplify\n+it without reducing protection of a supported behavior.\n+\n+Require concrete evidence that another test still protects the same observable\n+contract. Do not remove a test merely because it is slow, flaky, difficult to\n+understand, or overlaps setup with another test. Preserve historical regression\n+tests, security tests, negative tests, and the `funny-name-tool` negative-test\n+convention unless the behavior they protect no longer exists.\n+\n+When practical, prove the remaining test would catch the relevant regression\n+with a small temporary local mutation, then revert that mutation before making\n+the pull request. Limit production changes to the minimum needed to stop a test\n+from asserting private implementation shape; this workflow is not a feature or\n+refactoring workflow.",
+          "snapshot_ref": "151736fc7a08dac82788ade9006df518dacea818",
+          "snapshot_blob_sha": "c1aca511541f268a944b87e299ed805f887269a9",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__151736fc7a08dac82788ade9006df518dacea818__maintenance-test-pruning.md",
+          "snapshot_bytes": 1851,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-test-pruning.lock.yml\",\"generated_workflow_file\":\"maintenance-test-pruning.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-test-pruning.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-test-pruning.md",
+      "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+      "authored_at": "2026-07-29T00:14:29Z",
+      "committed_at": "2026-07-29T00:14:29Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "fix maintenance workflows",
+      "parent_shas": [
+        "b523d75f2b32ff713db35b3ad0725a9806ff77a1"
+      ],
+      "tree_sha": "a55f6c043a53b1616f58930658aa41bd35b03cbf",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/2a1df33ef74729614931d791f5750f2366f7dab0",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-test-pruning.md",
+          "commit_sha": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "committed_at": "2026-07-29T00:14:29Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 2,
+          "file_changes": 5,
+          "file_patch": "@@ -1,9 +1,9 @@\n ---\n-name: Daily Maintenance - Test Pruning\n+name: Weekly Maintenance - Test Pruning\n description: Remove redundant or obsolete tests without reducing behavioral protection.\n labels: [automation, maintenance, tests]\n on:\n-  schedule: daily\n+  schedule: weekly\n   workflow_dispatch:\n \n permissions:\n@@ -35,6 +35,7 @@ max-turn-cache-misses: 2000\n timeout-minutes: 30\n \n imports:\n+  - uses: .github/workflows/shared/agentic-models.md\n   - uses: .github/workflows/shared/maintenance-base.md\n     with:\n       category: test-pruning",
+          "snapshot_ref": "2a1df33ef74729614931d791f5750f2366f7dab0",
+          "snapshot_blob_sha": "c3edf4e54506d8ab39a0948ec499fb4a683c39b7",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__2a1df33ef74729614931d791f5750f2366f7dab0__maintenance-test-pruning.md",
+          "snapshot_bytes": 1906,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-test-pruning.lock.yml\",\"generated_workflow_file\":\"maintenance-test-pruning.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-test-pruning.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+      "source_full_name": "neurodesk/neurodesktop",
+      "md_path": ".github/workflows/maintenance-test-pruning.md",
+      "commit_sha": "a895f367d92b03f16ae906e59ddc488d89fca0c3",
+      "authored_at": "2026-08-04T01:39:23Z",
+      "committed_at": "2026-08-04T01:39:26Z",
+      "author_name": "Steffen Bollmann",
+      "author_email": "stebo85@users.noreply.github.com",
+      "author_login": "stebo85",
+      "author_account_type": "User",
+      "committer_name": "Steffen Bollmann",
+      "committer_email": "stebo85@users.noreply.github.com",
+      "committer_login": "stebo85",
+      "committer_account_type": "User",
+      "message": "make aw more robust",
+      "parent_shas": [
+        "e858d8963b29eb80624f0ba8aab956e1dd9842b6"
+      ],
+      "tree_sha": "cc6986fd9cc2eaef7db60c9aede4b87318e84a3b",
+      "html_url": "https://github.com/neurodesk/neurodesktop/commit/a895f367d92b03f16ae906e59ddc488d89fca0c3",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "neurodesk/neurodesktop:.github/workflows/maintenance-test-pruning.md",
+          "source_full_name": "neurodesk/neurodesktop",
+          "md_path": ".github/workflows/maintenance-test-pruning.md",
+          "commit_sha": "a895f367d92b03f16ae906e59ddc488d89fca0c3",
+          "committed_at": "2026-08-04T01:39:26Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -15,6 +15,7 @@ permissions:\n engine:\n   id: codex\n   model: ${{ vars.GH_AW_MODEL_AGENT_CODEX || vars.GH_AW_DEFAULT_MODEL_CODEX || 'neurodesk' }}\n+  args: [\"-c\", \"features.multi_agent=false\"]\n   env:\n     OPENAI_BASE_URL: \"https://llm.neurodesk.org/openai\"\n     OPENAI_API_KEY: ${{ secrets.CODEX_API_KEY || secrets.OPENAI_API_KEY }}",
+          "snapshot_ref": "a895f367d92b03f16ae906e59ddc488d89fca0c3",
+          "snapshot_blob_sha": "1e2712100de57c076a045d8e21999cc3e77fa4ed",
+          "snapshot_file": "snapshots/neurodesktop__neurodesk__a895f367d92b03f16ae906e59ddc488d89fca0c3__maintenance-test-pruning.md",
+          "snapshot_bytes": 1951,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"neurodesk/neurodesktop\",\"generated_owner\":\"neurodesk\",\"generated_repo\":\"neurodesktop\",\"generated_workflow_path\":\".github/workflows/maintenance-test-pruning.lock.yml\",\"generated_workflow_file\":\"maintenance-test-pruning.lock.yml\",\"generated_html_url\":\"https://github.com/neurodesk/neurodesktop/blob/a895f367d92b03f16ae906e59ddc488d89fca0c3/.github/workflows/maintenance-test-pruning.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

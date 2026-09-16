@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+    "source_full_name": "EvergineTeam/OpenGL.NET",
+    "source_owner": "EvergineTeam",
+    "source_repo": "OpenGL.NET",
+    "md_path": ".github/workflows/ci-doctor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/EvergineTeam/OpenGL.NET/blob/HEAD/.github/workflows/ci-doctor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "EvergineTeam/OpenGL.NET",
+      "generated_owner": "EvergineTeam",
+      "generated_repo": "OpenGL.NET",
+      "generated_workflow_path": ".github/workflows/ci-doctor.lock.yml",
+      "generated_workflow_file": "ci-doctor.lock.yml",
+      "generated_html_url": "https://github.com/EvergineTeam/OpenGL.NET/blob/542ad219bc78d0f725f2db89e724a89c1d00014b/.github/workflows/ci-doctor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 3,
+      "excluded_bot": 2
+    },
+    "collected_at_utc": "2026-08-04T11:27:00+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/OpenGL.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "f11e6c3f7706632cb12e6e9ed4763a9c9dafbbe8",
+      "authored_at": "2026-08-02T13:30:01Z",
+      "committed_at": "2026-08-02T13:30:01Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat: run the ci-doctor and binding-updater agents (#10)\n\nCompletes the trio of XML-driven bindings. Installs toolbox v1.3.0, so\nthis repository starts where the other two ended rather than\nrediscovering the same four failures.\n\nThere is a specific job waiting for the updater here. The first\nregeneration from the current registry silently collapsed 179 typed\nenums into one, because Khronos removed the <groups> block that\nOpenGLSpecification.cs reads and moved the grouping into group=\nattributes on each enum. The build passed and CD went green; only\nreading the diff caught it. That is precisely the class of failure this\nagent exists for, and it is a better first assignment than a synthetic\ntest.\n\nNeither agent can merge anything: both run read-only and write only\nthrough safe-outputs, and any pull request touching OpenGLGen is\nlabelled needs-human-review.",
+      "parent_shas": [
+        "172838e19438d9b90d3554af289c2941a738dd68"
+      ],
+      "tree_sha": "9d8cd3c9a8882953c38923ac92122bc0cf3d4836",
+      "html_url": "https://github.com/EvergineTeam/OpenGL.NET/commit/f11e6c3f7706632cb12e6e9ed4763a9c9dafbbe8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/OpenGL.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "f11e6c3f7706632cb12e6e9ed4763a9c9dafbbe8",
+          "committed_at": "2026-08-02T13:30:01Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 101,
+          "file_deletions": 0,
+          "file_changes": 101,
+          "file_patch": "@@ -0,0 +1,101 @@\n+---\n+emoji: 🩺\n+name: CI Doctor\n+description: Triages failed CI/CD runs in a binding repository and fixes workflow configuration problems.\n+labels: [bindings, maintenance, reactive]\n+on:\n+  workflow_run:\n+    workflows: [\"CI\", \"CD\", \"Sync standards\"]\n+    types: [completed]\n+    branches: [main]\n+  workflow_dispatch:\n+if: contains(fromJson('[\"failure\",\"timed_out\"]'), github.event.workflow_run.conclusion)\n+permissions:\n+  contents: read\n+  actions: read\n+  issues: read\n+  pull-requests: read\n+  copilot-requests: write\n+strict: true\n+model: claude-sonnet-5\n+max-turns: 25\n+max-ai-credits: 150\n+network:\n+  allowed: [defaults, github]\n+tools:\n+  github:\n+    mode: gh-proxy\n+    toolsets: [default]\n+safe-outputs:\n+  create-pull-request:\n+    title-prefix: \"fix(ci): \"\n+    labels: [agent:ci-fix]\n+    allowed-files:\n+      - \".github/workflows/**\"\n+    draft: false\n+    if-no-changes: \"ignore\"\n+  create-issue:\n+    title-prefix: \"CI failure: \"\n+    labels: [agent:needs-human]\n+    allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n+    deduplicate-by-title: true\n+    max: 1\n+source: EvergineTeam/Evergine.Bindings@1e1c380bfed92b3f51e8bf32a550c2cb5b278ea7\n+---\n+\n+# CI Doctor\n+\n+A workflow in this binding repository has failed. Diagnose it, and either fix it or hand it to whoever — human or agent — can.\n+\n+You are the **infrastructure** half of this repository's automation. The dividing line is sharp and you must not cross it:\n+\n+- **Yours**: anything under `.github/`. Workflow configuration, branch names, action refs, missing inputs, expired or absent secrets, runner problems, transient network failures.\n+- **Not yours**: anything under the generator directory or the generated output. If the fix belongs in C# code, you hand it off — you never edit it.\n+\n+Read `binding.yml` at the repository root first. It tells you which paths are generator source and which are generated output, so you can tell which side of that line a failure falls on.\n+\n+## What to do\n+\n+**1. Get the facts.** Fetch the failed run's logs and identify the job and step that failed, and the first error that is a cause rather than a consequence. A cascade of downstream errors usually has one real origin near the top.\n+\n+**2. Derive a failure key** of the form `<workflow>:<job>:<step>:<error-signature>`. The signature must be stable across runs: strip run numbers, timestamps, temporary paths and SHAs. `git fetch origin +refs/heads/main*` and `git fetch origin +refs/heads/feature-x*` are the same signature.\n+\n+**3. Check for an existing open issue with that key before writing anything.** If one exists, call `noop`. Thirteen repositories sharing one recurring fault must not produce thirteen issues per run.\n+\n+**4. Classify and act.** Exactly one of:\n+\n+### Workflow configuration → open a pull request\n+\n+A wrong branch name, a reusable workflow pointing at a ref that no longer resolves, a malformed or missing input, a typo. These are yours to fix. Keep the diff minimal — change what is broken and nothing else. In the pull request body, state what failed, why, and what the change does.\n+\n+Do not \"improve\" the workflow while you are in there. A pull request that fixes one line gets merged in a minute; one that also reorganises the file waits for a review that may never come.\n+\n+### Transient infrastructure → re-run once, then escalate\n+\n+Network timeouts, runner allocation failures, 5xx from nuget.org, rate limits. Re-run the failed workflow once. If the re-run succeeds, call `noop`: a flake that self-recovered is not worth a human's attention. If it fails again the same way, it is not a flake — open an issue with `agent:needs-human`.\n+\n+Never open a pull request for a transient failure. There is nothing to fix.\n+\n+### The generator or the specification → hand off\n+\n+The build failed because the generator cannot handle something new in the upstream specification, or because the generated code no longer compiles. Open an issue labelled **`agent:needs-regen`**.\n+\n+That label is not documentation, it is a trigger: it wakes the binding updater, which owns the generator. Say precisely what you found — the failing construct, the file, the compiler error — because the next agent starts from your issue and nothing else.\n+\n+### Upstream broke compatibility → stop\n+\n+The upstream specification changed in a way that cannot be absorbed by regenerating. Open an issue labelled **`agent:upstream-break`** and stop.\n+\n+This is a terminal state for automation, deliberately. Whether to adapt, pin to the previous version, or raise it upstream is a product decision. Lay out what changed and what the options are; do not choose.\n+\n+### Anything else → say so plainly\n+\n+If you cannot determine the cause with confidence, open an issue labelled `agent:needs-human` containing the failing job and step, the relevant log excerpt, your best hypothesis marked clearly as a hypothesis, and the exact commands to reproduce locally. A truthful \"I do not know, here is what I found\" is far more useful than a confident wrong diagnosis that sends someone down the wrong path for an afternoon.\n+\n+## Rules\n+\n+- **Never touch the default branch.** Every change goes through a pull request.\n+- **Never edit generator source or generated output.** That is the updater's job, and the boundary is what keeps both agents predictable.\n+- **Do not react to your own work.** If the failed run was triggered by an agent branch (`agent/*`) or by a bot actor, call `noop`. An agent that triages its own output loops, and loops cost money.\n+- **One intervention per failure.** Either a pull request, or a re-run, or an issue. Never several.\n+- **Report what you did not do.** If you fixed one problem but noticed another outside your remit, say so in the pull request body rather than silently widening the change.",
+          "snapshot_ref": "f11e6c3f7706632cb12e6e9ed4763a9c9dafbbe8",
+          "snapshot_blob_sha": "715e77911ed5e388f0643432cc2de0d6c334a80a",
+          "snapshot_file": "snapshots/OpenGL.NET__EvergineTeam__f11e6c3f7706632cb12e6e9ed4763a9c9dafbbe8__ci-doctor.md",
+          "snapshot_bytes": 5756,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/OpenGL.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"OpenGL.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/OpenGL.NET/blob/542ad219bc78d0f725f2db89e724a89c1d00014b/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/OpenGL.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "f0941bbdac180e38c16d5fbeb4d0c44b8a4c1b19",
+      "authored_at": "2026-08-02T19:54:49Z",
+      "committed_at": "2026-08-02T19:54:49Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to toolbox v1.7.0 (#14)\n\nBrings the GitHub App configuration, which lets ci-doctor open the pull\nrequests it exists to open. GITHUB_TOKEN may not write under\n.github/workflows/ -- that permission is App-only -- so until now the\ndoctor would diagnose a broken workflow and then fail to propose the\nfix, falling back to an issue with a manual link.\n\nAlso catches this repository up on everything since its pin: the\nportable upstream fetch, the line-ending fixes, and change detection\nthat reads the index rather than the working tree.",
+      "parent_shas": [
+        "68dfcfb32b5006e6acedead3e5695760efbaece3"
+      ],
+      "tree_sha": "0940c2548a42185234a9aaad55b9c3c942895627",
+      "html_url": "https://github.com/EvergineTeam/OpenGL.NET/commit/f0941bbdac180e38c16d5fbeb4d0c44b8a4c1b19",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/OpenGL.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "f0941bbdac180e38c16d5fbeb4d0c44b8a4c1b19",
+          "committed_at": "2026-08-02T19:54:49Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 8,
+          "file_deletions": 1,
+          "file_changes": 9,
+          "file_patch": "@@ -27,9 +27,16 @@ tools:\n     mode: gh-proxy\n     toolsets: [default]\n safe-outputs:\n+  # The doctor's whole job is editing workflow configuration, and GITHUB_TOKEN\n+  # may not write under .github/workflows/ -- that permission is App-only. Without\n+  # this the pull request fails and degrades to an issue carrying a manual link.\n+  github-app:\n+    client-id: ${{ vars.APP_CLIENT_ID }}\n+    private-key: ${{ secrets.APP_PRIVATE_KEY }}\n   create-pull-request:\n     title-prefix: \"fix(ci): \"\n     labels: [agent:ci-fix]\n+    allow-workflows: true\n     allowed-files:\n       - \".github/workflows/**\"\n     draft: false\n@@ -40,7 +47,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@1e1c380bfed92b3f51e8bf32a550c2cb5b278ea7\n+source: EvergineTeam/Evergine.Bindings@19dd071f1863ac632c22c023bbcc45008c49dc1e\n ---\n \n # CI Doctor",
+          "snapshot_ref": "f0941bbdac180e38c16d5fbeb4d0c44b8a4c1b19",
+          "snapshot_blob_sha": "6bba967503f31d243604dd115da60e6a01a82fa0",
+          "snapshot_file": "snapshots/OpenGL.NET__EvergineTeam__f0941bbdac180e38c16d5fbeb4d0c44b8a4c1b19__ci-doctor.md",
+          "snapshot_bytes": 6128,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/OpenGL.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"OpenGL.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/OpenGL.NET/blob/542ad219bc78d0f725f2db89e724a89c1d00014b/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/OpenGL.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "321febd0de5366d304582116c0da267766bf47f6",
+      "authored_at": "2026-08-02T20:48:33Z",
+      "committed_at": "2026-08-02T20:48:33Z",
+      "author_name": "jcant0n",
+      "author_email": "javiercantonferrero@gmail.com",
+      "author_login": "jcant0n",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to toolbox v1.7.1 (#15)",
+      "parent_shas": [
+        "f0941bbdac180e38c16d5fbeb4d0c44b8a4c1b19"
+      ],
+      "tree_sha": "fb62742e475292921784d260c2ee74b583ba50c0",
+      "html_url": "https://github.com/EvergineTeam/OpenGL.NET/commit/321febd0de5366d304582116c0da267766bf47f6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/OpenGL.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "321febd0de5366d304582116c0da267766bf47f6",
+          "committed_at": "2026-08-02T20:48:33Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 15,
+          "file_deletions": 1,
+          "file_changes": 16,
+          "file_patch": "@@ -37,6 +37,20 @@ safe-outputs:\n     title-prefix: \"fix(ci): \"\n     labels: [agent:ci-fix]\n     allow-workflows: true\n+    # Two independent gates guard the patch, and both must pass. `allowed-files`\n+    # is an exclusive allowlist: nothing outside these globs can ever be written,\n+    # not even ordinary source. `protected-files` is a separate policy covering\n+    # manifests, instruction files and everything under a top-level dot folder --\n+    # which is all of `.github/`, so it applies to every fix this agent exists to\n+    # make. Its default (`request_review`) cannot be honoured on this path: with a\n+    # GitHub App the push goes through the signed-commit API, which has no way to\n+    # open a pull request and then ask for changes, so it refuses outright and the\n+    # run degrades to an issue carrying a patch bundle.\n+    #\n+    # `allowed` lifts the second gate only. The first still confines the agent to\n+    # workflow files, and the pull request is reviewed by a human before merge --\n+    # which is where that judgement belongs, rather than blocking the proposal.\n+    protected-files: allowed\n     allowed-files:\n       - \".github/workflows/**\"\n     draft: false\n@@ -47,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@19dd071f1863ac632c22c023bbcc45008c49dc1e\n+source: EvergineTeam/Evergine.Bindings@34c1fd0511086f987615f62836ef84040c193321\n ---\n \n # CI Doctor",
+          "snapshot_ref": "321febd0de5366d304582116c0da267766bf47f6",
+          "snapshot_blob_sha": "ffdbab5a1c4659f0378b18a7a3ccaaded37fa890",
+          "snapshot_file": "snapshots/OpenGL.NET__EvergineTeam__321febd0de5366d304582116c0da267766bf47f6__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/OpenGL.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"OpenGL.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/OpenGL.NET/blob/542ad219bc78d0f725f2db89e724a89c1d00014b/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/OpenGL.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "f2a8351c0f1ac3afa388028df822961cb9860576",
+      "authored_at": "2026-08-03T08:39:54Z",
+      "committed_at": "2026-08-03T08:39:54Z",
+      "author_name": "evergine-bindings-automation[bot]",
+      "author_email": "312213894+evergine-bindings-automation[bot]@users.noreply.github.com",
+      "author_login": "evergine-bindings-automation[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to the current toolbox release (#17)\n\nRepins the installed agentic workflows from\n34c1fd0511086f987615f62836ef84040c193321 to\nc6cb3217e05c978d287831bef05895075c263dfa and recompiles.\n\nCo-authored-by: jcant0n <1783366+jcant0n@users.noreply.github.com>",
+      "parent_shas": [
+        "ee57739eec52d44f7d23ee2fa1fcb6a30fb795c2"
+      ],
+      "tree_sha": "e7fd92104577ee948c2455873fc81a9d297952c1",
+      "html_url": "https://github.com/EvergineTeam/OpenGL.NET/commit/f2a8351c0f1ac3afa388028df822961cb9860576",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:evergine-bindings-automation[bot];312213894+evergine-bindings-automation[bot]@users.noreply.github.com;evergine-bindings-automation[bot]",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/OpenGL.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "f2a8351c0f1ac3afa388028df822961cb9860576",
+          "committed_at": "2026-08-03T08:39:54Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -61,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@34c1fd0511086f987615f62836ef84040c193321\n+source: EvergineTeam/Evergine.Bindings@c6cb3217e05c978d287831bef05895075c263dfa\n ---\n \n # CI Doctor",
+          "snapshot_ref": "f2a8351c0f1ac3afa388028df822961cb9860576",
+          "snapshot_blob_sha": "0cdf3f4af4b4b2493cfed26e34be51f04e099e72",
+          "snapshot_file": "snapshots/OpenGL.NET__EvergineTeam__f2a8351c0f1ac3afa388028df822961cb9860576__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/OpenGL.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"OpenGL.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/OpenGL.NET/blob/542ad219bc78d0f725f2db89e724a89c1d00014b/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+      "source_full_name": "EvergineTeam/OpenGL.NET",
+      "md_path": ".github/workflows/ci-doctor.md",
+      "commit_sha": "542ad219bc78d0f725f2db89e724a89c1d00014b",
+      "authored_at": "2026-08-03T16:41:38Z",
+      "committed_at": "2026-08-03T16:41:38Z",
+      "author_name": "evergine-bindings-automation[bot]",
+      "author_email": "312213894+evergine-bindings-automation[bot]@users.noreply.github.com",
+      "author_login": "evergine-bindings-automation[bot]",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore: update agents to the current toolbox release (#19)\n\nRepins the installed agentic workflows from\nc6cb3217e05c978d287831bef05895075c263dfa to\nd70d06b5525a011b293f81d5de14fd329eb36832 and recompiles.\n\nCo-authored-by: jcant0n <1783366+jcant0n@users.noreply.github.com>",
+      "parent_shas": [
+        "2bf8f1cc4f023658ca2583d076f1ff8016efd19f"
+      ],
+      "tree_sha": "768b32e3377b699f7930a2b1245fbaea01356995",
+      "html_url": "https://github.com/EvergineTeam/OpenGL.NET/commit/542ad219bc78d0f725f2db89e724a89c1d00014b",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "excluded_bot",
+      "attribution_class": "excluded_generic_bot",
+      "agent_name": "",
+      "attribution_confidence": "high",
+      "attribution_evidence": "generic bot identity:evergine-bindings-automation[bot];312213894+evergine-bindings-automation[bot]@users.noreply.github.com;evergine-bindings-automation[bot]",
+      "md_changes": [
+        {
+          "source_key": "EvergineTeam/OpenGL.NET:.github/workflows/ci-doctor.md",
+          "source_full_name": "EvergineTeam/OpenGL.NET",
+          "md_path": ".github/workflows/ci-doctor.md",
+          "commit_sha": "542ad219bc78d0f725f2db89e724a89c1d00014b",
+          "committed_at": "2026-08-03T16:41:38Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -61,7 +61,7 @@ safe-outputs:\n     allowed-labels: [agent:needs-regen, agent:upstream-break, agent:needs-human]\n     deduplicate-by-title: true\n     max: 1\n-source: EvergineTeam/Evergine.Bindings@c6cb3217e05c978d287831bef05895075c263dfa\n+source: EvergineTeam/Evergine.Bindings@d70d06b5525a011b293f81d5de14fd329eb36832\n ---\n \n # CI Doctor",
+          "snapshot_ref": "542ad219bc78d0f725f2db89e724a89c1d00014b",
+          "snapshot_blob_sha": "6db3a244042e2362d5e7add32ca91b92d8a382a7",
+          "snapshot_file": "snapshots/OpenGL.NET__EvergineTeam__542ad219bc78d0f725f2db89e724a89c1d00014b__ci-doctor.md",
+          "snapshot_bytes": 7118,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"EvergineTeam/OpenGL.NET\",\"generated_owner\":\"EvergineTeam\",\"generated_repo\":\"OpenGL.NET\",\"generated_workflow_path\":\".github/workflows/ci-doctor.lock.yml\",\"generated_workflow_file\":\"ci-doctor.lock.yml\",\"generated_html_url\":\"https://github.com/EvergineTeam/OpenGL.NET/blob/542ad219bc78d0f725f2db89e724a89c1d00014b/.github/workflows/ci-doctor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

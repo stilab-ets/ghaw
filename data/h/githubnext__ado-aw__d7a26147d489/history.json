@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+    "source_full_name": "githubnext/ado-aw",
+    "source_owner": "githubnext",
+    "source_repo": "ado-aw",
+    "md_path": ".github/workflows/ado-task-ir-contributor.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/githubnext/ado-aw/blob/HEAD/.github/workflows/ado-task-ir-contributor.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "githubnext/ado-aw",
+      "generated_owner": "githubnext",
+      "generated_repo": "ado-aw",
+      "generated_workflow_path": ".github/workflows/ado-task-ir-contributor.lock.yml",
+      "generated_workflow_file": "ado-task-ir-contributor.lock.yml",
+      "generated_html_url": "https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/ado-task-ir-contributor.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 2,
+      "human": 3
+    },
+    "collected_at_utc": "2026-08-04T11:48:50+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/ado-task-ir-contributor.md",
+      "commit_sha": "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e",
+      "authored_at": "2026-06-14T13:19:06Z",
+      "committed_at": "2026-06-14T13:19:06Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(workflows): add ado-task-ir-contributor agentic workflow (#1004)",
+      "parent_shas": [
+        "a4ad96b2ce4ece67d4b16e7ca329c26876e4cd9c"
+      ],
+      "tree_sha": "10fb3dc17ab0230b779beb47eefff8d4e40480a5",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/ado-task-ir-contributor.md",
+          "commit_sha": "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e",
+          "committed_at": "2026-06-14T13:19:06Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 307,
+          "file_deletions": 0,
+          "file_changes": 307,
+          "file_patch": "@@ -0,0 +1,307 @@\n+---\n+on:\n+  schedule: every 4h\n+  workflow_dispatch: {}\n+description: Crawls Azure DevOps built-in task docs, contributes typed IR helper functions for uncovered tasks, converts compiler-generated Step::RawYaml usages to typed steps, and opens a focused PR per run.\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+tools:\n+  github:\n+    toolsets: [default]\n+  bash: [\"*\"]\n+  cache-memory: true\n+network:\n+  allowed: [defaults, rust, learn.microsoft.com, dev.azure.com]\n+safe-outputs:\n+  create-pull-request:\n+    max: 1\n+    protected-files: fallback-to-issue\n+    allowed-files:\n+      - \"src/compile/ir/**\"\n+      - \"src/runtimes/**\"\n+      - \"src/compile/extensions/**\"\n+      - \"src/compile/agentic_pipeline.rs\"\n+      - \"tests/**\"\n+---\n+\n+# ADO Task IR Contributor\n+\n+You are a Rust compiler engineer for the **ado-aw** project. Your job is to systematically expand the **typed IR** for Azure DevOps built-in pipeline tasks, one focused PR at a time.\n+\n+## Background\n+\n+The `ado-aw` compiler transforms agent markdown into Azure DevOps YAML through a typed pipeline IR in `src/compile/ir/`. Steps are represented by the `Step` enum in `src/compile/ir/step.rs`:\n+\n+- `Step::Bash` — bash scripts\n+- `Step::Task` — generic ADO task steps (e.g. `UseNode@1`, `UseDotNet@2`)\n+- `Step::Checkout` / `Step::Download` / `Step::Publish` — special-purpose steps\n+- `Step::RawYaml` — **escape hatch** for user-authored YAML that the IR cannot model\n+\n+The `TaskStep` struct is already fully generic — it accepts any `task: String` and an `inputs: IndexMap`. The gap is:\n+1. **No typed factory functions** for most ADO built-in tasks — every place that uses a known ADO task must hand-craft `TaskStep::new(\"Foo@1\", \"display\").with_input(...)`.\n+2. **Compiler-generated `Step::RawYaml`** — occasionally, extension/runtime code emits `Step::RawYaml` for steps that could be expressed as `Step::Task` with a typed helper; these should be migrated.\n+\n+## Step 1 — Load Previous State\n+\n+```bash\n+cat /tmp/gh-aw/cache-memory/ado-task-ir-state.json 2>/dev/null || echo '{\"completed_tasks\":[],\"deferred_tasks\":[],\"history\":[]}'\n+```\n+\n+Track:\n+- `completed_tasks` — ADO task identifiers already contributed (`[\"UseNode@1\", \"UseDotNet@2\", ...]`)\n+- `deferred_tasks` — tasks skipped in prior runs with a reason\n+- `history` — last 30 run records (`date`, `outcome`, `pr_title`, `pr_open`, `pr_number`)\n+\n+If the most recent history entry has `pr_open: true`, look up that PR in GitHub:\n+\n+```bash\n+gh pr list --search 'is:open in:title ado-task-ir' --limit 10\n+```\n+\n+If the prior PR is still open, emit `noop` with \"Waiting on open PR #N before adding more tasks.\" and stop.\n+\n+## Step 2 — Audit Existing Typed Coverage\n+\n+Examine what typed factory functions already exist:\n+\n+```bash\n+# Existing TaskStep factory functions in runtimes and extensions\n+grep -rn \"TaskStep::new\\|fn.*task_step\" src/runtimes src/compile/extensions --include=\"*.rs\"\n+```\n+\n+Also look for any `Step::RawYaml` in **compiler-generated** code (as opposed to user-YAML passthrough paths):\n+\n+```bash\n+# Find RawYaml usages that are NOT in user-YAML passthrough functions\n+grep -n \"Step::RawYaml\\|RawYaml(\" src/compile/agentic_pipeline.rs src/runtimes/**/*.rs src/compile/extensions/**/*.rs 2>/dev/null\n+```\n+\n+Focus on:\n+- `src/runtimes/**` — runtime install/auth steps\n+- `src/compile/extensions/**` — always-on compiler infrastructure steps\n+\n+Ignore `push_raw_yaml_if_nonempty`, `step_to_raw_yaml_string`, and any function that explicitly handles user-authored YAML (these are legitimately `Step::RawYaml`).\n+\n+Build a set of **already-typed tasks**: task identifiers that already have typed factory functions (e.g. `UseNode@1`, `UseDotNet@2`, `UsePythonVersion@0`, `NpmAuthenticate@0`, `PipAuthenticate@1`, `NuGetAuthenticate@1`).\n+\n+## Step 3 — Fetch ADO Built-In Task Catalog\n+\n+Retrieve the Azure DevOps built-in task reference page:\n+\n+```bash\n+curl -fsSL \"https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/?view=azure-devops\" \\\n+  -H \"Accept: text/html\" \\\n+  --max-time 30 \\\n+  -o /tmp/gh-aw/agent/ado-tasks-reference.html 2>&1 | head -5\n+wc -l /tmp/gh-aw/agent/ado-tasks-reference.html\n+```\n+\n+Extract the task list (task identifier + version + category):\n+\n+```bash\n+grep -oP '(?<=href=\")[^\"]*task-reference[^\"]*(?=\")' /tmp/gh-aw/agent/ado-tasks-reference.html | sort -u | head -50\n+# Also extract task names visible in the page\n+grep -oP '[A-Za-z][A-Za-z0-9\\-]+@[0-9]+' /tmp/gh-aw/agent/ado-tasks-reference.html | sort -u\n+```\n+\n+If the HTML download fails, fall back to a curated list of high-value tasks from the compiler's own documentation and test fixtures:\n+\n+```bash\n+# Fallback: tasks already referenced in tests/fixtures and source\n+grep -rh \"task:\\|TaskStep::new\" src tests --include=\"*.rs\" --include=\"*.yml\" --include=\"*.yaml\" 2>/dev/null \\\n+  | grep -oP '[A-Za-z][A-Za-z0-9\\-]+@[0-9]+' | sort -u\n+```\n+\n+## Step 4 — Choose One Task to Contribute\n+\n+From the catalog, select **one** task that:\n+1. Is **not** already in `completed_tasks` from state\n+2. Is **not** already typed (no existing factory function)\n+3. Has a stable, widely-used task identifier (prefer tasks in the `Utility`, `Build`, or `Test` categories)\n+4. Has clear documentation on `learn.microsoft.com`\n+\n+Priority order (highest first):\n+1. A `Step::RawYaml` in compiler-generated code that maps to a known ADO task — converting it to `Step::Task` removes tech debt directly.\n+2. A task used frequently in the `tests/` fixtures as raw YAML strings.\n+3. A task from the ADO catalog that the project is likely to use (e.g. `CopyFiles@2`, `PublishTestResults@2`, `DotNetCoreCLI@2`, `ArchiveFiles@2`, `ExtractFiles@1`, `PowerShell@2`, `CmdLine@2`, `DownloadBuildArtifacts@1`, `PublishPipelineArtifact@1`).\n+\n+Fetch the selected task's detail page to understand its inputs:\n+\n+```bash\n+TASK_ID=\"<chosen-task-id>\"  # e.g. CopyFiles@2\n+TASK_SLUG=$(echo \"$TASK_ID\" | tr '@' '-' | tr '[:upper:]' '[:lower:]')\n+curl -fsSL \"https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/${TASK_SLUG}-task?view=azure-devops\" \\\n+  --max-time 30 \\\n+  -o /tmp/gh-aw/agent/ado-task-detail.html\n+# Extract key inputs\n+grep -A2 -B2 -i \"input\\|required\\|default\" /tmp/gh-aw/agent/ado-task-detail.html | head -100\n+```\n+\n+Document the task:\n+- Task identifier (e.g. `CopyFiles@2`)\n+- Display name convention\n+- Required inputs\n+- Optional inputs with defaults\n+- Relevant use cases in ado-aw\n+\n+## Step 5 — Implement the Typed Helper\n+\n+Decide where to place the factory function:\n+\n+- **If the task is tied to a specific runtime** (language install, package auth): add to `src/runtimes/<name>/mod.rs`.\n+- **If the task is a general-purpose ADO built-in**: add to `src/compile/ir/step.rs` as a standalone constructor function alongside the existing step types, or create a new `src/compile/ir/tasks.rs` module if multiple new tasks are being added.\n+\n+For a new `tasks.rs` module, create it at `src/compile/ir/tasks.rs` and add `pub mod tasks;` to `src/compile/ir/mod.rs`.\n+\n+### Helper function shape\n+\n+Model after existing patterns in `src/runtimes/`:\n+\n+```rust\n+/// Returns a [`TaskStep`] for `CopyFiles@2`.\n+///\n+/// Copies files matching `contents` from `source_folder` to `target_folder`.\n+/// All parameters map directly to the ADO task inputs.\n+pub fn copy_files_step(\n+    source_folder: impl Into<String>,\n+    contents: impl Into<String>,\n+    target_folder: impl Into<String>,\n+) -> TaskStep {\n+    TaskStep::new(\"CopyFiles@2\", \"Copy Files\")\n+        .with_input(\"SourceFolder\", source_folder)\n+        .with_input(\"Contents\", contents)\n+        .with_input(\"TargetFolder\", target_folder)\n+}\n+```\n+\n+Guidelines:\n+- Function name: snake_case, derived from the task display name, without the version suffix (e.g. `copy_files_step`, `publish_test_results_step`).\n+- Required inputs: positional parameters.\n+- Optional inputs with common defaults: keyword-style builder on the returned `TaskStep` (use `.with_input` after the initial construction).\n+- Include a doc comment with the task identifier and a one-line description.\n+- Do NOT add a new `Step` enum variant for standard tasks — `Step::Task(TaskStep)` is the correct representation.\n+\n+### Convert RawYaml if applicable\n+\n+If Step 4 identified a `Step::RawYaml` in compiler code that this task covers, replace it now:\n+\n+```rust\n+// Before:\n+steps.push(Step::RawYaml(format!(\"- task: CopyFiles@2\\n  inputs:\\n    SourceFolder: {src}\\n    TargetFolder: {dst}\")));\n+\n+// After:\n+use crate::compile::ir::tasks::copy_files_step;\n+steps.push(Step::Task(copy_files_step(&src, \"**\", &dst)));\n+```\n+\n+## Step 6 — Add Tests\n+\n+Add at least one unit test to the same file (or `tests/compiler_tests.rs` for integration tests):\n+\n+```rust\n+#[test]\n+fn copy_files_step_creates_task_with_inputs() {\n+    let t = copy_files_step(\"$(Build.SourcesDirectory)\", \"**/*.rs\", \"$(Build.ArtifactStagingDirectory)\");\n+    assert_eq!(t.task, \"CopyFiles@2\");\n+    assert_eq!(t.inputs.get(\"SourceFolder\").map(|s| s.as_str()), Some(\"$(Build.SourcesDirectory)\"));\n+    assert_eq!(t.inputs.get(\"TargetFolder\").map(|s| s.as_str()), Some(\"$(Build.ArtifactStagingDirectory)\"));\n+}\n+```\n+\n+## Step 7 — Validate\n+\n+Run the full validation suite:\n+\n+```bash\n+cargo build --all-targets 2>&1 | tail -20\n+cargo test 2>&1 | tail -30\n+cargo clippy --all-targets --all-features --workspace -- -D warnings 2>&1 | tail -20\n+```\n+\n+All three must pass. If anything fails:\n+- Compilation errors: fix them before continuing.\n+- Test failures: investigate whether the new code broke an existing test or the test itself is wrong.\n+- Clippy warnings: apply the canonical fix.\n+\n+Do not open a PR with a failing CI baseline.\n+\n+## Step 8 — Save State\n+\n+Update cache memory using `jq` to avoid manual JSON construction errors:\n+\n+```bash\n+STATE_FILE=/tmp/gh-aw/cache-memory/ado-task-ir-state.json\n+CURRENT=$(cat \"$STATE_FILE\" 2>/dev/null || echo '{\"completed_tasks\":[],\"deferred_tasks\":[],\"history\":[]}')\n+\n+jq \\\n+  --arg task \"<new-task-id>\" \\\n+  --arg date \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" \\\n+  --arg outcome \"contributed\" \\\n+  --arg pr_title \"<pr-title>\" \\\n+  '.completed_tasks += [$task]\n+  | .history = ([{\n+      date: $date,\n+      outcome: $outcome,\n+      task: $task,\n+      pr_title: $pr_title,\n+      pr_number: null,\n+      pr_open: true\n+    }] + .history)[:30]' \\\n+  <<< \"$CURRENT\" > \"$STATE_FILE\"\n+```\n+\n+## Step 9 — Open the PR\n+\n+If changes were made, open a PR with:\n+\n+**Title** — conventional commits format:\n+- `feat(ir): add typed helper for <TaskName@version>` — for new factory functions\n+- `refactor(ir): replace RawYaml with typed TaskStep for <TaskName@version>` — for RawYaml conversions\n+- `feat(ir): add tasks module with typed helpers for <TaskA> and <TaskB>` — if a new module is created\n+\n+**Body**:\n+\n+```markdown\n+## Summary\n+\n+Adds a typed factory function for `<TaskName@version>` to the ado-aw IR.\n+\n+## Motivation\n+\n+Previously, any code that needed to emit this ADO task step had to hand-craft\n+`TaskStep::new(...)` with raw string inputs. This PR introduces a well-typed\n+helper that validates required inputs at the call site and provides a clear API.\n+\n+## Changes\n+\n+- `src/compile/ir/tasks.rs` (or relevant file): `<fn_name>()` factory function\n+- `tests/...`: unit tests for the new helper\n+- (if applicable) `src/compile/...`: converted `Step::RawYaml` → `Step::Task`\n+\n+## ADO Task Reference\n+\n+- Task: `<TaskName@version>`\n+- Docs: `https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/...`\n+- Required inputs: ...\n+- Optional inputs: ...\n+\n+## Validation\n+\n+- [x] `cargo build --all-targets`\n+- [x] `cargo test`\n+- [x] `cargo clippy --all-targets --all-features --workspace -- -D warnings`\n+\n+---\n+*Created by the ado-task-ir-contributor workflow.*\n+```\n+\n+## When NOT to Open a PR\n+\n+- An open PR from a previous run exists — emit `noop`.\n+- The catalog fetch fails AND no `Step::RawYaml` conversion candidates exist — emit `noop` with \"Cannot fetch ADO task catalog; no local candidates found.\"\n+- All interesting tasks are already typed — emit `noop` with a count.\n+- Validation fails and no safe scope exists — emit `report-incomplete` with the failure details.\n+\n+One run. One task. One PR.",
+          "snapshot_ref": "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e",
+          "snapshot_blob_sha": "ecff3e98ec64338f2b55bab727979be8d16f9148",
+          "snapshot_file": "snapshots/ado-aw__githubnext__79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e__ado-task-ir-contributor.md",
+          "snapshot_bytes": 12029,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/ado-task-ir-contributor.lock.yml\",\"generated_workflow_file\":\"ado-task-ir-contributor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/ado-task-ir-contributor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/ado-task-ir-contributor.md",
+      "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "authored_at": "2026-06-14T17:57:37Z",
+      "committed_at": "2026-06-14T17:57:37Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): disable AI-credit limits and use copilot-requests permission (#1010)\n\nSet max-ai-credits: -1 and max-daily-ai-credits: -1 on every agentic workflow to remove the per-run and rolling-24h AIC guardrails. Add copilot-requests: write to each permissions block so Copilot inference uses the run's GITHUB_TOKEN instead of the COPILOT_GITHUB_TOKEN PAT, eliminating periodic token refreshes.\n\nLock files regenerated with gh aw compile (v0.79.6); also includes the actions-lock.json refresh, copilot-setup-steps.yml SHA bump, the generated agentics-maintenance.yml, and the gh-aw v0.79.6 agents/skills artifacts emitted by the same compile run.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "79b357d2457ae1c22ffc2de91c5cd5ac9b605f5e"
+      ],
+      "tree_sha": "9ddb4d6d49e0ee57f481587c53366bbbc8b6fc44",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/1e567a9a63b77d670b547544df5d7b2bf37b8985",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/ado-task-ir-contributor.md",
+          "commit_sha": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "committed_at": "2026-06-14T17:57:37Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 3,
+          "file_deletions": 0,
+          "file_changes": 3,
+          "file_patch": "@@ -7,6 +7,7 @@ permissions:\n   contents: read\n   issues: read\n   pull-requests: read\n+  copilot-requests: write\n tools:\n   github:\n     toolsets: [default]\n@@ -24,6 +25,8 @@ safe-outputs:\n       - \"src/compile/extensions/**\"\n       - \"src/compile/agentic_pipeline.rs\"\n       - \"tests/**\"\n+max-ai-credits: -1\n+max-daily-ai-credits: -1\n ---\n \n # ADO Task IR Contributor",
+          "snapshot_ref": "1e567a9a63b77d670b547544df5d7b2bf37b8985",
+          "snapshot_blob_sha": "c2dfac9d8ac489b5aac24e7c5c496677af22dbef",
+          "snapshot_file": "snapshots/ado-aw__githubnext__1e567a9a63b77d670b547544df5d7b2bf37b8985__ado-task-ir-contributor.md",
+          "snapshot_bytes": 12099,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/ado-task-ir-contributor.lock.yml\",\"generated_workflow_file\":\"ado-task-ir-contributor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/ado-task-ir-contributor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/ado-task-ir-contributor.md",
+      "commit_sha": "7e94d35eb1a8ede88687598b56089e93b2170e16",
+      "authored_at": "2026-06-18T15:22:21Z",
+      "committed_at": "2026-06-18T15:22:21Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "refactor(ir): replace task helpers with typed builder structs (#1091)\n\n* refactor(ir): replace task helpers with typed builder structs\n\nReplace the free-function ADO task helpers in src/compile/ir/tasks.rs\n(positional required args + untyped .with_input(\"camelKey\",\"str\") for\noptionals) with a tasks/ directory module of typed builder structs, one\nfile per task. Each builder exposes new(<required>) + typed chained\nsetters + into_step() -> TaskStep; only set fields emit inputs, with\nenums for constrained values and Option<bool> for bool-string inputs.\n\nCommand/mode-dispatch tasks (Docker@2, DotNetCoreCLI@2, NuGetCommand@2,\nPowerShell@2) use a command enum with per-variant data so invalid\ninput/command combinations are unrepresentable; tasks/docker.rs is the\ncanonical template. Migrate the docker_installer call sites, update the\nado-task-ir-contributor workflow + docs to the new convention.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n* refactor(ir): address task-builder review feedback\n\n- powershell: split PowerShell into typestate builders PowerShellFile /\n  PowerShellInline so \u0007rguments exists only in file mode; the previous\n  single-struct .arguments() was a silent no-op on inline targets.\n- archive_files: type sevenZipCompression as a SevenZipCompression enum\n  (ultra/maximum/normal/fast/fastest/none) instead of a raw String.\n- docker: lower optionals via push_opt (matches dotnet/nuget/npm) and note\n  the push_opt/push_bool helpers in the canonical-template doc comment.\n- npm: dedup NpmCi (identical to NpmInstall) via a type alias and merge the\n  Install/Ci into_step arms.\n- docs/ir.md: fix the builder example (no builder is named Builder).\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "17f314b3472dedb10bdc434af0d29b52ce0bdddf"
+      ],
+      "tree_sha": "1ceeab84a5f606000acc262e0fecce9f8a1e6b06",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/7e94d35eb1a8ede88687598b56089e93b2170e16",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/ado-task-ir-contributor.md",
+          "commit_sha": "7e94d35eb1a8ede88687598b56089e93b2170e16",
+          "committed_at": "2026-06-18T15:22:21Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 120,
+          "file_deletions": 50,
+          "file_changes": 170,
+          "file_patch": "@@ -2,7 +2,7 @@\n on:\n   schedule: every 4h\n   workflow_dispatch: {}\n-description: Crawls Azure DevOps built-in task docs, contributes typed IR helper functions for uncovered tasks, converts compiler-generated Step::RawYaml usages to typed steps, and opens a focused PR per run.\n+description: Crawls Azure DevOps built-in task docs, contributes typed IR builder structs for uncovered tasks, converts compiler-generated Step::RawYaml usages to typed steps, and opens a focused PR per run.\n permissions:\n   contents: read\n   issues: read\n@@ -42,9 +42,9 @@ The `ado-aw` compiler transforms agent markdown into Azure DevOps YAML through a\n - `Step::Checkout` / `Step::Download` / `Step::Publish` — special-purpose steps\n - `Step::RawYaml` — **escape hatch** for user-authored YAML that the IR cannot model\n \n-The `TaskStep` struct is already fully generic — it accepts any `task: String` and an `inputs: IndexMap`. The gap is:\n-1. **No typed factory functions** for most ADO built-in tasks — every place that uses a known ADO task must hand-craft `TaskStep::new(\"Foo@1\", \"display\").with_input(...)`.\n-2. **Compiler-generated `Step::RawYaml`** — occasionally, extension/runtime code emits `Step::RawYaml` for steps that could be expressed as `Step::Task` with a typed helper; these should be migrated.\n+The `TaskStep` struct is fully generic — it accepts any `task: String` and an `inputs: IndexMap`. Typed coverage of specific ADO tasks lives in `src/compile/ir/tasks/` as **builder structs** (one submodule per task). Each builder exposes `new(<required>)`, one typed chained setter per optional input, and `into_step() -> TaskStep`; only inputs that were set are emitted. Constrained input values are typed enums (each with `as_ado_str()`), bool-string inputs take a Rust `bool`, and command/mode-dispatch tasks (`Docker@2`, `DotNetCoreCLI@2`, `NuGetCommand@2`, `PowerShell@2`) use a command enum with per-variant data so invalid input/command combinations are unrepresentable. `src/compile/ir/tasks/docker.rs` is the canonical template. The gaps are:\n+1. **No typed builder** for most ADO built-in tasks — code that uses an uncovered task must hand-craft `TaskStep::new(\"Foo@1\", \"display\").with_input(...)` with raw string keys.\n+2. **Compiler-generated `Step::RawYaml`** — occasionally, extension/runtime code emits `Step::RawYaml` for steps that could be expressed as `Step::Task` with a typed builder; these should be migrated.\n \n ## Step 1 — Load Previous State\n \n@@ -67,10 +67,13 @@ If the prior PR is still open, emit `noop` with \"Waiting on open PR #N before ad\n \n ## Step 2 — Audit Existing Typed Coverage\n \n-Examine what typed factory functions already exist:\n+Examine which tasks already have a typed builder under `src/compile/ir/tasks/`:\n \n ```bash\n-# Existing TaskStep factory functions in runtimes and extensions\n+# One submodule per covered task; the struct + into_step are the builder.\n+ls src/compile/ir/tasks/\n+grep -rn \"pub struct \\|pub fn into_step\" src/compile/ir/tasks/ --include=\"*.rs\"\n+# Other typed task factories that live outside tasks/ (runtimes / extensions)\n grep -rn \"TaskStep::new\\|fn.*task_step\" src/runtimes src/compile/extensions --include=\"*.rs\"\n ```\n \n@@ -87,7 +90,7 @@ Focus on:\n \n Ignore `push_raw_yaml_if_nonempty`, `step_to_raw_yaml_string`, and any function that explicitly handles user-authored YAML (these are legitimately `Step::RawYaml`).\n \n-Build a set of **already-typed tasks**: task identifiers that already have typed factory functions (e.g. `UseNode@1`, `UseDotNet@2`, `UsePythonVersion@0`, `NpmAuthenticate@0`, `PipAuthenticate@1`, `NuGetAuthenticate@1`).\n+Build the set of **already-typed tasks**: the union of the task identifiers covered by `src/compile/ir/tasks/` builder structs and the runtime/extension factories (e.g. `UseNode@1`, `UseDotNet@2`, `UsePythonVersion@0`, `NpmAuthenticate@0`, `PipAuthenticate@1`, `NuGetAuthenticate@1`).\n \n ## Step 3 — Fetch ADO Built-In Task Catalog\n \n@@ -121,10 +124,12 @@ grep -rh \"task:\\|TaskStep::new\" src tests --include=\"*.rs\" --include=\"*.yml\" --i\n \n From the catalog, select **one** task that:\n 1. Is **not** already in `completed_tasks` from state\n-2. Is **not** already typed (no existing factory function)\n+2. Is **not** already typed (no existing builder struct under `src/compile/ir/tasks/` and no runtime/extension factory)\n 3. Has a stable, widely-used task identifier (prefer tasks in the `Utility`, `Build`, or `Test` categories)\n 4. Has clear documentation on `learn.microsoft.com`\n \n+The chosen task will become a new submodule `src/compile/ir/tasks/<task_snake>.rs`.\n+\n Priority order (highest first):\n 1. A `Step::RawYaml` in compiler-generated code that maps to a known ADO task — converting it to `Step::Task` removes tech debt directly.\n 2. A task used frequently in the `tests/` fixtures as raw YAML strings.\n@@ -149,67 +154,130 @@ Document the task:\n - Optional inputs with defaults\n - Relevant use cases in ado-aw\n \n-## Step 5 — Implement the Typed Helper\n+## Step 5 — Implement the Typed Builder\n \n-Decide where to place the factory function:\n+Decide where to place the builder:\n \n-- **If the task is tied to a specific runtime** (language install, package auth): add to `src/runtimes/<name>/mod.rs`.\n-- **If the task is a general-purpose ADO built-in**: add to `src/compile/ir/step.rs` as a standalone constructor function alongside the existing step types, or create a new `src/compile/ir/tasks.rs` module if multiple new tasks are being added.\n+- **If the task is tied to a specific runtime** (language install, package auth): add to `src/runtimes/<name>/mod.rs` (these remain free factory functions).\n+- **If the task is a general-purpose ADO built-in**: create a **new submodule** `src/compile/ir/tasks/<task_snake>.rs` and declare it in `src/compile/ir/tasks/mod.rs` with `pub mod <task_snake>;` (alphabetical order). One file per task.\n \n-For a new `tasks.rs` module, create it at `src/compile/ir/tasks.rs` and add `pub mod tasks;` to `src/compile/ir/mod.rs`.\n+### Builder struct shape\n \n-### Helper function shape\n+Model after `src/compile/ir/tasks/copy_files.rs` (a single-mode task) and, for command/mode-dispatch tasks, `src/compile/ir/tasks/docker.rs` (the canonical command-enum template). Shared helpers (`bool_input`, `push_opt`, `push_bool`) live in `src/compile/ir/tasks/common.rs`.\n \n-Model after existing patterns in `src/runtimes/`:\n+A builder is a struct with the required inputs as fields, each optional input as an `Option<…>` field, and a `display_name: Option<String>` override:\n \n ```rust\n-/// Returns a [`TaskStep`] for `CopyFiles@2`.\n-///\n-/// Copies files matching `contents` from `source_folder` to `target_folder`.\n-/// All parameters map directly to the ADO task inputs.\n-pub fn copy_files_step(\n-    source_folder: impl Into<String>,\n-    contents: impl Into<String>,\n-    target_folder: impl Into<String>,\n-) -> TaskStep {\n-    TaskStep::new(\"CopyFiles@2\", \"Copy Files\")\n-        .with_input(\"SourceFolder\", source_folder)\n-        .with_input(\"Contents\", contents)\n-        .with_input(\"TargetFolder\", target_folder)\n+use super::common::bool_input;\n+use crate::compile::ir::step::TaskStep;\n+\n+/// Builder for a [`TaskStep`] invoking `CopyFiles@2`.\n+#[derive(Debug, Clone)]\n+pub struct CopyFiles {\n+    contents: String,\n+    target_folder: String,\n+    source_folder: Option<String>,\n+    clean_target_folder: Option<bool>,\n+    display_name: Option<String>,\n+}\n+\n+impl CopyFiles {\n+    /// Required inputs are positional parameters of `new`.\n+    pub fn new(contents: impl Into<String>, target_folder: impl Into<String>) -> Self {\n+        Self {\n+            contents: contents.into(),\n+            target_folder: target_folder.into(),\n+            source_folder: None,\n+            clean_target_folder: None,\n+            display_name: None,\n+        }\n+    }\n+\n+    /// One typed chained setter per optional input.\n+    pub fn source_folder(mut self, value: impl Into<String>) -> Self {\n+        self.source_folder = Some(value.into());\n+        self\n+    }\n+\n+    /// Bool-string inputs take a Rust `bool`.\n+    pub fn clean_target_folder(mut self, value: bool) -> Self {\n+        self.clean_target_folder = Some(value);\n+        self\n+    }\n+\n+    /// Always provide a `displayName` override.\n+    pub fn with_display_name(mut self, value: impl Into<String>) -> Self {\n+        self.display_name = Some(value.into());\n+        self\n+    }\n+\n+    /// `into_step` emits required inputs always, optionals only when set.\n+    pub fn into_step(self) -> TaskStep {\n+        let mut t = TaskStep::new(\n+            \"CopyFiles@2\",\n+            self.display_name.unwrap_or_else(|| \"Copy Files\".into()),\n+        )\n+        .with_input(\"Contents\", self.contents)\n+        .with_input(\"TargetFolder\", self.target_folder);\n+        if let Some(v) = self.source_folder {\n+            t = t.with_input(\"SourceFolder\", v);\n+        }\n+        if let Some(v) = self.clean_target_folder {\n+            t = t.with_input(\"CleanTargetFolder\", bool_input(v));\n+        }\n+        t\n+    }\n }\n ```\n \n Guidelines:\n-- Function name: snake_case, derived from the task display name, without the version suffix (e.g. `copy_files_step`, `publish_test_results_step`).\n-- Required inputs: positional parameters.\n-- Optional inputs with common defaults: keyword-style builder on the returned `TaskStep` (use `.with_input` after the initial construction).\n-- Include a doc comment with the task identifier and a one-line description.\n-- Do NOT add a new `Step` enum variant for standard tasks — `Step::Task(TaskStep)` is the correct representation.\n+- Struct name: PascalCase of the task display name, without the version suffix (e.g. `CopyFiles`, `PublishTestResults`).\n+- **Required inputs** → positional parameters of `new`.\n+- **Optional inputs** → `Option<…>` fields with one typed chained setter each; only emit them in `into_step` when set.\n+- **Constrained values** (a fixed set of string tokens) → a typed enum with `as_ado_str(&self) -> &'static str` returning the exact ADO token. Colocate the enum with the task (reusable shared enums may live in `common.rs`).\n+- **Bool-string inputs** → `Option<bool>`; lower via `bool_input`.\n+- **Command/mode-dispatch tasks** (each command exposes a different optional-input set) → a command **enum with per-variant data** so invalid input/command combos are unrepresentable. Wrap it in a builder struct (`new(<Command>)` plus per-command constructors) and match the variant in `into_step`. Model on `src/compile/ir/tasks/docker.rs`.\n+- Include a doc comment with the task identifier and the ADO task reference URL.\n+- Do NOT add a new `Step` enum variant for standard tasks — `Step::Task(<builder>.into_step())` is the correct representation.\n \n ### Convert RawYaml if applicable\n \n If Step 4 identified a `Step::RawYaml` in compiler code that this task covers, replace it now:\n \n ```rust\n // Before:\n-steps.push(Step::RawYaml(format!(\"- task: CopyFiles@2\\n  inputs:\\n    SourceFolder: {src}\\n    TargetFolder: {dst}\")));\n+steps.push(Step::RawYaml(format!(\"- task: CopyFiles@2\\n  inputs:\\n    Contents: '**'\\n    TargetFolder: {dst}\")));\n \n // After:\n-use crate::compile::ir::tasks::copy_files_step;\n-steps.push(Step::Task(copy_files_step(&src, \"**\", &dst)));\n+use crate::compile::ir::tasks::copy_files::CopyFiles;\n+steps.push(Step::Task(CopyFiles::new(\"**\", &dst).into_step()));\n ```\n \n ## Step 6 — Add Tests\n \n-Add at least one unit test to the same file (or `tests/compiler_tests.rs` for integration tests):\n+Add at least one `#[cfg(test)] mod tests` unit test to the new task submodule (or `tests/compiler_tests.rs` for integration tests), building via the struct and asserting on `task` / `inputs`:\n \n ```rust\n-#[test]\n-fn copy_files_step_creates_task_with_inputs() {\n-    let t = copy_files_step(\"$(Build.SourcesDirectory)\", \"**/*.rs\", \"$(Build.ArtifactStagingDirectory)\");\n-    assert_eq!(t.task, \"CopyFiles@2\");\n-    assert_eq!(t.inputs.get(\"SourceFolder\").map(|s| s.as_str()), Some(\"$(Build.SourcesDirectory)\"));\n-    assert_eq!(t.inputs.get(\"TargetFolder\").map(|s| s.as_str()), Some(\"$(Build.ArtifactStagingDirectory)\"));\n+#[cfg(test)]\n+mod tests {\n+    use super::*;\n+\n+    #[test]\n+    fn creates_task_with_inputs() {\n+        let t = CopyFiles::new(\"**/*.rs\", \"$(Build.ArtifactStagingDirectory)\")\n+            .source_folder(\"$(Build.SourcesDirectory)\")\n+            .into_step();\n+        assert_eq!(t.task, \"CopyFiles@2\");\n+        assert_eq!(t.inputs.get(\"Contents\").map(String::as_str), Some(\"**/*.rs\"));\n+        assert_eq!(\n+            t.inputs.get(\"TargetFolder\").map(String::as_str),\n+            Some(\"$(Build.ArtifactStagingDirectory)\")\n+        );\n+        assert_eq!(\n+            t.inputs.get(\"SourceFolder\").map(String::as_str),\n+            Some(\"$(Build.SourcesDirectory)\")\n+        );\n+    }\n }\n ```\n \n@@ -260,27 +328,29 @@ jq \\\n If changes were made, open a PR with:\n \n **Title** — conventional commits format:\n-- `feat(ir): add typed helper for <TaskName@version>` — for new factory functions\n+- `feat(ir): add typed builder for <TaskName@version>` — for a new builder struct\n - `refactor(ir): replace RawYaml with typed TaskStep for <TaskName@version>` — for RawYaml conversions\n-- `feat(ir): add tasks module with typed helpers for <TaskA> and <TaskB>` — if a new module is created\n \n **Body**:\n \n ```markdown\n ## Summary\n \n-Adds a typed factory function for `<TaskName@version>` to the ado-aw IR.\n+Adds a typed builder struct for `<TaskName@version>` to the ado-aw IR.\n \n ## Motivation\n \n Previously, any code that needed to emit this ADO task step had to hand-craft\n-`TaskStep::new(...)` with raw string inputs. This PR introduces a well-typed\n-helper that validates required inputs at the call site and provides a clear API.\n+`TaskStep::new(...)` with raw string input keys. This PR introduces a typed\n+builder struct (`new(<required>)` + typed optional setters + `into_step()`) so\n+required inputs are positional, optional inputs and their constrained values are\n+type-checked, and call sites stop using stringly-typed keys.\n \n ## Changes\n \n-- `src/compile/ir/tasks.rs` (or relevant file): `<fn_name>()` factory function\n-- `tests/...`: unit tests for the new helper\n+- `src/compile/ir/tasks/<task_snake>.rs`: new `<TaskName>` builder struct (+ any\n+  typed enums) and its `#[cfg(test)] mod tests`\n+- `src/compile/ir/tasks/mod.rs`: `pub mod <task_snake>;` declaration\n - (if applicable) `src/compile/...`: converted `Step::RawYaml` → `Step::Task`\n \n ## ADO Task Reference",
+          "snapshot_ref": "7e94d35eb1a8ede88687598b56089e93b2170e16",
+          "snapshot_blob_sha": "4b69e4f0e9b0d887ef8faff7dbad7abab229d207",
+          "snapshot_file": "snapshots/ado-aw__githubnext__7e94d35eb1a8ede88687598b56089e93b2170e16__ado-task-ir-contributor.md",
+          "snapshot_bytes": 15915,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/ado-task-ir-contributor.lock.yml\",\"generated_workflow_file\":\"ado-task-ir-contributor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/ado-task-ir-contributor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/ado-task-ir-contributor.md",
+      "commit_sha": "7654d30cafbee76aa987d713957166304a657655",
+      "authored_at": "2026-06-20T18:40:09Z",
+      "committed_at": "2026-06-20T18:40:09Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "docs(workflows): refocus ir contributor prompt on ado-aw high-value tasks (#1130)",
+      "parent_shas": [
+        "e146562bb56ff15e4ed5f1ff6f7d92526834530b"
+      ],
+      "tree_sha": "10593288fb57eaedf762583787c22787ea287168",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/7654d30cafbee76aa987d713957166304a657655",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/ado-task-ir-contributor.md",
+          "commit_sha": "7654d30cafbee76aa987d713957166304a657655",
+          "committed_at": "2026-06-20T18:40:09Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 31,
+          "file_deletions": 13,
+          "file_changes": 44,
+          "file_patch": "@@ -92,7 +92,22 @@ Ignore `push_raw_yaml_if_nonempty`, `step_to_raw_yaml_string`, and any function\n \n Build the set of **already-typed tasks**: the union of the task identifiers covered by `src/compile/ir/tasks/` builder structs and the runtime/extension factories (e.g. `UseNode@1`, `UseDotNet@2`, `UsePythonVersion@0`, `NpmAuthenticate@0`, `PipAuthenticate@1`, `NuGetAuthenticate@1`).\n \n-## Step 3 — Fetch ADO Built-In Task Catalog\n+## Step 3 — Build an ado-aw-relevant candidate set\n+\n+Before using the global ADO catalog, derive candidates from the ado-aw codebase so work stays high-impact for this repo:\n+\n+```bash\n+# Compiler/runtime usage that is still stringly-typed today\n+grep -rnh \"TaskStep::new(\" src/compile src/runtimes src/compile/extensions --include=\"*.rs\"\n+\n+# Existing emitted tasks in compiled fixtures (high-signal for real ado-aw usage)\n+grep -rh \"^- task:\" tests --include=\"*.lock.yml\" --include=\"*.yml\" --include=\"*.yaml\" 2>/dev/null \\\n+  | grep -oP '[A-Za-z][A-Za-z0-9\\\\-]+@[0-9]+' | sort | uniq -c | sort -nr\n+```\n+\n+Use this repo-derived set as the primary source of truth for what to implement next.\n+\n+## Step 4 — Fetch ADO Built-In Task Catalog (Secondary Source)\n \n Retrieve the Azure DevOps built-in task reference page:\n \n@@ -112,28 +127,31 @@ grep -oP '(?<=href=\")[^\"]*task-reference[^\"]*(?=\")' /tmp/gh-aw/agent/ado-tasks-r\n grep -oP '[A-Za-z][A-Za-z0-9\\-]+@[0-9]+' /tmp/gh-aw/agent/ado-tasks-reference.html | sort -u\n ```\n \n-If the HTML download fails, fall back to a curated list of high-value tasks from the compiler's own documentation and test fixtures:\n+If the HTML download fails, continue using the repo-derived candidates from Step 3 (do not block on docs fetch):\n \n ```bash\n # Fallback: tasks already referenced in tests/fixtures and source\n grep -rh \"task:\\|TaskStep::new\" src tests --include=\"*.rs\" --include=\"*.yml\" --include=\"*.yaml\" 2>/dev/null \\\n   | grep -oP '[A-Za-z][A-Za-z0-9\\-]+@[0-9]+' | sort -u\n ```\n \n-## Step 4 — Choose One Task to Contribute\n+## Step 5 — Choose One Task to Contribute\n \n-From the catalog, select **one** task that:\n+From the repo-derived candidates (plus the catalog when needed), select **one** task that:\n 1. Is **not** already in `completed_tasks` from state\n 2. Is **not** already typed (no existing builder struct under `src/compile/ir/tasks/` and no runtime/extension factory)\n-3. Has a stable, widely-used task identifier (prefer tasks in the `Utility`, `Build`, or `Test` categories)\n+3. Has a concrete ado-aw impact today (appears in compiler/runtime code, tests/fixtures, or unlocks a nearby `Step::RawYaml` migration)\n 4. Has clear documentation on `learn.microsoft.com`\n \n The chosen task will become a new submodule `src/compile/ir/tasks/<task_snake>.rs`.\n \n Priority order (highest first):\n 1. A `Step::RawYaml` in compiler-generated code that maps to a known ADO task — converting it to `Step::Task` removes tech debt directly.\n-2. A task used frequently in the `tests/` fixtures as raw YAML strings.\n-3. A task from the ADO catalog that the project is likely to use (e.g. `CopyFiles@2`, `PublishTestResults@2`, `DotNetCoreCLI@2`, `ArchiveFiles@2`, `ExtractFiles@1`, `PowerShell@2`, `CmdLine@2`, `DownloadBuildArtifacts@1`, `PublishPipelineArtifact@1`).\n+2. A task currently emitted from `src/compile/**`, `src/runtimes/**`, or `src/compile/extensions/**` via raw `TaskStep::new(...)`.\n+3. A task used frequently in `tests/**/*.lock.yml` compiled fixtures (prefer high-count tasks).\n+4. Only if no repo-derived candidates remain: a catalog task likely to support ado-aw compiler scenarios (artifacts, package/auth, build/test orchestration).\n+\n+Explicitly avoid low-signal tasks with no current ado-aw footprint (for example service-connection/deployment-specialized tasks) unless tied to an active ado-aw compiler path.\n \n Fetch the selected task's detail page to understand its inputs:\n \n@@ -154,7 +172,7 @@ Document the task:\n - Optional inputs with defaults\n - Relevant use cases in ado-aw\n \n-## Step 5 — Implement the Typed Builder\n+## Step 6 — Implement the Typed Builder\n \n Decide where to place the builder:\n \n@@ -242,7 +260,7 @@ Guidelines:\n \n ### Convert RawYaml if applicable\n \n-If Step 4 identified a `Step::RawYaml` in compiler code that this task covers, replace it now:\n+If Step 5 identified a `Step::RawYaml` in compiler code that this task covers, replace it now:\n \n ```rust\n // Before:\n@@ -253,7 +271,7 @@ use crate::compile::ir::tasks::copy_files::CopyFiles;\n steps.push(Step::Task(CopyFiles::new(\"**\", &dst).into_step()));\n ```\n \n-## Step 6 — Add Tests\n+## Step 7 — Add Tests\n \n Add at least one `#[cfg(test)] mod tests` unit test to the new task submodule (or `tests/compiler_tests.rs` for integration tests), building via the struct and asserting on `task` / `inputs`:\n \n@@ -281,7 +299,7 @@ mod tests {\n }\n ```\n \n-## Step 7 — Validate\n+## Step 8 — Validate\n \n Run the full validation suite:\n \n@@ -298,7 +316,7 @@ All three must pass. If anything fails:\n \n Do not open a PR with a failing CI baseline.\n \n-## Step 8 — Save State\n+## Step 9 — Save State\n \n Update cache memory using `jq` to avoid manual JSON construction errors:\n \n@@ -323,7 +341,7 @@ jq \\\n   <<< \"$CURRENT\" > \"$STATE_FILE\"\n ```\n \n-## Step 9 — Open the PR\n+## Step 10 — Open the PR\n \n If changes were made, open a PR with:\n ",
+          "snapshot_ref": "7654d30cafbee76aa987d713957166304a657655",
+          "snapshot_blob_sha": "7aa78fca7048074d25387f05ea28d10b2ced521e",
+          "snapshot_file": "snapshots/ado-aw__githubnext__7654d30cafbee76aa987d713957166304a657655__ado-task-ir-contributor.md",
+          "snapshot_bytes": 16912,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/ado-task-ir-contributor.lock.yml\",\"generated_workflow_file\":\"ado-task-ir-contributor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/ado-task-ir-contributor.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+      "source_full_name": "githubnext/ado-aw",
+      "md_path": ".github/workflows/ado-task-ir-contributor.md",
+      "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "authored_at": "2026-07-02T09:30:40Z",
+      "committed_at": "2026-07-02T09:30:40Z",
+      "author_name": "James Devine",
+      "author_email": "james_a_devine@outlook.com",
+      "author_login": "jamesadevine",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(workflows): remove AI credit budget caps on agentic workflows (#1298)\n\nSet safe-outputs.threat-detection.max-ai-credits to -1 on all 19\ngh-aw workflows and recompile their lock files so both the agent and\nthreat-detection stages run with unlimited AI credit budgets.\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "105e11b195b79286266bef2fe1347a90a414531f"
+      ],
+      "tree_sha": "802695ed1f750dceae8470c21cadf1030203215f",
+      "html_url": "https://github.com/githubnext/ado-aw/commit/e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "githubnext/ado-aw:.github/workflows/ado-task-ir-contributor.md",
+          "source_full_name": "githubnext/ado-aw",
+          "md_path": ".github/workflows/ado-task-ir-contributor.md",
+          "commit_sha": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "committed_at": "2026-07-02T09:30:40Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 2,
+          "file_deletions": 0,
+          "file_changes": 2,
+          "file_patch": "@@ -16,6 +16,8 @@ tools:\n network:\n   allowed: [defaults, rust, learn.microsoft.com, dev.azure.com]\n safe-outputs:\n+  threat-detection:\n+    max-ai-credits: -1\n   create-pull-request:\n     max: 1\n     protected-files: fallback-to-issue",
+          "snapshot_ref": "e06f17da0e8020a36fdff4b6033adc32f6b09ce1",
+          "snapshot_blob_sha": "ca034624a030a33480ef5f9bd0d9a9693560a106",
+          "snapshot_file": "snapshots/ado-aw__githubnext__e06f17da0e8020a36fdff4b6033adc32f6b09ce1__ado-task-ir-contributor.md",
+          "snapshot_bytes": 16955,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"githubnext/ado-aw\",\"generated_owner\":\"githubnext\",\"generated_repo\":\"ado-aw\",\"generated_workflow_path\":\".github/workflows/ado-task-ir-contributor.lock.yml\",\"generated_workflow_file\":\"ado-task-ir-contributor.lock.yml\",\"generated_html_url\":\"https://github.com/githubnext/ado-aw/blob/f660667d6ecfb567f328333ba20e23cbfb899b86/.github/workflows/ado-task-ir-contributor.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

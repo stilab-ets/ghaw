@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+    "source_full_name": "YousefHadder/markdown-plus.nvim",
+    "source_owner": "YousefHadder",
+    "source_repo": "markdown-plus.nvim",
+    "md_path": ".github/workflows/contributor-recognition.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/YousefHadder/markdown-plus.nvim/blob/HEAD/.github/workflows/contributor-recognition.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "YousefHadder/markdown-plus.nvim",
+      "generated_owner": "YousefHadder",
+      "generated_repo": "markdown-plus.nvim",
+      "generated_workflow_path": ".github/workflows/contributor-recognition.lock.yml",
+      "generated_workflow_file": "contributor-recognition.lock.yml",
+      "generated_html_url": "https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/contributor-recognition.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 5
+    },
+    "collected_at_utc": "2026-08-04T12:43:42+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/contributor-recognition.md",
+      "commit_sha": "d4cede52616a5a1b3a90f886d8c2a8da39a5325d",
+      "authored_at": "2026-05-03T20:54:29Z",
+      "committed_at": "2026-05-03T20:54:29Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "feat(ci): add contributor recognition workflow (#305)",
+      "parent_shas": [
+        "b320c8d81761daa5b3bdb68772878be1299c7284"
+      ],
+      "tree_sha": "464f3c44da9d3ffbc881a1f454908ee3d44d9394",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/d4cede52616a5a1b3a90f886d8c2a8da39a5325d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/contributor-recognition.md",
+          "commit_sha": "d4cede52616a5a1b3a90f886d8c2a8da39a5325d",
+          "committed_at": "2026-05-03T20:54:29Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 261,
+          "file_deletions": 0,
+          "file_changes": 261,
+          "file_patch": "@@ -0,0 +1,261 @@\n+---\n+name: Contributor Recognition\n+description: Finds recently active external contributors and proposes All Contributors updates through a draft pull request\n+on:\n+  workflow_dispatch:\n+  schedule:\n+    - cron: weekly\n+  skip-if-match: 'is:open in:title \"[contributors]\"'\n+\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+\n+tracker-id: contributor-recognition\n+engine: copilot\n+strict: true\n+\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - node\n+\n+safe-outputs:\n+  create-pull-request:\n+    expires: 7d\n+    title-prefix: \"[contributors] \"\n+    labels: [documentation, automation, contributors]\n+    reviewers: [YousefHadder]\n+    draft: true\n+    auto-merge: false\n+  create-issue:\n+    expires: 7d\n+    title-prefix: \"[contributors] \"\n+    labels: [documentation, automation, contributors]\n+    max: 1\n+\n+tools:\n+  github:\n+    toolsets: [default]\n+  edit:\n+  bash:\n+    - \"cat .all-contributorsrc\"\n+    - \"cat README.md\"\n+    - \"grep -n 'ALL-CONTRIBUTORS' README.md\"\n+    - \"git\"\n+    - \"npx -y all-contributors-cli add\"\n+    - \"npx -y all-contributors-cli generate\"\n+\n+timeout-minutes: 20\n+\n+imports:\n+  - shared/reporting.md\n+  - shared/safe-output-app.md\n+---\n+\n+{{#runtime-import? .github/shared-instructions.md}}\n+\n+# Contributor Recognition Agent\n+\n+You are a contributor-recognition agent for **markdown-plus.nvim**. Your job is to find recent external contributors who are not yet listed in All Contributors, update the canonical All Contributors files with the official CLI, and create a draft pull request for maintainer review.\n+\n+## Critical Rules\n+\n+- **Use All Contributors as the source of truth and renderer.** Update contributors with `npx -y all-contributors-cli add ...` and refresh generated content with `npx -y all-contributors-cli generate`.\n+- **Do not manually edit the generated contributors table in `README.md`.** The table is between `<!-- ALL-CONTRIBUTORS-LIST:START -->` and `<!-- ALL-CONTRIBUTORS-LIST:END -->`.\n+- **Do not manually edit the generated badge in `README.md`.** The badge is between `<!-- ALL-CONTRIBUTORS-BADGE:START -->` and `<!-- ALL-CONTRIBUTORS-BADGE:END -->`.\n+- **Only modify `.all-contributorsrc` and `README.md`.** Do not edit source code, docs, changelog, workflows, rockspecs, or release files.\n+- **Never add bots.** Exclude accounts ending in `[bot]`, `github-actions[bot]`, `dependabot[bot]`, `renovate[bot]`, and automation-only accounts.\n+- **Prefer precision over recall.** If a contribution type is unclear, mention it in the PR body under \"Needs maintainer review\" when a PR is created, or create a review issue when there are only ambiguous candidates.\n+- **Create at most one PR or issue per run.** If no contributor updates or ambiguous candidates are found, exit cleanly without creating an output.\n+\n+## Project Context\n+\n+- **Repository**: ${{ github.repository }}\n+- **Analysis Date**: $(date +%Y-%m-%d)\n+- **Workspace**: ${{ github.workspace }}\n+- **All Contributors config**: `.all-contributorsrc`\n+- **Generated target**: `README.md`\n+\n+This repository already follows the All Contributors specification. `.all-contributorsrc` is configured with `commit: false`, so the workflow should only prepare file changes and let safe-outputs create the pull request.\n+\n+## Recognition Window\n+\n+Review activity from the last 30 days. Use a broad enough window to catch contributors whose PRs or issues were merged/responded to recently, but do not add stale historical contributors unless there is clear recent activity.\n+\n+## Contribution Type Mapping\n+\n+Use the official All Contributors contribution keys. Apply these conservative mappings:\n+\n+| Evidence | Contribution type |\n+|----------|-------------------|\n+| Authored a merged PR with source changes under `lua/`, `plugin/`, `scripts/`, or `spec/` | `code` |\n+| Authored a merged PR primarily changing `README.md`, `doc/`, examples, or wiki-facing documentation | `doc` |\n+| Authored a merged PR primarily adding or improving tests under `spec/` | `test` |\n+| Reported a bug that was reproduced, fixed, or clearly informed a merged fix | `bug` |\n+| Suggested a feature or UX improvement that was implemented or clearly shaped a change | `ideas` |\n+| Provided substantive PR review comments or approvals that improved a merged PR | `review` |\n+\n+Do not add `maintenance`, `infra`, `tool`, or other less common types unless the evidence is direct and unambiguous.\n+\n+## Workflow\n+\n+### 1. Load Current Contributor State\n+\n+Read the current All Contributors files:\n+\n+```bash\n+cat .all-contributorsrc\n+cat README.md\n+grep -n 'ALL-CONTRIBUTORS' README.md\n+```\n+\n+Extract the existing contributor logins from `.all-contributorsrc`. Do not add a login that is already present unless there is clear evidence for a missing contribution type.\n+\n+### 2. Scan Recent Activity\n+\n+Use GitHub tools to inspect recent project activity:\n+\n+1. Search merged PRs from the last 30 days:\n+   - Query pattern: `repo:${{ github.repository }} is:pr is:merged merged:>=YYYY-MM-DD`\n+   - For each PR, read details and changed files.\n+   - For each PR, fetch reviews and review comments (`get_reviews` and `get_review_comments`) to identify substantive human review contributions.\n+2. Search recently closed bug and feature issues from the last 30 days:\n+   - Query pattern: `repo:${{ github.repository }} is:issue closed:>=YYYY-MM-DD label:bug`\n+   - Query pattern: `repo:${{ github.repository }} is:issue closed:>=YYYY-MM-DD label:enhancement`\n+   - Also check `feature`, `idea`, or similar labels if present.\n+3. For each candidate, gather direct evidence:\n+   - Login\n+   - Contribution type(s)\n+   - Source PR/issue number\n+   - Short rationale\n+\n+Exclude maintainers only when the activity is routine project maintenance. If a maintainer is not already listed and made a user-visible contribution, leave them in \"Needs maintainer review\" rather than adding automatically.\n+\n+### 3. Decide Updates\n+\n+Build a candidate table with these columns:\n+\n+| Login | Types | Evidence | Action |\n+|-------|-------|----------|--------|\n+| `user` | `code,bug` | `#123`, `#124` | Add |\n+| `user2` | `ideas` | `#125` | Needs maintainer review |\n+\n+Only apply candidates with **Action = Add**.\n+\n+Skip a candidate when:\n+\n+- The login is already listed with all detected contribution types.\n+- The account is a bot or automation account.\n+- The evidence is ambiguous or only social/supportive without a clear All Contributors type.\n+- The contribution is internal maintainer housekeeping.\n+\n+### 4. Apply All Contributors Updates\n+\n+For each approved candidate, run the official CLI:\n+\n+```bash\n+npx -y all-contributors-cli add <login> <type1,type2>\n+```\n+\n+After all additions, regenerate the README content:\n+\n+```bash\n+npx -y all-contributors-cli generate\n+```\n+\n+Then verify that only allowed files changed and inspect the focused diff:\n+\n+```bash\n+git diff --name-only\n+git ls-files --others --exclude-standard\n+git diff -- .all-contributorsrc README.md\n+```\n+\n+If `git diff --name-only` or `git ls-files --others --exclude-standard` shows any file other than `.all-contributorsrc` or `README.md`, revert those unrelated changes before creating the PR.\n+\n+### 5. Create Pull Request or Review Issue\n+\n+If `.all-contributorsrc` or `README.md` changed, create a draft PR using the safe-outputs `create_pull_request` tool.\n+\n+**PR title**:\n+\n+```text\n+[contributors] Add recent contributors\n+```\n+\n+**PR body**:\n+\n+```markdown\n+### Summary\n+\n+Updates All Contributors recognition for recent project activity.\n+\n+### Contributors Added\n+\n+| Login | Types | Evidence |\n+|-------|-------|----------|\n+| `user` | `code,bug` | #123, #124 |\n+\n+### Needs Maintainer Review\n+\n+| Login | Possible Types | Evidence | Reason not added |\n+|-------|----------------|----------|------------------|\n+| `user2` | `ideas` | #125 | Ambiguous whether this should be recognized |\n+\n+### Notes\n+\n+- Updated via `npx -y all-contributors-cli add` and `npx -y all-contributors-cli generate`.\n+- Only `.all-contributorsrc` and `README.md` were changed.\n+```\n+\n+Omit \"Contributors Added\" or \"Needs Maintainer Review\" when empty.\n+\n+If there are ambiguous candidates but no `.all-contributorsrc` or `README.md` changes, create an issue using the safe-outputs `create_issue` tool instead of dropping the findings.\n+\n+**Issue title**:\n+\n+```text\n+[contributors] Review possible contributor recognition\n+```\n+\n+**Issue body**:\n+\n+```markdown\n+### Summary\n+\n+Recent project activity produced possible All Contributors updates that need maintainer judgment before they should be added.\n+\n+### Needs Maintainer Review\n+\n+| Login | Possible Types | Evidence | Reason not added |\n+|-------|----------------|----------|------------------|\n+| `user2` | `ideas` | #125 | Ambiguous whether this should be recognized |\n+\n+### Notes\n+\n+- No `.all-contributorsrc` or `README.md` changes were made.\n+- Add confirmed contributors with the official All Contributors CLI.\n+```\n+\n+### 6. Exit Cleanly\n+\n+If there are no changes and no ambiguous candidates after scanning recent activity, do not create a PR or issue. Output:\n+\n+```text\n+No contributor updates needed.\n+```\n+\n+## Validation Checklist\n+\n+Before creating the PR:\n+\n+- `.all-contributorsrc` remains valid JSON.\n+- `README.md` still contains both All Contributors marker pairs.\n+- The README contributors table was generated by the All Contributors CLI.\n+- The diff only includes `.all-contributorsrc` and `README.md`.\n+- Every automatic addition has direct evidence linked to a recent PR or issue.\n+\n+Begin by reading `.all-contributorsrc` and `README.md`, then scan recent activity.",
+          "snapshot_ref": "d4cede52616a5a1b3a90f886d8c2a8da39a5325d",
+          "snapshot_blob_sha": "23f0b66d2a4b24bc0cc746a07c89100ba45efe76",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__d4cede52616a5a1b3a90f886d8c2a8da39a5325d__contributor-recognition.md",
+          "snapshot_bytes": 9371,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/contributor-recognition.lock.yml\",\"generated_workflow_file\":\"contributor-recognition.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/contributor-recognition.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/contributor-recognition.md",
+      "commit_sha": "5b18ea528c2b8b1c6514a652acf5577ff1541971",
+      "authored_at": "2026-05-03T21:07:01Z",
+      "committed_at": "2026-05-03T21:07:01Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix: tighten contributor recognition prompt (#306)",
+      "parent_shas": [
+        "d4cede52616a5a1b3a90f886d8c2a8da39a5325d"
+      ],
+      "tree_sha": "566d8b97cf74c714678cee17fdecb393eb1ca2d3",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/5b18ea528c2b8b1c6514a652acf5577ff1541971",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/contributor-recognition.md",
+          "commit_sha": "5b18ea528c2b8b1c6514a652acf5577ff1541971",
+          "committed_at": "2026-05-03T21:07:01Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 15,
+          "file_deletions": 3,
+          "file_changes": 18,
+          "file_patch": "@@ -68,6 +68,7 @@ You are a contributor-recognition agent for **markdown-plus.nvim**. Your job is\n - **Do not manually edit the generated badge in `README.md`.** The badge is between `<!-- ALL-CONTRIBUTORS-BADGE:START -->` and `<!-- ALL-CONTRIBUTORS-BADGE:END -->`.\n - **Only modify `.all-contributorsrc` and `README.md`.** Do not edit source code, docs, changelog, workflows, rockspecs, or release files.\n - **Never add bots.** Exclude accounts ending in `[bot]`, `github-actions[bot]`, `dependabot[bot]`, `renovate[bot]`, and automation-only accounts.\n+- **Do not reduce recent activity to PR authors only.** External issue authors count when their bug report or feature idea was fixed, implemented, or clearly shaped a merged PR, even if the implementing PR was authored by the repo owner.\n - **Prefer precision over recall.** If a contribution type is unclear, mention it in the PR body under \"Needs maintainer review\" when a PR is created, or create a review issue when there are only ambiguous candidates.\n - **Create at most one PR or issue per run.** If no contributor updates or ambiguous candidates are found, exit cleanly without creating an output.\n \n@@ -100,6 +101,8 @@ Use the official All Contributors contribution keys. Apply these conservative ma\n \n Do not add `maintenance`, `infra`, `tool`, or other less common types unless the evidence is direct and unambiguous.\n \n+For `bug` and `ideas`, the issue author is the contributor even when the merged fix PR was opened by the repo owner. Treat these as direct evidence when the issue is closed as completed and a merged PR body, title, commit message, or maintainer comment references the issue with language like `Fixes #123`, `Closes #123`, `Resolves #123`, \"fixed in #123\", or \"implemented in #123\".\n+\n ## Workflow\n \n ### 1. Load Current Contributor State\n@@ -126,7 +129,13 @@ Use GitHub tools to inspect recent project activity:\n    - Query pattern: `repo:${{ github.repository }} is:issue closed:>=YYYY-MM-DD label:bug`\n    - Query pattern: `repo:${{ github.repository }} is:issue closed:>=YYYY-MM-DD label:enhancement`\n    - Also check `feature`, `idea`, or similar labels if present.\n-3. For each candidate, gather direct evidence:\n+3. Cross-reference external issue authors before deciding there are no updates:\n+   - For every recently closed bug/enhancement/feature/idea issue authored by a non-bot external user, read the issue and comments.\n+   - Check whether the issue was closed as completed, confirmed by the reporter, or referenced by a merged PR/commit in the same 30-day window.\n+   - Search merged PR titles/bodies for closing keywords and issue references (`#ISSUE_NUMBER`, `Fixes`, `Closes`, `Resolves`, `implements`, `fixed in`).\n+   - Add the issue author as a `bug` candidate for fixed bug reports and an `ideas` candidate for implemented feature/UX requests.\n+   - Do not discard these candidates just because the implementing PR author is the repo owner.\n+4. For each candidate, gather direct evidence:\n    - Login\n    - Contribution type(s)\n    - Source PR/issue number\n@@ -151,6 +160,9 @@ Skip a candidate when:\n - The account is a bot or automation account.\n - The evidence is ambiguous or only social/supportive without a clear All Contributors type.\n - The contribution is internal maintainer housekeeping.\n+- The issue was self-closed as user error, support-only, or not tied to a completed fix/implementation.\n+\n+Do **not** skip a candidate solely because the linked implementation PR was authored by `YousefHadder` or another maintainer. In that case, attribute the issue author with `bug` or `ideas` when their report/request directly led to the merged change.\n \n ### 4. Apply All Contributors Updates\n \n@@ -242,10 +254,10 @@ Recent project activity produced possible All Contributors updates that need mai\n \n ### 6. Exit Cleanly\n \n-If there are no changes and no ambiguous candidates after scanning recent activity, do not create a PR or issue. Output:\n+If there are no changes and no ambiguous candidates after scanning recent activity, do not create a PR or issue. Only use this path after explicitly checking external closed bug/enhancement issues and linked merged PRs. Include the scan counts in the noop message so false negatives are easier to spot.\n \n ```text\n-No contributor updates needed.\n+No contributor updates needed. Scanned <N> merged PRs, <N> closed issues, and <N> external issue authors.\n ```\n \n ## Validation Checklist",
+          "snapshot_ref": "5b18ea528c2b8b1c6514a652acf5577ff1541971",
+          "snapshot_blob_sha": "255857f64833d9af3f67811852bbed7bece55cbd",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__5b18ea528c2b8b1c6514a652acf5577ff1541971__contributor-recognition.md",
+          "snapshot_bytes": 11341,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/contributor-recognition.lock.yml\",\"generated_workflow_file\":\"contributor-recognition.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/contributor-recognition.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/contributor-recognition.md",
+      "commit_sha": "502d17fc2c1df4f05e9db1f8c03451305b32acc2",
+      "authored_at": "2026-05-03T21:47:42Z",
+      "committed_at": "2026-05-03T21:47:42Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "fix(ci): improve contributor recognition detection (#307)",
+      "parent_shas": [
+        "090da16e01458390897e6612f124c65018da6443"
+      ],
+      "tree_sha": "3b35ffa3407814d8a97c662eff275ae4435abe66",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/502d17fc2c1df4f05e9db1f8c03451305b32acc2",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/contributor-recognition.md",
+          "commit_sha": "502d17fc2c1df4f05e9db1f8c03451305b32acc2",
+          "committed_at": "2026-05-03T21:47:42Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 32,
+          "file_deletions": 12,
+          "file_changes": 44,
+          "file_patch": "@@ -5,7 +5,7 @@ on:\n   workflow_dispatch:\n   schedule:\n     - cron: weekly\n-  skip-if-match: 'is:open in:title \"[contributors]\"'\n+  skip-if-match: 'is:open in:title \"docs(contributors):\"'\n \n permissions:\n   contents: read\n@@ -25,14 +25,14 @@ network:\n safe-outputs:\n   create-pull-request:\n     expires: 7d\n-    title-prefix: \"[contributors] \"\n+    title-prefix: \"docs(contributors): \"\n     labels: [documentation, automation, contributors]\n     reviewers: [YousefHadder]\n     draft: true\n     auto-merge: false\n   create-issue:\n     expires: 7d\n-    title-prefix: \"[contributors] \"\n+    title-prefix: \"docs(contributors): \"\n     labels: [documentation, automation, contributors]\n     max: 1\n \n@@ -44,6 +44,7 @@ tools:\n     - \"cat .all-contributorsrc\"\n     - \"cat README.md\"\n     - \"grep -n 'ALL-CONTRIBUTORS' README.md\"\n+    - \"jq\"\n     - \"git\"\n     - \"npx -y all-contributors-cli add\"\n     - \"npx -y all-contributors-cli generate\"\n@@ -103,6 +104,15 @@ Do not add `maintenance`, `infra`, `tool`, or other less common types unless the\n \n For `bug` and `ideas`, the issue author is the contributor even when the merged fix PR was opened by the repo owner. Treat these as direct evidence when the issue is closed as completed and a merged PR body, title, commit message, or maintainer comment references the issue with language like `Fixes #123`, `Closes #123`, `Resolves #123`, \"fixed in #123\", or \"implemented in #123\".\n \n+## Maintainer-Provided Backfill Candidates\n+\n+Some historical issue records may be filtered by workflow integrity policy even when their linked merged PRs are visible. Use this table only for the listed issue/PR pairs, and only when the linked PR is merged, references the issue, and the login is not already listed with the contribution type.\n+\n+| Login | Type | Issue | Linked merged PR | Rationale |\n+|-------|------|-------|------------------|-----------|\n+| `jototland` | `bug` | #282 | #285 | Reported a bug that was fixed by the linked PR. |\n+| `edvinsyk` | `ideas` | #302 | #303 | Suggested an enhancement that was implemented by the linked PR. |\n+\n ## Workflow\n \n ### 1. Load Current Contributor State\n@@ -122,20 +132,30 @@ Extract the existing contributor logins from `.all-contributorsrc`. Do not add a\n Use GitHub tools to inspect recent project activity:\n \n 1. Search merged PRs from the last 30 days:\n-   - Query pattern: `repo:${{ github.repository }} is:pr is:merged merged:>=YYYY-MM-DD`\n+   - Use `search_pull_requests` with `owner` and `repo` parameters set; query only: `is:merged merged:>=YYYY-MM-DD`\n    - For each PR, read details and changed files.\n    - For each PR, fetch reviews and review comments (`get_reviews` and `get_review_comments`) to identify substantive human review contributions.\n-2. Search recently closed bug and feature issues from the last 30 days:\n-   - Query pattern: `repo:${{ github.repository }} is:issue closed:>=YYYY-MM-DD label:bug`\n-   - Query pattern: `repo:${{ github.repository }} is:issue closed:>=YYYY-MM-DD label:enhancement`\n-   - Also check `feature`, `idea`, or similar labels if present.\n-3. Cross-reference external issue authors before deciding there are no updates:\n+   - **Mandatory linked-issue pass**: For every merged PR, inspect the title, body, and commits for issue references (`#123`) and closing keywords (`Fixes`, `Closes`, `Resolves`, `implements`, `fixed in`). For each referenced issue, call `issue_read` and evaluate the issue author as a possible `bug` or `ideas` contributor. This pass is required even if every merged PR author is the repo owner or a bot.\n+2. Search recently closed bug and feature issues from the last 30 days with narrow, label-specific queries:\n+   - Use `search_issues` with `owner` and `repo` parameters set; query only: `closed:>=YYYY-MM-DD label:bug`\n+   - Use `search_issues` with `owner` and `repo` parameters set; query only: `closed:>=YYYY-MM-DD label:enhancement`\n+   - Repeat for `label:feature` and `label:idea` if those labels exist.\n+   - Do **not** rely on one broad `closed:>=YYYY-MM-DD` issue search as the only source; broad output can be truncated or too large to inspect accurately.\n+3. Parse GitHub search results accurately:\n+   - GitHub MCP search responses are objects with an `items` array. If a response is saved to a temporary file because it is large, parse `.items[]` with `jq`; do not grep for logins or assume the root JSON value is an array.\n+   - If a search result is too large to inspect, narrow the query by label or date and retry. Do not conclude there are zero external issue authors from truncated or unparsed output.\n+4. Apply the maintainer-provided backfill table when issue metadata is filtered:\n+   - If `issue_read` or `search_issues` returns filtered data for one of the listed issue numbers, do not noop solely because the issue author cannot be re-read through GitHub tools.\n+   - Verify the linked PR is merged and references the issue number with closing or implementation language.\n+   - Treat the listed login and type as an approved candidate when the contributor is not already listed with that type.\n+   - Do not extrapolate from the table to other issue numbers. Unlisted filtered issues should go under \"Needs maintainer review\" or into the review issue fallback.\n+5. Cross-reference external issue authors before deciding there are no updates:\n    - For every recently closed bug/enhancement/feature/idea issue authored by a non-bot external user, read the issue and comments.\n    - Check whether the issue was closed as completed, confirmed by the reporter, or referenced by a merged PR/commit in the same 30-day window.\n    - Search merged PR titles/bodies for closing keywords and issue references (`#ISSUE_NUMBER`, `Fixes`, `Closes`, `Resolves`, `implements`, `fixed in`).\n    - Add the issue author as a `bug` candidate for fixed bug reports and an `ideas` candidate for implemented feature/UX requests.\n    - Do not discard these candidates just because the implementing PR author is the repo owner.\n-4. For each candidate, gather direct evidence:\n+6. For each candidate, gather direct evidence:\n    - Login\n    - Contribution type(s)\n    - Source PR/issue number\n@@ -195,7 +215,7 @@ If `.all-contributorsrc` or `README.md` changed, create a draft PR using the saf\n **PR title**:\n \n ```text\n-[contributors] Add recent contributors\n+docs(contributors): add recent contributors\n ```\n \n **PR body**:\n@@ -230,7 +250,7 @@ If there are ambiguous candidates but no `.all-contributorsrc` or `README.md` ch\n **Issue title**:\n \n ```text\n-[contributors] Review possible contributor recognition\n+docs(contributors): review possible contributor recognition\n ```\n \n **Issue body**:",
+          "snapshot_ref": "502d17fc2c1df4f05e9db1f8c03451305b32acc2",
+          "snapshot_blob_sha": "e5c96a708654ab59fcc6b7df4a709fe490720e0e",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__502d17fc2c1df4f05e9db1f8c03451305b32acc2__contributor-recognition.md",
+          "snapshot_bytes": 13805,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/contributor-recognition.lock.yml\",\"generated_workflow_file\":\"contributor-recognition.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/contributor-recognition.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/contributor-recognition.md",
+      "commit_sha": "ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+      "authored_at": "2026-05-12T17:16:31Z",
+      "committed_at": "2026-05-12T17:16:31Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "chore(aw): fix failing agentic workflows (#318)",
+      "parent_shas": [
+        "b1b22e104f9a055ce4ac396716d60d6cf86f255e"
+      ],
+      "tree_sha": "bdbd8e434f0ef555537cd95b2165628e83ac1812",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/contributor-recognition.md",
+          "commit_sha": "ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+          "committed_at": "2026-05-12T17:16:31Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 0,
+          "file_changes": 7,
+          "file_patch": "@@ -35,6 +35,7 @@ safe-outputs:\n     title-prefix: \"docs(contributors): \"\n     labels: [documentation, automation, contributors]\n     max: 1\n+  noop:\n \n tools:\n   github:\n@@ -291,3 +292,9 @@ Before creating the PR:\n - Every automatic addition has direct evidence linked to a recent PR or issue.\n \n Begin by reading `.all-contributorsrc` and `README.md`, then scan recent activity.\n+\n+**Important**: If no new contributors are found (or no recognition is warranted) after completing your analysis, you **MUST** call the `noop` safe-output tool with a brief explanation. Failing to call any safe-output tool is the most common cause of safe-output workflow failures.\n+\n+```json\n+{\"noop\": {\"message\": \"No action needed: [brief explanation of what was analyzed and why]\"}}\n+```",
+          "snapshot_ref": "ef70186e8bea88c414177ef283fa9937ee7cb4c8",
+          "snapshot_blob_sha": "1c644c8ef3a7a87c3dfbf2de2610ac1d8f3505b1",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__ef70186e8bea88c414177ef283fa9937ee7cb4c8__contributor-recognition.md",
+          "snapshot_bytes": 14200,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/contributor-recognition.lock.yml\",\"generated_workflow_file\":\"contributor-recognition.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/contributor-recognition.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+      "source_full_name": "YousefHadder/markdown-plus.nvim",
+      "md_path": ".github/workflows/contributor-recognition.md",
+      "commit_sha": "34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+      "authored_at": "2026-06-19T19:25:19Z",
+      "committed_at": "2026-06-19T19:25:19Z",
+      "author_name": "Yousef Hadder 🇵🇸",
+      "author_email": "yousefhadder@github.com",
+      "author_login": "YousefHadder",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "ci(aw): fix contributor-recognition false positives and wiki PR churn (#371)",
+      "parent_shas": [
+        "d7adda294e4e72103ef4e7e7aaca9aa883f59cf6"
+      ],
+      "tree_sha": "46229699a70a7722738ede7df09bcbed4650d459",
+      "html_url": "https://github.com/YousefHadder/markdown-plus.nvim/commit/34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "YousefHadder/markdown-plus.nvim:.github/workflows/contributor-recognition.md",
+          "source_full_name": "YousefHadder/markdown-plus.nvim",
+          "md_path": ".github/workflows/contributor-recognition.md",
+          "commit_sha": "34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+          "committed_at": "2026-06-19T19:25:19Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 4,
+          "file_deletions": 0,
+          "file_changes": 4,
+          "file_patch": "@@ -40,6 +40,8 @@ safe-outputs:\n tools:\n   github:\n     toolsets: [default]\n+    min-integrity: none\n+    allowed-repos: [yousefhadder/markdown-plus*]\n   edit:\n   bash:\n     - \"cat .all-contributorsrc\"\n@@ -113,6 +115,8 @@ Some historical issue records may be filtered by workflow integrity policy even\n |-------|------|-------|------------------|-----------|\n | `jototland` | `bug` | #282 | #285 | Reported a bug that was fixed by the linked PR. |\n | `edvinsyk` | `ideas` | #302 | #303 | Suggested an enhancement that was implemented by the linked PR. |\n+| `nkahe` | `ideas` | #338 | #346 | Requested the toggle-list type picker, implemented by the linked PR. |\n+| `ArnallJM` | `ideas` | #365 | #367 | Requested configurable ordered-list whitespace, implemented by the linked PR. |\n \n ## Workflow\n ",
+          "snapshot_ref": "34f1cc4e5dd5270837c8236805b9f0f86f2cf24d",
+          "snapshot_blob_sha": "047bc5bb177a65f7039341816cdc908de8124b76",
+          "snapshot_file": "snapshots/markdown-plus.nvim__YousefHadder__34f1cc4e5dd5270837c8236805b9f0f86f2cf24d__contributor-recognition.md",
+          "snapshot_bytes": 14499,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"YousefHadder/markdown-plus.nvim\",\"generated_owner\":\"YousefHadder\",\"generated_repo\":\"markdown-plus.nvim\",\"generated_workflow_path\":\".github/workflows/contributor-recognition.lock.yml\",\"generated_workflow_file\":\"contributor-recognition.lock.yml\",\"generated_html_url\":\"https://github.com/YousefHadder/markdown-plus.nvim/blob/4cc9ef336aefc70ded0e90fd03ead983b8a8e2e3/.github/workflows/contributor-recognition.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

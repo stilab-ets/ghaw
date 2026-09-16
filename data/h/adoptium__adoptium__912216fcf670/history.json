@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "adoptium/adoptium:.github/workflows/periodic-faq.md",
+    "source_full_name": "adoptium/adoptium",
+    "source_owner": "adoptium",
+    "source_repo": "adoptium",
+    "md_path": ".github/workflows/periodic-faq.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/adoptium/adoptium/blob/HEAD/.github/workflows/periodic-faq.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "adoptium/adoptium",
+      "generated_owner": "adoptium",
+      "generated_repo": "adoptium",
+      "generated_workflow_path": ".github/workflows/periodic-faq.lock.yml",
+      "generated_workflow_file": "periodic-faq.lock.yml",
+      "generated_html_url": "https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/periodic-faq.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 2,
+    "event_count": 2,
+    "snapshot_count": 2,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "human": 2
+    },
+    "collected_at_utc": "2026-08-04T11:24:33+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/periodic-faq.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/periodic-faq.md",
+      "commit_sha": "34175903b16a642ce9df5a8d9c803c527562ffe0",
+      "authored_at": "2026-07-20T08:16:07Z",
+      "committed_at": "2026-07-20T08:16:07Z",
+      "author_name": "Ababiya Darge",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add periodic-faq agentic workflow for community FAQ review (#311)\n\n* Add periodic-faq agentic workflow for community FAQ review\n\nReviews community questions across adoptium-support, other user-facing\nrepos, org Discussions, Stack Overflow, Reddit, the mailing list archives\nand Slack, then opens a single issue per run with paste-ready AsciiDoc\nproposals for the Adoptium FAQ.\n\nFollows the existing issue-burn-down pattern: a deterministic pre-fetch\nstep gathers data outside the agent sandbox, so inference is spent on\nclustering and drafting rather than fetching. The agent proposes only and\nnever edits the FAQ directly.\n\nRequires SLACK_BOT_TOKEN and SLACK_TEAM_ID secrets for the read-only\nSlack MCP server.\n\n* Address review: weekly schedule, report one-offs\n\n- Move the schedule from daily to weekly (matches the existing 7-day\n  pre-fetch window).\n- Report individual one-off questions under a new \"Notable One-Offs\"\n  section as signal, even when they do not warrant an FAQ change.",
+      "parent_shas": [
+        "1b73cec17f3ff47aba9b291ea829038aca9f9eda"
+      ],
+      "tree_sha": "ffe559a7f2167997359a3daf32ab464793133327",
+      "html_url": "https://github.com/adoptium/adoptium/commit/34175903b16a642ce9df5a8d9c803c527562ffe0",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/periodic-faq.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/periodic-faq.md",
+          "commit_sha": "34175903b16a642ce9df5a8d9c803c527562ffe0",
+          "committed_at": "2026-07-20T08:16:07Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 273,
+          "file_deletions": 0,
+          "file_changes": 273,
+          "file_patch": "@@ -0,0 +1,273 @@\n+---\n+description: \"Continuous multi-channel review of community questions with proposed Adoptium FAQ updates.\"\n+on:\n+  schedule: weekly            # fuzzy weekly schedule; matches the 7-day pre-fetch window\n+  workflow_dispatch:\n+engine:\n+  id: copilot\n+  model: gpt-4.1              # pinned: reliably calls the safe-output tools\n+permissions:\n+  contents: read\n+  issues: read\n+  pull-requests: read\n+  discussions: read\n+network:\n+  allowed:\n+    - defaults\n+    - github\n+    - node                    # npx fetches the Slack MCP server\n+    - \"slack.com\"\n+    - \"*.slack.com\"\n+    - \"api.stackexchange.com\"   # web-fetch fallback for the pre-fetched sources\n+    - \"www.reddit.com\"\n+    - \"www.eclipse.org\"\n+# Deterministic pre-fetch: runs outside the firewall sandbox, before the agent.\n+# Pulls the FAQ + GitHub questions with plain curl and writes them to files, so the\n+# agent spends inference on judgement (cluster/compare/draft), not on fetching.\n+steps:\n+  - name: Pre-fetch FAQ and GitHub sources\n+    env:\n+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n+    run: |\n+      set -euo pipefail\n+      DIR=/tmp/gh-aw/agent\n+      mkdir -p \"$DIR\"\n+      SINCE=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)\n+      echo \"$SINCE\" > \"$DIR/window-start.txt\"\n+      # Live FAQ\n+      curl -sSL \\\n+        \"https://raw.githubusercontent.com/adoptium/adoptium.net/main/content/asciidoc-pages/docs/faq/index.adoc\" \\\n+        -o \"$DIR/faq.adoc\"\n+      # adoptium-support issues (open + closed) updated in the window, authenticated\n+      # (5000/hr limit instead of 60). Headers as an array so the token survives\n+      # word splitting.\n+      GH_API=(-H \"Accept: application/vnd.github+json\" -H \"Authorization: Bearer $GH_TOKEN\")\n+      curl -sSL \"${GH_API[@]}\" \\\n+        \"https://api.github.com/repos/adoptium/adoptium-support/issues?state=open&since=$SINCE&per_page=100\" \\\n+        -o \"$DIR/support-open.json\"\n+      curl -sSL \"${GH_API[@]}\" \\\n+        \"https://api.github.com/repos/adoptium/adoptium-support/issues?state=closed&since=$SINCE&per_page=100\" \\\n+        -o \"$DIR/support-closed.json\"\n+      # Org-wide PMC-agenda issues via the search API (reads .items)\n+      curl -sSL \"${GH_API[@]}\" \\\n+        \"https://api.github.com/search/issues?q=org:adoptium+label:PMC-agenda+state:open&per_page=50\" \\\n+        -o \"$DIR/pmc-agenda.json\"\n+      # Issues from other user-facing Adoptium repos: install, container, and\n+      # website questions that never reach adoptium-support\n+      for REPO in installer containers adoptium.net; do\n+        curl -sSL \"${GH_API[@]}\" \\\n+          \"https://api.github.com/repos/adoptium/$REPO/issues?state=all&since=$SINCE&per_page=100\" \\\n+          -o \"$DIR/issues-$REPO.json\"\n+      done\n+      # GitHub Discussions across the adoptium org (GraphQL search; best effort)\n+      SINCE_DAY=$(date -u -d '7 days ago' +%Y-%m-%d)\n+      gh api graphql -f query=\"\n+        query {\n+          search(query: \\\"org:adoptium updated:>=$SINCE_DAY\\\", type: DISCUSSION, first: 50) {\n+            nodes { ... on Discussion {\n+              title body url updatedAt repository { nameWithOwner }\n+              comments(first: 10) { nodes { body } }\n+            } }\n+          }\n+        }\" > \"$DIR/discussions.json\" \\\n+        || echo '{\"data\":{\"search\":{\"nodes\":[]}}}' > \"$DIR/discussions.json\"\n+      # Stack Overflow questions per tag (public API; responses are always gzip,\n+      # hence --compressed; best effort — never fail the run)\n+      SINCE_EPOCH=$(date -u -d '7 days ago' +%s)\n+      for TAG in adoptium temurin adoptopenjdk; do\n+        curl -sSL --compressed \\\n+          \"https://api.stackexchange.com/2.3/questions?order=desc&sort=creation&tagged=$TAG&site=stackoverflow&fromdate=$SINCE_EPOCH&filter=withbody\" \\\n+          -o \"$DIR/so-$TAG.json\" || echo '{\"items\":[]}' > \"$DIR/so-$TAG.json\"\n+      done\n+      # Reddit mentions (public JSON; Reddit sometimes blocks CI IPs — best effort)\n+      curl -sSL -A \"adoptium-faq-review:v1.0 (github-actions)\" \\\n+        \"https://www.reddit.com/search.json?q=temurin%20OR%20adoptium&sort=new&t=week&limit=50&raw_json=1\" \\\n+        -o \"$DIR/reddit.json\" || echo '{\"data\":{\"children\":[]}}' > \"$DIR/reddit.json\"\n+      # Mailing list archives (actual MHonArc archive pages, not the\n+      # accounts.eclipse.org subscription page). PMC plus the dev lists;\n+      # best effort, never fail the run. Note: there is no \"adoptium-dev\"\n+      # list (confirmed 404) — PMC discussion lives on adoptium-pmc instead.\n+      curl -sSL \"https://www.eclipse.org/lists/adoptium-pmc/\" \\\n+        -o \"$DIR/mailing-list.html\" || echo \"mailing list unavailable\" > \"$DIR/mailing-list.html\"\n+      for ML in temurin-dev; do\n+        curl -sSL \"https://www.eclipse.org/lists/$ML/\" \\\n+          -o \"$DIR/mailing-$ML.html\" || echo \"mailing list unavailable\" > \"$DIR/mailing-$ML.html\"\n+      done\n+      echo \"Pre-fetch complete:\"; ls -la \"$DIR\"\n+tools:\n+  web-fetch:                  # fallback fetch if a pre-fetched file is missing\n+  cache-memory:               # per-channel watermark across runs\n+mcp-servers:\n+  slack:\n+    command: \"npx\"\n+    args: [\"-y\", \"@modelcontextprotocol/server-slack\"]\n+    env:\n+      SLACK_BOT_TOKEN: \"${{ secrets.SLACK_BOT_TOKEN }}\"\n+      SLACK_TEAM_ID: \"${{ secrets.SLACK_TEAM_ID }}\"\n+    allowed:                  # read-only tools only (enforced at the gateway)\n+      - slack_list_channels\n+      - slack_get_channel_history\n+      - slack_get_thread_replies\n+safe-outputs:\n+  create-issue:\n+    title-prefix: \"[faq-review] \"\n+    labels: [documentation, faq]\n+    expires: false\n+---\n+\n+# Adoptium FAQ Review\n+\n+You review community questions across several channels and propose improvements to\n+the **Adoptium FAQ**. You do **not** edit the FAQ directly; you produce a single\n+GitHub issue with ready-to-apply proposals for maintainer review.\n+\n+## Pre-fetched inputs (read these, do not re-fetch)\n+\n+A deterministic step has already downloaded the data into `/tmp/gh-aw/agent/`. Read\n+these files directly instead of making web requests:\n+\n+- `faq.adoc` — the live FAQ. Parse its `==` question headings first, so every\n+  comparison is against the current entries.\n+- `support-open.json`, `support-closed.json` — `adoptium/adoptium-support` issues\n+  (a JSON array). Review each item's `title`, `body`, and comments.\n+- `pmc-agenda.json` — org-wide `PMC-agenda` issues. Read the `items` array.\n+- `issues-installer.json`, `issues-containers.json`, `issues-adoptium.net.json` —\n+  issues (open and closed, JSON arrays) from the other user-facing Adoptium repos:\n+  install, container, and website questions.\n+- `discussions.json` — GitHub Discussions across the `adoptium` org. Read\n+  `data.search.nodes[]`: `title`, `body`, `url`, `repository.nameWithOwner`, and\n+  `comments.nodes[].body`.\n+- `so-adoptium.json`, `so-temurin.json`, `so-adoptopenjdk.json` — Stack Overflow\n+  questions per tag (Stack Exchange API format). Read `items[]`: `title`, `body`,\n+  `link`, `creation_date`. The same question may appear under more than one tag —\n+  dedupe by `question_id`.\n+- `reddit.json` — Reddit search results for Temurin/Adoptium mentions. Read\n+  `data.children[].data`: `title`, `selftext`, `permalink`, `subreddit`.\n+- `mailing-list.html` — PMC mailing list archive, or the text \"mailing list\n+  unavailable\" if the fetch failed (then skip it and note so).\n+- `mailing-temurin-dev.html` — temurin-dev mailing list archive, same\n+  fallback text on failure. (There is no adoptium-dev list — PMC traffic is\n+  on adoptium-pmc, which is covered by `mailing-list.html`.)\n+- `window-start.txt` — the ISO 8601 start of the 7-day pre-fetch window.\n+\n+Only fall back to `web-fetch` if one of these files is missing or empty. If a file\n+exists but is not parseable in its documented format (e.g. an HTML block page or an\n+API error body instead of JSON), treat that channel as **failed**, quote a short\n+snippet of what was found, and move on — never invent data for it.\n+\n+## FAQ format\n+\n+AsciiDoc. Each entry is a second-level heading plus prose:\n+\n+```asciidoc\n+== How long is Eclipse Temurin supported?\n+\n+Answer text. Internal links use link:/temurin/releases[label];\n+external links use https://example.com[label].\n+```\n+\n+## Continuity across runs\n+\n+Use `cache-memory` with the key `watermark` (an ISO 8601 timestamp). Read it at the\n+start; process only items newer than it; write the newest processed timestamp back\n+at the end. If the key is missing (first run), use `window-start.txt` as the cutoff.\n+This keeps the review incremental.\n+\n+## Slack channel\n+\n+Reading Slack is **mandatory** every run — it is a primary source, not an optional\n+extra. You MUST call `slack_list_channels`, then `slack_get_channel_history` for\n+**every channel where the bot is a member** (`is_member: true` in the\n+`slack_list_channels` response — do not hardcode a channel list; membership is the\n+source of truth), and `slack_get_thread_replies` for threads, for messages since\n+the watermark. If `is_member` is absent from the response, attempt the history\n+call on every listed channel and treat `not_in_channel` as \"not a member\" rather\n+than a failure. Do this before drafting any proposals; do not skip it because the\n+other sources already yielded enough material.\n+\n+The only acceptable reason to not read a member channel is a genuine tool\n+failure — the Slack MCP tool returns an error (e.g. `missing_scope`,\n+`invalid_auth`, a rate limit / `429`, or the tool is absent). Channels the bot is\n+not a member of are simply listed as \"not a member\" in Channel Coverage — that is\n+a skip, not a failure. For genuine failures:\n+- Attempt the call anyway; do not assume it will fail without trying.\n+- In **Channel Coverage**, record the exact tool name and the verbatim error string\n+  returned (e.g. \"`slack_get_channel_history` → `missing_scope`\"). Never write a\n+  vague \"tooling not invoked\" — if you did not invoke it, that is a failure to\n+  follow instructions, not a valid skip.\n+- Reading other sources may still continue, but a Slack failure must be surfaced\n+  loudly in the report so it can be fixed.\n+\n+## Process\n+\n+1. Read the `watermark` from `cache-memory`.\n+2. Parse `faq.adoc` and list its existing questions.\n+3. Read **all** the pre-fetched files (support issues, other-repo issues,\n+   discussions, Stack Overflow, Reddit, mailing lists), then read the Slack history\n+   (mandatory — call `slack_list_channels` and `slack_get_channel_history` as\n+   described above; only a returned tool error excuses a channel). Collect\n+   questions newer than the watermark. Note which channels had data, which were\n+   empty, and which failed with what error.\n+4. Cluster semantically similar questions (across channels — the same question in\n+   Slack, on Stack Overflow, and in a support issue counts once).\n+5. Classify each cluster vs. the FAQ: already covered; covered but needs\n+   update/expansion; or not covered (new-entry candidate).\n+6. Draft proposals (format below).\n+7. Write the updated `watermark` to `cache-memory`.\n+8. **Terminal action — end with exactly one safe output:**\n+   - Anything worth reporting → call `create_issue` with the full report.\n+   - Every reachable channel genuinely empty → call `noop` with a one-line reason.\n+   - Never finish without a safe-output call.\n+## Output: issue format\n+\n+### Summary\n+Trends this period; volume up or down; common themes.\n+\n+### Channel Coverage\n+One line per channel — every pre-fetched source (adoptium-support, installer,\n+containers, adoptium.net, org Discussions, Stack Overflow, Reddit, each mailing\n+list) plus Slack — stating read / empty / failed, and on failure why. For Slack\n+specifically, state whether `slack_list_channels` / `slack_get_channel_history`\n+were called and, on failure, the verbatim error returned. \"Not invoked\" is not an\n+acceptable Slack status — it means the mandatory read was skipped.\n+\n+### Proposed New FAQ Entries\n+Per proposal, in order: why it belongs (1–2 sentences); motivating discussions\n+(links, or Slack channel + approximate time); a paste-ready AsciiDoc block matching\n+the existing style:\n+\n+```asciidoc\n+== <Proposed question>?\n+\n+<Draft answer in AsciiDoc, using link:/path[label] and https://url[label]>\n+```\n+\n+Then: **Apply to:** `content/asciidoc-pages/docs/faq/index.adoc` in `adoptium/adoptium.net`.\n+\n+### Existing FAQ Improvements\n+Entries to expand, clarify, update, merge, or remove — name the `== Heading`, the\n+change, and the reasoning. Give proposed wording as a paste-ready AsciiDoc block.\n+\n+### Frequently Asked (already covered)\n+Recurring questions already handled adequately — useful signal, no change needed.\n+\n+### Documentation Gaps\n+Where users consistently struggled to find answers.\n+\n+### Notable One-Offs\n+Individual questions that are unlikely to warrant an FAQ entry but are still\n+worth surfacing — a novel bug report, an unusual environment, a sharp question a\n+maintainer may want to see. One line each with a source link. These do not drive\n+FAQ changes; they are reported as signal.\n+\n+## Constraints\n+\n+- Do **not** modify the FAQ directly; propose only.\n+- Every block must be valid AsciiDoc matching the existing style.\n+- Prefer official maintainer answers over community speculation.\n+- Base FAQ proposals on recurring or broadly useful questions. Still report\n+  one-offs under **Notable One-Offs** — they are useful signal even when they do\n+  not warrant an FAQ change.\n+- Never duplicate an existing entry; compare against `faq.adoc` first.\n+- Include source links wherever possible.\n+- Exactly one issue per run, or a `noop`. Never neither.",
+          "snapshot_ref": "34175903b16a642ce9df5a8d9c803c527562ffe0",
+          "snapshot_blob_sha": "b4650f05c1ee73f23decadd9ce83e6d8dba8f0ca",
+          "snapshot_file": "snapshots/adoptium__adoptium__34175903b16a642ce9df5a8d9c803c527562ffe0__periodic-faq.md",
+          "snapshot_bytes": 13415,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/periodic-faq.lock.yml\",\"generated_workflow_file\":\"periodic-faq.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/periodic-faq.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "adoptium/adoptium:.github/workflows/periodic-faq.md",
+      "source_full_name": "adoptium/adoptium",
+      "md_path": ".github/workflows/periodic-faq.md",
+      "commit_sha": "4ea7a771efb053a0215482037aaec2464a42125d",
+      "authored_at": "2026-07-20T12:26:51Z",
+      "committed_at": "2026-07-20T12:26:51Z",
+      "author_name": "Ababiya324",
+      "author_email": "ababiyadarge@gmail.com",
+      "author_login": "Ababiya324",
+      "author_account_type": "User",
+      "committer_name": "Ababiya324",
+      "committer_email": "ababiyadarge@gmail.com",
+      "committer_login": "Ababiya324",
+      "committer_account_type": "User",
+      "message": "Fix periodic-faq: authenticate Copilot via the Actions token\n\nThe merged workflow requires a COPILOT_GITHUB_TOKEN secret that this repo\ndoes not have, so its first run fails at the engine validation step. Add\ncopilot-requests: write so the workflow authenticates through the job's\nActions token (org centralized Copilot billing), matching the other\nagentic workflows here. Recompiled; COPILOT_GITHUB_TOKEN is no longer a\nrequired secret.",
+      "parent_shas": [
+        "34175903b16a642ce9df5a8d9c803c527562ffe0"
+      ],
+      "tree_sha": "3c9fb7081a565dac06765d71c92abe90573492cd",
+      "html_url": "https://github.com/adoptium/adoptium/commit/4ea7a771efb053a0215482037aaec2464a42125d",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "adoptium/adoptium:.github/workflows/periodic-faq.md",
+          "source_full_name": "adoptium/adoptium",
+          "md_path": ".github/workflows/periodic-faq.md",
+          "commit_sha": "4ea7a771efb053a0215482037aaec2464a42125d",
+          "committed_at": "2026-07-20T12:26:51Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -11,6 +11,7 @@ permissions:\n   issues: read\n   pull-requests: read\n   discussions: read\n+  copilot-requests: write     # use Actions token-based Copilot inference (no PAT secret)\n network:\n   allowed:\n     - defaults",
+          "snapshot_ref": "4ea7a771efb053a0215482037aaec2464a42125d",
+          "snapshot_blob_sha": "fd145e8a5d41ebff0f8904f98b2ae259b8782a7c",
+          "snapshot_file": "snapshots/adoptium__adoptium__4ea7a771efb053a0215482037aaec2464a42125d__periodic-faq.md",
+          "snapshot_bytes": 13505,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"adoptium/adoptium\",\"generated_owner\":\"adoptium\",\"generated_repo\":\"adoptium\",\"generated_workflow_path\":\".github/workflows/periodic-faq.lock.yml\",\"generated_workflow_file\":\"periodic-faq.lock.yml\",\"generated_html_url\":\"https://github.com/adoptium/adoptium/blob/cdb00417dbdb3124ef5a23e75fae06cb568d4879/.github/workflows/periodic-faq.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

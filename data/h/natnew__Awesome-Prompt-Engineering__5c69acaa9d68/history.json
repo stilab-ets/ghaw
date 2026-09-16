@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+    "source_full_name": "natnew/Awesome-Prompt-Engineering",
+    "source_owner": "natnew",
+    "source_repo": "Awesome-Prompt-Engineering",
+    "md_path": ".github/workflows/issue-triage-agent.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/natnew/Awesome-Prompt-Engineering/blob/HEAD/.github/workflows/issue-triage-agent.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "natnew/Awesome-Prompt-Engineering",
+      "generated_owner": "natnew",
+      "generated_repo": "Awesome-Prompt-Engineering",
+      "generated_workflow_path": ".github/workflows/issue-triage-agent.lock.yml",
+      "generated_workflow_file": "issue-triage-agent.lock.yml",
+      "generated_html_url": "https://github.com/natnew/Awesome-Prompt-Engineering/blob/b3a74a1c6f5b2ac1b76ff4436bcc712fdbbd86e3/.github/workflows/issue-triage-agent.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 5,
+    "event_count": 5,
+    "snapshot_count": 5,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 1,
+      "human": 4
+    },
+    "collected_at_utc": "2026-08-04T12:42:58+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Prompt-Engineering",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "f1567eb517fd6b5dfef2b889093105d6b074635c",
+      "authored_at": "2026-02-16T11:02:57Z",
+      "committed_at": "2026-02-16T11:02:57Z",
+      "author_name": "copilot-swe-agent[bot]",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "copilot-swe-agent[bot]",
+      "committer_email": "198982749+Copilot@users.noreply.github.com",
+      "committer_login": "Copilot",
+      "committer_account_type": "Bot",
+      "message": "Add Issue Triage Agent workflow for automated issue labeling and commenting\n\nCo-authored-by: natnew <37782009+natnew@users.noreply.github.com>",
+      "parent_shas": [
+        "4878dcaf463862f5229d48c562f9092c5f9fb304"
+      ],
+      "tree_sha": "8ff511911a10ace1981146b60e792cee4cf1af43",
+      "html_url": "https://github.com/natnew/Awesome-Prompt-Engineering/commit/f1567eb517fd6b5dfef2b889093105d6b074635c",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent;GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Prompt-Engineering",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "f1567eb517fd6b5dfef2b889093105d6b074635c",
+          "committed_at": "2026-02-16T11:02:57Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 94,
+          "file_deletions": 0,
+          "file_changes": 94,
+          "file_patch": "@@ -0,0 +1,94 @@\n+---\n+name: Issue Triage Agent\n+description: Automatically triages incoming issues by analyzing content and assigning labels.\n+on:\n+  issues:\n+    types: [opened, reopened]\n+\n+permissions:\n+  issues: read\n+\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+    # Allow processing of issues from all contributors in this public repository\n+    lockdown: false\n+\n+safe-outputs:\n+  add-labels:\n+    allowed: [bug, enhancement, documentation, question, help-wanted, good-first-issue, prompt-engineering, tool]\n+  add-comment:\n+    max: 1\n+\n+timeout-minutes: 5\n+\n+---\n+\n+# Issue Triage Agent\n+\n+You are a helpful maintainer bot for the Awesome Prompt Engineering repository. Your job is to triage new issues by analyzing their content, researching the codebase, and applying appropriate labels.\n+\n+## Your Mission\n+\n+Analyze the newly opened or reopened issue #${{ github.event.issue.number }}\n+in ${{ github.repository }}. Read its title and body, then add one of the\n+allowed labels: `bug`, `enhancement`, `documentation`, `question`,\n+`help-wanted`, `good-first-issue`, `prompt-engineering`, or `tool`.\n+\n+## Task Steps\n+\n+### 1. Analyze the Issue\n+\n+Use the `github` tools to get details about the current issue:\n+- Read the issue title and description.\n+- Look for keywords that indicate the nature of the issue.\n+- Research similar existing issues for context.\n+\n+### 2. Determine Labels\n+\n+Based on your analysis, select up to 2 labels from the allowed list:\n+\n+- **bug**: If the issue reports a broken link, incorrect information, or a formatting problem.\n+- **enhancement**: If the issue suggests an improvement to existing content or structure.\n+- **documentation**: If the issue is about adding or updating documentation, guides, or references.\n+- **question**: If the issue is asking a question about prompt engineering or the repository.\n+- **help-wanted**: If the issue needs community input or contributions.\n+- **good-first-issue**: If the issue is a small, well-defined task suitable for new contributors.\n+- **prompt-engineering**: If the issue is directly about prompt engineering techniques, patterns, or examples.\n+- **tool**: If the issue involves adding or updating an AI tool, resource, or external link.\n+\n+### 3. Skip Issues That\n+\n+- Already have any of these labels\n+- Have been assigned to any user\n+\n+### 4. Add Labels\n+\n+Use the `add-labels` safe-output to apply the selected labels to the issue.\n+- Only apply labels that strictly match the analysis.\n+- Do not remove existing labels.\n+\n+### 5. Post a Comment\n+\n+Use the `add-comment` safe-output to post a **single** comment on the issue.\n+- **Tone**: Friendly, professional, and encouraging.\n+- **Content**:\n+    - Mention the issue author.\n+    - Explain why the label was added.\n+    - Give a brief summary of how the issue may be addressed.\n+    - Mention that a human maintainer will review the issue shortly.\n+\n+## Example Comment\n+\n+> \"Welcome @user! 👋 Thanks for opening this issue.\n+>\n+> I've analyzed your issue and it looks like you're suggesting a new prompt engineering technique to add to the collection. I've labeled this as `prompt-engineering` and `enhancement`.\n+>\n+> A human maintainer will review your issue soon!\"\n+\n+## Guidelines\n+\n+- **Be Safe**: Only analyze text content. Do not execute any code or follow external links.\n+- **Be Helpful**: If the issue description is empty or unclear, kindly suggest adding more details in your comment.\n+- **Be Concise**: Keep the comment short and to the point.\n+- **Be Accurate**: Ensure the label accurately reflects the issue content.",
+          "snapshot_ref": "f1567eb517fd6b5dfef2b889093105d6b074635c",
+          "snapshot_blob_sha": "8ed9658e27317b669f328a4bc1ef293671b6d2e0",
+          "snapshot_file": "snapshots/Awesome-Prompt-Engineering__natnew__f1567eb517fd6b5dfef2b889093105d6b074635c__issue-triage-agent.md",
+          "snapshot_bytes": 3489,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Prompt-Engineering\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Prompt-Engineering\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Prompt-Engineering/blob/b3a74a1c6f5b2ac1b76ff4436bcc712fdbbd86e3/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Prompt-Engineering",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "41a41ebc61f63787ea93284c64a71c0dc5bba08e",
+      "authored_at": "2026-02-16T16:19:08Z",
+      "committed_at": "2026-02-16T16:19:08Z",
+      "author_name": "Natasha",
+      "author_email": "natashanewboldlondon@gmail.com",
+      "author_login": "natnew",
+      "author_account_type": "User",
+      "committer_name": "Natasha",
+      "committer_email": "natashanewboldlondon@gmail.com",
+      "committer_login": "natnew",
+      "committer_account_type": "User",
+      "message": "feat: Add issue triage agent workflow and shared reporting guidelines.",
+      "parent_shas": [
+        "db2315c44e95dedd444599a19175c60a48a46d38"
+      ],
+      "tree_sha": "d4de995cbd94d2437ea0ff8abf5e79c56c04ccad",
+      "html_url": "https://github.com/natnew/Awesome-Prompt-Engineering/commit/41a41ebc61f63787ea93284c64a71c0dc5bba08e",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Prompt-Engineering",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "41a41ebc61f63787ea93284c64a71c0dc5bba08e",
+          "committed_at": "2026-02-16T16:19:08Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 75,
+          "file_deletions": 0,
+          "file_changes": 75,
+          "file_patch": "@@ -0,0 +1,75 @@\n+---\n+engine: claude\n+timeout-minutes: 5\n+strict: true\n+on:\n+  schedule: \"0 14 * * 1-5\"\n+  workflow_dispatch:\n+permissions:\n+  issues: read\n+tools:\n+  github:\n+    toolsets: [issues, labels]\n+safe-outputs:\n+  add-labels:\n+    allowed: [bug, feature, enhancement, documentation, question, help-wanted, good-first-issue, submission]\n+  add-comment: {}\n+imports:\n+  - shared/reporting.md\n+---\n+\n+# Issue Triage Agent\n+\n+List open issues in ${{ github.repository }} that have no labels. For each unlabeled issue, analyze the title and body, then add one of the allowed labels:\n+- `submission`: If the issue is proposing a new resource, tool, or link for the Awesome list.\n+- `bug`: If the issue reports a broken link, typo, or error in the content.\n+- `feature`: If the issue suggests a new category or structural change.\n+- `documentation`: If the issue relates to `README.md`, `Contributing.md`, or other docs.\n+- `question`, `help-wanted`, `good-first-issue`: As per standard usage.\n+\n+Skip issues that:\n+- Already have any of these labels\n+- Have been assigned to any user (especially non-bot users)\n+\n+After adding the label to an issue, mention the issue author in a comment using this format (follow shared/reporting.md guidelines):\n+\n+**Comment Template**:\n+```markdown\n+### 🏷️ Issue Triaged\n+\n+Hi @{author}! I've categorized this issue as **{label_name}** based on the following analysis:\n+\n+**Reasoning**: {brief_explanation_of_why_this_label}\n+\n+<details>\n+<summary><b>View Triage Details</b></summary>\n+\n+#### Analysis\n+- **Keywords detected**: {list_of_keywords_that_matched}\n+- **Issue type indicators**: {what_made_this_fit_the_category}\n+- **Confidence**: {High/Medium/Low}\n+\n+#### Recommended Next Steps\n+- If this is a **submission**, please ensure it meets our [Contributing Guidelines](https://github.com/natnew/Awesome-Prompt-Engineering/blob/main/Contributing.md).\n+- {context_specific_suggestion_2}\n+\n+</details>\n+\n+**References**: [Triage run §{run_id}](https://github.com/github/gh-aw/actions/runs/{run_id})\n+```\n+\n+**Key formatting requirements**:\n+- Use h3 (###) for the main heading\n+- Keep reasoning visible for quick understanding\n+- Wrap detailed analysis in `<details>` tags\n+- Include workflow run reference\n+- Keep total comment concise (collapsed details prevent noise)\n+\n+## Batch Comment Optimization\n+\n+For efficiency, if multiple issues are triaged in a single run:\n+1. Add individual labels to each issue\n+2. Add a brief comment to each issue (using the template above)\n+3. Optionally: Create a discussion summarizing all triage actions for that run\n+\n+This provides both per-issue context and batch visibility.",
+          "snapshot_ref": "41a41ebc61f63787ea93284c64a71c0dc5bba08e",
+          "snapshot_blob_sha": "9f733e7635236432bce827b24fc714cc54d45cf2",
+          "snapshot_file": "snapshots/Awesome-Prompt-Engineering__natnew__41a41ebc61f63787ea93284c64a71c0dc5bba08e__issue-triage-agent.md",
+          "snapshot_bytes": 2579,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Prompt-Engineering\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Prompt-Engineering\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Prompt-Engineering/blob/b3a74a1c6f5b2ac1b76ff4436bcc712fdbbd86e3/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Prompt-Engineering",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "987f615fea654edca9c14559a65ec86bcbc2d17a",
+      "authored_at": "2026-02-16T16:26:07Z",
+      "committed_at": "2026-02-16T16:26:07Z",
+      "author_name": "Natasha",
+      "author_email": "natashanewboldlondon@gmail.com",
+      "author_login": "natnew",
+      "author_account_type": "User",
+      "committer_name": "Natasha",
+      "committer_email": "natashanewboldlondon@gmail.com",
+      "committer_login": "natnew",
+      "committer_account_type": "User",
+      "message": "feat: Add GitHub Actions workflow for an issue triage agent.",
+      "parent_shas": [
+        "41a41ebc61f63787ea93284c64a71c0dc5bba08e",
+        "b11d5b7d5a7da3a41993d20df1805243791a654d"
+      ],
+      "tree_sha": "ff0e48058032d2e79b41f4fbf493310c928a4140",
+      "html_url": "https://github.com/natnew/Awesome-Prompt-Engineering/commit/987f615fea654edca9c14559a65ec86bcbc2d17a",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Prompt-Engineering",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "987f615fea654edca9c14559a65ec86bcbc2d17a",
+          "committed_at": "2026-02-16T16:26:07Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 54,
+          "file_deletions": 28,
+          "file_changes": 82,
+          "file_patch": "@@ -1,37 +1,79 @@\n ---\n+name: Issue Triage Agent\n+description: Automatically triages incoming issues by analyzing content and assigning labels.\n engine: claude\n timeout-minutes: 5\n strict: true\n on:\n-  schedule: \"0 14 * * 1-5\"\n+  issues:\n+    types: [opened, reopened]\n   workflow_dispatch:\n+\n permissions:\n   issues: read\n+\n tools:\n   github:\n     toolsets: [issues, labels]\n+    # Allow processing of issues from all contributors in this public repository\n+    lockdown: false\n+\n safe-outputs:\n   add-labels:\n-    allowed: [bug, feature, enhancement, documentation, question, help-wanted, good-first-issue, submission]\n+    allowed: [bug, enhancement, documentation, question, help-wanted, good-first-issue, prompt-engineering, tool, submission, feature]\n   add-comment: {}\n+\n imports:\n   - shared/reporting.md\n ---\n \n-# Issue Triage Agent\n+You are a helpful maintainer bot for the Awesome Prompt Engineering repository. Your job is to triage new issues by analyzing their content, researching the codebase, and applying appropriate labels.\n+\n+## Your Mission\n+\n+Analyze the newly opened or reopened issue #${{ github.event.issue.number }}\n+in ${{ github.repository }}. Read its title and body, then add one of the\n+allowed labels.\n+\n+## Task Steps\n+\n+### 1. Analyze the Issue\n+\n+Use the `github` tools to get details about the current issue:\n+- Read the issue title and description.\n+- Look for keywords that indicate the nature of the issue.\n+- Research similar existing issues for context.\n+\n+### 2. Determine Labels\n \n-List open issues in ${{ github.repository }} that have no labels. For each unlabeled issue, analyze the title and body, then add one of the allowed labels:\n-- `submission`: If the issue is proposing a new resource, tool, or link for the Awesome list.\n-- `bug`: If the issue reports a broken link, typo, or error in the content.\n-- `feature`: If the issue suggests a new category or structural change.\n-- `documentation`: If the issue relates to `README.md`, `Contributing.md`, or other docs.\n-- `question`, `help-wanted`, `good-first-issue`: As per standard usage.\n+Based on your analysis, select labels from the allowed list:\n+\n+- **submission**: If the issue is proposing a new resource, tool, or link for the Awesome list.\n+- **bug**: If the issue reports a broken link, incorrect information, or a formatting problem.\n+- **enhancement**: If the issue suggests an improvement to existing content or structure.\n+- **documentation**: If the issue is about adding or updating documentation, guides, or references.\n+- **question**: If the issue is asking a question about prompt engineering or the repository.\n+- **help-wanted**: If the issue needs community input or contributions.\n+- **good-first-issue**: If the issue is a small, well-defined task suitable for new contributors.\n+- **prompt-engineering**: If the issue is directly about prompt engineering techniques, patterns, or examples.\n+- **tool**: If the issue involves adding or updating an AI tool, resource, or external link.\n+\n+### 3. Skip Issues That\n \n-Skip issues that:\n - Already have any of these labels\n-- Have been assigned to any user (especially non-bot users)\n+- Have been assigned to any user\n+\n+### 4. Add Labels\n+\n+Use the `add-labels` safe-output to apply the selected labels to the issue.\n+- Only apply labels that strictly match the analysis.\n+- Do not remove existing labels.\n+\n+### 5. Post a Comment\n \n-After adding the label to an issue, mention the issue author in a comment using this format (follow shared/reporting.md guidelines):\n+Use the `add-comment` safe-output to post a **single** comment on the issue.\n+- **Tone**: Friendly, professional, and encouraging.\n+- **Format**: Follow the guidelines in `shared/reporting.md`.\n \n **Comment Template**:\n ```markdown\n@@ -57,19 +99,3 @@ Hi @{author}! I've categorized this issue as **{label_name}** based on the follo\n \n **References**: [Triage run §{run_id}](https://github.com/github/gh-aw/actions/runs/{run_id})\n ```\n-\n-**Key formatting requirements**:\n-- Use h3 (###) for the main heading\n-- Keep reasoning visible for quick understanding\n-- Wrap detailed analysis in `<details>` tags\n-- Include workflow run reference\n-- Keep total comment concise (collapsed details prevent noise)\n-\n-## Batch Comment Optimization\n-\n-For efficiency, if multiple issues are triaged in a single run:\n-1. Add individual labels to each issue\n-2. Add a brief comment to each issue (using the template above)\n-3. Optionally: Create a discussion summarizing all triage actions for that run\n-\n-This provides both per-issue context and batch visibility.",
+          "snapshot_ref": "987f615fea654edca9c14559a65ec86bcbc2d17a",
+          "snapshot_blob_sha": "afcd7e0ee75683639ac17a839d68b37ed1ff433d",
+          "snapshot_file": "snapshots/Awesome-Prompt-Engineering__natnew__987f615fea654edca9c14559a65ec86bcbc2d17a__issue-triage-agent.md",
+          "snapshot_bytes": 3481,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Prompt-Engineering\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Prompt-Engineering\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Prompt-Engineering/blob/b3a74a1c6f5b2ac1b76ff4436bcc712fdbbd86e3/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Prompt-Engineering",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "8849b987f0134be6148972fd138088486850ab1b",
+      "authored_at": "2026-02-16T17:06:44Z",
+      "committed_at": "2026-02-16T17:06:44Z",
+      "author_name": "Natasha",
+      "author_email": "natashanewboldlondon@gmail.com",
+      "author_login": "natnew",
+      "author_account_type": "User",
+      "committer_name": "Natasha",
+      "committer_email": "natashanewboldlondon@gmail.com",
+      "committer_login": "natnew",
+      "committer_account_type": "User",
+      "message": "Switch Issue Triage Agent to Copilot engine",
+      "parent_shas": [
+        "987f615fea654edca9c14559a65ec86bcbc2d17a"
+      ],
+      "tree_sha": "700f778ac117e9abc53b690508782844188741a5",
+      "html_url": "https://github.com/natnew/Awesome-Prompt-Engineering/commit/8849b987f0134be6148972fd138088486850ab1b",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Prompt-Engineering",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "8849b987f0134be6148972fd138088486850ab1b",
+          "committed_at": "2026-02-16T17:06:44Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 1,
+          "file_changes": 2,
+          "file_patch": "@@ -1,7 +1,7 @@\n ---\n name: Issue Triage Agent\n description: Automatically triages incoming issues by analyzing content and assigning labels.\n-engine: claude\n+engine: copilot\n timeout-minutes: 5\n strict: true\n on:",
+          "snapshot_ref": "8849b987f0134be6148972fd138088486850ab1b",
+          "snapshot_blob_sha": "2d4a61a322c3e491e7da9803cdb5d50ddd3b4e60",
+          "snapshot_file": "snapshots/Awesome-Prompt-Engineering__natnew__8849b987f0134be6148972fd138088486850ab1b__issue-triage-agent.md",
+          "snapshot_bytes": 3482,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Prompt-Engineering\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Prompt-Engineering\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Prompt-Engineering/blob/b3a74a1c6f5b2ac1b76ff4436bcc712fdbbd86e3/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+      "source_full_name": "natnew/Awesome-Prompt-Engineering",
+      "md_path": ".github/workflows/issue-triage-agent.md",
+      "commit_sha": "9e5fc9e5ef1352ba675eadca62173d65adf538b7",
+      "authored_at": "2026-02-16T17:33:24Z",
+      "committed_at": "2026-02-16T17:33:24Z",
+      "author_name": "Natasha",
+      "author_email": "natashanewboldlondon@gmail.com",
+      "author_login": "natnew",
+      "author_account_type": "User",
+      "committer_name": "Natasha",
+      "committer_email": "natashanewboldlondon@gmail.com",
+      "committer_login": "natnew",
+      "committer_account_type": "User",
+      "message": "Revert to vanilla Issue Triage Agent (Copilot engine)",
+      "parent_shas": [
+        "52e707a42e68050c8f9c612db4cbeecc719493d3"
+      ],
+      "tree_sha": "d4772aa65756093be6d19faa8231c48e5b445cdb",
+      "html_url": "https://github.com/natnew/Awesome-Prompt-Engineering/commit/9e5fc9e5ef1352ba675eadca62173d65adf538b7",
+      "verification_verified": false,
+      "verification_reason": "unsigned",
+      "actor_type": "human",
+      "attribution_class": "human_no_agent_signal",
+      "agent_name": "",
+      "attribution_confidence": "operational_label",
+      "attribution_evidence": "no supported agent signature in commit metadata",
+      "md_changes": [
+        {
+          "source_key": "natnew/Awesome-Prompt-Engineering:.github/workflows/issue-triage-agent.md",
+          "source_full_name": "natnew/Awesome-Prompt-Engineering",
+          "md_path": ".github/workflows/issue-triage-agent.md",
+          "commit_sha": "9e5fc9e5ef1352ba675eadca62173d65adf538b7",
+          "committed_at": "2026-02-16T17:33:24Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 14,
+          "file_deletions": 79,
+          "file_changes": 93,
+          "file_patch": "@@ -1,101 +1,36 @@\n ---\n-name: Issue Triage Agent\n-description: Automatically triages incoming issues by analyzing content and assigning labels.\n-engine: copilot\n timeout-minutes: 5\n-strict: true\n+name: Issue Triage Agent\n+\n on:\n   issues:\n     types: [opened, reopened]\n-  workflow_dispatch:\n \n permissions:\n   issues: read\n \n tools:\n   github:\n     toolsets: [issues, labels]\n-    # Allow processing of issues from all contributors in this public repository\n-    lockdown: false\n \n safe-outputs:\n   add-labels:\n-    allowed: [bug, enhancement, documentation, question, help-wanted, good-first-issue, prompt-engineering, tool, submission, feature]\n+    allowed: [bug, feature, enhancement, documentation, question, help-wanted, good-first-issue]\n   add-comment: {}\n-\n-imports:\n-  - shared/reporting.md\n ---\n \n-You are a helpful maintainer bot for the Awesome Prompt Engineering repository. Your job is to triage new issues by analyzing their content, researching the codebase, and applying appropriate labels.\n-\n-## Your Mission\n-\n-Analyze the newly opened or reopened issue #${{ github.event.issue.number }}\n-in ${{ github.repository }}. Read its title and body, then add one of the\n-allowed labels.\n-\n-## Task Steps\n-\n-### 1. Analyze the Issue\n-\n-Use the `github` tools to get details about the current issue:\n-- Read the issue title and description.\n-- Look for keywords that indicate the nature of the issue.\n-- Research similar existing issues for context.\n-\n-### 2. Determine Labels\n-\n-Based on your analysis, select labels from the allowed list:\n-\n-- **submission**: If the issue is proposing a new resource, tool, or link for the Awesome list.\n-- **bug**: If the issue reports a broken link, incorrect information, or a formatting problem.\n-- **enhancement**: If the issue suggests an improvement to existing content or structure.\n-- **documentation**: If the issue is about adding or updating documentation, guides, or references.\n-- **question**: If the issue is asking a question about prompt engineering or the repository.\n-- **help-wanted**: If the issue needs community input or contributions.\n-- **good-first-issue**: If the issue is a small, well-defined task suitable for new contributors.\n-- **prompt-engineering**: If the issue is directly about prompt engineering techniques, patterns, or examples.\n-- **tool**: If the issue involves adding or updating an AI tool, resource, or external link.\n+# Issue Triage Agent\n \n-### 3. Skip Issues That\n+List open issues in ${{ github.repository }} that have no labels. For each\n+unlabeled issue, analyze the title and body, then add one of the allowed\n+labels: `bug`, `feature`, `enhancement`, `documentation`, `question`,\n+`help-wanted`, or `good-first-issue`.\n \n+Skip issues that:\n - Already have any of these labels\n-- Have been assigned to any user\n-\n-### 4. Add Labels\n-\n-Use the `add-labels` safe-output to apply the selected labels to the issue.\n-- Only apply labels that strictly match the analysis.\n-- Do not remove existing labels.\n-\n-### 5. Post a Comment\n-\n-Use the `add-comment` safe-output to post a **single** comment on the issue.\n-- **Tone**: Friendly, professional, and encouraging.\n-- **Format**: Follow the guidelines in `shared/reporting.md`.\n-\n-**Comment Template**:\n-```markdown\n-### 🏷️ Issue Triaged\n-\n-Hi @{author}! I've categorized this issue as **{label_name}** based on the following analysis:\n-\n-**Reasoning**: {brief_explanation_of_why_this_label}\n-\n-<details>\n-<summary><b>View Triage Details</b></summary>\n-\n-#### Analysis\n-- **Keywords detected**: {list_of_keywords_that_matched}\n-- **Issue type indicators**: {what_made_this_fit_the_category}\n-- **Confidence**: {High/Medium/Low}\n-\n-#### Recommended Next Steps\n-- If this is a **submission**, please ensure it meets our [Contributing Guidelines](https://github.com/natnew/Awesome-Prompt-Engineering/blob/main/Contributing.md).\n-- {context_specific_suggestion_2}\n-\n-</details>\n+- Have been assigned to any user (especially non-bot users)\n \n-**References**: [Triage run §{run_id}](https://github.com/github/gh-aw/actions/runs/{run_id})\n-```\n+Do research on the issue in the context of the codebase and, after\n+adding the label to an issue, mention the issue author in a comment, explain\n+why the label was added and give a brief summary of how the issue may be\n+addressed.",
+          "snapshot_ref": "9e5fc9e5ef1352ba675eadca62173d65adf538b7",
+          "snapshot_blob_sha": "54a171704e2aed2bab68b986f30faf853962da0b",
+          "snapshot_file": "snapshots/Awesome-Prompt-Engineering__natnew__9e5fc9e5ef1352ba675eadca62173d65adf538b7__issue-triage-agent.md",
+          "snapshot_bytes": 941,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"natnew/Awesome-Prompt-Engineering\",\"generated_owner\":\"natnew\",\"generated_repo\":\"Awesome-Prompt-Engineering\",\"generated_workflow_path\":\".github/workflows/issue-triage-agent.lock.yml\",\"generated_workflow_file\":\"issue-triage-agent.lock.yml\",\"generated_html_url\":\"https://github.com/natnew/Awesome-Prompt-Engineering/blob/b3a74a1c6f5b2ac1b76ff4436bcc712fdbbd86e3/.github/workflows/issue-triage-agent.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}

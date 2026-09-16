@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+    "source_full_name": "Z3Prover/z3",
+    "source_owner": "Z3Prover",
+    "source_repo": "z3",
+    "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+    "discovery_method": "inferred_from_lock_filename",
+    "github_url": "https://github.com/Z3Prover/z3/blob/HEAD/.github/workflows/compare-stats-anomaly-reporter.md"
+  },
+  "scope": {
+    "branch_history": "default_branch",
+    "artifact": "gh-aw source markdown file",
+    "snapshots": "one snapshot per commit touching the markdown path when available"
+  },
+  "generated_workflows": [
+    {
+      "generated_full_name": "Z3Prover/z3",
+      "generated_owner": "Z3Prover",
+      "generated_repo": "z3",
+      "generated_workflow_path": ".github/workflows/compare-stats-anomaly-reporter.lock.yml",
+      "generated_workflow_file": "compare-stats-anomaly-reporter.lock.yml",
+      "generated_html_url": "https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/compare-stats-anomaly-reporter.lock.yml"
+    }
+  ],
+  "summary": {
+    "commit_count": 3,
+    "event_count": 3,
+    "snapshot_count": 3,
+    "snapshot_error_count": 0,
+    "actor_counts": {
+      "agent": 3
+    },
+    "collected_at_utc": "2026-08-04T12:43:43+00:00"
+  },
+  "commits": [
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+      "commit_sha": "b3fff5b39912813ea3ce5add8e6ac2e490aac2b6",
+      "authored_at": "2026-05-27T16:25:33Z",
+      "committed_at": "2026-05-27T16:25:33Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Add compare-stats anomaly reporter workflow for 30h bug/crash triage (#9647)\n\nThis adds an agentic workflow that analyzes `compare_stats.html` over a\nrolling 30-hour window and publishes a GitHub Discussion summarizing\nbugs, crashes, and anomalies. It explicitly captures unknown-outlier\npatterns where a benchmark is `unknown` while peers in the same set are\nmostly `sat`/`unsat`/`timeout`.\n\n- **Workflow added**\n- Introduces `.github/workflows/compare-stats-anomaly-reporter.md` (plus\ncompiled `.lock.yml`).\n  - Supports `workflow_dispatch` and scheduled execution.\n- Uses safe discussion output with auto-close of older reports for the\nsame stream.\n\n- **Data acquisition + robustness**\n- Fetches `http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html`\nwith `curl` and `wget` fallback.\n- Adds integrity checks (non-empty HTML/table presence) and explicit\nincomplete-report behavior on fetch/parse failures.\n\n- **30-hour analysis semantics**\n- Filters rows by timestamp candidates (`time`, `timestamp`, `date`,\n`run`, etc.) using UTC.\n- Falls back to full-table analysis when timestamps are unavailable, and\nmarks the report accordingly.\n\n- **Classification logic**\n- Detects bug/crash signals from status/details (`crash`, `segfault`,\n`assert`, `abort`, `exception`, `error`, `failed`, `bug`).\n  - Detects:\n- unknown-outlier anomalies (thresholded minority `unknown` in otherwise\ndecisive SAT-family outcomes),\n- status divergences (conflicting non-timeout outcomes for same\nbenchmark),\n    - repeated hard-failure anomalies.\n\n- **Discussion output shape**\n- Produces a compact report with executive counts, bug/crash table,\nanomaly subsections, and raw extraction summary/limitations.\n\n```yaml\nsafe-outputs:\n  create-discussion:\n    title-prefix: \"[Compare Stats] \"\n    category: \"agentic workflows\"\n    close-older-discussions: true\n```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "1aa2158bf41b157952ef7e52f4ad82e97bfdb55d"
+      ],
+      "tree_sha": "39b6b83fbdfcda178cabe777d590ea2773c00320",
+      "html_url": "https://github.com/Z3Prover/z3/commit/b3fff5b39912813ea3ce5add8e6ac2e490aac2b6",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+          "commit_sha": "b3fff5b39912813ea3ce5add8e6ac2e490aac2b6",
+          "committed_at": "2026-05-27T16:25:33Z",
+          "event_status": "added",
+          "previous_path": "",
+          "file_additions": 191,
+          "file_deletions": 0,
+          "file_changes": 191,
+          "file_patch": "@@ -0,0 +1,191 @@\n+---\n+description: Analyze compare_stats.html for the latest 30 hours and publish bug/crash/anomaly summary as a GitHub Discussion\n+\n+on:\n+  schedule:\n+    - cron: \"0 */12 * * *\"\n+  workflow_dispatch:\n+\n+permissions: read-all\n+\n+strict: false\n+timeout-minutes: 45\n+\n+network:\n+  allowed:\n+    - defaults\n+    - mtzguido.tplinkdns.com\n+\n+tools:\n+  bash: [\":*\"]\n+  github:\n+    toolsets: [default]\n+\n+safe-outputs:\n+  create-discussion:\n+    title-prefix: \"[Compare Stats] \"\n+    category: \"agentic workflows\"\n+    close-older-discussions: true\n+  missing-tool:\n+    create-issue: true\n+  noop:\n+    report-as-issue: false\n+---\n+\n+# Compare Stats Bug/Crash/Anomaly Reporter\n+\n+Your name is ${{ github.workflow }}. You are a Z3 benchmarking analysis agent for `${{ github.repository }}`.\n+\n+Analyze the benchmark comparison page below, focusing on results from the last 30 hours, then create a GitHub Discussion with a concise but actionable summary of:\n+\n+- Bugs\n+- Crashes\n+- Anomalies\n+\n+Source URL:\n+`http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html`\n+\n+Note: this endpoint is currently HTTP-only. Treat fetched data as non-sensitive benchmark telemetry and do not include secrets in requests or reports.\n+Note: the workflow runs every 12 hours but analyzes 30 hours intentionally to provide overlap and avoid missing transient failures between runs.\n+Overlapping windows are expected; `close-older-discussions: true` keeps only the latest report thread active.\n+\n+## Requirements\n+\n+### 1) Fetch and save the source page\n+\n+Use bash to fetch the page into `/tmp/gh-aw/agent/compare_stats.html`.\n+\n+Try this first:\n+```bash\n+curl -fsSL --max-time 60 \"http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html\" -o /tmp/gh-aw/agent/compare_stats.html\n+```\n+\n+If that fails, retry once with:\n+```bash\n+wget -q -T 60 -O /tmp/gh-aw/agent/compare_stats.html \"http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html\"\n+```\n+\n+If both fail, still create a discussion that explains the fetch failure, includes stderr output, and marks the report as incomplete.\n+After a successful fetch, perform basic integrity checks before parsing:\n+- file is non-empty\n+- content includes `<html` and at least one `<table`\n+- if checks fail, treat as suspicious/incomplete data and report this explicitly\n+\n+### 2) Parse tabular data\n+\n+Use Python to parse all tables from the HTML into normalized rows.\n+\n+Use resilient parsing:\n+- Prefer `pandas.read_html` when available.\n+- If pandas fails, parse with `html.parser`/regex fallback.\n+\n+Persist normalized JSON to `/tmp/gh-aw/agent/compare_stats_rows.json`.\n+\n+### 3) Detect time window (last 30 hours)\n+\n+Find candidate timestamp columns using case-insensitive column-name matches:\n+- `time`, `timestamp`, `date`, `run`, `created`, `updated`\n+\n+Parse datetimes with timezone handling if present. Use current UTC time and filter to rows where timestamp is within the past 30 hours.\n+Treat naive timestamps as UTC.\n+\n+If no timestamp can be extracted:\n+- Report this limitation explicitly.\n+- Continue analysis on all rows.\n+- Mark the discussion as \"time-window fallback\".\n+\n+### 4) Classify bugs/crashes/anomalies\n+\n+Infer key columns using column-name heuristics:\n+- status/result/outcome\n+- benchmark/instance/file/name\n+- set/suite/group/track/family\n+- message/error/details/reason\n+\n+Normalize status strings to lowercase.\n+\n+#### Bugs / Crashes\n+Classify a row as **crash/bug** if status/details contain terms like:\n+- `crash`, `segfault`, `assert`, `abort`, `exception`, `error`, `failed`, `bug`\n+\n+#### Anomalies\n+At minimum, detect:\n+\n+1. **Unknown-outlier anomaly** (required):\n+   - Within the same benchmark set/suite/group, if most rows are in `{sat, unsat, timeout}` but a minority are `unknown`, flag the `unknown` rows as anomalies.\n+   - Rationale: require enough samples for confidence and avoid flagging sets where `unknown` is common behavior. `0.4` caps unknown results to a minority, while `0.6` enforces a decisive majority of sat/unsat/timeout outcomes. Any remainder after those constraints is intentionally allowed for other statuses.\n+   - Use this threshold: `total_rows >= 4`, `unknown_count / total_rows <= 0.4`, and `(sat_count + unsat_count + timeout_count) / total_rows >= 0.6`.\n+   - If set/suite/group columns are missing, fallback grouping order is: directory prefix of benchmark path/name, then benchmark name prefix before first separator (`/`, `:`, `::`), then a single global group.\n+\n+2. **Status divergence anomaly**:\n+   - Same benchmark name appears multiple times with conflicting non-timeout statuses (for example `sat` vs `unsat`).\n+   - Ignore timeout-only disagreements here; timeout behavior is covered under the repeated hard-failure anomaly section to reduce noise from transient runtime variance.\n+\n+3. **Repeated hard-failure anomaly**:\n+   - Same benchmark appears repeatedly with crash/error-like status in the time window.\n+\n+### 5) Generate discussion report\n+\n+Create a GitHub Discussion using `create-discussion` safe output.\n+\n+Use this structure:\n+\n+```markdown\n+### Compare Stats Analysis Report\n+\n+**Source**: [compare_stats.html](http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html)\n+**Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n+**Analysis Time (UTC)**: <timestamp>\n+**Window**: last 30 hours (or fallback mode)\n+\n+### Executive Summary\n+\n+- Rows analyzed: N\n+- Rows in 30h window: M (or \"timestamp unavailable\")\n+- Bugs/crashes: B\n+- Anomalies: A\n+\n+### Bugs and Crashes\n+\n+| Benchmark Set | Benchmark | Status | Details | Timestamp |\n+|---|---|---|---|---|\n+| ... |\n+\n+### Anomalies\n+\n+#### Unknown-Outlier Cases\n+| Benchmark Set | Benchmark | Status | Peer Status Distribution | Timestamp |\n+|---|---|---|---|---|\n+| ... |\n+\n+#### Status Divergences\n+| Benchmark | Observed Statuses | Benchmark Set(s) | Timestamp(s) |\n+|---|---|---|---|\n+| ... |\n+\n+#### Repeated Hard Failures\n+| Benchmark | Failure Count | Representative Status/Details | Benchmark Set(s) |\n+|---|---|---|---|\n+| ... |\n+\n+### Notes and Limitations\n+- Mention parsing assumptions\n+- Mention missing columns/timestamps if any\n+\n+<details>\n+<summary><b>Raw Extraction Summary</b></summary>\n+\n+- Table count\n+- Candidate columns used\n+- Top status distribution\n+- Up to 30 representative raw rows (sanitized)\n+\n+</details>\n+```\n+\n+## Reporting Rules\n+\n+- Be factual and concise.\n+- Do not claim certainty when column mapping is heuristic.\n+- If no bugs/crashes/anomalies are found, still create the discussion and explicitly state \"No issues detected in analyzed window.\"\n+- Do not open PRs or modify repository files.",
+          "snapshot_ref": "b3fff5b39912813ea3ce5add8e6ac2e490aac2b6",
+          "snapshot_blob_sha": "db0a8198976844130ca23b05f7fecbb2d80ac584",
+          "snapshot_file": "snapshots/z3__Z3Prover__b3fff5b39912813ea3ce5add8e6ac2e490aac2b6__compare-stats-anomaly-reporter.md",
+          "snapshot_bytes": 6482,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/compare-stats-anomaly-reporter.lock.yml\",\"generated_workflow_file\":\"compare-stats-anomaly-reporter.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/compare-stats-anomaly-reporter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+      "commit_sha": "eb4c3a0756b1d7e857cdaddadb580bc5a5c9962c",
+      "authored_at": "2026-05-27T16:57:20Z",
+      "committed_at": "2026-05-27T16:57:20Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Update compare-stats anomaly reporter to read benchmark stats from `/z3/` (#9650)\n\nThis updates the compare-stats anomaly reporter to retrieve benchmark\ndata from `http://mtzguido.tplinkdns.com:8081/z3/` instead of the old\n`compare_stats.html` endpoint. The workflow prompt and generated lock\nfile now consistently reference the root benchmark stats URL.\n\n- **Workflow source**\n- Repoint the benchmark source URL from `.../compare_stats.html` to\n`.../z3/`\n- Update prompt text to describe the source as benchmark statistics\nrather than a specific HTML file\n- Rename the temporary fetched artifact from `compare_stats.html` to\n`benchmark_stats.html` for consistency\n\n- **Generated workflow**\n- Regenerate `compare-stats-anomaly-reporter.lock.yml` so the compiled\nworkflow matches the markdown source\n- Refresh the embedded workflow description and prompt payload to\nreference the new endpoint\n\n- **Report output**\n- Update the discussion template’s source link to point at the root\nbenchmark stats page\n\n```md\nSource URL:\n`http://mtzguido.tplinkdns.com:8081/z3/`\n\ncurl -fsSL --max-time 60 \"http://mtzguido.tplinkdns.com:8081/z3/\" \\\n  -o /tmp/gh-aw/agent/benchmark_stats.html\n```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "1564e00215e18dc3557ee86bae4a9d91e098c449"
+      ],
+      "tree_sha": "91eb52f6da66b2328790e50565401af8e1b24b21",
+      "html_url": "https://github.com/Z3Prover/z3/commit/eb4c3a0756b1d7e857cdaddadb580bc5a5c9962c",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+          "commit_sha": "eb4c3a0756b1d7e857cdaddadb580bc5a5c9962c",
+          "committed_at": "2026-05-27T16:57:20Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 7,
+          "file_deletions": 7,
+          "file_changes": 14,
+          "file_patch": "@@ -1,5 +1,5 @@\n ---\n-description: Analyze compare_stats.html for the latest 30 hours and publish bug/crash/anomaly summary as a GitHub Discussion\n+description: Analyze benchmark statistics from the latest 30 hours and publish bug/crash/anomaly summary as a GitHub Discussion\n \n on:\n   schedule:\n@@ -36,14 +36,14 @@ safe-outputs:\n \n Your name is ${{ github.workflow }}. You are a Z3 benchmarking analysis agent for `${{ github.repository }}`.\n \n-Analyze the benchmark comparison page below, focusing on results from the last 30 hours, then create a GitHub Discussion with a concise but actionable summary of:\n+Analyze the benchmark statistics page below, focusing on results from the last 30 hours, then create a GitHub Discussion with a concise but actionable summary of:\n \n - Bugs\n - Crashes\n - Anomalies\n \n Source URL:\n-`http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html`\n+`http://mtzguido.tplinkdns.com:8081/z3/`\n \n Note: this endpoint is currently HTTP-only. Treat fetched data as non-sensitive benchmark telemetry and do not include secrets in requests or reports.\n Note: the workflow runs every 12 hours but analyzes 30 hours intentionally to provide overlap and avoid missing transient failures between runs.\n@@ -53,16 +53,16 @@ Overlapping windows are expected; `close-older-discussions: true` keeps only the\n \n ### 1) Fetch and save the source page\n \n-Use bash to fetch the page into `/tmp/gh-aw/agent/compare_stats.html`.\n+Use bash to fetch the page into `/tmp/gh-aw/agent/benchmark_stats.html`.\n \n Try this first:\n ```bash\n-curl -fsSL --max-time 60 \"http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html\" -o /tmp/gh-aw/agent/compare_stats.html\n+curl -fsSL --max-time 60 \"http://mtzguido.tplinkdns.com:8081/z3/\" -o /tmp/gh-aw/agent/benchmark_stats.html\n ```\n \n If that fails, retry once with:\n ```bash\n-wget -q -T 60 -O /tmp/gh-aw/agent/compare_stats.html \"http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html\"\n+wget -q -T 60 -O /tmp/gh-aw/agent/benchmark_stats.html \"http://mtzguido.tplinkdns.com:8081/z3/\"\n ```\n \n If both fail, still create a discussion that explains the fetch failure, includes stderr output, and marks the report as incomplete.\n@@ -133,7 +133,7 @@ Use this structure:\n ```markdown\n ### Compare Stats Analysis Report\n \n-**Source**: [compare_stats.html](http://mtzguido.tplinkdns.com:8081/z3/compare_stats.html)\n+**Source**: [benchmark statistics](http://mtzguido.tplinkdns.com:8081/z3/)\n **Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n **Analysis Time (UTC)**: <timestamp>\n **Window**: last 30 hours (or fallback mode)",
+          "snapshot_ref": "eb4c3a0756b1d7e857cdaddadb580bc5a5c9962c",
+          "snapshot_blob_sha": "8f450991b4d6b5d8e47adbb46358c7b17e9620d9",
+          "snapshot_file": "snapshots/z3__Z3Prover__eb4c3a0756b1d7e857cdaddadb580bc5a5c9962c__compare-stats-anomaly-reporter.md",
+          "snapshot_bytes": 6421,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/compare-stats-anomaly-reporter.lock.yml\",\"generated_workflow_file\":\"compare-stats-anomaly-reporter.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/compare-stats-anomaly-reporter.lock.yml\"}]"
+        }
+      ]
+    },
+    {
+      "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+      "source_full_name": "Z3Prover/z3",
+      "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+      "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "authored_at": "2026-06-12T03:57:43Z",
+      "committed_at": "2026-06-12T03:57:43Z",
+      "author_name": "Copilot",
+      "author_email": "198982749+Copilot@users.noreply.github.com",
+      "author_login": "Copilot",
+      "author_account_type": "Bot",
+      "committer_name": "GitHub",
+      "committer_email": "noreply@github.com",
+      "committer_login": "web-flow",
+      "committer_account_type": "User",
+      "message": "Suppress auto-created failure issues for agentic workflows (#9834)\n\nThis change stops agentic workflows from opening GitHub issues when a\nrun fails due to workflow/tooling conditions such as missing-tool\nreports or token-budget exhaustion. It applies the repository-wide\nsuppression suggested by the failure issue itself, so these runs can\nstill fail without creating issue noise.\n\n- **What changed**\n- Added `safe-outputs.report-failure-as-issue: false` to each top-level\nagentic workflow source under `.github/workflows/*.md`\n- Regenerated the corresponding compiled `.lock.yml` workflows so the\nruntime configuration matches the source frontmatter\n\n- **Effect**\n  - Agentic workflow runs continue to report failure in Actions\n- Automatic `[aw] ... failed` issue creation is disabled for these\nworkflows\n- Existing safe outputs such as `noop` and `missing-tool` remain\nunchanged\n\n- **Scope**\n- Applied consistently across the repository’s top-level agentic\nworkflows, including `zipt-code-reviewer`, `build-warning-fixer`,\n`code-conventions-analyzer`, `workflow-suggestion-agent`, and related\nworkflows\n\n- **Configuration pattern**\n  ```yaml\n  safe-outputs:\n    report-failure-as-issue: false\n    create-issue:\n      ...\n    missing-tool:\n      create-issue: true\n    noop:\n      report-as-issue: false\n  ```\n\n---------\n\nCo-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>",
+      "parent_shas": [
+        "335e23bf586ba7ab77bb8e240ecfdf3c28c81ab9"
+      ],
+      "tree_sha": "491c779185cecedff0288d500c768c6200c17c8f",
+      "html_url": "https://github.com/Z3Prover/z3/commit/24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+      "verification_verified": true,
+      "verification_reason": "valid",
+      "actor_type": "agent",
+      "attribution_class": "agent_explicit",
+      "agent_name": "GitHub Copilot",
+      "attribution_confidence": "high",
+      "attribution_evidence": "GitHub Copilot:copilot_swe_agent_email",
+      "md_changes": [
+        {
+          "source_key": "Z3Prover/z3:.github/workflows/compare-stats-anomaly-reporter.md",
+          "source_full_name": "Z3Prover/z3",
+          "md_path": ".github/workflows/compare-stats-anomaly-reporter.md",
+          "commit_sha": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "committed_at": "2026-06-12T03:57:43Z",
+          "event_status": "modified",
+          "previous_path": "",
+          "file_additions": 1,
+          "file_deletions": 0,
+          "file_changes": 1,
+          "file_patch": "@@ -22,6 +22,7 @@ tools:\n     toolsets: [default]\n \n safe-outputs:\n+  report-failure-as-issue: false\n   create-discussion:\n     title-prefix: \"[Compare Stats] \"\n     category: \"agentic workflows\"",
+          "snapshot_ref": "24242ec2a12aae6bc10a5d5108c521dcc7da0ff9",
+          "snapshot_blob_sha": "2100dc5291516e7bfb4824c13ede3449cf3e52bb",
+          "snapshot_file": "snapshots/z3__Z3Prover__24242ec2a12aae6bc10a5d5108c521dcc7da0ff9__compare-stats-anomaly-reporter.md",
+          "snapshot_bytes": 6454,
+          "snapshot_error": "",
+          "generated_workflows": "[{\"generated_full_name\":\"Z3Prover/z3\",\"generated_owner\":\"Z3Prover\",\"generated_repo\":\"z3\",\"generated_workflow_path\":\".github/workflows/compare-stats-anomaly-reporter.lock.yml\",\"generated_workflow_file\":\"compare-stats-anomaly-reporter.lock.yml\",\"generated_html_url\":\"https://github.com/Z3Prover/z3/blob/1ba56667b5cd72ef633f84b1f49fc1cb14a54cd3/.github/workflows/compare-stats-anomaly-reporter.lock.yml\"}]"
+        }
+      ]
+    }
+  ]
+}
